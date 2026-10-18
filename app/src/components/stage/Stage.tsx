@@ -19,6 +19,7 @@ import round from "./RoundButton.module.css";
 import { liftButtons, makeRoom, ROOM_GAP as SHEET_GAP } from "./makeRoom";
 import { AlsoLive } from "./AlsoLive";
 import { Ambilight } from "./Ambilight";
+import { viewfinderPicture } from "./viewfinder";
 import { NowWatching, STREAM_PLACES } from "./NowWatching";
 // The component, not the type of the same name from ../../types.
 import { LiveFeed as LiveNowFeed } from "./LiveFeed";
@@ -620,8 +621,8 @@ export function Stage({
         <Ambilight
           key={big ? `${big.person.id}|${stage.mainKind}|${gridKey(shape)}` : "none"}
           video={big ? bigVideoEl : null}
-          // Nobody live: the colour bars glow too (spec 0158).
-          still={null}
+          // Nobody live: the viewfinder's corners glow, each its own colour (spec 0123).
+          still={big ? null : viewfinderPicture()}
           prefs={ambilight}
           shape={shape}
         />
