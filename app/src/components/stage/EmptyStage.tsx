@@ -79,6 +79,7 @@ export function EmptyStage({
           key={at}
           className={styles.corner}
           data-at={at}
+          data-mark={at}
           aria-hidden="true"
         />
       ))}
