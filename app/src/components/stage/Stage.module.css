@@ -40,6 +40,12 @@
   z-index: 1;
 }
 
+/* A picture filling the stage: no black behind it to show as a sliver at an edge (spec 0123
+   prototype; see ScreenVideo.module.css). */
+.frame:has(video[data-fill]) {
+  background: transparent;
+}
+
 .frame:fullscreen {
   border-radius: 0;
 }
