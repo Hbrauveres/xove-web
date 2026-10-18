@@ -503,7 +503,9 @@
 .voiceRow {
   min-height: var(--ctl, 38px);
   padding: 0 12px;
-  font-weight: 500;
+  /* The panel's scale: options read like the picker's own text, never above the title. */
+  font-size: var(--pick-font, 12px);
+  font-weight: 400;
 }
 
 .voiceRow > span {
