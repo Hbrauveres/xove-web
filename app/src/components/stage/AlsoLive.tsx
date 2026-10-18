@@ -3,6 +3,7 @@ import type { LiveFeed, Sharer } from "../../types";
 import { Avatar } from "../ui/Avatar";
 import { Range } from "../ui/Range";
 import { ScreenVideo } from "./ScreenVideo";
+import { VoicePill } from "./VoicePill";
 import styles from "./AlsoLive.module.css";
 
 import { MUTED, type PreviewSound } from "./previewSound";
@@ -67,11 +68,11 @@ export function AlsoLive({ others, liveCount, free, onPick, sound, onSoundChange
                   )}
                 </span>
                 <span className={styles.chip}>
-                  <Avatar person={s.person} size={16} />
+                  {!s.isMe && s.hasVoice ? <VoicePill name={s.person.name} talking={s.speaking} /> : <Avatar person={s.person} size={16} />}
                   {name} · {what}
                 </span>
               </button>
-              {!s.isMe && s.hasSound && (
+              {!s.isMe && (s.hasSound || s.hasVoice) && (
                 <PreviewSpeaker
                   name={s.person.name}
                   sound={mine}

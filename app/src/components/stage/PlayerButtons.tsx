@@ -40,6 +40,9 @@ type Props = {
   /** The settings panel is open; the cog opens and closes it (spec 0107). */
   settingsOpen: boolean;
   onSettings: () => void;
+  /** My voice is on, and turning it on or off (spec 0123). */
+  voice?: boolean;
+  onVoice?: () => void;
   /** With the settings open, a live button's gesture goes to its setting there (spec 0115). */
   onGoTo?: (kind: StreamKind) => void;
   /** A drop-up's list opened or closed: the player keeps its controls shown while one is open. */

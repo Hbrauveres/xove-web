@@ -67,3 +67,11 @@
   padding: 8px 0 2px;
   cursor: pointer;
 }
+
+/* A card's voice (spec 0123): its pill at the picture's bottom-left. */
+.voice {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 1;
+}

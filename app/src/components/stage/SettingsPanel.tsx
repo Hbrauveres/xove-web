@@ -1,12 +1,15 @@
 import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { CAMERA_BLOCKED, type CameraProblem, type ScreenSurface } from "../../hooks/useLiveKitRoom";
-import type { SharePrefs } from "../../media/preferences";
+import type { SharePrefs, VoicePrefs } from "../../media/preferences";
+import type { MicDevice } from "../../hooks/useLiveKitRoom";
+import { useMicLevel } from "../../hooks/useMicLevel";
+import sw from "../room/AccountButton.module.css";
 import { CAMERA_QUALITIES, MODE_OPTIONS, SHARE_QUALITIES, type ShareMode, type ShareQuality } from "../../media/shareSettings";
 import type { CameraDevice, MediaTrack, StreamKind } from "../../types";
 import { Picker } from "../ui/Picker";
 import { Segmented } from "../ui/Segmented";
 import { showToast } from "../ui/toast";
-import { CameraOnIcon, CloseIcon, ScreenOffIcon, ScreenShareIcon, WindowIcon } from "./icons";
+import { CameraOnIcon, CloseIcon, MicIcon, ScreenOffIcon, ScreenShareIcon, WindowIcon } from "./icons";
 import { NO_SCREEN, NO_SOUND } from "./PlayerButtons";
 import { FULL_VIEW_SHEET } from "./makeRoom";
 import styles from "./SettingsPanel.module.css";
@@ -17,7 +20,7 @@ const PANEL_MS = 260;
 
 const SURFACE: Record<ScreenSurface, string> = { window: "A window", browser: "A tab", monitor: "Your whole screen" };
 
-type Tab = "screen" | "camera";
+type Tab = "screen" | "camera" | "voice";
 
 type Props = {
   /** Over the cog, inside the player (desktop, tablets, a phone held sideways), or a bottom sheet (a phone held upright). */
@@ -49,6 +52,12 @@ type Props = {
   fullView?: boolean;
   /** A live button's gesture with the panel open: go to this setting and cue it (spec 0115). */
   goTo?: { kind: StreamKind; n: number };
+  /** My voice (spec 0123): on or off, how it's captured, the mics, and its own track for the level. */
+  voice?: boolean;
+  voicePrefs?: VoicePrefs;
+  onVoicePrefs?: (prefs: VoicePrefs) => void;
+  mics?: MicDevice[];
+  localVoice?: MediaTrack;
 };
 
 /** How long a control stays cued: two 1 s pulses (design decision 2). */
@@ -63,15 +72,15 @@ type Cue = { kind: Tab; n: number } | null;
 export function SettingsPanel(props: Props) {
   const { variant, open, onClose, screenTab, mine, onPreviewCamera } = props;
   // Both tabs always show; one that can't be used here is greyed out, not hidden (design decision 2).
-  const tabs: Tab[] = ["screen", "camera"];
-  const usable: Tab[] = screenTab ? tabs : ["camera"];
+  const tabs: Tab[] = ["screen", "camera", "voice"];
+  const usable: Tab[] = screenTab ? tabs : ["camera", "voice"];
   const [chosen, setTab] = useState<Tab>(usable[0]);
   // Told to go to a setting: its tab, and the control cued for 2 s (never a tab that can't be used).
   const [cue, setCue] = useState<Cue>(null);
   const [lastGoTo, setLastGoTo] = useState(props.goTo?.n);
   if (props.goTo && props.goTo.n !== lastGoTo) {
     setLastGoTo(props.goTo.n);
-    if (open && usable.includes(props.goTo.kind)) {
+    if (open && usable.includes(props.goTo.kind as Tab)) {
       setTab(props.goTo.kind);
       setCue({ kind: props.goTo.kind, n: props.goTo.n });
     }
@@ -199,9 +208,9 @@ export function SettingsPanel(props: Props) {
               else if (pointer.current === "touch" || pointer.current === "pen") showToast(NO_SCREEN, <ScreenOffIcon />);
             }}
           >
-            {t === "screen" ? <ScreenShareIcon /> : <CameraOnIcon />}
-            {t === "screen" ? "Screen" : "Camera"}
-            {mine[t] && <span className={styles.dot} data-live aria-hidden="true" />}
+            {t === "screen" ? <ScreenShareIcon /> : t === "camera" ? <CameraOnIcon /> : <MicIcon />}
+            {t === "screen" ? "Screen" : t === "camera" ? "Camera" : "Voice"}
+            {(t === "voice" ? props.voice : mine[t]) && <span className={styles.dot} data-live aria-hidden="true" />}
           </button>
         ))}
       </div>
@@ -221,7 +230,13 @@ export function SettingsPanel(props: Props) {
             aria-hidden={t !== tab || undefined}
             inert={t !== tab || undefined}
           >
-            {t === "screen" ? <ScreenTab {...props} cue={cue?.kind === "screen" ? cue.n : undefined} /> : <CameraTab {...props} cue={cue?.kind === "camera" ? cue.n : undefined} />}
+            {t === "screen" ? (
+              <ScreenTab {...props} cue={cue?.kind === "screen" ? cue.n : undefined} />
+            ) : t === "camera" ? (
+              <CameraTab {...props} cue={cue?.kind === "camera" ? cue.n : undefined} />
+            ) : (
+              <VoiceTab {...props} shown={open && tab === "voice"} />
+            )}
           </div>
         ))}
       </div>
@@ -362,4 +377,74 @@ function Preview({ video }: { video?: MediaTrack }) {
     };
   }, [video]);
   return <video ref={ref} className={styles.video} autoPlay playsInline muted disablePictureInPicture aria-label="Your camera" />;
+}
+
+/** Voice isolation is only in recent Chrome (spec 0123): elsewhere its switch is greyed with this. */
+const NO_ISOLATION = "This browser can't isolate a voice";
+const canIsolate = () => {
+  try {
+    return Boolean((navigator.mediaDevices?.getSupportedConstraints?.() as Record<string, boolean> | undefined)?.voiceIsolation);
+  } catch {
+    return false;
+  }
+};
+
+/** The Voice tab (spec 0123, rounds 96 to 100): Microphone (its picker and live level), then Voice processing. */
+function VoiceTab(props: Props & { shown: boolean }) {
+  const { voicePrefs, onVoicePrefs, mics = [], localVoice, shown } = props;
+  const level = useMicLevel(localVoice, shown);
+  if (!voicePrefs || !onVoicePrefs) return null;
+  const set = (patch: Partial<VoicePrefs>) => onVoicePrefs({ ...voicePrefs, ...patch });
+  const isolate = canIsolate();
+  const SWITCHES: { key: keyof Omit<VoicePrefs, "micId">; label: string; hint: string; unavailable?: string }[] = [
+    { key: "echoCancellation", label: "Echo cancellation", hint: "Stops your speakers coming back through the mic" },
+    { key: "noiseSuppression", label: "Noise suppression", hint: "Quiets fans, keyboards and hum" },
+    { key: "autoGainControl", label: "Automatic volume", hint: "Keeps your voice at an even level" },
+    { key: "voiceIsolation", label: "Voice isolation", hint: "Keeps only speech", unavailable: isolate ? undefined : NO_ISOLATION },
+  ];
+  return (
+    <>
+      <div className={styles.lead}>
+        <div className={styles.group}>
+          <p className={styles.heading}>Microphone</p>
+          {mics.length > 0 ? (
+            <Picker
+              label="Microphone"
+              options={mics.map((m) => ({ value: m.deviceId, label: m.label }))}
+              value={voicePrefs.micId ?? mics[0].deviceId}
+              onChange={(micId) => set({ micId })}
+            />
+          ) : (
+            <p className={styles.hint}>The browser lists your microphones once you turn your voice on.</p>
+          )}
+          {/* Prototype (round 2): the live level under the picker; the design puts it inside the pill. */}
+          <span className={styles.level} aria-hidden="true">
+            <i style={{ width: `${Math.round(level * 100)}%` }} />
+          </span>
+        </div>
+      </div>
+      <div className={styles.group}>
+        <p className={styles.heading}>Voice processing</p>
+        {SWITCHES.map((s) => (
+          <label key={s.key} className={`${sw.switchRow} ${styles.voiceRow}`} title={s.unavailable}>
+            <span>
+              {s.label}
+              <small className={styles.hint}>{s.hint}</small>
+            </span>
+            <button
+              type="button"
+              role="switch"
+              className={sw.switch}
+              aria-label={s.label}
+              aria-checked={voicePrefs[s.key]}
+              aria-disabled={s.unavailable ? true : undefined}
+              onClick={() => (s.unavailable ? showToast(s.unavailable, <MicIcon />) : set({ [s.key]: !voicePrefs[s.key] }))}
+            >
+              <i />
+            </button>
+          </label>
+        ))}
+      </div>
+    </>
+  );
 }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { loadWatchPrefs, saveWatchPrefs, type WatchPrefs } from "../../media/preferences";
+import { loadVoiceHearing, loadWatchPrefs, saveVoiceHearing, saveWatchPrefs, type WatchPrefs } from "../../media/preferences";
 import { viewerQualities } from "../../media/shareSettings";
 import type { StagePick } from "../../hooks/useStagePick";
 import type { AmbilightPrefs } from "../../media/preferences";
@@ -11,7 +11,7 @@ import { StageNotice } from "./StageNotice";
 import { StageOverlay } from "./StageOverlay";
 import { PlayerButtons, type StreamControls } from "./PlayerButtons";
 import { NO_SOUND_HERE } from "./VolumeButton";
-import { NO_VOICE_YET } from "./VolumeMixer";
+import { VoiceAudio } from "./VoiceAudio";
 import { ViewerBar, type Sound } from "./ViewerBar";
 import { MicIcon, MicOffIcon } from "./icons";
 import round from "./RoundButton.module.css";
@@ -119,9 +119,14 @@ export function Stage({
   const sideways = layout === "sideways";
   const frameRef = useRef<HTMLDivElement>(null);
   const [watch, setWatch] = useState<WatchPrefs>(loadWatchPrefs);
-  // Prototype (ADR-0070, spec 0123 round 1): the voice's volume and your mic, held here until round 2 wires them.
-  const [voiceSound, setVoiceSound] = useState<Sound>({ volume: 0.85, muted: false });
-  const [micOn, setMicOn] = useState(false);
+  // How I hear the voice of the person I watch (spec 0123): its own volume and mute, remembered.
+  const [voiceSound, setVoiceSoundState] = useState<Sound>(loadVoiceHearing);
+  const setVoiceSound = (next: Sound) => {
+    setVoiceSoundState(next);
+    saveVoiceHearing(next);
+  };
+  const micOn = Boolean(controls.voice);
+  const toggleMic = () => controls.onVoice?.();
 
   // Who is big comes from the room (spec 0104), which the previews and the activity can change too.
   const { big, swappedFor, pick, toggleSwap } = stage;
@@ -358,8 +363,17 @@ export function Stage({
       // The phone's feed is silent (spec 0158): a preview unmuted on desktop isn't downloaded there.
       const preview = !phone && !sideways && (thumbnailSound[s.person.id] ?? MUTED).muted === false;
       s.setSoundOn(s.person.id === bigId || preview);
+      // Their voice comes down with their sound: the person I watch, or a preview I turned on (spec 0123).
+      s.setVoiceOn?.(s.person.id === bigId || preview);
     }
   }, [sharers, bigId, thumbnailSound, phone, sideways]);
+  // The voices I hear: the person I watch at the voice's own volume, a preview I turned on at its own.
+  const voices = sharers.flatMap((s) => {
+    if (s.isMe || !s.voice || !s.hasVoice) return [];
+    if (s.person.id === bigId) return [{ id: s.person.id, track: s.voice, volume: voiceSound.volume, muted: voiceSound.muted }];
+    const preview = thumbnailSound[s.person.id] ?? MUTED;
+    return !phone && !sideways && !preview.muted ? [{ id: s.person.id, track: s.voice, volume: preview.volume, muted: false }] : [];
+  });
 
   const changeWatch = (next: WatchPrefs) => {
     setWatch(next);
@@ -550,10 +564,10 @@ export function Stage({
           // Someone else's stream: what you hear at the left, you at the right (spec 0123, round 141).
           <ViewerBar
             sound={{ ...watch, onChange: (s) => changeWatch({ ...watch, ...s }), unavailable: !big.screen ? NO_SCREEN_SOUND : big.hasSound ? undefined : NO_SOUND_HERE }}
-            voice={{ ...voiceSound, onChange: setVoiceSound, unavailable: NO_VOICE_YET, name: big.person.name }}
+            voice={{ ...voiceSound, onChange: setVoiceSound, unavailable: big.hasVoice ? undefined : `${big.person.name}'s mic is off`, name: big.person.name, talking: big.speaking }}
             live={meLive}
             micOn={micOn}
-            onMic={() => setMicOn((on) => !on)}
+            onMic={toggleMic}
             canShareScreen={controls.canShareScreen}
             onStart={startMine}
             onSettings={toggleSettings}
@@ -571,7 +585,7 @@ export function Stage({
             onMenuChange={onMenuChange}
             extra={
               <div className={`${round.pill} ${micOn ? round.live : ""}`}>
-                <button type="button" className={round.main} aria-pressed={micOn} aria-label={micOn ? "Mute your voice" : "Share your voice"} onClick={() => setMicOn((on) => !on)}>
+                <button type="button" className={round.main} aria-pressed={micOn} aria-label={micOn ? "Mute your voice" : "Share your voice"} onClick={toggleMic}>
                   {micOn ? <MicIcon /> : <MicOffIcon />}
                 </button>
                 <span role="tooltip" className={round.tip} aria-hidden="true">
@@ -621,6 +635,9 @@ export function Stage({
           {body()}
           {!onScreen && chromeLayer}
           {!sideways && settingsPanel}
+          {voices.map((v) => (
+            <VoiceAudio key={v.id} track={v.track} volume={v.volume} muted={v.muted} />
+          ))}
           {/* A short message to the user, at the top centre of the player (design decision 10). */}
           {!sideways && <Toast />}
         </div>

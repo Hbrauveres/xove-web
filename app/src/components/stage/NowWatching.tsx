@@ -5,7 +5,8 @@ import styles from "./NowWatching.module.css";
 import { whoIsHere } from "./whoIsHere";
 
 /** What a person shares, in two words. */
-const whatOf = (s: Sharer) => (s.screen && s.camera ? "Screen with camera" : s.screen ? "Screen" : "Camera");
+// "· voice" while their voice is on (spec 0123).
+const whatOf = (s: Sharer) => (s.screen && s.camera ? "Screen with camera" : s.screen ? "Screen" : "Camera") + (!s.isMe && s.hasVoice ? " · voice" : "");
 
 /** The most avatars in a row: the count covers the rest. */
 const MAX_AVATARS = 4;

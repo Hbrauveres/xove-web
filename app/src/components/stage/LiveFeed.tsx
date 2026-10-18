@@ -1,6 +1,7 @@
 import type { Friend, LiveFeed as Feed, Sharer } from "../../types";
 import { NowWatching, STREAM_PLACES } from "./NowWatching";
 import { ScreenVideo } from "./ScreenVideo";
+import { VoicePill } from "./VoicePill";
 import styles from "./LiveFeed.module.css";
 
 type Props = {
@@ -52,6 +53,11 @@ export function LiveFeed({ others, liveCount, watchersOf, onPick }: Props) {
                   />
                 ) : (
                   <span className={styles.loading}>Loading…</span>
+                )}
+                {!s.isMe && s.hasVoice && (
+                  <span className={styles.voice}>
+                    <VoicePill name={s.person.name} talking={s.speaking} size={26} />
+                  </span>
                 )}
               </button>
               {/* The line under it opens the stream too; the keyboard uses the picture's button. */}

@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { loadCameraPrefs, loadSharePrefs, saveCameraPrefs, saveSharePrefs, type SharePrefs } from "../media/preferences";
+import { loadCameraPrefs, loadSharePrefs, loadVoicePrefs, saveCameraPrefs, saveSharePrefs, saveVoicePrefs, type SharePrefs, type VoicePrefs } from "../media/preferences";
 import type { ActivityEvent, CameraDevice, ConnectionState, Friend, LiveFeed, MediaTrack, Sharer, StreamKind } from "../types";
 import type { LiveStream, RoomSeatsState } from "../api/types";
-import { useLiveKitRoom, type CameraProblem, type Capture, type ScreenSurface } from "./useLiveKitRoom";
+import { useLiveKitRoom, type CameraProblem, type Capture, type MicDevice, type ScreenSurface } from "./useLiveKitRoom";
+import { showToast } from "../components/ui/toast";
 import { useStreams } from "./useStreams";
 import { api as client } from "../api/client";
 
@@ -66,6 +67,15 @@ export type RoomSession = {
   connection: ConnectionState;
   error: string | null;
   busy: boolean;
+  /** My voice (spec 0123): sent only while it's on, alongside my screen or camera. */
+  voice: boolean;
+  toggleVoice: () => void;
+  /** How my voice is captured (remembered); a change applies at once while it's on. */
+  voicePrefs: VoicePrefs;
+  setVoicePrefs: (prefs: VoicePrefs) => void;
+  mics: MicDevice[];
+  /** My mic's own track, for its live level in the settings. */
+  localVoice: MediaTrack | undefined;
 };
 
 export const identityOf = (userId: number) => `user-${userId}`;
@@ -143,6 +153,10 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
         sound: media?.sound,
         hasSound: media?.hasSound,
         setSoundOn: media?.setSoundOn,
+        voice: media?.voice,
+        hasVoice: media?.hasVoice,
+        speaking: media?.speaking,
+        setVoiceOn: media?.setVoiceOn,
       };
     });
   }, [live, lk.remote, lk.local, me]);
@@ -436,6 +450,28 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
     [lk, api],
   );
 
+  // ---- my voice (spec 0123): only by my choice, only while I share a screen or a camera ----
+  const [voicePrefs, setVoicePrefsState] = useState<VoicePrefs>(loadVoicePrefs);
+  const toggleVoice = useCallback(async () => {
+    if (lk.voice) return lk.stopVoice();
+    const problem = await lk.startVoice(voicePrefs);
+    if (problem === "blocked") showToast("Your browser blocked the microphone. Allow it in the site's settings, then try again.");
+    if (problem === "missing") showToast("No microphone found.");
+  }, [lk, voicePrefs]);
+  const setVoicePrefs = useCallback(
+    (next: VoicePrefs) => {
+      setVoicePrefsState(next);
+      saveVoicePrefs(next);
+      if (lk.voice) void lk.applyVoice(next);
+    },
+    [lk],
+  );
+  // Stopping both my screen and my camera turns my voice off: a voice never travels alone.
+  const sending = lk.publishing.screen || lk.publishing.camera;
+  useEffect(() => {
+    if (!sending && lk.voice) void lk.stopVoice();
+  }, [sending, lk]);
+
   // The API lost a stream I'm still sending (it restarted, and every deploy restarts
   // it): register it again. If the places filled up meanwhile, stop sending it; any
   // other failure (the API still starting) is tried again on the next poll.
@@ -497,5 +533,11 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
     connection: lk.connection,
     error: api.error ?? lk.error,
     busy: api.busy || isStarting || isChanging,
+    voice: lk.voice,
+    toggleVoice: () => void toggleVoice(),
+    voicePrefs,
+    setVoicePrefs,
+    mics: lk.mics,
+    localVoice: lk.localVoice,
   };
 }

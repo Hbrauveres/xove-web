@@ -19,6 +19,10 @@ const KEYS = {
   ambilightBrightness: "xove.ambilight.brightness",
   watchVolume: "xove.watch.volume",
   watchMuted: "xove.watch.muted",
+  voiceVolume: "xove.voice.volume",
+  voiceMuted: "xove.voice.muted",
+  micDevice: "xove.mic.device",
+  micProcessing: "xove.mic.processing",
 } as const;
 
 const qualities = SHARE_QUALITIES.map((q) => q.id as string);
@@ -107,4 +111,49 @@ export function loadWatchPrefs(): WatchPrefs {
 export function saveWatchPrefs(prefs: WatchPrefs) {
   write(KEYS.watchVolume, String(prefs.volume));
   write(KEYS.watchMuted, String(prefs.muted));
+}
+
+/** How I hear the voice of the person I watch (spec 0123): its own volume and mute. */
+export function loadVoiceHearing(): WatchPrefs {
+  const volume = Number(read(KEYS.voiceVolume) ?? 1);
+  return { volume: Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : 1, muted: read(KEYS.voiceMuted) === "true" };
+}
+
+export function saveVoiceHearing(prefs: WatchPrefs) {
+  write(KEYS.voiceVolume, String(prefs.volume));
+  write(KEYS.voiceMuted, String(prefs.muted));
+}
+
+/** How my voice is captured (spec 0123): the mic picked and the browser's processing. */
+export type VoicePrefs = {
+  micId: string | null;
+  echoCancellation: boolean;
+  noiseSuppression: boolean;
+  autoGainControl: boolean;
+  voiceIsolation: boolean;
+};
+
+export const DEFAULT_VOICE: VoicePrefs = { micId: null, echoCancellation: true, noiseSuppression: true, autoGainControl: true, voiceIsolation: false };
+
+export function loadVoicePrefs(): VoicePrefs {
+  let processing: Partial<VoicePrefs> = {};
+  try {
+    processing = JSON.parse(read(KEYS.micProcessing) ?? "{}") as Partial<VoicePrefs>;
+  } catch {
+    processing = {};
+  }
+  const flag = (k: keyof Omit<VoicePrefs, "micId">) => (typeof processing[k] === "boolean" ? (processing[k] as boolean) : DEFAULT_VOICE[k]);
+  return {
+    micId: read(KEYS.micDevice),
+    echoCancellation: flag("echoCancellation"),
+    noiseSuppression: flag("noiseSuppression"),
+    autoGainControl: flag("autoGainControl"),
+    voiceIsolation: flag("voiceIsolation"),
+  };
+}
+
+export function saveVoicePrefs(prefs: VoicePrefs) {
+  if (prefs.micId) write(KEYS.micDevice, prefs.micId);
+  const { micId: _, ...processing } = prefs;
+  write(KEYS.micProcessing, JSON.stringify(processing));
 }

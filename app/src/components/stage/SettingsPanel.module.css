@@ -486,3 +486,38 @@
   display: grid;
   border-radius: 10px;
 }
+
+/* The Voice tab (spec 0123 prototype): the mic's live level, and the processing switches. */
+.level {
+  display: block;
+  height: 3px;
+  margin-top: 8px;
+  border-radius: 999px;
+  background: rgba(235, 235, 236, 0.22);
+  overflow: hidden;
+}
+
+.level i {
+  display: block;
+  height: 100%;
+  background: var(--ok);
+  transition: width 90ms linear;
+}
+
+.voiceRow {
+  padding-left: 5px;
+}
+
+.voiceRow > span {
+  display: grid;
+  gap: 2px;
+}
+
+.voiceRow small {
+  margin: 0;
+}
+
+.voiceRow button[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

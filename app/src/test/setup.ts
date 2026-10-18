@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom/vitest";
 import { cleanup, configure } from "@testing-library/react";
 import { afterEach, vi } from "vitest";
-import { fakeCameras, rooms } from "./fakeLiveKit";
+import { fakeCameras, fakeMics, rooms } from "./fakeLiveKit";
 
 // findBy and waitFor wait up to 3 s, not 1 s: CI's runners are slower than a laptop,
 // and a room test waiting on a few polls ran out there.
@@ -24,7 +24,10 @@ Object.defineProperty(navigator, "mediaDevices", {
   configurable: true,
   value: {
     getDisplayMedia: (request?: unknown) => rooms[rooms.length - 1].localParticipant.getDisplayMedia(request),
-    enumerateDevices: async () => fakeCameras.map((c) => ({ ...c, kind: "videoinput", groupId: "" })),
+    enumerateDevices: async () => [
+      ...fakeCameras.map((c) => ({ ...c, kind: "videoinput", groupId: "" })),
+      ...fakeMics.map((m) => ({ ...m, kind: "audioinput", groupId: "" })),
+    ],
     addEventListener: () => {},
     removeEventListener: () => {},
   },

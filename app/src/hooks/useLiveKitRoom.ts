@@ -13,7 +13,7 @@ import {
 } from "livekit-client";
 import { ApiError, api } from "../api/client";
 import type { SharingConnection } from "../api/types";
-import { loadCameraDevice, saveCameraDevice, type SharePrefs } from "../media/preferences";
+import { loadCameraDevice, saveCameraDevice, type SharePrefs, type VoicePrefs } from "../media/preferences";
 import {
   SHARE_QUALITIES,
   cameraCaptureOptions,
@@ -105,7 +105,20 @@ export type RemoteMedia = {
   hasSound: boolean;
   /** Downloads the sound of their screen, or stops downloading it. */
   setSoundOn: (on: boolean) => void;
+  /** Their voice (spec 0123), while it's downloaded. */
+  voice?: MediaTrack;
+  /** Their voice is on and not muted by them. */
+  hasVoice: boolean;
+  /** Speaking right now (LiveKit's own detection). */
+  speaking: boolean;
+  /** Downloads their voice, or stops downloading it. */
+  setVoiceOn: (on: boolean) => void;
 };
+
+/** A microphone this browser has (spec 0123). */
+export type MicDevice = { deviceId: string; label: string };
+/** Why my voice couldn't start: the browser refused the mic, or there's none. */
+export type VoiceProblem = "blocked" | "missing" | null;
 
 export type LiveKitRoom = {
   connection: ConnectionState;
@@ -154,7 +167,29 @@ export type LiveKitRoom = {
   cameraId: string | null;
   /** Switches the camera being sent to another one, without stopping it; remembered for next time. */
   pickCamera: (deviceId: string, prefs: SharePrefs) => Promise<void>;
+  /** My voice is being sent (spec 0123). */
+  voice: boolean;
+  /** My mic's own track, for its level in the settings. */
+  localVoice?: MediaTrack;
+  /** Starts sending my voice with these choices; says why when it can't. */
+  startVoice: (prefs: VoicePrefs) => Promise<VoiceProblem>;
+  stopVoice: () => Promise<void>;
+  /** Applies another mic or other processing to my voice, live. */
+  applyVoice: (prefs: VoicePrefs) => Promise<void>;
+  mics: MicDevice[];
 };
+
+/** How my voice is captured: the mic picked and the browser's processing (spec 0123). */
+function micCaptureOptions(prefs: VoicePrefs) {
+  return {
+    ...(prefs.micId ? { deviceId: { ideal: prefs.micId } } : {}),
+    echoCancellation: prefs.echoCancellation,
+    noiseSuppression: prefs.noiseSuppression,
+    autoGainControl: prefs.autoGainControl,
+    // Only Chrome knows it yet; the others ignore it.
+    voiceIsolation: prefs.voiceIsolation,
+  };
+}
 
 const CONNECTION: Record<LkState, ConnectionState> = {
   [LkState.Connecting]: "connecting",
@@ -214,6 +249,8 @@ export function useLiveKitRoom(): LiveKitRoom {
   const [cameraProblem, setCameraProblem] = useState<CameraProblem>(null);
   const [presence, setPresence] = useState<ActivityEvent[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [voice, setVoice] = useState(false);
+  const [localVoice, setLocalVoice] = useState<MediaTrack | undefined>(undefined);
 
   // Read the whole picture from the Room after any change, instead of
   // patching state event by event. Simpler, and it can't drift.
@@ -229,7 +266,8 @@ export function useLiveKitRoom(): LiveKitRoom {
       const camera = remoteVideo(p, "camera");
       const soundPublication = p.getTrackPublication(Track.Source.ScreenShareAudio) as RemoteTrackPublication | undefined;
       const sound = soundPublication?.track;
-      if (screen || camera || soundPublication) {
+      const voicePublication = p.getTrackPublication(Track.Source.Microphone) as RemoteTrackPublication | undefined;
+      if (screen || camera || soundPublication || voicePublication) {
         next[p.identity] = {
           screen,
           camera,
@@ -237,6 +275,12 @@ export function useLiveKitRoom(): LiveKitRoom {
           hasSound: Boolean(soundPublication),
           setSoundOn: (on) => {
             if (soundPublication && soundPublication.isSubscribed !== on) soundPublication.setSubscribed(on);
+          },
+          voice: voicePublication?.track,
+          hasVoice: Boolean(voicePublication) && !voicePublication?.isMuted,
+          speaking: Boolean(voicePublication) && !voicePublication?.isMuted && p.isSpeaking,
+          setVoiceOn: (on) => {
+            if (voicePublication && voicePublication.isSubscribed !== on) voicePublication.setSubscribed(on);
           },
         };
       }
@@ -248,6 +292,9 @@ export function useLiveKitRoom(): LiveKitRoom {
     setPublishing({ screen: me.isScreenShareEnabled, camera: Boolean(camera) });
     const screen = me.getTrackPublication(Track.Source.ScreenShare)?.track;
     setLocal({ screen, camera });
+    const mic = me.getTrackPublication(Track.Source.Microphone)?.track;
+    setVoice(Boolean(mic));
+    setLocalVoice(mic);
     const surface = (screen?.mediaStreamTrack.getSettings?.() as { displaySurface?: string } | undefined)?.displaySurface;
     setScreenSurface(surface === "monitor" || surface === "window" || surface === "browser" ? surface : undefined);
   }, []);
@@ -271,6 +318,10 @@ export function useLiveKitRoom(): LiveKitRoom {
       .on(RoomEvent.TrackSubscribed, sync)
       .on(RoomEvent.TrackUnsubscribed, sync)
       .on(RoomEvent.LocalTrackPublished, sync)
+      // Who's speaking, and voices muted by their person (spec 0123).
+      .on(RoomEvent.ActiveSpeakersChanged, sync)
+      .on(RoomEvent.TrackMuted, sync)
+      .on(RoomEvent.TrackUnmuted, sync)
       // Also fires when the person clicks the browser's own "Stop sharing" bar.
       .on(RoomEvent.LocalTrackUnpublished, sync);
 
@@ -499,6 +550,7 @@ export function useLiveKitRoom(): LiveKitRoom {
 
   // The cameras, once the browser shows their names (after the camera is allowed).
   const [cameras, setCameras] = useState<CameraDevice[]>([]);
+  const [mics, setMics] = useState<MicDevice[]>([]);
   const [cameraId, setCameraId] = useState<string | null>(loadCameraDevice);
   const cameraLive = publishing.camera;
   useEffect(() => {
@@ -512,6 +564,8 @@ export function useLiveKitRoom(): LiveKitRoom {
           if (!current) return;
           const found = all.filter((d) => d.kind === "videoinput" && d.deviceId);
           setCameras(found.map((d, i) => ({ deviceId: d.deviceId, label: d.label || `Camera ${i + 1}` })));
+          const mics = all.filter((d) => d.kind === "audioinput" && d.deviceId && d.deviceId !== "default");
+          setMics(mics.map((d, i) => ({ deviceId: d.deviceId, label: d.label || `Microphone ${i + 1}` })));
         })
         .catch(() => {
           /* No list: the menu just shows no cameras. */
@@ -522,7 +576,38 @@ export function useLiveKitRoom(): LiveKitRoom {
       current = false;
       devices.removeEventListener?.("devicechange", list);
     };
-  }, [cameraLive]);
+  }, [cameraLive, voice]);
+
+  // ---- my voice (spec 0123): asked for only when I turn it on, sent alongside my stream ----
+  const startVoice = useCallback(
+    async (prefs: VoicePrefs): Promise<VoiceProblem> => {
+      const room = roomRef.current;
+      if (!room) return null;
+      try {
+        const [track] = await room.localParticipant.createTracks({ audio: micCaptureOptions(prefs) });
+        if (!track) return "missing";
+        await room.localParticipant.publishTrack(track, { source: Track.Source.Microphone });
+        sync();
+        return null;
+      } catch (e) {
+        const name = e instanceof DOMException ? e.name : "";
+        return name === "NotFoundError" || name === "OverconstrainedError" ? "missing" : "blocked";
+      }
+    },
+    [sync],
+  );
+  const stopVoice = useCallback(async () => {
+    const me = roomRef.current?.localParticipant;
+    const track = me?.getTrackPublication(Track.Source.Microphone)?.track;
+    if (me && track) await me.unpublishTrack(track as LocalAudioTrack, true);
+    sync();
+  }, [sync]);
+  const applyVoice = useCallback(async (prefs: VoicePrefs) => {
+    const track = roomRef.current?.localParticipant.getTrackPublication(Track.Source.Microphone)?.track as
+      | (LocalAudioTrack & { restartTrack?: (o: unknown) => Promise<void> })
+      | undefined;
+    await track?.restartTrack?.(micCaptureOptions(prefs));
+  }, []);
 
   // The camera being sent is the one in use, whatever was saved.
   const sentCamera = (local.camera as LocalVideoTrack | undefined)?.mediaStreamTrack?.getSettings?.().deviceId;
@@ -595,5 +680,11 @@ export function useLiveKitRoom(): LiveKitRoom {
     cameras,
     cameraId: sentCamera || cameraId,
     pickCamera,
+    voice,
+    localVoice,
+    startVoice,
+    stopVoice,
+    applyVoice,
+    mics,
   };
 }
