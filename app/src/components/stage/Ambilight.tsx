@@ -1,14 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { WIDESCREEN } from "../../hooks/useVideoShape";
-import {
-  CELL_PX,
-  easeFor,
-  edgeDraws,
-  fadeMask,
-  glowLayout,
-  gridFor,
-  type EdgeDraw,
-} from "../../media/ambilight";
+import { CELL_PX, easeFor, edgeDraws, fadeMask, glowLayout, gridFor, type EdgeDraw } from "../../media/ambilight";
 import type { AmbilightPrefs } from "../../media/preferences";
 import styles from "./Ambilight.module.css";
 
@@ -35,8 +27,7 @@ type Props = {
   shape?: number;
 };
 
-const reducedMotion = () =>
-  window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+const reducedMotion = () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
 /**
  * Ambilight (specs 0104 and 0118): the picture's own edges glow round the stage. Drawn by the
@@ -46,12 +37,7 @@ const reducedMotion = () =>
  * the result, so a 4K monitor costs the same as a small one. It updates with the screen's
  * refresh, and stops while the tab is hidden, the video is paused or missing, or it's off.
  */
-export function Ambilight({
-  video,
-  still = null,
-  prefs,
-  shape = WIDESCREEN,
-}: Props) {
+export function Ambilight({ video, still = null, prefs, shape = WIDESCREEN }: Props) {
   const { cols, rows } = gridFor(shape);
   const layout = useMemo(() => glowLayout(cols, rows), [cols, rows]);
   // The fade mask's alpha, computed once per grid.
@@ -87,21 +73,10 @@ export function Ambilight({
     const maskCtx = maskCanvas.getContext("2d");
     if (!edge || !maskCtx) return;
     const img = maskCtx.createImageData(width, height);
-    for (let i = 0; i < maskAlpha.length; i++)
-      img.data[i * 4 + 3] = maskAlpha[i];
+    for (let i = 0; i < maskAlpha.length; i++) img.data[i * 4 + 3] = maskAlpha[i];
     maskCtx.putImageData(img, 0, 0);
     for (const { src, dst } of edgeDraws(layout, still.width, still.height)) {
-      edge.drawImage(
-        still,
-        src[0],
-        src[1],
-        src[2],
-        src[3],
-        dst[0],
-        dst[1],
-        dst[2],
-        dst[3],
-      );
+      edge.drawImage(still, src[0], src[1], src[2], src[3], dst[0], dst[1], dst[2], dst[3]);
     }
     out.globalCompositeOperation = "copy";
     out.filter = `blur(${CELL_PX * 3}px)`;
@@ -127,8 +102,7 @@ export function Ambilight({
     const maskCtx = maskCanvas.getContext("2d");
     if (!edge || !maskCtx) return;
     const img = maskCtx.createImageData(width, height);
-    for (let i = 0; i < maskAlpha.length; i++)
-      img.data[i * 4 + 3] = maskAlpha[i];
+    for (let i = 0; i < maskAlpha.length; i++) img.data[i * 4 + 3] = maskAlpha[i];
     maskCtx.putImageData(img, 0, 0);
 
     const slow = reducedMotion();
@@ -139,11 +113,7 @@ export function Ambilight({
     let drawsFor = "";
     const draw = (now: number) => {
       if (video.paused || video.readyState < 2 || !video.videoWidth) return;
-      edge.globalAlpha = !primed
-        ? 1
-        : slow
-          ? SLOW_EASE
-          : easeFor(last ? now - last : UPDATE_MS, EASE_MS);
+      edge.globalAlpha = !primed ? 1 : slow ? SLOW_EASE : easeFor(last ? now - last : UPDATE_MS, EASE_MS);
       primed = true;
       last = now;
       const size = `${video.videoWidth}x${video.videoHeight}`;
@@ -152,17 +122,7 @@ export function Ambilight({
         drawsFor = size;
       }
       for (const { src, dst } of draws) {
-        edge.drawImage(
-          video,
-          src[0],
-          src[1],
-          src[2],
-          src[3],
-          dst[0],
-          dst[1],
-          dst[2],
-          dst[3],
-        );
+        edge.drawImage(video, src[0], src[1], src[2], src[3], dst[0], dst[1], dst[2], dst[3]);
       }
       out.globalCompositeOperation = "copy";
       out.filter = `blur(${CELL_PX * 3}px)`;
@@ -186,8 +146,7 @@ export function Ambilight({
       if (now >= due - ON_TIME_MS) {
         draw(now);
         // Keep the cadence; after a long gap (a hidden tab), start again from now.
-        due =
-          due + UPDATE_MS < now - UPDATE_MS ? now + UPDATE_MS : due + UPDATE_MS;
+        due = due + UPDATE_MS < now - UPDATE_MS ? now + UPDATE_MS : due + UPDATE_MS;
       }
       raf = requestAnimationFrame(frame);
     };
@@ -197,10 +156,7 @@ export function Ambilight({
       due = 0;
       if (slow) {
         draw(performance.now());
-        timer = window.setInterval(
-          () => draw(performance.now()),
-          SLOW_SAMPLE_MS,
-        );
+        timer = window.setInterval(() => draw(performance.now()), SLOW_SAMPLE_MS);
       } else {
         raf = requestAnimationFrame(frame);
       }
@@ -223,13 +179,7 @@ export function Ambilight({
       className={styles.light}
       width={layout.width}
       height={layout.height}
-      // A still picture gets a soft blur at the screen's own resolution too (spec 0123 prototype):
-      // the small canvas, stretched, otherwise shows its cells. Drawn once, so it costs nothing after.
-      style={{
-        ...layout.placement,
-        opacity: lit ? prefs.brightness : 0,
-        filter: stillShown ? "blur(56px)" : undefined,
-      }}
+      style={{ ...layout.placement, opacity: lit ? prefs.brightness : 0 }}
       data-on={lit || undefined}
       aria-hidden="true"
     />

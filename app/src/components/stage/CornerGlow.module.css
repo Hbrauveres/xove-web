@@ -1,0 +1,17 @@
+/* Behind the stage and past it by the lights' radius, so each corner sits at a light's centre. */
+.glow {
+  --r: clamp(180px, 24vmin, 340px);
+  position: absolute;
+  inset: calc(-1 * var(--r));
+  z-index: 0;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  filter: blur(18px);
+  transition: opacity 0.5s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow {
+    transition: none;
+  }
+}
