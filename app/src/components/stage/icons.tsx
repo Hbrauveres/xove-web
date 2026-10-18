@@ -120,16 +120,6 @@ export function SoundIcon() {
   );
 }
 
-/** Hear yourself, in the Voice tab's mic level (spec 0123): headphones. */
-export function HeadphonesIcon() {
-  return (
-    <Icon name="headphones">
-      <path d="M4 13v-2.5a6 6 0 0112 0V13" />
-      <path d="M4 12.5h2.5v4H5a1 1 0 01-1-1zM16 12.5h-2.5v4H15a1 1 0 001-1z" />
-    </Icon>
-  );
-}
-
 /** In the mixer, a voice playing: the mic (spec 0108). */
 export function MicIcon() {
   return (

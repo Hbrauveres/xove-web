@@ -1,6 +1,5 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import type { MediaTrack } from "../../types";
-import { HeadphonesIcon } from "./icons";
 import { VoiceAudio } from "./VoiceAudio";
 import styles from "./MicTest.module.css";
 
@@ -9,8 +8,8 @@ const HEAR_S = 5;
 
 /**
  * The Voice tab's mic level (spec 0123 prototype), one quiet row: the live level on the app's
- * slim track, its knob the sensitivity (sound under it isn't sent: green over it, faint under),
- * and at the end a small headphones button that plays your mic back to you for a few seconds.
+ * slim track, an upright line on it the sensitivity (sound under it isn't sent: green over it,
+ * faint under), and at the end Test, which plays your mic back to you for a few seconds.
  */
 export function MicTest({
   level,
@@ -49,7 +48,7 @@ export function MicTest({
           step={0.01}
           value={sensitivity}
           aria-label="Mic sensitivity"
-          title="Sensitivity: sound under the knob isn't sent"
+          title="Sensitivity: sound left of the line isn't sent"
           onChange={(e) => onSensitivity(Number(e.target.value))}
         />
       </div>
@@ -59,7 +58,7 @@ export function MicTest({
         data-on={hearing || undefined}
         disabled={!track}
         aria-pressed={hearing}
-        aria-label={hearing ? "Stop hearing yourself" : "Hear yourself"}
+        aria-label={hearing ? "Stop hearing yourself" : "Test: hear yourself"}
         title={
           track
             ? "Hear yourself for 5 s (use headphones)"
@@ -67,11 +66,7 @@ export function MicTest({
         }
         onClick={() => setLeft(hearing ? 0 : HEAR_S)}
       >
-        {hearing ? (
-          <span className={styles.count}>{left}</span>
-        ) : (
-          <HeadphonesIcon />
-        )}
+        {hearing ? <span className={styles.count}>Stop · {left}</span> : "Test"}
       </button>
       {hearing && track && (
         <VoiceAudio track={track} volume={1} muted={false} />

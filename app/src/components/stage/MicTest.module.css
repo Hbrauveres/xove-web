@@ -46,24 +46,25 @@
   background: transparent;
 }
 
+/* The sensitivity: a slim upright line across the track, the common mark for a threshold. */
 .meter input::-webkit-slider-thumb {
-  width: 12px;
-  height: 12px;
-  margin-top: -4.5px;
+  width: 3px;
+  height: 14px;
+  margin-top: -5.5px;
   border: 0;
-  border-radius: 50%;
+  border-radius: 2px;
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35);
   appearance: none;
   -webkit-appearance: none;
-  transition: width 0.12s, height 0.12s, margin-top 0.12s;
+  cursor: ew-resize;
+  transition: height 0.12s, margin-top 0.12s;
 }
 
 .meter input:hover::-webkit-slider-thumb,
 .meter input:focus-visible::-webkit-slider-thumb {
-  width: 14px;
-  height: 14px;
-  margin-top: -5.5px;
+  height: 16px;
+  margin-top: -6.5px;
 }
 
 .meter input::-moz-range-track {
@@ -72,12 +73,13 @@
 }
 
 .meter input::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
+  width: 3px;
+  height: 14px;
   border: 0;
-  border-radius: 50%;
+  border-radius: 2px;
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35);
+  cursor: ew-resize;
 }
 
 .meter input:focus-visible {
@@ -86,24 +88,21 @@
   border-radius: 4px;
 }
 
-/* Hear yourself: a small round button, white while it plays, counting down. */
+/* Test: hear yourself, a small pill in the settings' own style, counting down while it plays. */
 .hear {
-  display: grid;
   flex: none;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  padding: 0;
+  min-width: 64px;
+  height: 28px;
+  padding: 0 12px;
   border: 0;
-  border-radius: 50%;
+  border-radius: 999px;
   background: var(--sel-bg);
+  box-shadow: var(--sel-shadow);
   color: var(--text);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
-}
-
-.hear svg {
-  width: 16px;
-  height: 16px;
 }
 
 .hear:hover:not(:disabled) {
@@ -121,7 +120,7 @@
 }
 
 .count {
-  font: 600 12px/1 var(--font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
 @media (prefers-reduced-motion: reduce) {
