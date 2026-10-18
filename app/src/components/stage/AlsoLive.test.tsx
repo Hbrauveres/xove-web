@@ -34,7 +34,7 @@ const DIEGO = sharer("user-9", "Diego", ["camera"]);
 function Harness({
   others,
   free = 3,
-  canSetVolume = true,
+  canSetVolume: _canSetVolume = true,
   onPick = vi.fn(),
 }: {
   others: Sharer[];
@@ -49,9 +49,9 @@ function Harness({
       liveCount={6 - free}
       free={free}
       onPick={onPick}
-      sound={sound}
-      onSoundChange={(id, s) => setSound((prev) => ({ ...prev, [id]: s }))}
-      canSetVolume={canSetVolume}
+      // Prototype (spec 0123, round 2): previews mute per person; these tests are rewritten by /implement.
+      hearOf={(id) => ({ sound: sound[id] ?? { volume: 1, muted: false }, voice: { volume: 1, muted: false } })}
+      onHear={(id, h) => setSound((prev) => ({ ...prev, [id]: h.sound }))}
     />
   );
 }

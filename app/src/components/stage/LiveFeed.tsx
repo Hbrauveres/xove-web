@@ -1,7 +1,7 @@
 import type { Friend, LiveFeed as Feed, Sharer } from "../../types";
 import { NowWatching, STREAM_PLACES } from "./NowWatching";
 import { ScreenVideo } from "./ScreenVideo";
-import { VoicePill } from "./VoicePill";
+import { HearToggles, type Hearing } from "./HearToggles";
 import styles from "./LiveFeed.module.css";
 
 type Props = {
@@ -12,6 +12,9 @@ type Props = {
   /** Who has this person's stream on their stage (spec 0107). */
   watchersOf: (personId: string) => Friend[];
   onPick: (personId: string) => void;
+  /** What I hear from each person, and muting it from their card (spec 0123). */
+  hearOf?: (personId: string) => Hearing;
+  onHear?: (personId: string, hearing: Hearing) => void;
 };
 
 const kindOf = (feed: Feed) => (feed.kind === "camera" ? "camera" : "screen");
@@ -21,7 +24,7 @@ const kindOf = (feed: Feed) => (feed.kind === "camera" ? "camera" : "screen");
  * is a full-width picture, then who, LIVE, for how long and who's watching. Silent: only the
  * stage plays sound. A tap puts it on the stage.
  */
-export function LiveFeed({ others, liveCount, watchersOf, onPick }: Props) {
+export function LiveFeed({ others, liveCount, watchersOf, onPick, hearOf, onHear }: Props) {
   return (
     <section className={styles.feed} aria-labelledby="live-now">
       <h2 id="live-now" className={styles.head}>
@@ -54,9 +57,9 @@ export function LiveFeed({ others, liveCount, watchersOf, onPick }: Props) {
                 ) : (
                   <span className={styles.loading}>Loading…</span>
                 )}
-                {!s.isMe && s.hasVoice && (
+                {!s.isMe && hearOf && onHear && (
                   <span className={styles.voice}>
-                    <VoicePill name={s.person.name} talking={s.speaking} size={26} />
+                    <HearToggles sharer={s} hearing={hearOf(id)} onChange={(h) => onHear(id, h)} />
                   </span>
                 )}
               </button>

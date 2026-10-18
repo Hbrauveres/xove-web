@@ -12,6 +12,7 @@ import { StageOverlay } from "./StageOverlay";
 import { PlayerButtons, type StreamControls } from "./PlayerButtons";
 import { NO_SOUND_HERE } from "./VolumeButton";
 import { VoiceAudio } from "./VoiceAudio";
+import type { Hearing } from "./HearToggles";
 import { ViewerBar, type Sound } from "./ViewerBar";
 import { MicIcon, MicOffIcon } from "./icons";
 import round from "./RoundButton.module.css";
@@ -23,7 +24,6 @@ import { NowWatching, STREAM_PLACES } from "./NowWatching";
 import { LiveFeed as LiveNowFeed } from "./LiveFeed";
 import { HereCards } from "./HereCards";
 import { Toast } from "../ui/Toast";
-import { MUTED, type PreviewSound } from "./previewSound";
 import { useVideoShape } from "../../hooks/useVideoShape";
 import { useStageSwipe } from "../../hooks/useStageSwipe";
 import { stepOnStage } from "../../media/stagePick";
@@ -350,30 +350,29 @@ export function Stage({
   const playing = Boolean(main && (big?.isMe ? main.local : main.remote));
   useEffect(() => () => window.clearTimeout(idleTimer.current), []);
 
-  // Only the big person's sound plays, plus any thumbnail this viewer unmuted. The
-  // others aren't downloaded at all.
-  const [thumbnailSound, setThumbnailSound] = useState<Record<string, PreviewSound>>({});
   // The big video, for the ambilight to read.
   const [bigVideoEl, setBigVideoEl] = useState<HTMLVideoElement | null>(null);
   // The stage hugs the picture: no bars (spec 0107). 16:9 while empty or loading.
   const shape = useVideoShape(bigVideoEl);
+  // What I hear from each person (spec 0123): their sound and their voice, each with its own mute
+  // and volume, for the whole visit; a new person starts at my last volumes, unmuted.
+  const [hearing, setHearing] = useState<Record<string, Hearing>>({});
+  const hearOf = (id: string): Hearing => hearing[id] ?? { sound: { volume: watch.volume, muted: false }, voice: { volume: voiceSound.volume, muted: false } };
+  const setHear = (id: string, next: Hearing) => {
+    setHearing((prev) => ({ ...prev, [id]: next }));
+    changeWatch({ volume: next.sound.volume, muted: false });
+    setVoiceSound({ volume: next.voice.volume, muted: false });
+  };
+  // Only the person I watch is heard: theirs is the only sound and voice downloaded (previews are silent).
   useEffect(() => {
     for (const s of sharers) {
-      if (s.isMe || !s.setSoundOn) continue;
-      // The phone's feed is silent (spec 0158): a preview unmuted on desktop isn't downloaded there.
-      const preview = !phone && !sideways && (thumbnailSound[s.person.id] ?? MUTED).muted === false;
-      s.setSoundOn(s.person.id === bigId || preview);
-      // Their voice comes down with their sound: the person I watch, or a preview I turned on (spec 0123).
-      s.setVoiceOn?.(s.person.id === bigId || preview);
+      if (s.isMe) continue;
+      s.setSoundOn?.(s.person.id === bigId);
+      s.setVoiceOn?.(s.person.id === bigId);
     }
-  }, [sharers, bigId, thumbnailSound, phone, sideways]);
-  // The voices I hear: the person I watch at the voice's own volume, a preview I turned on at its own.
-  const voices = sharers.flatMap((s) => {
-    if (s.isMe || !s.voice || !s.hasVoice) return [];
-    if (s.person.id === bigId) return [{ id: s.person.id, track: s.voice, volume: voiceSound.volume, muted: voiceSound.muted }];
-    const preview = thumbnailSound[s.person.id] ?? MUTED;
-    return !phone && !sideways && !preview.muted ? [{ id: s.person.id, track: s.voice, volume: preview.volume, muted: false }] : [];
-  });
+  }, [sharers, bigId]);
+  const bigHearing = big && !big.isMe ? hearOf(big.person.id) : null;
+  const voices = big && !big.isMe && big.voice && big.hasVoice && bigHearing ? [{ id: big.person.id, track: big.voice, ...bigHearing.voice }] : [];
 
   const changeWatch = (next: WatchPrefs) => {
     setWatch(next);
@@ -509,8 +508,8 @@ export function Stage({
           video={main.remote.video}
           sound={big.sound}
           label={`${big.person.name}'s ${what(main)}`}
-          volume={watch.volume}
-          muted={watch.muted}
+          volume={bigHearing?.sound.volume ?? watch.volume}
+          muted={bigHearing?.sound.muted ?? watch.muted}
           onVideo={setBigVideoEl}
         />
       </>
@@ -563,8 +562,8 @@ export function Stage({
         {big && !big.isMe ? (
           // Someone else's stream: what you hear at the left, you at the right (spec 0123, round 141).
           <ViewerBar
-            sound={{ ...watch, onChange: (s) => changeWatch({ ...watch, ...s }), unavailable: !big.screen ? NO_SCREEN_SOUND : big.hasSound ? undefined : NO_SOUND_HERE }}
-            voice={{ ...voiceSound, onChange: setVoiceSound, unavailable: big.hasVoice ? undefined : `${big.person.name}'s mic is off`, name: big.person.name, talking: big.speaking }}
+            sound={{ ...hearOf(big.person.id).sound, onChange: (s) => setHear(big.person.id, { ...hearOf(big.person.id), sound: s }), unavailable: !big.screen ? NO_SCREEN_SOUND : big.hasSound ? undefined : NO_SOUND_HERE }}
+            voice={{ ...hearOf(big.person.id).voice, onChange: (v) => setHear(big.person.id, { ...hearOf(big.person.id), voice: v }), unavailable: big.hasVoice ? undefined : `${big.person.name}'s mic is off`, name: big.person.name, talking: big.speaking }}
             live={meLive}
             micOn={micOn}
             onMic={toggleMic}
@@ -695,6 +694,8 @@ export function Stage({
                 liveCount={STREAM_PLACES - controls.free}
                 watchersOf={watchersOf}
                 onPick={(id) => pick(id)}
+                hearOf={hearOf}
+                onHear={setHear}
               />
             ) : (
               <HereCards people={people} meId={meId} arrivedAt={arrivedAt} />
@@ -710,9 +711,8 @@ export function Stage({
             liveCount={6 - controls.free}
             free={controls.free}
             onPick={(id) => pick(id)}
-            sound={thumbnailSound}
-            onSoundChange={(id, sound) => setThumbnailSound((prev) => ({ ...prev, [id]: sound }))}
-            canSetVolume={canSetVolume()}
+            hearOf={hearOf}
+            onHear={setHear}
           />
         </div>
       )}
