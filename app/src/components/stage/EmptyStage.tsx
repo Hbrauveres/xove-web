@@ -29,23 +29,18 @@ function useClock() {
 
 /**
  * Nobody is live (spec 0123): the stage as a camera waiting, like Xovê's mark. Thin viewfinder
- * corners (the top right red, as in the logo), a quiet readout in the corners (standby and the
- * time, how many are live, who's here), and in a small focus frame the two ways to start. Where
+ * corners (the top right red, as in the logo), a quiet readout (standby and the time), and in a
+ * small focus frame the two ways to start; who's here and the seats are said once, below. Where
  * the browser can't share a screen (phones), the camera comes first and the screen is greyed with
  * its reason. Nothing moves but the clock. Prototype (ADR-0070).
  */
 export function EmptyStage({
   canShareScreen = true,
-  here = [],
+  // Prototype: said once, in the row below; dropped by /implement.
+  here: _here = [],
   onStart,
 }: Props) {
   const now = useClock();
-  const names = here.map((p) => p.name);
-  const who = !names.length
-    ? "Nobody else is here yet"
-    : names.length === 1
-      ? `${names[0]} is here`
-      : `${names.slice(0, -1).join(", ")} and ${names.at(-1)} are here`;
   const screen = (
     <button
       type="button"
@@ -87,27 +82,8 @@ export function EmptyStage({
         <i className={styles.dot} aria-hidden="true" />
         Standby · {now}
       </span>
-      <span className={styles.readout} data-at="tr">
-        0 / 6 live
-      </span>
-      {here.length > 0 && (
-        <span className={styles.readout} data-at="bl">
-          <span className={styles.here} aria-hidden="true">
-            {here.slice(0, 3).map((p) => (
-              <span
-                key={p.id}
-                className={styles.av}
-                style={{ background: `hsl(${p.hue} 42% 36%)` }}
-              >
-                {p.name.slice(0, 1)}
-              </span>
-            ))}
-          </span>
-          <span className={styles.who}>{who}</span>
-        </span>
-      )}
       <div className={styles.focus}>
-        <h2 className={styles.title}>Nobody's live yet</h2>
+        <h2 className={styles.title}>Be the first to go live</h2>
         <p className={styles.copy}>
           {canShareScreen
             ? "Share your screen or turn on your camera, and the room sees it at once."

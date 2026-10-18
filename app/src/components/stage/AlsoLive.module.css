@@ -183,16 +183,22 @@
   text-align: center;
 }
 
-.free b {
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: var(--text-xs);
-  color: var(--text-muted);
+/* The seats (spec 0123 prototype): six dots, three over three, red for each stream live. */
+.free {
+  grid-template-columns: repeat(3, 10px);
+  gap: 9px 12px;
 }
 
-.free span {
-  font-size: 0.6875rem;
-  color: var(--text-faint);
+.free i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(235, 235, 236, 0.14);
+}
+
+.free i[data-on] {
+  background: var(--accent);
+  box-shadow: 0 0 6px rgba(239, 75, 75, 0.45);
 }
 
 @media (max-width: 760px) {

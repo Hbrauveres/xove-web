@@ -11,7 +11,6 @@ type Props = {
   /** Everyone sharing except the person on the stage, longest first. */
   others: Sharer[];
   /** Live streams of the 6, everyone's. */
-  // Prototype (spec 0123): no longer shown; dropped by /implement.
   liveCount: number;
   /** Places left of the 6. */
   free: number;
@@ -29,7 +28,7 @@ const kindOf = (feed: LiveFeed) => (feed.kind === "camera" ? "camera" : "screen"
  * Past their room the previews scroll; the box stays put, and goes when nothing is free. Each
  * preview keeps its own sound (spec 0060): muted by default, a speaker to unmute, a slider.
  */
-export function AlsoLive({ others, free, onPick, hearOf, onHear }: Props) {
+export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear }: Props) {
   return (
     <section className={styles.also} aria-label="Also live">
       <ul className={styles.strip} aria-label="Other streams">
@@ -76,10 +75,17 @@ export function AlsoLive({ others, free, onPick, hearOf, onHear }: Props) {
         })}
       </ul>
       {free > 0 && (
-        <p className={styles.free} data-free>
-          {/* Simply the seats left (spec 0123 prototype). */}
-          <b>{seatsOpen(free)}</b>
-          <span>for your stream</span>
+        // The six seats as dots, red for each stream live (spec 0123 prototype); gone when all are taken.
+        <p
+          className={styles.free}
+          data-free
+          role="img"
+          aria-label={`${liveCount} of 6 live, ${seatsOpen(free)}`}
+          title={`${liveCount} of 6 live · ${seatsOpen(free)}`}
+        >
+          {Array.from({ length: 6 }, (_, i) => (
+            <i key={i} data-on={i < liveCount || undefined} />
+          ))}
         </p>
       )}
     </section>
