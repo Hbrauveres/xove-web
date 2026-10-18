@@ -88,10 +88,6 @@ export function EmptyStage({
       </span>
       {/* The camera's display, still and quiet (spec 0123 prototype): real where it can be (what
           your stream starts at), the rest only drawn; nothing said elsewhere is said again. */}
-      <span className={styles.grid} aria-hidden="true" />
-      <span className={styles.readout} data-at="tc" aria-hidden="true">
-        00:00:00:00
-      </span>
       <span className={styles.readout} data-at="tr" title="What your stream starts at (Settings)">
         {startsAt}
       </span>
@@ -113,17 +109,17 @@ export function EmptyStage({
         <span>Auto</span>
       </span>
       <span className={styles.readout} data-at="bl" aria-hidden="true">
-        <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.2">
-          <rect x="1.5" y="1.5" width="13" height="13" rx="1.5" />
-          <path d="M6 1.5v13M10 1.5v13M1.5 6h13M1.5 10h13" />
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+          <rect x="1.5" y="10" width="2.5" height="4" rx="0.6" />
+          <rect x="5.5" y="7" width="2.5" height="7" rx="0.6" />
+          <rect x="9.5" y="4" width="2.5" height="10" rx="0.6" />
+          <rect x="13.5" y="1.5" width="1.5" height="12.5" rx="0.6" opacity="0.4" />
         </svg>
-        Grid
+        Online
       </span>
-      <span className={styles.scale} data-at="bc" aria-hidden="true">
-        {["3", "2", "1", "0", "1", "2", "3"].map((n, i) => (
-          <span key={i} data-zero={n === "0" || undefined}>
-            {n === "0" ? "●" : n}
-          </span>
+      <span className={styles.ruler} data-at="bc" aria-hidden="true">
+        {Array.from({ length: 41 }, (_, i) => (
+          <i key={i} data-major={i % 5 === 0 || undefined} />
         ))}
       </span>
       <div className={styles.focus}>
