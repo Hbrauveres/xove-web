@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { loadCameraPrefs, loadSharePrefs } from "../../media/preferences";
 import type { Friend, StreamKind } from "../../types";
 import { CameraOnIcon, ScreenOffIcon, ScreenOnIcon } from "./icons";
 import { showToast } from "../ui/toast";
@@ -41,6 +42,9 @@ export function EmptyStage({
   onStart,
 }: Props) {
   const now = useClock();
+  // What your stream starts at: the screen's settings, or the camera's where screens can't be shared.
+  const prefs = canShareScreen ? loadSharePrefs() : loadCameraPrefs();
+  const startsAt = `${prefs.quality} · ${prefs.mode}`;
   const screen = (
     <button
       type="button"
@@ -81,6 +85,46 @@ export function EmptyStage({
       <span className={styles.readout} data-at="tl">
         <i className={styles.dot} aria-hidden="true" />
         Standby · {now}
+      </span>
+      {/* The camera's display, still and quiet (spec 0123 prototype): real where it can be (what
+          your stream starts at), the rest only drawn; nothing said elsewhere is said again. */}
+      <span className={styles.grid} aria-hidden="true" />
+      <span className={styles.readout} data-at="tc" aria-hidden="true">
+        00:00:00:00
+      </span>
+      <span className={styles.readout} data-at="tr" title="What your stream starts at (Settings)">
+        {startsAt}
+      </span>
+      <span className={styles.meter} data-at="ml" aria-hidden="true">
+        {(["L", "R"] as const).map((side) => (
+          <span key={side}>
+            <span className={styles.bars}>
+              {Array.from({ length: 16 }, (_, i) => (
+                <i key={i} />
+              ))}
+            </span>
+            {side}
+          </span>
+        ))}
+      </span>
+      <span className={styles.tags} data-at="mr" aria-hidden="true">
+        <b>16:9</b>
+        <span>HD</span>
+        <span>Auto</span>
+      </span>
+      <span className={styles.readout} data-at="bl" aria-hidden="true">
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.2">
+          <rect x="1.5" y="1.5" width="13" height="13" rx="1.5" />
+          <path d="M6 1.5v13M10 1.5v13M1.5 6h13M1.5 10h13" />
+        </svg>
+        Grid
+      </span>
+      <span className={styles.scale} data-at="bc" aria-hidden="true">
+        {["3", "2", "1", "0", "1", "2", "3"].map((n, i) => (
+          <span key={i} data-zero={n === "0" || undefined}>
+            {n === "0" ? "●" : n}
+          </span>
+        ))}
       </span>
       <div className={styles.focus}>
         <h2 className={styles.title}>Be the first to go live</h2>

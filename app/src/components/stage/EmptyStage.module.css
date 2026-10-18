@@ -82,6 +82,96 @@
   max-width: calc(100% - 2 * var(--inset) - 160px);
 }
 
+.readout[data-at="tc"] {
+  top: calc(var(--top) + 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  letter-spacing: 0.14em;
+}
+
+/* The camera's display (spec 0123 prototype): fainter than the readout, nothing moves. */
+.grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to right, transparent calc(33.333% - 0.5px), rgba(235, 235, 236, 0.035) calc(33.333% - 0.5px), rgba(235, 235, 236, 0.035) calc(33.333% + 0.5px), transparent calc(33.333% + 0.5px), transparent calc(66.666% - 0.5px), rgba(235, 235, 236, 0.035) calc(66.666% - 0.5px), rgba(235, 235, 236, 0.035) calc(66.666% + 0.5px), transparent calc(66.666% + 0.5px)),
+    linear-gradient(to bottom, transparent calc(33.333% - 0.5px), rgba(235, 235, 236, 0.035) calc(33.333% - 0.5px), rgba(235, 235, 236, 0.035) calc(33.333% + 0.5px), transparent calc(33.333% + 0.5px), transparent calc(66.666% - 0.5px), rgba(235, 235, 236, 0.035) calc(66.666% - 0.5px), rgba(235, 235, 236, 0.035) calc(66.666% + 0.5px), transparent calc(66.666% + 0.5px));
+}
+
+/* An empty sound meter, L and R. */
+.meter {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--inset) + 18px);
+  display: flex;
+  gap: 8px;
+  transform: translateY(-50%);
+  color: rgba(235, 235, 236, 0.45);
+  font: 500 10px/1 var(--font-mono);
+}
+
+.meter > span {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+}
+
+.bars {
+  display: grid;
+  gap: 4px;
+}
+
+.bars i {
+  width: 9px;
+  height: 3px;
+  border-radius: 1px;
+  background: rgba(235, 235, 236, 0.12);
+}
+
+/* Format tags, stacked. */
+.tags {
+  position: absolute;
+  top: 50%;
+  right: calc(var(--inset) + 18px);
+  display: grid;
+  justify-items: end;
+  gap: 7px;
+  transform: translateY(-50%);
+  color: rgba(235, 235, 236, 0.5);
+  font: 500 11px/1 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tags b {
+  padding: 3px 4px;
+  border: 1px solid rgba(235, 235, 236, 0.35);
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+/* An exposure scale, at the bottom's middle. */
+.scale {
+  position: absolute;
+  bottom: calc(var(--inset) + 16px);
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 12px;
+  border: 1px solid rgba(235, 235, 236, 0.18);
+  border-radius: 6px;
+  transform: translateX(-50%);
+  color: rgba(235, 235, 236, 0.4);
+  font: 500 10px/1 var(--font-mono);
+}
+
+.scale [data-zero] {
+  color: rgba(235, 235, 236, 0.7);
+  font-size: 7px;
+}
+
 /* Standby: a still grey dot (red would mean recording). */
 .dot {
   width: 7px;
@@ -212,7 +302,7 @@
   --top: 58px;
 }
 
-:global([data-layout="sideways"]) .readout:is([data-at="tl"], [data-at="tr"]) {
+:global([data-layout="sideways"]) .readout:is([data-at="tl"], [data-at="tr"], [data-at="tc"]) {
   display: none;
 }
 
@@ -272,6 +362,26 @@
   }
 
   .readout[data-at="bl"] {
+    display: none;
+  }
+}
+
+/* A small or short stage (a phone): only the top line of the display; the rest would crowd it. */
+@container (max-width: 640px) {
+  .meter,
+  .tags,
+  .scale,
+  .readout[data-at="bl"],
+  .readout[data-at="tc"] {
+    display: none;
+  }
+}
+
+@container (max-height: 420px) {
+  .meter,
+  .tags,
+  .scale,
+  .grid {
     display: none;
   }
 }
