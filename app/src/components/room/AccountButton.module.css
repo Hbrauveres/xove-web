@@ -123,11 +123,12 @@
   background: #3a3a3d;
 }
 
-/* Spec 0123 prototype: a smaller knob, 16 px (was 20), still just over the track. */
+/* Spec 0123 prototype: a smaller knob, 16 px (was 20), over the track's height but never past
+   its ends, so the switch ends exactly where its column does. */
 .switch i {
   position: absolute;
   top: 2px;
-  left: -1px;
+  left: 0;
   width: 16px;
   height: 16px;
   border-radius: 50%;
@@ -138,7 +139,7 @@
 
 .switch[aria-checked="true"] i {
   background: var(--accent);
-  transform: translateX(22px);
+  transform: translateX(20px);
 }
 
 .switch:focus-visible {
