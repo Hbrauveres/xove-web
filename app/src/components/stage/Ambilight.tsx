@@ -1,6 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { WIDESCREEN } from "../../hooks/useVideoShape";
-import { CELL_PX, easeFor, edgeDraws, fadeMask, glowLayout, gridFor, type EdgeDraw } from "../../media/ambilight";
+import {
+  CELL_PX,
+  easeFor,
+  edgeDraws,
+  fadeMask,
+  glowLayout,
+  gridFor,
+  type EdgeDraw,
+} from "../../media/ambilight";
 import type { AmbilightPrefs } from "../../media/preferences";
 import styles from "./Ambilight.module.css";
 
@@ -27,7 +35,35 @@ type Props = {
   shape?: number;
 };
 
-const reducedMotion = () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+/**
+ * A fine noise, made once: 128 px of grey grain at a few levels of alpha, tiled at the screen's
+ * own resolution over the light (spec 0123 prototype). Dithering: it breaks the steps between
+ * the darkest 8-bit shades, which a smooth, dim light shows as layers. Static, so it costs nothing.
+ */
+let grainUrl: string | undefined;
+function grainImage(): string | undefined {
+  if (grainUrl !== undefined) return grainUrl;
+  const c = document.createElement("canvas");
+  c.width = c.height = 128;
+  const ctx = c.getContext("2d");
+  if (!ctx) return undefined;
+  const img = ctx.createImageData(128, 128);
+  for (let i = 0; i < img.data.length; i += 4) {
+    const v = Math.random() < 0.5 ? 0 : 255;
+    img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
+    img.data[i + 3] = Math.round(Math.random() * 7);
+  }
+  ctx.putImageData(img, 0, 0);
+  try {
+    grainUrl = c.toDataURL();
+  } catch {
+    grainUrl = undefined;
+  }
+  return grainUrl;
+}
+
+const reducedMotion = () =>
+  window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
 /**
  * Ambilight (specs 0104 and 0118): the picture's own edges glow round the stage. Drawn by the
@@ -37,7 +73,12 @@ const reducedMotion = () => window.matchMedia?.("(prefers-reduced-motion: reduce
  * the result, so a 4K monitor costs the same as a small one. It updates with the screen's
  * refresh, and stops while the tab is hidden, the video is paused or missing, or it's off.
  */
-export function Ambilight({ video, still = null, prefs, shape = WIDESCREEN }: Props) {
+export function Ambilight({
+  video,
+  still = null,
+  prefs,
+  shape = WIDESCREEN,
+}: Props) {
   const { cols, rows } = gridFor(shape);
   const layout = useMemo(() => glowLayout(cols, rows), [cols, rows]);
   // The fade mask's alpha, computed once per grid.
@@ -73,10 +114,21 @@ export function Ambilight({ video, still = null, prefs, shape = WIDESCREEN }: Pr
     const maskCtx = maskCanvas.getContext("2d");
     if (!edge || !maskCtx) return;
     const img = maskCtx.createImageData(width, height);
-    for (let i = 0; i < maskAlpha.length; i++) img.data[i * 4 + 3] = maskAlpha[i];
+    for (let i = 0; i < maskAlpha.length; i++)
+      img.data[i * 4 + 3] = maskAlpha[i];
     maskCtx.putImageData(img, 0, 0);
     for (const { src, dst } of edgeDraws(layout, still.width, still.height)) {
-      edge.drawImage(still, src[0], src[1], src[2], src[3], dst[0], dst[1], dst[2], dst[3]);
+      edge.drawImage(
+        still,
+        src[0],
+        src[1],
+        src[2],
+        src[3],
+        dst[0],
+        dst[1],
+        dst[2],
+        dst[3],
+      );
     }
     out.globalCompositeOperation = "copy";
     out.filter = `blur(${CELL_PX * 3}px)`;
@@ -102,7 +154,8 @@ export function Ambilight({ video, still = null, prefs, shape = WIDESCREEN }: Pr
     const maskCtx = maskCanvas.getContext("2d");
     if (!edge || !maskCtx) return;
     const img = maskCtx.createImageData(width, height);
-    for (let i = 0; i < maskAlpha.length; i++) img.data[i * 4 + 3] = maskAlpha[i];
+    for (let i = 0; i < maskAlpha.length; i++)
+      img.data[i * 4 + 3] = maskAlpha[i];
     maskCtx.putImageData(img, 0, 0);
 
     const slow = reducedMotion();
@@ -113,7 +166,11 @@ export function Ambilight({ video, still = null, prefs, shape = WIDESCREEN }: Pr
     let drawsFor = "";
     const draw = (now: number) => {
       if (video.paused || video.readyState < 2 || !video.videoWidth) return;
-      edge.globalAlpha = !primed ? 1 : slow ? SLOW_EASE : easeFor(last ? now - last : UPDATE_MS, EASE_MS);
+      edge.globalAlpha = !primed
+        ? 1
+        : slow
+          ? SLOW_EASE
+          : easeFor(last ? now - last : UPDATE_MS, EASE_MS);
       primed = true;
       last = now;
       const size = `${video.videoWidth}x${video.videoHeight}`;
@@ -122,7 +179,17 @@ export function Ambilight({ video, still = null, prefs, shape = WIDESCREEN }: Pr
         drawsFor = size;
       }
       for (const { src, dst } of draws) {
-        edge.drawImage(video, src[0], src[1], src[2], src[3], dst[0], dst[1], dst[2], dst[3]);
+        edge.drawImage(
+          video,
+          src[0],
+          src[1],
+          src[2],
+          src[3],
+          dst[0],
+          dst[1],
+          dst[2],
+          dst[3],
+        );
       }
       out.globalCompositeOperation = "copy";
       out.filter = `blur(${CELL_PX * 3}px)`;
@@ -146,7 +213,8 @@ export function Ambilight({ video, still = null, prefs, shape = WIDESCREEN }: Pr
       if (now >= due - ON_TIME_MS) {
         draw(now);
         // Keep the cadence; after a long gap (a hidden tab), start again from now.
-        due = due + UPDATE_MS < now - UPDATE_MS ? now + UPDATE_MS : due + UPDATE_MS;
+        due =
+          due + UPDATE_MS < now - UPDATE_MS ? now + UPDATE_MS : due + UPDATE_MS;
       }
       raf = requestAnimationFrame(frame);
     };
@@ -156,7 +224,10 @@ export function Ambilight({ video, still = null, prefs, shape = WIDESCREEN }: Pr
       due = 0;
       if (slow) {
         draw(performance.now());
-        timer = window.setInterval(() => draw(performance.now()), SLOW_SAMPLE_MS);
+        timer = window.setInterval(
+          () => draw(performance.now()),
+          SLOW_SAMPLE_MS,
+        );
       } else {
         raf = requestAnimationFrame(frame);
       }
@@ -173,15 +244,29 @@ export function Ambilight({ video, still = null, prefs, shape = WIDESCREEN }: Pr
   // out (and nothing is drawn), and fades back in.
   if (!video && !still) return null;
   const lit = shown || stillShown;
+  const grain = grainImage();
   return (
-    <canvas
-      ref={canvas}
-      className={styles.light}
-      width={layout.width}
-      height={layout.height}
-      style={{ ...layout.placement, opacity: lit ? prefs.brightness : 0 }}
-      data-on={lit || undefined}
-      aria-hidden="true"
-    />
+    <>
+      <canvas
+        ref={canvas}
+        className={styles.light}
+        width={layout.width}
+        height={layout.height}
+        style={{ ...layout.placement, opacity: lit ? prefs.brightness : 0 }}
+        data-on={lit || undefined}
+        aria-hidden="true"
+      />
+      {grain && (
+        <span
+          className={`${styles.light} ${styles.grain}`}
+          style={{
+            ...layout.placement,
+            opacity: lit ? 1 : 0,
+            backgroundImage: `url(${grain})`,
+          }}
+          aria-hidden="true"
+        />
+      )}
+    </>
   );
 }
