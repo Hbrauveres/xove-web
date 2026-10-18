@@ -134,6 +134,28 @@ export function MicOffIcon() {
   );
 }
 
+/** Someone's voice, heard: a speaking head (spec 0123: a mic always means your own mic). */
+export function VoiceIcon() {
+  return (
+    <Icon name="voice">
+      <circle cx="8" cy="7" r="3" />
+      <path d="M2.5 17c0-3.2 2.5-5.2 5.5-5.2s5.5 2 5.5 5.2" />
+      <path d="M13.8 4.6a3.6 3.6 0 010 4.8M16.3 2.8a6.6 6.6 0 010 8.4" />
+    </Icon>
+  );
+}
+
+/** Someone's voice, muted or not there: the speaking head, its waves crossed. */
+export function VoiceOffIcon() {
+  return (
+    <Icon name="voice-off">
+      <circle cx="8" cy="7" r="3" />
+      <path d="M2.5 17c0-3.2 2.5-5.2 5.5-5.2s5.5 2 5.5 5.2" />
+      <path d="M13.5 5l4 4M17.5 5l-4 4" />
+    </Icon>
+  );
+}
+
 /** The window or tab being shared, in the settings. */
 export function WindowIcon() {
   return (

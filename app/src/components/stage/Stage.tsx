@@ -4,15 +4,17 @@ import { viewerQualities } from "../../media/shareSettings";
 import type { StagePick } from "../../hooks/useStagePick";
 import type { AmbilightPrefs } from "../../media/preferences";
 import type { Friend, LiveFeed, Sharer } from "../../types";
-import { barsPicture } from "./bars";
 import { EmptyStage } from "./EmptyStage";
 import { Facecam, type FacecamPlace } from "./Facecam";
 import { ScreenVideo } from "./ScreenVideo";
 import { StageNotice } from "./StageNotice";
 import { StageOverlay } from "./StageOverlay";
 import { PlayerButtons, type StreamControls } from "./PlayerButtons";
-import { NO_SOUND_HERE, VolumeButton } from "./VolumeButton";
+import { NO_SOUND_HERE } from "./VolumeButton";
 import { NO_VOICE_YET } from "./VolumeMixer";
+import { ViewerBar, type Sound } from "./ViewerBar";
+import { MicIcon, MicOffIcon } from "./icons";
+import round from "./RoundButton.module.css";
 import { liftButtons, makeRoom, ROOM_GAP as SHEET_GAP } from "./makeRoom";
 import { AlsoLive } from "./AlsoLive";
 import { Ambilight } from "./Ambilight";
@@ -117,9 +119,26 @@ export function Stage({
   const sideways = layout === "sideways";
   const frameRef = useRef<HTMLDivElement>(null);
   const [watch, setWatch] = useState<WatchPrefs>(loadWatchPrefs);
+  // Prototype (ADR-0070, spec 0123 round 1): the voice's volume and your mic, held here until round 2 wires them.
+  const [voiceSound, setVoiceSound] = useState<Sound>({ volume: 0.85, muted: false });
+  const [micOn, setMicOn] = useState(false);
 
   // Who is big comes from the room (spec 0104), which the previews and the activity can change too.
   const { big, swappedFor, pick, toggleSwap } = stage;
+  // Starting a stream takes you to your stream (spec 0123): picked once it's there.
+  const [toMine, setToMine] = useState(false);
+  const meLive = controls.mine.screen || controls.mine.camera;
+  if (toMine && sharers.some((s) => s.isMe)) {
+    setToMine(false);
+    pick(sharers.find((s) => s.isMe)!.person.id);
+  }
+  const startMine = useCallback(
+    (kind: "screen" | "camera") => {
+      controls.onStart(kind);
+      setToMine(true);
+    },
+    [controls],
+  );
   const bigId = big?.person.id ?? null;
 
   // Screen and camera together: the screen big, the camera in the facecam over it,
@@ -277,6 +296,8 @@ export function Stage({
     },
     [hold, settingsOpen, toggleSettings],
   );
+  // Prototype (round 1): the two-column mixer is replaced by ViewerBar; cleaned up by /implement.
+  void onMixer;
   // Let go however it closes (its button, 4 s idle, the settings, the stream ending).
   useEffect(() => {
     if (!mixerOpen) held.current.delete("volume");
@@ -457,7 +478,7 @@ export function Stage({
   const chrome = playing ? (chromeShown ? "shown" : "hidden") : undefined;
 
   const body = () => {
-    if (!big || !main) return <EmptyStage canShareScreen={controls.canShareScreen} />;
+    if (!big || !main) return <EmptyStage canShareScreen={controls.canShareScreen} here={(people ?? []).filter((p) => p.id !== meId)} onStart={startMine} />;
 
     // My own stream as everyone sees it, without its sound (it would echo). Sharing
     // the whole screen shows the page inside itself: sharing a tab or window avoids it.
@@ -525,33 +546,41 @@ export function Stage({
             onPick={(id) => pick(id)}
           />
         )}
-        <PlayerButtons
-          {...controls}
-          onSettings={toggleSettings}
-          onMenuChange={onMenuChange}
-          // Watching someone else: their volume first (spec 0101).
-          before={
-            remote &&
-            big && (
-              <VolumeButton
-                // The mixer's fixed places (round 113): the screen's sound, then the voice (#101).
-                channels={[
-                  {
-                    id: "screen",
-                    label: "Screen sound",
-                    ...watch,
-                    onChange: changeWatch,
-                    unavailable: !big.screen ? NO_SCREEN_SOUND : big.hasSound ? undefined : NO_SOUND_HERE,
-                  },
-                  { id: "voice", label: "Voice", volume: 0, muted: true, unavailable: NO_VOICE_YET },
-                ]}
-                canSetVolume={canSetVolume()}
-                open={mixerOpen}
-                onOpenChange={onMixer}
-              />
-            )
-          }
-        />
+        {big && !big.isMe ? (
+          // Someone else's stream: what you hear at the left, you at the right (spec 0123, round 141).
+          <ViewerBar
+            sound={{ ...watch, onChange: (s) => changeWatch({ ...watch, ...s }), unavailable: !big.screen ? NO_SCREEN_SOUND : big.hasSound ? undefined : NO_SOUND_HERE }}
+            voice={{ ...voiceSound, onChange: setVoiceSound, unavailable: NO_VOICE_YET, name: big.person.name }}
+            live={meLive}
+            micOn={micOn}
+            onMic={() => setMicOn((on) => !on)}
+            canShareScreen={controls.canShareScreen}
+            onStart={startMine}
+            onSettings={toggleSettings}
+            canSetVolume={canSetVolume()}
+          />
+        ) : !big ? (
+          // Nobody live: the empty stage has the ways to start; the settings sit in the corner.
+          <ViewerBar live={false} settingsOnly canShareScreen={controls.canShareScreen} onStart={startMine} onSettings={toggleSettings} canSetVolume={canSetVolume()} />
+        ) : (
+          // Your stream: your controls in the middle, your mic with them.
+          <PlayerButtons
+            {...controls}
+            onStart={startMine}
+            onSettings={toggleSettings}
+            onMenuChange={onMenuChange}
+            extra={
+              <div className={`${round.pill} ${micOn ? round.live : ""}`}>
+                <button type="button" className={round.main} aria-pressed={micOn} aria-label={micOn ? "Mute your voice" : "Share your voice"} onClick={() => setMicOn((on) => !on)}>
+                  {micOn ? <MicIcon /> : <MicOffIcon />}
+                </button>
+                <span role="tooltip" className={round.tip} aria-hidden="true">
+                  {micOn ? "Mute your voice" : "Share your voice"}
+                </span>
+              </div>
+            }
+          />
+        )}
       </div>
     </>
   );
@@ -577,7 +606,7 @@ export function Stage({
           key={big ? `${big.person.id}|${stage.mainKind}|${gridKey(shape)}` : "none"}
           video={big ? bigVideoEl : null}
           // Nobody live: the colour bars glow too (spec 0158).
-          still={big ? null : barsPicture()}
+          still={null}
           prefs={ambilight}
           shape={shape}
         />

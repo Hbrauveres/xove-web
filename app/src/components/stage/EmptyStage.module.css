@@ -1,42 +1,161 @@
+/* Nobody live (spec 0123, round 142): no colour bars; dark, a still soft light, and the way to start. */
 .empty {
   position: absolute;
   inset: 0;
   display: grid;
-  /* The line sits just above the round buttons, as in specs/0158-phone-upright/design.html. */
-  place-items: end center;
-  padding-bottom: max(52px, 20cqh);
-  background: var(--surface);
-}
-
-/* Broadcast colour bars at full colour, the "no signal" screen (spec 0158; faded before). */
-.test {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-}
-
-.body {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  padding: 20px;
   text-align: center;
-  padding-inline: var(--gutter);
+  container-type: size;
+  background:
+    radial-gradient(38% 46% at 34% 40%, rgba(70, 110, 190, 0.16), transparent 70%),
+    radial-gradient(40% 46% at 68% 62%, rgba(239, 75, 75, 0.12), transparent 70%),
+    #0d0d0f;
+}
+
+.mark {
+  display: grid;
+  filter: drop-shadow(0 0 18px rgba(239, 75, 75, 0.25));
 }
 
 .title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(var(--text-lg), 3vw, var(--text-xl));
+  margin: 2px 0 0;
+  font: 800 28px/1.1 var(--font-display);
+  letter-spacing: -0.01em;
 }
 
-/* Over the bars, in the bottom third above the round buttons: white with a shadow to read. */
 .copy {
-  margin: 0 0 8px;
+  margin: 0;
+  max-width: 36ch;
+  color: var(--text-muted);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.here {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 12px 0 4px;
+  border-radius: 999px;
+  background: rgba(10, 10, 11, 0.72);
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.av {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin-left: -7px;
+  border: 2px solid #0d0d0f;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.av:first-child {
+  margin-left: 0;
+}
+
+.go {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.go button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 19px;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.go svg {
+  width: 18px;
+  height: 18px;
+}
+
+.primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.ghost {
+  background: rgba(10, 10, 11, 0.72);
+  box-shadow: inset 0 0 0 1px var(--line);
   color: var(--text);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.5);
-  font-size: var(--text-sm);
+}
+
+.unavailable {
+  background: rgba(10, 10, 11, 0.72);
+  color: var(--text);
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (hover: hover) {
+  .primary:hover {
+    background: #f36a6a;
+  }
+
+  .ghost:hover {
+    background: rgba(40, 40, 44, 0.85);
+  }
+}
+
+/* A narrow stage (a phone upright): the two ways to start, stacked. */
+@container (max-width: 480px) {
+  .go {
+    flex-direction: column;
+    align-items: stretch;
+    width: min(100%, 260px);
+  }
+}
+
+/* A small stage (a phone upright): the mark, the title and the two ways to start, stacked. */
+@container (max-height: 320px) {
+  .empty {
+    gap: 8px;
+  }
+
+  .mark svg {
+    width: 34px;
+    height: 34px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .copy,
+  .here {
+    display: none;
+  }
+
+  .go {
+    gap: 6px;
+    margin-top: 0;
+  }
+
+  .go button {
+    height: 36px;
+    padding: 0 14px;
+    font-size: 13px;
+  }
 }

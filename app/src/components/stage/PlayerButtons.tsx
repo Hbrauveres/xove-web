@@ -46,10 +46,12 @@ type Props = {
   onMenuChange?: (open: boolean) => void;
   /** What the viewer hears, before my buttons (spec 0101): the volume, while watching someone. */
   before?: ReactNode;
+  /** After my screen and camera, before the cog: my mic (spec 0123 prototype). */
+  extra?: ReactNode;
 };
 
 /** What the room passes on to my buttons: the stage adds the viewer's part. */
-export type StreamControls = Omit<Props, "onMenuChange" | "before">;
+export type StreamControls = Omit<Props, "onMenuChange" | "before" | "extra">;
 
 const LABEL: Record<StreamKind, { start: string; stop: string; quick: string }> = {
   screen: { start: "Share your screen", stop: "Stop sharing your screen", quick: "What you share" },
@@ -64,7 +66,7 @@ const SURFACE: Record<ScreenSurface, string> = { window: "A window", browser: "A
  * starts or stops; while one is live, resting the pointer on it unrolls its quick access.
  */
 export function PlayerButtons(props: Props) {
-  const { before, settingsOpen, onSettings } = props;
+  const { before, extra, settingsOpen, onSettings } = props;
 
   // A button that comes or goes never moves the one under the pointer (spec 0106).
   const { ref: rowRef } = usePinnedRow<HTMLDivElement>();
@@ -79,6 +81,7 @@ export function PlayerButtons(props: Props) {
         {kinds.map((kind) => (
           <StreamButton key={kind} kind={kind} {...props} />
         ))}
+        {extra && <div className={styles.control}>{extra}</div>}
         <div className={styles.control}>
           <div className={round.pill} data-open={settingsOpen || undefined}>
             <button
