@@ -84,9 +84,9 @@ export function EmptyStage({
       </span>
       {/* The camera's display, still and quiet (spec 0123 prototype): real where it can be (what
           your stream starts at), the rest only drawn; nothing said elsewhere is said again. */}
-      {/* The room is your one channel. */}
+      {/* The room: Xovê has one. */}
       <span className={styles.readout} data-at="tr" aria-hidden="true">
-        CH 01
+        Room 01
       </span>
       {/* Streams are sent at 30 fps: 30 lit, 60 drawn, not offered. */}
       <span className={`${styles.readout} ${styles.fps}`} data-at="tc" aria-hidden="true">
