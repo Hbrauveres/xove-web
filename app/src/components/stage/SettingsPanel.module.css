@@ -498,11 +498,11 @@
 }
 
 /* The Voice tab (spec 0123 prototype): the mic's live level, and the processing switches. */
-/* Inset the same on both sides, on the picker's own padding: the labels start where its text
-   does and the switches end where its arrow does (spec 0123 prototype). */
+/* The labels on the headings' line; the switches end where the picker's arrow does, clear of
+   the column's edge (spec 0123 prototype). */
 .voiceRow {
   min-height: var(--ctl, 38px);
-  padding: 0 12px;
+  padding: 0 12px 0 0;
   /* The panel's scale: options read like the picker's own text, never above the title. */
   font-size: var(--pick-font, 12px);
   font-weight: 400;
