@@ -288,6 +288,14 @@ export function Stage({
     hold("settings", !settingsOpen);
     onSettings();
   }, [hold, settingsOpen, onSettings]);
+  // Another stream on the stage (a preview, a swipe, a stream ending) closes the settings: they
+  // belong to the buttons they opened from, which go with the stream (spec 0123 prototype).
+  const shownId = useRef(bigId);
+  useEffect(() => {
+    if (shownId.current === bigId) return;
+    shownId.current = bigId;
+    if (settingsOpen) toggleSettings();
+  }, [bigId, settingsOpen, toggleSettings]);
   // The volume's mixer (spec 0108): one panel over the buttons at a time, so the settings
   // and the mixer close each other; the controls stay shown while it's open.
   const [mixerOpen, setMixerOpen] = useState(false);
