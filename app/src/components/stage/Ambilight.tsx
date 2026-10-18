@@ -35,33 +35,6 @@ type Props = {
   shape?: number;
 };
 
-/**
- * A fine noise, made once: 128 px of grey grain at a few levels of alpha, tiled at the screen's
- * own resolution over the light (spec 0123 prototype). Dithering: it breaks the steps between
- * the darkest 8-bit shades, which a smooth, dim light shows as layers. Static, so it costs nothing.
- */
-let grainUrl: string | undefined;
-function grainImage(): string | undefined {
-  if (grainUrl !== undefined) return grainUrl;
-  const c = document.createElement("canvas");
-  c.width = c.height = 128;
-  const ctx = c.getContext("2d");
-  if (!ctx) return undefined;
-  const img = ctx.createImageData(128, 128);
-  for (let i = 0; i < img.data.length; i += 4) {
-    const v = Math.random() < 0.5 ? 0 : 255;
-    img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
-    img.data[i + 3] = Math.round(Math.random() * 7);
-  }
-  ctx.putImageData(img, 0, 0);
-  try {
-    grainUrl = c.toDataURL();
-  } catch {
-    grainUrl = undefined;
-  }
-  return grainUrl;
-}
-
 const reducedMotion = () =>
   window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
@@ -244,29 +217,21 @@ export function Ambilight({
   // out (and nothing is drawn), and fades back in.
   if (!video && !still) return null;
   const lit = shown || stillShown;
-  const grain = grainImage();
   return (
-    <>
-      <canvas
-        ref={canvas}
-        className={styles.light}
-        width={layout.width}
-        height={layout.height}
-        style={{ ...layout.placement, opacity: lit ? prefs.brightness : 0 }}
-        data-on={lit || undefined}
-        aria-hidden="true"
-      />
-      {grain && (
-        <span
-          className={`${styles.light} ${styles.grain}`}
-          style={{
-            ...layout.placement,
-            opacity: lit ? 1 : 0,
-            backgroundImage: `url(${grain})`,
-          }}
-          aria-hidden="true"
-        />
-      )}
-    </>
+    <canvas
+      ref={canvas}
+      className={styles.light}
+      width={layout.width}
+      height={layout.height}
+      // A still picture gets a soft blur at the screen's own resolution too (spec 0123 prototype):
+      // the small canvas, stretched, otherwise shows its cells. Drawn once, so it costs nothing after.
+      style={{
+        ...layout.placement,
+        opacity: lit ? prefs.brightness : 0,
+        filter: stillShown ? "blur(28px)" : undefined,
+      }}
+      data-on={lit || undefined}
+      aria-hidden="true"
+    />
   );
 }
