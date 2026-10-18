@@ -23,9 +23,9 @@ export function viewfinderPicture(): HTMLCanvasElement | null {
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, w, h);
   };
-  glow(0, 0, "150, 150, 156", 0.55);
+  glow(0, 0, "138, 150, 172", 0.55);
   glow(w, 0, "239, 75, 75", 0.9);
-  glow(0, h, "150, 150, 156", 0.55);
-  glow(w, h, "150, 150, 156", 0.55);
+  glow(0, h, "138, 150, 172", 0.55);
+  glow(w, h, "138, 150, 172", 0.55);
   return (picture = canvas);
 }

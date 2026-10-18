@@ -228,7 +228,7 @@ export function Ambilight({
       style={{
         ...layout.placement,
         opacity: lit ? prefs.brightness : 0,
-        filter: stillShown ? "blur(28px)" : undefined,
+        filter: stillShown ? "blur(56px)" : undefined,
       }}
       data-on={lit || undefined}
       aria-hidden="true"
