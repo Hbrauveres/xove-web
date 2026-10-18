@@ -5,7 +5,12 @@ import type { ReactNode } from "react";
  * a 20 × 20 grid, round 1.75 px strokes in the button's colour. One state system: a
  * stream you send shows its plain icon on a red pill; off, its icon is crossed.
  */
-function Icon({ name, children, viewBox = "0 0 20 20", strokeWidth = 1.75 }: {
+function Icon({
+  name,
+  children,
+  viewBox = "0 0 20 20",
+  strokeWidth = 1.75,
+}: {
   name: string;
   children: ReactNode;
   viewBox?: string;
@@ -111,6 +116,16 @@ export function SoundIcon() {
     <Icon name="sound">
       <path d="M3.5 8v4h3l4 3.5v-11l-4 3.5z" />
       <path d="M13.5 7.5a3.5 3.5 0 010 5" />
+    </Icon>
+  );
+}
+
+/** Hear yourself, in the Voice tab's mic level (spec 0123): headphones. */
+export function HeadphonesIcon() {
+  return (
+    <Icon name="headphones">
+      <path d="M4 13v-2.5a6 6 0 0112 0V13" />
+      <path d="M4 12.5h2.5v4H5a1 1 0 01-1-1zM16 12.5h-2.5v4H15a1 1 0 001-1z" />
     </Icon>
   );
 }

@@ -1,107 +1,132 @@
-/* The Voice tab's mic test (spec 0123 prototype): see MicTest.tsx. */
-.test {
-  display: grid;
-  gap: 8px;
+/* The Voice tab's mic level (spec 0123 prototype): see MicTest.tsx. Built on the app's slider
+   (Range.module.css): the same slim track and white knob. */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: var(--ctl, 38px);
 }
 
-/* The live level, grey under the line and green over it, with the line you drag. */
+/* The track: the live level drawn in it, green when it's over the knob (sent), faint under. */
 .meter {
+  --fill-colour: rgba(235, 235, 236, 0.4);
   position: relative;
-  height: 10px;
-  margin: 6px 0;
-  border-radius: 999px;
-  background: rgba(235, 235, 236, 0.1);
+  flex: 1;
+  min-width: 0;
+  height: 16px;
 }
 
-.meter i {
+.meter[data-sent] {
+  --fill-colour: var(--ok);
+}
+
+.meter::before {
+  content: "";
   position: absolute;
-  inset: 0 auto 0 0;
-  border-radius: inherit;
-  background: rgba(235, 235, 236, 0.32);
-  transition: width 90ms linear, background 120ms ease;
-}
-
-.meter[data-sent] i {
-  background: var(--ok);
+  inset: 6.5px 0;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--fill-colour) 0 var(--level), rgba(235, 235, 236, 0.16) var(--level));
+  transition: background 90ms linear;
 }
 
 .meter input {
   position: absolute;
-  inset: -8px 0;
+  inset: 0;
   width: 100%;
-  height: calc(100% + 16px);
+  height: 16px;
   margin: 0;
   background: transparent;
+  cursor: pointer;
   appearance: none;
-  cursor: ew-resize;
+  -webkit-appearance: none;
 }
 
 .meter input::-webkit-slider-runnable-track {
-  height: 100%;
+  height: 3px;
   background: transparent;
 }
 
 .meter input::-webkit-slider-thumb {
-  width: 4px;
-  height: 22px;
-  margin-top: 2px;
-  border-radius: 2px;
-  background: var(--text);
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.45);
+  width: 12px;
+  height: 12px;
+  margin-top: -4.5px;
+  border: 0;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.35);
   appearance: none;
+  -webkit-appearance: none;
+  transition: width 0.12s, height 0.12s, margin-top 0.12s;
+}
+
+.meter input:hover::-webkit-slider-thumb,
+.meter input:focus-visible::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  margin-top: -5.5px;
 }
 
 .meter input::-moz-range-track {
+  height: 3px;
   background: transparent;
 }
 
 .meter input::-moz-range-thumb {
-  width: 4px;
-  height: 22px;
+  width: 12px;
+  height: 12px;
   border: 0;
-  border-radius: 2px;
-  background: var(--text);
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.45);
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.35);
 }
 
-.meter input:focus-visible::-webkit-slider-thumb {
+.meter input:focus-visible {
   outline: 2px solid var(--text);
-  outline-offset: 2px;
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 
-.row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 4px;
-}
-
+/* Hear yourself: a small round button, white while it plays, counting down. */
 .hear {
+  display: grid;
   flex: none;
-  height: calc(var(--ctl, 38px) - 4px);
-  padding: 0 14px;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
   border: 0;
-  border-radius: 999px;
+  border-radius: 50%;
   background: var(--sel-bg);
-  box-shadow: var(--sel-shadow);
   color: var(--text);
-  font: inherit;
-  font-size: 12px;
-  font-variant-numeric: tabular-nums;
   cursor: pointer;
+}
+
+.hear svg {
+  width: 16px;
+  height: 16px;
 }
 
 .hear:hover:not(:disabled) {
   background: var(--sel-hover);
 }
 
-.hear:disabled {
-  cursor: not-allowed;
-  opacity: 0.45;
+.hear[data-on] {
+  background: var(--text);
+  color: #0c0c0d;
 }
 
-.hint {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: 11px;
+.hear:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.count {
+  font: 600 12px/1 var(--font-mono);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meter::before,
+  .meter input::-webkit-slider-thumb {
+    transition: none;
+  }
 }

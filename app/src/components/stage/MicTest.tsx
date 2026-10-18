@@ -1,5 +1,6 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import type { MediaTrack } from "../../types";
+import { HeadphonesIcon } from "./icons";
 import { VoiceAudio } from "./VoiceAudio";
 import styles from "./MicTest.module.css";
 
@@ -7,9 +8,9 @@ import styles from "./MicTest.module.css";
 const HEAR_S = 5;
 
 /**
- * The Voice tab's mic test (spec 0123 prototype): the voice's own preview, as the Camera tab
- * shows the camera. Its live level, with the sensitivity line on it (sound under it isn't sent),
- * and a few seconds of your mic played back to you.
+ * The Voice tab's mic level (spec 0123 prototype), one quiet row: the live level on the app's
+ * slim track, its knob the sensitivity (sound under it isn't sent: green over it, faint under),
+ * and at the end a small headphones button that plays your mic back to you for a few seconds.
  */
 export function MicTest({
   level,
@@ -23,18 +24,24 @@ export function MicTest({
   onSensitivity: (next: number) => void;
 }) {
   const [left, setLeft] = useState(0);
-  // Counts down while it plays; stops when the mic goes.
   useEffect(() => {
     if (left <= 0) return;
     const tick = window.setTimeout(() => setLeft(left - 1), 1000);
     return () => window.clearTimeout(tick);
   }, [left]);
-  const hearing = left > 0 && track;
-  const sent = level >= sensitivity;
+  const hearing = Boolean(left > 0 && track);
   return (
-    <div className={styles.test}>
-      <div className={styles.meter} data-sent={(track && sent) || undefined}>
-        <i style={{ width: `${Math.round(level * 100)}%` }} />
+    <div className={styles.row}>
+      <div
+        className={styles.meter}
+        data-sent={(track && level >= sensitivity) || undefined}
+        style={
+          {
+            "--level": `${Math.round(level * 100)}%`,
+            "--at": `${sensitivity * 100}%`,
+          } as CSSProperties
+        }
+      >
         <input
           type="range"
           min={0}
@@ -42,28 +49,33 @@ export function MicTest({
           step={0.01}
           value={sensitivity}
           aria-label="Mic sensitivity"
-          title="Sound under the line isn't sent"
-          style={{ "--at": `${sensitivity * 100}%` } as CSSProperties}
+          title="Sensitivity: sound under the knob isn't sent"
           onChange={(e) => onSensitivity(Number(e.target.value))}
         />
       </div>
-      <p className={styles.hint}>Drag the line: sound under it isn't sent.</p>
-      <div className={styles.row}>
-        <button
-          type="button"
-          className={styles.hear}
-          disabled={!track}
-          onClick={() => setLeft(hearing ? 0 : HEAR_S)}
-        >
-          {hearing ? `Stop · ${left}` : "Hear yourself"}
-        </button>
-        <p className={styles.hint}>
-          {track
-            ? "Use headphones: it plays your mic back to you."
-            : "Turn your voice on to test it."}
-        </p>
-      </div>
-      {hearing && <VoiceAudio track={track} volume={1} muted={false} />}
+      <button
+        type="button"
+        className={styles.hear}
+        data-on={hearing || undefined}
+        disabled={!track}
+        aria-pressed={hearing}
+        aria-label={hearing ? "Stop hearing yourself" : "Hear yourself"}
+        title={
+          track
+            ? "Hear yourself for 5 s (use headphones)"
+            : "Turn your voice on to hear yourself"
+        }
+        onClick={() => setLeft(hearing ? 0 : HEAR_S)}
+      >
+        {hearing ? (
+          <span className={styles.count}>{left}</span>
+        ) : (
+          <HeadphonesIcon />
+        )}
+      </button>
+      {hearing && track && (
+        <VoiceAudio track={track} volume={1} muted={false} />
+      )}
     </div>
   );
 }

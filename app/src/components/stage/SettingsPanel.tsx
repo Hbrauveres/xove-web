@@ -575,12 +575,10 @@ function VoiceTab(props: Props & { shown: boolean }) {
           <label
             key={s.key}
             className={`${sw.switchRow} ${styles.voiceRow}`}
-            title={s.unavailable}
+            // What it does, on hover: the rows stay one calm line each (spec 0123 prototype).
+            title={s.unavailable ?? s.hint}
           >
-            <span>
-              {s.label}
-              <small className={styles.hint}>{s.hint}</small>
-            </span>
+            <span>{s.label}</span>
             <button
               type="button"
               role="switch"
