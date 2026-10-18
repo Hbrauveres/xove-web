@@ -552,12 +552,6 @@ function VoiceTab(props: Props & { shown: boolean }) {
               options={mics.map((m) => ({ value: m.deviceId, label: m.label }))}
               value={voicePrefs.micId ?? mics[0].deviceId}
               onChange={(micId) => set({ micId })}
-              // The live level, inside the pill (design decision 9).
-              adornment={
-                <span className={styles.level} aria-hidden="true">
-                  <i style={{ width: `${Math.round(level * 100)}%` }} />
-                </span>
-              }
             />
           ) : (
             <p className={styles.hint}>
@@ -566,7 +560,7 @@ function VoiceTab(props: Props & { shown: boolean }) {
           )}
         </div>
         <div className={styles.group}>
-          <p className={styles.heading}>Mic test</p>
+          <p className={styles.heading}>Mic level</p>
           <MicTest
             level={level}
             track={localVoice}

@@ -1,28 +1,143 @@
-/* Nobody live (spec 0123, round 142): no colour bars; dark, a still soft light, and the way to start. */
+/*
+ * Nobody live (spec 0123): the stage as a camera waiting, like Xovê's mark. Thin viewfinder
+ * corners, the top right red as in the logo; a quiet readout in the corners; the way to start in a
+ * small focus frame. Still: only the clock changes, once a minute.
+ */
 .empty {
+  /* Close to the edge, so the stage's own buttons sit inside the bottom-right corner. */
+  --inset: 6px;
+  --top: var(--inset);
+  --arm: 28px;
   position: absolute;
   inset: 0;
   display: grid;
-  place-content: center;
-  justify-items: center;
-  gap: 12px;
+  place-items: center;
   padding: 20px;
   text-align: center;
   container-type: size;
-  background:
-    radial-gradient(38% 46% at 34% 40%, rgba(70, 110, 190, 0.16), transparent 70%),
-    radial-gradient(40% 46% at 68% 62%, rgba(239, 75, 75, 0.12), transparent 70%),
-    #0d0d0f;
+  background: radial-gradient(70% 70% at 50% 50%, #131316, #0b0b0c 100%);
 }
 
-.mark {
+/* The viewfinder's corners: two thin arms each. */
+.corner {
+  position: absolute;
+  width: var(--arm);
+  height: var(--arm);
+  border: 0 solid rgba(235, 235, 236, 0.42);
+  pointer-events: none;
+}
+
+.corner[data-at="tl"] {
+  top: var(--top);
+  left: var(--inset);
+  border-width: 2px 0 0 2px;
+}
+
+.corner[data-at="tr"] {
+  top: var(--top);
+  right: var(--inset);
+  border-width: 2px 2px 0 0;
+  border-color: var(--accent);
+}
+
+.corner[data-at="bl"] {
+  bottom: var(--inset);
+  left: var(--inset);
+  border-width: 0 0 2px 2px;
+}
+
+.corner[data-at="br"] {
+  bottom: var(--inset);
+  right: var(--inset);
+  border-width: 0 2px 2px 0;
+}
+
+/* The readout: small mono capitals, inside the corners. */
+.readout {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(235, 235, 236, 0.55);
+  font: 500 11px/1 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.readout[data-at="tl"] {
+  top: calc(var(--top) + 16px);
+  left: calc(var(--inset) + 16px);
+}
+
+.readout[data-at="tr"] {
+  top: calc(var(--top) + 16px);
+  right: calc(var(--inset) + 16px);
+}
+
+.readout[data-at="bl"] {
+  bottom: calc(var(--inset) + 16px);
+  left: calc(var(--inset) + 16px);
+  max-width: calc(100% - 2 * var(--inset) - 160px);
+}
+
+/* Standby: a still grey dot (red would mean recording). */
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(235, 235, 236, 0.45);
+}
+
+.here {
+  display: inline-flex;
+  flex: none;
+}
+
+.av {
   display: grid;
-  filter: drop-shadow(0 0 18px rgba(239, 75, 75, 0.25));
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-left: -6px;
+  border: 2px solid #0e0e10;
+  border-radius: 50%;
+  color: #fff;
+  font: 600 9px/1 var(--font-body);
+  letter-spacing: 0;
+}
+
+.av:first-child {
+  margin-left: 0;
+}
+
+.who {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The focus frame round the way to start: four short corners, fainter. */
+.focus {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 26px 30px;
+  background:
+    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) top left / 14px 1.5px,
+    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) top left / 1.5px 14px,
+    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) top right / 14px 1.5px,
+    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) top right / 1.5px 14px,
+    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) bottom left / 14px 1.5px,
+    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) bottom left / 1.5px 14px,
+    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) bottom right / 14px 1.5px,
+    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) bottom right / 1.5px 14px;
+  background-repeat: no-repeat;
 }
 
 .title {
-  margin: 2px 0 0;
-  font: 800 28px/1.1 var(--font-display);
+  margin: 0;
+  font: 800 26px/1.1 var(--font-display);
   letter-spacing: -0.01em;
 }
 
@@ -30,37 +145,8 @@
   margin: 0;
   max-width: 36ch;
   color: var(--text-muted);
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.5;
-}
-
-.here {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 30px;
-  padding: 0 12px 0 4px;
-  border-radius: 999px;
-  background: rgba(10, 10, 11, 0.72);
-  color: var(--text-muted);
-  font-size: 12px;
-}
-
-.av {
-  display: grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  margin-left: -7px;
-  border: 2px solid #0d0d0f;
-  border-radius: 50%;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 600;
-}
-
-.av:first-child {
-  margin-left: 0;
 }
 
 .go {
@@ -68,7 +154,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .go button {
@@ -119,32 +205,53 @@
   }
 }
 
-/* A narrow stage (a phone upright): the two ways to start, stacked. */
+/* Sideways on a phone the top bar floats over the stage: the corners start under it, and its
+   own "Nobody live" says what the top readouts would. */
+:global([data-layout="sideways"]) .empty {
+  --top: 58px;
+}
+
+:global([data-layout="sideways"]) .readout:is([data-at="tl"], [data-at="tr"]) {
+  display: none;
+}
+
+/* A narrow stage (a phone upright): the two ways to start stacked; only the names' count. */
 @container (max-width: 480px) {
+  .empty {
+    --arm: 22px;
+  }
+
   .go {
     flex-direction: column;
     align-items: stretch;
-    width: min(100%, 260px);
+    width: min(100%, 240px);
+  }
+
+  .focus {
+    padding: 20px 18px;
+  }
+
+  .who {
+    display: none;
   }
 }
 
-/* A small stage (a phone upright): the mark, the title and the two ways to start, stacked. */
+/* A short stage (a phone, sideways or upright): the title and the two ways to start. */
 @container (max-height: 320px) {
   .empty {
-    gap: 8px;
+    --arm: 20px;
   }
 
-  .mark svg {
-    width: 34px;
-    height: 34px;
+  .focus {
+    gap: 8px;
+    padding: 14px 18px;
   }
 
   .title {
     font-size: 18px;
   }
 
-  .copy,
-  .here {
+  .copy {
     display: none;
   }
 
@@ -157,5 +264,13 @@
     height: 36px;
     padding: 0 14px;
     font-size: 13px;
+  }
+
+  .readout {
+    font-size: 10px;
+  }
+
+  .readout[data-at="bl"] {
+    display: none;
   }
 }
