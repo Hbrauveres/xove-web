@@ -2,9 +2,10 @@ let picture: HTMLCanvasElement | undefined;
 
 /**
  * The empty stage's viewfinder corners as a small still picture, for the ambilight to light
- * (spec 0123 prototype): dark, with each corner's two arms right on the edge, where the light is
- * read, so each corner glows its own colour (the top right red). Made once; null where the page
- * has no canvas. Lit once, so it costs nothing after.
+ * (spec 0123 prototype): see-through, with a soft round light at each corner in its own colour
+ * (the top right red). See-through so the ambilight spreads nothing dark along the sides, and
+ * soft so each colour fades out instead of stepping. Made once; null where the page has no
+ * canvas. Lit once, so it costs nothing after.
  */
 export function viewfinderPicture(): HTMLCanvasElement | null {
   if (picture) return picture;
@@ -14,19 +15,17 @@ export function viewfinderPicture(): HTMLCanvasElement | null {
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
   const { width: w, height: h } = canvas;
-  ctx.fillStyle = "#0b0b0c";
-  ctx.fillRect(0, 0, w, h);
-  const arm = 18;
-  const t = 4;
-  const corner = (x: number, y: number, dx: number, dy: number, colour: string) => {
-    ctx.fillStyle = colour;
-    ctx.fillRect(dx > 0 ? x : x - arm, dy > 0 ? y : y - t, arm, t);
-    ctx.fillRect(dx > 0 ? x : x - t, dy > 0 ? y : y - arm, t, arm);
+  const glow = (x: number, y: number, rgb: string, strength: number) => {
+    const g = ctx.createRadialGradient(x, y, 0, x, y, 34);
+    g.addColorStop(0, `rgba(${rgb}, ${strength})`);
+    g.addColorStop(0.45, `rgba(${rgb}, ${strength * 0.45})`);
+    g.addColorStop(1, `rgba(${rgb}, 0)`);
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, w, h);
   };
-  const grey = "#74747a";
-  corner(0, 0, 1, 1, grey);
-  corner(w, 0, -1, 1, "#ef4b4b");
-  corner(0, h, 1, -1, grey);
-  corner(w, h, -1, -1, grey);
+  glow(0, 0, "150, 150, 156", 0.55);
+  glow(w, 0, "239, 75, 75", 0.9);
+  glow(0, h, "150, 150, 156", 0.55);
+  glow(w, h, "150, 150, 156", 0.55);
   return (picture = canvas);
 }
