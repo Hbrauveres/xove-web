@@ -169,35 +169,6 @@
   transform: translateX(-50%);
 }
 
-/* A battery, filled to its level. */
-.battery {
-  position: relative;
-  display: block;
-  width: 22px;
-  height: 11px;
-  padding: 1.5px;
-  border: 1px solid rgba(235, 235, 236, 0.55);
-  border-radius: 2.5px;
-}
-
-.battery::after {
-  content: "";
-  position: absolute;
-  top: 3px;
-  right: -3.5px;
-  width: 2px;
-  height: 3px;
-  border-radius: 0 1px 1px 0;
-  background: rgba(235, 235, 236, 0.55);
-}
-
-.battery i {
-  display: block;
-  height: 100%;
-  border-radius: 1px;
-  background: rgba(235, 235, 236, 0.55);
-}
-
 /* The frame rate, top middle: 30 lit in its box (what's sent), 60 faint beside it. */
 .readout[data-at="tc"] {
   top: calc(var(--top) + 13px);

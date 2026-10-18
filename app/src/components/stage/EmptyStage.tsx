@@ -11,29 +11,6 @@ type Props = {
   onStart?: (kind: StreamKind) => void;
 };
 
-/** The battery's level, 0 to 1, where the browser tells it (Chrome, Edge, Android); null elsewhere. */
-function useBattery() {
-  const [level, setLevel] = useState<number | null>(null);
-  useEffect(() => {
-    const nav = navigator as Navigator & { getBattery?: () => Promise<{ level: number; addEventListener: (e: string, f: () => void) => void; removeEventListener: (e: string, f: () => void) => void }> };
-    if (!nav.getBattery) return;
-    let gone = false;
-    let off = () => {};
-    void nav.getBattery().then((b) => {
-      if (gone) return;
-      const read = () => setLevel(b.level);
-      read();
-      b.addEventListener("levelchange", read);
-      off = () => b.removeEventListener("levelchange", read);
-    }).catch(() => {});
-    return () => {
-      gone = true;
-      off();
-    };
-  }, []);
-  return level;
-}
-
 /** The time now, as a viewfinder's readout: hours and minutes, ticking each minute. */
 function useClock() {
   const read = () =>
@@ -64,7 +41,6 @@ export function EmptyStage({
   onStart,
 }: Props) {
   const now = useClock();
-  const battery = useBattery();
   const screen = (
     <button
       type="button"
@@ -108,11 +84,9 @@ export function EmptyStage({
       </span>
       {/* The camera's display, still and quiet (spec 0123 prototype): real where it can be (what
           your stream starts at), the rest only drawn; nothing said elsewhere is said again. */}
+      {/* The room is your one channel. */}
       <span className={styles.readout} data-at="tr" aria-hidden="true">
-        {battery !== null && `${Math.round(battery * 100)}%`}
-        <span className={styles.battery}>
-          <i style={{ width: `${Math.round((battery ?? 1) * 100)}%` }} />
-        </span>
+        CH 01
       </span>
       {/* Streams are sent at 30 fps: 30 lit, 60 drawn, not offered. */}
       <span className={`${styles.readout} ${styles.fps}`} data-at="tc" aria-hidden="true">
