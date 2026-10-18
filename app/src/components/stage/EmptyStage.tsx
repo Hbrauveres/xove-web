@@ -114,6 +114,11 @@ export function EmptyStage({
           <i style={{ width: `${Math.round((battery ?? 1) * 100)}%` }} />
         </span>
       </span>
+      {/* Streams are sent at 30 fps: 30 lit, 60 drawn, not offered. */}
+      <span className={`${styles.readout} ${styles.fps}`} data-at="tc" aria-hidden="true">
+        <b>30</b>
+        60 fps
+      </span>
       <span className={styles.meter} data-at="ml" aria-hidden="true">
         {(["L", "R"] as const).map((side) => (
           <span key={side}>
@@ -128,12 +133,8 @@ export function EmptyStage({
       </span>
       <span className={styles.tags} data-at="mr" aria-hidden="true">
         <b>16:9</b>
-        {/* Streams are sent at 30 fps; 60 is drawn, not offered. */}
-        <span className={styles.fps}>
-          <em>30</em>
-          <span>|</span>
-          60 fps
-        </span>
+        <span>HD</span>
+        <span>Auto</span>
       </span>
       <span className={styles.grid} aria-hidden="true" />
       <span className={styles.readout} data-at="bl" aria-hidden="true">
