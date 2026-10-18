@@ -118,9 +118,9 @@
   position: absolute;
   top: 50%;
   right: calc(var(--inset) + 18px);
-  display: grid;
-  justify-items: end;
-  gap: 7px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
   transform: translateY(-50%);
   color: rgba(235, 235, 236, 0.5);
   font: 500 11px/1 var(--font-mono);
@@ -167,6 +167,58 @@
   border: 4px solid transparent;
   border-top: 5px solid rgba(235, 235, 236, 0.6);
   transform: translateX(-50%);
+}
+
+/* A battery, filled to its level. */
+.battery {
+  position: relative;
+  display: block;
+  width: 22px;
+  height: 11px;
+  padding: 1.5px;
+  border: 1px solid rgba(235, 235, 236, 0.55);
+  border-radius: 2.5px;
+}
+
+.battery::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  right: -3.5px;
+  width: 2px;
+  height: 3px;
+  border-radius: 0 1px 1px 0;
+  background: rgba(235, 235, 236, 0.55);
+}
+
+.battery i {
+  display: block;
+  height: 100%;
+  border-radius: 1px;
+  background: rgba(235, 235, 236, 0.55);
+}
+
+/* 30 lit, 60 faint: what's sent. */
+.fps {
+  display: inline-flex;
+  gap: 5px;
+  color: rgba(235, 235, 236, 0.28);
+}
+
+.fps em {
+  font-style: normal;
+  color: rgba(235, 235, 236, 0.7);
+}
+
+/* A thirds grid, barely there. */
+.grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  --g: rgba(235, 235, 236, 0.016);
+  background:
+    linear-gradient(to right, transparent calc(33.333% - 0.5px), var(--g) calc(33.333% - 0.5px), var(--g) calc(33.333% + 0.5px), transparent calc(33.333% + 0.5px), transparent calc(66.666% - 0.5px), var(--g) calc(66.666% - 0.5px), var(--g) calc(66.666% + 0.5px), transparent calc(66.666% + 0.5px)),
+    linear-gradient(to bottom, transparent calc(33.333% - 0.5px), var(--g) calc(33.333% - 0.5px), var(--g) calc(33.333% + 0.5px), transparent calc(33.333% + 0.5px), transparent calc(66.666% - 0.5px), var(--g) calc(66.666% - 0.5px), var(--g) calc(66.666% + 0.5px), transparent calc(66.666% + 0.5px));
 }
 
 /* Standby: a still grey dot (red would mean recording). */
@@ -376,7 +428,8 @@
 @container (max-height: 420px) {
   .meter,
   .tags,
-  .ruler {
+  .ruler,
+  .grid {
     display: none;
   }
 }
