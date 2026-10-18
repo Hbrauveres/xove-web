@@ -1,4 +1,13 @@
-import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import {
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent,
+} from "react";
+import cueStyles from "./cue.module.css";
 import styles from "./Picker.module.css";
 
 export type PickerOption<T extends string> = { value: T; label: string };
@@ -22,6 +31,8 @@ type Props<T extends string> = {
   closed?: boolean;
   /** Opens the list each time it changes (asked from elsewhere, spec 0115). */
   openSignal?: number;
+  /** Cued (spec 0115): the request it's cued for. The ring goes round the pill and its open list together. */
+  cue?: number;
 };
 
 /** How long the list takes to roll back before it leaves (spec 0111, design decision 9). */
@@ -49,6 +60,7 @@ export function Picker<T extends string>({
   onOpenChange,
   closed = false,
   openSignal,
+  cue,
 }: Props<T>) {
   const [open, setOpenState] = useState(false);
   // Drawn while open, and while it rolls back after.
@@ -56,8 +68,13 @@ export function Picker<T extends string>({
   if (open && !drawn) setDrawn(true);
   useEffect(() => {
     if (open || !drawn) return;
-    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    const gone = window.setTimeout(() => setDrawn(false), reduce ? 0 : CLOSE_MS);
+    const reduce = window.matchMedia?.(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const gone = window.setTimeout(
+      () => setDrawn(false),
+      reduce ? 0 : CLOSE_MS,
+    );
     return () => window.clearTimeout(gone);
   }, [open, drawn]);
   const root = useRef<HTMLDivElement>(null);
@@ -97,7 +114,9 @@ export function Picker<T extends string>({
 
   // Asked to open from elsewhere (a live button with the settings open).
   // Starts unset, so a picker that mounts already asked (a tab drawn on its own) still opens.
-  const [lastOpenSignal, setLastOpenSignal] = useState<number | undefined>(undefined);
+  const [lastOpenSignal, setLastOpenSignal] = useState<number | undefined>(
+    undefined,
+  );
   if (openSignal !== lastOpenSignal) {
     setLastOpenSignal(openSignal);
     if (openSignal !== undefined && !disabled) setOpenState(true);
@@ -112,7 +131,10 @@ export function Picker<T extends string>({
     return () => document.removeEventListener("pointerdown", away);
   }, [open]);
 
-  const optionsIn = () => [...(root.current?.querySelectorAll<HTMLButtonElement>("[role=radio]") ?? [])];
+  const optionsIn = () => [
+    ...(root.current?.querySelectorAll<HTMLButtonElement>("[role=radio]") ??
+      []),
+  ];
 
   // Opened upward: no taller than the room above it, up to whatever clips it (a short stage
   // on a phone); the rest scrolls, as always.
@@ -152,7 +174,13 @@ export function Picker<T extends string>({
           return;
         }
         const r = node.getBoundingClientRect();
-        if (!(r.right > l.left && r.left < l.right && r.bottom > l.top && r.top < l.bottom + FADE_GAP + FADE_PX)) return;
+        if (!(
+          r.right > l.left &&
+          r.left < l.right &&
+          r.bottom > l.top &&
+          r.top < l.bottom + FADE_GAP + FADE_PX
+        ))
+          return;
         const top = l.top - r.top;
         const bottom = l.bottom - r.top + FADE_GAP;
         const mask = `linear-gradient(to bottom, #000 ${top}px, transparent ${top}px, transparent ${bottom}px, rgba(0, 0, 0, 0.08) ${bottom + FADE_PX * 0.5}px, rgba(0, 0, 0, 0.35) ${bottom + FADE_PX * 0.75}px, #000 ${bottom + FADE_PX}px)`;
@@ -183,13 +211,27 @@ export function Picker<T extends string>({
     const el = list.current;
     if (!open || opens !== "up" || !el) return;
     let clip: Element | null = root.current?.parentElement ?? null;
-    while (clip && getComputedStyle(clip).overflow === "visible" && getComputedStyle(clip).overflowY === "visible") clip = clip.parentElement;
+    while (
+      clip &&
+      getComputedStyle(clip).overflow === "visible" &&
+      getComputedStyle(clip).overflowY === "visible"
+    )
+      clip = clip.parentElement;
     const top = clip ? clip.getBoundingClientRect().top : 0;
     const room = (root.current?.getBoundingClientRect().top ?? 0) - top - 8;
-    el.style.maxHeight = room > 0 ? `min(${Math.floor(room)}px, calc(var(--ctl, 38px) * 3.5))` : "";
+    el.style.maxHeight =
+      room > 0
+        ? `min(${Math.floor(room)}px, calc(var(--ctl, 38px) * 3.5))`
+        : "";
     // Upward, it opens at the pill's end: the nearest option whole, the half-shown one at the top (spec 0114).
     el.scrollTop = el.scrollHeight;
   }, [open, opens]);
+
+  // The cue's ring reaches over the open list (spec 0123 prototype): the list's height, while drawn.
+  useLayoutEffect(() => {
+    const h = open && list.current ? list.current.offsetHeight : 0;
+    root.current?.style.setProperty("--list-h", `${h}px`);
+  }, [open, drawn]);
 
   // Opened by the keyboard: its first option takes the focus once it's drawn.
   const focusFirst = useRef(false);
@@ -198,9 +240,10 @@ export function Picker<T extends string>({
     focusFirst.current = false;
     // The option nearest the pill, without scrolling the list away from it (spec 0114).
     const all = optionsIn();
-    (opens === "up" ? all[all.length - 1] : all[0])?.focus({ preventScroll: true });
+    (opens === "up" ? all[all.length - 1] : all[0])?.focus({
+      preventScroll: true,
+    });
   });
-
 
   const onKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Escape" && open) {
@@ -252,10 +295,40 @@ export function Picker<T extends string>({
         onClick={() => setOpen(!open)}
       >
         <span className={styles.chosen}>{chosen?.label}</span>
-        <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" className={styles.chevron}>
-          <path d="M3 4.5L6 7.5L9 4.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <svg
+          viewBox="0 0 12 12"
+          width="12"
+          height="12"
+          aria-hidden="true"
+          className={styles.chevron}
+        >
+          <path
+            d="M3 4.5L6 7.5L9 4.5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </button>
+      {cue ? (
+        <span
+          key={cue}
+          className={cueStyles.cue}
+          aria-hidden="true"
+          data-cue
+          // Over the list, round the pill and the list as one box.
+          style={{
+            zIndex: 11,
+            borderRadius: "var(--pick-r)",
+            [opens === "up" ? "top" : "bottom"]:
+              "calc(-1 * var(--list-h, 0px))",
+            transition:
+              "top 220ms cubic-bezier(0.2, 0.8, 0.2, 1), bottom 220ms cubic-bezier(0.2, 0.8, 0.2, 1)",
+          }}
+        />
+      ) : null}
       {drawn && (
         <div
           ref={list}
@@ -276,7 +349,11 @@ export function Picker<T extends string>({
               aria-checked="false"
               className={styles.option}
               // The nearest to the pill appears first.
-              style={{ "--k": opens === "up" ? others.length - 1 - i : i } as CSSProperties}
+              style={
+                {
+                  "--k": opens === "up" ? others.length - 1 - i : i,
+                } as CSSProperties
+              }
               title={o.label}
               onClick={() => pick(o.value)}
             >

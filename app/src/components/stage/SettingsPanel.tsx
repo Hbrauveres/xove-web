@@ -1,15 +1,39 @@
-import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
-import { CAMERA_BLOCKED, type CameraProblem, type ScreenSurface } from "../../hooks/useLiveKitRoom";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent,
+} from "react";
+import {
+  CAMERA_BLOCKED,
+  type CameraProblem,
+  type ScreenSurface,
+} from "../../hooks/useLiveKitRoom";
 import type { SharePrefs, VoicePrefs } from "../../media/preferences";
 import type { MicDevice } from "../../hooks/useLiveKitRoom";
 import { useMicLevel } from "../../hooks/useMicLevel";
 import sw from "../room/AccountButton.module.css";
-import { CAMERA_QUALITIES, MODE_OPTIONS, SHARE_QUALITIES, type ShareMode, type ShareQuality } from "../../media/shareSettings";
+import {
+  CAMERA_QUALITIES,
+  MODE_OPTIONS,
+  SHARE_QUALITIES,
+  type ShareMode,
+  type ShareQuality,
+} from "../../media/shareSettings";
 import type { CameraDevice, MediaTrack, StreamKind } from "../../types";
 import { Picker } from "../ui/Picker";
 import { Segmented } from "../ui/Segmented";
 import { showToast } from "../ui/toast";
-import { CameraOnIcon, CloseIcon, MicIcon, ScreenOffIcon, ScreenShareIcon, WindowIcon } from "./icons";
+import {
+  CameraOnIcon,
+  CloseIcon,
+  MicIcon,
+  ScreenOffIcon,
+  ScreenShareIcon,
+  WindowIcon,
+} from "./icons";
 import { NO_SCREEN, NO_SOUND } from "./PlayerButtons";
 import { FULL_VIEW_SHEET } from "./makeRoom";
 import styles from "./SettingsPanel.module.css";
@@ -18,7 +42,11 @@ import cueStyles from "../ui/cue.module.css";
 /** How long it takes to come in or go out; it leaves the page once it's out. */
 const PANEL_MS = 260;
 
-const SURFACE: Record<ScreenSurface, string> = { window: "A window", browser: "A tab", monitor: "Your whole screen" };
+const SURFACE: Record<ScreenSurface, string> = {
+  window: "A window",
+  browser: "A tab",
+  monitor: "Your whole screen",
+};
 
 type Tab = "screen" | "camera" | "voice";
 
@@ -144,7 +172,9 @@ export function SettingsPanel(props: Props) {
     if (open) {
       opener.current = document.activeElement as HTMLElement | null;
       // Not scrolled into view: the panel is still coming in, and the page would jump.
-      root.current?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.focus({ preventScroll: true });
+      root.current
+        ?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')
+        ?.focus({ preventScroll: true });
       return;
     }
     if (root.current?.contains(document.activeElement)) opener.current?.focus();
@@ -167,7 +197,11 @@ export function SettingsPanel(props: Props) {
       role="dialog"
       aria-label="Settings"
       data-variant={variant}
-      style={props.fullView ? ({ "--sheet-height": `${FULL_VIEW_SHEET * 100}%` } as CSSProperties) : undefined}
+      style={
+        props.fullView
+          ? ({ "--sheet-height": `${FULL_VIEW_SHEET * 100}%` } as CSSProperties)
+          : undefined
+      }
       data-open={shown || undefined}
       inert={!open || undefined}
       onKeyDown={onKeyDown}
@@ -175,7 +209,12 @@ export function SettingsPanel(props: Props) {
     >
       <div className={styles.head}>
         <h2>Settings</h2>
-        <button type="button" className={styles.close} aria-label="Close settings" onClick={onClose}>
+        <button
+          type="button"
+          className={styles.close}
+          aria-label="Close settings"
+          onClick={onClose}
+        >
           <CloseIcon />
         </button>
       </div>
@@ -186,11 +225,18 @@ export function SettingsPanel(props: Props) {
           const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
           if (!step || usable.length < 2) return;
           e.preventDefault();
-          const next = usable[(usable.indexOf(tab) + step + usable.length) % usable.length];
+          const next =
+            usable[
+              (usable.indexOf(tab) + step + usable.length) % usable.length
+            ];
           setTab(next);
-          root.current?.querySelector<HTMLElement>(`#${CSS.escape(tabId(next))}`)?.focus();
+          root.current
+            ?.querySelector<HTMLElement>(`#${CSS.escape(tabId(next))}`)
+            ?.focus();
         }}
-        style={{ "--n": tabs.length, "--i": tabs.indexOf(tab) } as CSSProperties}
+        style={
+          { "--n": tabs.length, "--i": tabs.indexOf(tab) } as CSSProperties
+        }
       >
         <span className={styles.marker} aria-hidden="true" />
         {tabs.map((t) => (
@@ -210,12 +256,21 @@ export function SettingsPanel(props: Props) {
             }}
             onClick={() => {
               if (usable.includes(t)) setTab(t);
-              else if (pointer.current === "touch" || pointer.current === "pen") showToast(NO_SCREEN, <ScreenOffIcon />);
+              else if (pointer.current === "touch" || pointer.current === "pen")
+                showToast(NO_SCREEN, <ScreenOffIcon />);
             }}
           >
-            {t === "screen" ? <ScreenShareIcon /> : t === "camera" ? <CameraOnIcon /> : <MicIcon />}
+            {t === "screen" ? (
+              <ScreenShareIcon />
+            ) : t === "camera" ? (
+              <CameraOnIcon />
+            ) : (
+              <MicIcon />
+            )}
             {t === "screen" ? "Screen" : t === "camera" ? "Camera" : "Voice"}
-            {(t === "voice" ? props.voice : mine[t]) && <span className={styles.dot} data-live aria-hidden="true" />}
+            {(t === "voice" ? props.voice : mine[t]) && (
+              <span className={styles.dot} data-live aria-hidden="true" />
+            )}
           </button>
         ))}
       </div>
@@ -236,9 +291,15 @@ export function SettingsPanel(props: Props) {
             inert={t !== tab || undefined}
           >
             {t === "screen" ? (
-              <ScreenTab {...props} cue={cue?.kind === "screen" ? cue.n : undefined} />
+              <ScreenTab
+                {...props}
+                cue={cue?.kind === "screen" ? cue.n : undefined}
+              />
             ) : t === "camera" ? (
-              <CameraTab {...props} cue={cue?.kind === "camera" ? cue.n : undefined} />
+              <CameraTab
+                {...props}
+                cue={cue?.kind === "camera" ? cue.n : undefined}
+              />
             ) : (
               <VoiceTab {...props} shown={open && tab === "voice"} />
             )}
@@ -249,9 +310,16 @@ export function SettingsPanel(props: Props) {
   );
 }
 
-function QualityAndMode({ kind, prefs, onPrefsChange, busy }: { kind: StreamKind } & Pick<Props, "prefs" | "onPrefsChange" | "busy">) {
+function QualityAndMode({
+  kind,
+  prefs,
+  onPrefsChange,
+  busy,
+}: { kind: StreamKind } & Pick<Props, "prefs" | "onPrefsChange" | "busy">) {
   const mine = prefs[kind];
-  const qualities = (kind === "camera" ? CAMERA_QUALITIES : SHARE_QUALITIES).map((q) => ({ value: q.id, label: q.id }));
+  const qualities = (
+    kind === "camera" ? CAMERA_QUALITIES : SHARE_QUALITIES
+  ).map((q) => ({ value: q.id, label: q.id }));
   const name = kind === "camera" ? "Camera" : "Screen";
   return (
     <>
@@ -281,7 +349,9 @@ function QualityAndMode({ kind, prefs, onPrefsChange, busy }: { kind: StreamKind
 
 /** The cue's ring over a control, drawn anew for each request so its pulses start over. */
 function CueRing({ n }: { n?: number }) {
-  return n ? <span key={n} className={cueStyles.cue} aria-hidden="true" data-cue /> : null;
+  return n ? (
+    <span key={n} className={cueStyles.cue} aria-hidden="true" data-cue />
+  ) : null;
 }
 
 /** `cue`: the request the tab's control is cued for, if any. */
@@ -297,7 +367,9 @@ function ScreenTab(props: Props & { cue?: number }) {
             <div className={styles.fieldRow}>
               <span className={styles.source}>
                 <WindowIcon />
-                <span>{screenSurface ? SURFACE[screenSurface] : "Your screen"}</span>
+                <span>
+                  {screenSurface ? SURFACE[screenSurface] : "Your screen"}
+                </span>
               </span>
               <button
                 type="button"
@@ -314,8 +386,8 @@ function ScreenTab(props: Props & { cue?: number }) {
           </div>
         ) : (
           <p className={styles.hint}>
-            You're not sharing. These are used the next time you do; the browser shows a preview when you pick what to
-            share.
+            You're not sharing. These are used the next time you do; the browser
+            shows a preview when you pick what to share.
           </p>
         )}
       </div>
@@ -325,15 +397,31 @@ function ScreenTab(props: Props & { cue?: number }) {
 }
 
 function CameraTab(props: Props & { cue?: number }) {
-  const { mine, cameras, cameraId, onPickCamera, cameraVideo, busy, cameraProblem } = props;
-  const problem = !cameraVideo && cameraProblem ? (cameraProblem === "blocked" ? CAMERA_BLOCKED : "No camera found.") : null;
+  const {
+    mine,
+    cameras,
+    cameraId,
+    onPickCamera,
+    cameraVideo,
+    busy,
+    cameraProblem,
+  } = props;
+  const problem =
+    !cameraVideo && cameraProblem
+      ? cameraProblem === "blocked"
+        ? CAMERA_BLOCKED
+        : "No camera found."
+      : null;
   return (
     <>
       {/* What you see: its own column sideways (spec 0111, design decisions 3 and 4). */}
       <div className={styles.lead}>
         <div className={styles.group}>
           <p className={styles.heading}>Preview</p>
-          <div className={styles.preview} data-problem={problem ? true : undefined}>
+          <div
+            className={styles.preview}
+            data-problem={problem ? true : undefined}
+          >
             {problem ? (
               <p className={styles.problem} role="status">
                 {problem}
@@ -341,7 +429,11 @@ function CameraTab(props: Props & { cue?: number }) {
             ) : (
               <>
                 <Preview video={cameraVideo} />
-                {mine.camera ? <span className={styles.live}>LIVE</span> : <span className={styles.badge}>Only you see this</span>}
+                {mine.camera ? (
+                  <span className={styles.live}>LIVE</span>
+                ) : (
+                  <span className={styles.badge}>Only you see this</span>
+                )}
               </>
             )}
           </div>
@@ -351,16 +443,19 @@ function CameraTab(props: Props & { cue?: number }) {
         <div className={styles.group}>
           <p className={styles.heading}>Camera</p>
           <div className={styles.cueBox}>
-            {/* Before the picker, so its floating list paints over the glow. */}
-            <CueRing n={props.cue} />
             <Picker
               label="Camera"
-              options={cameras.map((c) => ({ value: c.deviceId, label: c.label || "Camera" }))}
+              options={cameras.map((c) => ({
+                value: c.deviceId,
+                label: c.label || "Camera",
+              }))}
               value={cameraId ?? cameras[0].deviceId}
               disabled={busy}
               onChange={onPickCamera}
               // Gone to from the live camera button: its list opens (spec 0115).
               openSignal={props.cue}
+              // Cued round the pill and its open list together (spec 0123 prototype).
+              cue={props.cue}
             />
           </div>
         </div>
@@ -381,14 +476,29 @@ function Preview({ video }: { video?: MediaTrack }) {
       video.detach(el);
     };
   }, [video]);
-  return <video ref={ref} className={styles.video} autoPlay playsInline muted disablePictureInPicture aria-label="Your camera" />;
+  return (
+    <video
+      ref={ref}
+      className={styles.video}
+      autoPlay
+      playsInline
+      muted
+      disablePictureInPicture
+      aria-label="Your camera"
+    />
+  );
 }
 
 /** Voice isolation is only in recent Chrome (spec 0123): elsewhere its switch is greyed with this. */
 const NO_ISOLATION = "This browser can't isolate a voice";
 const canIsolate = () => {
   try {
-    return Boolean((navigator.mediaDevices?.getSupportedConstraints?.() as Record<string, boolean> | undefined)?.voiceIsolation);
+    return Boolean(
+      (
+        navigator.mediaDevices?.getSupportedConstraints?.() as
+          Record<string, boolean> | undefined
+      )?.voiceIsolation,
+    );
   } catch {
     return false;
   }
@@ -399,13 +509,36 @@ function VoiceTab(props: Props & { shown: boolean }) {
   const { voicePrefs, onVoicePrefs, mics = [], localVoice, shown } = props;
   const level = useMicLevel(localVoice, shown);
   if (!voicePrefs || !onVoicePrefs) return null;
-  const set = (patch: Partial<VoicePrefs>) => onVoicePrefs({ ...voicePrefs, ...patch });
+  const set = (patch: Partial<VoicePrefs>) =>
+    onVoicePrefs({ ...voicePrefs, ...patch });
   const isolate = canIsolate();
-  const SWITCHES: { key: keyof Omit<VoicePrefs, "micId">; label: string; hint: string; unavailable?: string }[] = [
-    { key: "echoCancellation", label: "Echo cancellation", hint: "Stops your speakers coming back through the mic" },
-    { key: "noiseSuppression", label: "Noise suppression", hint: "Quiets fans, keyboards and hum" },
-    { key: "autoGainControl", label: "Automatic volume", hint: "Keeps your voice at an even level" },
-    { key: "voiceIsolation", label: "Voice isolation", hint: "Keeps only speech", unavailable: isolate ? undefined : NO_ISOLATION },
+  const SWITCHES: {
+    key: keyof Omit<VoicePrefs, "micId">;
+    label: string;
+    hint: string;
+    unavailable?: string;
+  }[] = [
+    {
+      key: "echoCancellation",
+      label: "Echo cancellation",
+      hint: "Stops your speakers coming back through the mic",
+    },
+    {
+      key: "noiseSuppression",
+      label: "Noise suppression",
+      hint: "Quiets fans, keyboards and hum",
+    },
+    {
+      key: "autoGainControl",
+      label: "Automatic volume",
+      hint: "Keeps your voice at an even level",
+    },
+    {
+      key: "voiceIsolation",
+      label: "Voice isolation",
+      hint: "Keeps only speech",
+      unavailable: isolate ? undefined : NO_ISOLATION,
+    },
   ];
   return (
     <>
@@ -420,7 +553,9 @@ function VoiceTab(props: Props & { shown: boolean }) {
               onChange={(micId) => set({ micId })}
             />
           ) : (
-            <p className={styles.hint}>The browser lists your microphones once you turn your voice on.</p>
+            <p className={styles.hint}>
+              The browser lists your microphones once you turn your voice on.
+            </p>
           )}
           {/* Prototype (round 2): the live level under the picker; the design puts it inside the pill. */}
           <span className={styles.level} aria-hidden="true">
@@ -431,7 +566,11 @@ function VoiceTab(props: Props & { shown: boolean }) {
       <div className={styles.group}>
         <p className={styles.heading}>Voice processing</p>
         {SWITCHES.map((s) => (
-          <label key={s.key} className={`${sw.switchRow} ${styles.voiceRow}`} title={s.unavailable}>
+          <label
+            key={s.key}
+            className={`${sw.switchRow} ${styles.voiceRow}`}
+            title={s.unavailable}
+          >
             <span>
               {s.label}
               <small className={styles.hint}>{s.hint}</small>
@@ -443,7 +582,11 @@ function VoiceTab(props: Props & { shown: boolean }) {
               aria-label={s.label}
               aria-checked={voicePrefs[s.key]}
               aria-disabled={s.unavailable ? true : undefined}
-              onClick={() => (s.unavailable ? showToast(s.unavailable, <MicIcon />) : set({ [s.key]: !voicePrefs[s.key] }))}
+              onClick={() =>
+                s.unavailable
+                  ? showToast(s.unavailable, <MicIcon />)
+                  : set({ [s.key]: !voicePrefs[s.key] })
+              }
             >
               <i />
             </button>
