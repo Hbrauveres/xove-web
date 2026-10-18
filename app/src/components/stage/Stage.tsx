@@ -133,10 +133,12 @@ export function Stage({
   // Starting a stream takes you to your stream (spec 0123): picked once it's there.
   const [toMine, setToMine] = useState(false);
   const meLive = controls.mine.screen || controls.mine.camera;
-  if (toMine && sharers.some((s) => s.isMe)) {
+  const myId = sharers.find((s) => s.isMe)?.person.id;
+  useEffect(() => {
+    if (!toMine || !myId) return;
     setToMine(false);
-    pick(sharers.find((s) => s.isMe)!.person.id);
-  }
+    pick(myId);
+  }, [toMine, myId, pick]);
   const startMine = useCallback(
     (kind: "screen" | "camera") => {
       controls.onStart(kind);

@@ -60,7 +60,7 @@ type Props = {
   localVoice?: MediaTrack;
 };
 
-/** How long a control stays cued: two 1 s pulses (design decision 2). */
+/** The cue's two 1 s pulses (design decision 2); then it stays lit until the next press (spec 0123 prototype). */
 export const CUE_MS = 2000;
 type Cue = { kind: Tab; n: number } | null;
 
@@ -75,7 +75,7 @@ export function SettingsPanel(props: Props) {
   const tabs: Tab[] = ["screen", "camera", "voice"];
   const usable: Tab[] = screenTab ? tabs : ["camera", "voice"];
   const [chosen, setTab] = useState<Tab>(usable[0]);
-  // Told to go to a setting: its tab, and the control cued for 2 s (never a tab that can't be used).
+  // Told to go to a setting: its tab, and the control cued until the next press (never a tab that can't be used).
   const [cue, setCue] = useState<Cue>(null);
   const [lastGoTo, setLastGoTo] = useState(props.goTo?.n);
   if (props.goTo && props.goTo.n !== lastGoTo) {
@@ -86,10 +86,15 @@ export function SettingsPanel(props: Props) {
     }
   }
   if (!open && cue) setCue(null);
+  // Prototype (spec 0123): two pulses were over before the eye reached the list; it now stays lit
+  // until the next press anywhere but the live buttons (an option, outside) or the panel closes.
   useEffect(() => {
     if (!cue) return;
-    const off = window.setTimeout(() => setCue(null), CUE_MS);
-    return () => window.clearTimeout(off);
+    const off = (e: PointerEvent) => {
+      if (!(e.target as Element).closest?.("[data-dropup]")) setCue(null);
+    };
+    document.addEventListener("pointerdown", off);
+    return () => document.removeEventListener("pointerdown", off);
   }, [cue]);
   const tab = usable.includes(chosen) ? chosen : usable[0];
   const ids = useId();
