@@ -7,3 +7,9 @@
   object-fit: contain;
   background: #000;
 }
+
+/* Its box has the picture's own shape (within 1%): filled, so no thin black line at an edge
+   from fractional pixels (spec 0123 prototype). */
+.video[data-fill] {
+  object-fit: cover;
+}
