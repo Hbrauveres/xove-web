@@ -190,6 +190,12 @@
   background: var(--surface-raised);
 }
 
+/* On a wide screen, the size of the live person's photo (spec 0123 prototype). */
+.nobodyBig {
+  width: 52px;
+  height: 52px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .live::before {
     animation: none;
