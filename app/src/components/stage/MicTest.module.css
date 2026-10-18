@@ -1,0 +1,107 @@
+/* The Voice tab's mic test (spec 0123 prototype): see MicTest.tsx. */
+.test {
+  display: grid;
+  gap: 8px;
+}
+
+/* The live level, grey under the line and green over it, with the line you drag. */
+.meter {
+  position: relative;
+  height: 10px;
+  margin: 6px 0;
+  border-radius: 999px;
+  background: rgba(235, 235, 236, 0.1);
+}
+
+.meter i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: rgba(235, 235, 236, 0.32);
+  transition: width 90ms linear, background 120ms ease;
+}
+
+.meter[data-sent] i {
+  background: var(--ok);
+}
+
+.meter input {
+  position: absolute;
+  inset: -8px 0;
+  width: 100%;
+  height: calc(100% + 16px);
+  margin: 0;
+  background: transparent;
+  appearance: none;
+  cursor: ew-resize;
+}
+
+.meter input::-webkit-slider-runnable-track {
+  height: 100%;
+  background: transparent;
+}
+
+.meter input::-webkit-slider-thumb {
+  width: 4px;
+  height: 22px;
+  margin-top: 2px;
+  border-radius: 2px;
+  background: var(--text);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.45);
+  appearance: none;
+}
+
+.meter input::-moz-range-track {
+  background: transparent;
+}
+
+.meter input::-moz-range-thumb {
+  width: 4px;
+  height: 22px;
+  border: 0;
+  border-radius: 2px;
+  background: var(--text);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.45);
+}
+
+.meter input:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.hear {
+  flex: none;
+  height: calc(var(--ctl, 38px) - 4px);
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--sel-bg);
+  box-shadow: var(--sel-shadow);
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.hear:hover:not(:disabled) {
+  background: var(--sel-hover);
+}
+
+.hear:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.hint {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 11px;
+}

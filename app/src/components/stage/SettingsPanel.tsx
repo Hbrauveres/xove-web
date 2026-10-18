@@ -38,6 +38,7 @@ import { NO_SCREEN, NO_SOUND } from "./PlayerButtons";
 import { FULL_VIEW_SHEET } from "./makeRoom";
 import styles from "./SettingsPanel.module.css";
 import cueStyles from "../ui/cue.module.css";
+import { MicTest } from "./MicTest";
 
 /** How long it takes to come in or go out; it leaves the page once it's out. */
 const PANEL_MS = 260;
@@ -513,7 +514,7 @@ function VoiceTab(props: Props & { shown: boolean }) {
     onVoicePrefs({ ...voicePrefs, ...patch });
   const isolate = canIsolate();
   const SWITCHES: {
-    key: keyof Omit<VoicePrefs, "micId">;
+    key: keyof Omit<VoicePrefs, "micId" | "sensitivity">;
     label: string;
     hint: string;
     unavailable?: string;
@@ -551,16 +552,27 @@ function VoiceTab(props: Props & { shown: boolean }) {
               options={mics.map((m) => ({ value: m.deviceId, label: m.label }))}
               value={voicePrefs.micId ?? mics[0].deviceId}
               onChange={(micId) => set({ micId })}
+              // The live level, inside the pill (design decision 9).
+              adornment={
+                <span className={styles.level} aria-hidden="true">
+                  <i style={{ width: `${Math.round(level * 100)}%` }} />
+                </span>
+              }
             />
           ) : (
             <p className={styles.hint}>
               The browser lists your microphones once you turn your voice on.
             </p>
           )}
-          {/* Prototype (round 2): the live level under the picker; the design puts it inside the pill. */}
-          <span className={styles.level} aria-hidden="true">
-            <i style={{ width: `${Math.round(level * 100)}%` }} />
-          </span>
+        </div>
+        <div className={styles.group}>
+          <p className={styles.heading}>Mic test</p>
+          <MicTest
+            level={level}
+            track={localVoice}
+            sensitivity={voicePrefs.sensitivity}
+            onSensitivity={(sensitivity) => set({ sensitivity })}
+          />
         </div>
       </div>
       <div className={styles.group}>

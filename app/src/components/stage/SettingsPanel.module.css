@@ -490,8 +490,9 @@
 /* The Voice tab (spec 0123 prototype): the mic's live level, and the processing switches. */
 .level {
   display: block;
+  flex: none;
+  width: 40px;
   height: 3px;
-  margin-top: 8px;
   border-radius: 999px;
   background: rgba(235, 235, 236, 0.22);
   overflow: hidden;
@@ -515,6 +516,11 @@
 
 .voiceRow small {
   margin: 0;
+}
+
+/* The switches stay one size when a hint wraps, so they line up. */
+.voiceRow > button {
+  flex: none;
 }
 
 .voiceRow button[aria-disabled="true"] {

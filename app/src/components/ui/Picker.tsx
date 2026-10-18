@@ -6,6 +6,7 @@ import {
   useState,
   type CSSProperties,
   type KeyboardEvent,
+  type ReactNode,
 } from "react";
 import cueStyles from "./cue.module.css";
 import styles from "./Picker.module.css";
@@ -33,6 +34,8 @@ type Props<T extends string> = {
   openSignal?: number;
   /** Cued (spec 0115): the request it's cued for. The ring goes round the pill and its open list together. */
   cue?: number;
+  /** Shown in the pill before its arrow: the mic's live level (spec 0123). */
+  adornment?: ReactNode;
 };
 
 /** How long the list takes to roll back before it leaves (spec 0111, design decision 9). */
@@ -61,6 +64,7 @@ export function Picker<T extends string>({
   closed = false,
   openSignal,
   cue,
+  adornment,
 }: Props<T>) {
   const [open, setOpenState] = useState(false);
   // Drawn while open, and while it rolls back after.
@@ -295,6 +299,7 @@ export function Picker<T extends string>({
         onClick={() => setOpen(!open)}
       >
         <span className={styles.chosen}>{chosen?.label}</span>
+        {adornment}
         <svg
           viewBox="0 0 12 12"
           width="12"

@@ -462,9 +462,12 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
     (next: VoicePrefs) => {
       setVoicePrefsState(next);
       saveVoicePrefs(next);
-      if (lk.voice) void lk.applyVoice(next);
+      // The sensitivity line is the gate's, not the mic's: only the rest restarts the mic.
+      const { sensitivity: _a, ...mic } = next;
+      const { sensitivity: _b, ...was } = voicePrefs;
+      if (lk.voice && JSON.stringify(mic) !== JSON.stringify(was)) void lk.applyVoice(next);
     },
-    [lk],
+    [lk, voicePrefs],
   );
   // Stopping both my screen and my camera turns my voice off: a voice never travels alone.
   const sending = lk.publishing.screen || lk.publishing.camera;
