@@ -18,10 +18,11 @@ type Kind = "sound" | "voice";
 
 /**
  * A preview's buttons (specs 0123 and 0131): that person's voice and screen sound, heard or not by
- * me wherever they are, and a swap between their screen and camera when they share both. A tap
- * turns a sound on or off; resting on it or holding it opens its own slider across the preview.
- * A missing sound is greyed in its place; their voice lights green while they speak.
- * `layout`: over the picture (a big preview), or in the row under a small one.
+ * me wherever they are, and a swap between their screen and camera when they share both (on my own
+ * preview, the swap alone). A tap turns a sound on or off; resting on it or holding it opens its
+ * slider. A missing sound is greyed in its place; their voice lights green while they speak.
+ * `layout`: over a big picture, each slider upright over its button; or in the row of a small
+ * preview, one slider after the buttons.
  */
 export function HearToggles({
   sharer,
@@ -67,10 +68,10 @@ export function HearToggles({
     document.addEventListener("pointerdown", away);
     return () => document.removeEventListener("pointerdown", away);
   }, [open]);
-  // What the slider sets: the open sound, kept while it rolls up so it doesn't change on the way.
+  // What the row's slider sets: the open sound, kept while it rolls up so it doesn't change on the
+  // way. Switching, the one it replaces shrinks away while the new one grows, each let go when its
+  // own animation ends (spec 0131).
   const [shown, setShown] = useState<Kind | null>(null);
-  // The one it replaces shrinks away while the new one grows (spec 0131).
-  // Each one is let go when its own animation ends.
   const [leaving, setLeaving] = useState<Kind | null>(null);
   const [entering, setEntering] = useState<Kind | null>(null);
   if (open && open !== shown) {
@@ -80,18 +81,8 @@ export function HearToggles({
     }
     setShown(open);
   }
-  const iconOf = (kind: Kind) =>
-    kind === "sound" ? (
-      hearing.sound.muted ? (
-        <VolumeOffIcon />
-      ) : (
-        <SoundIcon />
-      )
-    ) : hearing.voice.muted ? (
-      <VoiceOffIcon />
-    ) : (
-      <VoiceIcon />
-    );
+  const iconOf = (kind: Kind, off: boolean) =>
+    kind === "sound" ? off ? <VolumeOffIcon /> : <SoundIcon /> : off ? <VoiceOffIcon /> : <VoiceIcon />;
   const show = (kind: Kind) => {
     setOpen(kind);
     restart();
@@ -144,7 +135,7 @@ export function HearToggles({
           if (open) restart();
         }}
       >
-        {kind === "sound" ? off ? <VolumeOffIcon /> : <SoundIcon /> : off ? <VoiceOffIcon /> : <VoiceIcon />}
+        {iconOf(kind, off)}
       </button>
     );
     if (layout !== "over") return btn;
@@ -217,8 +208,8 @@ export function HearToggles({
           </button>
         )}
       </span>
-      {/* One slider under the buttons, unrolling once; moving between buttons only changes what it
-          sets, with a crossfade, so the row never moves under the pointer (spec 0131). */}
+      {/* In the row: one slider after the buttons, unrolling once; moving between buttons only changes
+          what it sets, so the row never moves under the pointer (spec 0131). */}
       {layout === "tray" && (
         <span className={styles.drawer} data-drawer data-open={open ? true : undefined} inert={!open}>
           <span className={styles.inner}>
@@ -231,7 +222,7 @@ export function HearToggles({
                 aria-hidden="true"
                 onAnimationEnd={(e) => e.animationName.includes("shrink") && setLeaving(null)}
               >
-                {iconOf(leaving)}
+                {iconOf(leaving, hearing[leaving].muted)}
                 <Range
                   className={styles.range}
                   min={0}
@@ -251,7 +242,7 @@ export function HearToggles({
                 data-entering={entering === shown || undefined}
                 onAnimationEnd={(e) => e.animationName.includes("grow") && setEntering(null)}
               >
-                {iconOf(shown)}
+                {iconOf(shown, hearing[shown].muted)}
                 <Range
                   className={styles.range}
                   min={0}

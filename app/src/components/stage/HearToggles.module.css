@@ -1,20 +1,100 @@
-/* A preview's buttons (specs 0123 and 0131): its voice, its sound, its swap; at the picture's
-   corner, or in the row under a small preview. */
+/* A preview's buttons (specs 0123 and 0131): its voice, its sound, its swap; over a big picture,
+   or in the row of a small preview. */
 .toggles {
   display: inline-flex;
   gap: 4px;
 }
 
-/* In the row under a small preview: a little bigger, the row's own glass. */
+.buttons {
+  display: inline-flex;
+  gap: inherit;
+}
+
+.toggle {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(10, 10, 11, 0.72);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    background 120ms ease,
+    box-shadow 160ms ease;
+}
+
+.toggle svg {
+  width: 13px;
+  height: 13px;
+}
+
+.toggle[aria-pressed="true"],
+.toggle[aria-disabled="true"] {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.toggle[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (hover: hover) {
+  .toggle:not([aria-disabled="true"]):hover {
+    background: rgba(40, 40, 44, 0.9);
+  }
+}
+
+/* The button whose slider is open: a soft ring, so a change of sound is seen. */
+.toggle[data-active] {
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(235, 235, 236, 0.35);
+}
+
+/* Their voice while they speak: the speaking cue, neon on dark. */
+.toggle::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  transition: box-shadow 120ms ease;
+  pointer-events: none;
+}
+
+.toggle[data-talking] {
+  color: #45e087;
+}
+
+.toggle[data-talking]::before {
+  box-shadow:
+    inset 0 0 0 1px rgba(43, 205, 104, 0.85),
+    inset 0 0 4px rgba(22, 163, 74, 0.45),
+    0 0 6px 0 rgba(22, 163, 74, 0.35);
+}
+
+/* The row of a small preview: the preview's width whatever is open, the panels' glass, the buttons
+   centred and clear until hovered (spec 0131). The space to the slider is the slider's own padding,
+   so closed, the buttons sit in the middle. */
 .toggles[data-layout="tray"] {
   box-sizing: border-box;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
   gap: 0;
   padding: 4px;
   border: 1px solid var(--panel-line);
+  border-radius: 16px;
   background: var(--panel);
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+}
+
+.toggles[data-layout="tray"] .buttons {
+  gap: 6px;
 }
 
 .toggles[data-layout="tray"] .toggle {
@@ -23,37 +103,24 @@
   background: transparent;
 }
 
-.toggles[data-layout="tray"] .toggle:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
 .toggles[data-layout="tray"] .toggle svg {
   width: 15px;
   height: 15px;
 }
 
-.buttons {
-  display: inline-flex;
-  gap: inherit;
+@media (hover: hover) {
+  .toggles[data-layout="tray"] .toggle:not([aria-disabled="true"]):hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
 }
 
-/* In the row, the space to the slider is the slider's own padding: closed, the buttons sit in the
-   middle (spec 0131). */
-.toggles[data-layout="tray"] .buttons {
-  gap: 6px;
+.toggles[data-layout="tray"] .toggle[data-active] {
+  background: rgba(255, 255, 255, 0.1);
 }
 
-/* Under a small preview: one width, the preview's, whatever is open (spec 0131). */
-.toggles[data-layout="tray"] {
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  border-radius: 16px;
-}
-
-/* The slider: one drawer under the buttons that unrolls by its height (300 ms) and rolls back
-   (240 ms); switching sounds, the old slider shrinks away to the left while the new one grows
-   from it (spec 0131). */
+/* The row's slider: one drawer after the buttons that unrolls by its height (300 ms) and rolls back
+   (240 ms); switching sounds, the old slider shrinks away to the left while the new one grows from
+   it. */
 .drawer {
   display: grid;
   grid-template-rows: 0fr;
@@ -86,6 +153,17 @@
   color: var(--text);
 }
 
+.slider > svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+
+.range {
+  flex: 1;
+  min-width: 0;
+}
+
 /* Switching: the old one, laid over, its bar shrinking to the left and its icon fading. */
 .slider[data-leaving] {
   position: absolute;
@@ -101,7 +179,7 @@
   animation: shrink 220ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* The new one: its icon fading in, its bar growing from the left once the old one is gone. */
+/* The new one: its icon fading in, its bar growing from the left as the old one goes. */
 .slider[data-entering] svg {
   animation: fade-in 180ms ease 80ms backwards;
 }
@@ -110,6 +188,7 @@
   animation: grow 260ms cubic-bezier(0.2, 0.8, 0.2, 1) 120ms backwards;
 }
 
+/* Both ends given: a clip can't be blended to or from none. */
 @keyframes shrink {
   from {
     clip-path: inset(-8px 0 -8px 0);
@@ -140,27 +219,8 @@
   }
 }
 
-.slider > svg {
-  flex: none;
-  width: 15px;
-  height: 15px;
-}
-
-/* The button whose slider is open: a soft ring, so a change of sound is seen. */
-.toggle {
-  transition:
-    background 120ms ease,
-    box-shadow 160ms ease;
-}
-
-.toggle[data-active],
-.toggles[data-layout="tray"] .toggle[data-active] {
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 0 0 1px rgba(235, 235, 236, 0.35);
-}
-
-/* Over a big picture (the phone's feed): each sound's own slider, upright over its button, as the
-   stage's sounds: the same glass pill unrolling from the button (spec 0131). */
+/* Over a big picture (the phone's feed): each sound's own slider, upright over its button, the
+   stage's glass pill unrolling from it (spec 0131). */
 .anchor {
   position: relative;
   display: inline-grid;
@@ -213,8 +273,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .upright,
-  .toggle {
+  .toggle,
+  .toggle::before,
+  .drawer,
+  .upright {
     transition: none;
   }
 
@@ -225,72 +287,5 @@
   .slider[data-entering] svg,
   .slider[data-entering] .range {
     animation: none;
-  }
-}
-
-.range {
-  flex: 1;
-  min-width: 0;
-}
-
-.toggle {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: rgba(10, 10, 11, 0.72);
-  color: var(--text);
-  cursor: pointer;
-}
-
-.toggle svg {
-  width: 13px;
-  height: 13px;
-}
-
-.toggle[aria-pressed="true"],
-.toggle[aria-disabled="true"] {
-  color: rgba(255, 255, 255, 0.55);
-}
-
-.toggle[aria-disabled="true"] {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-@media (hover: hover) {
-  .toggle:not([aria-disabled="true"]):hover {
-    background: rgba(40, 40, 44, 0.9);
-  }
-}
-
-.toggle::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  transition: box-shadow 120ms ease;
-  pointer-events: none;
-}
-
-/* Their voice while they speak: the speaking cue, neon on dark. */
-.toggle[data-talking] {
-  color: #45e087;
-}
-
-.toggle[data-talking]::before {
-  box-shadow:
-    inset 0 0 0 1px rgba(43, 205, 104, 0.85),
-    inset 0 0 4px rgba(22, 163, 74, 0.45),
-    0 0 6px 0 rgba(22, 163, 74, 0.35);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .toggle::before {
-    transition: none;
   }
 }
