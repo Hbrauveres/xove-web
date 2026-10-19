@@ -15,6 +15,16 @@
   z-index: 2;
 }
 
+/* Above the open streams row (sideways): 6 px clear of its pictures; above the full view's
+   settings sheet, 8 px (spec 0133). */
+:global([data-row-open]) .bar {
+  bottom: 6px;
+}
+
+:global([data-sheet-lift]) .bar {
+  bottom: 8px;
+}
+
 .left,
 .right {
   display: flex;

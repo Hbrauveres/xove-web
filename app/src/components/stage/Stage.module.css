@@ -1,4 +1,9 @@
 .stage {
+  /* The sideways streams row's sizes, shared with the controls that end above it (spec 0133):
+     its heading, its pictures' width, and its content's height under its fade. */
+  --row-head: 28px;
+  --row-pictures: 112px;
+  --row-content: calc(var(--row-head) + 6px + var(--row-pictures) * 9 / 16 + 10px + env(safe-area-inset-bottom, 0px));
   min-width: 0;
   /* The column is the 16:9 box (spec 0107): the stage's size comes from its width. */
   container-type: inline-size;
@@ -54,7 +59,8 @@
   /* A new picture's shape: the view glides to it, as the stage did (the design sheet's motion). */
   transition:
     width 0.35s ease,
-    height 0.35s ease;
+    height 0.35s ease,
+    translate var(--unroll);
 }
 
 .picture {
@@ -90,7 +96,23 @@
   pointer-events: none;
   transition:
     opacity 0.25s ease,
-    translate var(--unroll);
+    translate var(--unroll),
+    bottom 0.28s ease;
+}
+
+/* Sideways and in the upright full view the box is the screen (spec 0133): the controls clear the
+   iPhone's home indicator, end above the open streams row (from its shared sizes), and above the
+   settings sheet (its height, told by the stage), rising with them. */
+.stage[data-layout="sideways"] :is(.controls, [data-overlay]) {
+  bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.stage[data-layout="sideways"][data-row-open] :is(.controls, [data-overlay]) {
+  bottom: var(--row-content);
+}
+
+.stage[data-layout="sideways"][data-sheet-lift] :is(.controls, [data-overlay]) {
+  bottom: var(--sheet-h, 0px);
 }
 
 /* Fading, part by part: a heard voice stays, for its speaking cue (spec 0131). */
@@ -114,44 +136,10 @@
   pointer-events: auto;
 }
 
-/*
- * The upright full view (spec 0112): the fullscreen button and the round buttons are the
- * screen's, at its bottom, over the player band and the black around it; they fade with the
- * top bar and move up together above the settings sheet.
- */
-.screenChrome {
-  position: absolute;
-  /* Clear of the iPhone's home indicator, like the streams row's arrow; above the streams row
-     while it's open (--row-lift, measured by the stage), rising with it. */
-  inset: 0 0 calc(env(safe-area-inset-bottom, 0px) + var(--row-lift, 0px));
-  z-index: 4;
-  pointer-events: none;
-  transition:
-    translate var(--unroll),
-    bottom 0.28s ease;
-}
-
-.stage[data-chrome="hidden"] .screenChrome .controls > :not(:has([data-stays])) {
-  opacity: 0;
-}
-
-.stage[data-chrome="hidden"] .screenChrome :is(button, input) {
-  pointer-events: none;
-}
-
-.stage[data-chrome="hidden"]:has(:focus-visible) .screenChrome .controls > * {
-  opacity: 1;
-}
-
-.stage[data-chrome="hidden"]:has(:focus-visible) .screenChrome :is(button, input) {
-  pointer-events: auto;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .box,
   .view,
-  .controls,
-  .screenChrome {
+  .controls {
     transition: none;
   }
 }
@@ -325,18 +313,19 @@
   }
 }
 
-/* Sideways with the streams row's arrow at the bottom-left: the sounds start 8 px after it, on the
-   same line, or at the edge when it's gone into the open row (spec 0131; --arrow-end is measured
-   by the stage). */
+/* Sideways with the streams row's arrow at the bottom-left (14 px in, 36 px): the sounds start
+   8 px after it, on its line, and go back to the edge when it moves into the open row (specs 0131
+   and 0133). The arrow and the sounds share the screen's box, so this is plain layout. */
 .stage[data-row-arrow] [data-viewer-bar] {
-  left: max(14px + env(safe-area-inset-left, 0px), var(--arrow-end, 0px) + 8px);
+  left: calc(14px + 36px + 8px + env(safe-area-inset-left, 0px));
   /* With the row: the arrow goes into it as it opens, and the sounds slide back to the edge. */
   transition:
     left 0.28s ease,
     opacity 0.25s ease;
 }
 
-/* Faded, the arrow's gone too: a heard voice slides to the corner (spec 0131). */
+/* The arrow in the open row, or faded with the controls: the sounds slide to the corner (spec 0131). */
+.stage[data-row-arrow][data-row-open] [data-viewer-bar],
 .stage[data-row-arrow][data-chrome="hidden"]:not(:has(:focus-visible)) [data-viewer-bar] {
   left: calc(14px + env(safe-area-inset-left, 0px));
 }

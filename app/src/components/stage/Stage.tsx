@@ -21,7 +21,7 @@ import type { Hearing } from "./HearToggles";
 import { ViewerBar, type Sound } from "./ViewerBar";
 import { MicIcon, MicOffIcon } from "./icons";
 import round from "./RoundButton.module.css";
-import { arrowEnd, liftButtons, liftOverRow, makeRoom, ROOM_GAP as SHEET_GAP } from "./makeRoom";
+import { liftButtons, makeRoom, ROOM_GAP as SHEET_GAP } from "./makeRoom";
 import { AlsoLive } from "./AlsoLive";
 import { Ambilight } from "./Ambilight";
 import { CornerGlow } from "./CornerGlow";
@@ -185,9 +185,9 @@ export function Stage({
   const stageRef = useRef<HTMLElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
   const controlsRef = useRef<HTMLDivElement>(null);
-  const screenChromeRef = useRef<HTMLDivElement>(null);
-  // The fullscreen button and the round buttons. In the upright full view they're the
-  // screen's, at its bottom, not the player band's (spec 0112); elsewhere, the player's.
+  const viewRef = useRef<HTMLDivElement>(null);
+  // Sideways and in the upright full view, the stage's box is the whole screen (spec 0133): its
+  // controls sit at the screen's bottom whatever the picture's shape.
   const onScreen = sideways && Boolean(fullView?.on && !fullView.hidden);
 
   // The upright full view with the settings sheet open (spec 0107, design decision 6; spec 0112):
@@ -204,11 +204,11 @@ export function Stage({
     const section = stageRef.current;
     if (!box || !section) return;
     const place = () => {
-      const buttons = screenChromeRef.current;
       const frame = frameRef.current;
+      const view = viewRef.current;
       const inPlayer = [frame?.querySelector<HTMLElement>("[data-overlay]"), controlsRef.current];
-      box.style.translate = "";
-      if (buttons) buttons.style.translate = "";
+      if (view) view.style.translate = "";
+      section.style.removeProperty("--sheet-h");
       inPlayer.forEach((el) => el && (el.style.translate = ""));
       if (!makingRoom && !roomInPlayer) return;
       const sheet = document.querySelector<HTMLElement>('[role="dialog"][data-variant="sheet"]');
@@ -228,29 +228,20 @@ export function Stage({
         if (up) inPlayer.forEach((el) => el && (el.style.translate = `0 ${-up}px`));
         return;
       }
-      // Fixed to the screen: its layout top, which its slide-in (a transform) doesn't change.
+      // Fixed to the screen: its layout top, which its slide-in (a transform) doesn't change. The
+      // controls end above it (the stylesheet reads its height); the picture moves up if it fits.
       const sheetTop = sheet.offsetTop;
       const s = section.getBoundingClientRect();
+      section.style.setProperty("--sheet-h", `${Math.max(0, s.bottom - sheetTop)}px`);
+      if (!view) return;
       const top = topRef.current;
       const bar = top
         ? Math.max(0, ...[...top.children].map((c) => (c as HTMLElement).offsetTop + (c as HTMLElement).offsetHeight))
         : 0;
-      const lift = makeRoom({
-        height: s.height,
-        bar,
-        sheet: s.bottom - sheetTop,
-        band: { top: box.offsetTop, height: box.offsetHeight },
-      });
-      if (lift) box.style.translate = `0 ${-lift}px`;
-      const row = buttons?.querySelector<HTMLElement>("[data-buttons]");
-      if (!buttons || !row) return;
-      // Where the row sits without any lift (layout, not the screen: a lift still sliding would
-      // otherwise be measured as already done).
-      let y = row.offsetHeight;
-      for (let n: HTMLElement | null = row; n && n !== section; n = n.offsetParent as HTMLElement | null)
-        y += n.offsetTop;
-      const up = liftButtons({ rowBottom: s.top + y, sheetTop });
-      if (up) buttons.style.translate = `0 ${-up}px`;
+      // The view's band in layout: centred in the box (its translate is its own centring).
+      const band = { top: box.offsetTop + view.offsetTop - view.offsetHeight / 2, height: view.offsetHeight };
+      const lift = makeRoom({ height: s.height, bar, sheet: s.bottom - sheetTop, band });
+      if (lift) view.style.translate = `-50% calc(-50% - ${lift}px)`;
     };
     place();
     window.addEventListener("resize", place);
@@ -269,7 +260,6 @@ export function Stage({
     held.current.size > 0 ||
     (keyboardFocus() && (frameRef.current?.contains(document.activeElement) ?? false)) ||
     (keyboardFocus() && (topRef.current?.contains(document.activeElement) ?? false)) ||
-    (keyboardFocus() && (screenChromeRef.current?.contains(document.activeElement) ?? false)) ||
     Boolean(topRef.current?.querySelector('[aria-expanded="true"]'));
   // An open streams row stays through the idle fade; only a tap hides it, with everything (spec 0131).
   const [rowAway, setRowAway] = useState(false);
@@ -486,55 +476,9 @@ export function Stage({
   }
   // Nobody live: there's no row to open.
   if (rowOpen && !big) setRowOpen(false);
-  // Sideways, the streams row's arrow sits at the screen's bottom-left: the sounds start after it
-  // (spec 0131), and go back to the edge when it moves into the open row.
-  useLayoutEffect(() => {
-    const stage = stageRef.current;
-    if (!rowArrow || !stage) return;
-    const place = () => {
-      const arrow = stage.querySelector<HTMLElement>('[data-arrow="up"]');
-      const bar = stage.querySelector<HTMLElement>("[data-viewer-bar]");
-      const holder = bar?.offsetParent as HTMLElement | null;
-      if (!arrow || !holder) return stage.style.removeProperty("--arrow-end");
-      // Where the arrow ends, from the sounds' own layer; the stylesheet keeps them clear of it.
-      stage.style.setProperty("--arrow-end", `${arrowEnd(arrow, holder)}px`);
-    };
-    place();
-    window.addEventListener("resize", place);
-    const watch = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(place);
-    watch?.observe(stage);
-    if (frameRef.current) watch?.observe(frameRef.current);
-    return () => {
-      window.removeEventListener("resize", place);
-      watch?.disconnect();
-      stage.style.removeProperty("--arrow-end");
-    };
-  }, [rowArrow, onScreen, rowOpen]);
   // Open and not hidden by a tap: hidden, it's closed for screen readers too, and opens again with
   // the controls.
   const rowShown = rowOpen && !(rowAway && !chromeShown);
-  // The streams row open: the buttons rise above it, as above the settings sheet (spec 0131): what
-  // comes up from the bottom never covers them.
-  useLayoutEffect(() => {
-    const stage = stageRef.current;
-    if (!stage) return;
-    const place = () => {
-      const row = stage.querySelector<HTMLElement>("[data-streams-row]");
-      const chrome = screenChromeRef.current;
-      const bar = chrome?.querySelector<HTMLElement>("[data-viewer-bar], [data-buttons]");
-      if (!rowShown || !row || !chrome || !bar) return stage.style.removeProperty("--row-lift");
-      // In layout: where the buttons sit unlifted, from the screen's bottom; the lift is the rest.
-      const lift = parseFloat(stage.style.getPropertyValue("--row-lift")) || 0;
-      let top = 0;
-      for (let n: HTMLElement | null = bar; n && n !== chrome; n = n.offsetParent as HTMLElement | null) top += n.offsetTop;
-      const under = parseFloat(getComputedStyle(chrome).bottom) - lift + (chrome.clientHeight - top - bar.offsetHeight);
-      const fade = parseFloat(getComputedStyle(row).paddingTop);
-      stage.style.setProperty("--row-lift", `${liftOverRow({ row: row.offsetHeight, fade, under })}px`);
-    };
-    place();
-    window.addEventListener("resize", place);
-    return () => window.removeEventListener("resize", place);
-  }, [rowShown, sideways, onScreen]);
   const rowSwipe = useStageSwipe(slideRef, {
     enabled: sideways && Boolean(big),
     axis: "vertical",
@@ -720,6 +664,9 @@ export function Stage({
       data-layout={layout}
       data-chrome={sideways ? chrome : undefined}
       data-row-arrow={rowArrow || undefined}
+      // Sideways, the open streams row: the controls end above it, from shared values (spec 0133).
+      data-row-open={(sideways && rowShown) || undefined}
+      data-sheet-lift={makingRoom || undefined}
       data-no-full={(sideways && fullView?.hidden) || undefined}
       aria-label="Shared screen"
       {...(sideways ? gestures : {})}
@@ -741,7 +688,7 @@ export function Stage({
           onFocus={showChrome}
         >
           {/* The view (spec 0133): the picture in its own shape, centred, with its light behind it. */}
-          <div className={styles.view}>
+          <div ref={viewRef} className={styles.view}>
             {/* Behind the picture, outside it: the picture clips what's inside it. */}
             {/* One per stream: a stream the browser won't let it read doesn't darken the next one. */}
             {/* Nobody live: each viewfinder corner glows outward, a blurred L (spec 0123, design decision 7). */}
@@ -754,7 +701,7 @@ export function Stage({
             />
             <div className={styles.picture}>{body()}</div>
           </div>
-          {!sideways && chromeLayer}
+          {chromeLayer}
           {!sideways && settingsPanel}
           {voices.map((v) => (
             <VoiceAudio key={v.id} track={v.track} volume={v.volume} muted={v.muted} />
@@ -768,13 +715,6 @@ export function Stage({
         </div>
       </div>
 
-      {/* Sideways (and the upright full view): at the bottom of the screen like the streams row's arrow,
-          whatever the picture's shape, moving up together above the sheet or the open row. */}
-      {sideways && (
-        <div ref={screenChromeRef} className={styles.screenChrome} onFocus={showChrome}>
-          {chromeLayer}
-        </div>
-      )}
 
       {/* Sideways the stage is the screen: over the top bar as well (design decision 9). */}
       {sideways && settingsPanel}

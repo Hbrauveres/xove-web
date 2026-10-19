@@ -2,7 +2,8 @@
   /* The translate: it rises with the round buttons above the settings sheet, together (spec 0118). */
   transition:
     opacity 0.25s ease,
-    translate var(--unroll);
+    translate var(--unroll),
+    bottom 0.28s ease;
   position: absolute;
   inset: 0;
   display: flex;
@@ -15,6 +16,16 @@
   pointer-events: none;
   padding: 12px;
   padding-bottom: calc(12px + (var(--btn, 48px) - 34px) / 2);
+}
+
+/* Above the open streams row, 6 px clear of its pictures, and the full view's settings sheet,
+   8 px, as the sounds (spec 0133). */
+:global([data-row-open]) .overlay {
+  padding-bottom: 6px;
+}
+
+:global([data-sheet-lift]) .overlay {
+  padding-bottom: 8px;
 }
 
 /* The fullscreen button, at the right. */

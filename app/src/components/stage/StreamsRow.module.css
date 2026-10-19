@@ -27,10 +27,13 @@
   pointer-events: auto;
 }
 
+/* Its sizes are the stage's shared values (spec 0133): the controls end above it from them. */
 .head {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-sizing: content-box;
+  height: var(--row-head, 28px);
   margin: 0;
   padding: 0 16px 6px;
   font-family: var(--font-mono);
@@ -125,7 +128,7 @@
   position: relative;
   display: block;
   flex: none;
-  width: 112px;
+  width: var(--row-pictures, 112px);
   aspect-ratio: 16 / 9;
   padding: 0;
   border: 0;
