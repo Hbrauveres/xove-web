@@ -120,7 +120,7 @@ export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, h
                 data-swapping={swapping === s.person.id || undefined}
                 data-talking={talking || undefined}
                 onPointerDown={() => {
-                  if (s.isMe) return;
+                  if (s.isMe && !both) return;
                   window.clearTimeout(hold.current);
                   hold.current = window.setTimeout(() => setHeld(s.person.id), 500);
                 }}
@@ -149,7 +149,7 @@ export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, h
                   <span className={styles.name}>{name}</span>
                 </button>
                 {/* Beside the picture's button, never in it. */}
-                {!s.isMe && hearOf && onHear && held === s.person.id && (
+                {(!s.isMe || both) && hearOf && onHear && held === s.person.id && (
                   <span className={styles.hear}>
                     <HearToggles
                       sharer={s}

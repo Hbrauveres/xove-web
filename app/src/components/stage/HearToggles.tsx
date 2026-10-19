@@ -187,14 +187,15 @@ export function HearToggles({
       onPointerMove={() => open && restart()}
     >
       <span className={styles.buttons}>
-        {button("voice")}
-        {button("sound")}
+        {/* My own preview: nothing of mine to hear, only the swap (spec 0131). */}
+        {!sharer.isMe && button("voice")}
+        {!sharer.isMe && button("sound")}
         {swap && (
           <button
             type="button"
             className={styles.toggle}
             aria-pressed={swap.on}
-            aria-label={`Swap ${name}'s screen and camera`}
+            aria-label={`Swap ${sharer.isMe ? "your" : `${name}'s`} screen and camera`}
             title="Swap screen and camera"
             onClick={(e) => {
               e.stopPropagation();

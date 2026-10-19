@@ -71,13 +71,13 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
               data-swapping={swapping === id || undefined}
               data-talking={talking || undefined}
               onPointerEnter={(e) => {
-                if (e.pointerType === "mouse" && !s.isMe) tray.show(id, e.currentTarget);
+                if (e.pointerType === "mouse" && (!s.isMe || both)) tray.show(id, e.currentTarget);
               }}
               onPointerLeave={(e) => {
                 if (e.pointerType === "mouse") tray.leave();
               }}
               onPointerDown={(e) => {
-                if (e.pointerType === "mouse" || s.isMe) return;
+                if (e.pointerType === "mouse" || (s.isMe && !both)) return;
                 const li = e.currentTarget;
                 window.clearTimeout(hold.current);
                 hold.current = window.setTimeout(() => tray.show(id, li, true), 500);
@@ -126,8 +126,9 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
         tray={tray}
         render={(id) => {
           const s = others.find((o) => o.person.id === id);
-          if (!s || s.isMe) return null;
-          const both = Boolean(s.screen && s.camera);
+          const both = Boolean(s?.screen && s?.camera);
+          // My own preview: only its swap, when I share both.
+          if (!s || (s.isMe && !both)) return null;
           return (
             <HearToggles
               sharer={s}

@@ -85,8 +85,8 @@ export function LiveFeed({ others, liveCount, watchersOf, onPick, hearOf, onHear
                     <span className={styles.loading}>Loading…</span>
                   )}
                 </button>
-                {/* Beside the picture's button, never in it: their sound and voice (spec 0123). */}
-                {!s.isMe && hearOf && onHear && (
+                {/* Beside the picture's button, never in it: their sound and voice (spec 0123); on mine, only the swap. */}
+                {(!s.isMe || both) && hearOf && onHear && (
                   <span className={styles.voice}>
                     <HearToggles
                       sharer={s}
