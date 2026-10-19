@@ -33,7 +33,10 @@ function useClock() {
  * the browser can't share a screen (phones), the camera comes first and the screen is greyed with
  * its reason. Nothing moves but the clock.
  */
-export function EmptyStage({ canShareScreen = true, onStart }: Props) {
+export function EmptyStage({
+  canShareScreen = true,
+  onStart,
+}: Props) {
   const now = useClock();
   const screen = (
     <Tooltip text={canShareScreen ? undefined : "This browser can't share a screen"}>

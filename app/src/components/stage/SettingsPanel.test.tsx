@@ -61,7 +61,7 @@ describe("the settings panel: tabs", () => {
     expect(within(panel()).getAllByRole("tab").map((t) => t.textContent)).toEqual(["Screen", "Camera", "Voice"]);
     const screenTab = within(panel()).getByRole("tab", { name: "Screen" });
     expect(screenTab).toHaveAttribute("aria-disabled", "true");
-    expect(screenTab).toHaveAttribute("title", NO_SCREEN);
+    expect(screenTab).toHaveAccessibleDescription(NO_SCREEN);
     expect(within(panel()).getByRole("tabpanel", { name: "Camera" })).toBeInTheDocument();
     await user.click(screenTab);
     expect(within(panel()).getByRole("tab", { name: "Camera" })).toHaveAttribute("aria-selected", "true");
@@ -148,7 +148,7 @@ describe("the settings panel: the Screen tab", () => {
     await user.click(within(tab).getByRole("radio", { name: "720p" }));
     expect(onPrefsChange).toHaveBeenLastCalledWith("screen", { quality: "720p", mode: "smooth" });
     const sharp = within(tab).getByRole("radio", { name: "Sharp" });
-    expect(sharp).toHaveAttribute("title", "Keeps detail sharp when the connection is tight: text, code");
+    expect(sharp).toHaveAccessibleDescription("Keeps detail sharp when the connection is tight: text, code");
     await user.click(sharp);
     expect(onPrefsChange).toHaveBeenLastCalledWith("screen", { quality: "1080p", mode: "sharp" });
   });
@@ -350,7 +350,7 @@ describe("the settings panel: the Voice tab (spec 0123)", () => {
       ["Automatic volume", "true"],
       ["Voice isolation", "false"],
     ]);
-    expect(switches[1].closest("label")).toHaveAttribute("title", "Quiets fans, keyboards and hum");
+    expect(switches[1].closest("label")).toHaveAccessibleDescription("Quiets fans, keyboards and hum");
   });
 
   it("applies a switch at once", async () => {

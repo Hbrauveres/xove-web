@@ -54,7 +54,7 @@ export function MicTest({
           />
         </Tooltip>
       </div>
-      {/* Disabled, the button gets no pointer: its wrapper says why. */}
+      {/* Disabled, the button gets no pointer: its wrapper takes it, for the tooltip. */}
       <Tooltip text={track ? "Hear yourself for 5 s (use headphones)" : "Turn your voice on to hear yourself"}>
         <span className={styles.hearWrap}>
           <button

@@ -99,9 +99,7 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
                 }}
                 onKeyDown={(e) => {
                   if (e.key !== "Tab" || e.shiftKey || tray.open?.id !== id) return;
-                  const first = document.querySelector<HTMLElement>(
-                    `[data-tray-for="${id}"]:not([data-leaving]) button`,
-                  );
+                  const first = document.querySelector<HTMLElement>(`[data-tray-for="${id}"]:not([data-leaving]) button`);
                   if (!first) return;
                   e.preventDefault();
                   first.focus();
@@ -163,7 +161,12 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
       {free > 0 && (
         // The six seats as dots, red for each stream live (spec 0123); gone when all are taken.
         <Tooltip text={`${liveCount} of 6 live · ${seatsOpen(free)}`}>
-          <p className={styles.free} data-free role="img" aria-label={`${liveCount} of 6 live, ${seatsOpen(free)}`}>
+          <p
+            className={styles.free}
+            data-free
+            role="img"
+            aria-label={`${liveCount} of 6 live, ${seatsOpen(free)}`}
+          >
             {Array.from({ length: 6 }, (_, i) => (
               <i key={i} data-on={i < liveCount || undefined} />
             ))}

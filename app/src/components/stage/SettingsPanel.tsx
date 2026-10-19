@@ -208,9 +208,8 @@ export function SettingsPanel(props: Props) {
       >
         <span className={styles.marker} aria-hidden="true" />
         {tabs.map((t) => (
-          <Tooltip text={usable.includes(t) ? undefined : NO_SCREEN}>
+          <Tooltip key={t} text={usable.includes(t) ? undefined : NO_SCREEN}>
             <button
-              key={t}
               id={tabId(t)}
               type="button"
               role="tab"
@@ -321,7 +320,12 @@ function ScreenTab(props: Props & { cue?: number }) {
                 <span>{screenSurface ? SURFACE[screenSurface] : "Your screen"}</span>
               </span>
               <Tooltip text={"Pick another window or tab; viewers keep watching the same stream"}>
-                <button type="button" className={styles.button} disabled={busy} onClick={onChangeWindow}>
+                <button
+                  type="button"
+                  className={styles.button}
+                  disabled={busy}
+                  onClick={onChangeWindow}
+                >
                   <CueRing n={props.cue} />
                   Change
                 </button>
@@ -495,9 +499,8 @@ function VoiceTab(props: Props & { shown: boolean }) {
       <div className={styles.group}>
         <p className={styles.heading}>Voice processing</p>
         {SWITCHES.map((s) => (
-          <Tooltip text={s.unavailable ?? s.hint}>
+          <Tooltip key={s.key} text={s.unavailable ?? s.hint}>
             <label
-              key={s.key}
               className={`${sw.switchRow} ${styles.voiceRow}`}
               // What it does, on hover: the rows stay one calm line each (spec 0123).
             >

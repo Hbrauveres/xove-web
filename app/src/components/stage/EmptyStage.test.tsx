@@ -22,7 +22,7 @@ describe("the empty stage, a camera waiting (spec 0123)", () => {
     const [first, second] = screen.getAllByRole("button");
     expect(first).toHaveAccessibleName(/Turn on your camera/);
     expect(second).toHaveAttribute("aria-disabled", "true");
-    expect(second).toHaveAttribute("title", "This browser can't share a screen");
+    expect(second).toHaveAccessibleDescription("This browser can't share a screen");
     await userEvent.setup().click(second);
     expect(onStart).not.toHaveBeenCalled();
   });

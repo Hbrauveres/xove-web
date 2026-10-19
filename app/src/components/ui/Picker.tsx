@@ -265,13 +265,13 @@ export function Picker<T extends string>({
       data-open={drawn || undefined}
       onKeyDown={onKeyDown}
     >
+      {/* A long name ends in "…" in the pill; the whole of it in its tooltip (spec 0114). */}
       <Tooltip text={chosen?.label}>
         <button
           ref={pill}
           type="button"
           className={styles.pill}
           aria-label={`${label}: ${chosen?.label ?? ""}`}
-          // A long name ends in "…" in the pill; the whole of it here (spec 0114).
           aria-expanded={open}
           aria-controls={open ? listId : undefined}
           disabled={disabled}
@@ -319,9 +319,8 @@ export function Picker<T extends string>({
           inert={!open || undefined}
         >
           {others.map((o, i) => (
-            <Tooltip text={o.label}>
+            <Tooltip key={o.value} text={o.label}>
               <button
-                key={o.value}
                 type="button"
                 role="radio"
                 aria-checked="false"

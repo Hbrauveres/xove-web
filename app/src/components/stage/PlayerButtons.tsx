@@ -6,18 +6,10 @@ import { DropUp } from "../ui/DropUp";
 import drop from "../ui/DropUp.module.css";
 import { Picker } from "../ui/Picker";
 import { showToast } from "../ui/toast";
-import { Tooltip } from "../ui/Tooltip";
-import {
-  CameraOffIcon,
-  CameraOnIcon,
-  CogIcon,
-  ScreenOffIcon,
-  ScreenOnIcon,
-  ScreenShareIcon,
-  WindowIcon,
-} from "./icons";
+import { CameraOffIcon, CameraOnIcon, CogIcon, ScreenOffIcon, ScreenOnIcon, ScreenShareIcon, WindowIcon } from "./icons";
 import round from "./RoundButton.module.css";
 import styles from "./PlayerButtons.module.css";
+import { Tooltip } from "../ui/Tooltip";
 
 export const FULL_ROOM = "6 streams are live, the most at once. You can start yours when one stops.";
 /** Why the screen button and the Screen tab are greyed out on a phone. */
@@ -244,3 +236,4 @@ function Icon({ kind, off }: { kind: StreamKind; off: boolean }) {
     </>
   );
 }
+

@@ -526,8 +526,7 @@ export function Stage({
       // In layout: where the buttons sit unlifted, from the screen's bottom; the lift is the rest.
       const lift = parseFloat(stage.style.getPropertyValue("--row-lift")) || 0;
       let top = 0;
-      for (let n: HTMLElement | null = bar; n && n !== chrome; n = n.offsetParent as HTMLElement | null)
-        top += n.offsetTop;
+      for (let n: HTMLElement | null = bar; n && n !== chrome; n = n.offsetParent as HTMLElement | null) top += n.offsetTop;
       const under = parseFloat(getComputedStyle(chrome).bottom) - lift + (chrome.clientHeight - top - bar.offsetHeight);
       const fade = parseFloat(getComputedStyle(row).paddingTop);
       stage.style.setProperty("--row-lift", `${liftOverRow({ row: row.offsetHeight, fade, under })}px`);
@@ -585,7 +584,13 @@ export function Stage({
   const chrome = playing ? (chromeShown ? "shown" : "hidden") : undefined;
 
   const body = () => {
-    if (!big || !main) return <EmptyStage canShareScreen={controls.canShareScreen} onStart={startMine} />;
+    if (!big || !main)
+      return (
+        <EmptyStage
+          canShareScreen={controls.canShareScreen}
+          onStart={startMine}
+        />
+      );
 
     // My own stream as everyone sees it, without its sound (it would echo). Sharing
     // the whole screen shows the page inside itself: sharing a tab or window avoids it.

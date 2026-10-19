@@ -23,6 +23,13 @@ const GAP = 10;
 const EDGE = 8;
 
 let warmUntil = 0;
+/** Whether a tooltip just hid, so the next one shows at once. */
+const warm = () => Date.now() < warmUntil;
+/** Hands an element to a ref of either kind. */
+function assignRef<T>(ref: Ref<T> | undefined, el: T | null) {
+  if (typeof ref === "function") ref(el);
+  else if (ref) (ref as { current: T | null }).current = el;
+}
 
 type Trigger = ReactElement<{
   ref?: Ref<HTMLElement>;
@@ -56,10 +63,16 @@ export function Tooltip({ text, children, hidden = false }: { text?: string; chi
     if (!insideFloating(anchor.current)) claimFloating(hide);
     setShown(true);
   }, [hide]);
+  // Hidden after showing: the next one along the row shows at once for a moment.
+  const wasShown = useRef(false);
   useEffect(() => {
-    if (shown) return;
+    if (shown) {
+      wasShown.current = true;
+      return;
+    }
     releaseFloating(hide);
-    warmUntil = Date.now() + WARM_MS;
+    if (wasShown.current) warmUntil = Date.now() + WARM_MS;
+    wasShown.current = false;
   }, [shown, hide]);
   useEffect(() => () => window.clearTimeout(timer.current), []);
   // Nothing to say, or told to keep quiet (a drop-up open over the control): gone.
@@ -77,7 +90,6 @@ export function Tooltip({ text, children, hidden = false }: { text?: string; chi
     const above = r.top - GAP - h >= EDGE;
     el.style.left = `${left}px`;
     el.style.top = `${above ? r.top - GAP - h : r.bottom + GAP}px`;
-    el.dataset.placed = "";
   }, [shown, text]);
   // Scrolling moves the control away: the tooltip goes.
   useEffect(() => {
@@ -87,19 +99,24 @@ export function Tooltip({ text, children, hidden = false }: { text?: string; chi
   }, [shown, hide]);
 
   const p = children.props;
-  const trigger = cloneElement(children, {
-    ref: (el: HTMLElement | null) => {
+  // Its own ref and the control's own, both.
+  const childRef = p.ref;
+  const setAnchor = useCallback(
+    (el: HTMLElement | null) => {
       anchor.current = el;
-      const r = (children as unknown as { props: { ref?: Ref<HTMLElement> } }).props.ref;
-      if (typeof r === "function") r(el);
-      else if (r) (r as { current: HTMLElement | null }).current = el;
+      assignRef(childRef, el);
     },
-    "aria-describedby": text && !hidden ? [p["aria-describedby"], id].filter(Boolean).join(" ") : p["aria-describedby"],
+    [childRef],
+  );
+  const trigger = cloneElement(children, {
+    ref: setAnchor,
+    // Quiet or not, it describes its control: a screen reader hears what a drop-up hides.
+    "aria-describedby": text ? [p["aria-describedby"], id].filter(Boolean).join(" ") : p["aria-describedby"],
     onPointerEnter: (e: PointerEvent<HTMLElement>) => {
       p.onPointerEnter?.(e);
       if (e.pointerType !== "mouse" || !text || hidden) return;
       window.clearTimeout(timer.current);
-      if (Date.now() < warmUntil) show();
+      if (warm()) show();
       else timer.current = window.setTimeout(show, TIP_REST_MS);
     },
     onPointerLeave: (e: PointerEvent<HTMLElement>) => {
