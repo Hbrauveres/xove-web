@@ -1,0 +1,27 @@
+/* A small preview's row (spec 0131), floating over the page at the preview's width. */
+.tray {
+  position: fixed;
+  z-index: 40;
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity 140ms ease,
+    transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.tray[data-up] {
+  transform: translateY(4px);
+}
+
+.tray[data-shown] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tray {
+    transition: none;
+  }
+}

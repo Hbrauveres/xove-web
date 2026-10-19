@@ -135,13 +135,6 @@
   margin-top: var(--info-gap, 14px);
 }
 
-/* A small preview's row opens down over the footer (spec 0131): above it while in use. */
-.info:hover,
-.info:focus-within,
-.info:has([data-held]) {
-  z-index: 21;
-}
-
 @media (max-width: 760px) {
   .info {
     flex-direction: column;

@@ -17,10 +17,10 @@
   display: flex;
   gap: 10px;
   min-width: 0;
-  /* Room inside the scroll box for a stacked picture's peek above and a small preview's row
-     under it (spec 0131), taken back by the margins so nothing else moves. */
-  margin: -6px 0 -96px;
-  padding: 6px 6px 96px 0;
+  /* Room inside the scroll box for a stacked picture's peek above (spec 0131), taken back by the
+     margins so nothing else moves. */
+  margin: -6px 0 -8px;
+  padding: 6px 6px 8px 0;
   list-style: none;
   overflow-x: auto;
 }
@@ -126,30 +126,9 @@
 }
 
 /* The preview's sound: a round speaker at the top left; its slider slides out to the right. */
-/* The row under a small preview (spec 0131): it opens on pointing (a mouse) or a hold (a finger),
-   floating over what's under the info row. */
-.tray {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  right: 0;
-  z-index: 5;
-  display: flex;
-  justify-content: center;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-4px);
-  transition: opacity 140ms ease, transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 180ms;
-}
-
-.item:hover .tray,
-.item:focus-within .tray,
-.item[data-held] .tray,
-.item[data-active] .tray {
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-  transition: opacity 140ms ease, transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s;
+/* The preview whose row is open: its focus ring, so you see which one the row belongs to. */
+.item[data-open] .video {
+  box-shadow: 0 0 0 1.5px rgba(235, 235, 236, 0.6);
 }
 
 /* A person with a screen and a camera: their second picture peeks out behind, like a deck. */

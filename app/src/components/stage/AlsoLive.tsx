@@ -3,6 +3,7 @@ import type { LiveFeed, Sharer } from "../../types";
 import { Avatar } from "../ui/Avatar";
 import { ScreenVideo } from "./ScreenVideo";
 import { HearToggles, type Hearing } from "./HearToggles";
+import { PreviewTray, usePreviewTray } from "./PreviewTray";
 import { seatsOpen } from "./NowWatching";
 import styles from "./AlsoLive.module.css";
 
@@ -31,11 +32,9 @@ const kindOf = (feed: LiveFeed) => (feed.kind === "camera" ? "camera" : "screen"
  * are silent; each carries that person's two toggles, their sound and their voice (spec 0123).
  */
 export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swappedOf, onSwap }: Props) {
-  // A finger holds a small preview to open its row (spec 0131); a mouse just points at it.
-  const [held, setHeld] = useState<string | null>(null);
+  // A small preview's row (spec 0131): pointing at it opens it, a finger's hold pins it.
+  const tray = usePreviewTray();
   const hold = useRef<number | undefined>(undefined);
-  // A slider in use keeps its row open, wherever the mouse goes (spec 0131).
-  const [active, setActive] = useState<string | null>(null);
   // A swap plays for a moment: the two pictures trade places.
   const [swapping, setSwapping] = useState<string | null>(null);
   useEffect(() => {
@@ -43,14 +42,6 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
     const done = window.setTimeout(() => setSwapping(null), 400);
     return () => window.clearTimeout(done);
   }, [swapping]);
-  useEffect(() => {
-    if (!held) return;
-    const away = (e: PointerEvent) => {
-      if (!(e.target as Element).closest?.(`[data-person="${held}"]`)) setHeld(null);
-    };
-    document.addEventListener("pointerdown", away);
-    return () => document.removeEventListener("pointerdown", away);
-  }, [held]);
   return (
     <section className={styles.also} aria-label="Also live">
       <ul className={styles.strip} aria-label="Other streams">
@@ -73,13 +64,19 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
               className={styles.item}
               data-person={id}
               data-stacked={both || undefined}
-              data-held={held === id || undefined}
-              data-active={active === id || undefined}
+              data-open={tray.open?.id === id || undefined}
               data-swapping={swapping === id || undefined}
+              onPointerEnter={(e) => {
+                if (e.pointerType === "mouse" && !s.isMe) tray.show(id, e.currentTarget);
+              }}
+              onPointerLeave={(e) => {
+                if (e.pointerType === "mouse") tray.leave();
+              }}
               onPointerDown={(e) => {
                 if (e.pointerType === "mouse" || s.isMe) return;
+                const li = e.currentTarget;
                 window.clearTimeout(hold.current);
-                hold.current = window.setTimeout(() => setHeld(id), 500);
+                hold.current = window.setTimeout(() => tray.show(id, li, true), 500);
               }}
               onPointerUp={() => window.clearTimeout(hold.current)}
               onPointerCancel={() => window.clearTimeout(hold.current)}
@@ -97,7 +94,7 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
                 aria-label={`Watch ${whose} ${what}`}
                 onClick={() => {
                   // The hold that opened the row isn't a click on the preview.
-                  if (held === id) return;
+                  if (tray.open?.pinned && tray.open.id === id) return;
                   onPick(id);
                 }}
               >
@@ -116,33 +113,39 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
                   {name} · {what}
                 </span>
               </button>
-              {/* Too small for buttons on the picture (spec 0131): their row opens under it. */}
-              {!s.isMe && (
-                <span className={styles.tray}>
-                  <HearToggles
-                    sharer={s}
-                    hearing={hearOf(id)}
-                    onChange={(h) => onHear(id, h)}
-                    layout="tray"
-                    swap={
-                      both && onSwap
-                        ? {
-                            on: Boolean(swappedOf?.(id)),
-                            onSwap: () => {
-                              setSwapping(id);
-                              onSwap(id);
-                            },
-                          }
-                        : undefined
-                    }
-                    onActive={(on) => setActive((was) => (on ? id : was === id ? null : was))}
-                  />
-                </span>
-              )}
             </li>
           );
         })}
       </ul>
+      {/* Too small for buttons on the picture (spec 0131): the open preview's row, floating. */}
+      {(() => {
+        const s = tray.open && others.find((o) => o.person.id === tray.open!.id);
+        if (!s || s.isMe) return null;
+        const id = s.person.id;
+        const both = Boolean(s.screen && s.camera);
+        return (
+          <PreviewTray tray={tray}>
+            <HearToggles
+              sharer={s}
+              hearing={hearOf(id)}
+              onChange={(h) => onHear(id, h)}
+              layout="tray"
+              swap={
+                both && onSwap
+                  ? {
+                      on: Boolean(swappedOf?.(id)),
+                      onSwap: () => {
+                        setSwapping(id);
+                        onSwap(id);
+                      },
+                    }
+                  : undefined
+              }
+              onActive={tray.setBusy}
+            />
+          </PreviewTray>
+        );
+      })()}
       {free > 0 && (
         // The six seats as dots, red for each stream live (spec 0123); gone when all are taken.
         <p

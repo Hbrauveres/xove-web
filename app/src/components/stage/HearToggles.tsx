@@ -134,24 +134,6 @@ export function HearToggles({
       // Moving the mouse away leaves the slider open (4 s idle or a press elsewhere closes it).
       onPointerMove={() => open && restart()}
     >
-      {open && (
-        // The sound's slider, on a line above the buttons, which stay (spec 0131).
-        <span className={styles.slider}>
-          {open === "sound" ? hearing.sound.muted ? <VolumeOffIcon /> : <SoundIcon /> : hearing.voice.muted ? <VoiceOffIcon /> : <VoiceIcon />}
-          <Range
-            className={styles.range}
-            min={0}
-            max={1}
-            step={0.05}
-            aria-label={open === "sound" ? `${name}'s screen sound volume` : `${name}'s voice volume`}
-            value={hearing[open].volume}
-            onChange={(e) => {
-              onChange({ ...hearing, [open]: { volume: Number(e.target.value), muted: false } });
-              restart();
-            }}
-          />
-        </span>
-      )}
       <span className={styles.buttons}>
         {button("voice")}
         {button("sound")}
@@ -173,6 +155,31 @@ export function HearToggles({
           </button>
         )}
       </span>
+      {/* Each sound's own slider under the buttons, unrolling smoothly; one open at a time (spec 0131). */}
+      {(["voice", "sound"] as const).map((kind) => {
+        const unavailable = kind === "sound" ? noSound : noVoice;
+        if (unavailable) return null;
+        const muted = hearing[kind].muted;
+        return (
+          <span key={kind} className={styles.drawer} data-open={open === kind || undefined} inert={open !== kind}>
+            <span className={styles.slider}>
+              {kind === "sound" ? muted ? <VolumeOffIcon /> : <SoundIcon /> : muted ? <VoiceOffIcon /> : <VoiceIcon />}
+              <Range
+                className={styles.range}
+                min={0}
+                max={1}
+                step={0.05}
+                aria-label={kind === "sound" ? `${name}'s screen sound volume` : `${name}'s voice volume`}
+                value={hearing[kind].volume}
+                onChange={(e) => {
+                  onChange({ ...hearing, [kind]: { volume: Number(e.target.value), muted: false } });
+                  restart();
+                }}
+              />
+            </span>
+          </span>
+        );
+      })}
     </span>
   );
 }
