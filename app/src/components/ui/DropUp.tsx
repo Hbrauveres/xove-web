@@ -15,6 +15,8 @@ import styles from "./DropUp.module.css";
 export const OPEN_DELAY_MS = 120;
 /** A slip of the pointer outside shorter than this doesn't close it. */
 export const LEAVE_GRACE_MS = 300;
+/** The drop-ups open now, each by how it closes itself: one at a time (spec 0133, #128). */
+const openOnes = new Set<() => void>();
 /** By touch: how long a press is held on the button to open it (a long press, as on any phone). */
 export const HOLD_MS = 500;
 /** By touch: a finger that moves further than this is scrolling, not holding. */
@@ -102,10 +104,27 @@ export function DropUp({ label, enabled, trigger, onLeave, width, closeSignal, r
     setByTouch(false);
     onLeave?.();
   };
+  // One at a time: moving on to another live button closes this one at once, without its grace,
+  // so two never stand over each other.
+  const closeMe = useRef(close);
+  useEffect(() => {
+    closeMe.current = close;
+  });
+  useEffect(() => {
+    if (!open) return;
+    const me = () => closeMe.current();
+    openOnes.add(me);
+    return () => {
+      openOnes.delete(me);
+    };
+  }, [open]);
+  // Called only before this one opens, so every one open is another.
+  const closeOthers = () => openOnes.forEach((other) => other());
 
   // ---- a mouse
   const onPointerEnter = (e: ReactPointerEvent) => {
     if (touchLike(e)) return;
+    if (!open) closeOthers();
     window.clearTimeout(leaving.current);
     if (open) return;
     opening.current = window.setTimeout(() => (redirect ? redirect() : setOpen(true)), OPEN_DELAY_MS);
@@ -136,6 +155,7 @@ export function DropUp({ label, enabled, trigger, onLeave, width, closeSignal, r
         redirect();
         return;
       }
+      closeOthers();
       setByTouch(true);
       setOpen(true);
     }, HOLD_MS);
@@ -168,7 +188,10 @@ export function DropUp({ label, enabled, trigger, onLeave, width, closeSignal, r
       keyboard = false;
     }
     // Redirected, the keyboard reaches the panel itself: tabbing past the button moves nothing.
-    if (keyboard && !redirect) setOpen(true);
+    if (keyboard && !redirect) {
+      closeOthers();
+      setOpen(true);
+    }
   };
   const onBlur = (e: FocusEvent) => {
     if (byTouch) return;

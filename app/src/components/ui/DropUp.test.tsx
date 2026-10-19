@@ -125,6 +125,32 @@ describe("DropUp, the quick-access pill over a live button", () => {
     expect(OPEN_DELAY_MS).toBe(120);
   });
 
+  it("closes at once when the pointer moves on to another live button: one at a time (spec 0133, #128)", () => {
+    render(
+      <div>
+        <DropUp label="The window you share" enabled trigger={<button>Stop sharing your screen</button>}>
+          <button>Change</button>
+        </DropUp>
+        <DropUp label="Your camera" enabled trigger={<button>Turn off your camera</button>}>
+          <button>Webcam C920</button>
+        </DropUp>
+      </div>,
+    );
+    const [screenUp, cameraUp] = ["Stop sharing your screen", "Turn off your camera"].map(
+      (name) => screen.getByRole("button", { name }).closest("[data-dropup]")!,
+    );
+    fireEvent.pointerEnter(screenUp);
+    act(() => vi.advanceTimersByTime(OPEN_DELAY_MS));
+    expect(screenUp).toHaveAttribute("data-open", "true");
+
+    // Straight to the camera, well within the screen's grace: the screen's closes now.
+    fireEvent.pointerLeave(screenUp);
+    fireEvent.pointerEnter(cameraUp);
+    expect(screenUp).toHaveAttribute("data-open", "false");
+    act(() => vi.advanceTimersByTime(OPEN_DELAY_MS));
+    expect(cameraUp).toHaveAttribute("data-open", "true");
+  });
+
   it("forgives a slip outside shorter than the grace, and closes after it", () => {
     const { wrap, shown, onLeave } = setup();
     fireEvent.pointerEnter(wrap);
