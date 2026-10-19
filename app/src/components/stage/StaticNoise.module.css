@@ -1,25 +1,83 @@
-/* A TV's static behind the empty stage (spec 0136, draft): faded far back, darker at the edges. */
+/* A TV's static behind the empty stage (spec 0136): faded far back, behind a gently curved glass. */
 .static {
   position: absolute;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
+  /* A 90s tube's screen: corners rounded a little more across than down, never a pill. */
+  border-radius: 4.5% / 7%;
 }
 
 .canvas {
   display: block;
   width: 100%;
   height: 100%;
-  opacity: var(--static-opacity, 0.12);
+  opacity: var(--static-opacity, 0.17);
   image-rendering: pixelated;
 }
 
-/* A vignette: the static fades into the stage's dark at its edges and round the middle's text. */
+/* A vignette: the static fades into the stage's dark round the middle's text. */
 .static::after {
   content: "";
   position: absolute;
   inset: 0;
+  background: radial-gradient(ellipse 34% 30% at 50% 50%, rgba(15, 15, 17, 0.75), transparent 100%);
+}
+
+/* The glass: darker towards its rounded edges, as a tube's, with a soft sheen high on the left and a
+   faint line of light along the top edge, where a room's light would catch it. */
+.glass {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
   background:
-    radial-gradient(ellipse 34% 30% at 50% 50%, rgba(15, 15, 17, 0.75), transparent 100%),
-    radial-gradient(ellipse 75% 75% at 50% 50%, transparent 55%, rgba(15, 15, 17, 0.9) 100%);
+    radial-gradient(ellipse 60% 40% at 28% 14%, rgba(235, 235, 236, 0.05), transparent 70%),
+    radial-gradient(ellipse 80% 80% at 50% 50%, transparent 52%, rgba(15, 15, 17, 0.92) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(235, 235, 236, 0.06),
+    inset 0 0 40px 10px rgba(0, 0, 0, 0.55);
+}
+
+/* The mouse's reflection: the pointer's shape in soft red neon, just below and right of it, as if
+   on the glass. It fades in over the stage and out when the mouse leaves. */
+.glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 7px 0 0 6px;
+  opacity: 0;
+  color: var(--accent);
+  mix-blend-mode: screen;
+  transition: opacity 0.4s ease;
+}
+
+.glow[data-shown] {
+  opacity: 0.75;
+}
+
+.glow svg {
+  display: block;
+  width: 26px;
+  height: 26px;
+  /* A neon tube: the outline itself soft but readable, its light spreading round it. */
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+  filter: blur(0.6px) drop-shadow(0 0 3px currentColor) drop-shadow(0 0 10px currentColor);
+}
+
+/* Draft only (spec 0136): the harness's bar turns the glass off to compare. */
+:global(html[data-static-glass="off"]) .static {
+  border-radius: 0;
+}
+
+:global(html[data-static-glass="off"]) .glass {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow {
+    transition: none;
+  }
 }
