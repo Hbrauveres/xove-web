@@ -190,7 +190,7 @@ describe("the fullscreen button has one place (spec 0111, design decision 2)", (
     expect(o).toMatch(/padding-bottom:\s*calc\(12px \+ \(var\(--btn, 48px\) - 34px\) \/ 2\)/);
     expect(rule(overlay, ".top")).toMatch(/justify-content:\s*flex-end/);
     // The row's button size per layout, nothing else of its own.
-    expect(rule(stage, '.stage[data-layout="phone"] [data-overlay]')).toMatch(/--btn:\s*44px/);
+    expect(rule(stage, '.stage[data-layout="phone"] [data-overlay],\n.stage[data-layout="phone"] .controls')).toMatch(/--btn:\s*44px/);
     expect(stage).not.toMatch(/\[data-overlay\]\s*\{[^}]*justify-content/);
   });
 });

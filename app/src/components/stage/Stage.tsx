@@ -376,7 +376,8 @@ export function Stage({
 
   // The big video, for the ambilight to read.
   const [bigVideoEl, setBigVideoEl] = useState<HTMLVideoElement | null>(null);
-  // The stage hugs the picture: no bars (spec 0107). 16:9 while empty or loading.
+  // The picture's shape, for the view and the box's height (specs 0107 and 0133). 16:9 while empty
+  // or loading.
   const shape = useVideoShape(bigVideoEl);
   // What I hear from each person (specs 0123 and 0131): their sound and their voice, each with its
   // own volume and one switch that follows them everywhere once touched, for the whole visit.

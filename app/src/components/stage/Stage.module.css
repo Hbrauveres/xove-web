@@ -5,9 +5,10 @@
 }
 
 /*
- * The stage's box: the light behind, the frame on top (spec 0104). It takes the picture's
- * shape inside the 16:9 box (spec 0107): a wider picture keeps the full width and gets
- * shorter, a taller one keeps the full height and gets narrower, centred. No black bars.
+ * The stage's box (spec 0133, ADR-0072): the controls' layer, its column's whole width, holding
+ * the buttons and a view with the picture and its light. Its height follows the picture (spec
+ * 0107): a wider picture makes it shorter, a taller one makes it as tall as the column allows;
+ * the view inside it takes the picture's own shape, centred, with no black bars.
  *
  * On a window taller than 16:9 (a vertical monitor), the box may also be as tall as the
  * height that's free above the info row, so a portrait picture fills it instead of staying
@@ -18,8 +19,6 @@
   --shape: 1.7778;
   --free-h: max(100cqw * 9 / 16, 100cqh - var(--info-h, 104px) - var(--info-gap, 14px));
   position: relative;
-  /* The controls' layer takes the column's whole width (spec 0133); the view inside it hugs the
-     picture. Its height still follows the picture, as before. */
   width: 100cqw;
   height: min(100cqw / var(--shape), var(--free-h));
   margin-inline: auto;
@@ -52,6 +51,10 @@
   width: min(100cqw, 100cqh * var(--shape));
   height: min(100cqh, 100cqw / var(--shape));
   translate: -50% -50%;
+  /* A new picture's shape: the view glides to it, as the stage did (the design sheet's motion). */
+  transition:
+    width 0.35s ease,
+    height 0.35s ease;
 }
 
 .picture {
@@ -146,6 +149,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .box,
+  .view,
   .controls,
   .screenChrome {
     transition: none;

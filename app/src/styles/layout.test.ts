@@ -21,11 +21,11 @@ describe("the room on a phone held upright (spec 0158)", () => {
     expect(rule(room, '.theater[data-layout="phone"] .middle')).toMatch(/padding:\s*0/);
   });
 
-  it("runs the stage edge to edge, hugging the picture, never taller than 60% of the screen", () => {
+  it("runs the stage's box edge to edge, as tall as the picture needs, never taller than 60% of the screen (spec 0133)", () => {
     const box = rule(stage, '.stage[data-layout="phone"] .box');
-    expect(box).toMatch(/width:\s*min\(100cqw, 60dvh \* var\(--shape\)\)/);
+    expect(box).toMatch(/width:\s*100cqw/);
     expect(box).toMatch(/height:\s*min\(100cqw \/ var\(--shape\), 60dvh\)/);
-    expect(rule(stage, '.stage[data-layout="phone"] .frame')).toMatch(/border-radius:\s*0/);
+    expect(rule(stage, '.stage[data-layout="phone"] .picture')).toMatch(/border-radius:\s*0/);
   });
 
   it("keeps the stage and its info row in place: only the block under them scrolls", () => {
@@ -67,10 +67,10 @@ describe("the phone's feed (spec 0158)", () => {
 describe("the room on a phone sideways, and tablets (spec 0160)", () => {
   const stage = sheet("components/stage/Stage.module.css");
 
-  it("fills the screen height first, hugging the picture", () => {
+  it("makes the stage's box the whole screen; the picture fills its height first, hugging its shape (spec 0133)", () => {
     const box = rule(stage, '.stage[data-layout="sideways"] .box');
-    expect(box).toMatch(/width:\s*min\(100cqw, 100dvh \* var\(--shape\)\)/);
-    expect(box).toMatch(/height:\s*min\(100dvh, 100cqw \/ var\(--shape\)\)/);
+    expect(box).toMatch(/width:\s*100cqw/);
+    expect(box).toMatch(/height:\s*100dvh/);
   });
 
   it("fades the top bar and the row's tab with the controls", () => {
@@ -96,17 +96,38 @@ describe("the fullscreen button in the full-screen view (specs 0171 and 0111)", 
   it("sits centred on the round buttons' row, at each of their sizes", () => {
     const stage = sheet("components/stage/Stage.module.css");
     // The place is the overlay's own rule, for every layout; a layout only gives its buttons' size.
-    expect(stage).toMatch(/\.stage\[data-layout="phone"\] \[data-overlay\] \{\s*--btn:\s*44px/);
+    expect(stage).toMatch(/\.stage\[data-layout="phone"\] \[data-overlay\],\s*\.stage\[data-layout="phone"\] \.controls \{\s*--btn:\s*44px/);
     // The round buttons have no narrow-screen size of their own, so the fullscreen button has none either.
     expect(stage).not.toMatch(/--btn:\s*42px/);
   });
 });
 
 describe("the stage on a tall desktop window", () => {
-  it("may be as tall as the free height above the info row, never less than the 16:9 box", () => {
+  it("may be as tall as the free height above the info row, never less than the 16:9 box; its box the column's width (spec 0133)", () => {
     const box = rule(sheet("components/stage/Stage.module.css"), ".box");
     expect(box).toMatch(/--free-h:\s*max\(100cqw \* 9 \/ 16, 100cqh - var\(--info-h, 104px\) - var\(--info-gap, 14px\)\)/);
-    expect(box).toMatch(/width:\s*min\(100cqw, var\(--free-h\) \* var\(--shape\)\)/);
+    expect(box).toMatch(/width:\s*100cqw/);
     expect(box).toMatch(/height:\s*min\(100cqw \/ var\(--shape\), var\(--free-h\)\)/);
+  });
+});
+
+describe("the stage's two layers (spec 0133, ADR-0072)", () => {
+  const stage = sheet("components/stage/Stage.module.css");
+
+  it("makes the box the controls' layer: see-through, its own size the buttons' measure", () => {
+    const frame = rule(stage, ".frame");
+    expect(frame).toMatch(/container-type:\s*size/);
+    expect(frame).not.toMatch(/background|overflow:\s*hidden|border-radius/);
+  });
+
+  it("holds the picture in a view of its own shape, as big as the box allows, centred", () => {
+    const view = rule(stage, ".view");
+    expect(view).toMatch(/width:\s*min\(100cqw, 100cqh \* var\(--shape\)\)/);
+    expect(view).toMatch(/height:\s*min\(100cqh, 100cqw \/ var\(--shape\)\)/);
+    expect(view).toMatch(/translate:\s*-50% -50%/);
+    const picture = rule(stage, ".picture");
+    expect(picture).toMatch(/overflow:\s*hidden/);
+    expect(picture).toMatch(/border-radius:\s*12px/);
+    expect(picture).toMatch(/background:\s*#000/);
   });
 });
