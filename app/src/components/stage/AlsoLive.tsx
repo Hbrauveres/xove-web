@@ -58,6 +58,9 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
           const video = s.isMe ? feed.local : feed.remote?.video;
           const name = s.isMe ? "You" : s.person.name;
           const whose = s.isMe ? "your" : `${s.person.name}'s`;
+          // Their voice heard while they speak: the picture's ring lights, or the button does while the
+          // row is open (spec 0131).
+          const talking = !s.isMe && s.hasVoice && s.speaking && !hearOf(id).voice.muted && tray.open?.id !== id;
           return (
             <li
               key={id}
@@ -66,6 +69,7 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
               data-stacked={both || undefined}
               data-open={tray.open?.id === id || undefined}
               data-swapping={swapping === id || undefined}
+              data-talking={talking || undefined}
               onPointerEnter={(e) => {
                 if (e.pointerType === "mouse" && !s.isMe) tray.show(id, e.currentTarget);
               }}

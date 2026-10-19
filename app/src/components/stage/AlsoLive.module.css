@@ -101,6 +101,26 @@
   pointer-events: none;
 }
 
+/* Their voice heard while they speak, the row closed: the speaking cue around the picture, as on
+   their voice button (spec 0131). */
+.video {
+  transition: box-shadow 120ms ease;
+}
+
+.video::after {
+  transition: box-shadow 120ms ease;
+}
+
+.item[data-talking] .video {
+  box-shadow: 0 0 6px 0 rgba(22, 163, 74, 0.35);
+}
+
+.item[data-talking] .video::after {
+  box-shadow:
+    inset 0 0 0 1px rgba(43, 205, 104, 0.85),
+    inset 0 0 4px rgba(22, 163, 74, 0.45);
+}
+
 /* Hover and keyboard focus: drawn inside, so the scrolling strip never cuts it (spec 0107). */
 .preview:hover .video::after,
 .preview:focus-visible .video::after {
