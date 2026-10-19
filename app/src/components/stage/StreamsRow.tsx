@@ -105,6 +105,10 @@ export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, h
             const video = s.isMe ? feed.local : feed.remote?.video;
             const name = s.isMe ? "You" : s.person.name;
             const whose = s.isMe ? "your" : `${s.person.name}'s`;
+            // Their voice heard while they speak: the picture's ring lights, or the button does while
+            // the buttons are open (spec 0131).
+            const talking =
+              !s.isMe && s.hasVoice && s.speaking && hearOf && !hearOf(s.person.id).voice.muted && held !== s.person.id;
             return (
               <li
                 key={s.person.id}
@@ -113,6 +117,7 @@ export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, h
                 data-held={held === s.person.id || undefined}
                 data-stacked={both || undefined}
                 data-swapping={swapping === s.person.id || undefined}
+                data-talking={talking || undefined}
                 onPointerDown={() => {
                   if (s.isMe) return;
                   window.clearTimeout(hold.current);

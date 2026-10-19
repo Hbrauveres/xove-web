@@ -124,6 +124,31 @@
   cursor: pointer;
 }
 
+/* Their voice heard while they speak: the speaking cue around the picture, as on their voice
+   button (spec 0131). */
+.picture::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transition: box-shadow 120ms ease;
+  pointer-events: none;
+}
+
+.picture {
+  transition: box-shadow 120ms ease;
+}
+
+.item[data-talking] .picture {
+  box-shadow: 0 0 6px 0 rgba(22, 163, 74, 0.35);
+}
+
+.item[data-talking] .picture::after {
+  box-shadow:
+    inset 0 0 0 1px rgba(43, 205, 104, 0.85),
+    inset 0 0 4px rgba(22, 163, 74, 0.45);
+}
+
 .picture video {
   object-fit: cover;
 }
