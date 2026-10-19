@@ -16,7 +16,6 @@
   width: 112%;
   height: 108%;
   filter: blur(clamp(36px, 4vmin, 64px));
-  opacity: 0.55;
 }
 
 @media (prefers-reduced-motion: reduce) {

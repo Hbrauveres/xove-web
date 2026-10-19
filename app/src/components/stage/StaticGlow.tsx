@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import type { AmbilightPrefs } from "../../media/preferences";
-import { bandLight } from "./staticBands";
+import { bandLight, onScreen } from "./staticBands";
 import styles from "./StaticGlow.module.css";
 
 /** The light is drawn this coarse (CSS pixels a cell) and then blurred: it only has to be soft. */
@@ -10,7 +10,7 @@ const FPS = 20;
 
 /**
  * The empty stage's ambilight (spec 0136): the static's bands light the wall round the stage as they
- * roll, the way a TV's picture does. Each row of a small canvas is as bright as the bands at that
+ * roll, the way a TV's picture does, never brighter than the static itself. Each row of a small canvas is as bright as the bands at that
  * height; the browser stretches and blurs it behind the stage, which hides the middle, so only the
  * light past its edges shows. It follows the ambilight's switch and brightness.
  */
@@ -35,9 +35,10 @@ export function StaticGlow({ prefs }: { prefs: AmbilightPrefs }) {
     const draw = (t: number) => {
       const s = t / 1000;
       for (let y = 0; y < rows; y++) {
-        const v = Math.round(bandLight((y + 0.5) * CELL, s) * 255);
-        // The corner glow's slightly blue grey, so the light and the corners match.
-        ctx.fillStyle = `rgb(${(v * 0.54) | 0}, ${(v * 0.59) | 0}, ${(v * 0.67) | 0})`;
+        // As bright as the static looks on the screen at that height, never brighter: the light
+        // comes from it. A touch of blue, as the corner glow's grey.
+        const v = onScreen(bandLight((y + 0.5) * CELL, s)) * 255;
+        ctx.fillStyle = `rgb(${(v * 0.94) | 0}, ${(v * 0.97) | 0}, ${v | 0})`;
         ctx.fillRect(0, y, 1, 1);
       }
     };

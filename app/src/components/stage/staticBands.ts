@@ -7,6 +7,13 @@
 export const ROLL = 24;
 /** How bright the gaps between the bands are, against the bands themselves. */
 export const GAPS = 0.4;
+/** How strongly the static shows over the stage's dark (its canvas's opacity). */
+export const STRENGTH = 0.17;
+/** Snow is half lit on average: a grain is anything from black to white. */
+const MEAN = 0.5;
+/** How bright the static looks on the stage at a band's brightness `light` (0–1 of white): what
+ * its light round the stage may reach, never more. */
+export const onScreen = (light: number) => light * MEAN * STRENGTH;
 
 /**
  * The static's brightness (0–1) at `py` CSS pixels from the stage's top, `s` seconds into the
