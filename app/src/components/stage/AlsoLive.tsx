@@ -3,7 +3,8 @@ import type { LiveFeed, Sharer } from "../../types";
 import { Avatar } from "../ui/Avatar";
 import { ScreenVideo } from "./ScreenVideo";
 import { HearToggles, type Hearing } from "./HearToggles";
-import { PreviewTray, usePreviewTray } from "./PreviewTray";
+import { PreviewTray } from "./PreviewTray";
+import { usePreviewTray } from "./usePreviewTray";
 import { seatsOpen } from "./NowWatching";
 import styles from "./AlsoLive.module.css";
 

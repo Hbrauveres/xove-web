@@ -32,6 +32,7 @@ import { HereCards } from "./HereCards";
 import { Toast } from "../ui/Toast";
 import { useVideoShape } from "../../hooks/useVideoShape";
 import { useStageSwipe } from "../../hooks/useStageSwipe";
+import { useKeyboardLast, useTapToggle } from "../../hooks/useTapToggle";
 import { stepOnStage } from "../../media/stagePick";
 import { choose, hearingOf, type Choices } from "../../media/hearing";
 import { StageDots } from "./StageDots";
@@ -261,20 +262,8 @@ export function Stage({
       watch?.disconnect();
     };
   }, [makingRoom, roomInPlayer]);
-  // The keyboard's focus keeps the controls; a finger's tap leaves focus on the button it pressed,
-  // and that one mustn't keep them up for good (spec 0131). Which came last: a key or a press.
-  const pressed = useRef(false);
-  useEffect(() => {
-    const press = () => (pressed.current = true);
-    const key = () => (pressed.current = false);
-    document.addEventListener("pointerdown", press, true);
-    document.addEventListener("keydown", key, true);
-    return () => {
-      document.removeEventListener("pointerdown", press, true);
-      document.removeEventListener("keydown", key, true);
-    };
-  }, []);
-  const keyboardFocus = () => !pressed.current;
+  // The keyboard's focus keeps the controls; a finger's tap doesn't (spec 0131).
+  const keyboardFocus = useKeyboardLast();
   const focusInside = () =>
     held.current.size > 0 ||
     (keyboardFocus() && (frameRef.current?.contains(document.activeElement) ?? false)) ||
@@ -528,7 +517,8 @@ export function Stage({
       stage.style.removeProperty("--arrow-end");
     };
   }, [rowArrow, onScreen, rowOpen]);
-  // Open and not hidden by a tap.
+  // Open and not hidden by a tap: hidden, it's closed for screen readers too, and opens again with
+  // the controls.
   const rowShown = rowOpen && !(rowAway && !chromeShown);
   // The streams row open: the buttons rise above it, as above the settings sheet (spec 0131): what
   // comes up from the bottom never covers them.
@@ -563,48 +553,36 @@ export function Stage({
     if (sideways) showChrome();
   }, [sideways, showChrome]);
   // Touches and moves: the frame's, or sideways the whole screen's, so the black at the
-  // stage's sides counts too.
-  // A finger's tap anywhere on the picture shows the controls, or hides them if they're shown: always
-  // the same, the open streams row included, which comes back as it was (spec 0131). A drag is a
-  // swipe and only shows them; a press on a control keeps them.
-  const tap = useRef<{ x: number; y: number; at: number; shown: boolean } | null>(null);
-  const onControl = (e: React.PointerEvent) =>
-    Boolean((e.target as Element).closest?.('button, input, a, label, [role="dialog"]'));
+  // stage's sides counts too. A tap toggles the controls, the open streams row with them (spec 0131).
+  const tap = useTapToggle({
+    shown: chromeShown && playing,
+    onShow: showChrome,
+    onHide: () => {
+      window.clearTimeout(idleTimer.current);
+      setChromeShown(false);
+      setRowAway(true);
+    },
+  });
   const gestures = {
     onPointerMove: (e: React.PointerEvent) => {
-      const t = tap.current;
-      if (e.pointerType !== "touch") showChrome();
-      else if (t && Math.hypot(e.clientX - t.x, e.clientY - t.y) > 10) {
-        tap.current = null;
-        showChrome();
-      }
+      tap.move(e);
       swipe.onPointerMove(e);
       rowSwipe.onPointerMove(e);
     },
     onPointerDown: (e: React.PointerEvent) => {
-      if (e.pointerType === "touch" && !onControl(e))
-        tap.current = { x: e.clientX, y: e.clientY, at: e.timeStamp, shown: chromeShown };
-      else showChrome();
+      tap.down(e);
       // Sideways the whole screen listens, but only a drag that starts on the picture swipes (FR-12).
       if (sideways && !slideRef.current?.contains(e.target as Node)) return;
       swipe.onPointerDown(e);
       rowSwipe.onPointerDown(e);
     },
     onPointerUp: (e: React.PointerEvent) => {
-      const t = tap.current;
-      tap.current = null;
-      if (t && e.timeStamp - t.at < 500) {
-        if (t.shown && playing) {
-          window.clearTimeout(idleTimer.current);
-          setChromeShown(false);
-          setRowAway(true);
-        } else showChrome();
-      }
+      tap.up(e);
       swipe.onPointerUp(e);
       rowSwipe.onPointerUp(e);
     },
     onPointerCancel: (e: React.PointerEvent) => {
-      tap.current = null;
+      tap.cancel();
       swipe.onPointerCancel(e);
       rowSwipe.onPointerCancel(e);
     },
@@ -751,7 +729,6 @@ export function Stage({
       data-chrome={sideways ? chrome : undefined}
       data-row-arrow={rowArrow || undefined}
       data-no-full={(sideways && fullView?.hidden) || undefined}
-      data-row-away={(rowAway && !chromeShown) || undefined}
       aria-label="Shared screen"
       {...(sideways ? gestures : {})}
     >
@@ -824,7 +801,7 @@ export function Stage({
             <StreamsRow
               others={sharers.filter((s) => s !== big)}
               liveCount={STREAM_PLACES - controls.free}
-              open={rowOpen}
+              open={rowShown}
               onOpen={() => {
                 setRowOpen(true);
                 showChrome();

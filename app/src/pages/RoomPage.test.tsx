@@ -1113,14 +1113,21 @@ describe("room: the player on touch screens and keyboards", () => {
     return { view, frame: video.closest("[data-chrome]")! };
   };
 
-  it("keeps the controls after a tap, so they can be tapped", async () => {
+  it("shows the controls on a tap and hides them on the next; a tap on a button only presses it (spec 0131, AC-7)", async () => {
     const { frame } = await watchBruno();
+    const tap = (on: Element) => {
+      fireEvent.pointerDown(on, { pointerType: "touch", clientX: 200, clientY: 120 });
+      // A finger lifting off fires pointerleave right away: it hides nothing.
+      fireEvent.pointerLeave(frame, { pointerType: "touch" });
+      fireEvent.pointerUp(on, { pointerType: "touch", clientX: 200, clientY: 120 });
+    };
 
-    // A finger lifting off fires pointerleave right away.
-    fireEvent.pointerDown(frame, { pointerType: "touch" });
-    fireEvent.pointerLeave(frame, { pointerType: "touch" });
-
+    tap(frame);
     expect(frame).toHaveAttribute("data-chrome", "shown");
+    tap(within(stage()).getByRole("button", { name: "Fullscreen" }));
+    expect(frame).toHaveAttribute("data-chrome", "shown");
+    tap(frame);
+    expect(frame).toHaveAttribute("data-chrome", "hidden");
   });
 
   it("keeps the controls while one of them has the keyboard focus", async () => {
@@ -2664,16 +2671,30 @@ describe("room: on a phone sideways (spec 0160)", () => {
     expect(screen.getByLabelText("Marina's shared screen")).toBe(video);
   });
 
-  it("fades the controls after a while without a touch, closing an open row; a touch brings them back", async () => {
+  it("fades the controls after a while, keeping an open row; a tap hides it with them, the next brings it back (spec 0131, AC-7)", async () => {
     await sidewaysWith(["Marina", "Rafa"]);
-    await screen.findByLabelText("Marina's shared screen");
+    const picture = await screen.findByLabelText("Marina's shared screen");
+    const tap = () => {
+      fireEvent.pointerDown(picture, { pointerId: 2, pointerType: "touch", clientX: 300, clientY: 200 });
+      fireEvent.pointerUp(picture, { pointerId: 2, pointerType: "touch", clientX: 300, clientY: 200 });
+    };
     drag(0, -150);
-    await waitFor(() => expect(row()?.closest("[data-open]") ?? row()).toHaveAttribute("data-open"));
+    await waitFor(() => expect(row()).not.toBeNull());
     expect(stageLayer()).toHaveAttribute("data-chrome", "shown");
+
+    // The idle fade leaves the open row.
     await waitFor(() => expect(stageLayer()).toHaveAttribute("data-chrome", "hidden"), { timeout: 4000 });
-    expect(row()).toBeNull();
-    fireEvent.pointerDown(stageLayer(), { pointerId: 2, clientX: 10, clientY: 10, button: 0 });
+    expect(row()).not.toBeNull();
+
+    // A tap shows the rest; the next hides everything, the row too; the one after brings it all back.
+    tap();
     expect(stageLayer()).toHaveAttribute("data-chrome", "shown");
+    tap();
+    expect(stageLayer()).toHaveAttribute("data-chrome", "hidden");
+    expect(row()).toBeNull();
+    tap();
+    expect(stageLayer()).toHaveAttribute("data-chrome", "shown");
+    expect(row()).not.toBeNull();
   });
 
   it("opens the row with a swipe up and closes it with a swipe down; a tap in it changes the stage, silently", async () => {

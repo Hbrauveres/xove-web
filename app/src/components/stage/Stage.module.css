@@ -300,13 +300,6 @@
   left: calc(14px + env(safe-area-inset-left, 0px));
 }
 
-/* The open streams row stays through the idle fade; a tap hides it with everything, and the next
-   brings it back (spec 0131). */
-.stage[data-layout="sideways"][data-row-away] [data-streams-row] {
-  transform: translateY(100%);
-  pointer-events: none;
-}
-
 /* Sideways where there's no fullscreen button (a phone held sideways is already full): Go live
    takes its place at the right (spec 0131). */
 .stage[data-no-full] [data-viewer-bar] {
