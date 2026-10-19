@@ -84,7 +84,7 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
             >
               {/* Someone sharing a screen and a camera: the other picture peeks out behind. */}
               {both && (
-                <span className={styles.behind} data-behind aria-hidden="true">
+                <span className={styles.behind} aria-hidden="true">
                   {backVideo && <ScreenVideo key={back!.kind} video={backVideo} label="" />}
                 </span>
               )}
@@ -98,7 +98,7 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
                   onPick(id);
                 }}
               >
-                <span className={styles.video}>
+                <span className={styles.video} data-picture>
                   {video ? (
                     <ScreenVideo
                       video={video}

@@ -67,18 +67,14 @@ export function PreviewTray({
     const place = () => {
       const el = ref.current;
       if (!el) return;
-      // The whole preview, with the picture peeking out behind a stacked one, so the row is centred
-      // on what is seen.
-      const r = open.anchor.getBoundingClientRect();
-      const back = open.anchor.querySelector("[data-behind]")?.getBoundingClientRect();
-      const left = Math.min(r.left, back?.left ?? r.left);
-      const right = Math.max(r.right, back?.right ?? r.right);
+      // The picture itself (not what peeks out behind a stacked one): the row is its width, centred.
+      const r = (open.anchor.querySelector("[data-picture]") ?? open.anchor).getBoundingClientRect();
       if (below === null) {
         below = r.bottom + GAP + el.offsetHeight + SLIDER_ROOM <= window.innerHeight - EDGE;
         setSide(below ? "below" : "above");
       }
-      el.style.left = `${left}px`;
-      el.style.width = `${right - left}px`;
+      el.style.left = `${r.left}px`;
+      el.style.width = `${r.width}px`;
       el.style.top = below ? `${r.bottom + GAP}px` : "";
       el.style.bottom = below ? "" : `${window.innerHeight - r.top + GAP}px`;
     };
