@@ -20,6 +20,7 @@ export function usePreviewTray() {
   const [open, setOpen] = useState<Open | null>(null);
   const [busy, setBusy] = useState(false);
   const over = useRef(false);
+  const shownId = useRef<string | null>(null);
   const timer = useRef<number | undefined>(undefined);
   const stay = useCallback(() => {
     over.current = true;
@@ -29,6 +30,9 @@ export function usePreviewTray() {
     over.current = true;
     window.clearTimeout(timer.current);
     setOpen((was) => (was?.pinned && !pinned && was.id === id ? was : { id, anchor, pinned }));
+    // Another preview: the last one's slider, rolling back with it, no longer holds the row.
+    if (shownId.current !== id) setBusy(false);
+    shownId.current = id;
   }, []);
   const leave = useCallback(() => {
     over.current = false;
@@ -40,30 +44,95 @@ export function usePreviewTray() {
     if (!busy && open && !open.pinned && !over.current) leave();
   }, [busy, open, leave]);
   useEffect(() => () => window.clearTimeout(timer.current), []);
+  useEffect(() => {
+    if (!open) shownId.current = null;
+  }, [open]);
   return { open, busy, setBusy, show, leave, stay, close: () => setOpen(null) };
 }
 
+/** How long a row takes to roll back into its preview, at most (its transition ends it sooner). */
+const OUT_MS = 320;
+
+type Layer = { open: Open; leaving: boolean };
+
 /**
- * The row itself, floating over the page at the preview's width: under it, or above it where the
- * window has no room under it. On its own layer, so the previews' scrolling strip never clips it.
+ * The rows themselves, floating over the page at the preview's width: under it, or above it where
+ * the window has no room under it. On their own layer, so the previews' scrolling strip never clips
+ * them. Moving to another preview, its row unrolls from it while the last one rolls back into its own.
  */
 export function PreviewTray({
   tray,
-  children,
+  render,
 }: {
   tray: ReturnType<typeof usePreviewTray>;
-  children: ReactNode;
+  /** One person's row. */
+  render: (id: string) => ReactNode;
 }) {
   const { open, busy, leave, stay, close } = tray;
+  const ref = useRef<HTMLDivElement>(null);
+  // The open row, and those still rolling back. Back on a row that is rolling back: it unrolls again.
+  const [layers, setLayers] = useState<Layer[]>([]);
+  const [was, setWas] = useState<Open | null>(null);
+  if (open !== was) {
+    setWas(open);
+    setLayers((ls) => {
+      const rest = ls.filter((l) => l.open.id !== open?.id).map((l) => ({ ...l, leaving: true }));
+      return open ? [...rest, { open, leaving: false }] : rest;
+    });
+  }
+  const gone = useCallback((id: string) => setLayers((ls) => ls.filter((l) => !(l.leaving && l.open.id === id))), []);
+  // A press elsewhere closes the row. Scrolling the previews moves them away: it closes too.
+  useEffect(() => {
+    if (!open) return;
+    const away = (e: PointerEvent) => {
+      const t = e.target as Node;
+      if (!ref.current?.contains(t) && !open.anchor.contains(t)) close();
+    };
+    const scrolled = (e: Event) => {
+      if (!busy && !ref.current?.contains(e.target as Node)) close();
+    };
+    document.addEventListener("pointerdown", away);
+    document.addEventListener("scroll", scrolled, true);
+    return () => {
+      document.removeEventListener("pointerdown", away);
+      document.removeEventListener("scroll", scrolled, true);
+    };
+  }, [open, busy, close]);
+  if (!layers.length) return null;
+  return createPortal(
+    <div ref={ref}>
+      {layers.map((l) => (
+        <Row key={l.open.id} layer={l} onGone={gone} onEnter={stay} onLeave={leave}>
+          {render(l.open.id)}
+        </Row>
+      ))}
+    </div>,
+    document.body,
+  );
+}
+
+function Row({
+  layer,
+  onGone,
+  onEnter,
+  onLeave,
+  children,
+}: {
+  layer: Layer;
+  onGone: (id: string) => void;
+  onEnter: () => void;
+  onLeave: () => void;
+  children: ReactNode;
+}) {
+  const { open, leaving } = layer;
   const ref = useRef<HTMLDivElement>(null);
   // Under the preview or above it: chosen once, as it opens, with room for a slider.
   const [side, setSide] = useState<"below" | "above" | null>(null);
   useLayoutEffect(() => {
-    if (!open) return;
     let below: boolean | null = null;
     let frame = 0;
-    // Glued to its preview on every frame while open (one measure a frame), so nothing that moves
-    // the preview (the strip scrolling, the page settling) leaves the row behind.
+    // Glued to its preview on every frame (one measure a frame), so nothing that moves the preview
+    // (the strip scrolling, the page settling) leaves the row behind.
     const place = () => {
       const el = ref.current;
       if (!el) return;
@@ -83,41 +152,35 @@ export function PreviewTray({
       frame = requestAnimationFrame(loop);
     };
     loop();
-    return () => {
-      cancelAnimationFrame(frame);
-      setSide(null);
-    };
+    return () => cancelAnimationFrame(frame);
   }, [open]);
-  // Scrolling the previews moves them away: the row closes. A press elsewhere does too.
+  // Shown a frame after it is placed, so it unrolls from the right edge.
+  const [placed, setPlaced] = useState(false);
   useEffect(() => {
-    if (!open) return;
-    const away = (e: PointerEvent) => {
-      const t = e.target as Node;
-      if (!ref.current?.contains(t) && !open.anchor.contains(t)) close();
-    };
-    const scrolled = (e: Event) => {
-      if (!busy && !ref.current?.contains(e.target as Node)) close();
-    };
-    document.addEventListener("pointerdown", away);
-    document.addEventListener("scroll", scrolled, true);
-    return () => {
-      document.removeEventListener("pointerdown", away);
-      document.removeEventListener("scroll", scrolled, true);
-    };
-  }, [open, busy, close]);
-  if (!open) return null;
-  return createPortal(
+    if (!side) return;
+    const f = requestAnimationFrame(() => setPlaced(true));
+    return () => cancelAnimationFrame(f);
+  }, [side]);
+  // Rolled back: gone (at the end of its transition, or after OUT_MS where there is none).
+  useEffect(() => {
+    if (!leaving) return;
+    const t = window.setTimeout(() => onGone(open.id), OUT_MS);
+    return () => window.clearTimeout(t);
+  }, [leaving, open.id, onGone]);
+  return (
     <div
       ref={ref}
       className={styles.tray}
-      data-shown={side ? true : undefined}
+      data-shown={(placed && !leaving) || undefined}
+      data-leaving={leaving || undefined}
       data-up={side === "above" || undefined}
+      inert={leaving}
       style={{ left: -9999, top: 0 }}
-      onPointerEnter={stay}
-      onPointerLeave={(e) => e.pointerType === "mouse" && leave()}
+      onPointerEnter={onEnter}
+      onPointerLeave={(e) => e.pointerType === "mouse" && onLeave()}
+      onTransitionEnd={(e) => leaving && e.target === e.currentTarget && e.propertyName === "clip-path" && onGone(open.id)}
     >
       {children}
-    </div>,
-    document.body,
+    </div>
   );
 }

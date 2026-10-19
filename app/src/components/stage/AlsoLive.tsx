@@ -118,13 +118,13 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
         })}
       </ul>
       {/* Too small for buttons on the picture (spec 0131): the open preview's row, floating. */}
-      {(() => {
-        const s = tray.open && others.find((o) => o.person.id === tray.open!.id);
-        if (!s || s.isMe) return null;
-        const id = s.person.id;
-        const both = Boolean(s.screen && s.camera);
-        return (
-          <PreviewTray tray={tray}>
+      <PreviewTray
+        tray={tray}
+        render={(id) => {
+          const s = others.find((o) => o.person.id === id);
+          if (!s || s.isMe) return null;
+          const both = Boolean(s.screen && s.camera);
+          return (
             <HearToggles
               sharer={s}
               hearing={hearOf(id)}
@@ -141,11 +141,11 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
                     }
                   : undefined
               }
-              onActive={tray.setBusy}
+              onActive={id === tray.open?.id ? tray.setBusy : undefined}
             />
-          </PreviewTray>
-        );
-      })()}
+          );
+        }}
+      />
       {free > 0 && (
         // The six seats as dots, red for each stream live (spec 0123); gone when all are taken.
         <p
