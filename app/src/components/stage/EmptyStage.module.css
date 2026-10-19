@@ -257,7 +257,7 @@
 }
 
 /*
- * The TV turning on (spec 0136), once, as the stage appears, in under a second, smooth rather than
+ * The TV turning on (spec 0136), once a visit, the first time the stage stands by, in under a second, smooth rather than
  * jerky: a point of light glows in the middle and draws a thin glowing line across; the line blooms
  * into a white glow that fills the screen and lights the wall round it; the glow settles into
  * a wide band streaked with scan lines, which opens softly onto the static. Over everything, then
@@ -320,9 +320,9 @@
 
 /* The band: a wide pale band streaked with scan lines, opening onto the picture. */
 .intro i[data-part="band"] {
-  top: 50%;
+  /* Centred on the screen's middle, so it opens from there. */
+  top: 27%;
   height: 46%;
-  margin-top: -23%;
   background:
     repeating-linear-gradient(0deg, rgba(60, 60, 64, 0.3) 0 1px, transparent 1px 3px),
     repeating-linear-gradient(90deg, rgba(90, 90, 96, 0.14) 0 2px, transparent 2px 7px, rgba(90, 90, 96, 0.1) 7px 8px, transparent 8px 13px),
