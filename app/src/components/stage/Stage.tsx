@@ -367,7 +367,9 @@ export function Stage({
       box?.removeEventListener("transitionend", place);
     };
   }, [settingsOpen, sideways, onScreen]);
-  const rowArrow = sideways && Boolean(big) && sharers.length > 1;
+  // The streams row's arrow at the bottom-left, on the buttons' line; lifted above the settings sheet,
+  // the buttons are off its line and need no room for it.
+  const rowArrow = sideways && Boolean(big) && sharers.length > 1 && !makingRoom;
   const playing = Boolean(main && (big?.isMe ? main.local : main.remote));
   useEffect(() => () => window.clearTimeout(idleTimer.current), []);
 
