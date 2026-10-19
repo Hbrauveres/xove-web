@@ -88,12 +88,12 @@ describe("stream buttons: off and live", () => {
 });
 
 describe("player buttons: the row (specs 0101 and 0107)", () => {
-  it("puts the volume before my buttons, and the cog last", () => {
-    setup({ before: <button type="button">Volume</button> });
+  it("puts my screen and camera first, my mic after them, and the cog last (spec 0123)", () => {
+    setup({ extra: <button type="button">Share your voice</button> });
     expect(screen.getAllByRole("button").map((b) => b.getAttribute("aria-label") ?? b.textContent)).toEqual([
-      "Volume",
       "Share your screen",
       "Turn on your camera",
+      "Share your voice",
       "Settings",
     ]);
   });

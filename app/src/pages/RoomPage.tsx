@@ -134,6 +134,12 @@ function Room({ pollMs, seat, onSignOut }: Props & { seat: RoomSeat; onSignOut: 
       busy={session.busy}
       fullView={sheet && fullView}
       goTo={goTo}
+      voice={session.voice}
+      voicePrefs={session.voicePrefs}
+      onVoicePrefs={session.setVoicePrefs}
+      mics={session.mics}
+      localVoice={session.localVoice}
+      micInput={session.micInput}
     />
   );
 
@@ -239,6 +245,8 @@ function Room({ pollMs, seat, onSignOut }: Props & { seat: RoomSeat; onSignOut: 
               settingsOpen,
               onSettings: toggleSettings,
               onGoTo: goToSetting,
+              voice: session.voice,
+              onVoice: session.toggleVoice,
             }}
             settingsPanel={sheet ? undefined : settingsPanel}
             sheetOpen={sheet && settingsOpen}

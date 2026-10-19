@@ -1,27 +1,35 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { loadWatchPrefs, saveWatchPrefs, type WatchPrefs } from "../../media/preferences";
+import {
+  loadVoiceHearing,
+  loadWatchPrefs,
+  saveVoiceHearing,
+  saveWatchPrefs,
+  type WatchPrefs,
+} from "../../media/preferences";
 import { viewerQualities } from "../../media/shareSettings";
 import type { StagePick } from "../../hooks/useStagePick";
 import type { AmbilightPrefs } from "../../media/preferences";
 import type { Friend, LiveFeed, Sharer } from "../../types";
-import { barsPicture } from "./bars";
 import { EmptyStage } from "./EmptyStage";
 import { Facecam, type FacecamPlace } from "./Facecam";
 import { ScreenVideo } from "./ScreenVideo";
 import { StageNotice } from "./StageNotice";
 import { StageOverlay } from "./StageOverlay";
 import { PlayerButtons, type StreamControls } from "./PlayerButtons";
-import { NO_SOUND_HERE, VolumeButton } from "./VolumeButton";
-import { NO_VOICE_YET } from "./VolumeMixer";
+import { VoiceAudio } from "./VoiceAudio";
+import type { Hearing } from "./HearToggles";
+import { ViewerBar, type Sound } from "./ViewerBar";
+import { MicIcon, MicOffIcon } from "./icons";
+import round from "./RoundButton.module.css";
 import { liftButtons, makeRoom, ROOM_GAP as SHEET_GAP } from "./makeRoom";
 import { AlsoLive } from "./AlsoLive";
 import { Ambilight } from "./Ambilight";
+import { CornerGlow } from "./CornerGlow";
 import { NowWatching, STREAM_PLACES } from "./NowWatching";
 // The component, not the type of the same name from ../../types.
 import { LiveFeed as LiveNowFeed } from "./LiveFeed";
 import { HereCards } from "./HereCards";
 import { Toast } from "../ui/Toast";
-import { MUTED, type PreviewSound } from "./previewSound";
 import { useVideoShape } from "../../hooks/useVideoShape";
 import { useStageSwipe } from "../../hooks/useStageSwipe";
 import { stepOnStage } from "../../media/stagePick";
@@ -82,6 +90,7 @@ export const CHROME_IDLE_MS = 2500;
 
 /** Watching a camera: there's no screen to hear. */
 const NO_SCREEN_SOUND = "No screen sound";
+const NO_SOUND_HERE = "No sound in this stream";
 
 /** iPhones and iPads ignore a page's volume (only their buttons change it). */
 const canSetVolume = () =>
@@ -117,9 +126,33 @@ export function Stage({
   const sideways = layout === "sideways";
   const frameRef = useRef<HTMLDivElement>(null);
   const [watch, setWatch] = useState<WatchPrefs>(loadWatchPrefs);
+  // How I hear the voice of the person I watch (spec 0123): its own volume and mute, remembered.
+  const [voiceSound, setVoiceSoundState] = useState<Sound>(loadVoiceHearing);
+  const setVoiceSound = (next: Sound) => {
+    setVoiceSoundState(next);
+    saveVoiceHearing(next);
+  };
+  const micOn = Boolean(controls.voice);
+  const toggleMic = () => controls.onVoice?.();
 
   // Who is big comes from the room (spec 0104), which the previews and the activity can change too.
   const { big, swappedFor, pick, toggleSwap } = stage;
+  // Starting a stream takes you to your stream (spec 0123): picked once it's there.
+  const [toMine, setToMine] = useState(false);
+  const meLive = controls.mine.screen || controls.mine.camera;
+  const myId = sharers.find((s) => s.isMe)?.person.id;
+  useEffect(() => {
+    if (!toMine || !myId) return;
+    setToMine(false);
+    pick(myId);
+  }, [toMine, myId, pick]);
+  const startMine = useCallback(
+    (kind: "screen" | "camera") => {
+      controls.onStart(kind);
+      setToMine(true);
+    },
+    [controls],
+  );
   const bigId = big?.person.id ?? null;
 
   // Screen and camera together: the screen big, the camera in the facecam over it,
@@ -129,7 +162,10 @@ export function Stage({
   // at the bottom right; under the top bar where one lies over the player.
   // Until it's moved, it follows the layout (turning the phone, the full view keep one stage).
   const [movedFacecam, setFacecamPlace] = useState<FacecamPlace | null>(null);
-  const facecamPlace = movedFacecam ?? { x: 0.73, y: layout === "sideways" ? 0.18 : 0.04 };
+  const facecamPlace = movedFacecam ?? {
+    x: 0.73,
+    y: layout === "sideways" ? 0.18 : 0.04,
+  };
   const [facecamCollapsed, setFacecamCollapsed] = useState(false);
   const both = Boolean(big?.screen && big?.camera);
   const main = big ? ((both && swapped ? big.camera : big.screen) ?? big.camera ?? null) : null;
@@ -179,8 +215,13 @@ export function Stage({
         if (!frame || !row) return;
         // In layout, from the player's top: a lift in place or still sliding isn't counted.
         let y = 0;
-        for (let n: HTMLElement | null = row; n && n !== frame; n = n.offsetParent as HTMLElement | null) y += n.offsetTop;
-        const up = liftButtons({ rowBottom: frame.getBoundingClientRect().top + y + row.offsetHeight, sheetTop: sheet.offsetTop, max: y - SHEET_GAP });
+        for (let n: HTMLElement | null = row; n && n !== frame; n = n.offsetParent as HTMLElement | null)
+          y += n.offsetTop;
+        const up = liftButtons({
+          rowBottom: frame.getBoundingClientRect().top + y + row.offsetHeight,
+          sheetTop: sheet.offsetTop,
+          max: y - SHEET_GAP,
+        });
         if (up) inPlayer.forEach((el) => el && (el.style.translate = `0 ${-up}px`));
         return;
       }
@@ -191,14 +232,20 @@ export function Stage({
       const bar = top
         ? Math.max(0, ...[...top.children].map((c) => (c as HTMLElement).offsetTop + (c as HTMLElement).offsetHeight))
         : 0;
-      const lift = makeRoom({ height: s.height, bar, sheet: s.bottom - sheetTop, band: { top: box.offsetTop, height: box.offsetHeight } });
+      const lift = makeRoom({
+        height: s.height,
+        bar,
+        sheet: s.bottom - sheetTop,
+        band: { top: box.offsetTop, height: box.offsetHeight },
+      });
       if (lift) box.style.translate = `0 ${-lift}px`;
       const row = buttons?.querySelector<HTMLElement>("[data-buttons]");
       if (!buttons || !row) return;
       // Where the row sits without any lift (layout, not the screen: a lift still sliding would
       // otherwise be measured as already done).
       let y = row.offsetHeight;
-      for (let n: HTMLElement | null = row; n && n !== section; n = n.offsetParent as HTMLElement | null) y += n.offsetTop;
+      for (let n: HTMLElement | null = row; n && n !== section; n = n.offsetParent as HTMLElement | null)
+        y += n.offsetTop;
       const up = liftButtons({ rowBottom: s.top + y, sheetTop });
       if (up) buttons.style.translate = `0 ${-up}px`;
     };
@@ -261,31 +308,20 @@ export function Stage({
     hold("settings", !settingsOpen);
     onSettings();
   }, [hold, settingsOpen, onSettings]);
-  // The volume's mixer (spec 0108): one panel over the buttons at a time, so the settings
-  // and the mixer close each other; the controls stay shown while it's open.
-  const [mixerOpen, setMixerOpen] = useState(false);
-  const [settingsWere, setSettingsWere] = useState(settingsOpen);
-  if (settingsOpen !== settingsWere) {
-    setSettingsWere(settingsOpen);
-    if (settingsOpen && mixerOpen) setMixerOpen(false);
-  }
-  const onMixer = useCallback(
-    (open: boolean) => {
-      setMixerOpen(open);
-      hold("volume", open);
-      if (open && settingsOpen) toggleSettings();
-    },
-    [hold, settingsOpen, toggleSettings],
-  );
-  // Let go however it closes (its button, 4 s idle, the settings, the stream ending).
+  // Another stream on the stage (a preview, a swipe, a stream ending) closes the settings: they
+  // belong to the buttons they opened from, which go with the stream (spec 0123).
+  const shownId = useRef(bigId);
   useEffect(() => {
-    if (!mixerOpen) held.current.delete("volume");
-  }, [mixerOpen]);
+    if (shownId.current === bigId) return;
+    shownId.current = bigId;
+    if (settingsOpen) toggleSettings();
+  }, [bigId, settingsOpen, toggleSettings]);
   useEffect(() => {
     if (!settingsOpen) held.current.delete("settings");
   }, [settingsOpen]);
-  // The settings open over the cog (design decision 9): centred on it, just above the round
-  // buttons. The panel reads where they are from two variables on what holds it.
+  // The settings open over the cog (design decision 9), or over Go live where they came from
+  // its menu (spec 0123): centred on it, just above the round buttons. The panel reads where
+  // they are from two variables on what holds it.
   useLayoutEffect(() => {
     const host = sideways ? stageRef.current : frameRef.current;
     if (!settingsOpen || !host || !controlsRef.current) return;
@@ -293,14 +329,17 @@ export function Stage({
       // Read each time: turning the phone in the full view moves the buttons to another layer.
       const controls = controlsRef.current;
       if (!controls) return;
-      const cog = controls.querySelector('button[aria-label="Settings"]');
+      const cog = controls.querySelector('button[aria-label="Settings"], [data-settings-anchor]');
       const row = controls.querySelector("[data-buttons]");
       const h = host.getBoundingClientRect();
       if (!cog || !row || !h.width) return;
       // The panel goes where the buttons end up: if the player is still sliding back (turning
       // the phone in the full view with the settings open), take its slide out.
       const box = boxRef.current;
-      const sliding = box && host !== frameRef.current && box.contains(row) ? box.getBoundingClientRect().top - h.top - box.offsetTop : 0;
+      const sliding =
+        box && host !== frameRef.current && box.contains(row)
+          ? box.getBoundingClientRect().top - h.top - box.offsetTop
+          : 0;
       const c = cog.getBoundingClientRect();
       host.style.setProperty("--cog-x", `${c.left + c.width / 2 - h.left}px`);
       host.style.setProperty("--above-row", `${h.bottom - (row.getBoundingClientRect().top - sliding) + ROW_GAP}px`);
@@ -324,21 +363,36 @@ export function Stage({
   const playing = Boolean(main && (big?.isMe ? main.local : main.remote));
   useEffect(() => () => window.clearTimeout(idleTimer.current), []);
 
-  // Only the big person's sound plays, plus any thumbnail this viewer unmuted. The
-  // others aren't downloaded at all.
-  const [thumbnailSound, setThumbnailSound] = useState<Record<string, PreviewSound>>({});
   // The big video, for the ambilight to read.
   const [bigVideoEl, setBigVideoEl] = useState<HTMLVideoElement | null>(null);
   // The stage hugs the picture: no bars (spec 0107). 16:9 while empty or loading.
   const shape = useVideoShape(bigVideoEl);
+  // What I hear from each person (spec 0123): their sound and their voice, each with its own mute
+  // and volume, for the whole visit; a new person starts at my last volumes, unmuted.
+  const [hearing, setHearing] = useState<Record<string, Hearing>>({});
+  const hearOf = (id: string): Hearing =>
+    hearing[id] ?? {
+      sound: { volume: watch.volume, muted: false },
+      voice: { volume: voiceSound.volume, muted: false },
+    };
+  const setHear = (id: string, next: Hearing) => {
+    setHearing((prev) => ({ ...prev, [id]: next }));
+    changeWatch({ volume: next.sound.volume, muted: false });
+    setVoiceSound({ volume: next.voice.volume, muted: false });
+  };
+  // Only the person I watch is heard: theirs is the only sound and voice downloaded (previews are silent).
   useEffect(() => {
     for (const s of sharers) {
-      if (s.isMe || !s.setSoundOn) continue;
-      // The phone's feed is silent (spec 0158): a preview unmuted on desktop isn't downloaded there.
-      const preview = !phone && !sideways && (thumbnailSound[s.person.id] ?? MUTED).muted === false;
-      s.setSoundOn(s.person.id === bigId || preview);
+      if (s.isMe) continue;
+      s.setSoundOn?.(s.person.id === bigId);
+      s.setVoiceOn?.(s.person.id === bigId);
     }
-  }, [sharers, bigId, thumbnailSound, phone, sideways]);
+  }, [sharers, bigId]);
+  const bigHearing = big && !big.isMe ? hearOf(big.person.id) : null;
+  const voices =
+    big && !big.isMe && big.voice && big.hasVoice && bigHearing
+      ? [{ id: big.person.id, track: big.voice, ...bigHearing.voice }]
+      : [];
 
   const changeWatch = (next: WatchPrefs) => {
     setWatch(next);
@@ -350,14 +404,6 @@ export function Stage({
   // sharer's cap changes: Auto never asks for more than the cap, so LiveKit stops sending
   // the layers above it.
   const remote = big?.isMe ? undefined : main?.remote;
-  // Nothing to hear any more (nobody else's stream, or one without sound): the mixer goes,
-  // and a new stream starts with it closed.
-  const canHear = Boolean(remote && big?.screen && big.hasSound);
-  const [heardId, setHeardId] = useState(bigId);
-  if (heardId !== bigId) {
-    setHeardId(bigId);
-    if (mixerOpen) setMixerOpen(false);
-  } else if (mixerOpen && !canHear) setMixerOpen(false);
   // A new function arrives with every LiveKit update; the video it's about is what matters.
   const setQuality = useRef(remote?.setQuality);
   useEffect(() => {
@@ -457,7 +503,13 @@ export function Stage({
   const chrome = playing ? (chromeShown ? "shown" : "hidden") : undefined;
 
   const body = () => {
-    if (!big || !main) return <EmptyStage canShareScreen={controls.canShareScreen} />;
+    if (!big || !main)
+      return (
+        <EmptyStage
+          canShareScreen={controls.canShareScreen}
+          onStart={startMine}
+        />
+      );
 
     // My own stream as everyone sees it, without its sound (it would echo). Sharing
     // the whole screen shows the page inside itself: sharing a tab or window avoids it.
@@ -469,16 +521,14 @@ export function Stage({
         <StageNotice spinner title="Starting your share…" text="Your screen shows here in a moment." />
       )
     ) : main.remote ? (
-      <>
-        <ScreenVideo
-          video={main.remote.video}
-          sound={big.sound}
-          label={`${big.person.name}'s ${what(main)}`}
-          volume={watch.volume}
-          muted={watch.muted}
-          onVideo={setBigVideoEl}
-        />
-      </>
+      <ScreenVideo
+        video={main.remote.video}
+        sound={big.sound}
+        label={`${big.person.name}'s ${what(main)}`}
+        volume={bigHearing?.sound.volume ?? watch.volume}
+        muted={bigHearing?.sound.muted ?? watch.muted}
+        onVideo={setBigVideoEl}
+      />
     ) : (
       <StageNotice spinner title={`Loading ${big.person.name}'s ${main.kind}…`} text="The video starts in a moment." />
     );
@@ -518,40 +568,67 @@ export function Stage({
       <div ref={controlsRef} className={styles.controls} data-no-swipe>
         {/* Upright and sideways alike: where you are among the people live (specs 0159, 0160). */}
         {(phone || sideways) && (
-          <StageDots
-            people={sharers.map((s) => s.person)}
-            meId={meId}
-            onStage={bigId}
-            onPick={(id) => pick(id)}
+          <StageDots people={sharers.map((s) => s.person)} meId={meId} onStage={bigId} onPick={(id) => pick(id)} />
+        )}
+        {big && !big.isMe ? (
+          // Someone else's stream: what you hear at the left, you at the right (spec 0123, design decision 1).
+          <ViewerBar
+            sound={{
+              ...hearOf(big.person.id).sound,
+              onChange: (s) => setHear(big.person.id, { ...hearOf(big.person.id), sound: s }),
+              unavailable: !big.screen ? NO_SCREEN_SOUND : big.hasSound ? undefined : NO_SOUND_HERE,
+            }}
+            voice={{
+              ...hearOf(big.person.id).voice,
+              onChange: (v) => setHear(big.person.id, { ...hearOf(big.person.id), voice: v }),
+              unavailable: big.hasVoice ? undefined : `${big.person.name}'s mic is off`,
+              name: big.person.name,
+              talking: big.speaking,
+            }}
+            live={meLive}
+            micOn={micOn}
+            onMic={toggleMic}
+            canShareScreen={controls.canShareScreen}
+            full={controls.free <= 0}
+            onStart={startMine}
+            onSettings={toggleSettings}
+            canSetVolume={canSetVolume()}
+          />
+        ) : !big ? (
+          // Nobody live: the empty stage has the ways to start; the settings sit in the corner.
+          <ViewerBar
+            live={false}
+            settingsOnly
+            canShareScreen={controls.canShareScreen}
+            onStart={startMine}
+            onSettings={toggleSettings}
+            canSetVolume={canSetVolume()}
+          />
+        ) : (
+          // Your stream: your controls in the middle, your mic with them.
+          <PlayerButtons
+            {...controls}
+            onStart={startMine}
+            onSettings={toggleSettings}
+            onMenuChange={onMenuChange}
+            extra={
+              <div className={`${round.pill} ${micOn ? round.live : ""}`}>
+                <button
+                  type="button"
+                  className={round.main}
+                  aria-pressed={micOn}
+                  aria-label={micOn ? "Mute your voice" : "Share your voice"}
+                  onClick={toggleMic}
+                >
+                  {micOn ? <MicIcon /> : <MicOffIcon />}
+                </button>
+                <span role="tooltip" className={round.tip} aria-hidden="true">
+                  {micOn ? "Mute your voice" : "Share your voice"}
+                </span>
+              </div>
+            }
           />
         )}
-        <PlayerButtons
-          {...controls}
-          onSettings={toggleSettings}
-          onMenuChange={onMenuChange}
-          // Watching someone else: their volume first (spec 0101).
-          before={
-            remote &&
-            big && (
-              <VolumeButton
-                // The mixer's fixed places (round 113): the screen's sound, then the voice (#101).
-                channels={[
-                  {
-                    id: "screen",
-                    label: "Screen sound",
-                    ...watch,
-                    onChange: changeWatch,
-                    unavailable: !big.screen ? NO_SCREEN_SOUND : big.hasSound ? undefined : NO_SOUND_HERE,
-                  },
-                  { id: "voice", label: "Voice", volume: 0, muted: true, unavailable: NO_VOICE_YET },
-                ]}
-                canSetVolume={canSetVolume()}
-                open={mixerOpen}
-                onOpenChange={onMixer}
-              />
-            )
-          }
-        />
       </div>
     </>
   );
@@ -573,11 +650,11 @@ export function Stage({
       >
         {/* Behind the frame, outside it: the frame clips what's inside it. */}
         {/* One per stream: a stream the browser won't let it read doesn't darken the next one. */}
+        {/* Nobody live: each viewfinder corner glows outward, a blurred L (spec 0123, design decision 7). */}
+        {!big && <CornerGlow prefs={ambilight} />}
         <Ambilight
           key={big ? `${big.person.id}|${stage.mainKind}|${gridKey(shape)}` : "none"}
           video={big ? bigVideoEl : null}
-          // Nobody live: the colour bars glow too (spec 0158).
-          still={big ? null : barsPicture()}
           prefs={ambilight}
           shape={shape}
         />
@@ -592,6 +669,9 @@ export function Stage({
           {body()}
           {!onScreen && chromeLayer}
           {!sideways && settingsPanel}
+          {voices.map((v) => (
+            <VoiceAudio key={v.id} track={v.track} volume={v.volume} muted={v.muted} />
+          ))}
           {/* A short message to the user, at the top centre of the player (design decision 10). */}
           {!sideways && <Toast />}
         </div>
@@ -633,6 +713,8 @@ export function Stage({
               }}
               onClose={() => setRowOpen(false)}
               onPick={(id) => pick(id)}
+              hearOf={hearOf}
+              onHear={setHear}
             />
           )}
         </>
@@ -649,6 +731,8 @@ export function Stage({
                 liveCount={STREAM_PLACES - controls.free}
                 watchersOf={watchersOf}
                 onPick={(id) => pick(id)}
+                hearOf={hearOf}
+                onHear={setHear}
               />
             ) : (
               <HereCards people={people} meId={meId} arrivedAt={arrivedAt} />
@@ -661,12 +745,11 @@ export function Stage({
           <NowWatching sharer={big} watchers={watchers} others={others} />
           <AlsoLive
             others={sharers.filter((s) => s !== big)}
-            liveCount={6 - controls.free}
+            liveCount={STREAM_PLACES - controls.free}
             free={controls.free}
             onPick={(id) => pick(id)}
-            sound={thumbnailSound}
-            onSoundChange={(id, sound) => setThumbnailSound((prev) => ({ ...prev, [id]: sound }))}
-            canSetVolume={canSetVolume()}
+            hearOf={hearOf}
+            onHear={setHear}
           />
         </div>
       )}

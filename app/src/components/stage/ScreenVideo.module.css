@@ -7,3 +7,12 @@
   object-fit: contain;
   background: #000;
 }
+
+/* Its box has the picture's own shape (within 1%): filled, so no thin black line at an edge
+   from fractional pixels (spec 0123). */
+.video[data-fill] {
+  object-fit: cover;
+  /* Nothing black behind it either: Chrome snaps a video's layer to whole pixels, and a black
+     background painted to the fractional edge showed as a sliver beside it. */
+  background: transparent;
+}

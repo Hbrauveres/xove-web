@@ -37,10 +37,23 @@ describe("the room on a phone held upright (spec 0158)", () => {
   });
 });
 
-describe("the empty stage's colour bars (spec 0158)", () => {
-  it("are at full colour, on desktop and phone", () => {
-    const empty = sheet("components/stage/EmptyStage.module.css");
-    expect(rule(empty, ".test")).not.toMatch(/opacity/);
+describe("the empty stage, a camera waiting (spec 0123, design decisions 6 and 7)", () => {
+  const empty = sheet("components/stage/EmptyStage.module.css");
+
+  it("is one flat dark, its corners close to the edge, the top right red", () => {
+    expect(rule(empty, ".empty")).toMatch(/background:\s*#0f0f11/);
+    expect(rule(empty, ".empty")).toMatch(/--inset:\s*6px/);
+    expect(rule(empty, '.corner[data-at="tr"]')).toMatch(/border-color:\s*var\(--accent\)/);
+  });
+
+  it("keeps only the display's top line on a small stage", () => {
+    expect(empty).toMatch(/@container \(max-width: 640px\) \{\s*\.meter,\s*\.tags,\s*\.ruler,/);
+  });
+
+  it("glows from blurred L's just outside the stage, the top right red", () => {
+    const glow = sheet("components/stage/CornerGlow.module.css");
+    expect(rule(glow, ".glow i")).toMatch(/filter:\s*blur\(var\(--blur\)\)/);
+    expect(rule(glow, '.glow i[data-at="tr"]')).toMatch(/--c:\s*rgba\(239, 75, 75/);
   });
 });
 

@@ -261,3 +261,24 @@ describe("Picker: opened on request (spec 0115)", () => {
     expect(pill).toHaveAttribute("aria-expanded", "true");
   });
 });
+
+describe("Picker: cued (spec 0123, design decision 11)", () => {
+  it("draws the cue's ring over its list, round the pill and the open list together", () => {
+    const { container } = render(<Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} openSignal={1} cue={1} />);
+    const ring = container.querySelector("[data-cue]") as HTMLElement;
+    expect(ring).not.toBeNull();
+    // Above the list (z-index 10), reaching down by the list's height.
+    expect(ring.style.zIndex).toBe("11");
+    expect(ring.style.bottom).toBe("calc(-1 * var(--list-h, 0px))");
+    expect(ring.compareDocumentPosition(screen.getByRole("radiogroup")) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it("reaches up instead when the list opens upward, and draws no ring when not cued", () => {
+    const { container, rerender } = render(
+      <Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} opens="up" openSignal={1} cue={1} />,
+    );
+    expect((container.querySelector("[data-cue]") as HTMLElement).style.top).toBe("calc(-1 * var(--list-h, 0px))");
+    rerender(<Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} opens="up" />);
+    expect(container.querySelector("[data-cue]")).toBeNull();
+  });
+});

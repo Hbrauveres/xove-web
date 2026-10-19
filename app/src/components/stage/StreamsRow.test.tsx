@@ -75,3 +75,19 @@ describe("the streams row, sideways (spec 0160)", () => {
     expect(show.querySelector("svg")).not.toBeNull();
   });
 });
+
+describe("the streams row: muting from a picture (spec 0123)", () => {
+  it("has each person's two toggles beside the picture, muting without opening them", async () => {
+    const onPick = vi.fn();
+    const onHear = vi.fn();
+    const heard = { sound: { volume: 1, muted: false }, voice: { volume: 1, muted: false } };
+    render(
+      <StreamsRow others={[{ ...RAFA, hasVoice: true }]} liveCount={2} open onOpen={() => {}} onClose={() => {}} onPick={onPick} hearOf={() => heard} onHear={onHear} />,
+    );
+    const toggle = screen.getByRole("button", { name: "Mute Rafa's voice" });
+    expect(toggle.closest("button[aria-label^='Watch']")).toBeNull();
+    await userEvent.setup().click(toggle);
+    expect(onHear).toHaveBeenCalledWith("user-3", { ...heard, voice: { volume: 1, muted: true } });
+    expect(onPick).not.toHaveBeenCalled();
+  });
+});

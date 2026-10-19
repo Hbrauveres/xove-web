@@ -5,7 +5,12 @@ import type { ReactNode } from "react";
  * a 20 × 20 grid, round 1.75 px strokes in the button's colour. One state system: a
  * stream you send shows its plain icon on a red pill; off, its icon is crossed.
  */
-function Icon({ name, children, viewBox = "0 0 20 20", strokeWidth = 1.75 }: {
+function Icon({
+  name,
+  children,
+  viewBox = "0 0 20 20",
+  strokeWidth = 1.75,
+}: {
   name: string;
   children: ReactNode;
   viewBox?: string;
@@ -130,6 +135,28 @@ export function MicOffIcon() {
   return (
     <Icon name="mic-off">
       <path d="M12.5 8.5v-3.5a2.5 2.5 0 00-5 0v4.5a2.5 2.5 0 003.6 2.2M4.5 9.5a5.5 5.5 0 008.6 4.5M15.3 11.2a5.6 5.6 0 00.2-1.7M10 15v2.5M3 3l14 14" />
+    </Icon>
+  );
+}
+
+/** Someone's voice, heard: a speaking head (spec 0123: a mic always means your own mic). */
+export function VoiceIcon() {
+  return (
+    <Icon name="voice">
+      <circle cx="8" cy="7" r="3" />
+      <path d="M2.5 17c0-3.2 2.5-5.2 5.5-5.2s5.5 2 5.5 5.2" />
+      <path d="M13.8 4.6a3.6 3.6 0 010 4.8M16.3 2.8a6.6 6.6 0 010 8.4" />
+    </Icon>
+  );
+}
+
+/** Someone's voice, muted or not there: the speaking head, its waves crossed. */
+export function VoiceOffIcon() {
+  return (
+    <Icon name="voice-off">
+      <circle cx="8" cy="7" r="3" />
+      <path d="M2.5 17c0-3.2 2.5-5.2 5.5-5.2s5.5 2 5.5 5.2" />
+      <path d="M13.5 5l4 4M17.5 5l-4 4" />
     </Icon>
   );
 }

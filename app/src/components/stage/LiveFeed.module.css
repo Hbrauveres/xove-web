@@ -32,6 +32,11 @@
   min-width: 0;
 }
 
+/* The picture and the toggles over it. */
+.frame {
+  position: relative;
+}
+
 /* The video fills this box: it's positioned inside it, never over the page (spec 0158). */
 .picture {
   position: relative;
@@ -66,4 +71,12 @@
 .info {
   padding: 8px 0 2px;
   cursor: pointer;
+}
+
+/* A card's voice (spec 0123): its pill at the picture's bottom-left. */
+.voice {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 1;
 }

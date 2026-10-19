@@ -240,19 +240,29 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-content: start;
   column-gap: 18px;
-  row-gap: 12px;
+  /* The right column's spacing is its own (below), so the left's tall area adds no gaps. */
+  row-gap: 0;
 }
 
+/* The left column stays put while the right one scrolls (spec 0123): pinned at the
+   top of its area, which spans every row the right column can have. */
 :global([data-layout="sideways"]) .panel[data-variant="popover"] .lead {
+  position: sticky;
+  top: 12px;
+  align-self: start;
   display: flex;
   flex-direction: column;
   gap: 10px;
   grid-column: 1;
-  grid-row: 1 / span 4;
+  grid-row: 1 / span 12;
 }
 
 :global([data-layout="sideways"]) .panel[data-variant="popover"] .body > :not(.lead) {
   grid-column: 2;
+}
+
+:global([data-layout="sideways"]) .panel[data-variant="popover"] .body > :not(.lead) ~ :not(.lead) {
+  margin-top: 12px;
 }
 
 :global([data-layout="sideways"]) .panel[data-variant="popover"] .preview {
@@ -485,4 +495,32 @@
   position: relative;
   display: grid;
   border-radius: 10px;
+}
+
+/* The Voice tab (spec 0123): the mic's live level, and the processing switches. */
+/* The labels just inside their heading (3 px), so they read as its own; the switches end where
+   the picker's arrow does, clear of the column's edge (spec 0123). */
+.voiceRow {
+  min-height: var(--ctl, 38px);
+  padding: 0 12px 0 3px;
+  /* The panel's scale: options read like the picker's own text, never above the title, and a
+     touch softer than pure white. */
+  color: rgba(235, 235, 236, 0.82);
+  font-size: var(--pick-font, 12px);
+  font-weight: 400;
+}
+
+.voiceRow > span {
+  display: grid;
+  gap: 2px;
+}
+
+/* The switches stay one size when a hint wraps, so they line up. */
+.voiceRow > button {
+  flex: none;
+}
+
+.voiceRow button[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
 }

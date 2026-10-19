@@ -5,7 +5,11 @@ import styles from "./NowWatching.module.css";
 import { whoIsHere } from "./whoIsHere";
 
 /** What a person shares, in two words. */
-const whatOf = (s: Sharer) => (s.screen && s.camera ? "Screen with camera" : s.screen ? "Screen" : "Camera");
+// "· voice" while their voice is on (spec 0123).
+const whatOf = (s: Sharer) => (s.screen && s.camera ? "Screen with camera" : s.screen ? "Screen" : "Camera") + (!s.isMe && s.hasVoice ? " · voice" : "");
+
+/** The seats left for a stream, in words (spec 0123). */
+export const seatsOpen = (free: number) => `${free} ${free === 1 ? "seat" : "seats"} open`;
 
 /** The most avatars in a row: the count covers the rest. */
 const MAX_AVATARS = 4;
@@ -45,7 +49,7 @@ export function NowWatching({ sharer, watchers = [], others = [], compact = fals
         )}
         <div className={styles.text}>
           <Heading className={styles.name}>
-            {sharer ? `${sharer.isMe ? "You" : sharer.person.name} · ${whatOf(sharer)}` : "Nobody live"}
+            {sharer ? `${sharer.isMe ? "You" : sharer.person.name} · ${whatOf(sharer)}` : "Nobody's sharing"}
           </Heading>
           <p className={styles.meta}>
             {sharer ? (
@@ -55,9 +59,7 @@ export function NowWatching({ sharer, watchers = [], others = [], compact = fals
                 {watchers.length > 0 && <span className={styles.watchers}>{watchers.length} watching</span>}
               </>
             ) : (
-              <span>
-                {STREAM_PLACES - free} of {STREAM_PLACES} · {free} free
-              </span>
+              <span>{seatsOpen(free)}</span>
             )}
           </p>
         </div>
@@ -67,10 +69,10 @@ export function NowWatching({ sharer, watchers = [], others = [], compact = fals
   if (!sharer) {
     return (
       <div className={styles.now}>
+        {/* As on the phone (spec 0123): an empty circle where the live person's photo goes. */}
+        <span className={`${styles.nobody} ${styles.nobodyBig}`} aria-hidden="true" />
         <div className={styles.text}>
-          <h2 className={styles.name}>
-            The stage is <em className={styles.yours}>yours</em>.
-          </h2>
+          <h2 className={styles.name}>Nobody's sharing</h2>
           <p className={styles.meta}>
             {others.length > 0 && (
               <span className={styles.row}>

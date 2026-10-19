@@ -1,5 +1,0 @@
-/* The volume button and the mixer over it (spec 0108). */
-.control {
-  position: relative;
-  display: flex;
-}

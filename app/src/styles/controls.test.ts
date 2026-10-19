@@ -51,11 +51,10 @@ describe("the white slider, like a video player's (spec 0121, FR-4)", () => {
   });
 });
 
-describe("the three sliders use the white slider (spec 0121, FR-4)", () => {
+describe("the sliders use the white slider (spec 0121, FR-4)", () => {
   const uses = [
     ["components/room/AccountButton", "the ambilight's brightness"],
-    ["components/stage/VolumeMixer", "the stage's volume"],
-    ["components/stage/AlsoLive", "a preview's volume"],
+    ["components/stage/ViewerBar", "each sound's volume over the stage"],
   ] as const;
 
   it("draws them with Range, with no red of their own", () => {
@@ -79,23 +78,23 @@ describe("the switch: a slim grey track, a bigger knob that lights red (spec 012
     expect(css).not.toMatch(/\.switch\[aria-checked="true"\] \{/);
   });
 
-  it("draws a 36 × 14 px grey track, the same off and on", () => {
+  it("draws a 36 × 12 px grey track, the same off and on", () => {
     const track = rule(css, ".switch::before");
     expect(track).toMatch(/width:\s*36px/);
-    expect(track).toMatch(/height:\s*14px/);
+    expect(track).toMatch(/height:\s*12px/);
     expect(track).toMatch(/background:\s*#3a3a3d/);
   });
 
-  it("has a 20 px knob with a soft shadow: grey off, red on, sliding in 180 ms", () => {
+  it("has a 16 px knob with a soft shadow, inside the track's ends: grey off, red on, sliding in 180 ms (spec 0123)", () => {
     const knob = rule(css, ".switch i");
-    expect(knob).toMatch(/width:\s*20px/);
-    expect(knob).toMatch(/height:\s*20px/);
+    expect(knob).toMatch(/width:\s*16px/);
+    expect(knob).toMatch(/height:\s*16px/);
     expect(knob).toMatch(/box-shadow:/);
     expect(knob).toMatch(/background:\s*#bdbdc0/);
     expect(knob).toMatch(/transition:[^;]*0\.18s/);
     const on = rule(css, '.switch[aria-checked="true"] i');
     expect(on).toMatch(/background:\s*var\(--accent\)/);
-    expect(knob).toMatch(/left:\s*-2px/);
+    expect(knob).toMatch(/left:\s*0/);
     expect(on).toMatch(/translateX\(20px\)/);
   });
 
@@ -199,9 +198,9 @@ describe("the fullscreen button has one place (spec 0111, design decision 2)", (
 describe("the cue: how the app points at a control (spec 0115, design decision 2)", () => {
   const cue = sheet("components/ui/cue.module.css");
 
-  it("is a sharp 1.5 px red border pulsing in place, with a slight glow, twice for 1 s", () => {
+  it("is a sharp 1.5 px red border pulsing in place, with a slight glow, twice for 1 s, then lit (spec 0123)", () => {
     expect(cue).toMatch(/0 0 0 1\.5px rgba\(239, 75, 75, 0\.95\), 0 0 14px rgba\(239, 75, 75, 0\.35\)/);
-    expect(rule(cue, ".cue")).toMatch(/animation:\s*pulse 1s ease-in-out 2/);
+    expect(rule(cue, ".cue")).toMatch(/animation:\s*pulse 1s ease-in-out 2,\s*settle 0\.5s ease-in-out 2s forwards/);
     // A ring of its own over the control, following its corners, never catching the pointer.
     expect(rule(cue, ".cue")).toMatch(/position:\s*absolute;[\s\S]*inset:\s*0;[\s\S]*border-radius:\s*inherit;[\s\S]*pointer-events:\s*none/);
     // No spreading ring: the border's width never changes.
@@ -213,31 +212,44 @@ describe("the cue: how the app points at a control (spec 0115, design decision 2
   });
 });
 
-describe("the volume mixer (spec 0108, design decisions 3 to 5)", () => {
-  const mixer = sheet("components/stage/VolumeMixer.module.css");
+describe("the corner buttons over someone's stream (spec 0123, design decisions 1, 3 and 8)", () => {
+  const bar = sheet("components/stage/ViewerBar.module.css");
 
-  it("is a slim frosted panel 10 px over the button, unrolling upward", () => {
-    const panel = rule(mixer, ".mixer");
-    expect(panel).toMatch(/bottom:\s*calc\(100% \+ 10px\)/);
-    expect(panel).toMatch(/background:\s*var\(--panel\)/);
-    expect(panel).toMatch(/clip-path:\s*inset\(100% 0 0 0 round 14px\)/);
-    expect(panel).toMatch(/transition:\s*clip-path var\(--unroll\)/);
-    expect(mixer).toMatch(/prefers-reduced-motion: reduce\)\s*\{\s*\.mixer\s*\{\s*transition:\s*none;/);
+  it("are 34 px, like the fullscreen button, with a 16 px icon", () => {
+    expect(rule(bar, ".round")).toMatch(/width:\s*34px;\s*height:\s*34px/);
+    expect(rule(bar, ".round svg")).toMatch(/width:\s*16px;\s*height:\s*16px/);
+    expect(rule(bar, ".golive")).toMatch(/height:\s*34px/);
   });
 
-  it("has 34 px columns with a 96 px upright bar and a 32 px round mute", () => {
-    expect(rule(mixer, ".channel")).toMatch(/width:\s*34px/);
-    expect(rule(mixer, ".bar")).toMatch(/height:\s*96px/);
-    expect(rule(mixer, ".mute")).toMatch(/width:\s*32px;\s*height:\s*32px/);
+  it("grey a sound that can't be heard at 45%, in its place", () => {
+    expect(rule(bar, '.round[aria-disabled="true"]')).toMatch(/opacity:\s*0\.45/);
   });
 
-  it("greys a sound that can't be heard at 45%, in its place", () => {
-    expect(rule(mixer, ".channel[data-unavailable]")).toMatch(/opacity:\s*0\.45/);
+  it("light the voice as a slim green neon tube while it speaks; silent, the icon at 42%", () => {
+    expect(rule(bar, ".round[data-talking]")).toMatch(/color:\s*#45e087/);
+    const tube = rule(bar, ".round[data-talking]::before");
+    expect(tube).toMatch(/inset 0 0 0 1px rgba\(43, 205, 104, 0\.85\)/);
+    expect(tube).toMatch(/rgba\(22, 163, 74/);
+    expect(rule(bar, ".round[data-silent] svg")).toMatch(/opacity:\s*0\.42/);
+    expect(rule(bar, ".round[data-voice]::before")).toMatch(/transition:\s*box-shadow 120ms/);
+  });
+});
+
+describe("settings rows (spec 0123, design decision 10)", () => {
+  const panel = sheet("components/stage/SettingsPanel.module.css");
+
+  it("are on the panel's type scale, a touch softer than white, 3 px inside their heading, the switch 12 px in", () => {
+    const row = rule(panel, ".voiceRow");
+    expect(row).toMatch(/font-size:\s*var\(--pick-font, 12px\)/);
+    expect(row).toMatch(/font-weight:\s*400/);
+    expect(row).toMatch(/color:\s*rgba\(235, 235, 236, 0\.82\)/);
+    expect(row).toMatch(/padding:\s*0 12px 0 3px/);
+    expect(rule(panel, ".voiceRow > button")).toMatch(/flex:\s*none/);
   });
 
-  it("is a pill of 36 px round buttons on an iPhone, its 4 px padding inside its height", () => {
-    expect(rule(mixer, ".mixer[data-pill]")).toMatch(/border-radius:\s*999px/);
-    expect(rule(mixer, ".mixer[data-pill] .inner")).toMatch(/padding:\s*4px/);
-    expect(rule(mixer, ".mixer[data-pill] .mute")).toMatch(/width:\s*36px;\s*height:\s*36px/);
+  it("hold for the account menu's switch too: regular, a touch softer than white", () => {
+    const row = rule(sheet("components/room/AccountButton.module.css"), ".switchRow");
+    expect(row).toMatch(/font-weight:\s*400/);
+    expect(row).toMatch(/color:\s*rgba\(235, 235, 236, 0\.82\)/);
   });
 });

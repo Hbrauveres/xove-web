@@ -15,6 +15,9 @@ export const RoomEvent = {
   TrackUnsubscribed: "trackUnsubscribed",
   LocalTrackPublished: "localTrackPublished",
   LocalTrackUnpublished: "localTrackUnpublished",
+  ActiveSpeakersChanged: "activeSpeakersChanged",
+  TrackMuted: "trackMuted",
+  TrackUnmuted: "trackUnmuted",
 } as const;
 
 export const VideoQuality = { LOW: 0, MEDIUM: 1, HIGH: 2 } as const;
@@ -132,6 +135,32 @@ export class FakeLocalCameraTrack extends FakeLocalScreenTrack {
   });
 }
 
+/** My microphone (spec 0123): captured with its processing, published as my voice. */
+export class FakeLocalMicTrack extends FakeLocalTrack {
+  /** The capture's options, as the app asked (the mic picked, its processing). */
+  options: unknown;
+  constructor(options?: unknown) {
+    super("audio", Track.Source.Microphone, new FakeMediaStreamTrack((options as { deviceId?: string } | undefined)?.deviceId));
+    this.options = options;
+  }
+  /** Captures again with new options: another mic or other processing, same published track. */
+  readonly restartTrack = vi.fn(async (options?: unknown) => {
+    this.options = options;
+  });
+  /** The noise gate (ADR-0071): its audio context, and the processor set on the track. */
+  processor?: unknown;
+  readonly setAudioContext = vi.fn();
+  readonly setProcessor = vi.fn(async (processor: unknown) => {
+    this.processor = processor;
+  });
+}
+
+/** The fake microphones (`enumerateDevices`, see setup.ts). */
+export const fakeMics = [
+  { deviceId: "mic-1", label: "Headset (USB)" },
+  { deviceId: "mic-2", label: "MacBook Pro microphone" },
+];
+
 /** The screen's video, wrapped by the app after the browser's picker. */
 export class LocalVideoTrack extends FakeLocalScreenTrack {
   constructor(mediaStreamTrack: FakeMediaStreamTrack) {
@@ -153,6 +182,8 @@ let publishSeq = 0;
 /** What a viewer asks the server for, per screen or camera; and whether it downloads a sound. */
 export type FakeRemotePublication = {
   track?: FakeTrack;
+  /** A voice its person muted (spec 0123). */
+  isMuted?: boolean;
   dimensions?: { width: number; height: number };
   trackInfo?: { layers: unknown[] };
   setVideoQuality: ReturnType<typeof vi.fn>;
@@ -166,6 +197,8 @@ export class FakeParticipant {
   readonly publications = new Map<string, FakeRemotePublication>();
   readonly identity: string;
   readonly name: string;
+  /** Speaking right now (LiveKit's own voice detection, spec 0123). */
+  isSpeaking = false;
 
   constructor(identity: string, name: string) {
     this.identity = identity;
@@ -195,6 +228,10 @@ export class Room {
     screenAudio: null as { trackSid: string; track: FakeLocalTrack; options?: unknown } | null,
     /** The camera this browser publishes. */
     camera: null as { trackSid: string; track: FakeLocalCameraTrack; options?: unknown } | null,
+    /** My voice, while it's on (spec 0123). */
+    mic: null as { trackSid: string; track: FakeLocalMicTrack; options?: unknown } | null,
+    /** Tests set this to an error name to play the microphone refused or missing. */
+    nextMic: "allow" as "allow" | "NotAllowedError" | "NotFoundError",
     /** Tests set this to an error name ("NotAllowedError", "NotFoundError") to play the camera refused or missing. */
     nextCamera: "allow" as "allow" | "NotAllowedError" | "NotFoundError",
     /** The last camera captured (whether it was published or not). */
@@ -221,11 +258,17 @@ export class Room {
       if (source === Track.Source.ScreenShare) return local.screens[0];
       if (source === Track.Source.ScreenShareAudio) return local.screenAudio ?? undefined;
       if (source === Track.Source.Camera) return local.camera ?? undefined;
+      if (source === Track.Source.Microphone) return local.mic ?? undefined;
       return undefined;
     },
     /** The camera (never asked with a microphone by the app: tests check `audio: false`). */
     createTracks: vi.fn(async (_options?: { video?: unknown; audio?: unknown }) => {
       const local = this.localParticipant;
+      // The microphone alone (spec 0123): my voice, never with the camera.
+      if (_options?.audio && !_options.video) {
+        if (local.nextMic !== "allow") throw new DOMException("No microphone", local.nextMic);
+        return [new FakeLocalMicTrack(_options.audio)];
+      }
       if (local.nextCamera !== "allow") throw new DOMException("No camera", local.nextCamera);
       // `ideal`: a camera that's gone falls back to the first one.
       const wanted = (_options?.video as { deviceId?: { ideal?: string } } | undefined)?.deviceId?.ideal;
@@ -249,6 +292,11 @@ export class Room {
     }),
     publishTrack: vi.fn(async (track: FakeLocalTrack, options?: unknown) => {
       const local = this.localParticipant;
+      if (track instanceof FakeLocalMicTrack) {
+        local.mic = { trackSid: "TR_my_voice", track, options };
+        this.emit(RoomEvent.LocalTrackPublished);
+        return local.mic;
+      }
       if (track instanceof FakeLocalCameraTrack) {
         local.camera = { trackSid: "TR_my_camera", track, options };
         this.emit(RoomEvent.LocalTrackPublished);
@@ -273,6 +321,7 @@ export class Room {
       local.screens = local.screens.filter((s) => s.track !== track);
       if (local.screenAudio?.track === track) local.screenAudio = null;
       if (local.camera?.track === track) local.camera = null;
+      if (local.mic?.track === track) local.mic = null;
       track.stop();
       this.emit(RoomEvent.LocalTrackUnpublished);
       return undefined;
@@ -369,6 +418,46 @@ export class Room {
     p.publications.set(Track.Source.ScreenShareAudio, publication);
     this.emit(RoomEvent.TrackSubscribed, sound, publication, p);
     return sound;
+  }
+
+  /** Someone turns on their voice (spec 0123): downloaded until this browser says otherwise. */
+  publishVoice(identity: string) {
+    const p = this.remoteParticipants.get(identity) ?? this.join(identity, identity);
+    const voice = new FakeTrack();
+    const publication = this.publication(voice);
+    publication.isMuted = false;
+    publication.setSubscribed.mockImplementation((on: boolean) => {
+      publication.isSubscribed = on;
+      publication.track = on ? voice : undefined;
+      this.emit(on ? RoomEvent.TrackSubscribed : RoomEvent.TrackUnsubscribed, voice, publication, p);
+    });
+    p.tracks.set(Track.Source.Microphone, voice);
+    p.publications.set(Track.Source.Microphone, publication);
+    this.emit(RoomEvent.TrackSubscribed, voice, publication, p);
+    return voice;
+  }
+
+  /** Someone mutes or unmutes their voice. */
+  muteVoice(identity: string, muted: boolean) {
+    const p = this.remoteParticipants.get(identity);
+    const publication = p?.publications.get(Track.Source.Microphone);
+    if (!p || !publication) return;
+    publication.isMuted = muted;
+    if (muted) p.isSpeaking = false;
+    this.emit(muted ? RoomEvent.TrackMuted : RoomEvent.TrackUnmuted, publication, p);
+  }
+
+  /** Someone starts or stops speaking (LiveKit's active speakers). */
+  setSpeaking(identity: string, speaking: boolean) {
+    const p = this.remoteParticipants.get(identity);
+    if (!p || p.isSpeaking === speaking) return;
+    p.isSpeaking = speaking;
+    this.emit(RoomEvent.ActiveSpeakersChanged, [...this.remoteParticipants.values()].filter((x) => x.isSpeaking));
+  }
+
+  /** Whether this browser downloads someone's voice. */
+  voicePublication(identity: string) {
+    return this.remoteParticipants.get(identity)?.publications.get(Track.Source.Microphone);
   }
 
   /** Someone turns on their camera: 720p with two layers unless said otherwise. */

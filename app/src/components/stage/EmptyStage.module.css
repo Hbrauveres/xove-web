@@ -1,42 +1,384 @@
+/*
+ * Nobody live (spec 0123): the stage as a camera waiting, like Xovê's mark. Thin viewfinder
+ * corners, the top right red as in the logo; a quiet readout in the corners; the way to start in a
+ * small focus frame. Still: only the clock changes, once a minute.
+ */
 .empty {
+  /* Close to the edge, so the stage's own buttons sit inside the bottom-right corner. */
+  --inset: 6px;
+  --top: var(--inset);
+  --arm: 28px;
   position: absolute;
   inset: 0;
   display: grid;
-  /* The line sits just above the round buttons, as in specs/0158-phone-upright/design.html. */
-  place-items: end center;
-  padding-bottom: max(52px, 20cqh);
-  background: var(--surface);
+  place-items: center;
+  padding: 20px;
+  text-align: center;
+  container-type: size;
+  /* One flat dark: a gradient this dim has too few shades and shows them as bands. */
+  background: #0f0f11;
 }
 
-/* Broadcast colour bars at full colour, the "no signal" screen (spec 0158; faded before). */
-.test {
+/* The viewfinder's corners: two thin arms each. */
+.corner {
   position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  width: var(--arm);
+  height: var(--arm);
+  border: 0 solid rgba(235, 235, 236, 0.42);
+  pointer-events: none;
 }
 
-.body {
-  position: relative;
-  display: flex;
-  flex-direction: column;
+.corner[data-at="tl"] {
+  top: var(--top);
+  left: var(--inset);
+  border-width: 2px 0 0 2px;
+}
+
+.corner[data-at="tr"] {
+  top: var(--top);
+  right: var(--inset);
+  border-width: 2px 2px 0 0;
+  border-color: var(--accent);
+}
+
+.corner[data-at="bl"] {
+  bottom: var(--inset);
+  left: var(--inset);
+  border-width: 0 0 2px 2px;
+}
+
+.corner[data-at="br"] {
+  bottom: var(--inset);
+  right: var(--inset);
+  border-width: 0 2px 2px 0;
+}
+
+/* The readout: small mono capitals, inside the corners. */
+.readout {
+  position: absolute;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  text-align: center;
-  padding-inline: var(--gutter);
+  color: rgba(235, 235, 236, 0.55);
+  font: 500 11px/1 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.readout[data-at="tl"] {
+  top: calc(var(--top) + 16px);
+  left: calc(var(--inset) + 16px);
+}
+
+.readout[data-at="tr"] {
+  top: calc(var(--top) + 16px);
+  right: calc(var(--inset) + 16px);
+}
+
+.readout[data-at="bl"] {
+  bottom: calc(var(--inset) + 16px);
+  left: calc(var(--inset) + 16px);
+  max-width: calc(100% - 2 * var(--inset) - 160px);
+}
+
+/* The camera's display (spec 0123): fainter than the readout, nothing moves. */
+/* An empty sound meter, L and R. */
+.meter {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--inset) + 18px);
+  display: flex;
+  gap: 8px;
+  transform: translateY(-50%);
+  color: rgba(235, 235, 236, 0.45);
+  font: 500 10px/1 var(--font-mono);
+}
+
+.meter > span {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+}
+
+.bars {
+  display: grid;
+  gap: 4px;
+}
+
+.bars i {
+  width: 9px;
+  height: 3px;
+  border-radius: 1px;
+  background: rgba(235, 235, 236, 0.12);
+}
+
+/* Format tags, stacked. */
+.tags {
+  position: absolute;
+  top: 50%;
+  right: calc(var(--inset) + 18px);
+  display: grid;
+  justify-items: end;
+  gap: 7px;
+  transform: translateY(-50%);
+  color: rgba(235, 235, 236, 0.5);
+  font: 500 11px/1 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tags b {
+  padding: 3px 4px;
+  border: 1px solid rgba(235, 235, 236, 0.35);
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+/* A plain tick ruler at the bottom's middle, a marker over its centre. */
+.ruler {
+  position: absolute;
+  bottom: calc(var(--inset) + 18px);
+  left: 50%;
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  height: 18px;
+  transform: translateX(-50%);
+  border-bottom: 1px solid rgba(235, 235, 236, 0.3);
+}
+
+.ruler i {
+  width: 1px;
+  height: 5px;
+  background: rgba(235, 235, 236, 0.3);
+}
+
+.ruler i[data-major] {
+  height: 9px;
+  background: rgba(235, 235, 236, 0.45);
+}
+
+.ruler::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  border: 4px solid transparent;
+  border-top: 5px solid rgba(235, 235, 236, 0.6);
+  transform: translateX(-50%);
+}
+
+/* The frame rate, top middle: 30 lit in its box (what's sent), 60 faint beside it. */
+.readout[data-at="tc"] {
+  top: calc(var(--top) + 13px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.fps {
+  gap: 8px;
+  color: rgba(235, 235, 236, 0.3);
+}
+
+.fps b {
+  padding: 3px 5px;
+  border-radius: 3px;
+  background: rgba(235, 235, 236, 0.7);
+  color: #0f0f11;
+  font-weight: 500;
+}
+
+/* A thirds grid, barely there. */
+.grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  --g: rgba(235, 235, 236, 0.016);
+  background:
+    linear-gradient(to right, transparent calc(33.333% - 0.5px), var(--g) calc(33.333% - 0.5px), var(--g) calc(33.333% + 0.5px), transparent calc(33.333% + 0.5px), transparent calc(66.666% - 0.5px), var(--g) calc(66.666% - 0.5px), var(--g) calc(66.666% + 0.5px), transparent calc(66.666% + 0.5px)),
+    linear-gradient(to bottom, transparent calc(33.333% - 0.5px), var(--g) calc(33.333% - 0.5px), var(--g) calc(33.333% + 0.5px), transparent calc(33.333% + 0.5px), transparent calc(66.666% - 0.5px), var(--g) calc(66.666% - 0.5px), var(--g) calc(66.666% + 0.5px), transparent calc(66.666% + 0.5px));
+}
+
+/* Standby: a still grey dot (red would mean recording). */
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(235, 235, 236, 0.45);
+}
+
+/* The focus frame round the way to start: four short corners, fainter. */
+.focus {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 26px 30px;
+  background:
+    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) top left / 14px 1.5px,
+    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) top left / 1.5px 14px,
+    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) top right / 14px 1.5px,
+    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) top right / 1.5px 14px,
+    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) bottom left / 14px 1.5px,
+    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) bottom left / 1.5px 14px,
+    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) bottom right / 14px 1.5px,
+    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) bottom right / 1.5px 14px;
+  background-repeat: no-repeat;
 }
 
 .title {
   margin: 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(var(--text-lg), 3vw, var(--text-xl));
+  font: 800 26px/1.1 var(--font-display);
+  letter-spacing: -0.01em;
 }
 
-/* Over the bars, in the bottom third above the round buttons: white with a shadow to read. */
 .copy {
-  margin: 0 0 8px;
+  margin: 0;
+  max-width: 36ch;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.go {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.go button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 19px;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.go svg {
+  width: 18px;
+  height: 18px;
+}
+
+.primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.ghost {
+  background: rgba(10, 10, 11, 0.72);
+  box-shadow: inset 0 0 0 1px var(--line);
   color: var(--text);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.5);
-  font-size: var(--text-sm);
+}
+
+.unavailable {
+  background: rgba(10, 10, 11, 0.72);
+  color: var(--text);
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (hover: hover) {
+  .primary:hover {
+    background: #f36a6a;
+  }
+
+  .ghost:hover {
+    background: rgba(40, 40, 44, 0.85);
+  }
+}
+
+/* Sideways on a phone the top bar floats over the stage: the corners start under it, and its
+   own "Nobody live" says what the top readouts would. */
+:global([data-layout="sideways"]) .empty {
+  --top: 58px;
+}
+
+:global([data-layout="sideways"]) .readout:is([data-at="tl"], [data-at="tr"], [data-at="tc"]) {
+  display: none;
+}
+
+/* A narrow stage (a phone upright): the two ways to start stacked. */
+@container (max-width: 480px) {
+  .empty {
+    --arm: 22px;
+  }
+
+  .go {
+    flex-direction: column;
+    align-items: stretch;
+    width: min(100%, 240px);
+  }
+
+  .focus {
+    padding: 20px 18px;
+  }
+}
+
+/* A short stage (a phone, sideways or upright): the title and the two ways to start. */
+@container (max-height: 320px) {
+  .empty {
+    --arm: 20px;
+  }
+
+  .focus {
+    gap: 8px;
+    padding: 14px 18px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .copy {
+    display: none;
+  }
+
+  .go {
+    gap: 6px;
+    margin-top: 0;
+  }
+
+  .go button {
+    height: 36px;
+    padding: 0 14px;
+    font-size: 13px;
+  }
+
+  .readout {
+    font-size: 10px;
+  }
+
+  .readout[data-at="bl"] {
+    display: none;
+  }
+}
+
+/* A small or short stage (a phone): only the top line of the display; the rest would crowd it. */
+@container (max-width: 640px) {
+  .meter,
+  .tags,
+  .ruler,
+  .readout[data-at="bl"],
+  .readout[data-at="tc"] {
+    display: none;
+  }
+}
+
+@container (max-height: 420px) {
+  .meter,
+  .tags,
+  .ruler,
+  .grid {
+    display: none;
+  }
 }

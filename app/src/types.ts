@@ -59,6 +59,14 @@ export type Sharer = {
   hasSound?: boolean;
   /** Downloads their sound, or not (a muted thumbnail's isn't downloaded). Only for someone else. */
   setSoundOn?: (on: boolean) => void;
+  /** Their voice (spec 0123), when it's someone else's and it's downloaded. */
+  voice?: MediaTrack;
+  /** Their voice is on (and not muted by them). */
+  hasVoice?: boolean;
+  /** Speaking right now. */
+  speaking?: boolean;
+  /** Downloads their voice, or not. Only for someone else. */
+  setVoiceOn?: (on: boolean) => void;
 };
 
 /** Numbers the real app would read from LiveKit's track stats. */

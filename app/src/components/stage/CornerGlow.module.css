@@ -1,0 +1,57 @@
+/*
+ * The corner lights (see CornerGlow.tsx). Each is an L of two thick arms in its colour, at the
+ * stage's corner, blurred: the blur makes the soft, endless fade. The grey is slightly blue, so
+ * its three colours step at different shades and the dark end shows no bands.
+ */
+.glow {
+  --len: clamp(120px, 13vmin, 220px);
+  --thick: clamp(16px, 1.8vmin, 28px);
+  --blur: clamp(40px, 4.5vmin, 72px);
+  /* The L's lie just outside the stage's edges, where the light shows. */
+  --out: calc(-1 * var(--thick));
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.glow i {
+  --c: rgba(138, 150, 172, 0.5);
+  position: absolute;
+  width: var(--len);
+  height: var(--len);
+  border: 0 solid var(--c);
+  filter: blur(var(--blur));
+}
+
+.glow i[data-at="tl"] {
+  top: var(--out);
+  left: var(--out);
+  border-width: var(--thick) 0 0 var(--thick);
+}
+
+.glow i[data-at="tr"] {
+  --c: rgba(239, 75, 75, 0.95);
+  top: var(--out);
+  right: var(--out);
+  border-width: var(--thick) var(--thick) 0 0;
+}
+
+.glow i[data-at="bl"] {
+  bottom: var(--out);
+  left: var(--out);
+  border-width: 0 0 var(--thick) var(--thick);
+}
+
+.glow i[data-at="br"] {
+  right: var(--out);
+  bottom: var(--out);
+  border-width: 0 var(--thick) var(--thick) 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow {
+    transition: none;
+  }
+}

@@ -1,0 +1,131 @@
+/* The Voice tab's mic level (spec 0123): see MicTest.tsx. Built on the app's slider
+   (Range.module.css): the same slim track and white knob. */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: var(--ctl, 38px);
+}
+
+/* The track: the live level drawn in it, green when it's over the knob (sent), faint under. */
+.meter {
+  --fill-colour: rgba(235, 235, 236, 0.4);
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 16px;
+}
+
+.meter[data-sent] {
+  --fill-colour: var(--ok);
+}
+
+.meter::before {
+  content: "";
+  position: absolute;
+  inset: 6.5px 0;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--fill-colour) 0 var(--level), rgba(235, 235, 236, 0.16) var(--level));
+  transition: background 90ms linear;
+}
+
+.meter input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 16px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.meter input::-webkit-slider-runnable-track {
+  height: 3px;
+  background: transparent;
+}
+
+/* The sensitivity: a slim upright line across the track, the common mark for a threshold. */
+.meter input::-webkit-slider-thumb {
+  width: 3px;
+  height: 14px;
+  margin-top: -5.5px;
+  border: 0;
+  border-radius: 2px;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35);
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: ew-resize;
+  transition: height 0.12s, margin-top 0.12s;
+}
+
+.meter input:hover::-webkit-slider-thumb,
+.meter input:focus-visible::-webkit-slider-thumb {
+  height: 16px;
+  margin-top: -6.5px;
+}
+
+.meter input::-moz-range-track {
+  height: 3px;
+  background: transparent;
+}
+
+.meter input::-moz-range-thumb {
+  width: 3px;
+  height: 14px;
+  border: 0;
+  border-radius: 2px;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35);
+  cursor: ew-resize;
+}
+
+.meter input:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Test: hear yourself, a small pill in the settings' own style, counting down while it plays. */
+.hear {
+  flex: none;
+  min-width: 64px;
+  height: 28px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--sel-bg);
+  box-shadow: var(--sel-shadow);
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.hear:hover:not(:disabled) {
+  background: var(--sel-hover);
+}
+
+.hear[data-on] {
+  background: var(--text);
+  color: #0c0c0d;
+}
+
+.hear:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.count {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meter::before,
+  .meter input::-webkit-slider-thumb {
+    transition: none;
+  }
+}
