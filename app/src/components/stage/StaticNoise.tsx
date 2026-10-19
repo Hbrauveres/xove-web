@@ -12,12 +12,10 @@ const BULGE = 0.09;
 /**
  * A TV's static behind the empty stage (spec 0136): snow in horizontal bands rolling slowly down,
  * dark and faded so it never competes with the way to start, behind a gently curved glass, as a
- * 90s TV's. The mouse leaves a soft red glow on the glass, the shape of the pointer, as a neon's
- * reflection. Still for reduced motion.
+ * 90s TV's. Still for reduced motion.
  */
 export function StaticNoise() {
   const canvas = useRef<HTMLCanvasElement>(null);
-  const glow = useRef<HTMLSpanElement>(null);
   useEffect(() => {
     const el = canvas.current;
     const ctx = el?.getContext("2d", { alpha: false });
@@ -46,19 +44,6 @@ export function StaticNoise() {
     fit();
     const resized = new ResizeObserver(fit);
     resized.observe(el);
-
-    // The glow follows a mouse over the stage, and fades when it leaves.
-    const moved = (e: PointerEvent) => {
-      const g = glow.current;
-      if (!g || e.pointerType !== "mouse") return;
-      const r = el.getBoundingClientRect();
-      const x = e.clientX - r.left;
-      const y = e.clientY - r.top;
-      const inside = x >= 0 && y >= 0 && x <= r.width && y <= r.height;
-      g.style.translate = `${x}px ${y}px`;
-      g.toggleAttribute("data-shown", inside);
-    };
-    window.addEventListener("pointermove", moved);
 
     // Each row's brightness (0–1), for this moment.
     const gain = new Float32Array(8192);
@@ -100,17 +85,11 @@ export function StaticNoise() {
     return () => {
       cancelAnimationFrame(frame);
       resized.disconnect();
-      window.removeEventListener("pointermove", moved);
     };
   }, []);
   return (
     <span className={styles.static} aria-hidden="true">
       <canvas ref={canvas} className={styles.canvas} />
-      <span ref={glow} className={styles.glow}>
-        <svg viewBox="0 0 24 24" width="24" height="24">
-          <path d="M4 2.5v17.2l4.6-4.4 3.1 6.9 3.1-1.4-3.1-6.8h6.4z" />
-        </svg>
-      </span>
       <span className={styles.glass} />
     </span>
   );

@@ -36,43 +36,8 @@
     inset 0 0 40px 10px rgba(0, 0, 0, 0.55);
 }
 
-/* The mouse glows: the pointer's own shape in soft red neon, right under it, so the pointer itself
-   seems lit. It fades in over the stage and out when the mouse leaves. */
-.glow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  /* The outline's tip on the pointer's: the path's tip sits at (4, 2.5) of its 24-unit box. */
-  margin: calc(-2.5px * 22 / 24) 0 0 calc(-4px * 22 / 24);
-  opacity: 0;
-  color: var(--accent);
-  mix-blend-mode: screen;
-  transition: opacity 0.4s ease;
-}
-
-.glow[data-shown] {
-  opacity: 0.75;
-}
-
-.glow svg {
-  display: block;
-  width: 22px;
-  height: 22px;
-  /* A neon tube: the outline itself soft but readable, its light spreading round it. */
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.6;
-  stroke-linejoin: round;
-  filter: blur(0.6px) drop-shadow(0 0 3px currentColor) drop-shadow(0 0 10px currentColor);
-}
-
 /* Draft only (spec 0136): the harness's bar turns the glass off to compare. */
 :global(html[data-static-glass="off"]) .glass {
   display: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .glow {
-    transition: none;
-  }
-}
