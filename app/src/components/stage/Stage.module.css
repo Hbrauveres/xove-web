@@ -1,13 +1,24 @@
 .stage {
+  /* The sideways streams row's sizes, shared with the controls that end above it (spec 0133):
+     its heading and the gap under it, its pictures' width, its bottom padding, its content's
+     height under its fade, and its arrow's place and size while closed. */
+  --row-head: 28px;
+  --row-head-gap: 6px;
+  --row-pictures: 112px;
+  --row-bottom: 10px;
+  --row-content: calc(var(--row-head) + var(--row-head-gap) + var(--row-pictures) * 9 / 16 + var(--row-bottom) + env(safe-area-inset-bottom, 0px));
+  --row-arrow-inset: 14px;
+  --row-arrow: 36px;
   min-width: 0;
   /* The column is the 16:9 box (spec 0107): the stage's size comes from its width. */
   container-type: inline-size;
 }
 
 /*
- * The stage's box: the light behind, the frame on top (spec 0104). It takes the picture's
- * shape inside the 16:9 box (spec 0107): a wider picture keeps the full width and gets
- * shorter, a taller one keeps the full height and gets narrower, centred. No black bars.
+ * The stage's box (spec 0133, ADR-0072): the controls' layer, its column's whole width, holding
+ * the buttons and a view with the picture and its light. Its height follows the picture (spec
+ * 0107): a wider picture makes it shorter, a taller one makes it as tall as the column allows;
+ * the view inside it takes the picture's own shape, centred, with no black bars.
  *
  * On a window taller than 16:9 (a vertical monitor), the box may also be as tall as the
  * height that's free above the info row, so a portrait picture fills it instead of staying
@@ -18,7 +29,7 @@
   --shape: 1.7778;
   --free-h: max(100cqw * 9 / 16, 100cqh - var(--info-h, 104px) - var(--info-gap, 14px));
   position: relative;
-  width: min(100cqw, var(--free-h) * var(--shape));
+  width: 100cqw;
   height: min(100cqw / var(--shape), var(--free-h));
   margin-inline: auto;
   transition:
@@ -27,10 +38,38 @@
     translate var(--unroll);
 }
 
+/* The controls' layer (spec 0133): the stage's whole box, see-through. Its own size decides where
+   the buttons go and how tall a menu can be, not the window's or the picture's. */
 .frame {
   position: relative;
-  /* Its own size decides where the buttons go and how tall a menu can be, not the window's. */
   container-type: size;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.frame:fullscreen {
+  background: #000;
+}
+
+/* The view (spec 0133): the picture in its own shape, as big as the controls' layer allows,
+   centred; its light behind it, stretched past it. */
+.view {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(100cqw, 100cqh * var(--shape));
+  height: min(100cqh, 100cqw / var(--shape));
+  translate: -50% -50%;
+  /* A new picture's shape: the view glides to it, as the stage did (the design sheet's motion). */
+  transition:
+    width 0.35s ease,
+    height 0.35s ease,
+    translate var(--unroll);
+}
+
+.picture {
+  position: relative;
   width: 100%;
   height: 100%;
   background: #000;
@@ -42,14 +81,13 @@
 
 /* A picture filling the stage: no black behind it to show as a sliver at an edge (spec 0123,
    design decision 14; see ScreenVideo.module.css). */
-.frame:has(video[data-fill]) {
+.picture:has(video[data-fill]) {
   background: transparent;
 }
 
-.frame:fullscreen {
+.frame:fullscreen .picture {
   border-radius: 0;
 }
-
 
 .frame[data-chrome="hidden"] {
   cursor: none;
@@ -62,7 +100,23 @@
   pointer-events: none;
   transition:
     opacity 0.25s ease,
-    translate var(--unroll);
+    translate var(--unroll),
+    bottom 0.28s ease;
+}
+
+/* Sideways and in the upright full view the box is the screen (spec 0133): the controls clear the
+   iPhone's home indicator, end above the open streams row (from its shared sizes), and above the
+   settings sheet (its height, told by the stage), rising with them. */
+.stage[data-layout="sideways"] :is(.controls, [data-overlay]) {
+  bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.stage[data-layout="sideways"][data-row-open] :is(.controls, [data-overlay]) {
+  bottom: var(--row-content);
+}
+
+.stage[data-layout="sideways"][data-sheet-lift] :is(.controls, [data-overlay]) {
+  bottom: var(--sheet-h, 0px);
 }
 
 /* Fading, part by part: a heard voice stays, for its speaking cue (spec 0131). */
@@ -86,43 +140,10 @@
   pointer-events: auto;
 }
 
-/*
- * The upright full view (spec 0112): the fullscreen button and the round buttons are the
- * screen's, at its bottom, over the player band and the black around it; they fade with the
- * top bar and move up together above the settings sheet.
- */
-.screenChrome {
-  position: absolute;
-  /* Clear of the iPhone's home indicator, like the streams row's arrow; above the streams row
-     while it's open (--row-lift, measured by the stage), rising with it. */
-  inset: 0 0 calc(env(safe-area-inset-bottom, 0px) + var(--row-lift, 0px));
-  z-index: 4;
-  pointer-events: none;
-  transition:
-    translate var(--unroll),
-    bottom 0.28s ease;
-}
-
-.stage[data-chrome="hidden"] .screenChrome .controls > :not(:has([data-stays])) {
-  opacity: 0;
-}
-
-.stage[data-chrome="hidden"] .screenChrome :is(button, input) {
-  pointer-events: none;
-}
-
-.stage[data-chrome="hidden"]:has(:focus-visible) .screenChrome .controls > * {
-  opacity: 1;
-}
-
-.stage[data-chrome="hidden"]:has(:focus-visible) .screenChrome :is(button, input) {
-  pointer-events: auto;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .box,
-  .controls,
-  .screenChrome {
+  .view,
+  .controls {
     transition: none;
   }
 }
@@ -153,8 +174,8 @@
 }
 
 /*
- * The phone (spec 0158): the stage runs edge to edge and still hugs the picture, never taller
- * than 60% of the screen; the info row sits under it; only the feed or the cards scroll.
+ * The phone (spec 0158): the stage runs edge to edge, its box never taller than 60% of the
+ * screen and the view in it hugging the picture; the info row sits under it; only the feed or the cards scroll.
  */
 .stage[data-layout="phone"] {
   flex: 1;
@@ -165,11 +186,11 @@
 
 .stage[data-layout="phone"] .box {
   flex: none;
-  width: min(100cqw, 60dvh * var(--shape));
+  width: 100cqw;
   height: min(100cqw / var(--shape), 60dvh);
 }
 
-.stage[data-layout="phone"] .frame {
+.stage[data-layout="phone"] .picture {
   border-radius: 0;
 }
 
@@ -219,8 +240,8 @@
 }
 
 /*
- * A phone sideways (spec 0160, specs/0160-phone-sideways/design.html): the stage fills the
- * screen height first and hugs the picture, centred, black at its sides where the light glows.
+ * A phone sideways (spec 0160, specs/0160-phone-sideways/design.html): the stage's box is the
+ * screen, and the view in it hugs the picture, centred, black at its sides where the light glows.
  * A top bar and the streams row float over it, and fade with the controls.
  */
 .stage[data-layout="sideways"] {
@@ -234,13 +255,14 @@
   touch-action: none;
 }
 
+/* Sideways the controls' layer is the whole screen (spec 0133); the view hugs the picture in it. */
 .stage[data-layout="sideways"] .box {
   flex: none;
-  width: min(100cqw, 100dvh * var(--shape));
-  height: min(100dvh, 100cqw / var(--shape));
+  width: 100cqw;
+  height: 100dvh;
 }
 
-.stage[data-layout="sideways"] .frame {
+.stage[data-layout="sideways"] .picture {
   border-radius: 0;
 }
 
@@ -280,24 +302,36 @@
  * sideways screens was assumed here before; the buttons never had it, so it put the button
  * 3 px off in a phone's full view.)
  */
-.stage[data-layout="phone"] [data-overlay] {
+.stage[data-layout="phone"] [data-overlay],
+.stage[data-layout="phone"] .controls {
   --btn: 44px;
 }
 
-/* Sideways with the streams row's arrow at the bottom-left: the sounds start 8 px after it, on the
-   same line, or at the edge when it's gone into the open row (spec 0131; --arrow-end is measured
-   by the stage). */
+/* A narrow stage's compact buttons (spec 0133): the fullscreen button stays level with them. */
+@container (max-width: 359px) {
+  .stage [data-overlay],
+  .stage .controls,
+  .stage[data-layout] [data-overlay],
+  .stage[data-layout] .controls {
+    --btn: 36px;
+  }
+}
+
+/* Sideways with the streams row's arrow at the bottom-left (14 px in, 36 px): the sounds start
+   8 px after it, on its line, and go back to the edge when it moves into the open row (specs 0131
+   and 0133). The arrow and the sounds share the screen's box, so this is plain layout. */
 .stage[data-row-arrow] [data-viewer-bar] {
-  left: max(14px + env(safe-area-inset-left, 0px), var(--arrow-end, 0px) + 8px);
+  left: calc(var(--row-arrow-inset) + var(--row-arrow) + 8px + env(safe-area-inset-left, 0px));
   /* With the row: the arrow goes into it as it opens, and the sounds slide back to the edge. */
   transition:
     left 0.28s ease,
     opacity 0.25s ease;
 }
 
-/* Faded, the arrow's gone too: a heard voice slides to the corner (spec 0131). */
+/* The arrow in the open row, or faded with the controls: the sounds slide to the corner (spec 0131). */
+.stage[data-row-arrow][data-row-open] [data-viewer-bar],
 .stage[data-row-arrow][data-chrome="hidden"]:not(:has(:focus-visible)) [data-viewer-bar] {
-  left: calc(14px + env(safe-area-inset-left, 0px));
+  left: calc(var(--row-arrow-inset) + env(safe-area-inset-left, 0px));
 }
 
 /* Sideways where there's no fullscreen button (a phone held sideways is already full): Go live

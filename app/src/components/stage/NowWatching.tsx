@@ -3,6 +3,7 @@ import type { Friend, Sharer } from "../../types";
 import { Avatar } from "../ui/Avatar";
 import styles from "./NowWatching.module.css";
 import { whoIsHere } from "./whoIsHere";
+import { Tooltip } from "../ui/Tooltip";
 
 /** What a person shares, in two words. */
 // "· voice" while their voice is on (spec 0123).
@@ -100,16 +101,18 @@ export function NowWatching({ sharer, watchers = [], others = [], compact = fals
           <span>{whatOf(sharer)}</span>
           <span className={styles.elapsed}>{elapsed}</span>
           {watchers.length > 0 && (
-            <span className={styles.watchers} title={watchers.map((p) => p.name).join(", ")}>
-              <span className={styles.row}>
-                {watchers.slice(0, MAX_AVATARS).map((p) => (
-                  <span key={p.id} data-watcher className={styles.face}>
-                    <Avatar person={p} size={22} />
-                  </span>
-                ))}
+            <Tooltip text={watchers.map((p) => p.name).join(", ")}>
+              <span className={styles.watchers}>
+                <span className={styles.row}>
+                  {watchers.slice(0, MAX_AVATARS).map((p) => (
+                    <span key={p.id} data-watcher className={styles.face}>
+                      <Avatar person={p} size={22} />
+                    </span>
+                  ))}
+                </span>
+                <span className={styles.count}>{watchers.length} watching</span>
               </span>
-              <span className={styles.count}>{watchers.length} watching</span>
-            </span>
+            </Tooltip>
           )}
         </p>
       </div>

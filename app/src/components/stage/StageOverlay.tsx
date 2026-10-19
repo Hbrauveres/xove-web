@@ -1,4 +1,5 @@
 import styles from "./StageOverlay.module.css";
+import { Tooltip } from "../ui/Tooltip";
 
 type Props = {
   /** The player is fullscreen (or, on a phone, in the full-screen view): the button leaves it. */
@@ -26,26 +27,27 @@ export function StageOverlay({ fullscreen, onFullscreen, view = false, hidden = 
   return (
     <div className={styles.overlay} data-overlay>
       <div className={styles.top}>
-        <button
-          type="button"
-          // A button, never the start of a swipe (spec 0159).
-          data-no-swipe
-          className={styles.iconButton}
-          onClick={onFullscreen}
-          aria-label={label}
-          title={label}
-        >
-          <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
-            <path
-              // Corners pointing out to enter, pointing in to leave.
-              d={fullscreen ? "M8 3v5H3M17 8h-5V3M12 17v-5h5M3 12h5v5" : "M3 8V3h5M12 3h5v5M17 12v5h-5M8 17H3v-5"}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
-        </button>
+        <Tooltip text={label}>
+          <button
+            type="button"
+            // A button, never the start of a swipe (spec 0159).
+            data-no-swipe
+            className={styles.iconButton}
+            onClick={onFullscreen}
+            aria-label={label}
+          >
+            <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+              <path
+                // Corners pointing out to enter, pointing in to leave.
+                d={fullscreen ? "M8 3v5H3M17 8h-5V3M12 17v-5h5M3 12h5v5" : "M3 8V3h5M12 3h5v5M17 12v5h-5M8 17H3v-5"}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+          </button>
+        </Tooltip>
       </div>
     </div>
   );

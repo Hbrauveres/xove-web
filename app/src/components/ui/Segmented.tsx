@@ -1,5 +1,6 @@
 import { useRef, type CSSProperties, type KeyboardEvent } from "react";
 import styles from "./Segmented.module.css";
+import { Tooltip } from "./Tooltip";
 
 export type SegmentOption<T extends string> = { value: T; label: string; title?: string };
 
@@ -42,23 +43,23 @@ export function Segmented<T extends string>({ label, options, value, onChange, d
       {options.map((o, i) => {
         const chosen = i === at;
         return (
-          <button
-            key={o.value}
-            ref={(el) => {
-              refs.current[i] = el;
-            }}
-            type="button"
-            role="radio"
-            aria-checked={chosen}
-            tabIndex={chosen ? 0 : -1}
-            title={o.title}
-            disabled={disabled}
-            onClick={() => {
-              if (!chosen) onChange(o.value);
-            }}
-          >
-            {o.label}
-          </button>
+          <Tooltip key={o.value} text={o.title}>
+            <button
+              ref={(el) => {
+                refs.current[i] = el;
+              }}
+              type="button"
+              role="radio"
+              aria-checked={chosen}
+              tabIndex={chosen ? 0 : -1}
+              disabled={disabled}
+              onClick={() => {
+                if (!chosen) onChange(o.value);
+              }}
+            >
+              {o.label}
+            </button>
+          </Tooltip>
         );
       })}
     </div>

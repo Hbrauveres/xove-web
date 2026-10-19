@@ -190,7 +190,7 @@ describe("the fullscreen button has one place (spec 0111, design decision 2)", (
     expect(o).toMatch(/padding-bottom:\s*calc\(12px \+ \(var\(--btn, 48px\) - 34px\) \/ 2\)/);
     expect(rule(overlay, ".top")).toMatch(/justify-content:\s*flex-end/);
     // The row's button size per layout, nothing else of its own.
-    expect(rule(stage, '.stage[data-layout="phone"] [data-overlay]')).toMatch(/--btn:\s*44px/);
+    expect(rule(stage, '.stage[data-layout="phone"] [data-overlay],\n.stage[data-layout="phone"] .controls')).toMatch(/--btn:\s*44px/);
     expect(stage).not.toMatch(/\[data-overlay\]\s*\{[^}]*justify-content/);
   });
 });
@@ -251,5 +251,38 @@ describe("settings rows (spec 0123, design decision 10)", () => {
     const row = rule(sheet("components/room/AccountButton.module.css"), ".switchRow");
     expect(row).toMatch(/font-weight:\s*400/);
     expect(row).toMatch(/color:\s*rgba\(235, 235, 236, 0\.82\)/);
+  });
+});
+
+describe("compact controls on a narrow stage (spec 0133, design decision 5)", () => {
+  const round = sheet("components/stage/RoundButton.module.css");
+  const row = sheet("components/stage/PlayerButtons.module.css");
+  const stage = sheet("components/stage/Stage.module.css");
+  /** The rules inside the stage's narrow container query. */
+  const narrow = (css: string) => {
+    const at = css.indexOf("@container (max-width: 359px)");
+    expect(at, "the narrow container query").toBeGreaterThanOrEqual(0);
+    return css.slice(at, css.indexOf("\n}\n", at));
+  };
+
+  it("measures the stage's own width, under 360 px, not the window's", () => {
+    for (const css of [round, row, stage]) expect(css).not.toMatch(/@media \(max-width: 359px\)/);
+    expect(rule(stage, ".frame")).toMatch(/container-type:\s*size/);
+  });
+
+  it("makes the round buttons 36 px, 6 px apart, centred clear of the fullscreen button on both sides", () => {
+    expect(narrow(round)).toMatch(/\.pill,\s*:global\(\[data-layout\]\) \.pill \{\s*height:\s*36px/);
+    expect(narrow(round)).toMatch(/\.main,\s*:global\(\[data-layout\]\) \.main \{\s*width:\s*36px/);
+    expect(narrow(row)).toMatch(/--gap:\s*6px/);
+    expect(narrow(row)).toMatch(/padding-inline:\s*calc\(12px \+ 34px \+ 8px\)/);
+  });
+
+  it("keeps every button on one centre line: the fullscreen button and the bar take the same size", () => {
+    expect(narrow(stage)).toMatch(/\.stage \[data-overlay\],\s*\.stage \.controls,[\s\S]*--btn:\s*36px/);
+  });
+
+  it("keeps today's sizes from 360 px up: 48 px, and 44 px on a phone held upright", () => {
+    expect(rule(round, ".pill")).toMatch(/height:\s*48px/);
+    expect(rule(round, ':global([data-layout="phone"]) .pill')).toMatch(/height:\s*44px/);
   });
 });

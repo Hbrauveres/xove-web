@@ -64,7 +64,8 @@ describe("stream buttons: off and live", () => {
     const camera = screen.getByRole("button", { name: "Turn on your camera" });
     expect(share).toHaveAttribute("aria-pressed", "false");
     expect(camera).toHaveAttribute("aria-pressed", "false");
-    expect(share).toHaveAccessibleDescription("Share your screen");
+    // Its tooltip says what its name says: a screen reader hears it once (spec 0133).
+    expect(share).not.toHaveAccessibleDescription();
   });
 
   it("lights a live stream's button, which stops it, with no arrow (spec 0107)", async () => {

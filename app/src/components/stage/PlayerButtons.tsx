@@ -1,4 +1,4 @@
-import { useId, useRef, useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import type { ScreenSurface } from "../../hooks/useLiveKitRoom";
 import { usePinnedRow } from "../../hooks/usePinnedRow";
 import type { CameraDevice, StreamKind } from "../../types";
@@ -9,6 +9,7 @@ import { showToast } from "../ui/toast";
 import { CameraOffIcon, CameraOnIcon, CogIcon, ScreenOffIcon, ScreenOnIcon, ScreenShareIcon, WindowIcon } from "./icons";
 import round from "./RoundButton.module.css";
 import styles from "./PlayerButtons.module.css";
+import { Tooltip } from "../ui/Tooltip";
 
 export const FULL_ROOM = "6 streams are live, the most at once. You can start yours when one stops.";
 /** Why the screen button and the Screen tab are greyed out on a phone. */
@@ -81,19 +82,18 @@ export function PlayerButtons(props: Props) {
         {extra && <div className={styles.control}>{extra}</div>}
         <div className={styles.control}>
           <div className={round.pill} data-open={settingsOpen || undefined}>
-            <button
-              type="button"
-              className={round.main}
-              aria-label="Settings"
-              aria-expanded={settingsOpen}
-              aria-haspopup="dialog"
-              onClick={onSettings}
-            >
-              <CogIcon />
-            </button>
-            <span role="tooltip" className={round.tip} aria-hidden="true">
-              Settings
-            </span>
+            <Tooltip text="Settings" hidden={settingsOpen}>
+              <button
+                type="button"
+                className={round.main}
+                aria-label="Settings"
+                aria-expanded={settingsOpen}
+                aria-haspopup="dialog"
+                onClick={onSettings}
+              >
+                <CogIcon />
+              </button>
+            </Tooltip>
           </div>
         </div>
       </div>
@@ -127,7 +127,6 @@ function StreamButton({
   const silent = kind === "screen" && live && noSound;
   const label = live ? LABEL[kind].stop : LABEL[kind].start;
   const tip = unavailable ? NO_SCREEN : full ? FULL_ROOM : silent ? `${label}. ${NO_SOUND}` : label;
-  const tipId = useId();
   // The camera's list closes when its drop-up is left.
   const [listClosed, setListClosed] = useState(false);
   // Counts what's been done from the drop-up (Change, a camera picked): each one closes it.
@@ -138,30 +137,29 @@ function StreamButton({
   const button = (
     <div className={styles.control}>
       <div className={`${round.pill} ${live ? round.live : ""} ${full ? round.disabled : ""}`}>
-        <button
-          type="button"
-          className={round.main}
-          aria-label={label}
-          aria-pressed={live}
-          aria-disabled={blocked || undefined}
-          aria-describedby={tipId}
-          onPointerDown={(e) => {
-            pointer.current = e.pointerType;
-          }}
-          onClick={() => {
-            if (full && (pointer.current === "touch" || pointer.current === "pen")) {
-              showToast(tip, kind === "camera" ? <CameraOffIcon /> : <ScreenOffIcon />);
-            }
-            if (blocked) return;
-            if (live) onStop(kind);
-            else onStart(kind);
-          }}
-        >
-          <Icon kind={kind} off={!live} />
-        </button>
-        <span id={tipId} role="tooltip" className={round.tip}>
-          {tip}
-        </span>
+        {/* A live button's drop-up takes its tooltip's place (spec 0107). */}
+        <Tooltip text={tip} hidden={live}>
+          <button
+            type="button"
+            className={round.main}
+            aria-label={label}
+            aria-pressed={live}
+            aria-disabled={blocked || undefined}
+            onPointerDown={(e) => {
+              pointer.current = e.pointerType;
+            }}
+            onClick={() => {
+              if (full && (pointer.current === "touch" || pointer.current === "pen")) {
+                showToast(tip, kind === "camera" ? <CameraOffIcon /> : <ScreenOffIcon />);
+              }
+              if (blocked) return;
+              if (live) onStop(kind);
+              else onStart(kind);
+            }}
+          >
+            <Icon kind={kind} off={!live} />
+          </button>
+        </Tooltip>
       </div>
     </div>
   );
@@ -173,18 +171,19 @@ function StreamButton({
           <WindowIcon />
           <span>{screenSurface ? SURFACE[screenSurface] : "Your screen"}</span>
         </span>
-        <button
-          type="button"
-          className={styles.change}
-          title="Pick another window or tab; viewers keep watching the same stream"
-          disabled={busy}
-          onClick={() => {
-            setDone((n) => n + 1);
-            onChangeWindow();
-          }}
-        >
-          Change
-        </button>
+        <Tooltip text={"Pick another window or tab; viewers keep watching the same stream"}>
+          <button
+            type="button"
+            className={styles.change}
+            disabled={busy}
+            onClick={() => {
+              setDone((n) => n + 1);
+              onChangeWindow();
+            }}
+          >
+            Change
+          </button>
+        </Tooltip>
       </div>
     ) : (
       <Picker

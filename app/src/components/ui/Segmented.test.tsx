@@ -14,7 +14,7 @@ describe("Segmented, the app's segmented control", () => {
     expect(screen.getByRole("radiogroup", { name: "Mode" })).toBeInTheDocument();
     expect(screen.getByRole("radio", { name: "Smooth" })).toHaveAttribute("aria-checked", "true");
     expect(screen.getByRole("radio", { name: "Sharp" })).toHaveAttribute("aria-checked", "false");
-    expect(screen.getByRole("radio", { name: "Sharp" })).toHaveAttribute("title", "Keeps detail sharp");
+    expect(screen.getByRole("radio", { name: "Sharp" })).toHaveAccessibleDescription("Keeps detail sharp");
   });
 
   it("picks another option on a click, and does nothing on the chosen one", async () => {

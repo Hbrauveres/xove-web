@@ -29,7 +29,7 @@ describe("the Voice tab's mic level (spec 0123)", () => {
     render(<MicTest level={0} sensitivity={0.12} onSensitivity={() => {}} />);
     const test = screen.getByRole("button", { name: "Test: hear yourself" });
     expect(test).toBeDisabled();
-    expect(test).toHaveAttribute("title", "Turn your voice on to hear yourself");
+    expect(test.parentElement).toHaveAccessibleDescription("Turn your voice on to hear yourself");
     expect(meter()).not.toHaveAttribute("data-sent");
   });
 

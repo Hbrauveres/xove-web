@@ -211,9 +211,9 @@ describe("Picker: long names and an upward list (spec 0114)", () => {
     const user = userEvent.setup();
     render(<Picker label="Camera" options={LONG} value="studio" onChange={() => {}} />);
     const pill = screen.getByRole("button", { name: "Camera: EMEET STUDIO Virtual Camera" });
-    expect(pill).toHaveAttribute("title", "EMEET STUDIO Virtual Camera");
+    expect(pill).toHaveAccessibleDescription("EMEET STUDIO Virtual Camera");
     await user.click(pill);
-    expect(screen.getByRole("radio", { name: "EMEET PIXY (328f:00c0)" })).toHaveAttribute("title", "EMEET PIXY (328f:00c0)");
+    expect(screen.getByRole("radio", { name: "EMEET PIXY (328f:00c0)" })).toHaveAccessibleDescription("EMEET PIXY (328f:00c0)");
   });
 
   it("opens an upward list scrolled to the pill's end", async () => {

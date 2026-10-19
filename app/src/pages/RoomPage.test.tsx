@@ -1062,7 +1062,7 @@ describe("room: change window and pick a camera (spec 0098)", () => {
     expect(local.screens).toHaveLength(1);
     // The new pick has sound: it's sent, and the badge goes.
     await waitFor(() =>
-      expect(within(stage()).getByRole("button", { name: "Stop sharing your screen" })).toHaveAccessibleDescription("Stop sharing your screen"),
+      expect(within(stage()).getByRole("button", { name: "Stop sharing your screen" })).not.toHaveAccessibleDescription(),
     );
     expect(local.screenAudio?.track.source).toBe("screen_share_audio");
   });
@@ -1127,6 +1127,23 @@ describe("room: the player on touch screens and keyboards", () => {
     tap(within(stage()).getByRole("button", { name: "Fullscreen" }));
     expect(frame).toHaveAttribute("data-chrome", "shown");
     tap(frame);
+    expect(frame).toHaveAttribute("data-chrome", "hidden");
+  });
+
+  it("toggles the controls with a tap on the box beside the picture, the dark sides included (spec 0133, AC-3)", async () => {
+    const { frame } = await watchBruno();
+    // The box itself, around the picture's view: what a tap next to a tall picture lands on (the
+    // real tap on the dark side is the validation's AC-3, in a browser).
+    const view = frame.querySelector("video")!.closest("[class*=view]")!;
+    expect(frame).not.toBe(view);
+    expect(frame.contains(view)).toBe(true);
+    const tapBox = () => {
+      fireEvent.pointerDown(frame, { pointerType: "touch", clientX: 5, clientY: 5 });
+      fireEvent.pointerUp(frame, { pointerType: "touch", clientX: 5, clientY: 5 });
+    };
+    tapBox();
+    expect(frame).toHaveAttribute("data-chrome", "shown");
+    tapBox();
     expect(frame).toHaveAttribute("data-chrome", "hidden");
   });
 
@@ -1575,6 +1592,12 @@ describe("room: the facecam", () => {
     expect(within(facecam()!).getByLabelText("Bruno's camera")).toBeInTheDocument();
     expect(within(stage()).getAllByLabelText("Bruno's shared screen")).toHaveLength(1);
     expect(facecam()!.contains(within(stage()).getByLabelText("Bruno's shared screen"))).toBe(false);
+  });
+
+  it("keeps the facecam on the picture, inside its view, not on the box's dark sides (spec 0133, design decision 4)", async () => {
+    await brunoWithBoth();
+    const view = within(stage()).getByLabelText("Bruno's shared screen").closest("[class*=view]")!;
+    expect(view.contains(facecam())).toBe(true);
   });
 
   it("starts at the top right, clear of the round buttons and the fullscreen button (spec 0111)", async () => {
@@ -2636,8 +2659,9 @@ describe("room: on a phone sideways (spec 0160)", () => {
     await sidewaysWith(["Marina", "Rafa"], true);
     await screen.findByRole("heading", { level: 2, name: "Marina · Screen" });
     const sound = await within(stageLayer()).findByRole("button", { name: "Mute the screen's sound" });
-    // Not the player's: the screen's own layer, at its bottom like the arrow.
-    expect(stageLayer().querySelector("video")!.closest("[data-chrome]")!.contains(sound)).toBe(false);
+    // On the stage's box, the whole screen, at its bottom like the arrow; not on the picture's view (spec 0133).
+    expect(stageLayer().querySelector("video")!.closest("[class*=view]")!.contains(sound)).toBe(false);
+    expect(stageLayer().querySelector("video")!.closest("[data-chrome]")!.contains(sound)).toBe(true);
     expect(stageLayer()).toHaveAttribute("data-row-arrow");
     // A phone held sideways has no fullscreen button: Go live takes its corner.
     expect(within(stageLayer()).queryByRole("button", { name: /fullscreen/i })).toBeNull();
@@ -2720,8 +2744,12 @@ describe("room: on a phone sideways (spec 0160)", () => {
       return r!;
     });
     expect(open).toHaveTextContent("2 of 6");
+    // The controls end above the open row: the stylesheet lifts them by this (spec 0133).
+    const layout = open.closest("[data-layout]")!;
+    expect(layout).toHaveAttribute("data-row-open");
     drag(0, 150);
     await waitFor(() => expect(row()).toBeNull());
+    expect(layout).not.toHaveAttribute("data-row-open");
     await userEvent.setup().click(screen.getByRole("button", { name: "Show the other streams" }));
     const again = await waitFor(() => row()!);
     await userEvent.setup().click(within(again).getByRole("button", { name: "Watch Rafa's screen" }));
@@ -2916,42 +2944,41 @@ describe("room: the full-screen view on a phone (spec 0171)", () => {
     expect(facecam().style.top).toBe("18%");
   });
 
-  it("draws the round buttons and the fullscreen button on the screen, not the player, in the full view (spec 0112)", async () => {
+  it("draws the round buttons and the fullscreen button on the stage's box, the whole screen, not on the picture, in the full view (specs 0112 and 0133)", async () => {
     const { video } = await upright();
-    const frame = video.closest("[data-chrome]") as HTMLElement;
-    expect(frame.querySelector("[data-buttons]")).not.toBeNull();
     await userEvent.setup().click(within(stage()).getByRole("button", { name: "Full-screen view" }));
+    const box = video.closest("[data-chrome]") as HTMLElement;
     const buttons = stage().querySelector("[data-buttons]")!;
     const exit = within(stage()).getByRole("button", { name: "Exit full-screen view" });
-    expect(frame.contains(buttons)).toBe(false);
-    expect(frame.contains(exit)).toBe(false);
-    // One layer, so they move up together above the settings sheet.
-    expect(buttons.closest("[class*=screenChrome]")).toBe(exit.closest("[class*=screenChrome]"));
+    // The box holds them; the picture's view doesn't.
+    expect(box.contains(buttons)).toBe(true);
+    expect(box.contains(exit)).toBe(true);
+    const view = video.closest("[class*=view]")!;
+    expect(view.contains(buttons)).toBe(false);
+    expect(view.contains(exit)).toBe(false);
   });
 
-  it("moves them up together to just above the settings sheet, read from the sheet, and back on closing (spec 0112)", async () => {
+  it("ends the controls above the settings sheet, its height read from the sheet, and back on closing (specs 0112 and 0133)", async () => {
     await upright();
     const user = userEvent.setup();
     await user.click(within(stage()).getByRole("button", { name: "Full-screen view" }));
-    const layer = stage().querySelector("[class*=screenChrome]") as HTMLElement;
-    // A 915 px screen, the sheet's top at 415; the row 48 px tall, its bottom at 903.
+    // A 915 px screen, the sheet's top at 415.
     vi.spyOn(HTMLElement.prototype, "offsetTop", "get").mockImplementation(function (this: HTMLElement) {
-      return this.dataset.variant === "sheet" ? 415 : this.hasAttribute("data-buttons") ? 855 : 0;
-    });
-    vi.spyOn(HTMLElement.prototype, "offsetHeight", "get").mockImplementation(function (this: HTMLElement) {
-      return this.hasAttribute("data-buttons") ? 48 : 0;
+      return this.dataset.variant === "sheet" ? 415 : 0;
     });
     vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({ top: 0, bottom: 915, left: 0, right: 412, width: 412, height: 915, x: 0, y: 0 } as DOMRect);
     // Watching, not live: the settings are in Go live's menu (spec 0123).
     await user.click(within(stage()).getByRole("button", { name: "Go live" }));
     await user.click(within(stage()).getByRole("menuitem", { name: "Settings" }));
-    // 903 - (415 - 8) = 496 px up.
-    await waitFor(() => expect(layer.style.translate).toBe("0 -496px"));
-    // Measured again (the address bar, the keyboard, another stream): the lift stays.
+    // The sheet covers 915 - 415 = 500 px: the controls end above it (the stylesheet reads it).
+    await waitFor(() => expect(stage().style.getPropertyValue("--sheet-h")).toBe("500px"));
+    expect(stage()).toHaveAttribute("data-sheet-lift");
+    // Read again (the address bar, the keyboard, another stream): it stays.
     act(() => window.dispatchEvent(new Event("resize")));
-    expect(layer.style.translate).toBe("0 -496px");
+    expect(stage().style.getPropertyValue("--sheet-h")).toBe("500px");
     await user.click(screen.getByRole("button", { name: "Close settings" }));
-    await waitFor(() => expect(layer.style.translate).toBe(""));
+    await waitFor(() => expect(stage().style.getPropertyValue("--sheet-h")).toBe(""));
+    expect(stage()).not.toHaveAttribute("data-sheet-lift");
   });
 
   it("never asks the browser for the player's fullscreen on a phone", async () => {

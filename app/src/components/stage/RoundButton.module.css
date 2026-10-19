@@ -61,42 +61,6 @@
   cursor: not-allowed;
 }
 
-.tip {
-  position: absolute;
-  bottom: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: max-content;
-  max-width: 260px;
-  padding: 6px 9px;
-  border-radius: var(--radius-sm);
-  background: #070708;
-  color: var(--text);
-  font-size: var(--text-xs);
-  text-align: center;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 120ms ease;
-  z-index: 3;
-}
-
-/* Pointed at with a mouse, or reached with the keyboard. A finger leaves the button "hovered"
-   after a tap, so touch screens get the toast instead (design decision 10). */
-@media (hover: hover) {
-  .pill:hover .tip {
-    opacity: 1;
-  }
-}
-
-.pill:has(:focus-visible) .tip {
-  opacity: 1;
-}
-
-/* A menu or a slider open over the pill hides its tooltip. */
-.pill[data-open] .tip {
-  opacity: 0;
-}
-
 /* The phone held upright (spec 0106): 44 px. */
 :global([data-layout="phone"]) .pill {
   height: 44px;
@@ -106,8 +70,21 @@
   width: 44px;
 }
 
+/* A narrow stage (spec 0133): compact, so a row of four and the fullscreen button still fit, down
+   to 280 px. Measured on the controls' layer itself, not the window. */
+@container (max-width: 359px) {
+  .pill,
+  :global([data-layout]) .pill {
+    height: 36px;
+  }
+
+  .main,
+  :global([data-layout]) .main {
+    width: 36px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .tip,
   .pill {
     transition: none;
   }
@@ -137,11 +114,4 @@
 .main:not([aria-disabled="true"]):hover .iconHover,
 .main:not([aria-disabled="true"]):focus-visible .iconHover {
   display: grid;
-}
-
-/* With a mouse, a live button's quick access takes its tooltip's place (spec 0107). */
-@media (hover: hover) {
-  .live .tip {
-    display: none;
-  }
 }

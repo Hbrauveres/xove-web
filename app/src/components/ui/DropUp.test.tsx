@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DropUp, HOLD_MS, LEAVE_GRACE_MS, OPEN_DELAY_MS } from "./DropUp";
+import { TIP_REST_MS, Tooltip } from "./Tooltip";
 
 let hover = true;
 beforeEach(() => {
@@ -123,6 +124,83 @@ describe("DropUp, the quick-access pill over a live button", () => {
     act(() => vi.advanceTimersByTime(OPEN_DELAY_MS));
     expect(shown()).toBe(true);
     expect(OPEN_DELAY_MS).toBe(120);
+  });
+
+  it("closes at once when the pointer moves on to another live button: one at a time (spec 0133, #128)", () => {
+    render(
+      <div>
+        <DropUp label="The window you share" enabled trigger={<button>Stop sharing your screen</button>}>
+          <button>Change</button>
+        </DropUp>
+        <DropUp label="Your camera" enabled trigger={<button>Turn off your camera</button>}>
+          <button>Webcam C920</button>
+        </DropUp>
+      </div>,
+    );
+    const [screenUp, cameraUp] = ["Stop sharing your screen", "Turn off your camera"].map(
+      (name) => screen.getByRole("button", { name }).closest("[data-dropup]")!,
+    );
+    fireEvent.pointerEnter(screenUp);
+    act(() => vi.advanceTimersByTime(OPEN_DELAY_MS));
+    expect(screenUp).toHaveAttribute("data-open", "true");
+
+    // Straight to the camera, well within the screen's grace: the screen's closes now.
+    fireEvent.pointerLeave(screenUp);
+    fireEvent.pointerEnter(cameraUp);
+    expect(screenUp).toHaveAttribute("data-open", "false");
+    act(() => vi.advanceTimersByTime(OPEN_DELAY_MS));
+    expect(cameraUp).toHaveAttribute("data-open", "true");
+  });
+
+  it("keeps open while a tooltip inside it shows, and closes when one outside shows (spec 0133)", () => {
+    render(
+      <div>
+        <DropUp label="Your camera" enabled trigger={<button>Turn off your camera</button>}>
+          <Tooltip text="Webcam C920">
+            <button>Camera: Webcam C920</button>
+          </Tooltip>
+        </DropUp>
+        <Tooltip text="Settings">
+          <button>Settings</button>
+        </Tooltip>
+      </div>,
+    );
+    const up = screen.getByRole("button", { name: "Turn off your camera" }).closest("[data-dropup]")!;
+    fireEvent.pointerEnter(up);
+    act(() => vi.advanceTimersByTime(OPEN_DELAY_MS));
+    expect(up).toHaveAttribute("data-open", "true");
+
+    // Its own picker's tooltip: part of it.
+    fireEvent.pointerEnter(screen.getByRole("button", { name: "Camera: Webcam C920" }), { pointerType: "mouse" });
+    act(() => vi.advanceTimersByTime(TIP_REST_MS));
+    expect(document.querySelector('[role="tooltip"][data-shown]')).toHaveTextContent("Webcam C920");
+    expect(up).toHaveAttribute("data-open", "true");
+
+    // Another control's tooltip: the drop-up goes.
+    fireEvent.pointerEnter(screen.getByRole("button", { name: "Settings" }), { pointerType: "mouse" });
+    act(() => vi.advanceTimersByTime(TIP_REST_MS));
+    expect(up).toHaveAttribute("data-open", "false");
+  });
+
+  it("opening closes a tooltip showing elsewhere (spec 0133)", () => {
+    render(
+      <div>
+        <DropUp label="Your camera" enabled trigger={<button>Turn off your camera</button>}>
+          <button>Webcam C920</button>
+        </DropUp>
+        <Tooltip text="Settings">
+          <button>Cog</button>
+        </Tooltip>
+      </div>,
+    );
+    fireEvent.pointerEnter(screen.getByRole("button", { name: "Cog" }), { pointerType: "mouse" });
+    act(() => vi.advanceTimersByTime(TIP_REST_MS));
+    expect(document.querySelector('[role="tooltip"][data-shown]')).not.toBeNull();
+    const up = screen.getByRole("button", { name: "Turn off your camera" }).closest("[data-dropup]")!;
+    fireEvent.pointerEnter(up);
+    expect(document.querySelector('[role="tooltip"][data-shown]')).toBeNull();
+    act(() => vi.advanceTimersByTime(OPEN_DELAY_MS));
+    expect(up).toHaveAttribute("data-open", "true");
   });
 
   it("forgives a slip outside shorter than the grace, and closes after it", () => {

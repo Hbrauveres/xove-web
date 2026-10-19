@@ -9,6 +9,7 @@ import {
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
+import { claimFloating, dismissFloating, releaseFloating } from "./floating";
 import styles from "./DropUp.module.css";
 
 /** How long the pointer rests on the button before the drop-up unrolls. */
@@ -102,10 +103,23 @@ export function DropUp({ label, enabled, trigger, onLeave, width, closeSignal, r
     setByTouch(false);
     onLeave?.();
   };
+  // One floating thing at a time, across the app (spec 0133, #128): opening closes any other drop-up
+  // or tooltip at once, without its grace, and a tooltip showing closes this one.
+  const closeMe = useRef(close);
+  useEffect(() => {
+    closeMe.current = close;
+  });
+  const [me] = useState(() => () => closeMe.current());
+  useEffect(() => {
+    if (open) claimFloating(me, root.current);
+    else releaseFloating(me);
+  }, [open, me]);
+  const closeOthers = () => dismissFloating(me);
 
   // ---- a mouse
   const onPointerEnter = (e: ReactPointerEvent) => {
     if (touchLike(e)) return;
+    if (!open) closeOthers();
     window.clearTimeout(leaving.current);
     if (open) return;
     opening.current = window.setTimeout(() => (redirect ? redirect() : setOpen(true)), OPEN_DELAY_MS);
@@ -136,6 +150,7 @@ export function DropUp({ label, enabled, trigger, onLeave, width, closeSignal, r
         redirect();
         return;
       }
+      closeOthers();
       setByTouch(true);
       setOpen(true);
     }, HOLD_MS);
@@ -168,7 +183,10 @@ export function DropUp({ label, enabled, trigger, onLeave, width, closeSignal, r
       keyboard = false;
     }
     // Redirected, the keyboard reaches the panel itself: tabbing past the button moves nothing.
-    if (keyboard && !redirect) setOpen(true);
+    if (keyboard && !redirect) {
+      closeOthers();
+      setOpen(true);
+    }
   };
   const onBlur = (e: FocusEvent) => {
     if (byTouch) return;

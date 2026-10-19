@@ -10,6 +10,7 @@ import {
 } from "react";
 import cueStyles from "./cue.module.css";
 import styles from "./Picker.module.css";
+import { Tooltip } from "./Tooltip";
 
 export type PickerOption<T extends string> = { value: T; label: string };
 
@@ -264,31 +265,32 @@ export function Picker<T extends string>({
       data-open={drawn || undefined}
       onKeyDown={onKeyDown}
     >
-      <button
-        ref={pill}
-        type="button"
-        className={styles.pill}
-        aria-label={`${label}: ${chosen?.label ?? ""}`}
-        // A long name ends in "…" in the pill; the whole of it here (spec 0114).
-        title={chosen?.label}
-        aria-expanded={open}
-        aria-controls={open ? listId : undefined}
-        disabled={disabled}
-        onClick={() => setOpen(!open)}
-      >
-        <span className={styles.chosen}>{chosen?.label}</span>
-        {adornment}
-        <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" className={styles.chevron}>
-          <path
-            d="M3 4.5L6 7.5L9 4.5"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </button>
+      {/* A long name ends in "…" in the pill; the whole of it in its tooltip (spec 0114). */}
+      <Tooltip text={chosen?.label}>
+        <button
+          ref={pill}
+          type="button"
+          className={styles.pill}
+          aria-label={`${label}: ${chosen?.label ?? ""}`}
+          aria-expanded={open}
+          aria-controls={open ? listId : undefined}
+          disabled={disabled}
+          onClick={() => setOpen(!open)}
+        >
+          <span className={styles.chosen}>{chosen?.label}</span>
+          {adornment}
+          <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" className={styles.chevron}>
+            <path
+              d="M3 4.5L6 7.5L9 4.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+      </Tooltip>
       {cue ? (
         <span
           key={cue}
@@ -317,23 +319,23 @@ export function Picker<T extends string>({
           inert={!open || undefined}
         >
           {others.map((o, i) => (
-            <button
-              key={o.value}
-              type="button"
-              role="radio"
-              aria-checked="false"
-              className={styles.option}
-              // The nearest to the pill appears first.
-              style={
-                {
-                  "--k": opens === "up" ? others.length - 1 - i : i,
-                } as CSSProperties
-              }
-              title={o.label}
-              onClick={() => pick(o.value)}
-            >
-              <span className={styles.name}>{o.label}</span>
-            </button>
+            <Tooltip key={o.value} text={o.label}>
+              <button
+                type="button"
+                role="radio"
+                aria-checked="false"
+                className={styles.option}
+                // The nearest to the pill appears first.
+                style={
+                  {
+                    "--k": opens === "up" ? others.length - 1 - i : i,
+                  } as CSSProperties
+                }
+                onClick={() => pick(o.value)}
+              >
+                <span className={styles.name}>{o.label}</span>
+              </button>
+            </Tooltip>
           ))}
         </div>
       )}

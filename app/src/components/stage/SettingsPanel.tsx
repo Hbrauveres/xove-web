@@ -21,6 +21,7 @@ import { FULL_VIEW_SHEET } from "./makeRoom";
 import styles from "./SettingsPanel.module.css";
 import cueStyles from "../ui/cue.module.css";
 import { MicTest } from "./MicTest";
+import { Tooltip } from "../ui/Tooltip";
 
 /** How long it takes to come in or go out; it leaves the page once it's out. */
 const PANEL_MS = 260;
@@ -207,30 +208,30 @@ export function SettingsPanel(props: Props) {
       >
         <span className={styles.marker} aria-hidden="true" />
         {tabs.map((t) => (
-          <button
-            key={t}
-            id={tabId(t)}
-            type="button"
-            role="tab"
-            className={styles.tab}
-            aria-selected={t === tab}
-            aria-controls={t === tab ? `${tabId(t)}-panel` : undefined}
-            aria-disabled={!usable.includes(t) || undefined}
-            title={usable.includes(t) ? undefined : NO_SCREEN}
-            tabIndex={t === tab ? 0 : -1}
-            onPointerDown={(e) => {
-              pointer.current = e.pointerType;
-            }}
-            onClick={() => {
-              if (usable.includes(t)) setTab(t);
-              else if (pointer.current === "touch" || pointer.current === "pen")
-                showToast(NO_SCREEN, <ScreenOffIcon />);
-            }}
-          >
-            {t === "screen" ? <ScreenShareIcon /> : t === "camera" ? <CameraOnIcon /> : <MicIcon />}
-            {t === "screen" ? "Screen" : t === "camera" ? "Camera" : "Voice"}
-            {(t === "voice" ? props.voice : mine[t]) && <span className={styles.dot} data-live aria-hidden="true" />}
-          </button>
+          <Tooltip key={t} text={usable.includes(t) ? undefined : NO_SCREEN}>
+            <button
+              id={tabId(t)}
+              type="button"
+              role="tab"
+              className={styles.tab}
+              aria-selected={t === tab}
+              aria-controls={t === tab ? `${tabId(t)}-panel` : undefined}
+              aria-disabled={!usable.includes(t) || undefined}
+              tabIndex={t === tab ? 0 : -1}
+              onPointerDown={(e) => {
+                pointer.current = e.pointerType;
+              }}
+              onClick={() => {
+                if (usable.includes(t)) setTab(t);
+                else if (pointer.current === "touch" || pointer.current === "pen")
+                  showToast(NO_SCREEN, <ScreenOffIcon />);
+              }}
+            >
+              {t === "screen" ? <ScreenShareIcon /> : t === "camera" ? <CameraOnIcon /> : <MicIcon />}
+              {t === "screen" ? "Screen" : t === "camera" ? "Camera" : "Voice"}
+              {(t === "voice" ? props.voice : mine[t]) && <span className={styles.dot} data-live aria-hidden="true" />}
+            </button>
+          </Tooltip>
         ))}
       </div>
       {/* Over the cog every tab is drawn in one cell, the hidden ones invisible, so the panel is as
@@ -318,16 +319,17 @@ function ScreenTab(props: Props & { cue?: number }) {
                 <WindowIcon />
                 <span>{screenSurface ? SURFACE[screenSurface] : "Your screen"}</span>
               </span>
-              <button
-                type="button"
-                className={styles.button}
-                title="Pick another window or tab; viewers keep watching the same stream"
-                disabled={busy}
-                onClick={onChangeWindow}
-              >
-                <CueRing n={props.cue} />
-                Change
-              </button>
+              <Tooltip text={"Pick another window or tab; viewers keep watching the same stream"}>
+                <button
+                  type="button"
+                  className={styles.button}
+                  disabled={busy}
+                  onClick={onChangeWindow}
+                >
+                  <CueRing n={props.cue} />
+                  Change
+                </button>
+              </Tooltip>
             </div>
             {noSound && <p className={styles.hint}>{NO_SOUND}</p>}
           </div>
@@ -497,27 +499,27 @@ function VoiceTab(props: Props & { shown: boolean }) {
       <div className={styles.group}>
         <p className={styles.heading}>Voice processing</p>
         {SWITCHES.map((s) => (
-          <label
-            key={s.key}
-            className={`${sw.switchRow} ${styles.voiceRow}`}
-            // What it does, on hover: the rows stay one calm line each (spec 0123).
-            title={s.unavailable ?? s.hint}
-          >
-            <span>{s.label}</span>
-            <button
-              type="button"
-              role="switch"
-              className={sw.switch}
-              aria-label={s.label}
-              aria-checked={voicePrefs[s.key]}
-              aria-disabled={s.unavailable ? true : undefined}
-              onClick={() =>
-                s.unavailable ? showToast(s.unavailable, <MicIcon />) : set({ [s.key]: !voicePrefs[s.key] })
-              }
+          <Tooltip key={s.key} text={s.unavailable ?? s.hint}>
+            <label
+              className={`${sw.switchRow} ${styles.voiceRow}`}
+              // What it does, on hover: the rows stay one calm line each (spec 0123).
             >
-              <i />
-            </button>
-          </label>
+              <span>{s.label}</span>
+              <button
+                type="button"
+                role="switch"
+                className={sw.switch}
+                aria-label={s.label}
+                aria-checked={voicePrefs[s.key]}
+                aria-disabled={s.unavailable ? true : undefined}
+                onClick={() =>
+                  s.unavailable ? showToast(s.unavailable, <MicIcon />) : set({ [s.key]: !voicePrefs[s.key] })
+                }
+              >
+                <i />
+              </button>
+            </label>
+          </Tooltip>
         ))}
       </div>
     </>

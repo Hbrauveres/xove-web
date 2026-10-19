@@ -2,6 +2,7 @@ import { useRef } from "react";
 import type { MediaTrack } from "../../types";
 import { ScreenVideo } from "./ScreenVideo";
 import styles from "./Facecam.module.css";
+import { Tooltip } from "../ui/Tooltip";
 
 /** Where the facecam sits over the player: its top-left corner, as fractions of the player (0 to 1). */
 export type FacecamPlace = { x: number; y: number };
@@ -83,12 +84,14 @@ export function Facecam({ video, label, place, collapsed, onSwap, onMove, onColl
 
   if (collapsed) {
     return (
-      <button type="button" className={styles.tab} onClick={() => onCollapse(false)} aria-label="Show facecam" title="Show facecam">
-        <svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true">
-          <rect x="3" y="5" width="10" height="10" rx="2" fill="none" stroke="currentColor" strokeWidth="1.8" />
-          <path d="M13 9l4-2v6l-4-2z" fill="currentColor" />
-        </svg>
-      </button>
+      <Tooltip text={"Show facecam"}>
+        <button type="button" className={styles.tab} onClick={() => onCollapse(false)} aria-label="Show facecam">
+          <svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true">
+            <rect x="3" y="5" width="10" height="10" rx="2" fill="none" stroke="currentColor" strokeWidth="1.8" />
+            <path d="M13 9l4-2v6l-4-2z" fill="currentColor" />
+          </svg>
+        </button>
+      </Tooltip>
     );
   }
 
@@ -111,29 +114,32 @@ export function Facecam({ video, label, place, collapsed, onSwap, onMove, onColl
     >
       <ScreenVideo video={video} label={label} />
       <div className={styles.controls}>
-        <button type="button" className={styles.button} onClick={onSwap} aria-label="Swap views" title="Swap views">
-          <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
-            <path
-              d="M4 7h11M12 4l3 3-3 3M16 13H5M8 10l-3 3 3 3"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-        <button
-          type="button"
-          className={styles.button}
-          onClick={() => onCollapse(true)}
-          aria-label="Hide facecam"
-          title="Hide facecam"
-        >
-          <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
-            <path d="M5 10h10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          </svg>
-        </button>
+        <Tooltip text={"Swap views"}>
+          <button type="button" className={styles.button} onClick={onSwap} aria-label="Swap views">
+            <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+              <path
+                d="M4 7h11M12 4l3 3-3 3M16 13H5M8 10l-3 3 3 3"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+        </Tooltip>
+        <Tooltip text={"Hide facecam"}>
+          <button
+            type="button"
+            className={styles.button}
+            onClick={() => onCollapse(true)}
+            aria-label="Hide facecam"
+          >
+            <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+              <path d="M5 10h10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </button>
+        </Tooltip>
       </div>
     </div>
   );

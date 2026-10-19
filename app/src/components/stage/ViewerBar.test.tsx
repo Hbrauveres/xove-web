@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { TIP_REST_MS } from "../ui/Tooltip";
 import { ViewerBar, type Sound } from "./ViewerBar";
 
 const base = { live: false, canShareScreen: true, onStart: vi.fn(), onSettings: vi.fn(), canSetVolume: true };
@@ -44,6 +45,44 @@ describe("the bar over someone else's stream (spec 0123): what I hear", () => {
     fireEvent.change(slider, { target: { value: "0.4" } });
     expect(slider).toHaveValue("0.4");
     expect(screen.getByRole("button", { name: "Mute Bruno's voice" })).toBeInTheDocument();
+  });
+
+  it("moving from one sound to the other, the one left closes and the one reached stays open (spec 0133)", () => {
+    vi.useFakeTimers();
+    render(<Bruno />);
+    const sound = screen.getByRole("button", { name: "Mute the screen's sound" });
+    const voice = screen.getByRole("button", { name: "Mute Bruno's voice" });
+    const isOpen = (name: string) => screen.getByRole("slider", { name }).closest("[inert]") === null;
+    fireEvent.pointerEnter(sound.parentElement!, { pointerType: "mouse" });
+    act(() => vi.advanceTimersByTime(150));
+    expect(isOpen("Screen sound volume")).toBe(true);
+
+    fireEvent.pointerLeave(sound.parentElement!, { pointerType: "mouse" });
+    fireEvent.pointerEnter(voice.parentElement!, { pointerType: "mouse" });
+    act(() => vi.advanceTimersByTime(150));
+    expect(isOpen("Bruno's voice volume")).toBe(true);
+    // The screen's sound's grace runs out: it mustn't close the voice's.
+    act(() => vi.advanceTimersByTime(400));
+    expect(isOpen("Bruno's voice volume")).toBe(true);
+    expect(isOpen("Screen sound volume")).toBe(false);
+  });
+
+  it("an open slider is one floating thing: my mic's tooltip closes it at once, no grace (spec 0133, #128)", () => {
+    vi.useFakeTimers();
+    const sound = { volume: 1, muted: false, onChange: vi.fn() };
+    render(<ViewerBar {...base} live micOn onMic={vi.fn()} sound={sound} voice={{ ...sound, name: "Bruno" }} />);
+    const voice = screen.getByRole("button", { name: "Mute Bruno's voice" });
+    const isOpen = () => screen.getByRole("slider", { name: "Bruno's voice volume" }).closest("[inert]") === null;
+    fireEvent.pointerEnter(voice.parentElement!, { pointerType: "mouse" });
+    act(() => vi.advanceTimersByTime(150));
+    expect(isOpen()).toBe(true);
+
+    fireEvent.pointerLeave(voice.parentElement!, { pointerType: "mouse" });
+    const mic = screen.getByRole("button", { name: "Mute your voice" });
+    fireEvent.pointerEnter(mic, { pointerType: "mouse" });
+    act(() => vi.advanceTimersByTime(TIP_REST_MS));
+    expect(document.querySelector('[role="tooltip"][data-shown]')).not.toBeNull();
+    expect(isOpen()).toBe(false);
   });
 
   it("opens a sound's slider when Tab reaches it, and Enter mutes it", async () => {
