@@ -1,7 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  DEFAULT_VOICE,
   loadAmbilight,
   loadCameraDevice,
+  loadVoiceHearing,
+  loadVoicePrefs,
+  saveVoiceHearing,
+  saveVoicePrefs,
   loadCameraPrefs,
   loadSharePrefs,
   loadWatchPrefs,
@@ -101,5 +106,32 @@ describe("the ambilight (spec 0104)", () => {
   it("ignores a brightness out of range", () => {
     localStorage.setItem("xove.ambilight.brightness", "7");
     expect(loadAmbilight().brightness).toBe(0.9);
+  });
+});
+
+describe("my voice's choices (spec 0123)", () => {
+  it("starts with the browser's cleaning on, isolation off and a low line", () => {
+    expect(loadVoicePrefs()).toEqual(DEFAULT_VOICE);
+    expect(DEFAULT_VOICE).toMatchObject({ echoCancellation: true, noiseSuppression: true, autoGainControl: true, voiceIsolation: false });
+  });
+
+  it("remembers the mic, the processing and the line", () => {
+    saveVoicePrefs({ ...DEFAULT_VOICE, micId: "mic-2", echoCancellation: false, sensitivity: 0.4 });
+    expect(loadVoicePrefs()).toEqual({ ...DEFAULT_VOICE, micId: "mic-2", echoCancellation: false, sensitivity: 0.4 });
+  });
+
+  it("ignores what it can't read, and keeps the line between 0 and 1", () => {
+    localStorage.setItem("xove.mic.processing", "{not json");
+    expect(loadVoicePrefs()).toEqual(DEFAULT_VOICE);
+    localStorage.setItem("xove.mic.processing", JSON.stringify({ sensitivity: 7, echoCancellation: "yes" }));
+    expect(loadVoicePrefs()).toMatchObject({ sensitivity: 1, echoCancellation: true });
+  });
+
+  it("remembers how I hear a voice: its volume and mute, the volume kept between 0 and 1", () => {
+    expect(loadVoiceHearing()).toEqual({ volume: 1, muted: false });
+    saveVoiceHearing({ volume: 0.3, muted: true });
+    expect(loadVoiceHearing()).toEqual({ volume: 0.3, muted: true });
+    localStorage.setItem("xove.voice.volume", "9");
+    expect(loadVoiceHearing().volume).toBe(1);
   });
 });

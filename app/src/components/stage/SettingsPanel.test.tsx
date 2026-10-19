@@ -8,6 +8,7 @@ import { CAMERA_BLOCKED } from "../../hooks/useLiveKitRoom";
 import { NO_SOUND } from "./PlayerButtons";
 import { CUE_MS, SettingsPanel } from "./SettingsPanel";
 import { NO_SCREEN } from "./PlayerButtons";
+import { DEFAULT_VOICE } from "../../media/preferences";
 import { clearToast, currentToast } from "../ui/toast";
 
 const PREFS: Record<StreamKind, SharePrefs> = {
@@ -325,5 +326,50 @@ describe("the settings panel: leaving", () => {
     expect(onPreviewCamera).toHaveBeenLastCalledWith(true);
     act(() => view.unmount());
     expect(onPreviewCamera).toHaveBeenLastCalledWith(false);
+  });
+});
+
+describe("the settings panel: the Voice tab (spec 0123)", () => {
+  const MICS = [
+    { deviceId: "mic-1", label: "Headset (USB)" },
+    { deviceId: "mic-2", label: "MacBook Pro microphone" },
+  ];
+  const voiceSetup = (onVoicePrefs = vi.fn()) =>
+    setup({ voicePrefs: DEFAULT_VOICE, onVoicePrefs, mics: MICS, voice: true });
+
+  it("has the microphone, its level and the four switches, each saying what it does on hover", async () => {
+    const { user } = voiceSetup();
+    await user.click(within(panel()).getByRole("tab", { name: "Voice" }));
+    const tab = within(within(panel()).getByRole("tabpanel", { name: "Voice" }));
+    expect(tab.getByRole("button", { name: "Microphone: Headset (USB)" })).toBeInTheDocument();
+    expect(tab.getByRole("slider", { name: "Mic sensitivity" })).toHaveValue(String(DEFAULT_VOICE.sensitivity));
+    const switches = tab.getAllByRole("switch");
+    expect(switches.map((s) => [s.getAttribute("aria-label"), s.getAttribute("aria-checked")])).toEqual([
+      ["Echo cancellation", "true"],
+      ["Noise suppression", "true"],
+      ["Automatic volume", "true"],
+      ["Voice isolation", "false"],
+    ]);
+    expect(switches[1].closest("label")).toHaveAttribute("title", "Quiets fans, keyboards and hum");
+  });
+
+  it("applies a switch at once", async () => {
+    const onVoicePrefs = vi.fn();
+    const { user } = voiceSetup(onVoicePrefs);
+    await user.click(within(panel()).getByRole("tab", { name: "Voice" }));
+    await user.click(within(panel()).getByRole("switch", { name: "Noise suppression" }));
+    expect(onVoicePrefs).toHaveBeenLastCalledWith({ ...DEFAULT_VOICE, noiseSuppression: false });
+  });
+
+  it("greys voice isolation where the browser can't do it, saying why when touched", async () => {
+    const onVoicePrefs = vi.fn();
+    const { user } = voiceSetup(onVoicePrefs);
+    await user.click(within(panel()).getByRole("tab", { name: "Voice" }));
+    const isolation = within(panel()).getByRole("switch", { name: "Voice isolation" });
+    expect(isolation).toHaveAttribute("aria-disabled", "true");
+    await user.click(isolation);
+    expect(onVoicePrefs).not.toHaveBeenCalled();
+    expect(currentToast()?.text).toBe("This browser can't isolate a voice");
+    clearToast();
   });
 });

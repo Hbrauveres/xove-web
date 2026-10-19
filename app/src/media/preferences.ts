@@ -135,14 +135,14 @@ export function saveVoiceHearing(prefs: WatchPrefs) {
   write(KEYS.voiceMuted, String(prefs.muted));
 }
 
-/** How my voice is captured (spec 0123): the mic picked and the browser's processing. */
+/** How my voice is captured and sent (spec 0123): the mic picked, the browser's processing, the gate's line. */
 export type VoicePrefs = {
   micId: string | null;
   echoCancellation: boolean;
   noiseSuppression: boolean;
   autoGainControl: boolean;
   voiceIsolation: boolean;
-  /** The mic test's line, 0 to 1: sound under it isn't sent (spec 0123). */
+  /** The mic level's line, 0 to 1: sound under it isn't sent (the noise gate, ADR-0071). */
   sensitivity: number;
 };
 
@@ -170,7 +170,10 @@ export function loadVoicePrefs(): VoicePrefs {
     noiseSuppression: flag("noiseSuppression"),
     autoGainControl: flag("autoGainControl"),
     voiceIsolation: flag("voiceIsolation"),
-    sensitivity: typeof processing.sensitivity === "number" ? processing.sensitivity : DEFAULT_VOICE.sensitivity,
+    sensitivity:
+      typeof processing.sensitivity === "number" && Number.isFinite(processing.sensitivity)
+        ? Math.min(1, Math.max(0, processing.sensitivity))
+        : DEFAULT_VOICE.sensitivity,
   };
 }
 
