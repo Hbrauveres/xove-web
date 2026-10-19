@@ -40,6 +40,13 @@ describe("now watching (spec 0104)", () => {
     expect(screen.getByText("Camera")).toBeInTheDocument();
   });
 
+  it("says · voice while their voice is on, never for my own stream (spec 0123)", () => {
+    const { rerender } = render(<NowWatching sharer={{ ...bruno(false), hasVoice: true }} />);
+    expect(screen.getByText("Screen · voice")).toBeInTheDocument();
+    rerender(<NowWatching sharer={{ ...bruno(false), hasVoice: true, isMe: true }} />);
+    expect(screen.queryByText(/voice/)).not.toBeInTheDocument();
+  });
+
   it("says You when I'm on the stage", () => {
     render(<NowWatching sharer={{ ...bruno(false), isMe: true }} />);
     expect(screen.getByRole("heading", { name: "You" })).toBeInTheDocument();
