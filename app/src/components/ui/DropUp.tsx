@@ -111,7 +111,7 @@ export function DropUp({ label, enabled, trigger, onLeave, width, closeSignal, r
   });
   const [me] = useState(() => () => closeMe.current());
   useEffect(() => {
-    if (open) claimFloating(me);
+    if (open) claimFloating(me, root.current);
     else releaseFloating(me);
   }, [open, me]);
   const closeOthers = () => dismissFloating(me);

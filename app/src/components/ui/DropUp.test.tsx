@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DropUp, HOLD_MS, LEAVE_GRACE_MS, OPEN_DELAY_MS } from "./DropUp";
+import { TIP_REST_MS, Tooltip } from "./Tooltip";
 
 let hover = true;
 beforeEach(() => {
@@ -149,6 +150,36 @@ describe("DropUp, the quick-access pill over a live button", () => {
     expect(screenUp).toHaveAttribute("data-open", "false");
     act(() => vi.advanceTimersByTime(OPEN_DELAY_MS));
     expect(cameraUp).toHaveAttribute("data-open", "true");
+  });
+
+  it("keeps open while a tooltip inside it shows, and closes when one outside shows (spec 0133)", () => {
+    render(
+      <div>
+        <DropUp label="Your camera" enabled trigger={<button>Turn off your camera</button>}>
+          <Tooltip text="Webcam C920">
+            <button>Camera: Webcam C920</button>
+          </Tooltip>
+        </DropUp>
+        <Tooltip text="Settings">
+          <button>Settings</button>
+        </Tooltip>
+      </div>,
+    );
+    const up = screen.getByRole("button", { name: "Turn off your camera" }).closest("[data-dropup]")!;
+    fireEvent.pointerEnter(up);
+    act(() => vi.advanceTimersByTime(OPEN_DELAY_MS));
+    expect(up).toHaveAttribute("data-open", "true");
+
+    // Its own picker's tooltip: part of it.
+    fireEvent.pointerEnter(screen.getByRole("button", { name: "Camera: Webcam C920" }), { pointerType: "mouse" });
+    act(() => vi.advanceTimersByTime(TIP_REST_MS));
+    expect(document.querySelector('[role="tooltip"][data-shown]')).toHaveTextContent("Webcam C920");
+    expect(up).toHaveAttribute("data-open", "true");
+
+    // Another control's tooltip: the drop-up goes.
+    fireEvent.pointerEnter(screen.getByRole("button", { name: "Settings" }), { pointerType: "mouse" });
+    act(() => vi.advanceTimersByTime(TIP_REST_MS));
+    expect(up).toHaveAttribute("data-open", "false");
   });
 
   it("forgives a slip outside shorter than the grace, and closes after it", () => {

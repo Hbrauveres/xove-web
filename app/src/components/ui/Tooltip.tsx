@@ -12,7 +12,7 @@ import {
   type Ref,
 } from "react";
 import { createPortal } from "react-dom";
-import { claimFloating, releaseFloating } from "./floating";
+import { claimFloating, insideFloating, releaseFloating } from "./floating";
 import styles from "./Tooltip.module.css";
 
 /** A mouse rests this long before a tooltip shows; moving on to the next one shows it at once. */
@@ -52,7 +52,8 @@ export function Tooltip({ text, children, hidden = false }: { text?: string; chi
     setShown(false);
   }, []);
   const show = useCallback(() => {
-    claimFloating(hide);
+    // Inside an open drop-up (its picker): part of it, so it doesn't close it.
+    if (!insideFloating(anchor.current)) claimFloating(hide);
     setShown(true);
   }, [hide]);
   useEffect(() => {
