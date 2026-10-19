@@ -369,30 +369,60 @@ export function Stage({
   const shape = useVideoShape(bigVideoEl);
   // What I hear from each person (spec 0123): their sound and their voice, each with its own mute
   // and volume, for the whole visit; a new person starts at my last volumes, unmuted.
-  const [hearing, setHearing] = useState<Record<string, Hearing>>({});
-  const hearOf = (id: string): Hearing =>
-    hearing[id] ?? {
-      sound: { volume: watch.volume, muted: false },
-      voice: { volume: voiceSound.volume, muted: false },
+  // Each person's sound and voice (spec 0131): one volume each, and one switch that follows them
+  // everywhere once touched; untouched, heard while big and off while small.
+  type Touched = { sound: { volume: number; muted?: boolean }; voice: { volume: number; muted?: boolean } };
+  const [hearing, setHearing] = useState<Record<string, Touched>>({});
+  const hearOf = (id: string): Hearing => {
+    const h = hearing[id];
+    const untouched = id !== bigId;
+    return {
+      sound: { volume: h?.sound.volume ?? watch.volume, muted: h?.sound.muted ?? untouched },
+      voice: { volume: h?.voice.volume ?? voiceSound.volume, muted: h?.voice.muted ?? untouched },
     };
+  };
   const setHear = (id: string, next: Hearing) => {
-    setHearing((prev) => ({ ...prev, [id]: next }));
+    const was = hearOf(id);
+    // Only what changed becomes this person's own choice; the rest stays untouched.
+    setHearing((prev) => {
+      const h = prev[id];
+      return {
+        ...prev,
+        [id]: {
+          sound: { volume: next.sound.volume, muted: next.sound.muted !== was.sound.muted ? next.sound.muted : h?.sound.muted },
+          voice: { volume: next.voice.volume, muted: next.voice.muted !== was.voice.muted ? next.voice.muted : h?.voice.muted },
+        },
+      };
+    });
     changeWatch({ volume: next.sound.volume, muted: false });
     setVoiceSound({ volume: next.voice.volume, muted: false });
   };
-  // Only the person I watch is heard: theirs is the only sound and voice downloaded (previews are silent).
+  // Whoever is heard, big or small, and only them, is downloaded.
+  const heardKey = sharers
+    .filter((s) => !s.isMe)
+    .map((s) => {
+      const h = hearOf(s.person.id);
+      return `${s.person.id}:${h.sound.muted ? 0 : 1}${h.voice.muted ? 0 : 1}`;
+    })
+    .join("|");
   useEffect(() => {
     for (const s of sharers) {
       if (s.isMe) continue;
-      s.setSoundOn?.(s.person.id === bigId);
-      s.setVoiceOn?.(s.person.id === bigId);
+      const h = hearOf(s.person.id);
+      s.setSoundOn?.(!h.sound.muted);
+      s.setVoiceOn?.(!h.voice.muted);
     }
-  }, [sharers, bigId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sharers, heardKey]);
   const bigHearing = big && !big.isMe ? hearOf(big.person.id) : null;
-  const voices =
-    big && !big.isMe && big.voice && big.hasVoice && bigHearing
-      ? [{ id: big.person.id, track: big.voice, ...bigHearing.voice }]
-      : [];
+  // Every voice I hear plays, the big person's and the previews' turned on; and the previews' sounds.
+  const notMe = sharers.filter((s) => !s.isMe);
+  const voices = notMe
+    .filter((s) => s.voice && s.hasVoice && !hearOf(s.person.id).voice.muted)
+    .map((s) => ({ id: s.person.id, track: s.voice!, ...hearOf(s.person.id).voice }));
+  const previewSounds = notMe
+    .filter((s) => s !== big && s.sound && s.hasSound && !hearOf(s.person.id).sound.muted)
+    .map((s) => ({ id: s.person.id, track: s.sound!, ...hearOf(s.person.id).sound }));
 
   const changeWatch = (next: WatchPrefs) => {
     setWatch(next);
@@ -672,6 +702,10 @@ export function Stage({
           {voices.map((v) => (
             <VoiceAudio key={v.id} track={v.track} volume={v.volume} muted={v.muted} />
           ))}
+          {/* The previews I turned on (spec 0131): their screens' sound, at their own volume. */}
+          {previewSounds.map((p) => (
+            <VoiceAudio key={`sound-${p.id}`} track={p.track} volume={p.volume} muted={p.muted} />
+          ))}
           {/* A short message to the user, at the top centre of the player (design decision 10). */}
           {!sideways && <Toast />}
         </div>
@@ -715,6 +749,8 @@ export function Stage({
               onPick={(id) => pick(id)}
               hearOf={hearOf}
               onHear={setHear}
+              swappedOf={(id) => Boolean(swappedFor[id])}
+              onSwap={toggleSwap}
             />
           )}
         </>
@@ -750,6 +786,8 @@ export function Stage({
             onPick={(id) => pick(id)}
             hearOf={hearOf}
             onHear={setHear}
+            swappedOf={(id) => Boolean(swappedFor[id])}
+            onSwap={toggleSwap}
           />
         </div>
       )}

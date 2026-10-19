@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import type { LiveFeed, Sharer } from "../../types";
 import { Avatar } from "../ui/Avatar";
 import { ScreenVideo } from "./ScreenVideo";
@@ -16,6 +17,9 @@ type Props = {
   /** What I hear from each person, and muting it from their preview (spec 0123). */
   hearOf: (personId: string) => Hearing;
   onHear: (personId: string, hearing: Hearing) => void;
+  /** Whether a person's preview shows their camera instead of their screen, and swapping it (spec 0131). */
+  swappedOf?: (personId: string) => boolean;
+  onSwap?: (personId: string) => void;
 };
 
 const kindOf = (feed: LiveFeed) => (feed.kind === "camera" ? "camera" : "screen");
@@ -26,26 +30,58 @@ const kindOf = (feed: LiveFeed) => (feed.kind === "camera" ? "camera" : "screen"
  * Past their room the previews scroll; the box stays put, and goes when nothing is free. Previews
  * are silent; each carries that person's two toggles, their sound and their voice (spec 0123).
  */
-export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear }: Props) {
+export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swappedOf, onSwap }: Props) {
+  // A finger holds a small preview to open its row (spec 0131); a mouse just points at it.
+  const [held, setHeld] = useState<string | null>(null);
+  const hold = useRef<number | undefined>(undefined);
+  useEffect(() => {
+    if (!held) return;
+    const away = (e: PointerEvent) => {
+      if (!(e.target as Element).closest?.(`[data-person="${held}"]`)) setHeld(null);
+    };
+    document.addEventListener("pointerdown", away);
+    return () => document.removeEventListener("pointerdown", away);
+  }, [held]);
   return (
     <section className={styles.also} aria-label="Also live">
       <ul className={styles.strip} aria-label="Other streams">
         {others.map((s) => {
-          const feed = s.screen ?? s.camera;
-          if (!feed) return null;
           const id = s.person.id;
+          const both = Boolean(s.screen && s.camera);
+          const feed = (both && swappedOf?.(id) ? s.camera : s.screen) ?? s.camera;
+          if (!feed) return null;
           const what = kindOf(feed);
           // My own stream plays from my browser; someone else's from LiveKit, once it arrives.
           const video = s.isMe ? feed.local : feed.remote?.video;
           const name = s.isMe ? "You" : s.person.name;
           const whose = s.isMe ? "your" : `${s.person.name}'s`;
           return (
-            <li key={id} className={styles.item}>
+            <li
+              key={id}
+              className={styles.item}
+              data-person={id}
+              data-stacked={both || undefined}
+              data-held={held === id || undefined}
+              onPointerDown={(e) => {
+                if (e.pointerType === "mouse" || s.isMe) return;
+                window.clearTimeout(hold.current);
+                hold.current = window.setTimeout(() => setHeld(id), 500);
+              }}
+              onPointerUp={() => window.clearTimeout(hold.current)}
+              onPointerCancel={() => window.clearTimeout(hold.current)}
+              onContextMenu={(e) => e.preventDefault()}
+            >
+              {/* Someone sharing a screen and a camera: the other picture peeks out behind. */}
+              {both && <span className={styles.behind} aria-hidden="true" />}
               <button
                 type="button"
                 className={styles.preview}
                 aria-label={`Watch ${whose} ${what}`}
-                onClick={() => onPick(id)}
+                onClick={() => {
+                  // The hold that opened the row isn't a click on the preview.
+                  if (held === id) return;
+                  onPick(id);
+                }}
               >
                 <span className={styles.video}>
                   {video ? (
@@ -62,10 +98,16 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear }: Pr
                   {name} · {what}
                 </span>
               </button>
-              {/* Their sound and voice, muted or not for me without opening them (spec 0123). */}
+              {/* Too small for buttons on the picture (spec 0131): their row opens under it. */}
               {!s.isMe && (
-                <span className={styles.sound}>
-                  <HearToggles sharer={s} hearing={hearOf(id)} onChange={(h) => onHear(id, h)} />
+                <span className={styles.tray}>
+                  <HearToggles
+                    sharer={s}
+                    hearing={hearOf(id)}
+                    onChange={(h) => onHear(id, h)}
+                    layout="tray"
+                    swap={both && onSwap ? { on: Boolean(swappedOf?.(id)), onSwap: () => onSwap(id) } : undefined}
+                  />
                 </span>
               )}
             </li>

@@ -45,7 +45,9 @@
   display: flex;
   gap: 8px;
   margin: 0;
-  padding: 0 16px;
+  /* Room inside the scroll box for a stacked picture's peek (spec 0131). */
+  margin-top: -5px;
+  padding: 5px 21px 0 16px;
   list-style: none;
   overflow-x: auto;
   scrollbar-width: none;
@@ -57,10 +59,27 @@
   flex: none;
 }
 
+/* A person with a screen and a camera: their second picture peeks out behind, like a deck. */
+.behind {
+  position: absolute;
+  top: -4px;
+  left: 5px;
+  right: -5px;
+  height: calc(112px * 9 / 16);
+  border: 1px solid rgba(235, 235, 236, 0.28);
+  border-radius: 8px;
+  background: rgba(22, 22, 23, 0.9);
+  pointer-events: none;
+}
+
+/* A held picture's buttons (spec 0131), over its lower part: no room under the row. */
 .hear {
   position: absolute;
-  top: 4px;
   left: 4px;
+  right: 4px;
+  bottom: 4px;
+  display: flex;
+  justify-content: center;
 }
 
 .picture {

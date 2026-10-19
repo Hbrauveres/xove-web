@@ -1,7 +1,50 @@
-/* A preview's two toggles (spec 0123): its sound and its voice, small, at the picture's corner. */
+/* A preview's buttons (specs 0123 and 0131): its voice, its sound, its swap; at the picture's
+   corner, or in the row under a small preview. */
 .toggles {
   display: inline-flex;
   gap: 4px;
+}
+
+/* In the row under a small preview: a little bigger, the row's own glass. */
+.toggles[data-layout="tray"] {
+  gap: 6px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(10, 10, 11, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.toggles[data-layout="tray"] .toggle {
+  width: 28px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.toggles[data-layout="tray"] .toggle svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* One sound's slider: its button at the left, the slider across the preview. */
+.toggles[data-open] {
+  display: flex;
+  width: 100%;
+}
+
+.slider {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding-right: 8px;
+}
+
+.range {
+  flex: 1;
+  min-width: 0;
 }
 
 .toggle {

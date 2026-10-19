@@ -17,8 +17,10 @@
   display: flex;
   gap: 10px;
   min-width: 0;
-  margin: 0 0 -8px;
-  padding: 0 0 8px;
+  /* Room inside the scroll box for a stacked picture's peek above and a small preview's row
+     under it (spec 0131), taken back by the margins so nothing else moves. */
+  margin: -6px 0 -52px;
+  padding: 6px 6px 52px 0;
   list-style: none;
   overflow-x: auto;
 }
@@ -124,17 +126,46 @@
 }
 
 /* The preview's sound: a round speaker at the top left; its slider slides out to the right. */
-.sound {
+/* The row under a small preview (spec 0131): it opens on pointing (a mouse) or a hold (a finger),
+   floating over what's under the info row. */
+.tray {
   position: absolute;
-  top: 5px;
-  left: 5px;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 5;
   display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px;
-  border-radius: 999px;
-  background: rgba(10, 10, 11, 0.72);
-  backdrop-filter: blur(6px);
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity 140ms ease, transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 180ms;
+}
+
+.item:hover .tray,
+.item:focus-within .tray,
+.item[data-held] .tray {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 140ms ease, transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s;
+}
+
+/* A person with a screen and a camera: their second picture peeks out behind, like a deck. */
+.behind {
+  position: absolute;
+  top: -5px;
+  left: 6px;
+  right: -6px;
+  height: calc(128px * 9 / 16);
+  border: 1px solid rgba(235, 235, 236, 0.28);
+  border-radius: 8px;
+  background: rgba(22, 22, 23, 0.9);
+  pointer-events: none;
+}
+
+.item[data-stacked] .preview {
+  position: relative;
 }
 
 .speaker {

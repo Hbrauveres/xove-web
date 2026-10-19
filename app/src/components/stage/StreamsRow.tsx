@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import type { LiveFeed as Feed, Sharer } from "../../types";
 import { STREAM_PLACES } from "./NowWatching";
 import { HearToggles, type Hearing } from "./HearToggles";
@@ -18,6 +19,8 @@ type Props = {
   /** What I hear from each person, and muting it from their picture (spec 0123). */
   hearOf?: (personId: string) => Hearing;
   onHear?: (personId: string, hearing: Hearing) => void;
+  swappedOf?: (personId: string) => boolean;
+  onSwap?: (personId: string) => void;
 };
 
 const kindOf = (feed: Feed) => (feed.kind === "camera" ? "camera" : "screen");
@@ -55,7 +58,18 @@ function ArrowButton({ up, onClick, className }: { up: boolean; onClick: () => v
  * and closes it, and so does a round button at the bottom left: an arrow up while it's closed,
  * an arrow down on the row while it's open.
  */
-export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, hearOf, onHear }: Props) {
+export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, hearOf, onHear, swappedOf, onSwap }: Props) {
+  // A hold on a picture opens its buttons over it (spec 0131): the pictures are too small to carry them.
+  const [held, setHeld] = useState<string | null>(null);
+  const hold = useRef<number | undefined>(undefined);
+  useEffect(() => {
+    if (!held) return;
+    const away = (e: PointerEvent) => {
+      if (!(e.target as Element).closest?.(`[data-person="${held}"]`)) setHeld(null);
+    };
+    document.addEventListener("pointerdown", away);
+    return () => document.removeEventListener("pointerdown", away);
+  }, [held]);
   return (
     <>
       {!open && <ArrowButton up className={styles.toggle} onClick={onOpen} />}
@@ -76,19 +90,36 @@ export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, h
         </h2>
         <ul className={styles.list}>
           {others.map((s) => {
-            const feed = s.screen ?? s.camera;
+            const both = Boolean(s.screen && s.camera);
+            const feed = (both && swappedOf?.(s.person.id) ? s.camera : s.screen) ?? s.camera;
             if (!feed) return null;
             const what = kindOf(feed);
             const video = s.isMe ? feed.local : feed.remote?.video;
             const name = s.isMe ? "You" : s.person.name;
             const whose = s.isMe ? "your" : `${s.person.name}'s`;
             return (
-              <li key={s.person.id} className={styles.item}>
+              <li
+                key={s.person.id}
+                className={styles.item}
+                data-person={s.person.id}
+                data-held={held === s.person.id || undefined}
+                data-stacked={both || undefined}
+                onPointerDown={() => {
+                  if (s.isMe) return;
+                  window.clearTimeout(hold.current);
+                  hold.current = window.setTimeout(() => setHeld(s.person.id), 500);
+                }}
+                onPointerUp={() => window.clearTimeout(hold.current)}
+                onPointerCancel={() => window.clearTimeout(hold.current)}
+                onContextMenu={(e) => e.preventDefault()}
+              >
+                {/* A screen and a camera: the other picture peeks out behind (spec 0131). */}
+                {both && <span className={styles.behind} aria-hidden="true" />}
                 <button
                   type="button"
                   className={styles.picture}
                   aria-label={`Watch ${whose} ${what}`}
-                  onClick={() => onPick(s.person.id)}
+                  onClick={() => held !== s.person.id && onPick(s.person.id)}
                 >
                   {video && (
                     <ScreenVideo
@@ -99,9 +130,15 @@ export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, h
                   <span className={styles.name}>{name}</span>
                 </button>
                 {/* Beside the picture's button, never in it. */}
-                {!s.isMe && hearOf && onHear && (
+                {!s.isMe && hearOf && onHear && held === s.person.id && (
                   <span className={styles.hear}>
-                    <HearToggles sharer={s} hearing={hearOf(s.person.id)} onChange={(h) => onHear(s.person.id, h)} />
+                    <HearToggles
+                      sharer={s}
+                      hearing={hearOf(s.person.id)}
+                      onChange={(h) => onHear(s.person.id, h)}
+                      layout="tray"
+                      swap={both && onSwap ? { on: Boolean(swappedOf?.(s.person.id)), onSwap: () => onSwap(s.person.id) } : undefined}
+                    />
                   </span>
                 )}
               </li>
