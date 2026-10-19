@@ -123,8 +123,8 @@
   background: #3a3a3d;
 }
 
-/* Spec 0123 prototype: a smaller knob, 16 px (was 20), over the track's height but never past
-   its ends, so the switch ends exactly where its column does. */
+/* A 16 px knob (spec 0123, design decision 10), over the track's height but never past its
+   ends, so the switch ends exactly where its column does. */
 .switch i {
   position: absolute;
   top: 2px;

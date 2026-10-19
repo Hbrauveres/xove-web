@@ -244,7 +244,7 @@
   row-gap: 0;
 }
 
-/* The left column stays put while the right one scrolls (spec 0123 prototype): pinned at the
+/* The left column stays put while the right one scrolls (spec 0123): pinned at the
    top of its area, which spans every row the right column can have. */
 :global([data-layout="sideways"]) .panel[data-variant="popover"] .lead {
   position: sticky;
@@ -497,9 +497,9 @@
   border-radius: 10px;
 }
 
-/* The Voice tab (spec 0123 prototype): the mic's live level, and the processing switches. */
+/* The Voice tab (spec 0123): the mic's live level, and the processing switches. */
 /* The labels just inside their heading (3 px), so they read as its own; the switches end where
-   the picker's arrow does, clear of the column's edge (spec 0123 prototype). */
+   the picker's arrow does, clear of the column's edge (spec 0123). */
 .voiceRow {
   min-height: var(--ctl, 38px);
   padding: 0 12px 0 3px;

@@ -73,12 +73,12 @@ describe("now watching: who's watching (spec 0107)", () => {
   });
 });
 
-describe("now watching: an empty stage (spec 0107)", () => {
-  it("invites someone to go live, with who's here", () => {
+describe("now watching: an empty stage (specs 0107 and 0123)", () => {
+  it("says nobody's sharing, with who's here, as on the phone", () => {
     const { container } = render(<NowWatching sharer={null} others={people("Bruno", "Ana", "Diego")} />);
 
-    expect(screen.getByRole("heading", { name: "The stage is yours." })).toBeInTheDocument();
-    expect(screen.getByText("Bruno, Ana and Diego are here, waiting for someone to go live.")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Nobody's sharing" })).toBeInTheDocument();
+    expect(screen.getByText("Bruno, Ana and Diego are here.")).toBeInTheDocument();
     expect(container.querySelectorAll("[data-here]")).toHaveLength(3);
     expect(screen.queryByText("LIVE")).not.toBeInTheDocument();
   });
@@ -91,11 +91,10 @@ describe("now watching: an empty stage (spec 0107)", () => {
   });
 
   it("names up to three, then counts the others", () => {
-    expect(whoIsHere(["Bruno"])).toBe("Bruno is here, waiting for someone to go live.");
-    expect(whoIsHere(["Bruno", "Ana"])).toBe("Bruno and Ana are here, waiting for someone to go live.");
-    expect(whoIsHere(["Bruno", "Ana", "Diego", "Carla", "Leo", "Rui", "Bia"])).toBe(
-      "Bruno, Ana and 5 others are here, waiting for someone to go live.",
-    );
+    // The stage asks you to go live, so this line doesn't (spec 0123: each thing said once).
+    expect(whoIsHere(["Bruno"])).toBe("Bruno is here.");
+    expect(whoIsHere(["Bruno", "Ana"])).toBe("Bruno and Ana are here.");
+    expect(whoIsHere(["Bruno", "Ana", "Diego", "Carla", "Leo", "Rui", "Bia"])).toBe("Bruno, Ana and 5 others are here.");
     expect(whoIsHere([])).toBe("Nobody else is here yet.");
   });
 
@@ -121,12 +120,13 @@ describe("now watching, compact for the phone (spec 0158)", () => {
     expect(container.querySelector("[data-compact]")).toBeInTheDocument();
   });
 
-  it("says Nobody live and the places free when the stage is empty", () => {
-    render(<NowWatching compact sharer={null} free={6} />);
+  it("says nobody's sharing and the seats open when the stage is empty (spec 0123)", () => {
+    const { rerender } = render(<NowWatching compact sharer={null} free={6} />);
 
-    expect(screen.getByRole("heading", { name: "Nobody live" })).toBeInTheDocument();
-    expect(screen.getByText("0 of 6 · 6 free")).toBeInTheDocument();
-    expect(screen.queryByText(/The stage is/)).toBeNull();
+    expect(screen.getByRole("heading", { name: "Nobody's sharing" })).toBeInTheDocument();
+    expect(screen.getByText("6 seats open")).toBeInTheDocument();
+    rerender(<NowWatching compact sharer={null} free={1} />);
+    expect(screen.getByText("1 seat open")).toBeInTheDocument();
   });
 
   it("can be a smaller heading, for the cards of a feed", () => {

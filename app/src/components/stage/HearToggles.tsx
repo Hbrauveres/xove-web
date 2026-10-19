@@ -8,7 +8,7 @@ import styles from "./HearToggles.module.css";
 export type Hearing = { sound: Sound; voice: Sound };
 
 /**
- * A preview's two toggles (spec 0123, round 2): mute or unmute that person's sound and voice for
+ * A preview's two toggles (spec 0123, design decision 4): mute or unmute that person's sound and voice for
  * me without opening their stream; the same mute their stage uses. A missing sound is greyed in
  * its place; their voice lights green while they speak.
  */

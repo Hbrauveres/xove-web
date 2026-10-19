@@ -24,14 +24,7 @@ const kindOf = (feed: Feed) => (feed.kind === "camera" ? "camera" : "screen");
  * is a full-width picture, then who, LIVE, for how long and who's watching. Silent: only the
  * stage plays sound. A tap puts it on the stage.
  */
-export function LiveFeed({
-  others,
-  liveCount,
-  watchersOf,
-  onPick,
-  hearOf,
-  onHear,
-}: Props) {
+export function LiveFeed({ others, liveCount, watchersOf, onPick, hearOf, onHear }: Props) {
   return (
     <section className={styles.feed} aria-labelledby="live-now">
       <h2 id="live-now" className={styles.head}>
@@ -69,22 +62,13 @@ export function LiveFeed({
                 {/* Beside the picture's button, never in it: their sound and voice (spec 0123). */}
                 {!s.isMe && hearOf && onHear && (
                   <span className={styles.voice}>
-                    <HearToggles
-                      sharer={s}
-                      hearing={hearOf(id)}
-                      onChange={(h) => onHear(id, h)}
-                    />
+                    <HearToggles sharer={s} hearing={hearOf(id)} onChange={(h) => onHear(id, h)} />
                   </span>
                 )}
               </div>
               {/* The line under it opens the stream too; the keyboard uses the picture's button. */}
               <div className={styles.info} onClick={() => onPick(id)}>
-                <NowWatching
-                  compact
-                  level={3}
-                  sharer={s}
-                  watchers={watchersOf(id)}
-                />
+                <NowWatching compact level={3} sharer={s} watchers={watchersOf(id)} />
               </div>
             </li>
           );

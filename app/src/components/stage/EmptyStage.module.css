@@ -82,7 +82,7 @@
   max-width: calc(100% - 2 * var(--inset) - 160px);
 }
 
-/* The camera's display (spec 0123 prototype): fainter than the readout, nothing moves. */
+/* The camera's display (spec 0123): fainter than the readout, nothing moves. */
 /* An empty sound meter, L and R. */
 .meter {
   position: absolute;
@@ -208,33 +208,6 @@
   background: rgba(235, 235, 236, 0.45);
 }
 
-.here {
-  display: inline-flex;
-  flex: none;
-}
-
-.av {
-  display: grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  margin-left: -6px;
-  border: 2px solid #0e0e10;
-  border-radius: 50%;
-  color: #fff;
-  font: 600 9px/1 var(--font-body);
-  letter-spacing: 0;
-}
-
-.av:first-child {
-  margin-left: 0;
-}
-
-.who {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 /* The focus frame round the way to start: four short corners, fainter. */
 .focus {
   position: relative;
@@ -334,7 +307,7 @@
   display: none;
 }
 
-/* A narrow stage (a phone upright): the two ways to start stacked; only the names' count. */
+/* A narrow stage (a phone upright): the two ways to start stacked. */
 @container (max-width: 480px) {
   .empty {
     --arm: 22px;
@@ -348,10 +321,6 @@
 
   .focus {
     padding: 20px 18px;
-  }
-
-  .who {
-    display: none;
   }
 }
 

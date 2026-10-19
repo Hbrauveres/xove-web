@@ -1,4 +1,4 @@
-/* The Voice tab's mic level (spec 0123 prototype): see MicTest.tsx. Built on the app's slider
+/* The Voice tab's mic level (spec 0123): see MicTest.tsx. Built on the app's slider
    (Range.module.css): the same slim track and white knob. */
 .row {
   display: flex;

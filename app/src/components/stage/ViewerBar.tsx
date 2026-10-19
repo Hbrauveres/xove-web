@@ -2,7 +2,8 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { StreamKind } from "../../types";
 import { Range } from "../ui/Range";
 import { showToast } from "../ui/toast";
-import { CameraOnIcon, CogIcon, MicIcon, MicOffIcon, ScreenOffIcon, ScreenOnIcon, SoundIcon, VoiceIcon, VoiceOffIcon, VolumeOffIcon } from "./icons";
+import { FULL_ROOM } from "./PlayerButtons";
+import { CameraOffIcon, CameraOnIcon, CogIcon, MicIcon, MicOffIcon, ScreenOffIcon, ScreenOnIcon, SoundIcon, VoiceIcon, VoiceOffIcon, VolumeOffIcon } from "./icons";
 import styles from "./ViewerBar.module.css";
 
 /** One sound you hear from the person you watch (spec 0123): its volume and mute. */
@@ -25,6 +26,8 @@ type Props = {
   micOn?: boolean;
   onMic?: () => void;
   canShareScreen: boolean;
+  /** All 6 places are taken: Go live's ways to start are greyed, saying why. */
+  full?: boolean;
   onStart: (kind: StreamKind) => void;
   onSettings: () => void;
   /** Where the browser can't set a page's volume (iPhones): a tap turns a sound on and off, no slider. */
@@ -34,12 +37,11 @@ type Props = {
 };
 
 /**
- * The bar over someone else's stream (spec 0123, round 141): the left corner is what you hear from
- * them, the right corner is you. Your stream's own controls live only on your stream. Prototype
- * (ADR-0070): round 1.
+ * The bar over someone else's stream (spec 0123, design decision 1): the left corner is what you hear from
+ * them, the right corner is you. Your stream's own controls live only on your stream.
  */
 export function ViewerBar(props: Props) {
-  const { sound, voice, live, micOn, onMic, canShareScreen, onStart, onSettings, canSetVolume, settingsOnly } = props;
+  const { sound, voice, live, micOn, onMic, canShareScreen, full, onStart, onSettings, canSetVolume, settingsOnly } = props;
   const [open, setOpen] = useState<"sound" | "voice" | null>(null);
   const [menu, setMenu] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
@@ -81,7 +83,15 @@ export function ViewerBar(props: Props) {
           </button>
         ) : (
           <span className={styles.anchor}>
-            <button type="button" className={styles.golive} aria-expanded={menu} aria-haspopup="menu" onClick={() => setMenu((m) => !m)}>
+            {/* The settings, opened from its menu, open over it (design decision 5). */}
+            <button
+              type="button"
+              className={styles.golive}
+              data-settings-anchor
+              aria-expanded={menu}
+              aria-haspopup="menu"
+              onClick={() => setMenu((m) => !m)}
+            >
               <i aria-hidden="true" />
               Go live
             </button>
@@ -90,15 +100,22 @@ export function ViewerBar(props: Props) {
                 <MenuItem
                   icon={canShareScreen ? <ScreenOnIcon /> : <ScreenOffIcon />}
                   label="Share your screen"
-                  unavailable={canShareScreen ? undefined : "This browser can't share a screen"}
+                  unavailable={!canShareScreen ? "This browser can't share a screen" : full ? FULL_ROOM : undefined}
                   onPick={() => {
                     setMenu(false);
                     onStart("screen");
                   }}
                 />
-                <MenuItem icon={<CameraOnIcon />} label="Turn on your camera" onPick={() => { setMenu(false); onStart("camera"); }} />
+                <MenuItem
+                  icon={full ? <CameraOffIcon /> : <CameraOnIcon />}
+                  label="Turn on your camera"
+                  unavailable={full ? FULL_ROOM : undefined}
+                  onPick={() => {
+                    setMenu(false);
+                    onStart("camera");
+                  }}
+                />
                 <span className={styles.sep} />
-                {/* The panel opens over Go live: it reads where the settings button is. */}
                 <MenuItem icon={<CogIcon />} label="Settings" onPick={() => { setMenu(false); onSettings(); }} />
               </div>
             )}
@@ -116,7 +133,7 @@ function MenuItem({ icon, label, unavailable, onPick }: { icon: ReactNode; label
       role="menuitem"
       aria-disabled={unavailable ? true : undefined}
       title={unavailable}
-      onClick={() => (unavailable ? showToast(unavailable, <ScreenOffIcon />) : onPick())}
+      onClick={() => (unavailable ? showToast(unavailable, icon) : onPick())}
     >
       {icon}
       {label}
@@ -124,7 +141,7 @@ function MenuItem({ icon, label, unavailable, onPick }: { icon: ReactNode; label
   );
 }
 
-/** One sound: a tap mutes it; resting the mouse or holding opens its own slider (rounds 143 and 145). */
+/** One sound: a tap mutes it; resting the mouse or holding opens its own slider (design decision 3). */
 function Hear({
   kind,
   s,

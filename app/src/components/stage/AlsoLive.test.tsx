@@ -1,65 +1,50 @@
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { FakeTrack } from "../../test/fakeLiveKit";
 import type { MediaTrack, Sharer } from "../../types";
 import { AlsoLive } from "./AlsoLive";
-import { MUTED, type PreviewSound } from "./previewSound";
+import type { Hearing } from "./HearToggles";
 
 const video = () => new FakeTrack() as unknown as MediaTrack;
-const sharer = (id: string, name: string, kinds: ("screen" | "camera")[], withSound = false): Sharer => ({
+const sharer = (id: string, name: string, kinds: ("screen" | "camera")[], extra: Partial<Sharer> = {}): Sharer => ({
   person: { id, name, hue: 100, online: true },
   isMe: false,
   since: Date.now(),
   ...Object.fromEntries(
     kinds.map((kind) => [
       kind,
-      {
-        kind,
-        startedAt: Date.now(),
-        settings: { quality: "1080p", mode: "smooth" },
-        remote: { video: video(), setQuality: () => {} },
-      },
+      { kind, startedAt: Date.now(), settings: { quality: "1080p", mode: "smooth" }, remote: { video: video(), setQuality: () => {} } },
     ]),
   ),
-  hasSound: withSound,
-  sound: withSound ? (new FakeTrack() as unknown as MediaTrack) : undefined,
+  hasSound: false,
+  ...extra,
 });
 
-const BRUNO = sharer("user-7", "Bruno", ["screen", "camera"], true);
-const ANA = sharer("user-3", "Ana", ["screen"], true);
+const BRUNO = sharer("user-7", "Bruno", ["screen", "camera"], { hasSound: true, sound: video(), hasVoice: true, voice: video() });
+const ANA = sharer("user-3", "Ana", ["screen"], { hasSound: true, sound: video() });
 const DIEGO = sharer("user-9", "Diego", ["camera"]);
+const HEARD: Hearing = { sound: { volume: 1, muted: false }, voice: { volume: 1, muted: false } };
 
-function Harness({
-  others,
-  free = 3,
-  canSetVolume: _canSetVolume = true,
-  onPick = vi.fn(),
-}: {
-  others: Sharer[];
-  free?: number;
-  canSetVolume?: boolean;
-  onPick?: (id: string) => void;
-}) {
-  const [sound, setSound] = useState<Record<string, PreviewSound>>({});
+function Harness({ others, live = 3, free = 3, onPick = vi.fn() }: { others: Sharer[]; live?: number; free?: number; onPick?: (id: string) => void }) {
+  const [hearing, setHearing] = useState<Record<string, Hearing>>({});
   return (
     <AlsoLive
       others={others}
-      liveCount={6 - free}
+      liveCount={live}
       free={free}
       onPick={onPick}
-      // Prototype (spec 0123, round 2): previews mute per person; these tests are rewritten by /implement.
-      hearOf={(id) => ({ sound: sound[id] ?? { volume: 1, muted: false }, voice: { volume: 1, muted: false } })}
-      onHear={(id, h) => setSound((prev) => ({ ...prev, [id]: h.sound }))}
+      hearOf={(id) => hearing[id] ?? HEARD}
+      onHear={(id, h) => setHearing((was) => ({ ...was, [id]: h }))}
     />
   );
 }
 
 const preview = (name: RegExp) => screen.getByRole("button", { name });
 
-describe("also live (spec 0104)", () => {
-  it("shows my own stream from my browser, as You, with no speaker", () => {
+describe("also live (specs 0104 and 0123)", () => {
+  it("shows my own stream from my browser, as You, with no toggles", () => {
     const local = video();
     const me: Sharer = {
       person: { id: "me", name: "Henrique", hue: 36, online: true },
@@ -72,25 +57,13 @@ describe("also live (spec 0104)", () => {
 
     expect(preview(/Watch your screen/)).toHaveTextContent("You · screen");
     expect((local as unknown as FakeTrack).attached).toHaveLength(1);
-    expect(screen.queryByRole("button", { name: /mute/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Mute/ })).not.toBeInTheDocument();
   });
 
   it("says Loading until someone's video arrives", () => {
     const waiting: Sharer = { ...ANA, screen: { ...ANA.screen!, remote: undefined } };
     render(<Harness others={[waiting]} />);
     expect(preview(/Watch Ana's screen/)).toHaveTextContent("Loading…");
-  });
-
-  it("shows each other stream with its chip, then the count and the free places in one box (spec 0107)", () => {
-    render(<Harness others={[ANA, DIEGO]} free={3} />);
-
-    expect(screen.queryByText("Also live")).not.toBeInTheDocument();
-    expect(preview(/Watch Ana's screen/)).toHaveTextContent("Ana · screen");
-    expect(preview(/Watch Diego's camera/)).toHaveTextContent("Diego · camera");
-    const box = screen.getByText("3 of 6 live").closest("[data-free]");
-    expect(box).toHaveTextContent("3 free · share yours");
-    // The box stays put while the previews scroll: it's not one of them.
-    expect(within(screen.getByRole("list", { name: "Other streams" })).queryByText(/free/)).not.toBeInTheDocument();
   });
 
   it("puts a preview on the stage when clicked", async () => {
@@ -100,57 +73,45 @@ describe("also live (spec 0104)", () => {
     expect(onPick).toHaveBeenCalledWith("user-3");
   });
 
-  it("has no box at all when all 6 places are taken (spec 0107)", () => {
-    const { container } = render(<Harness others={[ANA]} free={0} />);
-    expect(screen.queryByText(/of 6 live/)).not.toBeInTheDocument();
-    expect(screen.queryByText(/free · share yours/)).not.toBeInTheDocument();
+  it("plays no preview's sound or voice: previews are silent", () => {
+    render(<Harness others={[BRUNO]} />);
+    expect((BRUNO.sound as unknown as FakeTrack).attached).toHaveLength(0);
+    expect((BRUNO.voice as unknown as FakeTrack).attached).toHaveLength(0);
+  });
+
+  it("mutes a person's sound and voice from their preview, without opening them", async () => {
+    const onPick = vi.fn();
+    const user = userEvent.setup();
+    render(<Harness others={[BRUNO]} onPick={onPick} />);
+
+    const sound = screen.getByRole("button", { name: "Mute Bruno's screen sound" });
+    const voice = screen.getByRole("button", { name: "Mute Bruno's voice" });
+    await user.click(sound);
+    expect(sound).toHaveAttribute("aria-pressed", "true");
+    expect(voice).toHaveAttribute("aria-pressed", "false");
+    await user.click(voice);
+    expect(voice).toHaveAttribute("aria-pressed", "true");
+    expect(onPick).not.toHaveBeenCalled();
+  });
+
+  it("greys a sound that isn't there, in its place, saying why", () => {
+    render(<Harness others={[DIEGO]} />);
+    expect(screen.getByRole("button", { name: "Diego: No screen sound" })).toHaveAttribute("aria-disabled", "true");
+    expect(screen.getByRole("button", { name: "Diego: Diego's mic is off" })).toHaveAttribute("aria-disabled", "true");
+  });
+
+  it("shows the seats as six dots, red for each stream live, beside the previews (spec 0123)", () => {
+    const { container } = render(<Harness others={[ANA, DIEGO]} live={3} free={3} />);
+    const box = container.querySelector("[data-free]") as HTMLElement;
+    expect(box).toHaveAccessibleName("3 of 6 live, 3 seats open");
+    expect(box.querySelectorAll("i")).toHaveLength(6);
+    expect(box.querySelectorAll("i[data-on]")).toHaveLength(3);
+    // The box stays put while the previews scroll: it's not one of them.
+    expect(within(screen.getByRole("list", { name: "Other streams" })).queryByText(/seat/)).not.toBeInTheDocument();
+  });
+
+  it("has no box at all when all 6 seats are taken", () => {
+    const { container } = render(<Harness others={[ANA]} live={6} free={0} />);
     expect(container.querySelector("[data-free]")).toBeNull();
-  });
-
-  it("keeps previews muted, with a crossed speaker, and their sound not played", () => {
-    render(<Harness others={[BRUNO]} />);
-
-    expect(screen.getByRole("button", { name: "Unmute Bruno" })).toBeInTheDocument();
-    expect(BRUNO.sound && (BRUNO.sound as unknown as FakeTrack).attached).toHaveLength(0);
-    expect(MUTED.muted).toBe(true);
-  });
-
-  it("plays a preview's sound when unmuted, with its own horizontal slider on hover", async () => {
-    const user = userEvent.setup();
-    render(<Harness others={[BRUNO]} />);
-
-    await user.click(screen.getByRole("button", { name: "Unmute Bruno" }));
-    await waitFor(() => expect((BRUNO.sound as unknown as FakeTrack).attached).toHaveLength(1));
-
-    await user.hover(screen.getByRole("button", { name: "Mute Bruno" }));
-    expect(screen.getByRole("slider", { name: "Bruno's volume" })).toHaveAttribute("aria-orientation", "horizontal");
-
-    await user.click(screen.getByRole("button", { name: "Mute Bruno" }));
-    expect(screen.getByRole("button", { name: "Unmute Bruno" })).toBeInTheDocument();
-    await waitFor(() => expect((BRUNO.sound as unknown as FakeTrack).attached).toHaveLength(0));
-  });
-
-  it("sets a preview's own volume", async () => {
-    const user = userEvent.setup();
-    render(<Harness others={[BRUNO]} />);
-    await user.click(screen.getByRole("button", { name: "Unmute Bruno" }));
-    await user.hover(screen.getByRole("button", { name: "Mute Bruno" }));
-
-    fireEvent.change(screen.getByRole("slider", { name: "Bruno's volume" }), { target: { value: "0.4" } });
-
-    const audio = (BRUNO.sound as unknown as FakeTrack).attached[0] as HTMLAudioElement;
-    await waitFor(() => expect(audio.volume).toBeCloseTo(0.4));
-  });
-
-  it("shows no speaker for a preview without sound, nor a slider where volume can't be set", async () => {
-    const { unmount } = render(<Harness others={[DIEGO]} />);
-    expect(within(screen.getByRole("list")).queryByRole("button", { name: /mute/i })).not.toBeInTheDocument();
-    unmount();
-
-    const user = userEvent.setup();
-    render(<Harness others={[ANA]} canSetVolume={false} />);
-    await user.click(screen.getByRole("button", { name: "Unmute Ana" }));
-    await user.hover(screen.getByRole("button", { name: "Mute Ana" }));
-    expect(screen.queryByRole("slider")).not.toBeInTheDocument();
   });
 });

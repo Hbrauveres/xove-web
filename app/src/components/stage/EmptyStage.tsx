@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
-import type { Friend, StreamKind } from "../../types";
+import type { StreamKind } from "../../types";
 import { CameraOnIcon, ScreenOffIcon, ScreenOnIcon } from "./icons";
 import { showToast } from "../ui/toast";
 import styles from "./EmptyStage.module.css";
 
 type Props = {
   canShareScreen?: boolean;
-  /** The others in the room, for "Marina and Rafa are here". */
-  here?: Friend[];
   onStart?: (kind: StreamKind) => void;
 };
 
@@ -32,12 +30,10 @@ function useClock() {
  * corners (the top right red, as in the logo), a quiet readout (standby and the time), and in a
  * small focus frame the two ways to start; who's here and the seats are said once, below. Where
  * the browser can't share a screen (phones), the camera comes first and the screen is greyed with
- * its reason. Nothing moves but the clock. Prototype (ADR-0070).
+ * its reason. Nothing moves but the clock.
  */
 export function EmptyStage({
   canShareScreen = true,
-  // Prototype: said once, in the row below; dropped by /implement.
-  here: _here = [],
   onStart,
 }: Props) {
   const now = useClock();
@@ -48,9 +44,7 @@ export function EmptyStage({
       aria-disabled={canShareScreen ? undefined : true}
       title={canShareScreen ? undefined : "This browser can't share a screen"}
       onClick={() =>
-        canShareScreen
-          ? onStart?.("screen")
-          : showToast("This browser can't share a screen", <ScreenOffIcon />)
+        canShareScreen ? onStart?.("screen") : showToast("This browser can't share a screen", <ScreenOffIcon />)
       }
     >
       {canShareScreen ? <ScreenOnIcon /> : <ScreenOffIcon />}
@@ -70,21 +64,13 @@ export function EmptyStage({
   return (
     <div className={styles.empty} data-empty>
       {(["tl", "tr", "bl", "br"] as const).map((at) => (
-        <span
-          key={at}
-          className={styles.corner}
-          data-at={at}
-          data-mark={at}
-          aria-hidden="true"
-        />
+        <span key={at} className={styles.corner} data-at={at} data-mark={at} aria-hidden="true" />
       ))}
       <span className={styles.readout} data-at="tl">
         <i className={styles.dot} aria-hidden="true" />
         Standby · {now}
       </span>
-      {/* The camera's display, still and quiet (spec 0123 prototype): real where it can be (what
-          your stream starts at), the rest only drawn; nothing said elsewhere is said again. */}
-      {/* The room: Xovê has one. */}
+      {/* The camera's display (design decision 6): still, quiet, and saying nothing said elsewhere. */}
       <span className={styles.readout} data-at="tr" aria-hidden="true">
         Room 01
       </span>

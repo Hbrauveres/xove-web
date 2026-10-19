@@ -55,10 +55,7 @@ export function loadSharePrefs(): SharePrefs {
   const quality = read(KEYS.shareQuality);
   const mode = read(KEYS.shareMode);
   return {
-    quality:
-      quality && qualities.includes(quality)
-        ? (quality as ShareQuality)
-        : DEFAULT_SHARE.quality,
+    quality: quality && qualities.includes(quality) ? (quality as ShareQuality) : DEFAULT_SHARE.quality,
     mode: mode === "smooth" || mode === "sharp" ? mode : DEFAULT_SHARE.mode,
   };
 }
@@ -73,10 +70,7 @@ export function loadCameraPrefs(): SharePrefs {
   const quality = read(KEYS.cameraQuality);
   const mode = read(KEYS.cameraMode);
   return {
-    quality:
-      quality && cameraQualities.includes(quality)
-        ? (quality as ShareQuality)
-        : DEFAULT_CAMERA.quality,
+    quality: quality && cameraQualities.includes(quality) ? (quality as ShareQuality) : DEFAULT_CAMERA.quality,
     mode: mode === "smooth" || mode === "sharp" ? mode : DEFAULT_CAMERA.mode,
   };
 }
@@ -101,15 +95,11 @@ export type AmbilightPrefs = { on: boolean; brightness: number };
 export const DEFAULT_AMBILIGHT: AmbilightPrefs = { on: true, brightness: 0.9 };
 
 export function loadAmbilight(): AmbilightPrefs {
-  const brightness = Number(
-    read(KEYS.ambilightBrightness) ?? DEFAULT_AMBILIGHT.brightness,
-  );
+  const brightness = Number(read(KEYS.ambilightBrightness) ?? DEFAULT_AMBILIGHT.brightness);
   return {
     on: read(KEYS.ambilightOn) !== "false",
     brightness:
-      Number.isFinite(brightness) && brightness >= 0 && brightness <= 1
-        ? brightness
-        : DEFAULT_AMBILIGHT.brightness,
+      Number.isFinite(brightness) && brightness >= 0 && brightness <= 1 ? brightness : DEFAULT_AMBILIGHT.brightness,
   };
 }
 
@@ -152,7 +142,7 @@ export type VoicePrefs = {
   noiseSuppression: boolean;
   autoGainControl: boolean;
   voiceIsolation: boolean;
-  /** The mic test's line, 0 to 1: sound under it isn't sent (spec 0123 prototype). */
+  /** The mic test's line, 0 to 1: sound under it isn't sent (spec 0123). */
   sensitivity: number;
 };
 
@@ -168,26 +158,19 @@ export const DEFAULT_VOICE: VoicePrefs = {
 export function loadVoicePrefs(): VoicePrefs {
   let processing: Partial<VoicePrefs> = {};
   try {
-    processing = JSON.parse(
-      read(KEYS.micProcessing) ?? "{}",
-    ) as Partial<VoicePrefs>;
+    processing = JSON.parse(read(KEYS.micProcessing) ?? "{}") as Partial<VoicePrefs>;
   } catch {
     processing = {};
   }
   const flag = (k: keyof Omit<VoicePrefs, "micId" | "sensitivity">) =>
-    typeof processing[k] === "boolean"
-      ? (processing[k] as boolean)
-      : DEFAULT_VOICE[k];
+    typeof processing[k] === "boolean" ? (processing[k] as boolean) : DEFAULT_VOICE[k];
   return {
     micId: read(KEYS.micDevice),
     echoCancellation: flag("echoCancellation"),
     noiseSuppression: flag("noiseSuppression"),
     autoGainControl: flag("autoGainControl"),
     voiceIsolation: flag("voiceIsolation"),
-    sensitivity:
-      typeof processing.sensitivity === "number"
-        ? processing.sensitivity
-        : DEFAULT_VOICE.sensitivity,
+    sensitivity: typeof processing.sensitivity === "number" ? processing.sensitivity : DEFAULT_VOICE.sensitivity,
   };
 }
 

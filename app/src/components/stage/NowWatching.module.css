@@ -190,7 +190,7 @@
   background: var(--surface-raised);
 }
 
-/* On a wide screen, the size of the live person's photo (spec 0123 prototype). */
+/* On a wide screen, the size of the live person's photo (spec 0123). */
 .nobodyBig {
   width: 52px;
   height: 52px;

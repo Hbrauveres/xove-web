@@ -47,17 +47,17 @@ function setup(props: Partial<Parameters<typeof SettingsPanel>[0]> = {}) {
 const panel = () => screen.getByRole("dialog", { name: "Settings" });
 
 describe("the settings panel: tabs", () => {
-  it("opens on Screen, with Screen and Camera tabs and a red marker under the chosen one", () => {
+  it("opens on Screen, with Screen, Camera and Voice tabs and a red marker under the chosen one (spec 0123)", () => {
     setup();
     const tabs = within(panel()).getAllByRole("tab");
-    expect(tabs.map((t) => t.textContent)).toEqual(["Screen", "Camera"]);
+    expect(tabs.map((t) => t.textContent)).toEqual(["Screen", "Camera", "Voice"]);
     expect(tabs[0]).toHaveAttribute("aria-selected", "true");
     expect(within(panel()).getByRole("tablist").style.getPropertyValue("--i")).toBe("0");
   });
 
   it("greys out Screen where a screen can't be shared (a phone), saying why, and opens on Camera (design decision 2)", async () => {
     const { user } = setup({ screenTab: false });
-    expect(within(panel()).getAllByRole("tab").map((t) => t.textContent)).toEqual(["Screen", "Camera"]);
+    expect(within(panel()).getAllByRole("tab").map((t) => t.textContent)).toEqual(["Screen", "Camera", "Voice"]);
     const screenTab = within(panel()).getByRole("tab", { name: "Screen" });
     expect(screenTab).toHaveAttribute("aria-disabled", "true");
     expect(screenTab).toHaveAttribute("title", NO_SCREEN);
@@ -93,10 +93,10 @@ describe("the settings panel: tabs", () => {
   it("over the cog, draws every tab in one cell so it's as tall as the tallest; only the chosen one shows (design decision 9)", async () => {
     const { user } = setup();
     const panes = panel().querySelectorAll('[role="tabpanel"]');
-    expect(panes).toHaveLength(2);
+    expect(panes).toHaveLength(3);
     const hidden = [...panes].filter((p) => p.getAttribute("aria-hidden") === "true");
-    expect(hidden).toHaveLength(1);
-    expect(hidden[0]).toHaveAttribute("inert");
+    expect(hidden).toHaveLength(2);
+    hidden.forEach((p) => expect(p).toHaveAttribute("inert"));
     expect(within(panel()).getByRole("tabpanel", { name: "Screen" })).toBeInTheDocument();
     await user.click(within(panel()).getByRole("tab", { name: "Camera" }));
     expect(within(panel()).getByRole("tabpanel", { name: "Camera" })).not.toHaveAttribute("aria-hidden");
@@ -234,7 +234,7 @@ describe("the settings panel: the Camera tab's preview (spec 0111)", () => {
 });
 
 describe("the settings panel: going to a setting (spec 0115)", () => {
-  it("switches to Screen and cues Change, for 2 s", () => {
+  it("switches to Screen and cues Change: two pulses, then lit until the next press (spec 0123)", () => {
     vi.useFakeTimers();
     const all = { mine: { screen: true, camera: false } };
     const { rerender } = setup({ ...all, goTo: undefined });
@@ -243,8 +243,17 @@ describe("the settings panel: going to a setting (spec 0115)", () => {
     expect(within(panel()).getByRole("tab", { name: /Screen/ })).toHaveAttribute("aria-selected", "true");
     const change = within(panel()).getByRole("button", { name: "Change" });
     expect(change.querySelector("[data-cue]")).not.toBeNull();
-    act(() => vi.advanceTimersByTime(CUE_MS));
+    act(() => vi.advanceTimersByTime(CUE_MS * 3));
+    expect(change.querySelector("[data-cue]")).not.toBeNull();
+    // A press on a live button (the gesture that asked) keeps it; a press anywhere else ends it.
+    const live = document.createElement("div");
+    live.dataset.dropup = "";
+    document.body.append(live);
+    fireEvent.pointerDown(live);
+    expect(change.querySelector("[data-cue]")).not.toBeNull();
+    fireEvent.pointerDown(document.body);
     expect(change.querySelector("[data-cue]")).toBeNull();
+    live.remove();
     // Change itself stays: its focus isn't lost to a cue.
     expect(within(panel()).getByRole("button", { name: "Change" })).toBe(change);
     vi.useRealTimers();

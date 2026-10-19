@@ -5,8 +5,6 @@ import { HearToggles, type Hearing } from "./HearToggles";
 import { seatsOpen } from "./NowWatching";
 import styles from "./AlsoLive.module.css";
 
-
-
 type Props = {
   /** Everyone sharing except the person on the stage, longest first. */
   others: Sharer[];
@@ -24,9 +22,9 @@ const kindOf = (feed: LiveFeed) => (feed.kind === "camera" ? "camera" : "screen"
 
 /**
  * The right of the info row (specs 0104 and 0107): the other live streams as small previews (a
- * click puts one on the stage), then a box with how many of the 6 are live and the places left.
- * Past their room the previews scroll; the box stays put, and goes when nothing is free. Each
- * preview keeps its own sound (spec 0060): muted by default, a speaker to unmute, a slider.
+ * click puts one on the stage), then the seats as six dots, red for each stream live (spec 0123).
+ * Past their room the previews scroll; the box stays put, and goes when nothing is free. Previews
+ * are silent; each carries that person's two toggles, their sound and their voice (spec 0123).
  */
 export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear }: Props) {
   return (
@@ -75,7 +73,7 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear }: Pr
         })}
       </ul>
       {free > 0 && (
-        // The six seats as dots, red for each stream live (spec 0123 prototype); gone when all are taken.
+        // The six seats as dots, red for each stream live (spec 0123); gone when all are taken.
         <p
           className={styles.free}
           data-free

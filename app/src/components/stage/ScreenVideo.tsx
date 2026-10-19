@@ -14,7 +14,7 @@ type Props = {
   onVideo?: (el: HTMLVideoElement | null) => void;
 };
 
-/** How close the picture's shape must be to its box's to fill it (spec 0123 prototype). */
+/** How close the picture's shape must be to its box's to fill it (spec 0123). */
 const SAME_SHAPE = 0.01;
 
 /** Plays someone's shared screen or camera (and the screen's sound, if they shared it). */
@@ -45,12 +45,12 @@ export function ScreenVideo({ video, sound, label, volume = 1, muted = false, on
       setFill(Number.isFinite(box) && Number.isFinite(picture) && picture > 0 && Math.abs(picture / box - 1) < SAME_SHAPE);
     };
     check();
-    const watch = new ResizeObserver(check);
-    watch.observe(el);
+    const watch = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(check);
+    watch?.observe(el);
     el.addEventListener("loadedmetadata", check);
     el.addEventListener("resize", check);
     return () => {
-      watch.disconnect();
+      watch?.disconnect();
       el.removeEventListener("loadedmetadata", check);
       el.removeEventListener("resize", check);
     };

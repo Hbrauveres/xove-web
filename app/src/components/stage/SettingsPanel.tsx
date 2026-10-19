@@ -1,16 +1,5 @@
-import {
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type CSSProperties,
-  type KeyboardEvent,
-} from "react";
-import {
-  CAMERA_BLOCKED,
-  type CameraProblem,
-  type ScreenSurface,
-} from "../../hooks/useLiveKitRoom";
+import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { CAMERA_BLOCKED, type CameraProblem, type ScreenSurface } from "../../hooks/useLiveKitRoom";
 import type { SharePrefs, VoicePrefs } from "../../media/preferences";
 import type { MicDevice } from "../../hooks/useLiveKitRoom";
 import { useMicLevel } from "../../hooks/useMicLevel";
@@ -26,14 +15,7 @@ import type { CameraDevice, MediaTrack, StreamKind } from "../../types";
 import { Picker } from "../ui/Picker";
 import { Segmented } from "../ui/Segmented";
 import { showToast } from "../ui/toast";
-import {
-  CameraOnIcon,
-  CloseIcon,
-  MicIcon,
-  ScreenOffIcon,
-  ScreenShareIcon,
-  WindowIcon,
-} from "./icons";
+import { CameraOnIcon, CloseIcon, MicIcon, ScreenOffIcon, ScreenShareIcon, WindowIcon } from "./icons";
 import { NO_SCREEN, NO_SOUND } from "./PlayerButtons";
 import { FULL_VIEW_SHEET } from "./makeRoom";
 import styles from "./SettingsPanel.module.css";
@@ -89,7 +71,7 @@ type Props = {
   localVoice?: MediaTrack;
 };
 
-/** The cue's two 1 s pulses (design decision 2); then it stays lit until the next press (spec 0123 prototype). */
+/** The cue's two 1 s pulses (design decision 2); then it stays lit until the next press (spec 0123). */
 export const CUE_MS = 2000;
 type Cue = { kind: Tab; n: number } | null;
 
@@ -115,8 +97,8 @@ export function SettingsPanel(props: Props) {
     }
   }
   if (!open && cue) setCue(null);
-  // Prototype (spec 0123): two pulses were over before the eye reached the list; it now stays lit
-  // until the next press anywhere but the live buttons (an option, outside) or the panel closes.
+  // Lit until the next press anywhere but the live buttons (an option, outside) or the panel
+  // closing (spec 0123, design decision 11): two pulses alone were over before the eye got there.
   useEffect(() => {
     if (!cue) return;
     const off = (e: PointerEvent) => {
@@ -173,9 +155,7 @@ export function SettingsPanel(props: Props) {
     if (open) {
       opener.current = document.activeElement as HTMLElement | null;
       // Not scrolled into view: the panel is still coming in, and the page would jump.
-      root.current
-        ?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')
-        ?.focus({ preventScroll: true });
+      root.current?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.focus({ preventScroll: true });
       return;
     }
     if (root.current?.contains(document.activeElement)) opener.current?.focus();
@@ -198,11 +178,7 @@ export function SettingsPanel(props: Props) {
       role="dialog"
       aria-label="Settings"
       data-variant={variant}
-      style={
-        props.fullView
-          ? ({ "--sheet-height": `${FULL_VIEW_SHEET * 100}%` } as CSSProperties)
-          : undefined
-      }
+      style={props.fullView ? ({ "--sheet-height": `${FULL_VIEW_SHEET * 100}%` } as CSSProperties) : undefined}
       data-open={shown || undefined}
       inert={!open || undefined}
       onKeyDown={onKeyDown}
@@ -210,12 +186,7 @@ export function SettingsPanel(props: Props) {
     >
       <div className={styles.head}>
         <h2>Settings</h2>
-        <button
-          type="button"
-          className={styles.close}
-          aria-label="Close settings"
-          onClick={onClose}
-        >
+        <button type="button" className={styles.close} aria-label="Close settings" onClick={onClose}>
           <CloseIcon />
         </button>
       </div>
@@ -226,18 +197,11 @@ export function SettingsPanel(props: Props) {
           const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
           if (!step || usable.length < 2) return;
           e.preventDefault();
-          const next =
-            usable[
-              (usable.indexOf(tab) + step + usable.length) % usable.length
-            ];
+          const next = usable[(usable.indexOf(tab) + step + usable.length) % usable.length];
           setTab(next);
-          root.current
-            ?.querySelector<HTMLElement>(`#${CSS.escape(tabId(next))}`)
-            ?.focus();
+          root.current?.querySelector<HTMLElement>(`#${CSS.escape(tabId(next))}`)?.focus();
         }}
-        style={
-          { "--n": tabs.length, "--i": tabs.indexOf(tab) } as CSSProperties
-        }
+        style={{ "--n": tabs.length, "--i": tabs.indexOf(tab) } as CSSProperties}
       >
         <span className={styles.marker} aria-hidden="true" />
         {tabs.map((t) => (
@@ -261,17 +225,9 @@ export function SettingsPanel(props: Props) {
                 showToast(NO_SCREEN, <ScreenOffIcon />);
             }}
           >
-            {t === "screen" ? (
-              <ScreenShareIcon />
-            ) : t === "camera" ? (
-              <CameraOnIcon />
-            ) : (
-              <MicIcon />
-            )}
+            {t === "screen" ? <ScreenShareIcon /> : t === "camera" ? <CameraOnIcon /> : <MicIcon />}
             {t === "screen" ? "Screen" : t === "camera" ? "Camera" : "Voice"}
-            {(t === "voice" ? props.voice : mine[t]) && (
-              <span className={styles.dot} data-live aria-hidden="true" />
-            )}
+            {(t === "voice" ? props.voice : mine[t]) && <span className={styles.dot} data-live aria-hidden="true" />}
           </button>
         ))}
       </div>
@@ -292,15 +248,9 @@ export function SettingsPanel(props: Props) {
             inert={t !== tab || undefined}
           >
             {t === "screen" ? (
-              <ScreenTab
-                {...props}
-                cue={cue?.kind === "screen" ? cue.n : undefined}
-              />
+              <ScreenTab {...props} cue={cue?.kind === "screen" ? cue.n : undefined} />
             ) : t === "camera" ? (
-              <CameraTab
-                {...props}
-                cue={cue?.kind === "camera" ? cue.n : undefined}
-              />
+              <CameraTab {...props} cue={cue?.kind === "camera" ? cue.n : undefined} />
             ) : (
               <VoiceTab {...props} shown={open && tab === "voice"} />
             )}
@@ -318,9 +268,7 @@ function QualityAndMode({
   busy,
 }: { kind: StreamKind } & Pick<Props, "prefs" | "onPrefsChange" | "busy">) {
   const mine = prefs[kind];
-  const qualities = (
-    kind === "camera" ? CAMERA_QUALITIES : SHARE_QUALITIES
-  ).map((q) => ({ value: q.id, label: q.id }));
+  const qualities = (kind === "camera" ? CAMERA_QUALITIES : SHARE_QUALITIES).map((q) => ({ value: q.id, label: q.id }));
   const name = kind === "camera" ? "Camera" : "Screen";
   return (
     <>
@@ -350,9 +298,7 @@ function QualityAndMode({
 
 /** The cue's ring over a control, drawn anew for each request so its pulses start over. */
 function CueRing({ n }: { n?: number }) {
-  return n ? (
-    <span key={n} className={cueStyles.cue} aria-hidden="true" data-cue />
-  ) : null;
+  return n ? <span key={n} className={cueStyles.cue} aria-hidden="true" data-cue /> : null;
 }
 
 /** `cue`: the request the tab's control is cued for, if any. */
@@ -368,9 +314,7 @@ function ScreenTab(props: Props & { cue?: number }) {
             <div className={styles.fieldRow}>
               <span className={styles.source}>
                 <WindowIcon />
-                <span>
-                  {screenSurface ? SURFACE[screenSurface] : "Your screen"}
-                </span>
+                <span>{screenSurface ? SURFACE[screenSurface] : "Your screen"}</span>
               </span>
               <button
                 type="button"
@@ -387,8 +331,8 @@ function ScreenTab(props: Props & { cue?: number }) {
           </div>
         ) : (
           <p className={styles.hint}>
-            You're not sharing. These are used the next time you do; the browser
-            shows a preview when you pick what to share.
+            You're not sharing. These are used the next time you do; the browser shows a preview when you pick what to
+            share.
           </p>
         )}
       </div>
@@ -398,31 +342,16 @@ function ScreenTab(props: Props & { cue?: number }) {
 }
 
 function CameraTab(props: Props & { cue?: number }) {
-  const {
-    mine,
-    cameras,
-    cameraId,
-    onPickCamera,
-    cameraVideo,
-    busy,
-    cameraProblem,
-  } = props;
+  const { mine, cameras, cameraId, onPickCamera, cameraVideo, busy, cameraProblem } = props;
   const problem =
-    !cameraVideo && cameraProblem
-      ? cameraProblem === "blocked"
-        ? CAMERA_BLOCKED
-        : "No camera found."
-      : null;
+    !cameraVideo && cameraProblem ? (cameraProblem === "blocked" ? CAMERA_BLOCKED : "No camera found.") : null;
   return (
     <>
       {/* What you see: its own column sideways (spec 0111, design decisions 3 and 4). */}
       <div className={styles.lead}>
         <div className={styles.group}>
           <p className={styles.heading}>Preview</p>
-          <div
-            className={styles.preview}
-            data-problem={problem ? true : undefined}
-          >
+          <div className={styles.preview} data-problem={problem ? true : undefined}>
             {problem ? (
               <p className={styles.problem} role="status">
                 {problem}
@@ -455,7 +384,7 @@ function CameraTab(props: Props & { cue?: number }) {
               onChange={onPickCamera}
               // Gone to from the live camera button: its list opens (spec 0115).
               openSignal={props.cue}
-              // Cued round the pill and its open list together (spec 0123 prototype).
+              // Cued round the pill and its open list together (spec 0123).
               cue={props.cue}
             />
           </div>
@@ -495,10 +424,7 @@ const NO_ISOLATION = "This browser can't isolate a voice";
 const canIsolate = () => {
   try {
     return Boolean(
-      (
-        navigator.mediaDevices?.getSupportedConstraints?.() as
-          Record<string, boolean> | undefined
-      )?.voiceIsolation,
+      (navigator.mediaDevices?.getSupportedConstraints?.() as Record<string, boolean> | undefined)?.voiceIsolation,
     );
   } catch {
     return false;
@@ -510,8 +436,7 @@ function VoiceTab(props: Props & { shown: boolean }) {
   const { voicePrefs, onVoicePrefs, mics = [], localVoice, shown } = props;
   const level = useMicLevel(localVoice, shown);
   if (!voicePrefs || !onVoicePrefs) return null;
-  const set = (patch: Partial<VoicePrefs>) =>
-    onVoicePrefs({ ...voicePrefs, ...patch });
+  const set = (patch: Partial<VoicePrefs>) => onVoicePrefs({ ...voicePrefs, ...patch });
   const isolate = canIsolate();
   const SWITCHES: {
     key: keyof Omit<VoicePrefs, "micId" | "sensitivity">;
@@ -554,9 +479,7 @@ function VoiceTab(props: Props & { shown: boolean }) {
               onChange={(micId) => set({ micId })}
             />
           ) : (
-            <p className={styles.hint}>
-              The browser lists your microphones once you turn your voice on.
-            </p>
+            <p className={styles.hint}>The browser lists your microphones once you turn your voice on.</p>
           )}
         </div>
         <div className={styles.group}>
@@ -575,7 +498,7 @@ function VoiceTab(props: Props & { shown: boolean }) {
           <label
             key={s.key}
             className={`${sw.switchRow} ${styles.voiceRow}`}
-            // What it does, on hover: the rows stay one calm line each (spec 0123 prototype).
+            // What it does, on hover: the rows stay one calm line each (spec 0123).
             title={s.unavailable ?? s.hint}
           >
             <span>{s.label}</span>
@@ -587,9 +510,7 @@ function VoiceTab(props: Props & { shown: boolean }) {
               aria-checked={voicePrefs[s.key]}
               aria-disabled={s.unavailable ? true : undefined}
               onClick={() =>
-                s.unavailable
-                  ? showToast(s.unavailable, <MicIcon />)
-                  : set({ [s.key]: !voicePrefs[s.key] })
+                s.unavailable ? showToast(s.unavailable, <MicIcon />) : set({ [s.key]: !voicePrefs[s.key] })
               }
             >
               <i />

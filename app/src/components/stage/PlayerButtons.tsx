@@ -49,7 +49,7 @@ type Props = {
   onMenuChange?: (open: boolean) => void;
   /** What the viewer hears, before my buttons (spec 0101): the volume, while watching someone. */
   before?: ReactNode;
-  /** After my screen and camera, before the cog: my mic (spec 0123 prototype). */
+  /** After my screen and camera, before the cog: my mic (spec 0123). */
   extra?: ReactNode;
 };
 

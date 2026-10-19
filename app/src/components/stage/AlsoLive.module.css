@@ -183,7 +183,7 @@
   text-align: center;
 }
 
-/* The seats (spec 0123 prototype): six dots, three over three, red for each stream live. */
+/* The seats (spec 0123): six dots, three over three, red for each stream live. */
 .free {
   grid-template-columns: repeat(3, 10px);
   gap: 9px 12px;
