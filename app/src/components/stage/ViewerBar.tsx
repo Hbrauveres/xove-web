@@ -59,7 +59,7 @@ export function ViewerBar(props: Props) {
   }, [open, menu]);
 
   return (
-    <div ref={bar} className={styles.bar} data-buttons>
+    <div ref={bar} className={styles.bar} data-buttons data-viewer-bar>
       <div className={styles.left}>
         {sound && <Hear kind="sound" s={sound} open={open === "sound"} setOpen={setOpen} canSetVolume={canSetVolume} />}
         {voice && <Hear kind="voice" s={voice} open={open === "voice"} setOpen={setOpen} canSetVolume={canSetVolume} name={voice.name} talking={voice.talking} />}

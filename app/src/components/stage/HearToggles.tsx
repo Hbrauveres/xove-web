@@ -102,7 +102,7 @@ export function HearToggles({
     const muted = hearing[kind].muted;
     const off = Boolean(unavailable) || muted;
     const what = kind === "sound" ? `${name}'s screen sound` : `${name}'s voice`;
-    return (
+    const btn = (
       <button
         type="button"
         className={styles.toggle}
@@ -147,6 +147,33 @@ export function HearToggles({
         {kind === "sound" ? off ? <VolumeOffIcon /> : <SoundIcon /> : off ? <VoiceOffIcon /> : <VoiceIcon />}
       </button>
     );
+    if (layout !== "over") return btn;
+    // Over a big picture: its own slider, upright over the button, as the stage's sounds (spec 0131).
+    return (
+      <span className={styles.anchor}>
+        {btn}
+        <span
+          className={styles.upright}
+          data-open={open === kind || undefined}
+          data-muted={muted || undefined}
+          inert={open !== kind}
+        >
+          <Range
+            className={styles.uprightRange}
+            min={0}
+            max={1}
+            step={0.05}
+            aria-orientation="vertical"
+            aria-label={kind === "sound" ? `${name}'s screen sound volume` : `${name}'s voice volume`}
+            value={hearing[kind].volume}
+            onChange={(e) => {
+              onChange({ ...hearing, [kind]: { volume: Number(e.target.value), muted: false } });
+              restart();
+            }}
+          />
+        </span>
+      </span>
+    );
   };
 
   return (
@@ -189,46 +216,56 @@ export function HearToggles({
       </span>
       {/* One slider under the buttons, unrolling once; moving between buttons only changes what it
           sets, with a crossfade, so the row never moves under the pointer (spec 0131). */}
-      <span className={styles.drawer} data-drawer data-open={open ? true : undefined} inert={!open}>
-        <span className={styles.inner}>
-          {leaving && leaving !== shown && (
-            <span
-              key={`out-${leaving}`}
-              className={styles.slider}
-              data-slider
-              data-leaving
-              aria-hidden="true"
-              onAnimationEnd={(e) => e.animationName.includes("shrink") && setLeaving(null)}
-            >
-              {iconOf(leaving)}
-              <Range className={styles.range} min={0} max={1} step={0.05} value={hearing[leaving].volume} readOnly tabIndex={-1} />
-            </span>
-          )}
-          {shown && (
-            <span
-              key={shown}
-              className={styles.slider}
-              data-slider
-              data-entering={entering === shown || undefined}
-              onAnimationEnd={(e) => e.animationName.includes("grow") && setEntering(null)}
-            >
-              {iconOf(shown)}
-              <Range
-                className={styles.range}
-                min={0}
-                max={1}
-                step={0.05}
-                aria-label={shown === "sound" ? `${name}'s screen sound volume` : `${name}'s voice volume`}
-                value={hearing[shown].volume}
-                onChange={(e) => {
-                  onChange({ ...hearing, [shown]: { volume: Number(e.target.value), muted: false } });
-                  restart();
-                }}
-              />
-            </span>
-          )}
+      {layout === "tray" && (
+        <span className={styles.drawer} data-drawer data-open={open ? true : undefined} inert={!open}>
+          <span className={styles.inner}>
+            {leaving && leaving !== shown && (
+              <span
+                key={`out-${leaving}`}
+                className={styles.slider}
+                data-slider
+                data-leaving
+                aria-hidden="true"
+                onAnimationEnd={(e) => e.animationName.includes("shrink") && setLeaving(null)}
+              >
+                {iconOf(leaving)}
+                <Range
+                  className={styles.range}
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  value={hearing[leaving].volume}
+                  readOnly
+                  tabIndex={-1}
+                />
+              </span>
+            )}
+            {shown && (
+              <span
+                key={shown}
+                className={styles.slider}
+                data-slider
+                data-entering={entering === shown || undefined}
+                onAnimationEnd={(e) => e.animationName.includes("grow") && setEntering(null)}
+              >
+                {iconOf(shown)}
+                <Range
+                  className={styles.range}
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  aria-label={shown === "sound" ? `${name}'s screen sound volume` : `${name}'s voice volume`}
+                  value={hearing[shown].volume}
+                  onChange={(e) => {
+                    onChange({ ...hearing, [shown]: { volume: Number(e.target.value), muted: false } });
+                    restart();
+                  }}
+                />
+              </span>
+            )}
+          </span>
         </span>
-      </span>
+      )}
     </span>
   );
 }

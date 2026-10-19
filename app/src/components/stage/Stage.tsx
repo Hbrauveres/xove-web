@@ -360,6 +360,31 @@ export function Stage({
       box?.removeEventListener("transitionend", place);
     };
   }, [settingsOpen, sideways, onScreen]);
+  // Sideways, the streams row's arrow sits at the screen's bottom-left: where the picture reaches it,
+  // the sounds move along to start after it (spec 0131); a narrower picture leaves them in place.
+  const rowArrow = sideways && Boolean(big) && sharers.length > 1;
+  useLayoutEffect(() => {
+    const stage = stageRef.current;
+    if (!rowArrow || !stage) return;
+    const place = () => {
+      const arrow = stage.querySelector('[data-arrow="up"]');
+      const bar = stage.querySelector<HTMLElement>("[data-viewer-bar]");
+      const holder = bar?.offsetParent;
+      if (!arrow || !holder) return stage.style.removeProperty("--arrow-room");
+      const room = arrow.getBoundingClientRect().right + 8 - (holder.getBoundingClientRect().left + 12);
+      stage.style.setProperty("--arrow-room", `${Math.max(0, Math.round(room))}px`);
+    };
+    place();
+    window.addEventListener("resize", place);
+    const watch = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(place);
+    watch?.observe(stage);
+    if (frameRef.current) watch?.observe(frameRef.current);
+    return () => {
+      window.removeEventListener("resize", place);
+      watch?.disconnect();
+      stage.style.removeProperty("--arrow-room");
+    };
+  }, [rowArrow, onScreen]);
   const playing = Boolean(main && (big?.isMe ? main.local : main.remote));
   useEffect(() => () => window.clearTimeout(idleTimer.current), []);
 
@@ -669,6 +694,7 @@ export function Stage({
       className={styles.stage}
       data-layout={layout}
       data-chrome={sideways ? chrome : undefined}
+      data-row-arrow={rowArrow || undefined}
       aria-label="Shared screen"
       {...(sideways ? gestures : {})}
     >
@@ -769,6 +795,8 @@ export function Stage({
                 onPick={(id) => pick(id)}
                 hearOf={hearOf}
                 onHear={setHear}
+                swappedOf={(id) => Boolean(swappedFor[id])}
+                onSwap={toggleSwap}
               />
             ) : (
               <HereCards people={people} meId={meId} arrivedAt={arrivedAt} />

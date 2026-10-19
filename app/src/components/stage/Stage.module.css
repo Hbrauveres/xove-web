@@ -276,6 +276,12 @@
   --btn: 44px;
 }
 
+/* Sideways with the streams row's arrow at the bottom-left: where the picture reaches it, the sounds
+   start 8 px after it, on the same line (spec 0131; the stage measures --arrow-room). */
+.stage[data-row-arrow] [data-viewer-bar] {
+  left: calc(12px + var(--arrow-room, 0px));
+}
+
 /* Fading sideways: the top bar and the row's arrow button go with the round buttons (FR-8). */
 .stage[data-layout="sideways"] [data-fades] {
   transition: opacity 0.25s ease;

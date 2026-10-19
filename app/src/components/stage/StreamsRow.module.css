@@ -192,7 +192,8 @@
 .toggle {
   position: absolute;
   left: calc(14px + env(safe-area-inset-left, 0px));
-  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  /* Centred on the round buttons' row (48 px, 12 px up), as the sounds beside it. */
+  bottom: calc(12px + (48px - 36px) / 2 + env(safe-area-inset-bottom, 0px));
   z-index: 4;
 }
 
