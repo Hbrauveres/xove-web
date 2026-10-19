@@ -534,6 +534,7 @@ export function Stage({
         <EmptyStage
           canShareScreen={controls.canShareScreen}
           onStart={startMine}
+          tvStatic={ambilight.tvStatic !== false}
         />
       );
 
@@ -695,7 +696,7 @@ export function Stage({
             {/* Nobody live: each viewfinder corner glows outward, a blurred L (spec 0123, design decision 7). */}
             {!big && <CornerGlow prefs={ambilight} />}
             {/* Nobody live: the static's bands light the wall round the stage (spec 0136). */}
-            {!big && <StaticGlow prefs={ambilight} />}
+            {!big && ambilight.tvStatic !== false && <StaticGlow prefs={ambilight} />}
             <Ambilight
               key={big ? `${big.person.id}|${stage.mainKind}|${gridKey(shape)}` : "none"}
               video={big ? bigVideoEl : null}

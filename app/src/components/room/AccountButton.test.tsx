@@ -62,13 +62,23 @@ describe("account button (spec 0104)", () => {
     expect(screen.getByText("Member")).toBeInTheDocument();
   });
 
+  it("switches the empty stage's TV static off, at once and for next time (spec 0136)", async () => {
+    const { user, onAmbilightChange } = setup();
+    await user.click(screen.getByRole("button", { name: /account/ }));
+    const tvStatic = screen.getByRole("switch", { name: "TV static" });
+    expect(tvStatic).toHaveAttribute("aria-checked", "true");
+    await user.click(tvStatic);
+    expect(onAmbilightChange).toHaveBeenLastCalledWith({ on: true, brightness: 0.9, tvStatic: false });
+    expect(loadAmbilight().tvStatic).toBe(false);
+  });
+
   it("switches the ambilight and sets its brightness, at once and for next time", async () => {
     const { user, onAmbilightChange } = setup();
     await user.click(screen.getByRole("button", { name: /account/ }));
 
     await user.click(screen.getByRole("switch", { name: "Ambilight" }));
     expect(onAmbilightChange).toHaveBeenLastCalledWith({ on: false, brightness: 0.9 });
-    expect(loadAmbilight()).toEqual({ on: false, brightness: 0.9 });
+    expect(loadAmbilight()).toEqual({ on: false, brightness: 0.9, tvStatic: true });
     // Space toggles it too, from the keyboard (the test's prefs stay on, so it asks for off again).
     const calls = onAmbilightChange.mock.calls.length;
     screen.getByRole("switch", { name: "Ambilight" }).focus();

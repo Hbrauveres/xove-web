@@ -219,22 +219,85 @@
   text-align: center;
 }
 
-/* The seats (spec 0123): six dots, three over three, red for each stream live. */
+/* The seats (specs 0123 and 0136): six little screens, three over three, red for each stream live.
+   Each casts a soft light under it that flickers, as a TV's on a wall while its picture changes;
+   each at its own pace, so they never flicker together. Only opacity animates: cheap. */
 .free {
-  grid-template-columns: repeat(3, 10px);
-  gap: 9px 12px;
+  grid-template-columns: repeat(3, 16px);
+  gap: 10px 10px;
+  /* The lights sit under the screens, inside the box. */
+  isolation: isolate;
 }
 
 .free i {
-  width: 10px;
+  position: relative;
+  width: 16px;
   height: 10px;
-  border-radius: 50%;
+  border-radius: 2px;
   background: rgba(235, 235, 236, 0.14);
+  --light: rgba(235, 235, 236, 0.22);
 }
 
 .free i[data-on] {
   background: var(--accent);
-  box-shadow: 0 0 6px rgba(239, 75, 75, 0.45);
+  --light: rgba(239, 75, 75, 0.55);
+}
+
+.free i::after {
+  content: "";
+  position: absolute;
+  inset: 3px -3px -7px;
+  z-index: -1;
+  border-radius: 50%;
+  background: var(--light);
+  filter: blur(5px);
+  animation: tv-light 2.3s steps(1, end) infinite;
+}
+
+.free i:nth-child(2)::after {
+  animation-duration: 3.1s;
+  animation-delay: -0.7s;
+}
+
+.free i:nth-child(3)::after {
+  animation-duration: 2.7s;
+  animation-delay: -1.9s;
+}
+
+.free i:nth-child(4)::after {
+  animation-duration: 3.5s;
+  animation-delay: -1.2s;
+}
+
+.free i:nth-child(5)::after {
+  animation-duration: 2.5s;
+  animation-delay: -2.2s;
+}
+
+.free i:nth-child(6)::after {
+  animation-duration: 2.9s;
+  animation-delay: -0.4s;
+}
+
+/* A picture changing: the light jumps between levels, a few quick, a few held. */
+@keyframes tv-light {
+  0% { opacity: 0.55; }
+  9% { opacity: 0.9; }
+  14% { opacity: 0.6; }
+  31% { opacity: 1; }
+  38% { opacity: 0.45; }
+  52% { opacity: 0.8; }
+  57% { opacity: 0.65; }
+  71% { opacity: 0.95; }
+  84% { opacity: 0.5; }
+  91% { opacity: 0.75; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .free i::after {
+    animation: none;
+    opacity: 0.7;
+  }
 }
 
 @media (max-width: 760px) {

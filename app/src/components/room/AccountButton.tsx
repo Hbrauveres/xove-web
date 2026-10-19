@@ -101,6 +101,20 @@ export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightC
             disabled={!ambilight.on}
             onChange={(e) => change({ ...ambilight, brightness: Number(e.target.value) })}
           />
+          {/* Nobody live: the stage's moving static, off for anyone who'd rather it were still (spec 0136). */}
+          <label className={styles.switchRow}>
+            <span>TV static</span>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={ambilight.tvStatic !== false}
+              aria-label="TV static"
+              className={styles.switch}
+              onClick={() => change({ ...ambilight, tvStatic: ambilight.tvStatic === false })}
+            >
+              <i />
+            </button>
+          </label>
         </DropdownSection>
 
         <DropdownSection className={styles.actions}>

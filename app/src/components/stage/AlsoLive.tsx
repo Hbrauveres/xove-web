@@ -159,7 +159,8 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
         }}
       />
       {free > 0 && (
-        // The six seats as dots, red for each stream live (spec 0123); gone when all are taken.
+        // The six seats as little screens, red for each stream live (specs 0123 and 0136); gone when
+        // all are taken.
         <Tooltip text={`${liveCount} of 6 live · ${seatsOpen(free)}`}>
           <p
             className={styles.free}

@@ -7,6 +7,8 @@ import { Tooltip } from "../ui/Tooltip";
 
 type Props = {
   canShareScreen?: boolean;
+  /** The moving TV static behind it (spec 0136); off, the stage is its plain dark. */
+  tvStatic?: boolean;
   onStart?: (kind: StreamKind) => void;
 };
 
@@ -20,6 +22,7 @@ type Props = {
 export function EmptyStage({
   canShareScreen = true,
   onStart,
+  tvStatic = true,
 }: Props) {
   const screen = (
     <Tooltip text={canShareScreen ? undefined : "This browser can't share a screen"}>
@@ -49,7 +52,7 @@ export function EmptyStage({
   );
   return (
     <div className={styles.empty} data-empty>
-      <StaticNoise />
+      {tvStatic && <StaticNoise />}
       {(["tl", "tr", "bl", "br"] as const).map((at) => (
         <span key={at} className={styles.corner} data-at={at} data-mark={at} aria-hidden="true" />
       ))}
@@ -61,8 +64,8 @@ export function EmptyStage({
         <h2 className={styles.title}>Be the first to go live</h2>
         <p className={styles.copy}>
           {canShareScreen
-            ? "Share your screen or turn on your camera, and the room sees it at once."
-            : "Turn on your camera and the room sees you at once."}
+            ? "Share your screen or turn on your camera."
+            : "Turn on your camera."}
         </p>
         <div className={styles.go}>
           {canShareScreen ? (
