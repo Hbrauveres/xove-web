@@ -147,6 +147,12 @@ export class FakeLocalMicTrack extends FakeLocalTrack {
   readonly restartTrack = vi.fn(async (options?: unknown) => {
     this.options = options;
   });
+  /** The noise gate (ADR-0071): its audio context, and the processor set on the track. */
+  processor?: unknown;
+  readonly setAudioContext = vi.fn();
+  readonly setProcessor = vi.fn(async (processor: unknown) => {
+    this.processor = processor;
+  });
 }
 
 /** The fake microphones (`enumerateDevices`, see setup.ts and the harness). */

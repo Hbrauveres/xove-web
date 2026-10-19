@@ -2,7 +2,9 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { capOf } from "../media/shareSettings";
 import { aUser, installFakeApi } from "../test/fakeApi";
-import { FakeLocalCameraTrack, FakeLocalScreenTrack, FakeMediaStreamTrack, lastRoom } from "../test/fakeLiveKit";
+import { FakeLocalCameraTrack, FakeLocalMicTrack, FakeLocalScreenTrack, FakeMediaStreamTrack, lastRoom } from "../test/fakeLiveKit";
+import { NoiseGate } from "../media/noiseGate";
+import { DEFAULT_VOICE } from "../media/preferences";
 import { useLiveKitRoom, type Capture } from "./useLiveKitRoom";
 
 const member = aUser({ name: "Henrique Brauveres", status: "MEMBER" });
@@ -294,5 +296,91 @@ describe("sound on phones (a tap unlocks it)", () => {
     room.canPlaybackAudio = true;
     document.dispatchEvent(new Event("pointerup"));
     expect(room.startAudio).not.toHaveBeenCalled();
+  });
+});
+
+describe("my voice (spec 0123)", () => {
+  afterEach(() => vi.unstubAllGlobals());
+  const VOICE = { ...DEFAULT_VOICE, micId: "mic-2", sensitivity: 0.2 };
+
+  async function start(hook: Awaited<ReturnType<typeof connected>>, prefs = VOICE) {
+    let problem: string | null = "not run";
+    await act(async () => {
+      problem = await hook.result.current.startVoice(prefs);
+    });
+    return problem;
+  }
+
+  it("asks for the picked mic with its processing, and sends it as my microphone", async () => {
+    const hook = await connected();
+    expect(await start(hook)).toBeNull();
+
+    const local = lastRoom().localParticipant;
+    expect(local.createTracks).toHaveBeenLastCalledWith({
+      audio: { deviceId: { ideal: "mic-2" }, echoCancellation: true, noiseSuppression: true, autoGainControl: true, voiceIsolation: false },
+    });
+    expect(local.mic?.options).toEqual({ source: "microphone" });
+    await waitFor(() => expect(hook.result.current.voice).toBe(true));
+    expect(hook.result.current.micInput).toBe(local.mic!.track.mediaStreamTrack);
+  });
+
+  it("says why when the browser blocks the mic or there's none, and sends nothing", async () => {
+    const hook = await connected();
+    lastRoom().localParticipant.nextMic = "NotAllowedError";
+    expect(await start(hook)).toBe("blocked");
+    lastRoom().localParticipant.nextMic = "NotFoundError";
+    expect(await start(hook)).toBe("missing");
+    expect(lastRoom().localParticipant.mic).toBeNull();
+    expect(hook.result.current.voice).toBe(false);
+  });
+
+  it("applies another mic or other processing to the same track, live", async () => {
+    const hook = await connected();
+    await start(hook);
+    const track = lastRoom().localParticipant.mic!.track;
+    await act(async () => {
+      await hook.result.current.applyVoice({ ...VOICE, micId: "mic-1", echoCancellation: false });
+    });
+    expect(track.restartTrack).toHaveBeenLastCalledWith(expect.objectContaining({ deviceId: { ideal: "mic-1" }, echoCancellation: false }));
+    expect(lastRoom().localParticipant.mic!.track).toBe(track);
+  });
+
+  it("stops sending my voice", async () => {
+    const hook = await connected();
+    await start(hook);
+    await act(async () => {
+      await hook.result.current.stopVoice();
+    });
+    expect(lastRoom().localParticipant.mic).toBeNull();
+    await waitFor(() => expect(hook.result.current.voice).toBe(false));
+    expect(hook.result.current.micInput).toBeUndefined();
+  });
+
+  it("sends it through the noise gate at my sensitivity, and moves the line live (ADR-0071)", async () => {
+    const close = vi.fn(async () => {});
+    vi.stubGlobal("AudioContext", class { close = close; });
+    const hook = await connected();
+    await start(hook);
+
+    const track = lastRoom().localParticipant.mic!.track as FakeLocalMicTrack;
+    expect(track.setAudioContext).toHaveBeenCalledTimes(1);
+    const gate = track.processor as NoiseGate;
+    expect(gate).toBeInstanceOf(NoiseGate);
+    expect((gate as unknown as { line: number }).line).toBe(0.2);
+    act(() => hook.result.current.setVoiceLine(0.5));
+    expect((gate as unknown as { line: number }).line).toBe(0.5);
+
+    await act(async () => {
+      await hook.result.current.stopVoice();
+    });
+    expect(close).toHaveBeenCalled();
+  });
+
+  it("sends it ungated where the browser has no Web Audio", async () => {
+    vi.stubGlobal("AudioContext", undefined);
+    const hook = await connected();
+    expect(await start(hook)).toBeNull();
+    expect((lastRoom().localParticipant.mic!.track as FakeLocalMicTrack).setProcessor).not.toHaveBeenCalled();
+    expect(lastRoom().localParticipant.mic).not.toBeNull();
   });
 });

@@ -76,6 +76,8 @@ export type RoomSession = {
   mics: MicDevice[];
   /** My mic's own track, for its live level in the settings. */
   localVoice: MediaTrack | undefined;
+  /** The microphone itself, before the gate: what the level meter reads. */
+  micInput: MediaStreamTrack | undefined;
 };
 
 export const identityOf = (userId: number) => `user-${userId}`;
@@ -462,9 +464,10 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
     (next: VoicePrefs) => {
       setVoicePrefsState(next);
       saveVoicePrefs(next);
-      // The sensitivity line is the gate's, not the mic's: only the rest restarts the mic.
-      const { sensitivity: _a, ...mic } = next;
-      const { sensitivity: _b, ...was } = voicePrefs;
+      // The sensitivity is the gate's line: it moves live. The rest restarts the mic.
+      const { sensitivity: line, ...mic } = next;
+      const { sensitivity: _was, ...was } = voicePrefs;
+      lk.setVoiceLine(line);
       if (lk.voice && JSON.stringify(mic) !== JSON.stringify(was)) void lk.applyVoice(next);
     },
     [lk, voicePrefs],
@@ -542,5 +545,6 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
     setVoicePrefs,
     mics: lk.mics,
     localVoice: lk.localVoice,
+    micInput: lk.micInput,
   };
 }

@@ -167,7 +167,7 @@ async function startSharing(user: User) {
   await screen.findByRole("heading", { name: "You" });
 }
 
-type MenuKind = "Screen" | "Camera";
+type MenuKind = "Screen" | "Camera" | "Voice";
 
 /** The settings panel on a tab (spec 0107): opened from the cog when it isn't. */
 async function openMenu(user: User, kind: MenuKind = "Screen") {
@@ -2876,5 +2876,73 @@ describe("room: the full-screen view on a phone (spec 0171)", () => {
     frame.requestFullscreen = vi.fn(async () => {});
     await userEvent.setup().click(within(stage()).getByRole("button", { name: "Full-screen view" }));
     expect(frame.requestFullscreen).not.toHaveBeenCalled();
+  });
+});
+
+describe("room: my voice (spec 0123)", () => {
+  afterEach(() => localStorage.clear());
+  const mic = () => lastRoom().localParticipant.mic;
+
+  it("shows my mic only while I'm live, off at first, and turns my voice on and off; it takes no place", async () => {
+    const server = installFakeApi({ me: member });
+    const user = await readyRoom();
+    expect(within(stage()).queryByRole("button", { name: /your voice/i })).not.toBeInTheDocument();
+
+    await startSharing(user);
+    await user.click(within(stage()).getByRole("button", { name: "Share your voice" }));
+    await waitFor(() => expect(mic()).not.toBeNull());
+    expect(within(stage()).getByRole("button", { name: "Mute your voice" })).toHaveAttribute("aria-pressed", "true");
+    // The API lists my screen alone: a voice is never a stream.
+    expect(server.streams.filter((st) => st.userId === MY_USER_ID)).toHaveLength(1);
+    expect(screen.getByLabelText("1 of 6 live, 5 seats open")).toBeInTheDocument();
+
+    await user.click(within(stage()).getByRole("button", { name: "Mute your voice" }));
+    await waitFor(() => expect(mic()).toBeNull());
+  });
+
+  it("leaves the voice off and says how to allow it when the browser blocks the mic", async () => {
+    installFakeApi({ me: member });
+    const user = await readyRoom();
+    await startSharing(user);
+    lastRoom().localParticipant.nextMic = "NotAllowedError";
+    await user.click(within(stage()).getByRole("button", { name: "Share your voice" }));
+    expect(await screen.findByText(/blocked the microphone/i)).toBeInTheDocument();
+    expect(mic()).toBeNull();
+    expect(within(stage()).getByRole("button", { name: "Share your voice" })).toHaveAttribute("aria-pressed", "false");
+  });
+
+  it("turns the voice off when my last stream stops: a voice never travels alone", async () => {
+    installFakeApi({ me: member });
+    const user = await readyRoom();
+    await startSharing(user);
+    await user.click(within(stage()).getByRole("button", { name: "Share your voice" }));
+    await waitFor(() => expect(mic()).not.toBeNull());
+    await user.click(within(controls()).getByRole("button", { name: /stop sharing/i }));
+    await waitFor(() => expect(mic()).toBeNull());
+  });
+
+  it("the Voice tab: the mic picked and its processing, applied live and remembered; the line moves without a restart", async () => {
+    installFakeApi({ me: member });
+    const user = await readyRoom();
+    await startSharing(user);
+    await user.click(within(stage()).getByRole("button", { name: "Share your voice" }));
+    await waitFor(() => expect(mic()).not.toBeNull());
+    const panel = await openMenu(user, "Voice");
+
+    await user.click(panel.getByRole("button", { name: /^Microphone: / }));
+    await user.click(panel.getByRole("radio", { name: "MacBook Pro microphone" }));
+    const track = mic()!.track;
+    await waitFor(() => expect(track.restartTrack).toHaveBeenLastCalledWith(expect.objectContaining({ deviceId: { ideal: "mic-2" } })));
+
+    await user.click(panel.getByRole("switch", { name: "Echo cancellation" }));
+    expect(panel.getByRole("switch", { name: "Echo cancellation" })).toHaveAttribute("aria-checked", "false");
+    await waitFor(() => expect(track.restartTrack).toHaveBeenLastCalledWith(expect.objectContaining({ echoCancellation: false })));
+    const restarts = track.restartTrack.mock.calls.length;
+
+    fireEvent.change(panel.getByRole("slider", { name: "Mic sensitivity" }), { target: { value: "0.4" } });
+    expect(track.restartTrack.mock.calls.length).toBe(restarts);
+
+    expect(JSON.parse(localStorage.getItem("xove.mic.processing")!)).toMatchObject({ echoCancellation: false, sensitivity: 0.4 });
+    expect(localStorage.getItem("xove.mic.device")).toBe("mic-2");
   });
 });

@@ -139,6 +139,7 @@ function Room({ pollMs, seat, onSignOut }: Props & { seat: RoomSeat; onSignOut: 
       onVoicePrefs={session.setVoicePrefs}
       mics={session.mics}
       localVoice={session.localVoice}
+      micInput={session.micInput}
     />
   );
 

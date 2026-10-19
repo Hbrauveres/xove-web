@@ -69,6 +69,8 @@ type Props = {
   onVoicePrefs?: (prefs: VoicePrefs) => void;
   mics?: MicDevice[];
   localVoice?: MediaTrack;
+  /** The microphone itself, before the gate: what the level meter reads. */
+  micInput?: MediaStreamTrack;
 };
 
 /** The cue's two 1 s pulses (design decision 2); then it stays lit until the next press (spec 0123). */
@@ -433,8 +435,8 @@ const canIsolate = () => {
 
 /** The Voice tab (spec 0123, rounds 96 to 100): Microphone (its picker and live level), then Voice processing. */
 function VoiceTab(props: Props & { shown: boolean }) {
-  const { voicePrefs, onVoicePrefs, mics = [], localVoice, shown } = props;
-  const level = useMicLevel(localVoice, shown);
+  const { voicePrefs, onVoicePrefs, mics = [], localVoice, micInput, shown } = props;
+  const level = useMicLevel(micInput, shown);
   if (!voicePrefs || !onVoicePrefs) return null;
   const set = (patch: Partial<VoicePrefs>) => onVoicePrefs({ ...voicePrefs, ...patch });
   const isolate = canIsolate();

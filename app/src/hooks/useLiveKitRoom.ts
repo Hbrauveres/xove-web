@@ -13,6 +13,7 @@ import {
 } from "livekit-client";
 import { ApiError, api } from "../api/client";
 import type { SharingConnection } from "../api/types";
+import { NoiseGate } from "../media/noiseGate";
 import { loadCameraDevice, saveCameraDevice, type SharePrefs, type VoicePrefs } from "../media/preferences";
 import {
   SHARE_QUALITIES,
@@ -169,15 +170,37 @@ export type LiveKitRoom = {
   pickCamera: (deviceId: string, prefs: SharePrefs) => Promise<void>;
   /** My voice is being sent (spec 0123). */
   voice: boolean;
-  /** My mic's own track, for its level in the settings. */
+  /** My voice as it's sent (through the gate), for Test in the settings. */
   localVoice?: MediaTrack;
+  /** The microphone itself, before the gate, for its level in the settings. */
+  micInput?: MediaStreamTrack;
   /** Starts sending my voice with these choices; says why when it can't. */
   startVoice: (prefs: VoicePrefs) => Promise<VoiceProblem>;
   stopVoice: () => Promise<void>;
   /** Applies another mic or other processing to my voice, live. */
   applyVoice: (prefs: VoicePrefs) => Promise<void>;
+  /** Moves the gate's line (the sensitivity), live, without restarting the mic. */
+  setVoiceLine: (line: number) => void;
   mics: MicDevice[];
 };
+
+/**
+ * My voice through the noise gate (ADR-0071), with its own Web Audio context. Where the browser
+ * can't run it, the voice is sent as the browser's processing leaves it: null.
+ */
+async function gateVoice(track: LocalAudioTrack, line: number) {
+  if (typeof AudioContext === "undefined" || typeof track.setProcessor !== "function") return null;
+  const context = new AudioContext();
+  try {
+    track.setAudioContext(context);
+    const gate = new NoiseGate(line);
+    await track.setProcessor(gate);
+    return { gate, context };
+  } catch {
+    void context.close().catch(() => {});
+    return null;
+  }
+}
 
 /** How my voice is captured: the mic picked and the browser's processing (spec 0123). */
 function micCaptureOptions(prefs: VoicePrefs) {
@@ -579,6 +602,13 @@ export function useLiveKitRoom(): LiveKitRoom {
   }, [cameraLive, voice]);
 
   // ---- my voice (spec 0123): asked for only when I turn it on, sent alongside my stream ----
+  const gateRef = useRef<{ gate: NoiseGate; context: AudioContext } | null>(null);
+  const [micInput, setMicInput] = useState<MediaStreamTrack | undefined>(undefined);
+  const closeGate = () => {
+    void gateRef.current?.context.close().catch(() => {});
+    gateRef.current = null;
+  };
+  useEffect(() => closeGate, []);
   const startVoice = useCallback(
     async (prefs: VoicePrefs): Promise<VoiceProblem> => {
       const room = roomRef.current;
@@ -586,7 +616,11 @@ export function useLiveKitRoom(): LiveKitRoom {
       try {
         const [track] = await room.localParticipant.createTracks({ audio: micCaptureOptions(prefs) });
         if (!track) return "missing";
+        const raw = track.mediaStreamTrack;
+        closeGate();
+        gateRef.current = await gateVoice(track as LocalAudioTrack, prefs.sensitivity);
         await room.localParticipant.publishTrack(track, { source: Track.Source.Microphone });
+        setMicInput(gateRef.current?.gate.input ?? raw);
         sync();
         return null;
       } catch (e) {
@@ -600,6 +634,8 @@ export function useLiveKitRoom(): LiveKitRoom {
     const me = roomRef.current?.localParticipant;
     const track = me?.getTrackPublication(Track.Source.Microphone)?.track;
     if (me && track) await me.unpublishTrack(track as LocalAudioTrack, true);
+    closeGate();
+    setMicInput(undefined);
     sync();
   }, [sync]);
   const applyVoice = useCallback(async (prefs: VoicePrefs) => {
@@ -607,7 +643,10 @@ export function useLiveKitRoom(): LiveKitRoom {
       | (LocalAudioTrack & { restartTrack?: (o: unknown) => Promise<void> })
       | undefined;
     await track?.restartTrack?.(micCaptureOptions(prefs));
+    // Another mic: the meter follows it (the gate is handed the new one by LiveKit).
+    if (track) setMicInput(gateRef.current?.gate.input ?? track.mediaStreamTrack);
   }, []);
+  const setVoiceLine = useCallback((line: number) => gateRef.current?.gate.setLine(line), []);
 
   // The camera being sent is the one in use, whatever was saved.
   const sentCamera = (local.camera as LocalVideoTrack | undefined)?.mediaStreamTrack?.getSettings?.().deviceId;
@@ -685,6 +724,8 @@ export function useLiveKitRoom(): LiveKitRoom {
     startVoice,
     stopVoice,
     applyVoice,
+    setVoiceLine,
+    micInput,
     mics,
   };
 }
