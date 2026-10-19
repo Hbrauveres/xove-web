@@ -21,7 +21,7 @@ import type { Hearing } from "./HearToggles";
 import { ViewerBar, type Sound } from "./ViewerBar";
 import { MicIcon, MicOffIcon } from "./icons";
 import round from "./RoundButton.module.css";
-import { liftButtons, makeRoom, ROOM_GAP as SHEET_GAP } from "./makeRoom";
+import { liftButtons, liftOverRow, makeRoom, ROOM_GAP as SHEET_GAP } from "./makeRoom";
 import { AlsoLive } from "./AlsoLive";
 import { Ambilight } from "./Ambilight";
 import { CornerGlow } from "./CornerGlow";
@@ -540,13 +540,13 @@ export function Stage({
       const chrome = screenChromeRef.current;
       const bar = chrome?.querySelector<HTMLElement>("[data-viewer-bar], [data-buttons]");
       if (!rowShown || !row || !chrome || !bar) return stage.style.removeProperty("--row-lift");
-      // In layout: the row's content (under its fade), and where the buttons sit unlifted.
+      // In layout: where the buttons sit unlifted, from the screen's bottom; the lift is the rest.
       const lift = parseFloat(stage.style.getPropertyValue("--row-lift")) || 0;
-      const content = row.offsetHeight - parseFloat(getComputedStyle(row).paddingTop);
       let top = 0;
       for (let n: HTMLElement | null = bar; n && n !== chrome; n = n.offsetParent as HTMLElement | null) top += n.offsetTop;
       const under = parseFloat(getComputedStyle(chrome).bottom) - lift + (chrome.clientHeight - top - bar.offsetHeight);
-      stage.style.setProperty("--row-lift", `${Math.max(0, Math.round(content + 6 - under))}px`);
+      const fade = parseFloat(getComputedStyle(row).paddingTop);
+      stage.style.setProperty("--row-lift", `${liftOverRow({ row: row.offsetHeight, fade, under })}px`);
     };
     place();
     window.addEventListener("resize", place);

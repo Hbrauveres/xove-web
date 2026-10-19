@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { liftButtons, makeRoom, ROOM_GAP } from "./makeRoom";
+import { liftButtons, liftOverRow, makeRoom, ROOM_GAP, ROW_GAP } from "./makeRoom";
 
 // The upright full view of a 440 × 956 phone: a 48 px top bar, a sheet over 58% of it.
 const screen = { height: 956, bar: 48, sheet: Math.round(956 * 0.58) };
@@ -41,5 +41,17 @@ describe("the round buttons in the upright normal view (spec 0118)", () => {
   it("stop at the player's top edge rather than leave it", () => {
     expect(liftButtons({ rowBottom: 600, sheetTop: 100, max: 300 })).toBe(300);
     expect(liftButtons({ rowBottom: 600, sheetTop: 400, max: 300 })).toBe(600 - (400 - ROOM_GAP));
+  });
+});
+
+describe("lifting the buttons above the open streams row (spec 0131, design decision 15)", () => {
+  it("puts them 6 px above the row's pictures, not its fade", () => {
+    // A row 141 px tall with a 34 px fade on top; the buttons sit 19 px up.
+    expect(liftOverRow({ row: 141, fade: 34, under: 19 })).toBe(141 - 34 + ROW_GAP - 19);
+    expect(ROW_GAP).toBe(6);
+  });
+
+  it("never moves them down when they're already above it", () => {
+    expect(liftOverRow({ row: 80, fade: 34, under: 60 })).toBe(0);
   });
 });

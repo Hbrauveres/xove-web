@@ -2613,6 +2613,18 @@ describe("room: on a phone sideways (spec 0160)", () => {
   }
   const row = () => screen.queryByRole("region", { name: /Live now/ });
 
+  it("puts the stage's buttons on the screen, clear of the arrow, Go live in the empty corner (spec 0131, AC-6)", async () => {
+    await sidewaysWith(["Marina", "Rafa"], true);
+    await screen.findByRole("heading", { level: 2, name: "Marina · Screen" });
+    const sound = await within(stageLayer()).findByRole("button", { name: "Mute the screen's sound" });
+    // Not the player's: the screen's own layer, at its bottom like the arrow.
+    expect(stageLayer().querySelector("video")!.closest("[data-chrome]")!.contains(sound)).toBe(false);
+    expect(stageLayer()).toHaveAttribute("data-row-arrow");
+    // A phone held sideways has no fullscreen button: Go live takes its corner.
+    expect(within(stageLayer()).queryByRole("button", { name: /fullscreen/i })).toBeNull();
+    expect(stageLayer()).toHaveAttribute("data-no-full");
+  });
+
   it("has no header, logo or footer; the top line has who's on the stage and my buttons", async () => {
     const { view } = await sidewaysWith(["Marina", "Rafa"]);
     expect(await screen.findByRole("heading", { level: 2, name: "Marina · Screen" })).toBeInTheDocument();
