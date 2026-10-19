@@ -20,7 +20,7 @@
   /* Room inside the scroll box for a stacked picture's peek above (spec 0131), taken back by the
      margins so nothing else moves. */
   margin: -6px 0 -8px;
-  padding: 6px 6px 8px 0;
+  padding: 6px 0 8px;
   list-style: none;
   overflow-x: auto;
 }
