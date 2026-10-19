@@ -56,27 +56,40 @@ export function PreviewTray({
 }) {
   const { open, busy, leave, stay, close } = tray;
   const ref = useRef<HTMLDivElement>(null);
-  const [place, setPlace] = useState<{ left: number; width: number; top?: number; bottom?: number } | null>(null);
+  // Under the preview or above it: chosen once, as it opens, with room for a slider.
+  const [side, setSide] = useState<"below" | "above" | null>(null);
   useLayoutEffect(() => {
     if (!open) return;
-    // Under the preview or above it: chosen once, as it opens, with room for a slider.
     let below: boolean | null = null;
-    const measure = () => {
+    let frame = 0;
+    // Glued to its preview on every frame while open (one measure a frame), so nothing that moves
+    // the preview (the strip scrolling, the page settling) leaves the row behind.
+    const place = () => {
+      const el = ref.current;
+      if (!el) return;
+      // The whole preview, with the picture peeking out behind a stacked one, so the row is centred
+      // on what is seen.
       const r = open.anchor.getBoundingClientRect();
+      const back = open.anchor.querySelector("[data-behind]")?.getBoundingClientRect();
+      const left = Math.min(r.left, back?.left ?? r.left);
+      const right = Math.max(r.right, back?.right ?? r.right);
       if (below === null) {
-        const h = (ref.current?.offsetHeight ?? 0) + SLIDER_ROOM;
-        below = r.bottom + GAP + h <= window.innerHeight - EDGE;
+        below = r.bottom + GAP + el.offsetHeight + SLIDER_ROOM <= window.innerHeight - EDGE;
+        setSide(below ? "below" : "above");
       }
-      setPlace(below ? { left: r.left, width: r.width, top: r.bottom + GAP } : { left: r.left, width: r.width, bottom: window.innerHeight - r.top + GAP });
+      el.style.left = `${left}px`;
+      el.style.width = `${right - left}px`;
+      el.style.top = below ? `${r.bottom + GAP}px` : "";
+      el.style.bottom = below ? "" : `${window.innerHeight - r.top + GAP}px`;
     };
-    measure();
-    // Its height changes as a slider unrolls; the page can move under it.
-    const watch = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(measure);
-    if (ref.current) watch?.observe(ref.current);
-    window.addEventListener("resize", measure);
+    const loop = () => {
+      place();
+      frame = requestAnimationFrame(loop);
+    };
+    loop();
     return () => {
-      watch?.disconnect();
-      window.removeEventListener("resize", measure);
+      cancelAnimationFrame(frame);
+      setSide(null);
     };
   }, [open]);
   // Scrolling the previews moves them away: the row closes. A press elsewhere does too.
@@ -101,9 +114,9 @@ export function PreviewTray({
     <div
       ref={ref}
       className={styles.tray}
-      data-shown={place ? true : undefined}
-      data-up={place?.bottom !== undefined || undefined}
-      style={place ?? { left: -9999, top: 0 }}
+      data-shown={side ? true : undefined}
+      data-up={side === "above" || undefined}
+      style={{ left: -9999, top: 0 }}
       onPointerEnter={stay}
       onPointerLeave={(e) => e.pointerType === "mouse" && leave()}
     >

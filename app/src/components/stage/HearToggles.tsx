@@ -69,7 +69,29 @@ export function HearToggles({
   }, [open]);
   // What the slider sets: the open sound, kept while it rolls up so it doesn't change on the way.
   const [shown, setShown] = useState<Kind | null>(null);
-  if (open && open !== shown) setShown(open);
+  // The one it replaces shrinks away while the new one grows (spec 0131).
+  // Each one is let go when its own animation ends.
+  const [leaving, setLeaving] = useState<Kind | null>(null);
+  const [entering, setEntering] = useState<Kind | null>(null);
+  if (open && open !== shown) {
+    if (shown) {
+      setLeaving(shown);
+      setEntering(open);
+    }
+    setShown(open);
+  }
+  const iconOf = (kind: Kind) =>
+    kind === "sound" ? (
+      hearing.sound.muted ? (
+        <VolumeOffIcon />
+      ) : (
+        <SoundIcon />
+      )
+    ) : hearing.voice.muted ? (
+      <VoiceOffIcon />
+    ) : (
+      <VoiceIcon />
+    );
   const show = (kind: Kind) => {
     setOpen(kind);
     restart();
@@ -169,19 +191,28 @@ export function HearToggles({
           sets, with a crossfade, so the row never moves under the pointer (spec 0131). */}
       <span className={styles.drawer} data-drawer data-open={open ? true : undefined} inert={!open}>
         <span className={styles.inner}>
+          {leaving && leaving !== shown && (
+            <span
+              key={`out-${leaving}`}
+              className={styles.slider}
+              data-slider
+              data-leaving
+              aria-hidden="true"
+              onAnimationEnd={(e) => e.animationName.includes("shrink") && setLeaving(null)}
+            >
+              {iconOf(leaving)}
+              <Range className={styles.range} min={0} max={1} step={0.05} value={hearing[leaving].volume} readOnly tabIndex={-1} />
+            </span>
+          )}
           {shown && (
-            <span key={shown} className={styles.slider} data-slider>
-              {shown === "sound" ? (
-                hearing.sound.muted ? (
-                  <VolumeOffIcon />
-                ) : (
-                  <SoundIcon />
-                )
-              ) : hearing.voice.muted ? (
-                <VoiceOffIcon />
-              ) : (
-                <VoiceIcon />
-              )}
+            <span
+              key={shown}
+              className={styles.slider}
+              data-slider
+              data-entering={entering === shown || undefined}
+              onAnimationEnd={(e) => e.animationName.includes("grow") && setEntering(null)}
+            >
+              {iconOf(shown)}
               <Range
                 className={styles.range}
                 min={0}
