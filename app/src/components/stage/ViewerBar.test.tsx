@@ -46,6 +46,26 @@ describe("the bar over someone else's stream (spec 0123): what I hear", () => {
     expect(screen.getByRole("button", { name: "Mute Bruno's voice" })).toBeInTheDocument();
   });
 
+  it("moving from one sound to the other, the one left closes and the one reached stays open (spec 0133)", () => {
+    vi.useFakeTimers();
+    render(<Bruno />);
+    const sound = screen.getByRole("button", { name: "Mute the screen's sound" });
+    const voice = screen.getByRole("button", { name: "Mute Bruno's voice" });
+    const isOpen = (name: string) => screen.getByRole("slider", { name }).closest("[inert]") === null;
+    fireEvent.pointerEnter(sound.parentElement!, { pointerType: "mouse" });
+    act(() => vi.advanceTimersByTime(150));
+    expect(isOpen("Screen sound volume")).toBe(true);
+
+    fireEvent.pointerLeave(sound.parentElement!, { pointerType: "mouse" });
+    fireEvent.pointerEnter(voice.parentElement!, { pointerType: "mouse" });
+    act(() => vi.advanceTimersByTime(150));
+    expect(isOpen("Bruno's voice volume")).toBe(true);
+    // The screen's sound's grace runs out: it mustn't close the voice's.
+    act(() => vi.advanceTimersByTime(400));
+    expect(isOpen("Bruno's voice volume")).toBe(true);
+    expect(isOpen("Screen sound volume")).toBe(false);
+  });
+
   it("opens a sound's slider when Tab reaches it, and Enter mutes it", async () => {
     const user = userEvent.setup();
     render(<Bruno />);

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type Dispatch, type ReactNode, type SetStateAction } from "react";
 import type { StreamKind } from "../../types";
 import { Range } from "../ui/Range";
 import { showToast } from "../ui/toast";
@@ -199,7 +199,7 @@ function Hear({
   kind: "sound" | "voice";
   s: HearSound;
   open: boolean;
-  setOpen: (k: "sound" | "voice" | null) => void;
+  setOpen: Dispatch<SetStateAction<"sound" | "voice" | null>>;
   canSetVolume: boolean;
   name?: string;
   talking?: boolean;
@@ -210,9 +210,12 @@ function Hear({
   const idle = useRef<number | undefined>(undefined);
   const swallow = useRef(false);
   const pointer = useRef("mouse");
+  // Closes this sound's slider only if it's still the open one: moving on to the other sound, its
+  // timers must not close the slider just opened there (spec 0133).
+  const closeMine = () => setOpen((now) => (now === kind ? null : now));
   const restart = () => {
     window.clearTimeout(idle.current);
-    idle.current = window.setTimeout(() => setOpen(null), IDLE_MS);
+    idle.current = window.setTimeout(closeMine, IDLE_MS);
   };
   const show = () => {
     if (!canSetVolume || s.unavailable) return;
@@ -242,7 +245,7 @@ function Hear({
       onPointerLeave={(e) => {
         if (e.pointerType !== "mouse") return;
         window.clearTimeout(rest.current);
-        leave.current = window.setTimeout(() => open && setOpen(null), 300);
+        leave.current = window.setTimeout(closeMine, 300);
       }}
     >
       {/* Its slider open, its tooltip steps aside. */}
