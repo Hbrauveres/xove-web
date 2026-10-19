@@ -18,6 +18,15 @@
   transform: none;
 }
 
+/* Its fade on top lets presses through, to the buttons lifted above it (spec 0131). */
+.row {
+  pointer-events: none;
+}
+
+.row > * {
+  pointer-events: auto;
+}
+
 .head {
   display: flex;
   align-items: center;

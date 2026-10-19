@@ -182,6 +182,8 @@ function Hear({
   return (
     <span
       className={styles.anchor}
+      // A voice I hear never fades with the controls: its speaking cue stays (spec 0131).
+      data-stays={(kind === "voice" && !s.unavailable && !s.muted) || undefined}
       onPointerEnter={(e) => {
         if (e.pointerType !== "mouse") return;
         window.clearTimeout(leave.current);

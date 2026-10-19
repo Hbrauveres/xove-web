@@ -260,14 +260,26 @@ export function Stage({
       watch?.disconnect();
     };
   }, [makingRoom, roomInPlayer]);
+  // The keyboard's focus keeps the controls; a finger's tap leaves focus on the button it pressed,
+  // and that one mustn't keep them up for good (spec 0131).
+  const keyboardFocus = () => {
+    try {
+      return document.activeElement?.matches(":focus-visible") ?? false;
+    } catch {
+      return true;
+    }
+  };
   const focusInside = () =>
     held.current.size > 0 ||
-    (frameRef.current?.contains(document.activeElement) ?? false) ||
-    (topRef.current?.contains(document.activeElement) ?? false) ||
-    (screenChromeRef.current?.contains(document.activeElement) ?? false) ||
+    (keyboardFocus() && (frameRef.current?.contains(document.activeElement) ?? false)) ||
+    (keyboardFocus() && (topRef.current?.contains(document.activeElement) ?? false)) ||
+    (keyboardFocus() && (screenChromeRef.current?.contains(document.activeElement) ?? false)) ||
     Boolean(topRef.current?.querySelector('[aria-expanded="true"]'));
+  // An open streams row stays through the idle fade; only a tap hides it, with everything (spec 0131).
+  const [rowAway, setRowAway] = useState(false);
   const showChrome = useCallback(() => {
     setChromeShown(true);
+    setRowAway(false);
     window.clearTimeout(idleTimer.current);
     const fade = () => {
       if (focusInside()) idleTimer.current = window.setTimeout(fade, CHROME_IDLE_MS);
@@ -526,6 +538,8 @@ export function Stage({
       stage.style.removeProperty("--arrow-end");
     };
   }, [rowArrow, onScreen, rowOpen]);
+  // Open and not hidden by a tap.
+  const rowShown = rowOpen && !(rowAway && !chromeShown);
   // The streams row open: the buttons rise above it, as above the settings sheet (spec 0131): what
   // comes up from the bottom never covers them.
   useLayoutEffect(() => {
@@ -535,7 +549,7 @@ export function Stage({
       const row = stage.querySelector<HTMLElement>("[data-streams-row]");
       const chrome = screenChromeRef.current;
       const bar = chrome?.querySelector<HTMLElement>("[data-viewer-bar], [data-buttons]");
-      if (!rowOpen || !row || !chrome || !bar) return stage.style.removeProperty("--row-lift");
+      if (!rowShown || !row || !chrome || !bar) return stage.style.removeProperty("--row-lift");
       // In layout: the row's content (under its fade), and where the buttons sit unlifted.
       const lift = parseFloat(stage.style.getPropertyValue("--row-lift")) || 0;
       const content = row.offsetHeight - parseFloat(getComputedStyle(row).paddingTop);
@@ -547,7 +561,7 @@ export function Stage({
     place();
     window.addEventListener("resize", place);
     return () => window.removeEventListener("resize", place);
-  }, [rowOpen, sideways, onScreen]);
+  }, [rowShown, sideways, onScreen]);
   const rowSwipe = useStageSwipe(slideRef, {
     enabled: sideways && Boolean(big),
     axis: "vertical",
@@ -593,6 +607,7 @@ export function Stage({
         if (t.shown && playing) {
           window.clearTimeout(idleTimer.current);
           setChromeShown(false);
+          setRowAway(true);
         } else showChrome();
       }
       swipe.onPointerUp(e);
@@ -746,6 +761,7 @@ export function Stage({
       data-chrome={sideways ? chrome : undefined}
       data-row-arrow={rowArrow || undefined}
       data-no-full={(sideways && fullView?.hidden) || undefined}
+      data-row-away={(rowAway && !chromeShown) || undefined}
       aria-label="Shared screen"
       {...(sideways ? gestures : {})}
     >

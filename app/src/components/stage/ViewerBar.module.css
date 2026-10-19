@@ -28,6 +28,25 @@
   display: inline-grid;
 }
 
+/* Fading with the controls, part by part (spec 0131): a heard voice stays for its speaking cue,
+   alone in the corner, the sound beside it folding away. */
+.left > *,
+.right > * {
+  transition:
+    opacity 0.25s ease,
+    margin 0.25s ease,
+    background-color 120ms ease,
+    color 120ms ease;
+}
+
+:global([data-chrome="hidden"]:not(:has(:focus-visible))) :is(.left, .right) > :not([data-stays]) {
+  opacity: 0;
+}
+
+:global([data-chrome="hidden"]:not(:has(:focus-visible))) .left > :not([data-stays]):has(~ [data-stays]) {
+  margin-right: -42px;
+}
+
 .round {
   position: relative;
   display: grid;

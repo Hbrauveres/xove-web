@@ -65,7 +65,12 @@
     translate var(--unroll);
 }
 
-.frame[data-chrome="hidden"] .controls {
+/* Fading, part by part: a heard voice stays, for its speaking cue (spec 0131). */
+.controls > * {
+  transition: opacity 0.25s ease;
+}
+
+.frame[data-chrome="hidden"] .controls > :not(:has([data-stays])) {
   opacity: 0;
 }
 
@@ -73,11 +78,11 @@
   pointer-events: none;
 }
 
-.frame[data-chrome="hidden"]:focus-within .controls {
+.frame[data-chrome="hidden"]:has(:focus-visible) .controls > * {
   opacity: 1;
 }
 
-.frame[data-chrome="hidden"]:focus-within .controls :is(button, input) {
+.frame[data-chrome="hidden"]:has(:focus-visible) .controls :is(button, input) {
   pointer-events: auto;
 }
 
@@ -98,7 +103,7 @@
     bottom 0.28s ease;
 }
 
-.stage[data-chrome="hidden"] .screenChrome .controls {
+.stage[data-chrome="hidden"] .screenChrome .controls > :not(:has([data-stays])) {
   opacity: 0;
 }
 
@@ -106,11 +111,11 @@
   pointer-events: none;
 }
 
-.stage[data-chrome="hidden"]:focus-within .screenChrome .controls {
+.stage[data-chrome="hidden"]:has(:focus-visible) .screenChrome .controls > * {
   opacity: 1;
 }
 
-.stage[data-chrome="hidden"]:focus-within .screenChrome :is(button, input) {
+.stage[data-chrome="hidden"]:has(:focus-visible) .screenChrome :is(button, input) {
   pointer-events: auto;
 }
 
@@ -285,11 +290,19 @@
 .stage[data-row-arrow] [data-viewer-bar] {
   left: max(14px + env(safe-area-inset-left, 0px), var(--arrow-end, 0px) + 8px);
   /* With the row: the arrow goes into it as it opens, and the sounds slide back to the edge. */
-  transition: left 0.28s ease;
+  transition:
+    left 0.28s ease,
+    opacity 0.25s ease;
 }
 
-/* The open streams row hides with the controls, and comes back with them (spec 0131). */
-.stage[data-layout="sideways"][data-chrome="hidden"] [data-streams-row] {
+/* Faded, the arrow's gone too: a heard voice slides to the corner (spec 0131). */
+.stage[data-row-arrow][data-chrome="hidden"]:not(:has(:focus-visible)) [data-viewer-bar] {
+  left: calc(14px + env(safe-area-inset-left, 0px));
+}
+
+/* The open streams row stays through the idle fade; a tap hides it with everything, and the next
+   brings it back (spec 0131). */
+.stage[data-layout="sideways"][data-row-away] [data-streams-row] {
   transform: translateY(100%);
   pointer-events: none;
 }
