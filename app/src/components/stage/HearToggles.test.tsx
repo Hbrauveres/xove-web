@@ -34,7 +34,7 @@ describe("a preview's two toggles (spec 0123)", () => {
 
   it("shows what I muted as pressed", () => {
     render(<HearToggles sharer={bruno()} hearing={{ ...HEARD, voice: { volume: 0.7, muted: true } }} onChange={() => {}} />);
-    expect(screen.getByRole("button", { name: "Mute Bruno's voice" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "Unmute Bruno's voice" })).toHaveAttribute("aria-pressed", "true");
   });
 
   it("greys a sound that isn't there in its place, and a touch says why", async () => {
@@ -51,7 +51,7 @@ describe("a preview's two toggles (spec 0123)", () => {
     const { rerender } = render(<HearToggles sharer={bruno({ speaking: true })} hearing={HEARD} onChange={() => {}} />);
     expect(screen.getByRole("button", { name: "Mute Bruno's voice" })).toHaveAttribute("data-talking");
     rerender(<HearToggles sharer={bruno({ speaking: true })} hearing={{ ...HEARD, voice: { volume: 0.7, muted: true } }} onChange={() => {}} />);
-    expect(screen.getByRole("button", { name: "Mute Bruno's voice" })).not.toHaveAttribute("data-talking");
+    expect(screen.getByRole("button", { name: "Unmute Bruno's voice" })).not.toHaveAttribute("data-talking");
     rerender(<HearToggles sharer={bruno({ speaking: false })} hearing={HEARD} onChange={() => {}} />);
     expect(screen.getByRole("button", { name: "Mute Bruno's voice" })).not.toHaveAttribute("data-talking");
   });

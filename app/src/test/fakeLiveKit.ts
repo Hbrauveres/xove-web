@@ -155,7 +155,7 @@ export class FakeLocalMicTrack extends FakeLocalTrack {
   });
 }
 
-/** The fake microphones (`enumerateDevices`, see setup.ts and the harness). */
+/** The fake microphones (`enumerateDevices`, see setup.ts). */
 export const fakeMics = [
   { deviceId: "mic-1", label: "Headset (USB)" },
   { deviceId: "mic-2", label: "MacBook Pro microphone" },

@@ -46,6 +46,17 @@ describe("the bar over someone else's stream (spec 0123): what I hear", () => {
     expect(screen.getByRole("button", { name: "Mute Bruno's voice" })).toBeInTheDocument();
   });
 
+  it("opens a sound's slider when Tab reaches it, and Enter mutes it", async () => {
+    const user = userEvent.setup();
+    render(<Bruno />);
+    await user.tab();
+    const button = screen.getByRole("button", { name: "Mute the screen's sound" });
+    expect(button).toHaveFocus();
+    expect(screen.getByRole("slider", { name: "Screen sound volume" }).closest("[inert]")).toBeNull();
+    await user.keyboard("{Enter}");
+    expect(button).toHaveAttribute("aria-pressed", "true");
+  });
+
   it("opens the slider on a 500 ms hold by touch, and that hold doesn't mute", () => {
     vi.useFakeTimers();
     render(<Bruno />);

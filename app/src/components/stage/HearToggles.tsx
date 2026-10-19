@@ -31,7 +31,7 @@ export function HearToggles({ sharer, hearing, onChange }: { sharer: Sharer; hea
         className={styles.toggle}
         aria-disabled={noSound ? true : undefined}
         aria-pressed={noSound ? undefined : hearing.sound.muted}
-        aria-label={noSound ? `${name}: ${noSound}` : `Mute ${name}'s screen sound`}
+        aria-label={noSound ? `${name}: ${noSound}` : `${hearing.sound.muted ? "Unmute" : "Mute"} ${name}'s screen sound`}
         title={noSound ?? `${name}'s screen sound`}
         onClick={toggle("sound", noSound)}
       >
@@ -43,7 +43,7 @@ export function HearToggles({ sharer, hearing, onChange }: { sharer: Sharer; hea
         data-talking={(!voiceOff && sharer.speaking) || undefined}
         aria-disabled={noVoice ? true : undefined}
         aria-pressed={noVoice ? undefined : hearing.voice.muted}
-        aria-label={noVoice ? `${name}: ${noVoice}` : `Mute ${name}'s voice`}
+        aria-label={noVoice ? `${name}: ${noVoice}` : `${hearing.voice.muted ? "Unmute" : "Mute"} ${name}'s voice`}
         title={noVoice ?? `${name}'s voice`}
         onClick={toggle("voice", noVoice)}
       >

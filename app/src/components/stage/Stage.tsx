@@ -521,16 +521,14 @@ export function Stage({
         <StageNotice spinner title="Starting your share…" text="Your screen shows here in a moment." />
       )
     ) : main.remote ? (
-      <>
-        <ScreenVideo
-          video={main.remote.video}
-          sound={big.sound}
-          label={`${big.person.name}'s ${what(main)}`}
-          volume={bigHearing?.sound.volume ?? watch.volume}
-          muted={bigHearing?.sound.muted ?? watch.muted}
-          onVideo={setBigVideoEl}
-        />
-      </>
+      <ScreenVideo
+        video={main.remote.video}
+        sound={big.sound}
+        label={`${big.person.name}'s ${what(main)}`}
+        volume={bigHearing?.sound.volume ?? watch.volume}
+        muted={bigHearing?.sound.muted ?? watch.muted}
+        onVideo={setBigVideoEl}
+      />
     ) : (
       <StageNotice spinner title={`Loading ${big.person.name}'s ${main.kind}…`} text="The video starts in a moment." />
     );
@@ -652,7 +650,7 @@ export function Stage({
       >
         {/* Behind the frame, outside it: the frame clips what's inside it. */}
         {/* One per stream: a stream the browser won't let it read doesn't darken the next one. */}
-        {/* Nobody live: the viewfinder's corners glow round the stage, as circles (spec 0123). */}
+        {/* Nobody live: each viewfinder corner glows outward, a blurred L (spec 0123, design decision 7). */}
         {!big && <CornerGlow prefs={ambilight} />}
         <Ambilight
           key={big ? `${big.person.id}|${stage.mainKind}|${gridKey(shape)}` : "none"}
@@ -747,7 +745,7 @@ export function Stage({
           <NowWatching sharer={big} watchers={watchers} others={others} />
           <AlsoLive
             others={sharers.filter((s) => s !== big)}
-            liveCount={6 - controls.free}
+            liveCount={STREAM_PLACES - controls.free}
             free={controls.free}
             onPick={(id) => pick(id)}
             hearOf={hearOf}

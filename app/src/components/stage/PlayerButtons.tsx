@@ -6,7 +6,6 @@ import { DropUp } from "../ui/DropUp";
 import drop from "../ui/DropUp.module.css";
 import { Picker } from "../ui/Picker";
 import { showToast } from "../ui/toast";
-import { ButtonSlot } from "./ButtonSlot";
 import { CameraOffIcon, CameraOnIcon, CogIcon, ScreenOffIcon, ScreenOnIcon, ScreenShareIcon, WindowIcon } from "./icons";
 import round from "./RoundButton.module.css";
 import styles from "./PlayerButtons.module.css";
@@ -47,14 +46,12 @@ type Props = {
   onGoTo?: (kind: StreamKind) => void;
   /** A drop-up's list opened or closed: the player keeps its controls shown while one is open. */
   onMenuChange?: (open: boolean) => void;
-  /** What the viewer hears, before my buttons (spec 0101): the volume, while watching someone. */
-  before?: ReactNode;
   /** After my screen and camera, before the cog: my mic (spec 0123). */
   extra?: ReactNode;
 };
 
 /** What the room passes on to my buttons: the stage adds the viewer's part. */
-export type StreamControls = Omit<Props, "onMenuChange" | "before" | "extra">;
+export type StreamControls = Omit<Props, "onMenuChange" | "extra">;
 
 const LABEL: Record<StreamKind, { start: string; stop: string; quick: string }> = {
   screen: { start: "Share your screen", stop: "Stop sharing your screen", quick: "What you share" },
@@ -69,7 +66,7 @@ const SURFACE: Record<ScreenSurface, string> = { window: "A window", browser: "A
  * starts or stops; while one is live, resting the pointer on it unrolls its quick access.
  */
 export function PlayerButtons(props: Props) {
-  const { before, extra, settingsOpen, onSettings } = props;
+  const { extra, settingsOpen, onSettings } = props;
 
   // A button that comes or goes never moves the one under the pointer (spec 0106).
   const { ref: rowRef } = usePinnedRow<HTMLDivElement>();
@@ -78,9 +75,6 @@ export function PlayerButtons(props: Props) {
   return (
     <div className={styles.row}>
       <div className={styles.buttons} ref={rowRef} data-buttons>
-        <ButtonSlot shown={Boolean(before)} side="start">
-          {before}
-        </ButtonSlot>
         {kinds.map((kind) => (
           <StreamButton key={kind} kind={kind} {...props} />
         ))}

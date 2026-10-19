@@ -433,7 +433,7 @@ const canIsolate = () => {
   }
 };
 
-/** The Voice tab (spec 0123, rounds 96 to 100): Microphone (its picker and live level), then Voice processing. */
+/** The Voice tab (spec 0123, design decision 9): the microphone, its level with the line and Test, then Voice processing. */
 function VoiceTab(props: Props & { shown: boolean }) {
   const { voicePrefs, onVoicePrefs, mics = [], localVoice, micInput, shown } = props;
   const level = useMicLevel(micInput, shown);

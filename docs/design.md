@@ -136,8 +136,6 @@ Body line height is 1.5; headings balance their lines (`text-wrap: balance`). Fo
 | What | Duration | Easing |
 | --- | --- | --- |
 | Button hover and press | 120 ms (press moves 1 px down, 80 ms) | ease |
-| A round button coming or going: width and gap | 220 ms | `cubic-bezier(0.2, 0.8, 0.2, 1)` |
-| …its fade | in 160 ms after 80 ms, out 140 ms | ease |
 | The round buttons' row back to the centre, once the pointer leaves | 220 ms | `cubic-bezier(0.2, 0.8, 0.2, 1)` |
 | Slider knob growing | 120 ms | — |
 | Switch knob | 180 ms | ease |
@@ -183,7 +181,7 @@ Body line height is 1.5; headings balance their lines (`text-wrap: balance`). Fo
 - **Which ones:** on my stream, my screen and camera, my mic, and the cog. On a phone, which can't share a screen, the screen button is **greyed out**, not hidden: faded, its crossed icon, and "This browser can't share a screen" as its description. In fullscreen they come along, and any error from starting is drawn over the player.
 - **Unavailable** (a full room, no screen): 45% opacity, with the reason in the tooltip.
 - **A button that opens a panel never also changes a setting** (the cog only opens the settings).
-- **Coming and going without moving what you clicked:** a button that appears or goes opens or closes its width and its gap in 220 ms while it fades (in: 160 ms after 80 ms; out: 140 ms), so its neighbours slide. While a mouse pointer rests on the row, the button under it stays exactly where it is (a touch doesn't stay, so nothing is held); once the pointer leaves, the row glides back to the centre in 220 ms.
+- **Never moving what you clicked:** while a mouse pointer rests on the row, the button under it stays exactly where it is when the row changes width (a touch doesn't stay, so nothing is held); once the pointer leaves, the row glides back to the centre in 220 ms.
 - They fade with the rest of the controls while a stream plays, and come back on any move.
 
 ### What I hear, and Go live
@@ -200,7 +198,7 @@ Body line height is 1.5; headings balance their lines (`text-wrap: balance`). Fo
 ![A sound's own slider, over its button](images/design/hear-slider.png) ![Go live's menu](images/design/go-live.png)
 
 - **At the right, me:** my mic while I'm live (off by default, red while on); while I'm not, a **Go live** pill (a red dot, "Go live") whose menu offers my screen, my camera and the settings. Greyed where they can't start, saying why (a phone's screen; "6 streams are live" in a full room). The settings opened from it open over it.
-- **Who's talking:** the voice button lights while the person speaks: a slim green neon tube (1 px, `#2bcd68` at 85%) with a soft glow inside and out (`#16a34a`), the icon (1.25 px lines) brighter green (`#45e087`); silent, the plain button with the icon at 42%; voice off or muted (by them, or by me), the crossed icon, faded. It lights and goes out in 120 ms, and is still with reduced motion. My own stream never shows it: my mic says it.
+- **Who's talking:** the voice button lights while the person speaks: a slim green neon tube (1 px, `#2bcd68` at 85%) with a soft glow inside and out (`#16a34a`), the icon brighter green (`#45e087`); silent, the plain button with the icon at 42%; voice off or muted (by them, or by me), the crossed icon, faded. It lights and goes out in 120 ms, and is still with reduced motion. My own stream never shows it: my mic says it.
 
 ![The voice lit while Marina speaks](images/design/talking.png)
 
@@ -249,7 +247,7 @@ The settings for what you send, from the cog on my own stream, or from Go live's
 - **Tabs Screen, Camera and Voice**, with a **red marker** that slides under the chosen one and a **red dot** on the tab of what you're sending. **On phones the Screen tab is greyed out**, as anywhere a screen can't be shared: it stays in its place, says why ("This browser can't share a screen"), and the panel opens on Camera.
 - **Screen:** while you share, what's shared and **Change** (and, when the screen has no sound, a line saying how to share it); while you don't, one line saying these are used next time. **No preview**: the stage and the browser's picker already show it. Then Quality and Mode.
 - **Camera:** your camera's preview under its own **Preview** heading, like every other group, centred under it: **LIVE** while it's sent, **"Only you see this"** while it's off (the camera turns on for you alone while the tab is open). Like any app, the browser asks for the camera the first time; refused or missing, the preview's place says so, and how to allow it. Then the camera's picker, Quality and Mode. **Sideways**, the preview is alone in the left column; the camera's picker, Quality and Mode are in the right one.
-- **Voice:** the **Microphone** picker; **Mic level**, one row: my live level on the slim track (faint under the line, green over it, when it's sent), the sensitivity line on it (sound under it isn't sent), and **Test**, a small pill that plays my voice back to me for 5 s ("Stop · 5", counting down; greyed until my voice is on); then **Voice processing**, four [settings rows](#switch): echo cancellation, noise suppression and automatic volume (on), voice isolation (off, greyed where the browser can't). Applied at once, remembered.
+- **Voice:** the **Microphone** picker; **Mic level**, one row: my live level on the slim track (faint under the line, green over it, when it's sent), the sensitivity line on it (sound under it isn't sent), and **Test**, a small pill that plays my voice back to me for 5 s ("Stop · 5", counting down); the level and Test work once my voice is on (the mic is asked for only then), Test greyed until it is; then **Voice processing**, four [settings rows](#switch): echo cancellation, noise suppression and automatic volume (on), voice isolation (off, greyed where the browser can't). Applied at once, remembered.
 
 ![The Voice tab](images/design/voice-tab.png)
 - **No field descriptions**, except where a setting needs a line to make sense. The body scrolls with the app's slim scrollbar, without arrows.
