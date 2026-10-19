@@ -306,8 +306,19 @@
  * sideways screens was assumed here before; the buttons never had it, so it put the button
  * 3 px off in a phone's full view.)
  */
-.stage[data-layout="phone"] [data-overlay] {
+.stage[data-layout="phone"] [data-overlay],
+.stage[data-layout="phone"] .controls {
   --btn: 44px;
+}
+
+/* A narrow stage's compact buttons (spec 0133): the fullscreen button stays level with them. */
+@container (max-width: 359px) {
+  .stage [data-overlay],
+  .stage .controls,
+  .stage[data-layout] [data-overlay],
+  .stage[data-layout] .controls {
+    --btn: 36px;
+  }
 }
 
 /* Sideways with the streams row's arrow at the bottom-left: the sounds start 8 px after it, on the
