@@ -2,8 +2,7 @@ import type { StreamKind } from "../../types";
 import { CameraOnIcon, ScreenOffIcon, ScreenOnIcon } from "./icons";
 import { showToast } from "../ui/toast";
 import styles from "./EmptyStage.module.css";
-import { useEffect, useState } from "react";
-import { StaticNoise, type StaticKind } from "./StaticNoise";
+import { StaticNoise } from "./StaticNoise";
 import { Tooltip } from "../ui/Tooltip";
 
 type Props = {
@@ -18,26 +17,10 @@ type Props = {
  * can't share a screen (phones), the camera comes first and the screen is a small greyed button
  * saying why. Nothing moves.
  */
-/** Draft only (spec 0136): which static the prototype shows, chosen in the harness. */
-function useDraftStatic(): StaticKind | null {
-  const read = () => {
-    const v = document.documentElement.dataset.emptyStatic ?? "waves";
-    return v === "off" ? null : (v as StaticKind);
-  };
-  const [kind, setKind] = useState(read);
-  useEffect(() => {
-    const seen = new MutationObserver(() => setKind(read()));
-    seen.observe(document.documentElement, { attributes: true, attributeFilter: ["data-empty-static"] });
-    return () => seen.disconnect();
-  }, []);
-  return kind;
-}
-
 export function EmptyStage({
   canShareScreen = true,
   onStart,
 }: Props) {
-  const staticKind = useDraftStatic();
   const screen = (
     <Tooltip text={canShareScreen ? undefined : "This browser can't share a screen"}>
       <button
@@ -66,7 +49,7 @@ export function EmptyStage({
   );
   return (
     <div className={styles.empty} data-empty>
-      {staticKind && typeof HTMLCanvasElement !== "undefined" && !navigator.userAgent.includes("jsdom") && <StaticNoise kind={staticKind} />}
+      <StaticNoise />
       {(["tl", "tr", "bl", "br"] as const).map((at) => (
         <span key={at} className={styles.corner} data-at={at} data-mark={at} aria-hidden="true" />
       ))}

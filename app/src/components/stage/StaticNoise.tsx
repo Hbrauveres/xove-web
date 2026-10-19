@@ -1,21 +1,17 @@
 import { useEffect, useRef } from "react";
 import styles from "./StaticNoise.module.css";
 
-export type StaticKind = "waves" | "bands";
-
-/** One grain of static is this many CSS pixels: a fine grain, still little to draw. */
-const GRAIN = 2;
-/** Static flickers at this rate: slow enough to be easy on the eye, and little work. */
-const FPS = 12;
+/** One grain of static is this many CSS pixels: a coarse, old-TV grain, and little to draw. */
+const GRAIN = 3;
+/** Static flickers at this rate; more is wasted on a faded background. */
+const FPS = 20;
 
 /**
- * A TV's static behind the empty stage (spec 0136, draft): dark and faded so it never competes with
- * the way to start. `waves` is snow with a tall interference band of chevron rows, bent by a wide
- * wave, drifting slowly down;
- * `bands` is snow in soft horizontal bands that roll slowly. Near a mouse the static stirs: brighter,
- * its rows torn sideways, settling once the mouse rests. Still for reduced motion.
+ * A TV's static behind the empty stage (spec 0136): snow in horizontal bands that roll and breathe,
+ * dark and faded so it never competes with the way to start. Near a mouse the static stirs:
+ * brighter, its rows torn sideways, settling once the mouse rests. Still for reduced motion.
  */
-export function StaticNoise({ kind }: { kind: StaticKind }) {
+export function StaticNoise() {
   const canvas = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const el = canvas.current;
@@ -58,26 +54,17 @@ export function StaticNoise({ kind }: { kind: StaticKind }) {
       const s = t / 1000;
       const reach = Math.max(18, h * 0.28);
       for (let y = 0; y < h; y++) {
-        let g: number;
-        if (kind === "bands") {
-          // Soft bands of different widths rolling slowly down, never far from the snow round them.
-          const a = Math.sin((y / h) * 38 - s * 0.5) * 0.5 + 0.5;
-          const b = Math.sin((y / h) * 13 + s * 0.2) * 0.5 + 0.5;
-          g = 0.28 + 0.72 * Math.pow(a * 0.6 + b * 0.4, 1.4);
-        } else {
-          g = 0.8;
-        }
+        // Bands of different widths rolling down: bright ones with clear edges, dark gaps between.
+        const a = Math.sin(y * 0.09 - s * 1.1) * 0.5 + 0.5;
+        const b = Math.sin(y * 0.027 + s * 0.4) * 0.5 + 0.5;
+        const m = a * 0.55 + b * 0.45;
+        const edge = Math.min(1, Math.max(0, (m - 0.42) / 0.16));
+        const g = 0.12 + 0.88 * edge * edge * (3 - 2 * edge);
         gain[y] = g;
         // The mouse tears the rows near its own sideways, settling as it rests.
         const near = Math.max(0, 1 - Math.abs(y - pointer.y) / reach) * pointer.stir;
         tear[y] = Math.round(near * near * 10 * Math.sin(y * 0.9 + s * 30));
       }
-      // The interference for `waves`: rows of chevrons in a tall band that drifts slowly down, bent
-      // by a wide, slow wave across the picture.
-      const band = ((s * 0.025 + 0.5) % 1.6) * h - h * 0.3;
-      const bandH = Math.max(24, h * 0.32);
-      const bend = h * 0.09;
-      const rowH = Math.max(10, h * 0.07);
       const glow = Math.max(24, Math.min(w, h) * 0.35);
       for (let y = 0; y < h; y++) {
         const row = y * w;
@@ -89,16 +76,6 @@ export function StaticNoise({ kind }: { kind: StaticKind }) {
           seed ^= seed >>> 17;
           seed ^= seed << 5;
           let v = (seed >>> 24) * gain[y];
-          if (kind === "waves") {
-            const yw = y + Math.sin((x / w) * 6 + s * 0.35) * bend;
-            const dy = yw - band;
-            if (Math.abs(dy) < bandH) {
-              const e = Math.cos((dy / bandH) * Math.PI) * 0.5 + 0.5;
-              const local = (((yw % rowH) + rowH) % rowH) / rowH - 0.5;
-              const chevron = Math.sin((x / w) * 70 + Math.abs(local) * 7 - s * 1.2) * 0.5 + 0.5;
-              v *= 1 - e * 0.9 * (1 - chevron) + e * 0.45 * chevron;
-            }
-          }
           // Round the mouse, the static gathers: brighter, fading with distance.
           if (pointer.stir > 0.02) {
             const dx = x - pointer.x;
@@ -128,7 +105,7 @@ export function StaticNoise({ kind }: { kind: StaticKind }) {
       resized.disconnect();
       window.removeEventListener("pointermove", moved);
     };
-  }, [kind]);
+  }, []);
   return (
     <span className={styles.static} aria-hidden="true">
       <canvas ref={canvas} className={styles.canvas} />
