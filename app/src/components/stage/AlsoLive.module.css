@@ -63,6 +63,11 @@
   width: 128px;
 }
 
+/* A stacked preview's peek takes its own room, so the gap to the next one stays 10 px. */
+.item[data-stacked] {
+  margin-right: 6px;
+}
+
 .preview {
   display: block;
   width: 100%;

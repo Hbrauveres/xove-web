@@ -8,7 +8,7 @@
 /* In the row under a small preview: a little bigger, the row's own glass. */
 .toggles[data-layout="tray"] {
   box-sizing: border-box;
-  gap: 6px;
+  gap: 0;
   padding: 4px;
   border: 1px solid var(--panel-line);
   background: var(--panel);
@@ -35,6 +35,12 @@
 .buttons {
   display: inline-flex;
   gap: inherit;
+}
+
+/* In the row, the space to the slider is the slider's own padding: closed, the buttons sit in the
+   middle (spec 0131). */
+.toggles[data-layout="tray"] .buttons {
+  gap: 6px;
 }
 
 /* Under a small preview: one width, the preview's, whatever is open (spec 0131). */
@@ -76,7 +82,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 8px 2px;
+  padding: 8px 8px 4px;
   color: var(--text);
 }
 
