@@ -1130,6 +1130,22 @@ describe("room: the player on touch screens and keyboards", () => {
     expect(frame).toHaveAttribute("data-chrome", "hidden");
   });
 
+  it("toggles the controls with a tap on the box beside the picture, the dark sides included (spec 0133, AC-3)", async () => {
+    const { frame } = await watchBruno();
+    // The box itself, outside the picture's view: what a tap next to a tall picture lands on.
+    expect(frame.querySelector("video")).not.toBeNull();
+    const view = frame.querySelector("video")!.closest("div[class]")!;
+    expect(view.contains(frame)).toBe(false);
+    const tapBox = () => {
+      fireEvent.pointerDown(frame, { pointerType: "touch", clientX: 5, clientY: 5 });
+      fireEvent.pointerUp(frame, { pointerType: "touch", clientX: 5, clientY: 5 });
+    };
+    tapBox();
+    expect(frame).toHaveAttribute("data-chrome", "shown");
+    tapBox();
+    expect(frame).toHaveAttribute("data-chrome", "hidden");
+  });
+
   it("keeps the controls while one of them has the keyboard focus", async () => {
     const { frame } = await watchBruno();
 
