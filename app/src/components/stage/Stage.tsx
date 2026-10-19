@@ -261,14 +261,19 @@ export function Stage({
     };
   }, [makingRoom, roomInPlayer]);
   // The keyboard's focus keeps the controls; a finger's tap leaves focus on the button it pressed,
-  // and that one mustn't keep them up for good (spec 0131).
-  const keyboardFocus = () => {
-    try {
-      return document.activeElement?.matches(":focus-visible") ?? false;
-    } catch {
-      return true;
-    }
-  };
+  // and that one mustn't keep them up for good (spec 0131). Which came last: a key or a press.
+  const pressed = useRef(false);
+  useEffect(() => {
+    const press = () => (pressed.current = true);
+    const key = () => (pressed.current = false);
+    document.addEventListener("pointerdown", press, true);
+    document.addEventListener("keydown", key, true);
+    return () => {
+      document.removeEventListener("pointerdown", press, true);
+      document.removeEventListener("keydown", key, true);
+    };
+  }, []);
+  const keyboardFocus = () => !pressed.current;
   const focusInside = () =>
     held.current.size > 0 ||
     (keyboardFocus() && (frameRef.current?.contains(document.activeElement) ?? false)) ||
