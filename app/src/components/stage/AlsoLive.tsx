@@ -1,7 +1,11 @@
 import type { LiveFeed, Sharer } from "../../types";
 import { Avatar } from "../ui/Avatar";
 import { ScreenVideo } from "./ScreenVideo";
+import { stackOf, useHold, useSwapping } from "./stack";
 import { HearToggles, type Hearing } from "./HearToggles";
+import { PreviewTray } from "./PreviewTray";
+import { usePreviewTray } from "./usePreviewTray";
+import { useKeyboardLast } from "../../hooks/useTapToggle";
 import { seatsOpen } from "./NowWatching";
 import styles from "./AlsoLive.module.css";
 
@@ -16,6 +20,9 @@ type Props = {
   /** What I hear from each person, and muting it from their preview (spec 0123). */
   hearOf: (personId: string) => Hearing;
   onHear: (personId: string, hearing: Hearing) => void;
+  /** Whether a person's preview shows their camera instead of their screen, and swapping it (spec 0131). */
+  swappedOf?: (personId: string) => boolean;
+  onSwap?: (personId: string) => void;
 };
 
 const kindOf = (feed: LiveFeed) => (feed.kind === "camera" ? "camera" : "screen");
@@ -23,31 +30,85 @@ const kindOf = (feed: LiveFeed) => (feed.kind === "camera" ? "camera" : "screen"
 /**
  * The right of the info row (specs 0104 and 0107): the other live streams as small previews (a
  * click puts one on the stage), then the seats as six dots, red for each stream live (spec 0123).
- * Past their room the previews scroll; the box stays put, and goes when nothing is free. Previews
- * are silent; each carries that person's two toggles, their sound and their voice (spec 0123).
+ * Past their room the previews scroll; the box stays put, and goes when nothing is free. Pointing
+ * at a preview (or holding it) opens its row of buttons, to hear that person while they stay small
+ * and swap their screen and camera (spec 0131).
  */
-export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear }: Props) {
+export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swappedOf, onSwap }: Props) {
+  // A small preview's row (spec 0131): pointing at it opens it, a finger's hold pins it.
+  const tray = usePreviewTray();
+  const keyboardLast = useKeyboardLast();
+  const hold = useHold();
+  // A swap plays for a moment: the two pictures trade places.
+  const [swapping, setSwapping] = useSwapping();
   return (
     <section className={styles.also} aria-label="Also live">
       <ul className={styles.strip} aria-label="Other streams">
         {others.map((s) => {
-          const feed = s.screen ?? s.camera;
-          if (!feed) return null;
           const id = s.person.id;
+          const { both, feed, video, back, backVideo } = stackOf(s, Boolean(swappedOf?.(id)));
+          if (!feed) return null;
           const what = kindOf(feed);
-          // My own stream plays from my browser; someone else's from LiveKit, once it arrives.
-          const video = s.isMe ? feed.local : feed.remote?.video;
           const name = s.isMe ? "You" : s.person.name;
           const whose = s.isMe ? "your" : `${s.person.name}'s`;
+          // Their voice heard while they speak: the picture's ring lights, or the button does while the
+          // row is open (spec 0131).
+          const talking = !s.isMe && s.hasVoice && s.speaking && !hearOf(id).voice.muted && tray.open?.id !== id;
           return (
-            <li key={id} className={styles.item}>
+            <li
+              key={id}
+              className={styles.item}
+              data-person={id}
+              data-stacked={both || undefined}
+              data-open={tray.open?.id === id || undefined}
+              data-swapping={swapping === id || undefined}
+              data-talking={talking || undefined}
+              onPointerEnter={(e) => {
+                if (e.pointerType === "mouse" && (!s.isMe || both)) tray.show(id, e.currentTarget);
+              }}
+              onPointerLeave={(e) => {
+                if (e.pointerType === "mouse") tray.leave();
+              }}
+              onPointerDown={(e) => {
+                if (e.pointerType === "mouse" || (s.isMe && !both)) return;
+                const li = e.currentTarget;
+                hold.start(() => tray.show(id, li, true));
+              }}
+              onPointerUp={hold.cancel}
+              onPointerCancel={hold.cancel}
+              onContextMenu={(e) => e.preventDefault()}
+            >
+              {/* Someone sharing a screen and a camera: the other picture peeks out behind. */}
+              {both && (
+                <span className={styles.behind} aria-hidden="true">
+                  {backVideo && <ScreenVideo key={back!.kind} video={backVideo} label="" />}
+                </span>
+              )}
               <button
                 type="button"
                 className={styles.preview}
                 aria-label={`Watch ${whose} ${what}`}
-                onClick={() => onPick(id)}
+                // By keyboard, focusing a preview opens its row, and Tab goes into it (spec 0131).
+                onFocus={(e) => {
+                  if (keyboardLast() && (!s.isMe || both)) tray.show(id, e.currentTarget.closest("li")!);
+                }}
+                onBlur={(e) => {
+                  const to = e.relatedTarget as Element | null;
+                  if (!to?.closest(`[data-tray-for="${id}"]`)) tray.leave();
+                }}
+                onKeyDown={(e) => {
+                  if (e.key !== "Tab" || e.shiftKey || tray.open?.id !== id) return;
+                  const first = document.querySelector<HTMLElement>(`[data-tray-for="${id}"]:not([data-leaving]) button`);
+                  if (!first) return;
+                  e.preventDefault();
+                  first.focus();
+                }}
+                onClick={() => {
+                  // The click that ends the hold opening the row isn't a tap on the preview.
+                  if (!hold.swallow()) onPick(id);
+                }}
               >
-                <span className={styles.video}>
+                <span className={styles.video} data-picture>
                   {video ? (
                     <ScreenVideo
                       video={video}
@@ -62,16 +123,40 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear }: Pr
                   {name} · {what}
                 </span>
               </button>
-              {/* Their sound and voice, muted or not for me without opening them (spec 0123). */}
-              {!s.isMe && (
-                <span className={styles.sound}>
-                  <HearToggles sharer={s} hearing={hearOf(id)} onChange={(h) => onHear(id, h)} />
-                </span>
-              )}
             </li>
           );
         })}
       </ul>
+      {/* Too small for buttons on the picture (spec 0131): the open preview's row, floating. */}
+      <PreviewTray
+        tray={tray}
+        render={(id) => {
+          const s = others.find((o) => o.person.id === id);
+          const both = Boolean(s?.screen && s?.camera);
+          // My own preview: only its swap, when I share both.
+          if (!s || (s.isMe && !both)) return null;
+          return (
+            <HearToggles
+              sharer={s}
+              hearing={hearOf(id)}
+              onChange={(h) => onHear(id, h)}
+              layout="tray"
+              swap={
+                both && onSwap
+                  ? {
+                      on: Boolean(swappedOf?.(id)),
+                      onSwap: () => {
+                        setSwapping(id);
+                        onSwap(id);
+                      },
+                    }
+                  : undefined
+              }
+              onActive={id === tray.open?.id ? tray.setBusy : undefined}
+            />
+          );
+        }}
+      />
       {free > 0 && (
         // The six seats as dots, red for each stream live (spec 0123); gone when all are taken.
         <p

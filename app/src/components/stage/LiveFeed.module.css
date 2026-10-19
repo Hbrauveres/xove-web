@@ -80,3 +80,58 @@
   bottom: 10px;
   z-index: 1;
 }
+
+/* A screen and a camera (spec 0131): the other picture peeks out above, narrower, faded, like a
+   deck; the card takes the room it needs, so the gap to the one above stays. */
+.card[data-stacked] {
+  padding-top: 6px;
+}
+
+.behind {
+  position: absolute;
+  top: -6px;
+  left: 12px;
+  right: 12px;
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgba(235, 235, 236, 0.28);
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(22, 22, 23, 0.9);
+  pointer-events: none;
+}
+
+.behind video {
+  object-fit: cover;
+  background: transparent;
+  opacity: 0.5;
+}
+
+/* A swap: the front picture comes forward from behind, the back one drops behind. */
+@keyframes swap-front {
+  from {
+    transform: translateY(-6px) scale(0.96);
+    opacity: 0.5;
+  }
+}
+
+@keyframes swap-back {
+  from {
+    transform: translateY(6px) scale(1.04);
+    opacity: 1;
+  }
+}
+
+.card[data-swapping] .picture {
+  animation: swap-front 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.card[data-swapping] .behind {
+  animation: swap-back 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card[data-swapping] .picture,
+  .card[data-swapping] .behind {
+    animation: none;
+  }
+}

@@ -1,0 +1,46 @@
+/* A small preview's row (spec 0131), floating over the page at the preview's width. */
+/* It unrolls from the preview's edge and rolls back into it, as the stage's own sliders do: rolled
+   up, it is clipped to its edge next to the preview. The open clip reaches past the box, so the
+   shadow shows. */
+.tray {
+  position: fixed;
+  z-index: 40;
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  clip-path: inset(-24px -24px calc(100% + 24px) -24px round 16px);
+}
+
+/* Moving only while it shows or leaves, never while it is being placed. */
+.tray[data-shown],
+.tray[data-leaving] {
+  transition:
+    clip-path var(--unroll),
+    opacity 200ms ease;
+}
+
+.tray[data-up] {
+  clip-path: inset(calc(100% + 24px) -24px -24px -24px round 16px);
+}
+
+/* Above the preview, the slider opens above the buttons: the buttons stay next to the preview,
+   where the pointer is, and never move under it. */
+.tray[data-up] :global([data-drawer]) {
+  order: -1;
+}
+
+.tray[data-up] :global([data-slider]) {
+  padding-block: 4px 8px;
+}
+
+.tray[data-shown] {
+  opacity: 1;
+  clip-path: inset(-24px -24px -24px -24px round 16px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tray[data-shown],
+  .tray[data-leaving] {
+    transition: none;
+  }
+}

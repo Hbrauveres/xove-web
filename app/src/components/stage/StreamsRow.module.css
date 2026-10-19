@@ -18,6 +18,15 @@
   transform: none;
 }
 
+/* Its fade on top lets presses through, to the buttons lifted above it (spec 0131). */
+.row {
+  pointer-events: none;
+}
+
+.row > * {
+  pointer-events: auto;
+}
+
 .head {
   display: flex;
   align-items: center;
@@ -45,7 +54,9 @@
   display: flex;
   gap: 8px;
   margin: 0;
-  padding: 0 16px;
+  /* Room inside the scroll box for a stacked picture's peek (spec 0131). */
+  margin-top: -5px;
+  padding: 5px 21px 0 16px;
   list-style: none;
   overflow-x: auto;
   scrollbar-width: none;
@@ -57,10 +68,57 @@
   flex: none;
 }
 
+/* A person with a screen and a camera: their second picture peeks out behind, like a deck. */
+.behind {
+  position: absolute;
+  top: -4px;
+  left: 5px;
+  right: -5px;
+  height: calc(112px * 9 / 16);
+  border: 1px solid rgba(235, 235, 236, 0.28);
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(22, 22, 23, 0.9);
+  pointer-events: none;
+}
+
+.behind video {
+  object-fit: cover;
+  background: transparent;
+  opacity: 0.5;
+}
+
+/* A swap (spec 0131): the front picture comes forward from behind, the back one drops behind. */
+@keyframes swap-front {
+  from {
+    transform: translate(5px, -4px) scale(0.96);
+    opacity: 0.5;
+  }
+}
+
+@keyframes swap-back {
+  from {
+    transform: translate(-5px, 4px) scale(1.04);
+    opacity: 1;
+  }
+}
+
+.item[data-swapping] .picture {
+  animation: swap-front 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.item[data-swapping] .behind {
+  animation: swap-back 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* A held picture's buttons (spec 0131), over its lower part: no room under the row. */
 .hear {
   position: absolute;
-  top: 4px;
   left: 4px;
+  right: 4px;
+  bottom: 4px;
+  display: flex;
+  justify-content: center;
 }
 
 .picture {
@@ -75,6 +133,31 @@
   overflow: hidden;
   background: #000;
   cursor: pointer;
+}
+
+/* Their voice heard while they speak: the speaking cue around the picture, as on their voice
+   button (spec 0131). */
+.picture::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transition: box-shadow 120ms ease;
+  pointer-events: none;
+}
+
+.picture {
+  transition: box-shadow 120ms ease;
+}
+
+.item[data-talking] .picture {
+  box-shadow: 0 0 6px 0 rgba(22, 163, 74, 0.35);
+}
+
+.item[data-talking] .picture::after {
+  box-shadow:
+    inset 0 0 0 1px rgba(43, 205, 104, 0.85),
+    inset 0 0 4px rgba(22, 163, 74, 0.45);
 }
 
 .picture video {
@@ -118,7 +201,8 @@
 .toggle {
   position: absolute;
   left: calc(14px + env(safe-area-inset-left, 0px));
-  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  /* Centred on the round buttons' row (48 px, 12 px up), as the sounds beside it. */
+  bottom: calc(12px + (48px - 36px) / 2 + env(safe-area-inset-bottom, 0px));
   z-index: 4;
 }
 

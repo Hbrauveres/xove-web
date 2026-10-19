@@ -1113,14 +1113,21 @@ describe("room: the player on touch screens and keyboards", () => {
     return { view, frame: video.closest("[data-chrome]")! };
   };
 
-  it("keeps the controls after a tap, so they can be tapped", async () => {
+  it("shows the controls on a tap and hides them on the next; a tap on a button only presses it (spec 0131, AC-7)", async () => {
     const { frame } = await watchBruno();
+    const tap = (on: Element) => {
+      fireEvent.pointerDown(on, { pointerType: "touch", clientX: 200, clientY: 120 });
+      // A finger lifting off fires pointerleave right away: it hides nothing.
+      fireEvent.pointerLeave(frame, { pointerType: "touch" });
+      fireEvent.pointerUp(on, { pointerType: "touch", clientX: 200, clientY: 120 });
+    };
 
-    // A finger lifting off fires pointerleave right away.
-    fireEvent.pointerDown(frame, { pointerType: "touch" });
-    fireEvent.pointerLeave(frame, { pointerType: "touch" });
-
+    tap(frame);
     expect(frame).toHaveAttribute("data-chrome", "shown");
+    tap(within(stage()).getByRole("button", { name: "Fullscreen" }));
+    expect(frame).toHaveAttribute("data-chrome", "shown");
+    tap(frame);
+    expect(frame).toHaveAttribute("data-chrome", "hidden");
   });
 
   it("keeps the controls while one of them has the keyboard focus", async () => {
@@ -1817,13 +1824,58 @@ describe("room: whose sound plays", () => {
     return { server, room, sound };
   }
 
-  it("plays only the big person's sound; a preview's isn't even downloaded, only its toggles show (spec 0123)", async () => {
+  // A preview's buttons, in the row that pointing at it opens (spec 0131).
+  async function rowOf(name: string, user = userEvent.setup()) {
+    await user.hover(within(thumbnails()).getByRole("button", { name: (n) => n.startsWith(`Watch ${name}`) }));
+    return screen.findByRole("group", { name: `${name}'s sounds` });
+  }
+
+  it("plays only the big person's sound until I turn a preview on; a preview's is downloaded only while I hear it (spec 0131)", async () => {
     const { room, sound } = await anaAndBrunoWithSound();
+    const user = userEvent.setup();
 
     expect(sound("user-3").attached).toHaveLength(1);
     await waitFor(() => expect(room.soundPublication("user-7")!.setSubscribed).toHaveBeenLastCalledWith(false));
     expect(sound("user-7").attached).toHaveLength(0);
-    expect(within(thumbnails()).getByRole("button", { name: "Mute Bruno's screen sound" })).toBeInTheDocument();
+
+    // Bruno stays small; I turn his sound on from his row: it's downloaded and plays.
+    await user.click(within(await rowOf("Bruno", user)).getByRole("button", { name: "Unmute Bruno's screen sound" }));
+    await waitFor(() => expect(room.soundPublication("user-7")!.setSubscribed).toHaveBeenLastCalledWith(true));
+    await waitFor(() => expect(sound("user-7").attached).toHaveLength(1));
+    expect((sound("user-7").attached[0] as HTMLAudioElement).muted).toBe(false);
+    expect(screen.getByRole("heading", { name: "Ana" })).toBeInTheDocument();
+
+    // Off again: no longer downloaded.
+    await user.click(within(await rowOf("Bruno", user)).getByRole("button", { name: "Mute Bruno's screen sound" }));
+    await waitFor(() => expect(room.soundPublication("user-7")!.setSubscribed).toHaveBeenLastCalledWith(false));
+    expect(sound("user-7").attached).toHaveLength(0);
+  });
+
+  it("plays a preview's voice I turn on, at its own volume, while it stays small (spec 0131, AC-1)", async () => {
+    const { room, sound } = await anaAndBrunoWithSound();
+    const user = userEvent.setup();
+    let voice!: ReturnType<typeof room.publishVoice>;
+    act(() => {
+      voice = room.publishVoice("user-7");
+    });
+    expect(voice.attached).toHaveLength(0);
+
+    await user.click(within(await rowOf("Bruno", user)).getByRole("button", { name: "Unmute Bruno's voice" }));
+    await waitFor(() => expect(voice.attached).toHaveLength(1));
+    await waitFor(() => expect(room.voicePublication("user-7")!.setSubscribed).toHaveBeenLastCalledWith(true));
+    expect((voice.attached[0] as HTMLAudioElement).muted).toBe(false);
+    expect(screen.getByRole("heading", { name: "Ana" })).toBeInTheDocument();
+
+    // Its own volume: moving Bruno's slider leaves Ana's, on the stage, where it was.
+    const ana = sound("user-3").attached[0] as HTMLAudioElement;
+    const before = ana.volume;
+    const row = await rowOf("Bruno", user);
+    await user.hover(within(row).getByRole("button", { name: "Mute Bruno's voice" }));
+    fireEvent.change(await within(row).findByRole("slider", { name: "Bruno's voice volume" }), { target: { value: "0.2" } });
+    expect((voice.attached[0] as HTMLAudioElement).volume).toBeCloseTo(0.2);
+    await user.hover(within(row).getByRole("button", { name: "Unmute Bruno's screen sound" }));
+    fireEvent.change(await within(row).findByRole("slider", { name: "Bruno's screen sound volume" }), { target: { value: "0.1" } });
+    expect(ana.volume).toBeCloseTo(before);
   });
 
   it("locks a screen without sound on mute, for the big player and a thumbnail, until it gets sound (spec 0098)", async () => {
@@ -1843,8 +1895,11 @@ describe("room: whose sound plays", () => {
 
     expect(within(stage()).getByRole("button", { name: "No sound in this stream" })).toHaveAttribute("aria-disabled", "true");
     expect(within(stage()).queryByRole("slider", { name: "Screen sound volume" })).not.toBeInTheDocument();
-    // A preview without sound greys its sound toggle, in its place (spec 0123).
-    expect(within(thumbnails()).getByRole("button", { name: "Bruno: No screen sound" })).toHaveAttribute("aria-disabled", "true");
+    // A preview without sound greys its sound button, in its place (specs 0123 and 0131).
+    expect(within(await rowOf("Bruno")).getByRole("button", { name: "Bruno: No screen sound" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
 
     // Ana changes to a window with sound: her sound works again, at my volume.
     act(() => {
@@ -1875,30 +1930,33 @@ describe("room: whose sound plays", () => {
 
     expect(within(stage()).getByRole("button", { name: "No screen sound" })).toHaveAttribute("aria-disabled", "true");
     expect(within(stage()).getByRole("button", { name: "Ana's mic is off" })).toHaveAttribute("aria-disabled", "true");
-    expect(within(thumbnails()).getByRole("button", { name: "Bruno: No screen sound" })).toHaveAttribute("aria-disabled", "true");
-    expect(within(thumbnails()).getByRole("button", { name: "Bruno: Bruno's mic is off" })).toHaveAttribute("aria-disabled", "true");
+    const row = await rowOf("Bruno");
+    expect(within(row).getByRole("button", { name: "Bruno: No screen sound" })).toHaveAttribute("aria-disabled", "true");
+    expect(within(row).getByRole("button", { name: "Bruno: Bruno's mic is off" })).toHaveAttribute("aria-disabled", "true");
   });
 
-  it("keeps each person's mute while switching, and mutes from a preview too (spec 0123, AC-4)", async () => {
-    const { sound } = await anaAndBrunoWithSound();
+  it("keeps each person's switch wherever they are, while switching (specs 0123 AC-4, 0131 AC-1)", async () => {
+    const { room, sound } = await anaAndBrunoWithSound();
     const user = userEvent.setup();
 
     // Ana is big: mute her sound.
     await user.click(within(stage()).getByRole("button", { name: "Mute the screen's sound" }));
     expect((sound("user-3").attached[0] as HTMLAudioElement).muted).toBe(true);
-    // Mute Bruno's from his preview, without opening him.
-    await user.click(within(thumbnails()).getByRole("button", { name: "Mute Bruno's screen sound" }));
+    // Turn Bruno's on from his preview, without opening him.
+    await user.click(within(await rowOf("Bruno", user)).getByRole("button", { name: "Unmute Bruno's screen sound" }));
     expect(screen.getByRole("heading", { name: "Ana" })).toBeInTheDocument();
 
-    // Watch Bruno: his sound comes muted, as I left it.
+    // Watch Bruno: his sound stays on. Ana, small now, stays muted and isn't downloaded.
     await user.click(within(thumbnails()).getByRole("button", { name: /^Watch Bruno/ }));
     await waitFor(() => expect(sound("user-7").attached).toHaveLength(1));
-    expect((sound("user-7").attached[0] as HTMLAudioElement).muted).toBe(true);
+    expect((sound("user-7").attached[0] as HTMLAudioElement).muted).toBe(false);
+    await waitFor(() => expect(room.soundPublication("user-3")!.setSubscribed).toHaveBeenLastCalledWith(false));
 
-    // Back to Ana: still muted.
+    // Back to Ana: still muted; Bruno, small again, still heard.
     await user.click(within(thumbnails()).getByRole("button", { name: /^Watch Ana/ }));
     await waitFor(() => expect(sound("user-3").attached).toHaveLength(1));
     expect((sound("user-3").attached[0] as HTMLAudioElement).muted).toBe(true);
+    expect(room.soundPublication("user-7")!.setSubscribed).toHaveBeenLastCalledWith(true);
   });
 
   it("plays the new big person's sound after a swap, and mutes the one that left", async () => {
@@ -2574,6 +2632,18 @@ describe("room: on a phone sideways (spec 0160)", () => {
   }
   const row = () => screen.queryByRole("region", { name: /Live now/ });
 
+  it("puts the stage's buttons on the screen, clear of the arrow, Go live in the empty corner (spec 0131, AC-6)", async () => {
+    await sidewaysWith(["Marina", "Rafa"], true);
+    await screen.findByRole("heading", { level: 2, name: "Marina · Screen" });
+    const sound = await within(stageLayer()).findByRole("button", { name: "Mute the screen's sound" });
+    // Not the player's: the screen's own layer, at its bottom like the arrow.
+    expect(stageLayer().querySelector("video")!.closest("[data-chrome]")!.contains(sound)).toBe(false);
+    expect(stageLayer()).toHaveAttribute("data-row-arrow");
+    // A phone held sideways has no fullscreen button: Go live takes its corner.
+    expect(within(stageLayer()).queryByRole("button", { name: /fullscreen/i })).toBeNull();
+    expect(stageLayer()).toHaveAttribute("data-no-full");
+  });
+
   it("has no header, logo or footer; the top line has who's on the stage and my buttons", async () => {
     const { view } = await sidewaysWith(["Marina", "Rafa"]);
     expect(await screen.findByRole("heading", { level: 2, name: "Marina · Screen" })).toBeInTheDocument();
@@ -2613,16 +2683,30 @@ describe("room: on a phone sideways (spec 0160)", () => {
     expect(screen.getByLabelText("Marina's shared screen")).toBe(video);
   });
 
-  it("fades the controls after a while without a touch, closing an open row; a touch brings them back", async () => {
+  it("fades the controls after a while, keeping an open row; a tap hides it with them, the next brings it back (spec 0131, AC-7)", async () => {
     await sidewaysWith(["Marina", "Rafa"]);
-    await screen.findByLabelText("Marina's shared screen");
+    const picture = await screen.findByLabelText("Marina's shared screen");
+    const tap = () => {
+      fireEvent.pointerDown(picture, { pointerId: 2, pointerType: "touch", clientX: 300, clientY: 200 });
+      fireEvent.pointerUp(picture, { pointerId: 2, pointerType: "touch", clientX: 300, clientY: 200 });
+    };
     drag(0, -150);
-    await waitFor(() => expect(row()?.closest("[data-open]") ?? row()).toHaveAttribute("data-open"));
+    await waitFor(() => expect(row()).not.toBeNull());
     expect(stageLayer()).toHaveAttribute("data-chrome", "shown");
+
+    // The idle fade leaves the open row.
     await waitFor(() => expect(stageLayer()).toHaveAttribute("data-chrome", "hidden"), { timeout: 4000 });
-    expect(row()).toBeNull();
-    fireEvent.pointerDown(stageLayer(), { pointerId: 2, clientX: 10, clientY: 10, button: 0 });
+    expect(row()).not.toBeNull();
+
+    // A tap shows the rest; the next hides everything, the row too; the one after brings it all back.
+    tap();
     expect(stageLayer()).toHaveAttribute("data-chrome", "shown");
+    tap();
+    expect(stageLayer()).toHaveAttribute("data-chrome", "hidden");
+    expect(row()).toBeNull();
+    tap();
+    expect(stageLayer()).toHaveAttribute("data-chrome", "shown");
+    expect(row()).not.toBeNull();
   });
 
   it("opens the row with a swipe up and closes it with a swipe down; a tap in it changes the stage, silently", async () => {

@@ -1,54 +1,271 @@
+import { useEffect, useRef, useState } from "react";
 import type { Sharer } from "../../types";
+import { Range } from "../ui/Range";
 import { showToast } from "../ui/toast";
 import { SoundIcon, VoiceIcon, VoiceOffIcon, VolumeOffIcon } from "./icons";
 import type { Sound } from "./ViewerBar";
+import { useKeyboardLast } from "../../hooks/useTapToggle";
+import { HOLD_MS } from "./stack";
 import styles from "./HearToggles.module.css";
 
 /** What I hear from one person (spec 0123): their screen's sound and their voice, each its own mute. */
 export type Hearing = { sound: Sound; voice: Sound };
 
+/** As the stage's own sound buttons: a mouse rests 120 ms, a finger holds (`HOLD_MS`); 4 s idle closes. */
+const REST_MS = 120;
+const IDLE_MS = 4000;
+
+type Kind = "sound" | "voice";
+
 /**
- * A preview's two toggles (spec 0123, design decision 4): mute or unmute that person's sound and voice for
- * me without opening their stream; the same mute their stage uses. A missing sound is greyed in
- * its place; their voice lights green while they speak.
+ * A preview's buttons (specs 0123 and 0131): that person's voice and screen sound, heard or not by
+ * me wherever they are, and a swap between their screen and camera when they share both (on my own
+ * preview, the swap alone). A tap turns a sound on or off; resting on it or holding it opens its
+ * slider. A missing sound is greyed in its place; their voice lights green while they speak.
+ * `layout`: over a big picture, each slider upright over its button; or in the row of a small
+ * preview, one slider after the buttons.
  */
-export function HearToggles({ sharer, hearing, onChange }: { sharer: Sharer; hearing: Hearing; onChange: (h: Hearing) => void }) {
+export function HearToggles({
+  sharer,
+  hearing,
+  onChange,
+  layout = "over",
+  swap,
+  onActive,
+}: {
+  sharer: Sharer;
+  hearing: Hearing;
+  onChange: (h: Hearing) => void;
+  layout?: "over" | "tray";
+  swap?: { on: boolean; onSwap: () => void };
+  /** Told while a slider is open, so what holds the row keeps it open (spec 0131). */
+  onActive?: (active: boolean) => void;
+}) {
   const name = sharer.person.name;
   const noSound = !(sharer.screen && sharer.hasSound) ? "No screen sound" : undefined;
   const noVoice = sharer.hasVoice ? undefined : `${name}'s mic is off`;
-  const toggle = (kind: "sound" | "voice", unavailable?: string) => (e: React.MouseEvent) => {
-    // The preview's own click opens the stream: a toggle doesn't.
-    e.stopPropagation();
-    if (unavailable) return showToast(unavailable, kind === "sound" ? <VolumeOffIcon /> : <VoiceOffIcon />);
-    onChange({ ...hearing, [kind]: { ...hearing[kind], muted: !hearing[kind].muted } });
+  const [open, setOpen] = useState<Kind | null>(null);
+  const keyboardLast = useKeyboardLast();
+  const timers = useRef<number[]>([]);
+  const idle = useRef<number | undefined>(undefined);
+  const swallow = useRef(false);
+  const clear = () => timers.current.splice(0).forEach((t) => window.clearTimeout(t));
+  const restart = () => {
+    window.clearTimeout(idle.current);
+    idle.current = window.setTimeout(() => setOpen(null), IDLE_MS);
   };
-  const soundOff = Boolean(noSound) || hearing.sound.muted;
-  const voiceOff = Boolean(noVoice) || hearing.voice.muted;
+  useEffect(() => () => [...timers.current, idle.current].forEach((t) => window.clearTimeout(t)), []);
+  const tell = useRef(onActive);
+  useEffect(() => {
+    tell.current = onActive;
+  });
+  useEffect(() => tell.current?.(open !== null), [open]);
+  // A press anywhere else closes the slider.
+  const root = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const away = (e: PointerEvent) => {
+      if (!root.current?.contains(e.target as Node)) setOpen(null);
+    };
+    document.addEventListener("pointerdown", away);
+    return () => document.removeEventListener("pointerdown", away);
+  }, [open]);
+  // What the row's slider sets: the open sound, kept while it rolls up so it doesn't change on the
+  // way. Switching, the one it replaces shrinks away while the new one grows, each let go when its
+  // own animation ends (spec 0131).
+  const [shown, setShown] = useState<Kind | null>(null);
+  const [leaving, setLeaving] = useState<Kind | null>(null);
+  const [entering, setEntering] = useState<Kind | null>(null);
+  if (open && open !== shown) {
+    if (shown) {
+      setLeaving(shown);
+      setEntering(open);
+    }
+    setShown(open);
+  }
+  const iconOf = (kind: Kind, off: boolean) =>
+    kind === "sound" ? off ? <VolumeOffIcon /> : <SoundIcon /> : off ? <VoiceOffIcon /> : <VoiceIcon />;
+  const show = (kind: Kind) => {
+    setOpen(kind);
+    restart();
+  };
+
+  const button = (kind: Kind) => {
+    const unavailable = kind === "sound" ? noSound : noVoice;
+    const muted = hearing[kind].muted;
+    const off = Boolean(unavailable) || muted;
+    const what = kind === "sound" ? `${name}'s screen sound` : `${name}'s voice`;
+    const btn = (
+      <button
+        type="button"
+        className={styles.toggle}
+        data-talking={(kind === "voice" && !off && sharer.speaking) || undefined}
+        aria-disabled={unavailable ? true : undefined}
+        aria-pressed={unavailable ? undefined : muted}
+        aria-label={unavailable ? `${name}: ${unavailable}` : `${muted ? "Unmute" : "Mute"} ${what}`}
+        title={unavailable ?? what}
+        onPointerEnter={(e) => {
+          if (e.pointerType !== "mouse" || unavailable) return;
+          clear();
+          timers.current.push(window.setTimeout(() => show(kind), REST_MS));
+        }}
+        onPointerLeave={(e) => {
+          if (e.pointerType === "mouse") clear();
+        }}
+        data-active={open === kind || undefined}
+        // By keyboard, a sound's focus opens its slider, as the stage's own (Enter mutes).
+        onFocus={() => {
+          if (keyboardLast() && !unavailable) show(kind);
+        }}
+        onPointerDown={(e) => {
+          if (e.pointerType === "mouse" || unavailable) return;
+          clear();
+          timers.current.push(
+            window.setTimeout(() => {
+              swallow.current = true;
+              show(kind);
+            }, HOLD_MS),
+          );
+        }}
+        onPointerUp={clear}
+        onContextMenu={(e) => e.preventDefault()}
+        onClick={(e) => {
+          // The preview's own click opens the stream: a toggle doesn't.
+          e.stopPropagation();
+          if (swallow.current) {
+            swallow.current = false;
+            return;
+          }
+          if (unavailable) return showToast(unavailable, kind === "sound" ? <VolumeOffIcon /> : <VoiceOffIcon />);
+          onChange({ ...hearing, [kind]: { ...hearing[kind], muted: !muted } });
+          if (open) restart();
+        }}
+      >
+        {iconOf(kind, off)}
+      </button>
+    );
+    if (layout !== "over") return btn;
+    // Over a big picture: its own slider, upright over the button, as the stage's sounds (spec 0131).
+    return (
+      <span className={styles.anchor}>
+        {btn}
+        <span
+          className={styles.upright}
+          data-open={open === kind || undefined}
+          data-muted={muted || undefined}
+          inert={open !== kind}
+        >
+          <Range
+            className={styles.uprightRange}
+            min={0}
+            max={1}
+            step={0.05}
+            aria-orientation="vertical"
+            aria-label={kind === "sound" ? `${name}'s screen sound volume` : `${name}'s voice volume`}
+            value={hearing[kind].volume}
+            onChange={(e) => {
+              onChange({ ...hearing, [kind]: { volume: Number(e.target.value), muted: false } });
+              restart();
+            }}
+          />
+        </span>
+      </span>
+    );
+  };
+
   return (
-    <span className={styles.toggles}>
-      <button
-        type="button"
-        className={styles.toggle}
-        aria-disabled={noSound ? true : undefined}
-        aria-pressed={noSound ? undefined : hearing.sound.muted}
-        aria-label={noSound ? `${name}: ${noSound}` : `${hearing.sound.muted ? "Unmute" : "Mute"} ${name}'s screen sound`}
-        title={noSound ?? `${name}'s screen sound`}
-        onClick={toggle("sound", noSound)}
-      >
-        {soundOff ? <VolumeOffIcon /> : <SoundIcon />}
-      </button>
-      <button
-        type="button"
-        className={styles.toggle}
-        data-talking={(!voiceOff && sharer.speaking) || undefined}
-        aria-disabled={noVoice ? true : undefined}
-        aria-pressed={noVoice ? undefined : hearing.voice.muted}
-        aria-label={noVoice ? `${name}: ${noVoice}` : `${hearing.voice.muted ? "Unmute" : "Mute"} ${name}'s voice`}
-        title={noVoice ?? `${name}'s voice`}
-        onClick={toggle("voice", noVoice)}
-      >
-        {voiceOff ? <VoiceOffIcon /> : <VoiceIcon />}
-      </button>
+    <span
+      ref={root}
+      className={styles.toggles}
+      role="group"
+      aria-label={sharer.isMe ? "Your stream" : `${name}'s sounds`}
+      data-layout={layout}
+      data-open={open ?? undefined}
+      onClick={(e) => e.stopPropagation()}
+      // Moving the mouse away leaves the slider open (4 s idle or a press elsewhere closes it).
+      onPointerMove={() => open && restart()}
+    >
+      <span className={styles.buttons}>
+        {/* My own preview: nothing of mine to hear, only the swap (spec 0131). */}
+        {!sharer.isMe && button("voice")}
+        {!sharer.isMe && button("sound")}
+        {swap && (
+          <button
+            type="button"
+            className={styles.toggle}
+            aria-pressed={swap.on}
+            aria-label={`Swap ${sharer.isMe ? "your" : `${name}'s`} screen and camera`}
+            title="Swap screen and camera"
+            onClick={(e) => {
+              e.stopPropagation();
+              swap.onSwap();
+            }}
+          >
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path
+                d="M4 7h11M12 4l3 3-3 3M16 13H5M8 10l-3 3 3 3"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+        )}
+      </span>
+      {/* In the row: one slider after the buttons, unrolling once; moving between buttons only changes
+          what it sets, so the row never moves under the pointer (spec 0131). */}
+      {layout === "tray" && (
+        <span className={styles.drawer} data-drawer data-open={open ? true : undefined} inert={!open}>
+          <span className={styles.inner}>
+            {leaving && leaving !== shown && (
+              <span
+                key={`out-${leaving}`}
+                className={styles.slider}
+                data-slider
+                data-leaving
+                aria-hidden="true"
+                onAnimationEnd={(e) => e.animationName.includes("shrink") && setLeaving(null)}
+              >
+                {iconOf(leaving, hearing[leaving].muted)}
+                <Range
+                  className={styles.range}
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  value={hearing[leaving].volume}
+                  readOnly
+                  tabIndex={-1}
+                />
+              </span>
+            )}
+            {shown && (
+              <span
+                key={shown}
+                className={styles.slider}
+                data-slider
+                data-entering={entering === shown || undefined}
+                onAnimationEnd={(e) => e.animationName.includes("grow") && setEntering(null)}
+              >
+                {iconOf(shown, hearing[shown].muted)}
+                <Range
+                  className={styles.range}
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  aria-label={shown === "sound" ? `${name}'s screen sound volume` : `${name}'s voice volume`}
+                  value={hearing[shown].volume}
+                  onChange={(e) => {
+                    onChange({ ...hearing, [shown]: { volume: Number(e.target.value), muted: false } });
+                    restart();
+                  }}
+                />
+              </span>
+            )}
+          </span>
+        </span>
+      )}
     </span>
   );
 }

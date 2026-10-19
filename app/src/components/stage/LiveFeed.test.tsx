@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { FakeTrack } from "../../test/fakeLiveKit";
@@ -82,7 +82,7 @@ describe("the phone's feed of live streams (spec 0158)", () => {
   });
 });
 
-describe("the phone's feed: muting from a card (spec 0123)", () => {
+describe("the phone's feed: hearing from a card (specs 0123 and 0131)", () => {
   it("has each person's two toggles beside the picture, muting without opening them", async () => {
     const onPick = vi.fn();
     const onHear = vi.fn();
@@ -94,5 +94,50 @@ describe("the phone's feed: muting from a card (spec 0123)", () => {
     await userEvent.setup().click(toggle);
     expect(onHear).toHaveBeenCalledWith("user-2", { ...heard, sound: { volume: 1, muted: true } });
     expect(onPick).not.toHaveBeenCalled();
+  });
+
+  it("opens a sound's slider upright over its button on a hold, in the stage's style (spec 0131, AC-5)", async () => {
+    const onHear = vi.fn();
+    const heard = { sound: { volume: 0.4, muted: false }, voice: { volume: 1, muted: false } };
+    render(<LiveFeed others={[RAFA]} liveCount={1} watchersOf={() => []} onPick={vi.fn()} hearOf={() => heard} onHear={onHear} />);
+    const button = screen.getByRole("button", { name: "Mute Rafa's screen sound" });
+    const slider = screen.getByRole("slider", { name: "Rafa's screen sound volume" });
+    expect(slider.closest("[inert]")).not.toBeNull();
+
+    fireEvent.pointerDown(button, { pointerType: "touch" });
+    await act(() => new Promise((r) => setTimeout(r, 550)));
+    expect(slider.closest("[inert]")).toBeNull();
+    expect(slider).toHaveAttribute("aria-orientation", "vertical");
+    expect(slider).toHaveValue("0.4");
+    fireEvent.change(slider, { target: { value: "0.7" } });
+    expect(onHear).toHaveBeenLastCalledWith("user-2", { ...heard, sound: { volume: 0.7, muted: false } });
+  });
+
+  it("stacks a screen and a camera, with a swap; my own card has the swap alone (spec 0131)", async () => {
+    const user = userEvent.setup();
+    const heard = { sound: { volume: 1, muted: false }, voice: { volume: 1, muted: false } };
+    const onSwap = vi.fn();
+    const both = sharer("user-5", "Bia", ["screen", "camera"]);
+    const me: Sharer = { ...sharer("me", "Henrique", ["screen", "camera"]), isMe: true };
+    render(
+      <LiveFeed
+        others={[both, me]}
+        liveCount={2}
+        watchersOf={() => []}
+        onPick={vi.fn()}
+        hearOf={() => heard}
+        onHear={vi.fn()}
+        swappedOf={() => false}
+        onSwap={onSwap}
+      />,
+    );
+    const card = screen.getByRole("button", { name: "Watch Bia's screen" }).closest("li")!;
+    expect(card).toHaveAttribute("data-stacked");
+    await user.click(within(card).getByRole("button", { name: "Swap Bia's screen and camera" }));
+    expect(onSwap).toHaveBeenCalledWith("user-5");
+    expect(card).toHaveAttribute("data-swapping");
+
+    const mine = within(screen.getByRole("group", { name: "Your stream" })).getAllByRole("button");
+    expect(mine.map((b) => b.getAttribute("aria-label"))).toEqual(["Swap your screen and camera"]);
   });
 });

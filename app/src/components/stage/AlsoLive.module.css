@@ -17,8 +17,10 @@
   display: flex;
   gap: 10px;
   min-width: 0;
-  margin: 0 0 -8px;
-  padding: 0 0 8px;
+  /* Room inside the scroll box for a stacked picture's peek above (spec 0131), taken back by the
+     margins so nothing else moves. */
+  margin: -6px 0 -8px;
+  padding: 6px 0 8px;
   list-style: none;
   overflow-x: auto;
 }
@@ -61,6 +63,11 @@
   width: 128px;
 }
 
+/* A stacked preview's peek takes its own room, so the gap to the next one stays 10 px. */
+.item[data-stacked] {
+  margin-right: 6px;
+}
+
 .preview {
   display: block;
   width: 100%;
@@ -94,6 +101,26 @@
   pointer-events: none;
 }
 
+/* Their voice heard while they speak, the row closed: the speaking cue around the picture, as on
+   their voice button (spec 0131). */
+.video {
+  transition: box-shadow 120ms ease;
+}
+
+.video::after {
+  transition: box-shadow 120ms ease;
+}
+
+.item[data-talking] .video {
+  box-shadow: 0 0 6px 0 rgba(22, 163, 74, 0.35);
+}
+
+.item[data-talking] .video::after {
+  box-shadow:
+    inset 0 0 0 1px rgba(43, 205, 104, 0.85),
+    inset 0 0 4px rgba(22, 163, 74, 0.45);
+}
+
 /* Hover and keyboard focus: drawn inside, so the scrolling strip never cuts it (spec 0107). */
 .preview:hover .video::after,
 .preview:focus-visible .video::after {
@@ -123,49 +150,58 @@
   font-size: 0.6875rem;
 }
 
-/* The preview's sound: a round speaker at the top left; its slider slides out to the right. */
-.sound {
+/* The preview whose row is open keeps its hover ring, drawn inside so nothing clips it: one ring,
+   so you see which preview the row belongs to. */
+.item[data-open] .video::after {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+/* A person with a screen and a camera: their second picture peeks out behind, like a deck. */
+.behind {
   position: absolute;
-  top: 5px;
-  left: 5px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px;
-  border-radius: 999px;
-  background: rgba(10, 10, 11, 0.72);
-  backdrop-filter: blur(6px);
+  top: -5px;
+  left: 6px;
+  right: -6px;
+  height: calc(128px * 9 / 16);
+  border: 1px solid rgba(235, 235, 236, 0.28);
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(22, 22, 23, 0.9);
+  pointer-events: none;
 }
 
-.speaker {
-  display: grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  border: 0;
-  border-radius: 50%;
+/* The other picture, faded behind, filling its box (a peek, not the whole picture: no black bar). */
+.behind video {
+  object-fit: cover;
   background: transparent;
-  color: var(--text);
-  cursor: pointer;
+  opacity: 0.5;
 }
 
-.speaker:hover,
-.speaker:focus-visible {
-  background: rgba(255, 255, 255, 0.14);
-  outline: none;
-}
-
-.slider {
-  width: 64px;
-  margin: 0 6px 0 0;
-  animation: slide-out 0.18s ease;
-}
-
-@keyframes slide-out {
+/* A swap (spec 0131): the front picture comes forward from behind, the back one drops behind. */
+@keyframes swap-front {
   from {
-    width: 0;
-    opacity: 0;
+    transform: translate(6px, -5px) scale(0.96);
+    opacity: 0.5;
   }
+}
+
+@keyframes swap-back {
+  from {
+    transform: translate(-6px, 5px) scale(1.04);
+    opacity: 1;
+  }
+}
+
+.item[data-swapping] .preview {
+  animation: swap-front 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.item[data-swapping] .behind {
+  animation: swap-back 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.item[data-stacked] .preview {
+  position: relative;
 }
 
 /* How many of the 6 are live, and the places left (spec 0107): fixed at the right edge. */
@@ -207,8 +243,3 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .slider {
-    animation: none;
-  }
-}

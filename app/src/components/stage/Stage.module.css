@@ -65,7 +65,12 @@
     translate var(--unroll);
 }
 
-.frame[data-chrome="hidden"] .controls {
+/* Fading, part by part: a heard voice stays, for its speaking cue (spec 0131). */
+.controls > * {
+  transition: opacity 0.25s ease;
+}
+
+.frame[data-chrome="hidden"] .controls > :not(:has([data-stays])) {
   opacity: 0;
 }
 
@@ -73,11 +78,11 @@
   pointer-events: none;
 }
 
-.frame[data-chrome="hidden"]:focus-within .controls {
+.frame[data-chrome="hidden"]:has(:focus-visible) .controls > * {
   opacity: 1;
 }
 
-.frame[data-chrome="hidden"]:focus-within .controls :is(button, input) {
+.frame[data-chrome="hidden"]:has(:focus-visible) .controls :is(button, input) {
   pointer-events: auto;
 }
 
@@ -88,14 +93,17 @@
  */
 .screenChrome {
   position: absolute;
-  /* Clear of the iPhone's home indicator, like the streams row's arrow. */
-  inset: 0 0 env(safe-area-inset-bottom, 0px);
+  /* Clear of the iPhone's home indicator, like the streams row's arrow; above the streams row
+     while it's open (--row-lift, measured by the stage), rising with it. */
+  inset: 0 0 calc(env(safe-area-inset-bottom, 0px) + var(--row-lift, 0px));
   z-index: 4;
   pointer-events: none;
-  transition: translate var(--unroll);
+  transition:
+    translate var(--unroll),
+    bottom 0.28s ease;
 }
 
-.stage[data-chrome="hidden"] .screenChrome .controls {
+.stage[data-chrome="hidden"] .screenChrome .controls > :not(:has([data-stays])) {
   opacity: 0;
 }
 
@@ -103,11 +111,11 @@
   pointer-events: none;
 }
 
-.stage[data-chrome="hidden"]:focus-within .screenChrome .controls {
+.stage[data-chrome="hidden"]:has(:focus-visible) .screenChrome .controls > * {
   opacity: 1;
 }
 
-.stage[data-chrome="hidden"]:focus-within .screenChrome :is(button, input) {
+.stage[data-chrome="hidden"]:has(:focus-visible) .screenChrome :is(button, input) {
   pointer-events: auto;
 }
 
@@ -274,6 +282,28 @@
  */
 .stage[data-layout="phone"] [data-overlay] {
   --btn: 44px;
+}
+
+/* Sideways with the streams row's arrow at the bottom-left: the sounds start 8 px after it, on the
+   same line, or at the edge when it's gone into the open row (spec 0131; --arrow-end is measured
+   by the stage). */
+.stage[data-row-arrow] [data-viewer-bar] {
+  left: max(14px + env(safe-area-inset-left, 0px), var(--arrow-end, 0px) + 8px);
+  /* With the row: the arrow goes into it as it opens, and the sounds slide back to the edge. */
+  transition:
+    left 0.28s ease,
+    opacity 0.25s ease;
+}
+
+/* Faded, the arrow's gone too: a heard voice slides to the corner (spec 0131). */
+.stage[data-row-arrow][data-chrome="hidden"]:not(:has(:focus-visible)) [data-viewer-bar] {
+  left: calc(14px + env(safe-area-inset-left, 0px));
+}
+
+/* Sideways where there's no fullscreen button (a phone held sideways is already full): Go live
+   takes its place at the right (spec 0131). */
+.stage[data-no-full] [data-viewer-bar] {
+  right: calc(14px + env(safe-area-inset-right, 0px));
 }
 
 /* Fading sideways: the top bar and the row's arrow button go with the round buttons (FR-8). */

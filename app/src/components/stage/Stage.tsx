@@ -21,7 +21,7 @@ import type { Hearing } from "./HearToggles";
 import { ViewerBar, type Sound } from "./ViewerBar";
 import { MicIcon, MicOffIcon } from "./icons";
 import round from "./RoundButton.module.css";
-import { liftButtons, makeRoom, ROOM_GAP as SHEET_GAP } from "./makeRoom";
+import { arrowEnd, liftButtons, liftOverRow, makeRoom, ROOM_GAP as SHEET_GAP } from "./makeRoom";
 import { AlsoLive } from "./AlsoLive";
 import { Ambilight } from "./Ambilight";
 import { CornerGlow } from "./CornerGlow";
@@ -32,7 +32,9 @@ import { HereCards } from "./HereCards";
 import { Toast } from "../ui/Toast";
 import { useVideoShape } from "../../hooks/useVideoShape";
 import { useStageSwipe } from "../../hooks/useStageSwipe";
+import { useKeyboardLast, useTapToggle } from "../../hooks/useTapToggle";
 import { stepOnStage } from "../../media/stagePick";
+import { choose, hearingOf, type Choices } from "../../media/hearing";
 import { StageDots } from "./StageDots";
 import { StreamsRow } from "./StreamsRow";
 import { gridFor } from "../../media/ambilight";
@@ -260,14 +262,19 @@ export function Stage({
       watch?.disconnect();
     };
   }, [makingRoom, roomInPlayer]);
+  // The keyboard's focus keeps the controls; a finger's tap doesn't (spec 0131).
+  const keyboardFocus = useKeyboardLast();
   const focusInside = () =>
     held.current.size > 0 ||
-    (frameRef.current?.contains(document.activeElement) ?? false) ||
-    (topRef.current?.contains(document.activeElement) ?? false) ||
-    (screenChromeRef.current?.contains(document.activeElement) ?? false) ||
+    (keyboardFocus() && (frameRef.current?.contains(document.activeElement) ?? false)) ||
+    (keyboardFocus() && (topRef.current?.contains(document.activeElement) ?? false)) ||
+    (keyboardFocus() && (screenChromeRef.current?.contains(document.activeElement) ?? false)) ||
     Boolean(topRef.current?.querySelector('[aria-expanded="true"]'));
+  // An open streams row stays through the idle fade; only a tap hides it, with everything (spec 0131).
+  const [rowAway, setRowAway] = useState(false);
   const showChrome = useCallback(() => {
     setChromeShown(true);
+    setRowAway(false);
     window.clearTimeout(idleTimer.current);
     const fade = () => {
       if (focusInside()) idleTimer.current = window.setTimeout(fade, CHROME_IDLE_MS);
@@ -360,6 +367,9 @@ export function Stage({
       box?.removeEventListener("transitionend", place);
     };
   }, [settingsOpen, sideways, onScreen]);
+  // The streams row's arrow at the bottom-left, on the buttons' line; lifted above the settings sheet,
+  // the buttons are off its line and need no room for it.
+  const rowArrow = sideways && Boolean(big) && sharers.length > 1 && !makingRoom;
   const playing = Boolean(main && (big?.isMe ? main.local : main.remote));
   useEffect(() => () => window.clearTimeout(idleTimer.current), []);
 
@@ -367,32 +377,41 @@ export function Stage({
   const [bigVideoEl, setBigVideoEl] = useState<HTMLVideoElement | null>(null);
   // The stage hugs the picture: no bars (spec 0107). 16:9 while empty or loading.
   const shape = useVideoShape(bigVideoEl);
-  // What I hear from each person (spec 0123): their sound and their voice, each with its own mute
-  // and volume, for the whole visit; a new person starts at my last volumes, unmuted.
-  const [hearing, setHearing] = useState<Record<string, Hearing>>({});
+  // What I hear from each person (specs 0123 and 0131): their sound and their voice, each with its
+  // own volume and one switch that follows them everywhere once touched, for the whole visit.
+  const [hearing, setHearing] = useState<Record<string, Choices>>({});
   const hearOf = (id: string): Hearing =>
-    hearing[id] ?? {
-      sound: { volume: watch.volume, muted: false },
-      voice: { volume: voiceSound.volume, muted: false },
-    };
+    hearingOf(hearing[id], id === bigId, { sound: watch.volume, voice: voiceSound.volume });
   const setHear = (id: string, next: Hearing) => {
-    setHearing((prev) => ({ ...prev, [id]: next }));
+    const was = hearOf(id);
+    setHearing((prev) => ({ ...prev, [id]: choose(prev[id], was, next) }));
+    // The stage's volumes are where the next person starts: only a change to whoever is on the stage
+    // moves them, so a preview's volume never changes the stage's (spec 0131).
+    if (id !== bigId) return;
     changeWatch({ volume: next.sound.volume, muted: false });
     setVoiceSound({ volume: next.voice.volume, muted: false });
   };
-  // Only the person I watch is heard: theirs is the only sound and voice downloaded (previews are silent).
+  // Downloaded: the person on the stage's sound and voice, muted or not, so unmuting is instant; a
+  // preview's only while I hear it (spec 0131, FR-2).
   useEffect(() => {
     for (const s of sharers) {
       if (s.isMe) continue;
-      s.setSoundOn?.(s.person.id === bigId);
-      s.setVoiceOn?.(s.person.id === bigId);
+      const big = s.person.id === bigId;
+      const h = hearingOf(hearing[s.person.id], big, { sound: 0, voice: 0 });
+      s.setSoundOn?.(big || !h.sound.muted);
+      s.setVoiceOn?.(big || !h.voice.muted);
     }
-  }, [sharers, bigId]);
+  }, [sharers, bigId, hearing]);
   const bigHearing = big && !big.isMe ? hearOf(big.person.id) : null;
-  const voices =
-    big && !big.isMe && big.voice && big.hasVoice && bigHearing
-      ? [{ id: big.person.id, track: big.voice, ...bigHearing.voice }]
-      : [];
+  // The voices that play: the big person's (muted in place while I mute it) and the previews' I hear;
+  // and the previews' screen sounds I hear (the big one's plays with its picture).
+  const notMe = sharers.filter((s) => !s.isMe);
+  const voices = notMe
+    .filter((s) => s.voice && s.hasVoice && (s === big || !hearOf(s.person.id).voice.muted))
+    .map((s) => ({ id: s.person.id, track: s.voice!, ...hearOf(s.person.id).voice }));
+  const previewSounds = notMe
+    .filter((s) => s !== big && s.sound && s.hasSound && !hearOf(s.person.id).sound.muted)
+    .map((s) => ({ id: s.person.id, track: s.sound!, ...hearOf(s.person.id).sound }));
 
   const changeWatch = (next: WatchPrefs) => {
     setWatch(next);
@@ -455,7 +474,8 @@ export function Stage({
   });
 
   // Sideways (spec 0160): the streams row, closed at first and each time the phone turns
-  // sideways; a swipe up opens it, a swipe down closes it, and it closes with the controls.
+  // sideways; a swipe up opens it, a swipe down closes it. It hides with the controls and comes back
+  // open with them (spec 0131).
   const [rowOpen, setRowOpen] = useState(false);
   const [rowFor, setRowFor] = useState(layout);
   if (rowFor !== layout) {
@@ -464,7 +484,55 @@ export function Stage({
   }
   // Nobody live: there's no row to open.
   if (rowOpen && !big) setRowOpen(false);
-  if (rowOpen && sideways && playing && !chromeShown) setRowOpen(false);
+  // Sideways, the streams row's arrow sits at the screen's bottom-left: the sounds start after it
+  // (spec 0131), and go back to the edge when it moves into the open row.
+  useLayoutEffect(() => {
+    const stage = stageRef.current;
+    if (!rowArrow || !stage) return;
+    const place = () => {
+      const arrow = stage.querySelector<HTMLElement>('[data-arrow="up"]');
+      const bar = stage.querySelector<HTMLElement>("[data-viewer-bar]");
+      const holder = bar?.offsetParent as HTMLElement | null;
+      if (!arrow || !holder) return stage.style.removeProperty("--arrow-end");
+      // Where the arrow ends, from the sounds' own layer; the stylesheet keeps them clear of it.
+      stage.style.setProperty("--arrow-end", `${arrowEnd(arrow, holder)}px`);
+    };
+    place();
+    window.addEventListener("resize", place);
+    const watch = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(place);
+    watch?.observe(stage);
+    if (frameRef.current) watch?.observe(frameRef.current);
+    return () => {
+      window.removeEventListener("resize", place);
+      watch?.disconnect();
+      stage.style.removeProperty("--arrow-end");
+    };
+  }, [rowArrow, onScreen, rowOpen]);
+  // Open and not hidden by a tap: hidden, it's closed for screen readers too, and opens again with
+  // the controls.
+  const rowShown = rowOpen && !(rowAway && !chromeShown);
+  // The streams row open: the buttons rise above it, as above the settings sheet (spec 0131): what
+  // comes up from the bottom never covers them.
+  useLayoutEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    const place = () => {
+      const row = stage.querySelector<HTMLElement>("[data-streams-row]");
+      const chrome = screenChromeRef.current;
+      const bar = chrome?.querySelector<HTMLElement>("[data-viewer-bar], [data-buttons]");
+      if (!rowShown || !row || !chrome || !bar) return stage.style.removeProperty("--row-lift");
+      // In layout: where the buttons sit unlifted, from the screen's bottom; the lift is the rest.
+      const lift = parseFloat(stage.style.getPropertyValue("--row-lift")) || 0;
+      let top = 0;
+      for (let n: HTMLElement | null = bar; n && n !== chrome; n = n.offsetParent as HTMLElement | null) top += n.offsetTop;
+      const under = parseFloat(getComputedStyle(chrome).bottom) - lift + (chrome.clientHeight - top - bar.offsetHeight);
+      const fade = parseFloat(getComputedStyle(row).paddingTop);
+      stage.style.setProperty("--row-lift", `${liftOverRow({ row: row.offsetHeight, fade, under })}px`);
+    };
+    place();
+    window.addEventListener("resize", place);
+    return () => window.removeEventListener("resize", place);
+  }, [rowShown, sideways, onScreen]);
   const rowSwipe = useStageSwipe(slideRef, {
     enabled: sideways && Boolean(big),
     axis: "vertical",
@@ -476,25 +544,36 @@ export function Stage({
     if (sideways) showChrome();
   }, [sideways, showChrome]);
   // Touches and moves: the frame's, or sideways the whole screen's, so the black at the
-  // stage's sides counts too.
+  // stage's sides counts too. A tap toggles the controls, the open streams row with them (spec 0131).
+  const tap = useTapToggle({
+    shown: chromeShown && playing,
+    onShow: showChrome,
+    onHide: () => {
+      window.clearTimeout(idleTimer.current);
+      setChromeShown(false);
+      setRowAway(true);
+    },
+  });
   const gestures = {
     onPointerMove: (e: React.PointerEvent) => {
-      showChrome();
+      tap.move(e);
       swipe.onPointerMove(e);
       rowSwipe.onPointerMove(e);
     },
     onPointerDown: (e: React.PointerEvent) => {
-      showChrome();
+      tap.down(e);
       // Sideways the whole screen listens, but only a drag that starts on the picture swipes (FR-12).
       if (sideways && !slideRef.current?.contains(e.target as Node)) return;
       swipe.onPointerDown(e);
       rowSwipe.onPointerDown(e);
     },
     onPointerUp: (e: React.PointerEvent) => {
+      tap.up(e);
       swipe.onPointerUp(e);
       rowSwipe.onPointerUp(e);
     },
     onPointerCancel: (e: React.PointerEvent) => {
+      tap.cancel();
       swipe.onPointerCancel(e);
       rowSwipe.onPointerCancel(e);
     },
@@ -639,6 +718,8 @@ export function Stage({
       className={styles.stage}
       data-layout={layout}
       data-chrome={sideways ? chrome : undefined}
+      data-row-arrow={rowArrow || undefined}
+      data-no-full={(sideways && fullView?.hidden) || undefined}
       aria-label="Shared screen"
       {...(sideways ? gestures : {})}
     >
@@ -667,18 +748,23 @@ export function Stage({
           onFocus={showChrome}
         >
           {body()}
-          {!onScreen && chromeLayer}
+          {!sideways && chromeLayer}
           {!sideways && settingsPanel}
           {voices.map((v) => (
             <VoiceAudio key={v.id} track={v.track} volume={v.volume} muted={v.muted} />
+          ))}
+          {/* The previews I turned on (spec 0131): their screens' sound, at their own volume. */}
+          {previewSounds.map((p) => (
+            <VoiceAudio key={`sound-${p.id}`} track={p.track} volume={p.volume} muted={p.muted} />
           ))}
           {/* A short message to the user, at the top centre of the player (design decision 10). */}
           {!sideways && <Toast />}
         </div>
       </div>
 
-      {/* The upright full view: at the bottom of the screen, moving up together above the sheet. */}
-      {onScreen && (
+      {/* Sideways (and the upright full view): at the bottom of the screen like the streams row's arrow,
+          whatever the picture's shape, moving up together above the sheet or the open row. */}
+      {sideways && (
         <div ref={screenChromeRef} className={styles.screenChrome} onFocus={showChrome}>
           {chromeLayer}
         </div>
@@ -706,7 +792,7 @@ export function Stage({
             <StreamsRow
               others={sharers.filter((s) => s !== big)}
               liveCount={STREAM_PLACES - controls.free}
-              open={rowOpen}
+              open={rowShown}
               onOpen={() => {
                 setRowOpen(true);
                 showChrome();
@@ -715,6 +801,8 @@ export function Stage({
               onPick={(id) => pick(id)}
               hearOf={hearOf}
               onHear={setHear}
+              swappedOf={(id) => Boolean(swappedFor[id])}
+              onSwap={toggleSwap}
             />
           )}
         </>
@@ -733,6 +821,8 @@ export function Stage({
                 onPick={(id) => pick(id)}
                 hearOf={hearOf}
                 onHear={setHear}
+                swappedOf={(id) => Boolean(swappedFor[id])}
+                onSwap={toggleSwap}
               />
             ) : (
               <HereCards people={people} meId={meId} arrivedAt={arrivedAt} />
@@ -750,6 +840,8 @@ export function Stage({
             onPick={(id) => pick(id)}
             hearOf={hearOf}
             onHear={setHear}
+            swappedOf={(id) => Boolean(swappedFor[id])}
+            onSwap={toggleSwap}
           />
         </div>
       )}

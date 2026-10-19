@@ -1,6 +1,7 @@
 import type { Friend, LiveFeed as Feed, Sharer } from "../../types";
 import { NowWatching, STREAM_PLACES } from "./NowWatching";
 import { ScreenVideo } from "./ScreenVideo";
+import { stackOf, useSwapping } from "./stack";
 import { HearToggles, type Hearing } from "./HearToggles";
 import styles from "./LiveFeed.module.css";
 
@@ -15,16 +16,21 @@ type Props = {
   /** What I hear from each person, and muting it from their card (spec 0123). */
   hearOf?: (personId: string) => Hearing;
   onHear?: (personId: string, hearing: Hearing) => void;
+  /** Whether a person's card shows their camera instead of their screen, and swapping it (spec 0131). */
+  swappedOf?: (personId: string) => boolean;
+  onSwap?: (personId: string) => void;
 };
 
 const kindOf = (feed: Feed) => (feed.kind === "camera" ? "camera" : "screen");
 
 /**
  * Under the phone's stage (spec 0158): the other live streams, like the YouTube app's feed. Each
- * is a full-width picture, then who, LIVE, for how long and who's watching. Silent: only the
- * stage plays sound. A tap puts it on the stage.
+ * is a full-width picture, then who, LIVE, for how long and who's watching, with that person's
+ * buttons on the picture to hear them while they stay small (spec 0131). A tap puts it on the stage.
  */
-export function LiveFeed({ others, liveCount, watchersOf, onPick, hearOf, onHear }: Props) {
+export function LiveFeed({ others, liveCount, watchersOf, onPick, hearOf, onHear, swappedOf, onSwap }: Props) {
+  // A swap plays for a moment: the two pictures trade places (spec 0131).
+  const [swapping, setSwapping] = useSwapping();
   return (
     <section className={styles.feed} aria-labelledby="live-now">
       <h2 id="live-now" className={styles.head}>
@@ -35,15 +41,25 @@ export function LiveFeed({ others, liveCount, watchersOf, onPick, hearOf, onHear
       </h2>
       <ul className={styles.list}>
         {others.map((s) => {
-          const feed = s.screen ?? s.camera;
-          if (!feed) return null;
           const id = s.person.id;
+          const { both, feed, video, back, backVideo } = stackOf(s, Boolean(swappedOf?.(id)));
+          if (!feed) return null;
           const what = kindOf(feed);
-          const video = s.isMe ? feed.local : feed.remote?.video;
           const whose = s.isMe ? "your" : `${s.person.name}'s`;
           return (
-            <li key={id} className={styles.card}>
+            <li
+              key={id}
+              className={styles.card}
+              data-stacked={both || undefined}
+              data-swapping={swapping === id || undefined}
+            >
               <div className={styles.frame}>
+                {/* Someone sharing a screen and a camera: the other picture peeks out behind (spec 0131). */}
+                {both && (
+                  <span className={styles.behind} aria-hidden="true">
+                    {backVideo && <ScreenVideo key={back!.kind} video={backVideo} label="" />}
+                  </span>
+                )}
                 <button
                   type="button"
                   className={styles.picture}
@@ -59,10 +75,25 @@ export function LiveFeed({ others, liveCount, watchersOf, onPick, hearOf, onHear
                     <span className={styles.loading}>Loading…</span>
                   )}
                 </button>
-                {/* Beside the picture's button, never in it: their sound and voice (spec 0123). */}
-                {!s.isMe && hearOf && onHear && (
+                {/* Beside the picture's button, never in it: their sound and voice (spec 0123); on mine, only the swap. */}
+                {(!s.isMe || both) && hearOf && onHear && (
                   <span className={styles.voice}>
-                    <HearToggles sharer={s} hearing={hearOf(id)} onChange={(h) => onHear(id, h)} />
+                    <HearToggles
+                      sharer={s}
+                      hearing={hearOf(id)}
+                      onChange={(h) => onHear(id, h)}
+                      swap={
+                        both && onSwap
+                          ? {
+                              on: Boolean(swappedOf?.(id)),
+                              onSwap: () => {
+                                setSwapping(id);
+                                onSwap(id);
+                              },
+                            }
+                          : undefined
+                      }
+                    />
                   </span>
                 )}
               </div>

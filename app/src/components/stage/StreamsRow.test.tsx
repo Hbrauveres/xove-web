@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { FakeTrack } from "../../test/fakeLiveKit";
@@ -76,18 +76,69 @@ describe("the streams row, sideways (spec 0160)", () => {
   });
 });
 
-describe("the streams row: muting from a picture (spec 0123)", () => {
-  it("has each person's two toggles beside the picture, muting without opening them", async () => {
+describe("the streams row: hearing from a picture (specs 0123 and 0131)", () => {
+  const heard = { sound: { volume: 1, muted: false }, voice: { volume: 1, muted: false } };
+  // A finger holds the picture for half a second (spec 0131).
+  async function hold(name: RegExp) {
+    const li = screen.getByRole("button", { name }).closest("li")!;
+    fireEvent.pointerDown(li, { pointerType: "touch" });
+    await act(() => new Promise((r) => setTimeout(r, 550)));
+    fireEvent.pointerUp(li, { pointerType: "touch" });
+    return li;
+  }
+
+  it("shows a person's buttons only after a hold, over the picture's lower part, without opening them", async () => {
     const onPick = vi.fn();
     const onHear = vi.fn();
-    const heard = { sound: { volume: 1, muted: false }, voice: { volume: 1, muted: false } };
     render(
       <StreamsRow others={[{ ...RAFA, hasVoice: true }]} liveCount={2} open onOpen={() => {}} onClose={() => {}} onPick={onPick} hearOf={() => heard} onHear={onHear} />,
     );
+    expect(screen.queryByRole("button", { name: "Mute Rafa's voice" })).not.toBeInTheDocument();
+
+    await hold(/^Watch Rafa/);
     const toggle = screen.getByRole("button", { name: "Mute Rafa's voice" });
     expect(toggle.closest("button[aria-label^='Watch']")).toBeNull();
     await userEvent.setup().click(toggle);
     expect(onHear).toHaveBeenCalledWith("user-3", { ...heard, voice: { volume: 1, muted: true } });
     expect(onPick).not.toHaveBeenCalled();
+  });
+
+  it("ignores only the click that ends a hold: the next tap on the picture watches it", async () => {
+    const onPick = vi.fn();
+    render(
+      <StreamsRow others={[{ ...RAFA, hasVoice: true }]} liveCount={2} open onOpen={() => {}} onClose={() => {}} onPick={onPick} hearOf={() => heard} onHear={() => {}} />,
+    );
+    const li = await hold(/^Watch Rafa/);
+    fireEvent.click(within(li).getByRole("button", { name: /^Watch Rafa/ }));
+    expect(onPick).not.toHaveBeenCalled();
+    await userEvent.setup().click(within(li).getByRole("button", { name: /^Watch Rafa/ }));
+    expect(onPick).toHaveBeenCalledWith("user-3");
+  });
+
+  it("stacks a screen and a camera, with a swap among the held buttons (spec 0131)", async () => {
+    const onSwap = vi.fn();
+    const both: Sharer = { ...RAFA, camera: { ...DUDA.camera!, kind: "camera" } };
+    render(
+      <StreamsRow others={[both]} liveCount={2} open onOpen={() => {}} onClose={() => {}} onPick={() => {}} hearOf={() => heard} onHear={() => {}} swappedOf={() => false} onSwap={onSwap} />,
+    );
+    const li = await hold(/^Watch Rafa/);
+    expect(li).toHaveAttribute("data-stacked");
+    await userEvent.setup().click(screen.getByRole("button", { name: "Swap Rafa's screen and camera" }));
+    expect(onSwap).toHaveBeenCalledWith("user-3");
+    expect(li).toHaveAttribute("data-swapping");
+  });
+
+  it("lights a heard voice's picture while they speak, and not while muted (spec 0131)", () => {
+    const speaking = { ...RAFA, hasVoice: true, speaking: true };
+    const { rerender } = render(
+      <StreamsRow others={[speaking]} liveCount={2} open onOpen={() => {}} onClose={() => {}} onPick={() => {}} hearOf={() => heard} onHear={() => {}} />,
+    );
+    const li = () => screen.getByRole("button", { name: /^Watch Rafa/ }).closest("li")!;
+    expect(li()).toHaveAttribute("data-talking");
+    const muted = { ...heard, voice: { volume: 1, muted: true } };
+    rerender(
+      <StreamsRow others={[speaking]} liveCount={2} open onOpen={() => {}} onClose={() => {}} onPick={() => {}} hearOf={() => muted} onHear={() => {}} />,
+    );
+    expect(li()).not.toHaveAttribute("data-talking");
   });
 });

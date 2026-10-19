@@ -36,3 +36,30 @@ export function liftButtons({ rowBottom, sheetTop, max = Infinity }: { rowBottom
   // `max`: no higher than the player's top edge (the upright normal view, spec 0118).
   return Math.max(0, Math.min(max, rowBottom - (sheetTop - ROOM_GAP)));
 }
+
+/** The space kept between the buttons and the open streams row under them (spec 0131). */
+export const ROW_GAP = 6;
+
+/**
+ * How far to lift the buttons when the streams row opens sideways (spec 0131, design decision 15):
+ * to `ROW_GAP` above its pictures, its fade on top left to the picture. `row` is its height, `fade`
+ * the fade's, `under` how high the buttons' bottom sits from the screen's bottom without a lift.
+ */
+export function liftOverRow({ row, fade, under }: { row: number; fade: number; under: number }): number {
+  return Math.max(0, Math.round(row - fade + ROW_GAP - under));
+}
+
+/** An element's left edge in layout, through its offset parents: a slide (a transform) doesn't count. */
+const leftOf = (el: HTMLElement | null) => {
+  let x = 0;
+  for (; el; el = el.offsetParent as HTMLElement | null) x += el.offsetLeft;
+  return x;
+};
+
+/**
+ * Where the streams row's arrow ends, from the left of the layer the stage's sounds sit in (spec
+ * 0131, design decision 14): the sounds start after it, on its line.
+ */
+export function arrowEnd(arrow: HTMLElement, layer: HTMLElement): number {
+  return Math.round(leftOf(arrow) + arrow.offsetWidth - leftOf(layer));
+}

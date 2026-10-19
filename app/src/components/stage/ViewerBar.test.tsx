@@ -115,6 +115,18 @@ describe("the bar over someone else's stream (spec 0123): who's talking", () => 
 });
 
 describe("the bar over someone else's stream (spec 0123): me, at the right", () => {
+  it("marks a heard voice to stay through the fade, and only a heard one (spec 0131, design decision 18)", async () => {
+    const user = userEvent.setup();
+    const { rerender } = render(<Bruno />);
+    const anchor = (name: string) => screen.getByRole("button", { name }).parentElement!;
+    expect(anchor("Mute Bruno's voice")).toHaveAttribute("data-stays");
+    expect(anchor("Mute the screen's sound")).not.toHaveAttribute("data-stays");
+    await user.click(screen.getByRole("button", { name: "Mute Bruno's voice" }));
+    expect(anchor("Unmute Bruno's voice")).not.toHaveAttribute("data-stays");
+    rerender(<Bruno voiceOff />);
+    expect(anchor("Bruno's mic is off")).not.toHaveAttribute("data-stays");
+  });
+
   it("offers Go live while I'm not live: my screen, my camera, the settings", async () => {
     const onStart = vi.fn();
     const onSettings = vi.fn();
