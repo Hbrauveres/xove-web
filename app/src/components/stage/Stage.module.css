@@ -288,6 +288,12 @@
   transition: left 0.28s ease;
 }
 
+/* The open streams row hides with the controls, and comes back with them (spec 0131). */
+.stage[data-layout="sideways"][data-chrome="hidden"] [data-streams-row] {
+  transform: translateY(100%);
+  pointer-events: none;
+}
+
 /* Sideways where there's no fullscreen button (a phone held sideways is already full): Go live
    takes its place at the right (spec 0131). */
 .stage[data-no-full] [data-viewer-bar] {

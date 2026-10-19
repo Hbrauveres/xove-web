@@ -486,7 +486,8 @@ export function Stage({
   });
 
   // Sideways (spec 0160): the streams row, closed at first and each time the phone turns
-  // sideways; a swipe up opens it, a swipe down closes it, and it closes with the controls.
+  // sideways; a swipe up opens it, a swipe down closes it. It hides with the controls and comes back
+  // open with them (spec 0131).
   const [rowOpen, setRowOpen] = useState(false);
   const [rowFor, setRowFor] = useState(layout);
   if (rowFor !== layout) {
@@ -495,7 +496,6 @@ export function Stage({
   }
   // Nobody live: there's no row to open.
   if (rowOpen && !big) setRowOpen(false);
-  if (rowOpen && sideways && playing && !chromeShown) setRowOpen(false);
   // Sideways, the streams row's arrow sits at the screen's bottom-left: the sounds start after it
   // (spec 0131), and go back to the edge when it moves into the open row.
   useLayoutEffect(() => {
@@ -560,24 +560,46 @@ export function Stage({
   }, [sideways, showChrome]);
   // Touches and moves: the frame's, or sideways the whole screen's, so the black at the
   // stage's sides counts too.
+  // A finger's tap anywhere on the picture shows the controls, or hides them if they're shown: always
+  // the same, the open streams row included, which comes back as it was (spec 0131). A drag is a
+  // swipe and only shows them; a press on a control keeps them.
+  const tap = useRef<{ x: number; y: number; at: number; shown: boolean } | null>(null);
+  const onControl = (e: React.PointerEvent) =>
+    Boolean((e.target as Element).closest?.('button, input, a, label, [role="dialog"]'));
   const gestures = {
     onPointerMove: (e: React.PointerEvent) => {
-      showChrome();
+      const t = tap.current;
+      if (e.pointerType !== "touch") showChrome();
+      else if (t && Math.hypot(e.clientX - t.x, e.clientY - t.y) > 10) {
+        tap.current = null;
+        showChrome();
+      }
       swipe.onPointerMove(e);
       rowSwipe.onPointerMove(e);
     },
     onPointerDown: (e: React.PointerEvent) => {
-      showChrome();
+      if (e.pointerType === "touch" && !onControl(e))
+        tap.current = { x: e.clientX, y: e.clientY, at: e.timeStamp, shown: chromeShown };
+      else showChrome();
       // Sideways the whole screen listens, but only a drag that starts on the picture swipes (FR-12).
       if (sideways && !slideRef.current?.contains(e.target as Node)) return;
       swipe.onPointerDown(e);
       rowSwipe.onPointerDown(e);
     },
     onPointerUp: (e: React.PointerEvent) => {
+      const t = tap.current;
+      tap.current = null;
+      if (t && e.timeStamp - t.at < 500) {
+        if (t.shown && playing) {
+          window.clearTimeout(idleTimer.current);
+          setChromeShown(false);
+        } else showChrome();
+      }
       swipe.onPointerUp(e);
       rowSwipe.onPointerUp(e);
     },
     onPointerCancel: (e: React.PointerEvent) => {
+      tap.current = null;
       swipe.onPointerCancel(e);
       rowSwipe.onPointerCancel(e);
     },
