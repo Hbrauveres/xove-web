@@ -729,16 +729,8 @@ export function Stage({
         data-shape={shape.toFixed(4)}
         style={{ "--shape": shape } as React.CSSProperties}
       >
-        {/* Behind the frame, outside it: the frame clips what's inside it. */}
-        {/* One per stream: a stream the browser won't let it read doesn't darken the next one. */}
-        {/* Nobody live: each viewfinder corner glows outward, a blurred L (spec 0123, design decision 7). */}
-        {!big && <CornerGlow prefs={ambilight} />}
-        <Ambilight
-          key={big ? `${big.person.id}|${stage.mainKind}|${gridKey(shape)}` : "none"}
-          video={big ? bigVideoEl : null}
-          prefs={ambilight}
-          shape={shape}
-        />
+        {/* The controls' layer (spec 0133): the stage's whole box, whatever the picture's shape. It
+            holds the buttons and the view, and takes the taps. */}
         <div
           ref={frameRef}
           className={styles.frame}
@@ -747,7 +739,20 @@ export function Stage({
           onPointerLeave={leaveChrome}
           onFocus={showChrome}
         >
-          {body()}
+          {/* The view (spec 0133): the picture in its own shape, centred, with its light behind it. */}
+          <div className={styles.view}>
+            {/* Behind the picture, outside it: the picture clips what's inside it. */}
+            {/* One per stream: a stream the browser won't let it read doesn't darken the next one. */}
+            {/* Nobody live: each viewfinder corner glows outward, a blurred L (spec 0123, design decision 7). */}
+            {!big && <CornerGlow prefs={ambilight} />}
+            <Ambilight
+              key={big ? `${big.person.id}|${stage.mainKind}|${gridKey(shape)}` : "none"}
+              video={big ? bigVideoEl : null}
+              prefs={ambilight}
+              shape={shape}
+            />
+            <div className={styles.picture}>{body()}</div>
+          </div>
           {!sideways && chromeLayer}
           {!sideways && settingsPanel}
           {voices.map((v) => (

@@ -18,7 +18,9 @@
   --shape: 1.7778;
   --free-h: max(100cqw * 9 / 16, 100cqh - var(--info-h, 104px) - var(--info-gap, 14px));
   position: relative;
-  width: min(100cqw, var(--free-h) * var(--shape));
+  /* The controls' layer takes the column's whole width (spec 0133); the view inside it hugs the
+     picture. Its height still follows the picture, as before. */
+  width: 100cqw;
   height: min(100cqw / var(--shape), var(--free-h));
   margin-inline: auto;
   transition:
@@ -27,10 +29,33 @@
     translate var(--unroll);
 }
 
+/* The controls' layer (spec 0133): the stage's whole box, see-through. Its own size decides where
+   the buttons go and how tall a menu can be, not the window's or the picture's. */
 .frame {
   position: relative;
-  /* Its own size decides where the buttons go and how tall a menu can be, not the window's. */
   container-type: size;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.frame:fullscreen {
+  background: #000;
+}
+
+/* The view (spec 0133): the picture in its own shape, as big as the controls' layer allows,
+   centred; its light behind it, stretched past it. */
+.view {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(100cqw, 100cqh * var(--shape));
+  height: min(100cqh, 100cqw / var(--shape));
+  translate: -50% -50%;
+}
+
+.picture {
+  position: relative;
   width: 100%;
   height: 100%;
   background: #000;
@@ -42,11 +67,11 @@
 
 /* A picture filling the stage: no black behind it to show as a sliver at an edge (spec 0123,
    design decision 14; see ScreenVideo.module.css). */
-.frame:has(video[data-fill]) {
+.picture:has(video[data-fill]) {
   background: transparent;
 }
 
-.frame:fullscreen {
+.frame:fullscreen .picture {
   border-radius: 0;
 }
 
@@ -165,11 +190,11 @@
 
 .stage[data-layout="phone"] .box {
   flex: none;
-  width: min(100cqw, 60dvh * var(--shape));
+  width: 100cqw;
   height: min(100cqw / var(--shape), 60dvh);
 }
 
-.stage[data-layout="phone"] .frame {
+.stage[data-layout="phone"] .picture {
   border-radius: 0;
 }
 
@@ -234,13 +259,14 @@
   touch-action: none;
 }
 
+/* Sideways the controls' layer is the whole screen (spec 0133); the view hugs the picture in it. */
 .stage[data-layout="sideways"] .box {
   flex: none;
-  width: min(100cqw, 100dvh * var(--shape));
-  height: min(100dvh, 100cqw / var(--shape));
+  width: 100cqw;
+  height: 100dvh;
 }
 
-.stage[data-layout="sideways"] .frame {
+.stage[data-layout="sideways"] .picture {
   border-radius: 0;
 }
 
