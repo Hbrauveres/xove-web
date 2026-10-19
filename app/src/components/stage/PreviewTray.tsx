@@ -7,6 +7,8 @@ const LEAVE_MS = 250;
 /** Its distance from the preview, and from the window's edge. */
 const GAP = 6;
 const EDGE = 8;
+/** The room a slider adds when it unrolls: the side is chosen with it, so it never flips later. */
+const SLIDER_ROOM = 32;
 
 type Open = { id: string; anchor: HTMLElement; pinned: boolean };
 
@@ -57,10 +59,14 @@ export function PreviewTray({
   const [place, setPlace] = useState<{ left: number; width: number; top?: number; bottom?: number } | null>(null);
   useLayoutEffect(() => {
     if (!open) return;
+    // Under the preview or above it: chosen once, as it opens, with room for a slider.
+    let below: boolean | null = null;
     const measure = () => {
       const r = open.anchor.getBoundingClientRect();
-      const h = ref.current?.offsetHeight ?? 0;
-      const below = r.bottom + GAP + h <= window.innerHeight - EDGE;
+      if (below === null) {
+        const h = (ref.current?.offsetHeight ?? 0) + SLIDER_ROOM;
+        below = r.bottom + GAP + h <= window.innerHeight - EDGE;
+      }
       setPlace(below ? { left: r.left, width: r.width, top: r.bottom + GAP } : { left: r.left, width: r.width, bottom: window.innerHeight - r.top + GAP });
     };
     measure();

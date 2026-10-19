@@ -67,6 +67,9 @@ export function HearToggles({
     document.addEventListener("pointerdown", away);
     return () => document.removeEventListener("pointerdown", away);
   }, [open]);
+  // What the slider sets: the open sound, kept while it rolls up so it doesn't change on the way.
+  const [shown, setShown] = useState<Kind | null>(null);
+  if (open && open !== shown) setShown(open);
   const show = (kind: Kind) => {
     setOpen(kind);
     restart();
@@ -150,36 +153,51 @@ export function HearToggles({
             }}
           >
             <svg viewBox="0 0 20 20" aria-hidden="true">
-              <path d="M4 7h11M12 4l3 3-3 3M16 13H5M8 10l-3 3 3 3" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              <path
+                d="M4 7h11M12 4l3 3-3 3M16 13H5M8 10l-3 3 3 3"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </button>
         )}
       </span>
-      {/* Each sound's own slider under the buttons, unrolling smoothly; one open at a time (spec 0131). */}
-      {(["voice", "sound"] as const).map((kind) => {
-        const unavailable = kind === "sound" ? noSound : noVoice;
-        if (unavailable) return null;
-        const muted = hearing[kind].muted;
-        return (
-          <span key={kind} className={styles.drawer} data-open={open === kind || undefined} inert={open !== kind}>
-            <span className={styles.slider}>
-              {kind === "sound" ? muted ? <VolumeOffIcon /> : <SoundIcon /> : muted ? <VoiceOffIcon /> : <VoiceIcon />}
+      {/* One slider under the buttons, unrolling once; moving between buttons only changes what it
+          sets, with a crossfade, so the row never moves under the pointer (spec 0131). */}
+      <span className={styles.drawer} data-drawer data-open={open ? true : undefined} inert={!open}>
+        <span className={styles.inner}>
+          {shown && (
+            <span key={shown} className={styles.slider} data-slider>
+              {shown === "sound" ? (
+                hearing.sound.muted ? (
+                  <VolumeOffIcon />
+                ) : (
+                  <SoundIcon />
+                )
+              ) : hearing.voice.muted ? (
+                <VoiceOffIcon />
+              ) : (
+                <VoiceIcon />
+              )}
               <Range
                 className={styles.range}
                 min={0}
                 max={1}
                 step={0.05}
-                aria-label={kind === "sound" ? `${name}'s screen sound volume` : `${name}'s voice volume`}
-                value={hearing[kind].volume}
+                aria-label={shown === "sound" ? `${name}'s screen sound volume` : `${name}'s voice volume`}
+                value={hearing[shown].volume}
                 onChange={(e) => {
-                  onChange({ ...hearing, [kind]: { volume: Number(e.target.value), muted: false } });
+                  onChange({ ...hearing, [shown]: { volume: Number(e.target.value), muted: false } });
                   restart();
                 }}
               />
             </span>
-          </span>
-        );
-      })}
+          )}
+        </span>
+      </span>
     </span>
   );
 }
