@@ -12,8 +12,8 @@ This repo is the web app: React 19 and TypeScript, talking to [`xove-api`](https
 
 ## What it does
 
-- **Share a screen, a window or a tab**, with its sound, and a camera on top of it or on its own. No microphone yet: a voice will come only with a screen or a camera, when its sharer turns it on.
-- **Watch in theater mode:** the picked stream fills the stage in its own shape, with ambilight around it; the others play silently as previews.
+- **Share a screen, a window or a tab**, with its sound, and a camera on top of it or on its own, and **talk**: a voice sent with them, when the sharer turns it on, through a noise gate they set.
+- **Watch in theater mode:** the picked stream fills the stage in its own shape, with ambilight around it; you hear its sound and its sharer's voice, each muted or set on its own; the others play silently as previews, each with its own mutes.
 - **On a phone,** as an installed home-screen app: the stage on top and a feed upright, full screen with a row of streams sideways, swipes to change who's on the stage.
 - **Invited only:** sign in with Google, ask for access, an admin approves.
 
@@ -21,7 +21,7 @@ This repo is the web app: React 19 and TypeScript, talking to [`xove-api`](https
 
 | | |
 | --- | --- |
-| ![Nobody live on a desktop: colour bars on the stage](docs/images/design/room-empty-desktop.png) | **The room, nobody live.** Colour bars on the stage, lit by the ambilight, "The stage is yours." and the round buttons to start a share |
+| ![Nobody live on a desktop: the stage as a camera waiting](docs/images/design/room-empty-desktop.png) | **The room, nobody live.** The stage as a camera waiting, its corners glowing, "Be the first to go live" and the two ways to start |
 | ![A phone held sideways, with the streams row open](docs/images/design/room-phone-sideways.png) | **A phone held sideways.** The stage fills the screen; the controls fade while a stream plays; a swipe up opens the other streams |
 | ![The install screen on Android](docs/images/design/install-android.png) | **The install screen.** On a phone or tablet in a browser tab, Xovê asks to be installed: it's used from the home screen |
 

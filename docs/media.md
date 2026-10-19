@@ -32,7 +32,7 @@ sequenceDiagram
 | A tab | That tab's sound |
 | The whole screen | The system's sound, without Xovê's own (`restrictOwnAudio`), so viewers don't hear their own streams back |
 
-Sound is captured as music: no echo cancellation, no noise suppression, no automatic volume, in stereo, and sent at 128 kbit/s without silence skipping (`dtx: false`, which chops quiet moments). Whether a share has sound depends on the browser and the system: Chrome offers it for a tab, for a window where the system supports it, and for the whole screen on Windows; Firefox and Safari offer none. A screen without sound says so in its button's tooltip (with a mouse, in the settings' Screen tab), and viewers see a crossed, locked volume button.
+Sound is captured as music: no echo cancellation, no noise suppression, no automatic volume, in stereo, and sent at 128 kbit/s without silence skipping (`dtx: false`, which chops quiet moments). Whether a share has sound depends on the browser and the system: Chrome offers it for a tab, for a window where the system supports it, and for the whole screen on Windows; Firefox and Safari offer none. A screen without sound says so in its button's tooltip (with a mouse, in the settings' Screen tab), and viewers see its sound button greyed ("No sound in this stream").
 
 **While sharing**, the settings panel (from the cog) has what's shared and Change, the camera list, and each stream's quality and mode; with a mouse, resting on a live button unrolls the same quick access (Change; the camera list), and by touch a 500 ms press and hold does:
 
@@ -41,6 +41,16 @@ Sound is captured as music: no echo cancellation, no noise suppression, no autom
 - **Stop:** the lit button, or the browser's own "Stop sharing" bar, ends the stream.
 
 **Cameras** are asked for only on that click, or while the settings' Camera tab is open (the browser asks for permission the first time, like any app; refused or missing, the room and the Camera tab say so, and how to allow it) (a preview only the sharer sees, sent as is if the camera button is pressed then, kept if the camera is turned off with the tab open, and stopped when the tab closes), never with the microphone, and go up to 720p: enough for a face, and it spares the upload of someone sending a screen too. They're sent like a screen, with a 720p and a 480p layer.
+
+## The voice
+
+A sharer can talk to the room, alongside their screen or camera, never alone:
+
+- **Asked for only when they turn it on** (the mic button on their stream, or at the right of someone else's while they're live), off by default, never with the camera. The browser asks the first time; refused or missing, the voice stays off and a toast says why and how to allow it. Stopping both streams turns it off. A voice takes none of the 6 places: it isn't a stream for the API.
+- **Captured as a voice**, unlike a screen's sound: the browser's echo cancellation, noise suppression and automatic volume on by default, voice isolation off (where the browser has it), all set in the settings' Voice tab with the mic picked, applied live (`restartTrack` on the same track).
+- **Through a noise gate** (`media/noiseGate.ts`): sound under the sharer's sensitivity line isn't sent. A small Web Audio step set on the track as LiveKit's audio processor: an analyser read every 10 ms against the line opens a gain at once when the level crosses it, holds it 250 ms after the level drops, then fades it in 100 ms, so words aren't chopped. The line moves live, without restarting the mic. Where the browser can't run it, the voice goes ungated. It costs a little CPU on the sharer's computer while the voice is on; nothing for viewers.
+- **The level** in the Voice tab reads the mic itself, before the gate, on the gate's own scale, so the line means the same in both; it's measured only while the tab is open. **Test** plays the voice as it's sent, back to the sharer, for 5 s.
+- **Who's speaking** comes from LiveKit (`ActiveSpeakersChanged`); a voice muted by its sharer shows as off.
 
 ## Quality and modes
 
@@ -64,8 +74,8 @@ The sharer picks a quality and a mode in the settings, before sharing or while s
 
 - **The size it shows.** The room connects with `adaptiveStream`: each video is downloaded at the size it's shown, so previews and the facecam come in small. With `dynacast`, layers nobody watches aren't sent at all.
 - **Always Auto.** There's no quality to pick while watching: each video comes at the size it's shown, steps down by itself when the connection can't keep up, and never asks for more than the sharer sends.
-- **Sound.** Only the big person's plays. Previews are muted, each with its own volume; a muted preview's sound isn't downloaded at all, and a preview without sound has no speaker. Someone sharing sees their own streams like everyone else, without their sound. The volume button mutes and unmutes to the same level; there's no slider while muted, without sound, or on iPhones and iPads, which ignore a page's volume.
-- **Remembered.** Each browser keeps its choices in `localStorage`: `xove.share.*` (quality, mode), `xove.camera.*` (quality, mode, device), `xove.watch.*` (volume, muted) and `xove.ambilight.*` (on, brightness).
+- **Sound.** Only the big person's plays: their screen's sound and their voice, each with its own mute and volume, kept per person for the visit. Previews are silent, and a sound nobody hears isn't downloaded at all; a preview's toggles mute that person for when they're big. Someone sharing sees their own streams like everyone else, without their sound. There's no slider on iPhones and iPads, which ignore a page's volume: each sound is on and off.
+- **Remembered.** Each browser keeps its choices in `localStorage`: `xove.share.*` (quality, mode), `xove.camera.*` (quality, mode, device), `xove.mic.*` (the mic picked; its processing and line), `xove.watch.*` and `xove.voice.*` (the volume a screen's sound and a voice start at) and `xove.ambilight.*` (on, brightness).
 
 To see what really happens, open `chrome://webrtc-internals` in the sharer's or a viewer's browser: the codec, frame rate, size, bitrate, and why the quality drops ("cpu": the sharer's computer can't keep up; "bandwidth": the connection can't).
 
@@ -78,6 +88,6 @@ The picture's own edges glow around the stage, like a TV's ambient light. It's d
 - **A grid of square cells** follows the stage's shape (`gridFor`): 64 × 36 at 16:9, 36 × 64 for a portrait picture, at most 96 along the longer side. Round it, the glow reaches 16 cells, then a 3-cell margin, at 2 px a cell (`glowLayout`).
 - **Each update** draws the picture in nine pieces (`edgeDraws`): the whole picture under the stage, its edge strips stretched outward, and its corner patches stretched into the corners. It draws them over the last update at partial opacity, which eases the light with a 120 ms time constant (`easeFor`). Then it blurs the result once and cuts it with a fade mask made once per grid (`fadeMask`): the light falls to exactly zero before the margin, with a fixed grain so it doesn't show bands.
 
-**When it updates** (`components/stage/Ambilight.tsx`): with the screen's refresh (`requestAnimationFrame`, at most 60 times a second), only while the tab is visible, the video plays and the ambilight is on. With reduced motion it updates twice a second instead, a gentle step each time. With nobody live, it lights the empty stage's colour bars: a small still picture drawn once, with no loop.
+**When it updates** (`components/stage/Ambilight.tsx`): with the screen's refresh (`requestAnimationFrame`, at most 60 times a second), only while the tab is visible, the video plays and the ambilight is on. With reduced motion it updates twice a second instead, a gentle step each time. With nobody live there's no ambilight: the empty stage's corners glow on their own (still CSS: a blurred L at each corner, following the ambilight's switch and brightness).
 
 **What it costs:** one small canvas draw and one blur per frame while a video plays. The ambilight's switch and brightness are in the account menu.

@@ -79,7 +79,7 @@ Dark only: Xovê is a room for watching screens, so the chrome stays out of the 
 | `--accent-ink` | `#3a0808` | Text and icons on a red fill (4.7:1) |
 | `--accent-soft` | `rgba(239, 75, 75, 0.14)` | Soft red glows and tints |
 | `--live` | `#ef4b4b` | LIVE, the live dot, danger buttons |
-| `--ok` | `#3fbf7f` | Connected, the seats bar |
+| `--ok` | `#3fbf7f` | Connected, the seats bar, the mic level when it's sent |
 | `--warn` | `#e0b341` | Reconnecting |
 | `--glass` | `rgba(10, 10, 11, 0.72)` | The round buttons, drop-ups and pickers over the video (with an 8 px blur) |
 | `--panel` | `rgba(18, 18, 20, 0.74)` | The settings panel (with a 22 px blur) |
@@ -88,10 +88,11 @@ Dark only: Xovê is a room for watching screens, so the chrome stays out of the 
 | `--sel-shadow` | `0 1px 2px rgba(0, 0, 0, 0.4)` | Its shadow |
 | `--sel-hover` | `#26262a` | A button in a row, pointed at |
 
-- **Pure black `#000` only behind the video:** the stage, the previews, the facecam and the camera's preview in the settings, as the picture's own frame. Nowhere else.
+- **Pure black `#000` only behind the video:** the stage, the previews, the facecam and the camera's preview in the settings, as the picture's own frame. Nowhere else. A picture that fills the stage (its shape within 1% of the stage's) has nothing black behind it, so no sliver shows at an edge.
+- **The speaking greens**, only for "this person is speaking": the tube `#2bcd68` at 85%, the icon `#45e087`, the glow `#16a34a`. Nothing else is green but "connected" and a mic level that's sent.
 - **Red is rare on purpose:** it means the brand or something live. Sliders are white and the switch is grey until it's on.
 - **Avatars** without a photo get the person's own hue: `hsl(<hue> 42% 38%)` with a white initial.
-- **The empty stage's colour bars** keep their colours, at full strength, and the ambilight glows from them.
+- **The empty stage** is one flat dark (`#0f0f11`: a gradient this dim shows bands); its corners glow softly, each in its own colour (a slightly blue grey, the top right red).
 - **The ambilight** takes its colour from the picture, never from the palette.
 - **Contrast:** every text colour reaches 4.5:1 on every surface, 3:1 for faint labels. `styles/palette.test.ts` computes it and rejects the old palettes (amber, blue-tinted greys).
 
@@ -101,9 +102,9 @@ Dark only: Xovê is a room for watching screens, so the chrome stays out of the 
 
 | Font | Token | Use |
 | --- | --- | --- |
-| **Bricolage Grotesque** 500 / 700 / 800 | `--font-display` | Headings, the name of who's on the stage, big statements ("The stage is yours.") |
+| **Bricolage Grotesque** 500 / 700 / 800 | `--font-display` | Headings, the name of who's on the stage, big statements ("Be the first to go live") |
 | **IBM Plex Sans** 400 / 500 / 600 | `--font-body` | Everything else: body, buttons, names in lists |
-| **IBM Plex Mono** 400 / 500 | `--font-mono` | Counters and times: LIVE, `1:12:41`, "3 of 6 live", section labels like "LIVE NOW" |
+| **IBM Plex Mono** 400 / 500 | `--font-mono` | Counters and times: LIVE, `1:12:41`, section labels like "LIVE NOW", the empty stage's camera display |
 
 | Size token | rem | px | Typical use |
 | --- | --- | --- | --- |
@@ -147,9 +148,10 @@ Body line height is 1.5; headings balance their lines (`text-wrap: balance`). Fo
 | The settings' tab marker; a segmented control's pill | 200 ms | `cubic-bezier(0.2, 0.8, 0.2, 1)` |
 | A drop-up: the pause before it unrolls | 120 ms resting on the button | — |
 | …its fade and 6 px slide up | 140 ms and 180 ms; a slip outside shorter than 300 ms doesn't close it | ease, `cubic-bezier(0.2, 0.8, 0.2, 1)` |
-| The volume mixer unrolling upward from its button, and rolling back | 260 ms, by its height; closes after 4 s without a touch | `cubic-bezier(0.2, 0.8, 0.2, 1)` |
+| A sound's slider unrolling over its button: resting the mouse on it, or holding it by touch | after 120 ms at rest, 500 ms held; closes after 4 s without a touch | `cubic-bezier(0.2, 0.8, 0.2, 1)` |
+| The speaking cue lighting and going out | 120 ms | ease |
 | A picker's chevron turning | 200 ms | `cubic-bezier(0.2, 0.8, 0.2, 1)` |
-| The cue: a control pointed at (a sharp red border pulsing in place, with a slight glow) | two 1 s pulses, then gone; still with reduced motion | ease-in-out |
+| The cue: a control pointed at (a sharp red border pulsing in place, with a slight glow) | two 1 s pulses, then lit until the next press; still with reduced motion | ease-in-out |
 | A list unrolling from its pill, its options fading in by their distance (40 ms apart), and rolling back | 220 ms; 150 ms back | `cubic-bezier(0.2, 0.8, 0.2, 1)`; ease-in back |
 | The soft light behind an option pointed at | 160 ms | ease |
 | The player moving up for the settings sheet (upright full view) and back | 260 ms | `cubic-bezier(0.2, 0.8, 0.2, 1)` |
@@ -168,32 +170,39 @@ Body line height is 1.5; headings balance their lines (`text-wrap: balance`). Fo
 
 ### Round buttons
 
-![The round buttons over the stage](images/design/round-buttons.png)
+![My own stream's round buttons: my screen, camera, mic and settings](images/design/round-buttons.png)
+
+**Controls by owner** (a rule for every control): over **someone else's stream**, the left corner is what I hear from them and the right corner is me ([below](#what-i-hear-and-go-live)), nothing of mine in the middle; over **my own stream**, my controls in the middle. A control goes on the side of whoever it belongs to. **A mic icon always means my mic**; someone else's voice is a speaking head.
 
 - **48 px** circles in a pill (44 px on a phone held upright, 48 px again in its full-screen view and held sideways), 10 px apart (8 px on the upright phone), dark frosted glass (`rgba(10, 10, 11, 0.72)`, blur 8 px, shadow `0 4px 16px` black at 35%), with a 20 px icon.
 - **One state system, on every round button:** **sending** (your screen, your camera) is a red pill (`--accent`) with the plain icon in deep red (`--accent-ink`); **off** is dark glass with the crossed icon in white; **unavailable** is 45% opacity, with the reason in the tooltip. Red means live (and, elsewhere, the brand and [the cue](#rules-for-new-work)).
-- **The icons** (`components/stage/icons.tsx`): the screen is a crossed monitor while you're not sharing, and shows **a screen with an arrow up** while it's pointed at or focused, so it says what a click does (not while it's unavailable); while you share, the plain monitor. The camera is crossed while off, plain while on. The volume is a speaker with its waves, crossed when every sound you can hear is muted or at zero (a greyed one doesn't count). Settings is **a cog with teeth**.
-- **Order**, centred at the bottom of the stage: volume, screen, camera, settings.
+- **The icons** (`components/stage/icons.tsx`): the screen is a crossed monitor while you're not sharing, and shows **a screen with an arrow up** while it's pointed at or focused, so it says what a click does (not while it's unavailable); while you share, the plain monitor. The camera is crossed while off, plain while on. My mic is crossed while off, plain and red while my voice is on. Settings is **a cog with teeth**.
+- **Order**, centred at the bottom of my own stream: screen, camera, mic, settings. They show only on my stream (my tile, or the stage once I start a stream, which opens mine).
 - **Plain on/off buttons, no arrows.** A click starts or stops; what you send is set in the [settings panel](#the-settings-panel), and while a stream is live, resting the mouse on its button unrolls its [drop-up](#drop-ups). With a mouse, a live button shows its drop-up instead of a tooltip.
 - **Hover:** a glass pill lightens to `rgba(40, 40, 44, 0.85)` in 120 ms (only with a mouse); a red pill and an unavailable one don't change. **Focus** draws one red ring around the pill.
-- **Which ones:** sharing my screen and camera, and the cog, always; the volume only while watching someone else. On a phone, which can't share a screen, the screen button is **greyed out**, not hidden: faded, its crossed icon, and "This browser can't share a screen" as its description. In fullscreen they come along, and any error from starting is drawn over the player.
-- **Unavailable** (a full room, no sound): 45% opacity, with the reason in the tooltip. A stream with nothing to hear (no screen sound and no voice: a screen without sound, and until the voice arrives, a camera) shows a crossed, locked volume button ("No sound in this stream").
-- **A button that opens a panel never also changes a setting:** the volume button opens [the mixer](#the-volume-mixer) and closes it, on a click, a tap or Enter, and **never mutes**; muting is the mixer's own round buttons. Nothing opens on hover or focus.
-- **Coming and going without moving what you clicked:** a button that appears or goes (the volume when you start or stop watching someone) opens or closes its width and its gap in 220 ms while it fades (in: 160 ms after 80 ms; out: 140 ms), so its neighbours slide. While a mouse pointer rests on the row, the button under it stays exactly where it is (a touch doesn't stay, so nothing is held); once the pointer leaves, the row glides back to the centre in 220 ms.
+- **Which ones:** on my stream, my screen and camera, my mic, and the cog. On a phone, which can't share a screen, the screen button is **greyed out**, not hidden: faded, its crossed icon, and "This browser can't share a screen" as its description. In fullscreen they come along, and any error from starting is drawn over the player.
+- **Unavailable** (a full room, no screen): 45% opacity, with the reason in the tooltip.
+- **A button that opens a panel never also changes a setting** (the cog only opens the settings).
+- **Coming and going without moving what you clicked:** a button that appears or goes opens or closes its width and its gap in 220 ms while it fades (in: 160 ms after 80 ms; out: 140 ms), so its neighbours slide. While a mouse pointer rests on the row, the button under it stays exactly where it is (a touch doesn't stay, so nothing is held); once the pointer leaves, the row glides back to the centre in 220 ms.
 - They fade with the rest of the controls while a stream plays, and come back on any move.
 
-### The volume mixer
+### What I hear, and Go live
 
-![The mixer over the volume button: the screen's sound, and the voice greyed](images/design/mixer.png) ![The iPhone's pill of two round on/off buttons](images/design/mixer-iphone.png)
+![Over someone else's stream: what I hear at the left, Go live at the right](images/design/viewer-bar.png)
 
-`components/stage/VolumeMixer`: what the viewer hears, from the volume button.
+`components/stage/ViewerBar`: the corners over someone else's stream.
 
-- **Over its button, everywhere:** desktop, tablets, and phones upright, sideways and in the full view, centred over the volume button and **10 px above** it. A slim frosted panel (the panel colour at 74%, blur 22 px, a 1 px white border at 8%, 14 px corners) that **unrolls upward** from the button, its contents at the bottom, and rolls back.
-- **A column per sound, in a fixed order:** the screen's sound, then the person's voice. Each is **an upright bar** (the [slider](#sliders), turned upright, 96 px) and **a round mute** under it (32 px, a 16 px icon), 34 px wide, no labels. A playing sound shows its plain white icon (a speaker with one wave; the mic); a muted one, or one at zero, the crossed white icon (a muted one's bar faded to 35%). Each mute keeps one name ("Mute Screen sound"), pressed while muted, in the mixer and the iPhone's pill alike. No red: nothing is live there.
-- **Its places are fixed; a sound you can't hear is greyed in its place:** 45%, an empty track with no knob, the crossed icon, and why in its tooltip ("No voice yet"); a tap says it in the [toast](#notifications-and-status), and nothing changes. The mixer never moves or resizes when a sound comes or goes.
-- **It closes** from the volume button, a press outside, Escape (wherever the focus is), or **4 s without a touch inside** (any press, move, key or change starts the count over); closing with the focus inside gives it back to the button. **Muting never closes it.** Moving a bar also unmutes that sound.
-- **iPhone** (iOS ignores a page's volume): no bars, **a pill of two round on/off buttons** (36 px) over the button, its 4 px padding inside its height so they're centred, the voice's greyed the same way.
-- **One panel over the buttons at a time:** opening the mixer closes the settings, and opening the settings closes the mixer.
+- **34 px** round buttons, as small as the fullscreen button, so the picture stays the subject; the round buttons' glass, a 16 px icon. The left corner is level with the fullscreen button; the right corner sits just left of it.
+- **At the left, what I hear from them, each sound its own button in a fixed place:** their screen's sound (a speaker), then their voice (a speaking head). A sound that isn't there is greyed in its place (45%, its reason in the tooltip: "No sound in this stream", "Marina's mic is off"), and a touch says it in the [toast](#notifications-and-status).
+- **A tap or click mutes and unmutes that one sound** (crossed while muted, pressed for screen readers). **Resting the mouse on it (120 ms) or holding it by touch (500 ms) unrolls its own slider** over it ([the slider](#sliders), upright); Tab opens it, Enter mutes. Moving a slider also unmutes; it closes after 4 s without a touch, or a press outside. On an iPhone, which can't set a page's volume, each button is on and off, with no slider.
+- **Each person's sound and voice keep their own mute and volume** while I'm in the room, so watching someone else and coming back never brings back a sound I muted. The volumes I set last are the start for the next person.
+
+![A sound's own slider, over its button](images/design/hear-slider.png) ![Go live's menu](images/design/go-live.png)
+
+- **At the right, me:** my mic while I'm live (off by default, red while on); while I'm not, a **Go live** pill (a red dot, "Go live") whose menu offers my screen, my camera and the settings. Greyed where they can't start, saying why (a phone's screen; "6 streams are live" in a full room). The settings opened from it open over it.
+- **Who's talking:** the voice button lights while the person speaks: a slim green neon tube (1 px, `#2bcd68` at 85%) with a soft glow inside and out (`#16a34a`), the icon (1.25 px lines) brighter green (`#45e087`); silent, the plain button with the icon at 42%; voice off or muted (by them, or by me), the crossed icon, faded. It lights and goes out in 120 ms, and is still with reduced motion. My own stream never shows it: my mic says it.
+
+![The voice lit while Marina speaks](images/design/talking.png)
 
 ### Segmented controls
 
@@ -216,6 +225,7 @@ Body line height is 1.5; headings balance their lines (`text-wrap: balance`). Fo
 
 ![The camera list open in the settings, floating, the controls under it fading back in](images/design/picker-open.png)
 - The arrow keys move through it; Escape or a click outside closes it.
+- **Cued** (from a live button, with the settings open), [the cue](#rules-for-new-work) goes round the pill and its open list together, over the list.
 
 ### Drop-ups
 
@@ -232,13 +242,16 @@ Body line height is 1.5; headings balance their lines (`text-wrap: balance`). Fo
 
 ![The settings over the cog on desktop, Screen tab](images/design/settings-popover.png) ![The settings sheet on a phone](images/design/settings-sheet.png) ![The settings over the cog on a phone held sideways, in two columns](images/design/settings-sideways.png)
 
-The settings for what you send, from the cog.
+The settings for what you send, from the cog on my own stream, or from Go live's menu (then over Go live).
 
-- **Desktop, tablets and phones held sideways: over the cog.** A popover **centred on the cog**, like the volume's mixer, **10 px above the round buttons** (never behind them) and never past the player's sides; it fades in and rises 6 px. **Every tab has the same height**, the tallest one's, so switching tabs never moves the tabs under the pointer; at least 240 px, at most the room above the buttons (then it scrolls inside). Its width follows the player: a fifth of it, **280 to 320 px**. **Sideways it uses the width:** up to 560 px, in **two columns**, what you pick on the left (the preview and the camera, the window) and how it's sent on the right (Quality, Mode), so no tab scrolls. **One panel over the buttons at a time:** the settings and the [mixer](#the-volume-mixer) close each other. **A phone held upright** (its full-screen view too): a **bottom sheet**, no pull handle; the ✕, the cog or Escape closes it.
+- **Desktop, tablets and phones held sideways: over the cog.** A popover **centred on the cog** (or on Go live), **10 px above the round buttons** (never behind them) and never past the player's sides; it fades in and rises 6 px. **Every tab has the same height**, the tallest one's, so switching tabs never moves the tabs under the pointer; at least 240 px, at most the room above the buttons (then it scrolls inside). Its width follows the player: a fifth of it, **280 to 320 px**. **Sideways it uses the width:** up to 560 px, in **two columns**, what you pick on the left (the preview and the camera, the window, the microphone) and how it's sent on the right (Quality, Mode, the voice's processing); **the left column stays put while the right one scrolls**. **Another stream taking the stage closes the settings:** they belong to the buttons they opened from. **A phone held upright** (its full-screen view too): a **bottom sheet**, no pull handle; the ✕, the cog or Escape closes it.
 - Frosted like the dropdown panels (the panel colour at 74%, blur 22 px, a 1 px white border at 8%), 16 px corners (20 px on top of the sheet). **One control height:** 30 px over the cog, 44 px in the sheet.
-- **Tabs Screen and Camera**, with a **red marker** that slides under the chosen one and a **red dot** on the tab of what you're sending. **On phones the Screen tab is greyed out**, as anywhere a screen can't be shared: it stays in its place, says why ("This browser can't share a screen"), and the panel opens on Camera.
+- **Tabs Screen, Camera and Voice**, with a **red marker** that slides under the chosen one and a **red dot** on the tab of what you're sending. **On phones the Screen tab is greyed out**, as anywhere a screen can't be shared: it stays in its place, says why ("This browser can't share a screen"), and the panel opens on Camera.
 - **Screen:** while you share, what's shared and **Change** (and, when the screen has no sound, a line saying how to share it); while you don't, one line saying these are used next time. **No preview**: the stage and the browser's picker already show it. Then Quality and Mode.
 - **Camera:** your camera's preview under its own **Preview** heading, like every other group, centred under it: **LIVE** while it's sent, **"Only you see this"** while it's off (the camera turns on for you alone while the tab is open). Like any app, the browser asks for the camera the first time; refused or missing, the preview's place says so, and how to allow it. Then the camera's picker, Quality and Mode. **Sideways**, the preview is alone in the left column; the camera's picker, Quality and Mode are in the right one.
+- **Voice:** the **Microphone** picker; **Mic level**, one row: my live level on the slim track (faint under the line, green over it, when it's sent), the sensitivity line on it (sound under it isn't sent), and **Test**, a small pill that plays my voice back to me for 5 s ("Stop · 5", counting down; greyed until my voice is on); then **Voice processing**, four [settings rows](#switch): echo cancellation, noise suppression and automatic volume (on), voice isolation (off, greyed where the browser can't). Applied at once, remembered.
+
+![The Voice tab](images/design/voice-tab.png)
 - **No field descriptions**, except where a setting needs a line to make sense. The body scrolls with the app's slim scrollbar, without arrows.
 - **In the upright full view, the sheet makes room instead of covering:** the round buttons and the fullscreen button, which sit at the bottom of the screen there, move up together to just above the sheet (8 px), never behind it; the video moves up at the same size between the top bar and the sheet when it fits, and stays where it is (under the sheet) when it doesn't (a vertical share). The video is never shrunk; everything slides back when the sheet closes. The sheet's top is read from the sheet itself.
 - **In the upright normal view, the sheet never hides the round buttons either:** where a tall player (a vertical stream) reaches under the sheet, the round buttons and the fullscreen button rise together over the video to just above it (8 px), no higher than the player's top, sliding together; the video, the page and the feed don't move. With a widescreen stream they're already clear and nothing moves.
@@ -258,11 +271,15 @@ Two sizes: **md** (10 × 18 px padding, 15 px text) and **sm** (6 × 12 px, 13 p
 
 ### Sliders
 
-`components/ui/Range`, white like a video player's: a **3 px track**, white up to the knob and `#ebebec` at 22% after, and a **12 px white knob** that grows to 14 px on hover or keyboard focus. Used for the ambilight's brightness, each sound's volume in the stage's [mixer](#the-volume-mixer) (upright) and each preview's volume (horizontal). WebKit has no part for the filled side, so `Range` sets a `--fill` variable; Firefox uses `::-moz-range-progress`.
+`components/ui/Range`, white like a video player's: a **3 px track**, white up to the knob and `#ebebec` at 22% after, and a **12 px white knob** that grows to 14 px on hover or keyboard focus. Used for the ambilight's brightness and each sound's volume over the stage ([upright](#what-i-hear-and-go-live)). WebKit has no part for the filled side, so `Range` sets a `--fill` variable; Firefox uses `::-moz-range-progress`.
+
+**A threshold is a line, not a knob:** the mic's sensitivity is a slim upright white line (3 × 14 px, growing to 16 px) across the same slim track, the common mark for a threshold.
 
 ### Switch
 
-A slim grey track (**36 × 14 px**, `#3a3a3d`) that looks the same off and on, and a **20 px knob** that overhangs it: `#bdbdc0` when off, red when on, sliding in 180 ms. The ambilight's on/off in the account menu. **In a panel, a switch row** (a label, its description, the switch at the right) **sits 5 px in** from the edge the headings and boxes share, so its text doesn't sit on it.
+A slim grey track (**36 × 12 px**, `#3a3a3d`) that looks the same off and on, and a **16 px knob** over its height but never past its ends: `#bdbdc0` when off, red when on, sliding in 180 ms. The ambilight's on/off in the account menu, the Voice tab's processing.
+
+**Settings rows** (every settings list): the label on the panel's type scale (12 px, regular, white at 82%), never heavier or bigger than the panel's title; what a row does in its tooltip, not under it; the label 3 px inside its heading; the switch ending 12 px in from the column's edge, where a picker's arrow does.
 
 `styles/controls.test.ts` checks the sliders' and the switch's values.
 
@@ -288,7 +305,10 @@ A slim grey track (**36 × 14 px**, `#3a3a3d`) that looks the same off and on, a
 
 ![The info row under the stage](images/design/info-row.png)
 
-- **The info row:** on the left, who's on the stage (avatar with its ring, name in the display font, LIVE, what, how long) and who's watching (up to 4 avatars and "N watching", me included, never the sharer); on the right, the other streams as **previews** with a name chip (their screen, or their camera when that's all they share), then a dashed box "N of 6 live · N free · share yours", gone when all 6 are live. When room runs short, the left gives way first, then the previews scroll with a slim scrollbar, and the box stays put.
+- **The info row:** on the left, who's on the stage (avatar with its ring, name in the display font, LIVE, what (" · voice" while their voice is on), how long) and who's watching (up to 4 avatars and "N watching", me included, never the sharer); with nobody live, an empty circle where the photo goes, **"Nobody's sharing"**, and who's here. On the right, the other streams as **previews** with a name chip (their screen, or their camera when that's all they share), then **the seats**: a dashed box of six dots, three over three, grey for an open seat and red for each stream live, their count in words on hover; gone when all 6 are live. When room runs short, the left gives way first, then the previews scroll with a slim scrollbar, and the box stays put.
+- **Previews are silent** (only the person I watch is heard), and each carries that person's **two toggles** at its corner, their sound and their voice (24 px), the same mutes their stage uses, the voice lit while they speak. The phone's cards have them too, beside the picture.
+
+![Previews with their toggles, and the seats](images/design/preview-toggles.png)
 - **The facecam:** the camera as a small window over the screen, 24% of the player's width, `--radius-sm`, with 28 px round buttons (swap views, collapse) that fade with the controls; collapsed, a 28 × 44 px tab at the right edge. It **starts at the top right** (just under the top bar where one lies over the player), clear of the round buttons and the fullscreen button. It can be dragged, or moved with the arrow keys. Swapping also works on your own preview; the swap and the collapse last for the visit only.
 - **The fullscreen button has one place:** the **bottom right** of the player, its centre level with the round buttons, to enter and to leave, on desktop and phones alike, over a stream and over the empty stage, so stopping the only stream in fullscreen (or in a phone's full view) never strands you there. Held sideways, a phone has none: the room is always in the full view.
 
@@ -327,7 +347,12 @@ Turning switches layouts at once, and the stage keeps its place in the page, so 
 
 ![The empty room on a desktop](images/design/room-empty-desktop.png)
 
-**Nobody live:** colour bars on the stage (full colour, lit by the ambilight), "The stage is yours." and the round buttons to start.
+**Nobody live, a camera waiting:**
+
+- **Viewfinder corners** close to the stage's edges (the stage's buttons sit inside the bottom-right one), the top right red as in the logo, on one flat dark.
+- **Their glow:** each corner glows outward in its own colour, a blurred L just outside the stage, a fade with no edge; still, following the ambilight's switch and brightness.
+- **A quiet camera display** in small grey mono capitals, still but for the clock: a grey dot, "Standby" and the time (never a red dot: that would mean recording); the frame rate (`30` lit in a filled box, what's sent; "60 fps" faint); "Room 01"; an empty L/R meter; `16:9`, HD, Auto; a signal and "Online"; a plain tick ruler; a thirds grid at about 1.6% white. Small stages keep only the top line; sideways, the corners start under the floating top bar and the top line hides.
+- **In a faint focus frame:** "Be the first to go live", a line, and the two ways to start (on a phone, the camera first and the screen greyed).
 
 ### Phone, upright
 
@@ -365,7 +390,7 @@ What a phone or tablet sees in a browser tab, on every page: the wordmark, the s
 ## Accessibility
 
 - **Focus is always visible:** a 2 px red ring, 2 px out (3 px around the round buttons' pill, white 4 px out around sliders).
-- **Keyboard:** every control is a real button or input; Enter opens the volume's mixer, and its bars move with the arrow keys; the facecam moves with the arrow keys; Escape closes panels.
+- **Keyboard:** every control is a real button or input; a sound's button mutes on Enter and opens its slider on focus, which moves with the arrow keys; the facecam moves with the arrow keys; Escape closes panels.
 - **Names:** every control and picture has a spoken name; the mark is "Xovê"; videos are named by whose stream they are.
 - **Contrast** as in [Colour](#colour), checked by a test.
 - **Reduced motion** as in [Motion](#motion).
@@ -374,13 +399,15 @@ What a phone or tablet sees in a browser tab, on every page: the wordmark, the s
 
 - **Use the tokens.** A new colour, size or font is a design decision: it needs an approved draft first, then it lands in `global.css` and here.
 - **Red means the brand, live, or the cue.** Don't use it for anything else.
-- **The cue** (`components/ui/cue.module.css`) is how the app points at a control: a sharp 1.5 px red border pulsing in place (never a spreading ring), with a slight glow around it like the stage's ambilight (14 px, the red at 35%); two slow 1 s pulses, then gone. With reduced motion, the border and glow still for the same 2 s. It's a ring of its own over the control, drawn anew for each request, so the control keeps its shadow and focus.
+- **The cue** (`components/ui/cue.module.css`) is how the app points at a control: a sharp 1.5 px red border pulsing in place (never a spreading ring), with a slight glow around it like the stage's ambilight (14 px, the red at 35%); two slow 1 s pulses, then lit and still until the next press anywhere else (or the panel closing). With reduced motion, lit and still from the start. It's a ring of its own over the control, drawn anew for each request, so the control keeps its shadow and focus; round a picker, it takes the open list in too.
 
   ![The cue on Change](images/design/cue.png)
-- **A button that opens a panel never also changes a setting** (the volume button only opens the mixer; muting is inside it).
-- **A panel's places are fixed.** A set of controls (the mixer's sounds, and any like it) keeps every place it will ever have; one that can't be used yet is greyed in place, never left out, and never counts for a summary (the volume button's crossed speaker).
-- **Unavailable, not hidden.** An option that can't be used here stays in its place, greyed out (a text option, like a tab: the faint text colour at 50%; a control, like a round button or a mixer channel: 45% opacity), with its reason in its tooltip, so a panel looks the same on every device.
-- **Draft first:** a visual change starts as a clickable HTML draft with these tokens and fonts, approved before the work starts. The approved draft is the reference the code must match.
+- **A button that opens a panel never also changes a setting** (the cog only opens the settings). A button that *is* a sound mutes it with a tap, and opens its own slider on a rest or a hold.
+- **Controls by owner:** what I hear on the left of someone's stream, me on the right; my stream's controls only on my stream. A mic icon means my mic.
+- **Say each thing once:** on one screen, a fact (who's here, the seats, that nobody's sharing) appears in one place only.
+- **A panel's places are fixed.** A set of controls (the sounds I hear, and any like it) keeps every place it will ever have; one that can't be used yet is greyed in place, never left out, and never counts for a summary.
+- **Unavailable, not hidden.** An option that can't be used here stays in its place, greyed out (a text option, like a tab: the faint text colour at 50%; a control, like a round button or a sound I can't hear: 45% opacity), with its reason in its tooltip, so a panel looks the same on every device.
+- **Draft first:** a visual change starts as a draft approved before the work starts: a change to screens that exist, as a prototype in the app itself; a brand-new screen may start as a clickable HTML draft with these tokens and fonts. The approved draft is the reference the code must match.
 - **Check every size:** desktop 1920 × 1080, vertical monitors (1080 × 1920 and 1440 × 2560), a narrow window, phones upright (412 × 915, 360 × 740) and sideways (915 × 412, 667 × 375), tablets (820 × 1180, 1180 × 820), the empty room and the install screen.
 - **Reuse the components:** `RoundButton` styles, `Button`, `Range`, the switch, `Dropdown`, `Segmented`, `Picker`, `DropUp`, `Avatar`, `LiveDot`, `StageNotice`, `Toast`. A new control follows their sizes, motion and focus ring. A choice from a list is a `Picker` (one box, floating, with the slim scrollbar when long), a few options a `Segmented`, and a quick action over a live button a `DropUp`, everywhere in the app.
 - **Panels open over the button that opened them,** never from a side; on a wide, short player they use the width (two columns) rather than scroll. **Panels are frosted, never opaque**; nothing over the video hides the round buttons.
