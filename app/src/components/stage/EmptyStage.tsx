@@ -3,6 +3,7 @@ import { CameraOnIcon, ScreenOffIcon, ScreenOnIcon } from "./icons";
 import { showToast } from "../ui/toast";
 import styles from "./EmptyStage.module.css";
 import { StaticNoise } from "./StaticNoise";
+import { tv } from "./staticBands";
 import { useEffect, useState } from "react";
 import { Tooltip } from "../ui/Tooltip";
 
@@ -10,9 +11,6 @@ type Props = {
   canShareScreen?: boolean;
   onStart?: (kind: StreamKind) => void;
 };
-
-/** Whether the TV has turned on in this visit: the page's whole life. */
-let turnedOn = false;
 
 /**
  * Nobody is live (spec 0123, calmed in spec 0136): the stage as a camera waiting, like Xovê's mark.
@@ -27,9 +25,9 @@ export function EmptyStage({
 }: Props) {
   // The TV turning on (spec 0136): only the first time the stage stands by in this visit; once it's
   // on, the last stream stopping doesn't turn it on again. Gone when it ends.
-  const [turningOn, setTurningOn] = useState(() => !turnedOn && !window.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
+  const [turningOn, setTurningOn] = useState(() => !tv.on && !window.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
   useEffect(() => {
-    turnedOn = true;
+    tv.on = true;
   }, []);
   const screen = (
     <Tooltip text={canShareScreen ? undefined : "This browser can't share a screen"}>

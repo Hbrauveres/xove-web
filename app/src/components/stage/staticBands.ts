@@ -30,3 +30,10 @@ export function bandLight(py: number, s: number) {
   const edge = Math.min(1, Math.max(0, (m - 0.42) / 0.16));
   return (GAPS + (1 - GAPS) * edge * edge * (3 - 2 * edge)) * shimmer;
 }
+
+/**
+ * Whether the TV has turned on in this visit (the page's whole life): the stage's turn-on and its
+ * light on the wall play only the first time the stage stands by, never again when the last stream
+ * stops. Set once the stage has stood by.
+ */
+export const tv = { on: false };
