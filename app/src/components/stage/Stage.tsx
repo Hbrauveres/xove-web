@@ -366,12 +366,19 @@ export function Stage({
   useLayoutEffect(() => {
     const stage = stageRef.current;
     if (!rowArrow || !stage) return;
+    // Measured in layout offsets, not on the screen: the full view turns an upright phone's stage
+    // sideways by rotating it, and on-screen boxes come back rotated.
+    const leftOf = (el: HTMLElement | null) => {
+      let x = 0;
+      for (; el; el = el.offsetParent as HTMLElement | null) x += el.offsetLeft;
+      return x;
+    };
     const place = () => {
-      const arrow = stage.querySelector('[data-arrow="up"]');
+      const arrow = stage.querySelector<HTMLElement>('[data-arrow="up"]');
       const bar = stage.querySelector<HTMLElement>("[data-viewer-bar]");
-      const holder = bar?.offsetParent;
+      const holder = bar?.offsetParent as HTMLElement | null;
       if (!arrow || !holder) return stage.style.removeProperty("--arrow-room");
-      const room = arrow.getBoundingClientRect().right + 8 - (holder.getBoundingClientRect().left + 12);
+      const room = leftOf(arrow) + arrow.offsetWidth + 8 - (leftOf(holder) + 12);
       stage.style.setProperty("--arrow-room", `${Math.max(0, Math.round(room))}px`);
     };
     place();
