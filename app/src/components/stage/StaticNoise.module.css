@@ -1,0 +1,25 @@
+/* A TV's static behind the empty stage (spec 0136, draft): faded far back, darker at the edges. */
+.static {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: var(--static-opacity, 0.12);
+  image-rendering: pixelated;
+}
+
+/* A vignette: the static fades into the stage's dark at its edges and round the middle's text. */
+.static::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 34% 30% at 50% 50%, rgba(15, 15, 17, 0.75), transparent 100%),
+    radial-gradient(ellipse 75% 75% at 50% 50%, transparent 55%, rgba(15, 15, 17, 0.9) 100%);
+}

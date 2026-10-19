@@ -79,6 +79,7 @@
 
 /* The way to start: a heading, a line, the buttons; no frame of its own. */
 .focus {
+  position: relative;
   display: grid;
   justify-items: center;
   gap: 12px;
