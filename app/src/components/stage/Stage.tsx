@@ -360,38 +360,7 @@ export function Stage({
       box?.removeEventListener("transitionend", place);
     };
   }, [settingsOpen, sideways, onScreen]);
-  // Sideways, the streams row's arrow sits at the screen's bottom-left: where the picture reaches it,
-  // the sounds move along to start after it (spec 0131); a narrower picture leaves them in place.
   const rowArrow = sideways && Boolean(big) && sharers.length > 1;
-  useLayoutEffect(() => {
-    const stage = stageRef.current;
-    if (!rowArrow || !stage) return;
-    // Measured in layout offsets, not on the screen: the full view turns an upright phone's stage
-    // sideways by rotating it, and on-screen boxes come back rotated.
-    const leftOf = (el: HTMLElement | null) => {
-      let x = 0;
-      for (; el; el = el.offsetParent as HTMLElement | null) x += el.offsetLeft;
-      return x;
-    };
-    const place = () => {
-      const arrow = stage.querySelector<HTMLElement>('[data-arrow="up"]');
-      const bar = stage.querySelector<HTMLElement>("[data-viewer-bar]");
-      const holder = bar?.offsetParent as HTMLElement | null;
-      if (!arrow || !holder) return stage.style.removeProperty("--arrow-room");
-      const room = leftOf(arrow) + arrow.offsetWidth + 8 - (leftOf(holder) + 12);
-      stage.style.setProperty("--arrow-room", `${Math.max(0, Math.round(room))}px`);
-    };
-    place();
-    window.addEventListener("resize", place);
-    const watch = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(place);
-    watch?.observe(stage);
-    if (frameRef.current) watch?.observe(frameRef.current);
-    return () => {
-      window.removeEventListener("resize", place);
-      watch?.disconnect();
-      stage.style.removeProperty("--arrow-room");
-    };
-  }, [rowArrow, onScreen]);
   const playing = Boolean(main && (big?.isMe ? main.local : main.remote));
   useEffect(() => () => window.clearTimeout(idleTimer.current), []);
 
@@ -527,6 +496,58 @@ export function Stage({
   // Nobody live: there's no row to open.
   if (rowOpen && !big) setRowOpen(false);
   if (rowOpen && sideways && playing && !chromeShown) setRowOpen(false);
+  // Sideways, the streams row's arrow sits at the screen's bottom-left: the sounds start after it
+  // (spec 0131), and go back to the edge when it moves into the open row.
+  useLayoutEffect(() => {
+    const stage = stageRef.current;
+    if (!rowArrow || !stage) return;
+    // Measured in layout offsets, not on the screen: a slide (a transform) in progress doesn't count.
+    const leftOf = (el: HTMLElement | null) => {
+      let x = 0;
+      for (; el; el = el.offsetParent as HTMLElement | null) x += el.offsetLeft;
+      return x;
+    };
+    const place = () => {
+      const arrow = stage.querySelector<HTMLElement>('[data-arrow="up"]');
+      const bar = stage.querySelector<HTMLElement>("[data-viewer-bar]");
+      const holder = bar?.offsetParent as HTMLElement | null;
+      if (!arrow || !holder) return stage.style.removeProperty("--arrow-end");
+      // Where the arrow ends, from the sounds' own edge; the stylesheet keeps them clear of it.
+      stage.style.setProperty("--arrow-end", `${Math.round(leftOf(arrow) + arrow.offsetWidth - leftOf(holder))}px`);
+    };
+    place();
+    window.addEventListener("resize", place);
+    const watch = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(place);
+    watch?.observe(stage);
+    if (frameRef.current) watch?.observe(frameRef.current);
+    return () => {
+      window.removeEventListener("resize", place);
+      watch?.disconnect();
+      stage.style.removeProperty("--arrow-end");
+    };
+  }, [rowArrow, onScreen, rowOpen]);
+  // The streams row open: the buttons rise above it, as above the settings sheet (spec 0131): what
+  // comes up from the bottom never covers them.
+  useLayoutEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    const place = () => {
+      const row = stage.querySelector<HTMLElement>("[data-streams-row]");
+      const chrome = screenChromeRef.current;
+      const bar = chrome?.querySelector<HTMLElement>("[data-viewer-bar], [data-buttons]");
+      if (!rowOpen || !row || !chrome || !bar) return stage.style.removeProperty("--row-lift");
+      // In layout: the row's content (under its fade), and where the buttons sit unlifted.
+      const lift = parseFloat(stage.style.getPropertyValue("--row-lift")) || 0;
+      const content = row.offsetHeight - parseFloat(getComputedStyle(row).paddingTop);
+      let top = 0;
+      for (let n: HTMLElement | null = bar; n && n !== chrome; n = n.offsetParent as HTMLElement | null) top += n.offsetTop;
+      const under = parseFloat(getComputedStyle(chrome).bottom) - lift + (chrome.clientHeight - top - bar.offsetHeight);
+      stage.style.setProperty("--row-lift", `${Math.max(0, Math.round(content + 6 - under))}px`);
+    };
+    place();
+    window.addEventListener("resize", place);
+    return () => window.removeEventListener("resize", place);
+  }, [rowOpen, sideways, onScreen]);
   const rowSwipe = useStageSwipe(slideRef, {
     enabled: sideways && Boolean(big),
     axis: "vertical",
@@ -702,6 +723,7 @@ export function Stage({
       data-layout={layout}
       data-chrome={sideways ? chrome : undefined}
       data-row-arrow={rowArrow || undefined}
+      data-no-full={(sideways && fullView?.hidden) || undefined}
       aria-label="Shared screen"
       {...(sideways ? gestures : {})}
     >
@@ -730,7 +752,7 @@ export function Stage({
           onFocus={showChrome}
         >
           {body()}
-          {!onScreen && chromeLayer}
+          {!sideways && chromeLayer}
           {!sideways && settingsPanel}
           {voices.map((v) => (
             <VoiceAudio key={v.id} track={v.track} volume={v.volume} muted={v.muted} />
@@ -744,8 +766,9 @@ export function Stage({
         </div>
       </div>
 
-      {/* The upright full view: at the bottom of the screen, moving up together above the sheet. */}
-      {onScreen && (
+      {/* Sideways (and the upright full view): at the bottom of the screen like the streams row's arrow,
+          whatever the picture's shape, moving up together above the sheet or the open row. */}
+      {sideways && (
         <div ref={screenChromeRef} className={styles.screenChrome} onFocus={showChrome}>
           {chromeLayer}
         </div>

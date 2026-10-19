@@ -88,11 +88,14 @@
  */
 .screenChrome {
   position: absolute;
-  /* Clear of the iPhone's home indicator, like the streams row's arrow. */
-  inset: 0 0 env(safe-area-inset-bottom, 0px);
+  /* Clear of the iPhone's home indicator, like the streams row's arrow; above the streams row
+     while it's open (--row-lift, measured by the stage), rising with it. */
+  inset: 0 0 calc(env(safe-area-inset-bottom, 0px) + var(--row-lift, 0px));
   z-index: 4;
   pointer-events: none;
-  transition: translate var(--unroll);
+  transition:
+    translate var(--unroll),
+    bottom 0.28s ease;
 }
 
 .stage[data-chrome="hidden"] .screenChrome .controls {
@@ -276,10 +279,19 @@
   --btn: 44px;
 }
 
-/* Sideways with the streams row's arrow at the bottom-left: where the picture reaches it, the sounds
-   start 8 px after it, on the same line (spec 0131; the stage measures --arrow-room). */
+/* Sideways with the streams row's arrow at the bottom-left: the sounds start 8 px after it, on the
+   same line, or at the edge when it's gone into the open row (spec 0131; --arrow-end is measured
+   by the stage). */
 .stage[data-row-arrow] [data-viewer-bar] {
-  left: calc(12px + var(--arrow-room, 0px));
+  left: max(14px + env(safe-area-inset-left, 0px), var(--arrow-end, 0px) + 8px);
+  /* With the row: the arrow goes into it as it opens, and the sounds slide back to the edge. */
+  transition: left 0.28s ease;
+}
+
+/* Sideways where there's no fullscreen button (a phone held sideways is already full): Go live
+   takes its place at the right (spec 0131). */
+.stage[data-no-full] [data-viewer-bar] {
+  right: calc(14px + env(safe-area-inset-right, 0px));
 }
 
 /* Fading sideways: the top bar and the row's arrow button go with the round buttons (FR-8). */

@@ -81,6 +81,7 @@ export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, h
       {!open && <ArrowButton up className={styles.toggle} onClick={onOpen} />}
       <section
         className={styles.row}
+        data-streams-row
         data-open={open || undefined}
         data-no-swipe
         aria-labelledby="streams-row"
