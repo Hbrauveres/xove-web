@@ -1,12 +1,13 @@
 import { useEffect, useRef } from "react";
 import styles from "./StaticNoise.module.css";
 
-/** One grain of static is this many CSS pixels: a fine grain, still little to draw. */
+/** One grain of static is this many CSS pixels: a fine grain, still little to draw. Draft only: the
+ * harness's slider overrides it through `--static-grain`. */
 const GRAIN = 2;
 /** Static flickers at this rate; more is wasted on a faded background. */
 const FPS = 20;
 /** How fast the bands roll down, in CSS pixels a second. */
-const ROLL = 18;
+const ROLL = 24;
 
 /**
  * A TV's static behind the empty stage (spec 0136): snow in horizontal bands rolling slowly down,
@@ -22,14 +23,17 @@ export function StaticNoise() {
     const still = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
     // The pointer, in grains, and how stirred the static is (1 just moved, fading to 0).
     const pointer = { x: -1e4, y: -1e4, stir: 0 };
+    let grain = GRAIN;
+    const readGrain = () => Number.parseFloat(getComputedStyle(el).getPropertyValue("--static-grain")) || GRAIN;
     let w = 0;
     let h = 0;
     let image: ImageData | null = null;
     let words: Uint32Array | null = null;
     const fit = () => {
       const r = el.getBoundingClientRect();
-      w = Math.max(1, Math.ceil(r.width / GRAIN));
-      h = Math.max(1, Math.ceil(r.height / GRAIN));
+      grain = readGrain();
+      w = Math.max(1, Math.ceil(r.width / grain));
+      h = Math.max(1, Math.ceil(r.height / grain));
       el.width = w;
       el.height = h;
       image = ctx.createImageData(w, h);
@@ -41,8 +45,8 @@ export function StaticNoise() {
     const moved = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
       const r = el.getBoundingClientRect();
-      pointer.x = (e.clientX - r.left) / GRAIN;
-      pointer.y = (e.clientY - r.top) / GRAIN;
+      pointer.x = (e.clientX - r.left) / grain;
+      pointer.y = (e.clientY - r.top) / grain;
       pointer.stir = 1;
     };
     window.addEventListener("pointermove", moved);
@@ -52,21 +56,23 @@ export function StaticNoise() {
     const tear = new Int16Array(4096);
     let seed = 0x9e3779b9;
     const draw = (t: number) => {
+      if (readGrain() !== grain) fit();
       if (!image || !words) return;
       const s = t / 1000;
       const reach = Math.max(18, h * 0.28);
       for (let y = 0; y < h; y++) {
         // Bands of different widths rolling down: bright ones with clear edges, dark gaps between.
         // In CSS pixels, so the bands keep their size whatever the grain.
-        const py = y * GRAIN;
-        // Both waves roll down together at one slow speed, so the bands move as one and keep
-        // their sizes instead of growing and shrinking.
-        const roll = py - s * ROLL;
+        const py = y * grain;
+        // The bands roll down together, keeping their sizes; on top, the picture wavers up and down
+        // a little, as a TV losing its vertical hold, and each band's brightness shimmers.
+        const roll = py - s * ROLL + Math.sin(s * 0.9) * 14 + Math.sin(s * 2.7) * 4;
         const a = Math.sin(roll * 0.03) * 0.5 + 0.5;
-        const b = Math.sin(roll * 0.009) * 0.5 + 0.5;
+        const b = Math.sin(roll * 0.009 + Math.sin(s * 0.3) * 0.35) * 0.5 + 0.5;
+        const shimmer = 0.82 + 0.18 * Math.sin(s * 1.9 + roll * 0.004);
         const m = a * 0.55 + b * 0.45;
         const edge = Math.min(1, Math.max(0, (m - 0.42) / 0.16));
-        const g = 0.12 + 0.88 * edge * edge * (3 - 2 * edge);
+        const g = (0.12 + 0.88 * edge * edge * (3 - 2 * edge)) * shimmer;
         gain[y] = g;
         // The mouse tears the rows near its own sideways, settling as it rests.
         const near = Math.max(0, 1 - Math.abs(y - pointer.y) / reach) * pointer.stir;
