@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
 import type { LiveFeed, Sharer } from "../../types";
 import { Avatar } from "../ui/Avatar";
 import { ScreenVideo } from "./ScreenVideo";
+import { stackOf, useHold, useSwapping } from "./stack";
 import { HearToggles, type Hearing } from "./HearToggles";
 import { PreviewTray } from "./PreviewTray";
 import { usePreviewTray } from "./usePreviewTray";
+import { useKeyboardLast } from "../../hooks/useTapToggle";
 import { seatsOpen } from "./NowWatching";
 import styles from "./AlsoLive.module.css";
 
@@ -29,34 +30,25 @@ const kindOf = (feed: LiveFeed) => (feed.kind === "camera" ? "camera" : "screen"
 /**
  * The right of the info row (specs 0104 and 0107): the other live streams as small previews (a
  * click puts one on the stage), then the seats as six dots, red for each stream live (spec 0123).
- * Past their room the previews scroll; the box stays put, and goes when nothing is free. Previews
- * are silent; each carries that person's two toggles, their sound and their voice (spec 0123).
+ * Past their room the previews scroll; the box stays put, and goes when nothing is free. Pointing
+ * at a preview (or holding it) opens its row of buttons, to hear that person while they stay small
+ * and swap their screen and camera (spec 0131).
  */
 export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swappedOf, onSwap }: Props) {
   // A small preview's row (spec 0131): pointing at it opens it, a finger's hold pins it.
   const tray = usePreviewTray();
-  const hold = useRef<number | undefined>(undefined);
+  const keyboardLast = useKeyboardLast();
+  const hold = useHold();
   // A swap plays for a moment: the two pictures trade places.
-  const [swapping, setSwapping] = useState<string | null>(null);
-  useEffect(() => {
-    if (!swapping) return;
-    const done = window.setTimeout(() => setSwapping(null), 400);
-    return () => window.clearTimeout(done);
-  }, [swapping]);
+  const [swapping, setSwapping] = useSwapping();
   return (
     <section className={styles.also} aria-label="Also live">
       <ul className={styles.strip} aria-label="Other streams">
         {others.map((s) => {
           const id = s.person.id;
-          const both = Boolean(s.screen && s.camera);
-          const feed = (both && swappedOf?.(id) ? s.camera : s.screen) ?? s.camera;
+          const { both, feed, video, back, backVideo } = stackOf(s, Boolean(swappedOf?.(id)));
           if (!feed) return null;
-          // The other picture, behind (a screen and a camera together).
-          const back = both ? (feed === s.screen ? s.camera : s.screen) : undefined;
-          const backVideo = back && (s.isMe ? back.local : back.remote?.video);
           const what = kindOf(feed);
-          // My own stream plays from my browser; someone else's from LiveKit, once it arrives.
-          const video = s.isMe ? feed.local : feed.remote?.video;
           const name = s.isMe ? "You" : s.person.name;
           const whose = s.isMe ? "your" : `${s.person.name}'s`;
           // Their voice heard while they speak: the picture's ring lights, or the button does while the
@@ -80,11 +72,10 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
               onPointerDown={(e) => {
                 if (e.pointerType === "mouse" || (s.isMe && !both)) return;
                 const li = e.currentTarget;
-                window.clearTimeout(hold.current);
-                hold.current = window.setTimeout(() => tray.show(id, li, true), 500);
+                hold.start(() => tray.show(id, li, true));
               }}
-              onPointerUp={() => window.clearTimeout(hold.current)}
-              onPointerCancel={() => window.clearTimeout(hold.current)}
+              onPointerUp={hold.cancel}
+              onPointerCancel={hold.cancel}
               onContextMenu={(e) => e.preventDefault()}
             >
               {/* Someone sharing a screen and a camera: the other picture peeks out behind. */}
@@ -97,10 +88,24 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
                 type="button"
                 className={styles.preview}
                 aria-label={`Watch ${whose} ${what}`}
+                // By keyboard, focusing a preview opens its row, and Tab goes into it (spec 0131).
+                onFocus={(e) => {
+                  if (keyboardLast() && (!s.isMe || both)) tray.show(id, e.currentTarget.closest("li")!);
+                }}
+                onBlur={(e) => {
+                  const to = e.relatedTarget as Element | null;
+                  if (!to?.closest(`[data-tray-for="${id}"]`)) tray.leave();
+                }}
+                onKeyDown={(e) => {
+                  if (e.key !== "Tab" || e.shiftKey || tray.open?.id !== id) return;
+                  const first = document.querySelector<HTMLElement>(`[data-tray-for="${id}"]:not([data-leaving]) button`);
+                  if (!first) return;
+                  e.preventDefault();
+                  first.focus();
+                }}
                 onClick={() => {
-                  // The hold that opened the row isn't a click on the preview.
-                  if (tray.open?.pinned && tray.open.id === id) return;
-                  onPick(id);
+                  // The click that ends the hold opening the row isn't a tap on the preview.
+                  if (!hold.swallow()) onPick(id);
                 }}
               >
                 <span className={styles.video} data-picture>

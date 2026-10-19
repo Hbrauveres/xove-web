@@ -60,7 +60,7 @@ const preview = (name: RegExp) => screen.getByRole("button", { name });
 const item = (name: RegExp) => preview(name).closest("li") as HTMLElement;
 // Pointing at a preview opens its row (spec 0131).
 async function rowOf(name: string, user = userEvent.setup()) {
-  await user.hover(preview(new RegExp(`^Watch ${name}`)));
+  await user.hover(screen.getByRole("button", { name: (n) => n.startsWith(`Watch ${name}`) }));
   return screen.findByRole("group", { name: `${name}'s sounds` });
 }
 
@@ -202,6 +202,31 @@ describe("also live (specs 0104 and 0123)", () => {
     expect(screen.getByRole("group", { name: "Bruno's sounds" }).closest("[data-leaving]")).not.toBeNull();
     expect(item(/^Watch Ana/)).toHaveAttribute("data-open");
     expect(item(/^Watch Bruno/)).not.toHaveAttribute("data-open");
+  });
+
+  it("reaches a preview's row by keyboard: Tab goes in and on to the next preview, Escape back (spec 0131)", async () => {
+    const user = userEvent.setup();
+    render(<Harness others={[BRUNO, ANA]} />);
+
+    await user.tab();
+    expect(preview(/^Watch Bruno/)).toHaveFocus();
+    const row = await screen.findByRole("group", { name: "Bruno's sounds" });
+    await user.tab();
+    expect(within(row).getByRole("button", { name: "Mute Bruno's voice" })).toHaveFocus();
+    // A sound focused by keyboard opens its slider, as on the stage.
+    expect(await within(row).findByRole("slider", { name: "Bruno's voice volume" })).toBeInTheDocument();
+    await user.tab({ shift: true });
+    expect(preview(/^Watch Bruno/)).toHaveFocus();
+
+    // Through the row and out: the next preview.
+    await user.tab();
+    for (let i = 0; i < 6 && !preview(/^Watch Ana/).matches(":focus"); i++) await user.tab();
+    expect(preview(/^Watch Ana/)).toHaveFocus();
+    expect(await screen.findByRole("group", { name: "Ana's sounds" })).toBeInTheDocument();
+
+    await user.tab();
+    await user.keyboard("{Escape}");
+    expect(preview(/^Watch Ana/)).toHaveFocus();
   });
 
   it("greys a sound that isn't there, in its place, saying why", async () => {

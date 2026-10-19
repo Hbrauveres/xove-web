@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { liftButtons, liftOverRow, makeRoom, ROOM_GAP, ROW_GAP } from "./makeRoom";
+import { arrowEnd, liftButtons, liftOverRow, makeRoom, ROOM_GAP, ROW_GAP } from "./makeRoom";
 
 // The upright full view of a 440 × 956 phone: a 48 px top bar, a sheet over 58% of it.
 const screen = { height: 956, bar: 48, sheet: Math.round(956 * 0.58) };
@@ -53,5 +53,21 @@ describe("lifting the buttons above the open streams row (spec 0131, design deci
 
   it("never moves them down when they're already above it", () => {
     expect(liftOverRow({ row: 80, fade: 34, under: 60 })).toBe(0);
+  });
+});
+
+describe("where the streams row's arrow ends (spec 0131, design decision 14)", () => {
+  // Layout boxes as the browser gives them: each offset from its offset parent.
+  const box = (offsetLeft: number, offsetWidth = 0, offsetParent: unknown = null) =>
+    ({ offsetLeft, offsetWidth, offsetParent }) as unknown as HTMLElement;
+
+  it("measures from the sounds' own layer, through every offset parent, ignoring any slide", () => {
+    const screen = box(0);
+    const stage = box(0, 0, screen);
+    const arrow = box(14, 36, stage);
+    const layer = box(0, 0, stage);
+    expect(arrowEnd(arrow, layer)).toBe(50);
+    // The sounds' layer starts further right (the player, centred): less room is needed.
+    expect(arrowEnd(arrow, box(91, 0, stage))).toBe(50 - 91);
   });
 });

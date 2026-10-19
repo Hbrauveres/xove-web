@@ -1826,7 +1826,7 @@ describe("room: whose sound plays", () => {
 
   // A preview's buttons, in the row that pointing at it opens (spec 0131).
   async function rowOf(name: string, user = userEvent.setup()) {
-    await user.hover(within(thumbnails()).getByRole("button", { name: new RegExp(`^Watch ${name}`) }));
+    await user.hover(within(thumbnails()).getByRole("button", { name: (n) => n.startsWith(`Watch ${name}`) }));
     return screen.findByRole("group", { name: `${name}'s sounds` });
   }
 
@@ -1852,7 +1852,7 @@ describe("room: whose sound plays", () => {
   });
 
   it("plays a preview's voice I turn on, at its own volume, while it stays small (spec 0131, AC-1)", async () => {
-    const { room } = await anaAndBrunoWithSound();
+    const { room, sound } = await anaAndBrunoWithSound();
     const user = userEvent.setup();
     let voice!: ReturnType<typeof room.publishVoice>;
     act(() => {
@@ -1862,8 +1862,20 @@ describe("room: whose sound plays", () => {
 
     await user.click(within(await rowOf("Bruno", user)).getByRole("button", { name: "Unmute Bruno's voice" }));
     await waitFor(() => expect(voice.attached).toHaveLength(1));
+    await waitFor(() => expect(room.voicePublication("user-7")!.setSubscribed).toHaveBeenLastCalledWith(true));
     expect((voice.attached[0] as HTMLAudioElement).muted).toBe(false);
     expect(screen.getByRole("heading", { name: "Ana" })).toBeInTheDocument();
+
+    // Its own volume: moving Bruno's slider leaves Ana's, on the stage, where it was.
+    const ana = sound("user-3").attached[0] as HTMLAudioElement;
+    const before = ana.volume;
+    const row = await rowOf("Bruno", user);
+    await user.hover(within(row).getByRole("button", { name: "Mute Bruno's voice" }));
+    fireEvent.change(await within(row).findByRole("slider", { name: "Bruno's voice volume" }), { target: { value: "0.2" } });
+    expect((voice.attached[0] as HTMLAudioElement).volume).toBeCloseTo(0.2);
+    await user.hover(within(row).getByRole("button", { name: "Unmute Bruno's screen sound" }));
+    fireEvent.change(await within(row).findByRole("slider", { name: "Bruno's screen sound volume" }), { target: { value: "0.1" } });
+    expect(ana.volume).toBeCloseTo(before);
   });
 
   it("locks a screen without sound on mute, for the big player and a thumbnail, until it gets sound (spec 0098)", async () => {

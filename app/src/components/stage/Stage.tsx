@@ -21,7 +21,7 @@ import type { Hearing } from "./HearToggles";
 import { ViewerBar, type Sound } from "./ViewerBar";
 import { MicIcon, MicOffIcon } from "./icons";
 import round from "./RoundButton.module.css";
-import { liftButtons, liftOverRow, makeRoom, ROOM_GAP as SHEET_GAP } from "./makeRoom";
+import { arrowEnd, liftButtons, liftOverRow, makeRoom, ROOM_GAP as SHEET_GAP } from "./makeRoom";
 import { AlsoLive } from "./AlsoLive";
 import { Ambilight } from "./Ambilight";
 import { CornerGlow } from "./CornerGlow";
@@ -385,28 +385,23 @@ export function Stage({
   const setHear = (id: string, next: Hearing) => {
     const was = hearOf(id);
     setHearing((prev) => ({ ...prev, [id]: choose(prev[id], was, next) }));
+    // The stage's volumes are where the next person starts: only a change to whoever is on the stage
+    // moves them, so a preview's volume never changes the stage's (spec 0131).
+    if (id !== bigId) return;
     changeWatch({ volume: next.sound.volume, muted: false });
     setVoiceSound({ volume: next.voice.volume, muted: false });
   };
   // Downloaded: the person on the stage's sound and voice, muted or not, so unmuting is instant; a
   // preview's only while I hear it (spec 0131, FR-2).
-  const heardKey = sharers
-    .filter((s) => !s.isMe)
-    .map((s) => {
-      const h = hearOf(s.person.id);
-      return `${s.person.id}:${s.person.id === bigId ? "big" : `${h.sound.muted ? 0 : 1}${h.voice.muted ? 0 : 1}`}`;
-    })
-    .join("|");
   useEffect(() => {
     for (const s of sharers) {
       if (s.isMe) continue;
-      const h = hearOf(s.person.id);
       const big = s.person.id === bigId;
+      const h = hearingOf(hearing[s.person.id], big, { sound: 0, voice: 0 });
       s.setSoundOn?.(big || !h.sound.muted);
       s.setVoiceOn?.(big || !h.voice.muted);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sharers, heardKey]);
+  }, [sharers, bigId, hearing]);
   const bigHearing = big && !big.isMe ? hearOf(big.person.id) : null;
   // The voices that play: the big person's (muted in place while I mute it) and the previews' I hear;
   // and the previews' screen sounds I hear (the big one's plays with its picture).
@@ -494,19 +489,13 @@ export function Stage({
   useLayoutEffect(() => {
     const stage = stageRef.current;
     if (!rowArrow || !stage) return;
-    // Measured in layout offsets, not on the screen: a slide (a transform) in progress doesn't count.
-    const leftOf = (el: HTMLElement | null) => {
-      let x = 0;
-      for (; el; el = el.offsetParent as HTMLElement | null) x += el.offsetLeft;
-      return x;
-    };
     const place = () => {
       const arrow = stage.querySelector<HTMLElement>('[data-arrow="up"]');
       const bar = stage.querySelector<HTMLElement>("[data-viewer-bar]");
       const holder = bar?.offsetParent as HTMLElement | null;
       if (!arrow || !holder) return stage.style.removeProperty("--arrow-end");
-      // Where the arrow ends, from the sounds' own edge; the stylesheet keeps them clear of it.
-      stage.style.setProperty("--arrow-end", `${Math.round(leftOf(arrow) + arrow.offsetWidth - leftOf(holder))}px`);
+      // Where the arrow ends, from the sounds' own layer; the stylesheet keeps them clear of it.
+      stage.style.setProperty("--arrow-end", `${arrowEnd(arrow, holder)}px`);
     };
     place();
     window.addEventListener("resize", place);

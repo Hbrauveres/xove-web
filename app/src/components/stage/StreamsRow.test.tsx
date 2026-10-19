@@ -103,6 +103,18 @@ describe("the streams row: hearing from a picture (specs 0123 and 0131)", () => 
     expect(onPick).not.toHaveBeenCalled();
   });
 
+  it("ignores only the click that ends a hold: the next tap on the picture watches it", async () => {
+    const onPick = vi.fn();
+    render(
+      <StreamsRow others={[{ ...RAFA, hasVoice: true }]} liveCount={2} open onOpen={() => {}} onClose={() => {}} onPick={onPick} hearOf={() => heard} onHear={() => {}} />,
+    );
+    const li = await hold(/^Watch Rafa/);
+    fireEvent.click(within(li).getByRole("button", { name: /^Watch Rafa/ }));
+    expect(onPick).not.toHaveBeenCalled();
+    await userEvent.setup().click(within(li).getByRole("button", { name: /^Watch Rafa/ }));
+    expect(onPick).toHaveBeenCalledWith("user-3");
+  });
+
   it("stacks a screen and a camera, with a swap among the held buttons (spec 0131)", async () => {
     const onSwap = vi.fn();
     const both: Sharer = { ...RAFA, camera: { ...DUDA.camera!, kind: "camera" } };

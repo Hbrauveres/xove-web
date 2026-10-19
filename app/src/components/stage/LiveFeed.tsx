@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
 import type { Friend, LiveFeed as Feed, Sharer } from "../../types";
 import { NowWatching, STREAM_PLACES } from "./NowWatching";
 import { ScreenVideo } from "./ScreenVideo";
+import { stackOf, useSwapping } from "./stack";
 import { HearToggles, type Hearing } from "./HearToggles";
 import styles from "./LiveFeed.module.css";
 
@@ -25,17 +25,12 @@ const kindOf = (feed: Feed) => (feed.kind === "camera" ? "camera" : "screen");
 
 /**
  * Under the phone's stage (spec 0158): the other live streams, like the YouTube app's feed. Each
- * is a full-width picture, then who, LIVE, for how long and who's watching. Silent: only the
- * stage plays sound. A tap puts it on the stage.
+ * is a full-width picture, then who, LIVE, for how long and who's watching, with that person's
+ * buttons on the picture to hear them while they stay small (spec 0131). A tap puts it on the stage.
  */
 export function LiveFeed({ others, liveCount, watchersOf, onPick, hearOf, onHear, swappedOf, onSwap }: Props) {
   // A swap plays for a moment: the two pictures trade places (spec 0131).
-  const [swapping, setSwapping] = useState<string | null>(null);
-  useEffect(() => {
-    if (!swapping) return;
-    const done = window.setTimeout(() => setSwapping(null), 400);
-    return () => window.clearTimeout(done);
-  }, [swapping]);
+  const [swapping, setSwapping] = useSwapping();
   return (
     <section className={styles.feed} aria-labelledby="live-now">
       <h2 id="live-now" className={styles.head}>
@@ -47,14 +42,9 @@ export function LiveFeed({ others, liveCount, watchersOf, onPick, hearOf, onHear
       <ul className={styles.list}>
         {others.map((s) => {
           const id = s.person.id;
-          const both = Boolean(s.screen && s.camera);
-          const feed = (both && swappedOf?.(id) ? s.camera : s.screen) ?? s.camera;
+          const { both, feed, video, back, backVideo } = stackOf(s, Boolean(swappedOf?.(id)));
           if (!feed) return null;
-          // The other picture, behind (a screen and a camera together).
-          const back = both ? (feed === s.screen ? s.camera : s.screen) : undefined;
-          const backVideo = back && (s.isMe ? back.local : back.remote?.video);
           const what = kindOf(feed);
-          const video = s.isMe ? feed.local : feed.remote?.video;
           const whose = s.isMe ? "your" : `${s.person.name}'s`;
           return (
             <li

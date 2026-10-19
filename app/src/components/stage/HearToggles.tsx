@@ -4,14 +4,15 @@ import { Range } from "../ui/Range";
 import { showToast } from "../ui/toast";
 import { SoundIcon, VoiceIcon, VoiceOffIcon, VolumeOffIcon } from "./icons";
 import type { Sound } from "./ViewerBar";
+import { useKeyboardLast } from "../../hooks/useTapToggle";
+import { HOLD_MS } from "./stack";
 import styles from "./HearToggles.module.css";
 
 /** What I hear from one person (spec 0123): their screen's sound and their voice, each its own mute. */
 export type Hearing = { sound: Sound; voice: Sound };
 
-/** As the stage's own sound buttons: a mouse rests 120 ms, a finger holds 500 ms; 4 s idle closes. */
+/** As the stage's own sound buttons: a mouse rests 120 ms, a finger holds (`HOLD_MS`); 4 s idle closes. */
 const REST_MS = 120;
-const HOLD_MS = 500;
 const IDLE_MS = 4000;
 
 type Kind = "sound" | "voice";
@@ -44,6 +45,7 @@ export function HearToggles({
   const noSound = !(sharer.screen && sharer.hasSound) ? "No screen sound" : undefined;
   const noVoice = sharer.hasVoice ? undefined : `${name}'s mic is off`;
   const [open, setOpen] = useState<Kind | null>(null);
+  const keyboardLast = useKeyboardLast();
   const timers = useRef<number[]>([]);
   const idle = useRef<number | undefined>(undefined);
   const swallow = useRef(false);
@@ -111,6 +113,10 @@ export function HearToggles({
           if (e.pointerType === "mouse") clear();
         }}
         data-active={open === kind || undefined}
+        // By keyboard, a sound's focus opens its slider, as the stage's own (Enter mutes).
+        onFocus={() => {
+          if (keyboardLast() && !unavailable) show(kind);
+        }}
         onPointerDown={(e) => {
           if (e.pointerType === "mouse" || unavailable) return;
           clear();

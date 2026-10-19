@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { LiveFeed as Feed, Sharer } from "../../types";
 import { STREAM_PLACES } from "./NowWatching";
 import { HearToggles, type Hearing } from "./HearToggles";
 import { ScreenVideo } from "./ScreenVideo";
+import { stackOf, useHold, useSwapping } from "./stack";
 import styles from "./StreamsRow.module.css";
 
 type Props = {
@@ -53,21 +54,16 @@ function ArrowButton({ up, onClick, className }: { up: boolean; onClick: () => v
 
 /**
  * Sideways (spec 0160): the other live streams in one row of small pictures along the bottom,
- * over a black gradient. Silent, like the upright feed; each picture carries that person's two
- * toggles, their sound and their voice (spec 0123). It slides up when open. A swipe opens
+ * over a black gradient. Holding a picture shows its person's buttons over it, to hear them while
+ * they stay small and swap their screen and camera (spec 0131). It slides up when open. A swipe opens
  * and closes it, and so does a round button at the bottom left: an arrow up while it's closed,
  * an arrow down on the row while it's open.
  */
 export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, hearOf, onHear, swappedOf, onSwap }: Props) {
   // A hold on a picture opens its buttons over it (spec 0131): the pictures are too small to carry them.
   const [held, setHeld] = useState<string | null>(null);
-  const hold = useRef<number | undefined>(undefined);
-  const [swapping, setSwapping] = useState<string | null>(null);
-  useEffect(() => {
-    if (!swapping) return;
-    const done = window.setTimeout(() => setSwapping(null), 400);
-    return () => window.clearTimeout(done);
-  }, [swapping]);
+  const hold = useHold();
+  const [swapping, setSwapping] = useSwapping();
   useEffect(() => {
     if (!held) return;
     const away = (e: PointerEvent) => {
@@ -97,13 +93,9 @@ export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, h
         </h2>
         <ul className={styles.list}>
           {others.map((s) => {
-            const both = Boolean(s.screen && s.camera);
-            const feed = (both && swappedOf?.(s.person.id) ? s.camera : s.screen) ?? s.camera;
+            const { both, feed, video, back, backVideo } = stackOf(s, Boolean(swappedOf?.(s.person.id)));
             if (!feed) return null;
-            const back = both ? (feed === s.screen ? s.camera : s.screen) : undefined;
-            const backVideo = back && (s.isMe ? back.local : back.remote?.video);
             const what = kindOf(feed);
-            const video = s.isMe ? feed.local : feed.remote?.video;
             const name = s.isMe ? "You" : s.person.name;
             const whose = s.isMe ? "your" : `${s.person.name}'s`;
             // Their voice heard while they speak: the picture's ring lights, or the button does while
@@ -120,12 +112,10 @@ export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, h
                 data-swapping={swapping === s.person.id || undefined}
                 data-talking={talking || undefined}
                 onPointerDown={() => {
-                  if (s.isMe && !both) return;
-                  window.clearTimeout(hold.current);
-                  hold.current = window.setTimeout(() => setHeld(s.person.id), 500);
+                  if (!s.isMe || both) hold.start(() => setHeld(s.person.id));
                 }}
-                onPointerUp={() => window.clearTimeout(hold.current)}
-                onPointerCancel={() => window.clearTimeout(hold.current)}
+                onPointerUp={hold.cancel}
+                onPointerCancel={hold.cancel}
                 onContextMenu={(e) => e.preventDefault()}
               >
                 {/* A screen and a camera: the other picture peeks out behind (spec 0131). */}
@@ -138,7 +128,7 @@ export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, h
                   type="button"
                   className={styles.picture}
                   aria-label={`Watch ${whose} ${what}`}
-                  onClick={() => held !== s.person.id && onPick(s.person.id)}
+                  onClick={() => !hold.swallow() && onPick(s.person.id)}
                 >
                   {video && (
                     <ScreenVideo

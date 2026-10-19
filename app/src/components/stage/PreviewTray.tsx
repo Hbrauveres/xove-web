@@ -9,6 +9,11 @@ const EDGE = 8;
 /** The room a slider adds when it unrolls: the side is chosen with it, so it never flips later. */
 const SLIDER_ROOM = 32;
 
+/** What Tab stops at, in order. */
+const TABBABLE = 'button, input, [href], [tabindex]:not([tabindex="-1"])';
+const tabbables = (root: ParentNode) =>
+  [...root.querySelectorAll<HTMLElement>(TABBABLE)].filter((el) => !el.closest("[inert]") && !(el as HTMLButtonElement).disabled);
+
 /** How long a row takes to roll back into its preview, at most (its transition ends it sooner). */
 const OUT_MS = 320;
 
@@ -135,8 +140,32 @@ function Row({
       data-up={side === "above" || undefined}
       inert={leaving}
       style={{ left: -9999, top: 0 }}
+      data-tray-for={open.id}
       onPointerEnter={onEnter}
       onPointerLeave={(e) => e.pointerType === "mouse" && onLeave()}
+      // By keyboard (spec 0131): the row sits between its preview and the next one in Tab's order.
+      onFocus={onEnter}
+      onBlur={(e) => {
+        const to = e.relatedTarget as Node | null;
+        if (!to || (!ref.current?.contains(to) && !open.anchor.contains(to))) onLeave();
+      }}
+      onKeyDown={(e) => {
+        const inRow = tabbables(e.currentTarget);
+        const back = open.anchor.querySelector<HTMLElement>(TABBABLE);
+        if (e.key === "Escape" || (e.key === "Tab" && e.shiftKey && e.target === inRow[0])) {
+          e.preventDefault();
+          back?.focus();
+        } else if (e.key === "Tab" && !e.shiftKey && e.target === inRow.at(-1)) {
+          // On to whatever follows the preview.
+          const next = tabbables(document).find(
+            (el) => !open.anchor.contains(el) && !e.currentTarget.contains(el) && open.anchor.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING,
+          );
+          if (next) {
+            e.preventDefault();
+            next.focus();
+          }
+        }
+      }}
       onTransitionEnd={(e) => leaving && e.target === e.currentTarget && e.propertyName === "clip-path" && onGone(open.id)}
     >
       {children}

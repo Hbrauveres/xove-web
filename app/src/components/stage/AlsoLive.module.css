@@ -150,7 +150,6 @@
   font-size: 0.6875rem;
 }
 
-/* The preview's sound: a round speaker at the top left; its slider slides out to the right. */
 /* The preview whose row is open keeps its hover ring, drawn inside so nothing clips it: one ring,
    so you see which preview the row belongs to. */
 .item[data-open] .video::after {
@@ -205,37 +204,6 @@
   position: relative;
 }
 
-.speaker {
-  display: grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
-  color: var(--text);
-  cursor: pointer;
-}
-
-.speaker:hover,
-.speaker:focus-visible {
-  background: rgba(255, 255, 255, 0.14);
-  outline: none;
-}
-
-.slider {
-  width: 64px;
-  margin: 0 6px 0 0;
-  animation: slide-out 0.18s ease;
-}
-
-@keyframes slide-out {
-  from {
-    width: 0;
-    opacity: 0;
-  }
-}
-
 /* How many of the 6 are live, and the places left (spec 0107): fixed at the right edge. */
 .free {
   flex: none;
@@ -275,8 +243,3 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .slider {
-    animation: none;
-  }
-}

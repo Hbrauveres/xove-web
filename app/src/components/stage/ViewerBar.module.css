@@ -44,7 +44,8 @@
 }
 
 :global([data-chrome="hidden"]:not(:has(:focus-visible))) .left > :not([data-stays]):has(~ [data-stays]) {
-  margin-right: -42px;
+  /* One button (34 px) and the gap after it (8 px): the voice takes its place. */
+  margin-right: calc(-34px - 8px);
 }
 
 .round {
