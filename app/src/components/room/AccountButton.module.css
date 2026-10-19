@@ -93,11 +93,14 @@
   padding: 12px 16px 14px;
 }
 
+/* A settings row (spec 0123, design decision 10): its label regular and a touch softer than
+   white, never heavier than the panel's headings; the switch at the right. */
 .switchRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-weight: 600;
+  color: rgba(235, 235, 236, 0.82);
+  font-weight: 400;
 }
 
 /* The switch (spec 0121): a slim grey track, the same off and on, and a bigger knob that

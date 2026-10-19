@@ -234,3 +234,22 @@ describe("the corner buttons over someone's stream (spec 0123, design decisions 
     expect(rule(bar, ".round[data-voice]::before")).toMatch(/transition:\s*box-shadow 120ms/);
   });
 });
+
+describe("settings rows (spec 0123, design decision 10)", () => {
+  const panel = sheet("components/stage/SettingsPanel.module.css");
+
+  it("are on the panel's type scale, a touch softer than white, 3 px inside their heading, the switch 12 px in", () => {
+    const row = rule(panel, ".voiceRow");
+    expect(row).toMatch(/font-size:\s*var\(--pick-font, 12px\)/);
+    expect(row).toMatch(/font-weight:\s*400/);
+    expect(row).toMatch(/color:\s*rgba\(235, 235, 236, 0\.82\)/);
+    expect(row).toMatch(/padding:\s*0 12px 0 3px/);
+    expect(rule(panel, ".voiceRow > button")).toMatch(/flex:\s*none/);
+  });
+
+  it("hold for the account menu's switch too: regular, a touch softer than white", () => {
+    const row = rule(sheet("components/room/AccountButton.module.css"), ".switchRow");
+    expect(row).toMatch(/font-weight:\s*400/);
+    expect(row).toMatch(/color:\s*rgba\(235, 235, 236, 0\.82\)/);
+  });
+});
