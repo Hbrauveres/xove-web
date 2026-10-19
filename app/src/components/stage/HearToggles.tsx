@@ -7,6 +7,7 @@ import type { Sound } from "./ViewerBar";
 import { useKeyboardLast } from "../../hooks/useTapToggle";
 import { HOLD_MS } from "./stack";
 import styles from "./HearToggles.module.css";
+import { Tooltip } from "../ui/Tooltip";
 
 /** What I hear from one person (spec 0123): their screen's sound and their voice, each its own mute. */
 export type Hearing = { sound: Sound; voice: Sound };
@@ -96,53 +97,54 @@ export function HearToggles({
     const off = Boolean(unavailable) || muted;
     const what = kind === "sound" ? `${name}'s screen sound` : `${name}'s voice`;
     const btn = (
-      <button
-        type="button"
-        className={styles.toggle}
-        data-talking={(kind === "voice" && !off && sharer.speaking) || undefined}
-        aria-disabled={unavailable ? true : undefined}
-        aria-pressed={unavailable ? undefined : muted}
-        aria-label={unavailable ? `${name}: ${unavailable}` : `${muted ? "Unmute" : "Mute"} ${what}`}
-        title={unavailable ?? what}
-        onPointerEnter={(e) => {
-          if (e.pointerType !== "mouse" || unavailable) return;
-          clear();
-          timers.current.push(window.setTimeout(() => show(kind), REST_MS));
-        }}
-        onPointerLeave={(e) => {
-          if (e.pointerType === "mouse") clear();
-        }}
-        data-active={open === kind || undefined}
-        // By keyboard, a sound's focus opens its slider, as the stage's own (Enter mutes).
-        onFocus={() => {
-          if (keyboardLast() && !unavailable) show(kind);
-        }}
-        onPointerDown={(e) => {
-          if (e.pointerType === "mouse" || unavailable) return;
-          clear();
-          timers.current.push(
-            window.setTimeout(() => {
-              swallow.current = true;
-              show(kind);
-            }, HOLD_MS),
-          );
-        }}
-        onPointerUp={clear}
-        onContextMenu={(e) => e.preventDefault()}
-        onClick={(e) => {
-          // The preview's own click opens the stream: a toggle doesn't.
-          e.stopPropagation();
-          if (swallow.current) {
-            swallow.current = false;
-            return;
-          }
-          if (unavailable) return showToast(unavailable, kind === "sound" ? <VolumeOffIcon /> : <VoiceOffIcon />);
-          onChange({ ...hearing, [kind]: { ...hearing[kind], muted: !muted } });
-          if (open) restart();
-        }}
-      >
-        {iconOf(kind, off)}
-      </button>
+      <Tooltip text={unavailable ?? what} hidden={open === kind}>
+        <button
+          type="button"
+          className={styles.toggle}
+          data-talking={(kind === "voice" && !off && sharer.speaking) || undefined}
+          aria-disabled={unavailable ? true : undefined}
+          aria-pressed={unavailable ? undefined : muted}
+          aria-label={unavailable ? `${name}: ${unavailable}` : `${muted ? "Unmute" : "Mute"} ${what}`}
+          onPointerEnter={(e) => {
+            if (e.pointerType !== "mouse" || unavailable) return;
+            clear();
+            timers.current.push(window.setTimeout(() => show(kind), REST_MS));
+          }}
+          onPointerLeave={(e) => {
+            if (e.pointerType === "mouse") clear();
+          }}
+          data-active={open === kind || undefined}
+          // By keyboard, a sound's focus opens its slider, as the stage's own (Enter mutes).
+          onFocus={() => {
+            if (keyboardLast() && !unavailable) show(kind);
+          }}
+          onPointerDown={(e) => {
+            if (e.pointerType === "mouse" || unavailable) return;
+            clear();
+            timers.current.push(
+              window.setTimeout(() => {
+                swallow.current = true;
+                show(kind);
+              }, HOLD_MS),
+            );
+          }}
+          onPointerUp={clear}
+          onContextMenu={(e) => e.preventDefault()}
+          onClick={(e) => {
+            // The preview's own click opens the stream: a toggle doesn't.
+            e.stopPropagation();
+            if (swallow.current) {
+              swallow.current = false;
+              return;
+            }
+            if (unavailable) return showToast(unavailable, kind === "sound" ? <VolumeOffIcon /> : <VoiceOffIcon />);
+            onChange({ ...hearing, [kind]: { ...hearing[kind], muted: !muted } });
+            if (open) restart();
+          }}
+        >
+          {iconOf(kind, off)}
+        </button>
+      </Tooltip>
     );
     if (layout !== "over") return btn;
     // Over a big picture: its own slider, upright over the button, as the stage's sounds (spec 0131).
@@ -190,28 +192,29 @@ export function HearToggles({
         {!sharer.isMe && button("voice")}
         {!sharer.isMe && button("sound")}
         {swap && (
-          <button
-            type="button"
-            className={styles.toggle}
-            aria-pressed={swap.on}
-            aria-label={`Swap ${sharer.isMe ? "your" : `${name}'s`} screen and camera`}
-            title="Swap screen and camera"
-            onClick={(e) => {
-              e.stopPropagation();
-              swap.onSwap();
-            }}
-          >
-            <svg viewBox="0 0 20 20" aria-hidden="true">
-              <path
-                d="M4 7h11M12 4l3 3-3 3M16 13H5M8 10l-3 3 3 3"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
+          <Tooltip text={"Swap screen and camera"}>
+            <button
+              type="button"
+              className={styles.toggle}
+              aria-pressed={swap.on}
+              aria-label={`Swap ${sharer.isMe ? "your" : `${name}'s`} screen and camera`}
+              onClick={(e) => {
+                e.stopPropagation();
+                swap.onSwap();
+              }}
+            >
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  d="M4 7h11M12 4l3 3-3 3M16 13H5M8 10l-3 3 3 3"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          </Tooltip>
         )}
       </span>
       {/* In the row: one slider after the buttons, unrolling once; moving between buttons only changes

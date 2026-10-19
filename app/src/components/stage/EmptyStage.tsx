@@ -3,6 +3,7 @@ import type { StreamKind } from "../../types";
 import { CameraOnIcon, ScreenOffIcon, ScreenOnIcon } from "./icons";
 import { showToast } from "../ui/toast";
 import styles from "./EmptyStage.module.css";
+import { Tooltip } from "../ui/Tooltip";
 
 type Props = {
   canShareScreen?: boolean;
@@ -32,24 +33,22 @@ function useClock() {
  * the browser can't share a screen (phones), the camera comes first and the screen is greyed with
  * its reason. Nothing moves but the clock.
  */
-export function EmptyStage({
-  canShareScreen = true,
-  onStart,
-}: Props) {
+export function EmptyStage({ canShareScreen = true, onStart }: Props) {
   const now = useClock();
   const screen = (
-    <button
-      type="button"
-      className={canShareScreen ? styles.primary : styles.unavailable}
-      aria-disabled={canShareScreen ? undefined : true}
-      title={canShareScreen ? undefined : "This browser can't share a screen"}
-      onClick={() =>
-        canShareScreen ? onStart?.("screen") : showToast("This browser can't share a screen", <ScreenOffIcon />)
-      }
-    >
-      {canShareScreen ? <ScreenOnIcon /> : <ScreenOffIcon />}
-      Share your screen
-    </button>
+    <Tooltip text={canShareScreen ? undefined : "This browser can't share a screen"}>
+      <button
+        type="button"
+        className={canShareScreen ? styles.primary : styles.unavailable}
+        aria-disabled={canShareScreen ? undefined : true}
+        onClick={() =>
+          canShareScreen ? onStart?.("screen") : showToast("This browser can't share a screen", <ScreenOffIcon />)
+        }
+      >
+        {canShareScreen ? <ScreenOnIcon /> : <ScreenOffIcon />}
+        Share your screen
+      </button>
+    </Tooltip>
   );
   const camera = (
     <button

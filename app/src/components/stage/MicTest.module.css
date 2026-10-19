@@ -129,3 +129,8 @@
     transition: none;
   }
 }
+
+/* The Test button's wrapper, which takes the pointer for its tooltip while it's disabled. */
+.hearWrap {
+  display: inline-flex;
+}

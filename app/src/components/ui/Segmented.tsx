@@ -1,5 +1,6 @@
 import { useRef, type CSSProperties, type KeyboardEvent } from "react";
 import styles from "./Segmented.module.css";
+import { Tooltip } from "./Tooltip";
 
 export type SegmentOption<T extends string> = { value: T; label: string; title?: string };
 
@@ -19,7 +20,10 @@ type Props<T extends string> = {
  */
 export function Segmented<T extends string>({ label, options, value, onChange, disabled = false }: Props<T>) {
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
-  const at = Math.max(0, options.findIndex((o) => o.value === value));
+  const at = Math.max(
+    0,
+    options.findIndex((o) => o.value === value),
+  );
 
   const onKeyDown = (e: KeyboardEvent) => {
     const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
@@ -42,23 +46,24 @@ export function Segmented<T extends string>({ label, options, value, onChange, d
       {options.map((o, i) => {
         const chosen = i === at;
         return (
-          <button
-            key={o.value}
-            ref={(el) => {
-              refs.current[i] = el;
-            }}
-            type="button"
-            role="radio"
-            aria-checked={chosen}
-            tabIndex={chosen ? 0 : -1}
-            title={o.title}
-            disabled={disabled}
-            onClick={() => {
-              if (!chosen) onChange(o.value);
-            }}
-          >
-            {o.label}
-          </button>
+          <Tooltip text={o.title}>
+            <button
+              key={o.value}
+              ref={(el) => {
+                refs.current[i] = el;
+              }}
+              type="button"
+              role="radio"
+              aria-checked={chosen}
+              tabIndex={chosen ? 0 : -1}
+              disabled={disabled}
+              onClick={() => {
+                if (!chosen) onChange(o.value);
+              }}
+            >
+              {o.label}
+            </button>
+          </Tooltip>
         );
       })}
     </div>

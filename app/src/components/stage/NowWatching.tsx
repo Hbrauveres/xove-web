@@ -3,10 +3,13 @@ import type { Friend, Sharer } from "../../types";
 import { Avatar } from "../ui/Avatar";
 import styles from "./NowWatching.module.css";
 import { whoIsHere } from "./whoIsHere";
+import { Tooltip } from "../ui/Tooltip";
 
 /** What a person shares, in two words. */
 // "· voice" while their voice is on (spec 0123).
-const whatOf = (s: Sharer) => (s.screen && s.camera ? "Screen with camera" : s.screen ? "Screen" : "Camera") + (!s.isMe && s.hasVoice ? " · voice" : "");
+const whatOf = (s: Sharer) =>
+  (s.screen && s.camera ? "Screen with camera" : s.screen ? "Screen" : "Camera") +
+  (!s.isMe && s.hasVoice ? " · voice" : "");
 
 /** The seats left for a stream, in words (spec 0123). */
 export const seatsOpen = (free: number) => `${free} ${free === 1 ? "seat" : "seats"} open`;
@@ -36,7 +39,14 @@ type Props = {
  * for how long and who's watching, like YouTube's title row. Or, with nobody live, an
  * invitation with who's here.
  */
-export function NowWatching({ sharer, watchers = [], others = [], compact = false, free = STREAM_PLACES, level = 2 }: Props) {
+export function NowWatching({
+  sharer,
+  watchers = [],
+  others = [],
+  compact = false,
+  free = STREAM_PLACES,
+  level = 2,
+}: Props) {
   const elapsed = useElapsed(sharer?.since ?? null);
   const Heading = level === 3 ? "h3" : "h2";
   if (compact) {
@@ -100,16 +110,18 @@ export function NowWatching({ sharer, watchers = [], others = [], compact = fals
           <span>{whatOf(sharer)}</span>
           <span className={styles.elapsed}>{elapsed}</span>
           {watchers.length > 0 && (
-            <span className={styles.watchers} title={watchers.map((p) => p.name).join(", ")}>
-              <span className={styles.row}>
-                {watchers.slice(0, MAX_AVATARS).map((p) => (
-                  <span key={p.id} data-watcher className={styles.face}>
-                    <Avatar person={p} size={22} />
-                  </span>
-                ))}
+            <Tooltip text={watchers.map((p) => p.name).join(", ")}>
+              <span className={styles.watchers}>
+                <span className={styles.row}>
+                  {watchers.slice(0, MAX_AVATARS).map((p) => (
+                    <span key={p.id} data-watcher className={styles.face}>
+                      <Avatar person={p} size={22} />
+                    </span>
+                  ))}
+                </span>
+                <span className={styles.count}>{watchers.length} watching</span>
               </span>
-              <span className={styles.count}>{watchers.length} watching</span>
-            </span>
+            </Tooltip>
           )}
         </p>
       </div>

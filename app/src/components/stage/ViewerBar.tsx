@@ -3,8 +3,21 @@ import type { StreamKind } from "../../types";
 import { Range } from "../ui/Range";
 import { showToast } from "../ui/toast";
 import { FULL_ROOM } from "./PlayerButtons";
-import { CameraOffIcon, CameraOnIcon, CogIcon, MicIcon, MicOffIcon, ScreenOffIcon, ScreenOnIcon, SoundIcon, VoiceIcon, VoiceOffIcon, VolumeOffIcon } from "./icons";
+import {
+  CameraOffIcon,
+  CameraOnIcon,
+  CogIcon,
+  MicIcon,
+  MicOffIcon,
+  ScreenOffIcon,
+  ScreenOnIcon,
+  SoundIcon,
+  VoiceIcon,
+  VoiceOffIcon,
+  VolumeOffIcon,
+} from "./icons";
 import styles from "./ViewerBar.module.css";
+import { Tooltip } from "../ui/Tooltip";
 
 /** One sound you hear from the person you watch (spec 0123): its volume and mute. */
 export type Sound = { volume: number; muted: boolean };
@@ -41,7 +54,8 @@ type Props = {
  * them, the right corner is you. Your stream's own controls live only on your stream.
  */
 export function ViewerBar(props: Props) {
-  const { sound, voice, live, micOn, onMic, canShareScreen, full, onStart, onSettings, canSetVolume, settingsOnly } = props;
+  const { sound, voice, live, micOn, onMic, canShareScreen, full, onStart, onSettings, canSetVolume, settingsOnly } =
+    props;
   const [open, setOpen] = useState<"sound" | "voice" | null>(null);
   const [menu, setMenu] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
@@ -62,25 +76,38 @@ export function ViewerBar(props: Props) {
     <div ref={bar} className={styles.bar} data-buttons data-viewer-bar>
       <div className={styles.left}>
         {sound && <Hear kind="sound" s={sound} open={open === "sound"} setOpen={setOpen} canSetVolume={canSetVolume} />}
-        {voice && <Hear kind="voice" s={voice} open={open === "voice"} setOpen={setOpen} canSetVolume={canSetVolume} name={voice.name} talking={voice.talking} />}
+        {voice && (
+          <Hear
+            kind="voice"
+            s={voice}
+            open={open === "voice"}
+            setOpen={setOpen}
+            canSetVolume={canSetVolume}
+            name={voice.name}
+            talking={voice.talking}
+          />
+        )}
       </div>
       <div className={styles.right}>
         {settingsOnly ? (
-          <button type="button" className={styles.round} aria-label="Settings" title="Settings" onClick={onSettings}>
-            <CogIcon />
-          </button>
+          <Tooltip text={"Settings"}>
+            <button type="button" className={styles.round} aria-label="Settings" onClick={onSettings}>
+              <CogIcon />
+            </button>
+          </Tooltip>
         ) : live ? (
-          <button
-            type="button"
-            className={styles.round}
-            data-on={micOn || undefined}
-            aria-pressed={Boolean(micOn)}
-            aria-label={micOn ? "Mute your voice" : "Share your voice"}
-            title={micOn ? "Mute your voice" : "Share your voice"}
-            onClick={onMic}
-          >
-            {micOn ? <MicIcon /> : <MicOffIcon />}
-          </button>
+          <Tooltip text={micOn ? "Mute your voice" : "Share your voice"}>
+            <button
+              type="button"
+              className={styles.round}
+              data-on={micOn || undefined}
+              aria-pressed={Boolean(micOn)}
+              aria-label={micOn ? "Mute your voice" : "Share your voice"}
+              onClick={onMic}
+            >
+              {micOn ? <MicIcon /> : <MicOffIcon />}
+            </button>
+          </Tooltip>
         ) : (
           <span className={styles.anchor}>
             {/* The settings, opened from its menu, open over it (design decision 5). */}
@@ -116,7 +143,14 @@ export function ViewerBar(props: Props) {
                   }}
                 />
                 <span className={styles.sep} />
-                <MenuItem icon={<CogIcon />} label="Settings" onPick={() => { setMenu(false); onSettings(); }} />
+                <MenuItem
+                  icon={<CogIcon />}
+                  label="Settings"
+                  onPick={() => {
+                    setMenu(false);
+                    onSettings();
+                  }}
+                />
               </div>
             )}
           </span>
@@ -126,18 +160,29 @@ export function ViewerBar(props: Props) {
   );
 }
 
-function MenuItem({ icon, label, unavailable, onPick }: { icon: ReactNode; label: string; unavailable?: string; onPick: () => void }) {
+function MenuItem({
+  icon,
+  label,
+  unavailable,
+  onPick,
+}: {
+  icon: ReactNode;
+  label: string;
+  unavailable?: string;
+  onPick: () => void;
+}) {
   return (
-    <button
-      type="button"
-      role="menuitem"
-      aria-disabled={unavailable ? true : undefined}
-      title={unavailable}
-      onClick={() => (unavailable ? showToast(unavailable, icon) : onPick())}
-    >
-      {icon}
-      {label}
-    </button>
+    <Tooltip text={unavailable}>
+      <button
+        type="button"
+        role="menuitem"
+        aria-disabled={unavailable ? true : undefined}
+        onClick={() => (unavailable ? showToast(unavailable, icon) : onPick())}
+      >
+        {icon}
+        {label}
+      </button>
+    </Tooltip>
   );
 }
 
@@ -177,8 +222,13 @@ function Hear({
   useEffect(() => () => [rest, leave, hold, idle].forEach((t) => window.clearTimeout(t.current)), []);
 
   const silent = Boolean(s.unavailable) || s.muted || s.volume === 0;
-  const label = s.unavailable ?? (kind === "sound" ? `${s.muted ? "Unmute" : "Mute"} the screen's sound` : `${s.muted ? "Unmute" : "Mute"} ${name}'s voice`);
-  const icon = kind === "sound" ? (silent ? <VolumeOffIcon /> : <SoundIcon />) : silent ? <VoiceOffIcon /> : <VoiceIcon />;
+  const label =
+    s.unavailable ??
+    (kind === "sound"
+      ? `${s.muted ? "Unmute" : "Mute"} the screen's sound`
+      : `${s.muted ? "Unmute" : "Mute"} ${name}'s voice`);
+  const icon =
+    kind === "sound" ? silent ? <VolumeOffIcon /> : <SoundIcon /> : silent ? <VoiceOffIcon /> : <VoiceIcon />;
   return (
     <span
       className={styles.anchor}
@@ -195,48 +245,54 @@ function Hear({
         leave.current = window.setTimeout(() => open && setOpen(null), 300);
       }}
     >
-      <button
-        type="button"
-        className={styles.round}
-        data-voice={kind === "voice" || undefined}
-        data-talking={(kind === "voice" && talking && !silent) || undefined}
-        data-silent={(kind === "voice" && !talking && !silent) || undefined}
-        aria-disabled={s.unavailable ? true : undefined}
-        aria-pressed={s.unavailable ? undefined : s.muted}
-        aria-label={label}
-        title={kind === "sound" ? s.unavailable ?? "Screen sound" : s.unavailable ?? `${name}'s voice`}
-        onPointerDown={(e) => {
-          pointer.current = e.pointerType;
-          if (e.pointerType === "mouse") return;
-          hold.current = window.setTimeout(() => {
-            swallow.current = true;
-            show();
-          }, HOLD_MS);
-        }}
-        onPointerUp={() => window.clearTimeout(hold.current)}
-        onContextMenu={(e) => e.preventDefault()}
-        onFocus={(e) => {
-          try {
-            if (e.currentTarget.matches(":focus-visible")) show();
-          } catch {
-            /* old browsers */
-          }
-        }}
-        onClick={() => {
-          if (swallow.current) {
-            swallow.current = false;
-            return;
-          }
-          if (s.unavailable) {
-            if (pointer.current !== "mouse") showToast(s.unavailable, kind === "sound" ? <VolumeOffIcon /> : <VoiceOffIcon />);
-            return;
-          }
-          s.onChange({ ...s, muted: !s.muted });
-          if (open) restart();
-        }}
+      {/* Its slider open, its tooltip steps aside. */}
+      <Tooltip
+        text={kind === "sound" ? (s.unavailable ?? "Screen sound") : (s.unavailable ?? `${name}'s voice`)}
+        hidden={open}
       >
-        {icon}
-      </button>
+        <button
+          type="button"
+          className={styles.round}
+          data-voice={kind === "voice" || undefined}
+          data-talking={(kind === "voice" && talking && !silent) || undefined}
+          data-silent={(kind === "voice" && !talking && !silent) || undefined}
+          aria-disabled={s.unavailable ? true : undefined}
+          aria-pressed={s.unavailable ? undefined : s.muted}
+          aria-label={label}
+          onPointerDown={(e) => {
+            pointer.current = e.pointerType;
+            if (e.pointerType === "mouse") return;
+            hold.current = window.setTimeout(() => {
+              swallow.current = true;
+              show();
+            }, HOLD_MS);
+          }}
+          onPointerUp={() => window.clearTimeout(hold.current)}
+          onContextMenu={(e) => e.preventDefault()}
+          onFocus={(e) => {
+            try {
+              if (e.currentTarget.matches(":focus-visible")) show();
+            } catch {
+              /* old browsers */
+            }
+          }}
+          onClick={() => {
+            if (swallow.current) {
+              swallow.current = false;
+              return;
+            }
+            if (s.unavailable) {
+              if (pointer.current !== "mouse")
+                showToast(s.unavailable, kind === "sound" ? <VolumeOffIcon /> : <VoiceOffIcon />);
+              return;
+            }
+            s.onChange({ ...s, muted: !s.muted });
+            if (open) restart();
+          }}
+        >
+          {icon}
+        </button>
+      </Tooltip>
       {canSetVolume && !s.unavailable && (
         <span className={styles.slider} data-open={open || undefined} data-muted={s.muted || undefined} inert={!open}>
           <Range

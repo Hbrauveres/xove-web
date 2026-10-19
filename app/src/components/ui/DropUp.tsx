@@ -9,14 +9,13 @@ import {
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
+import { claimFloating, dismissFloating, releaseFloating } from "./floating";
 import styles from "./DropUp.module.css";
 
 /** How long the pointer rests on the button before the drop-up unrolls. */
 export const OPEN_DELAY_MS = 120;
 /** A slip of the pointer outside shorter than this doesn't close it. */
 export const LEAVE_GRACE_MS = 300;
-/** The drop-ups open now, each by how it closes itself: one at a time (spec 0133, #128). */
-const openOnes = new Set<() => void>();
 /** By touch: how long a press is held on the button to open it (a long press, as on any phone). */
 export const HOLD_MS = 500;
 /** By touch: a finger that moves further than this is scrolling, not holding. */
@@ -104,22 +103,18 @@ export function DropUp({ label, enabled, trigger, onLeave, width, closeSignal, r
     setByTouch(false);
     onLeave?.();
   };
-  // One at a time: moving on to another live button closes this one at once, without its grace,
-  // so two never stand over each other.
+  // One floating thing at a time, across the app (spec 0133, #128): opening closes any other drop-up
+  // or tooltip at once, without its grace, and a tooltip showing closes this one.
   const closeMe = useRef(close);
   useEffect(() => {
     closeMe.current = close;
   });
+  const [me] = useState(() => () => closeMe.current());
   useEffect(() => {
-    if (!open) return;
-    const me = () => closeMe.current();
-    openOnes.add(me);
-    return () => {
-      openOnes.delete(me);
-    };
-  }, [open]);
-  // Called only before this one opens, so every one open is another.
-  const closeOthers = () => openOnes.forEach((other) => other());
+    if (open) claimFloating(me);
+    else releaseFloating(me);
+  }, [open, me]);
+  const closeOthers = () => dismissFloating(me);
 
   // ---- a mouse
   const onPointerEnter = (e: ReactPointerEvent) => {

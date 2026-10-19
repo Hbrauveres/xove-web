@@ -2,6 +2,7 @@ import { useEffect, useState, type CSSProperties } from "react";
 import type { MediaTrack } from "../../types";
 import { VoiceAudio } from "./VoiceAudio";
 import styles from "./MicTest.module.css";
+import { Tooltip } from "../ui/Tooltip";
 
 /** How long "Hear yourself" plays your mic back. */
 const HEAR_S = 5;
@@ -41,29 +42,34 @@ export function MicTest({
           } as CSSProperties
         }
       >
-        <input
-          type="range"
-          min={0}
-          max={1}
-          step={0.01}
-          value={sensitivity}
-          aria-label="Mic sensitivity"
-          title="Sensitivity: sound left of the line isn't sent"
-          onChange={(e) => onSensitivity(Number(e.target.value))}
-        />
+        <Tooltip text={"Sensitivity: sound left of the line isn't sent"}>
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.01}
+            value={sensitivity}
+            aria-label="Mic sensitivity"
+            onChange={(e) => onSensitivity(Number(e.target.value))}
+          />
+        </Tooltip>
       </div>
-      <button
-        type="button"
-        className={styles.hear}
-        data-on={hearing || undefined}
-        disabled={!track}
-        aria-pressed={hearing}
-        aria-label={hearing ? "Stop hearing yourself" : "Test: hear yourself"}
-        title={track ? "Hear yourself for 5 s (use headphones)" : "Turn your voice on to hear yourself"}
-        onClick={() => setLeft(hearing ? 0 : HEAR_S)}
-      >
-        {hearing ? <span className={styles.count}>Stop · {left}</span> : "Test"}
-      </button>
+      {/* Disabled, the button gets no pointer: its wrapper says why. */}
+      <Tooltip text={track ? "Hear yourself for 5 s (use headphones)" : "Turn your voice on to hear yourself"}>
+        <span className={styles.hearWrap}>
+          <button
+            type="button"
+            className={styles.hear}
+            data-on={hearing || undefined}
+            disabled={!track}
+            aria-pressed={hearing}
+            aria-label={hearing ? "Stop hearing yourself" : "Test: hear yourself"}
+            onClick={() => setLeft(hearing ? 0 : HEAR_S)}
+          >
+            {hearing ? <span className={styles.count}>Stop · {left}</span> : "Test"}
+          </button>
+        </span>
+      </Tooltip>
       {hearing && track && <VoiceAudio track={track} volume={1} muted={false} />}
     </div>
   );
