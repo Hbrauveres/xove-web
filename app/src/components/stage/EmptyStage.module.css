@@ -6,7 +6,6 @@
 .empty {
   /* Close to the edge, so the stage's own buttons sit inside the bottom-right corner. */
   --inset: 6px;
-  --top: var(--inset);
   --arm: 28px;
   --stroke: 2px;
   position: absolute;
@@ -32,13 +31,13 @@
 }
 
 .corner[data-at="tl"] {
-  top: var(--top);
+  top: var(--inset);
   left: var(--inset);
   border-width: var(--stroke) 0 0 var(--stroke);
 }
 
 .corner[data-at="tr"] {
-  top: var(--top);
+  top: var(--inset);
   right: var(--inset);
   border-width: var(--stroke) var(--stroke) 0 0;
   border-color: var(--accent);
@@ -61,7 +60,7 @@
    recording). */
 .readout {
   position: absolute;
-  top: calc(var(--top) + 18px);
+  top: calc(var(--inset) + 18px);
   left: calc(var(--inset) + 18px);
   display: inline-flex;
   align-items: center;
@@ -163,12 +162,8 @@
   }
 }
 
-/* Sideways on a phone the top bar floats over the stage: the corners start under it, and its
-   own "Nobody live" says what "Standby" would. */
-:global([data-layout="sideways"]) .empty {
-  --top: 58px;
-}
-
+/* Sideways on a phone the top bar floats over the stage: the corners stay at the screen's edges,
+   as everywhere, and its own "Nobody live" says what "Standby" would. */
 :global([data-layout="sideways"]) .readout {
   display: none;
 }
