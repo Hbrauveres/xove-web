@@ -211,6 +211,35 @@ describe("also live (specs 0104 and 0123)", () => {
     expect(within(row).getByRole("button", { name: "Diego: Diego's mic is off" })).toHaveAttribute("aria-disabled", "true");
   });
 
+  it("stacks a screen and a camera: the other picture behind, and the swap trades them (spec 0131, AC-3)", async () => {
+    const user = userEvent.setup();
+    render(<Harness others={[BRUNO]} />);
+    expect(item(/^Watch Bruno's screen/)).toHaveAttribute("data-stacked");
+    expect(item(/^Watch Bruno's screen/).querySelector(":scope > span[aria-hidden=\"true\"] video")).not.toBeNull();
+
+    const row = await rowOf("Bruno", user);
+    await user.click(within(row).getByRole("button", { name: "Swap Bruno's screen and camera" }));
+    expect(preview(/^Watch Bruno's camera/)).toBeInTheDocument();
+    expect(item(/^Watch Bruno's camera/)).toHaveAttribute("data-swapping");
+  });
+
+  it("lights a heard preview's picture while they speak; open, its voice button instead; muted, nothing (spec 0131, AC-4)", async () => {
+    const user = userEvent.setup();
+    const speaking = { ...BRUNO, speaking: true };
+    const { rerender } = render(<Harness others={[speaking]} />);
+    expect(item(/^Watch Bruno/)).toHaveAttribute("data-talking");
+
+    const row = await rowOf("Bruno", user);
+    expect(item(/^Watch Bruno/)).not.toHaveAttribute("data-talking");
+    expect(within(row).getByRole("button", { name: "Mute Bruno's voice" })).toHaveAttribute("data-talking");
+
+    const off: Hearing = { ...HEARD, voice: { volume: 1, muted: true } };
+    rerender(<Harness others={[speaking]} heard={off} />);
+    await user.unhover(preview(/^Watch Bruno/));
+    await waitFor(() => expect(item(/^Watch Bruno/)).not.toHaveAttribute("data-open"));
+    expect(item(/^Watch Bruno/)).not.toHaveAttribute("data-talking");
+  });
+
   it("shows the seats as six dots, red for each stream live, beside the previews (spec 0123)", () => {
     const { container } = render(<Harness others={[ANA, DIEGO]} live={3} free={3} />);
     const box = container.querySelector("[data-free]") as HTMLElement;
