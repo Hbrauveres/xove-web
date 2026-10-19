@@ -180,6 +180,8 @@ export function HearToggles({
     <span
       ref={root}
       className={styles.toggles}
+      role="group"
+      aria-label={sharer.isMe ? "Your stream" : `${name}'s sounds`}
       data-layout={layout}
       data-open={open ?? undefined}
       onClick={(e) => e.stopPropagation()}

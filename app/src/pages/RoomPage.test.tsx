@@ -1817,13 +1817,46 @@ describe("room: whose sound plays", () => {
     return { server, room, sound };
   }
 
-  it("plays only the big person's sound; a preview's isn't even downloaded, only its toggles show (spec 0123)", async () => {
+  // A preview's buttons, in the row that pointing at it opens (spec 0131).
+  async function rowOf(name: string, user = userEvent.setup()) {
+    await user.hover(within(thumbnails()).getByRole("button", { name: new RegExp(`^Watch ${name}`) }));
+    return screen.findByRole("group", { name: `${name}'s sounds` });
+  }
+
+  it("plays only the big person's sound until I turn a preview on; a preview's is downloaded only while I hear it (spec 0131)", async () => {
     const { room, sound } = await anaAndBrunoWithSound();
+    const user = userEvent.setup();
 
     expect(sound("user-3").attached).toHaveLength(1);
     await waitFor(() => expect(room.soundPublication("user-7")!.setSubscribed).toHaveBeenLastCalledWith(false));
     expect(sound("user-7").attached).toHaveLength(0);
-    expect(within(thumbnails()).getByRole("button", { name: "Mute Bruno's screen sound" })).toBeInTheDocument();
+
+    // Bruno stays small; I turn his sound on from his row: it's downloaded and plays.
+    await user.click(within(await rowOf("Bruno", user)).getByRole("button", { name: "Unmute Bruno's screen sound" }));
+    await waitFor(() => expect(room.soundPublication("user-7")!.setSubscribed).toHaveBeenLastCalledWith(true));
+    await waitFor(() => expect(sound("user-7").attached).toHaveLength(1));
+    expect((sound("user-7").attached[0] as HTMLAudioElement).muted).toBe(false);
+    expect(screen.getByRole("heading", { name: "Ana" })).toBeInTheDocument();
+
+    // Off again: no longer downloaded.
+    await user.click(within(await rowOf("Bruno", user)).getByRole("button", { name: "Mute Bruno's screen sound" }));
+    await waitFor(() => expect(room.soundPublication("user-7")!.setSubscribed).toHaveBeenLastCalledWith(false));
+    expect(sound("user-7").attached).toHaveLength(0);
+  });
+
+  it("plays a preview's voice I turn on, at its own volume, while it stays small (spec 0131, AC-1)", async () => {
+    const { room } = await anaAndBrunoWithSound();
+    const user = userEvent.setup();
+    let voice!: ReturnType<typeof room.publishVoice>;
+    act(() => {
+      voice = room.publishVoice("user-7");
+    });
+    expect(voice.attached).toHaveLength(0);
+
+    await user.click(within(await rowOf("Bruno", user)).getByRole("button", { name: "Unmute Bruno's voice" }));
+    await waitFor(() => expect(voice.attached).toHaveLength(1));
+    expect((voice.attached[0] as HTMLAudioElement).muted).toBe(false);
+    expect(screen.getByRole("heading", { name: "Ana" })).toBeInTheDocument();
   });
 
   it("locks a screen without sound on mute, for the big player and a thumbnail, until it gets sound (spec 0098)", async () => {
@@ -1843,8 +1876,11 @@ describe("room: whose sound plays", () => {
 
     expect(within(stage()).getByRole("button", { name: "No sound in this stream" })).toHaveAttribute("aria-disabled", "true");
     expect(within(stage()).queryByRole("slider", { name: "Screen sound volume" })).not.toBeInTheDocument();
-    // A preview without sound greys its sound toggle, in its place (spec 0123).
-    expect(within(thumbnails()).getByRole("button", { name: "Bruno: No screen sound" })).toHaveAttribute("aria-disabled", "true");
+    // A preview without sound greys its sound button, in its place (specs 0123 and 0131).
+    expect(within(await rowOf("Bruno")).getByRole("button", { name: "Bruno: No screen sound" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
 
     // Ana changes to a window with sound: her sound works again, at my volume.
     act(() => {
@@ -1875,30 +1911,33 @@ describe("room: whose sound plays", () => {
 
     expect(within(stage()).getByRole("button", { name: "No screen sound" })).toHaveAttribute("aria-disabled", "true");
     expect(within(stage()).getByRole("button", { name: "Ana's mic is off" })).toHaveAttribute("aria-disabled", "true");
-    expect(within(thumbnails()).getByRole("button", { name: "Bruno: No screen sound" })).toHaveAttribute("aria-disabled", "true");
-    expect(within(thumbnails()).getByRole("button", { name: "Bruno: Bruno's mic is off" })).toHaveAttribute("aria-disabled", "true");
+    const row = await rowOf("Bruno");
+    expect(within(row).getByRole("button", { name: "Bruno: No screen sound" })).toHaveAttribute("aria-disabled", "true");
+    expect(within(row).getByRole("button", { name: "Bruno: Bruno's mic is off" })).toHaveAttribute("aria-disabled", "true");
   });
 
-  it("keeps each person's mute while switching, and mutes from a preview too (spec 0123, AC-4)", async () => {
-    const { sound } = await anaAndBrunoWithSound();
+  it("keeps each person's switch wherever they are, while switching (specs 0123 AC-4, 0131 AC-1)", async () => {
+    const { room, sound } = await anaAndBrunoWithSound();
     const user = userEvent.setup();
 
     // Ana is big: mute her sound.
     await user.click(within(stage()).getByRole("button", { name: "Mute the screen's sound" }));
     expect((sound("user-3").attached[0] as HTMLAudioElement).muted).toBe(true);
-    // Mute Bruno's from his preview, without opening him.
-    await user.click(within(thumbnails()).getByRole("button", { name: "Mute Bruno's screen sound" }));
+    // Turn Bruno's on from his preview, without opening him.
+    await user.click(within(await rowOf("Bruno", user)).getByRole("button", { name: "Unmute Bruno's screen sound" }));
     expect(screen.getByRole("heading", { name: "Ana" })).toBeInTheDocument();
 
-    // Watch Bruno: his sound comes muted, as I left it.
+    // Watch Bruno: his sound stays on. Ana, small now, stays muted and isn't downloaded.
     await user.click(within(thumbnails()).getByRole("button", { name: /^Watch Bruno/ }));
     await waitFor(() => expect(sound("user-7").attached).toHaveLength(1));
-    expect((sound("user-7").attached[0] as HTMLAudioElement).muted).toBe(true);
+    expect((sound("user-7").attached[0] as HTMLAudioElement).muted).toBe(false);
+    await waitFor(() => expect(room.soundPublication("user-3")!.setSubscribed).toHaveBeenLastCalledWith(false));
 
-    // Back to Ana: still muted.
+    // Back to Ana: still muted; Bruno, small again, still heard.
     await user.click(within(thumbnails()).getByRole("button", { name: /^Watch Ana/ }));
     await waitFor(() => expect(sound("user-3").attached).toHaveLength(1));
     expect((sound("user-3").attached[0] as HTMLAudioElement).muted).toBe(true);
+    expect(room.soundPublication("user-7")!.setSubscribed).toHaveBeenLastCalledWith(true);
   });
 
   it("plays the new big person's sound after a swap, and mutes the one that left", async () => {

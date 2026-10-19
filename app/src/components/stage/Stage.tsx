@@ -33,6 +33,7 @@ import { Toast } from "../ui/Toast";
 import { useVideoShape } from "../../hooks/useVideoShape";
 import { useStageSwipe } from "../../hooks/useStageSwipe";
 import { stepOnStage } from "../../media/stagePick";
+import { choose, hearingOf, type Choices } from "../../media/hearing";
 import { StageDots } from "./StageDots";
 import { StreamsRow } from "./StreamsRow";
 import { gridFor } from "../../media/ambilight";
@@ -385,58 +386,42 @@ export function Stage({
   const [bigVideoEl, setBigVideoEl] = useState<HTMLVideoElement | null>(null);
   // The stage hugs the picture: no bars (spec 0107). 16:9 while empty or loading.
   const shape = useVideoShape(bigVideoEl);
-  // What I hear from each person (spec 0123): their sound and their voice, each with its own mute
-  // and volume, for the whole visit; a new person starts at my last volumes, unmuted.
-  // Each person's sound and voice (spec 0131): one volume each, and one switch that follows them
-  // everywhere once touched; untouched, heard while big and off while small.
-  type Touched = { sound: { volume: number; muted?: boolean }; voice: { volume: number; muted?: boolean } };
-  const [hearing, setHearing] = useState<Record<string, Touched>>({});
-  const hearOf = (id: string): Hearing => {
-    const h = hearing[id];
-    const untouched = id !== bigId;
-    return {
-      sound: { volume: h?.sound.volume ?? watch.volume, muted: h?.sound.muted ?? untouched },
-      voice: { volume: h?.voice.volume ?? voiceSound.volume, muted: h?.voice.muted ?? untouched },
-    };
-  };
+  // What I hear from each person (specs 0123 and 0131): their sound and their voice, each with its
+  // own volume and one switch that follows them everywhere once touched, for the whole visit.
+  const [hearing, setHearing] = useState<Record<string, Choices>>({});
+  const hearOf = (id: string): Hearing =>
+    hearingOf(hearing[id], id === bigId, { sound: watch.volume, voice: voiceSound.volume });
   const setHear = (id: string, next: Hearing) => {
     const was = hearOf(id);
-    // Only what changed becomes this person's own choice; the rest stays untouched.
-    setHearing((prev) => {
-      const h = prev[id];
-      return {
-        ...prev,
-        [id]: {
-          sound: { volume: next.sound.volume, muted: next.sound.muted !== was.sound.muted ? next.sound.muted : h?.sound.muted },
-          voice: { volume: next.voice.volume, muted: next.voice.muted !== was.voice.muted ? next.voice.muted : h?.voice.muted },
-        },
-      };
-    });
+    setHearing((prev) => ({ ...prev, [id]: choose(prev[id], was, next) }));
     changeWatch({ volume: next.sound.volume, muted: false });
     setVoiceSound({ volume: next.voice.volume, muted: false });
   };
-  // Whoever is heard, big or small, and only them, is downloaded.
+  // Downloaded: the person on the stage's sound and voice, muted or not, so unmuting is instant; a
+  // preview's only while I hear it (spec 0131, FR-2).
   const heardKey = sharers
     .filter((s) => !s.isMe)
     .map((s) => {
       const h = hearOf(s.person.id);
-      return `${s.person.id}:${h.sound.muted ? 0 : 1}${h.voice.muted ? 0 : 1}`;
+      return `${s.person.id}:${s.person.id === bigId ? "big" : `${h.sound.muted ? 0 : 1}${h.voice.muted ? 0 : 1}`}`;
     })
     .join("|");
   useEffect(() => {
     for (const s of sharers) {
       if (s.isMe) continue;
       const h = hearOf(s.person.id);
-      s.setSoundOn?.(!h.sound.muted);
-      s.setVoiceOn?.(!h.voice.muted);
+      const big = s.person.id === bigId;
+      s.setSoundOn?.(big || !h.sound.muted);
+      s.setVoiceOn?.(big || !h.voice.muted);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sharers, heardKey]);
   const bigHearing = big && !big.isMe ? hearOf(big.person.id) : null;
-  // Every voice I hear plays, the big person's and the previews' turned on; and the previews' sounds.
+  // The voices that play: the big person's (muted in place while I mute it) and the previews' I hear;
+  // and the previews' screen sounds I hear (the big one's plays with its picture).
   const notMe = sharers.filter((s) => !s.isMe);
   const voices = notMe
-    .filter((s) => s.voice && s.hasVoice && !hearOf(s.person.id).voice.muted)
+    .filter((s) => s.voice && s.hasVoice && (s === big || !hearOf(s.person.id).voice.muted))
     .map((s) => ({ id: s.person.id, track: s.voice!, ...hearOf(s.person.id).voice }));
   const previewSounds = notMe
     .filter((s) => s !== big && s.sound && s.hasSound && !hearOf(s.person.id).sound.muted)
