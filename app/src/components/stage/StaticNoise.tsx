@@ -5,9 +5,11 @@ import styles from "./StaticNoise.module.css";
 const GRAIN = 2;
 /** Static flickers at this rate; more is wasted on a faded background. */
 const FPS = 20;
+/** How fast the bands roll down, in CSS pixels a second. */
+const ROLL = 18;
 
 /**
- * A TV's static behind the empty stage (spec 0136): snow in horizontal bands that roll and breathe,
+ * A TV's static behind the empty stage (spec 0136): snow in horizontal bands rolling slowly down,
  * dark and faded so it never competes with the way to start. Near a mouse the static stirs:
  * brighter, its rows torn sideways, settling once the mouse rests. Still for reduced motion.
  */
@@ -57,8 +59,11 @@ export function StaticNoise() {
         // Bands of different widths rolling down: bright ones with clear edges, dark gaps between.
         // In CSS pixels, so the bands keep their size whatever the grain.
         const py = y * GRAIN;
-        const a = Math.sin(py * 0.03 - s * 1.1) * 0.5 + 0.5;
-        const b = Math.sin(py * 0.009 + s * 0.4) * 0.5 + 0.5;
+        // Both waves roll down together at one slow speed, so the bands move as one and keep
+        // their sizes instead of growing and shrinking.
+        const roll = py - s * ROLL;
+        const a = Math.sin(roll * 0.03) * 0.5 + 0.5;
+        const b = Math.sin(roll * 0.009) * 0.5 + 0.5;
         const m = a * 0.55 + b * 0.45;
         const edge = Math.min(1, Math.max(0, (m - 0.42) / 0.16));
         const g = 0.12 + 0.88 * edge * edge * (3 - 2 * edge);
