@@ -1062,7 +1062,7 @@ describe("room: change window and pick a camera (spec 0098)", () => {
     expect(local.screens).toHaveLength(1);
     // The new pick has sound: it's sent, and the badge goes.
     await waitFor(() =>
-      expect(within(stage()).getByRole("button", { name: "Stop sharing your screen" })).toHaveAccessibleDescription("Stop sharing your screen"),
+      expect(within(stage()).getByRole("button", { name: "Stop sharing your screen" })).not.toHaveAccessibleDescription(),
     );
     expect(local.screenAudio?.track.source).toBe("screen_share_audio");
   });
@@ -1132,10 +1132,11 @@ describe("room: the player on touch screens and keyboards", () => {
 
   it("toggles the controls with a tap on the box beside the picture, the dark sides included (spec 0133, AC-3)", async () => {
     const { frame } = await watchBruno();
-    // The box itself, outside the picture's view: what a tap next to a tall picture lands on.
-    expect(frame.querySelector("video")).not.toBeNull();
-    const view = frame.querySelector("video")!.closest("div[class]")!;
-    expect(view.contains(frame)).toBe(false);
+    // The box itself, around the picture's view: what a tap next to a tall picture lands on (the
+    // real tap on the dark side is the validation's AC-3, in a browser).
+    const view = frame.querySelector("video")!.closest("[class*=view]")!;
+    expect(frame).not.toBe(view);
+    expect(frame.contains(view)).toBe(true);
     const tapBox = () => {
       fireEvent.pointerDown(frame, { pointerType: "touch", clientX: 5, clientY: 5 });
       fireEvent.pointerUp(frame, { pointerType: "touch", clientX: 5, clientY: 5 });
@@ -1591,6 +1592,12 @@ describe("room: the facecam", () => {
     expect(within(facecam()!).getByLabelText("Bruno's camera")).toBeInTheDocument();
     expect(within(stage()).getAllByLabelText("Bruno's shared screen")).toHaveLength(1);
     expect(facecam()!.contains(within(stage()).getByLabelText("Bruno's shared screen"))).toBe(false);
+  });
+
+  it("keeps the facecam on the picture, inside its view, not on the box's dark sides (spec 0133, design decision 4)", async () => {
+    await brunoWithBoth();
+    const view = within(stage()).getByLabelText("Bruno's shared screen").closest("[class*=view]")!;
+    expect(view.contains(facecam())).toBe(true);
   });
 
   it("starts at the top right, clear of the round buttons and the fullscreen button (spec 0111)", async () => {
@@ -2737,8 +2744,12 @@ describe("room: on a phone sideways (spec 0160)", () => {
       return r!;
     });
     expect(open).toHaveTextContent("2 of 6");
+    // The controls end above the open row: the stylesheet lifts them by this (spec 0133).
+    const layout = open.closest("[data-layout]")!;
+    expect(layout).toHaveAttribute("data-row-open");
     drag(0, 150);
     await waitFor(() => expect(row()).toBeNull());
+    expect(layout).not.toHaveAttribute("data-row-open");
     await userEvent.setup().click(screen.getByRole("button", { name: "Show the other streams" }));
     const again = await waitFor(() => row()!);
     await userEvent.setup().click(within(again).getByRole("button", { name: "Watch Rafa's screen" }));
@@ -2951,12 +2962,9 @@ describe("room: the full-screen view on a phone (spec 0171)", () => {
     await upright();
     const user = userEvent.setup();
     await user.click(within(stage()).getByRole("button", { name: "Full-screen view" }));
-    // A 915 px screen, the sheet's top at 415; the row 48 px tall, its bottom at 903.
+    // A 915 px screen, the sheet's top at 415.
     vi.spyOn(HTMLElement.prototype, "offsetTop", "get").mockImplementation(function (this: HTMLElement) {
-      return this.dataset.variant === "sheet" ? 415 : this.hasAttribute("data-buttons") ? 855 : 0;
-    });
-    vi.spyOn(HTMLElement.prototype, "offsetHeight", "get").mockImplementation(function (this: HTMLElement) {
-      return this.hasAttribute("data-buttons") ? 48 : 0;
+      return this.dataset.variant === "sheet" ? 415 : 0;
     });
     vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({ top: 0, bottom: 915, left: 0, right: 412, width: 412, height: 915, x: 0, y: 0 } as DOMRect);
     // Watching, not live: the settings are in Go live's menu (spec 0123).

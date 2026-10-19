@@ -182,6 +182,27 @@ describe("DropUp, the quick-access pill over a live button", () => {
     expect(up).toHaveAttribute("data-open", "false");
   });
 
+  it("opening closes a tooltip showing elsewhere (spec 0133)", () => {
+    render(
+      <div>
+        <DropUp label="Your camera" enabled trigger={<button>Turn off your camera</button>}>
+          <button>Webcam C920</button>
+        </DropUp>
+        <Tooltip text="Settings">
+          <button>Cog</button>
+        </Tooltip>
+      </div>,
+    );
+    fireEvent.pointerEnter(screen.getByRole("button", { name: "Cog" }), { pointerType: "mouse" });
+    act(() => vi.advanceTimersByTime(TIP_REST_MS));
+    expect(document.querySelector('[role="tooltip"][data-shown]')).not.toBeNull();
+    const up = screen.getByRole("button", { name: "Turn off your camera" }).closest("[data-dropup]")!;
+    fireEvent.pointerEnter(up);
+    expect(document.querySelector('[role="tooltip"][data-shown]')).toBeNull();
+    act(() => vi.advanceTimersByTime(OPEN_DELAY_MS));
+    expect(up).toHaveAttribute("data-open", "true");
+  });
+
   it("forgives a slip outside shorter than the grace, and closes after it", () => {
     const { wrap, shown, onLeave } = setup();
     fireEvent.pointerEnter(wrap);

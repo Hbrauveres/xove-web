@@ -6,6 +6,7 @@ import { FULL_ROOM } from "./PlayerButtons";
 import { CameraOffIcon, CameraOnIcon, CogIcon, MicIcon, MicOffIcon, ScreenOffIcon, ScreenOnIcon, SoundIcon, VoiceIcon, VoiceOffIcon, VolumeOffIcon } from "./icons";
 import styles from "./ViewerBar.module.css";
 import { Tooltip } from "../ui/Tooltip";
+import { claimFloating, releaseFloating } from "../ui/floating";
 
 /** One sound you hear from the person you watch (spec 0123): its volume and mute. */
 export type Sound = { volume: number; muted: boolean };
@@ -58,12 +59,19 @@ export function ViewerBar(props: Props) {
     document.addEventListener("pointerdown", outside, true);
     return () => document.removeEventListener("pointerdown", outside, true);
   }, [open, menu]);
+  // An open slider is one floating thing (spec 0133, #128): a tooltip or a drop-up showing closes
+  // it at once, and opening it closes them.
+  const [closeSlider] = useState(() => () => setOpen(null));
+  useEffect(() => {
+    if (open) claimFloating(closeSlider);
+    else releaseFloating(closeSlider);
+  }, [open, closeSlider]);
 
   return (
     <div ref={bar} className={styles.bar} data-buttons data-viewer-bar>
       <div className={styles.left}>
-        {sound && <Hear kind="sound" s={sound} open={open === "sound"} setOpen={setOpen} canSetVolume={canSetVolume} />}
-        {voice && <Hear kind="voice" s={voice} open={open === "voice"} setOpen={setOpen} canSetVolume={canSetVolume} name={voice.name} talking={voice.talking} />}
+        {sound && <Hear kind="sound" s={sound} open={open === "sound"} quiet={open !== null} setOpen={setOpen} canSetVolume={canSetVolume} />}
+        {voice && <Hear kind="voice" s={voice} open={open === "voice"} quiet={open !== null} setOpen={setOpen} canSetVolume={canSetVolume} name={voice.name} talking={voice.talking} />}
       </div>
       <div className={styles.right}>
         {settingsOnly ? (
@@ -151,6 +159,7 @@ function Hear({
   kind,
   s,
   open,
+  quiet,
   setOpen,
   canSetVolume,
   name,
@@ -159,6 +168,8 @@ function Hear({
   kind: "sound" | "voice";
   s: HearSound;
   open: boolean;
+  /** A slider is open, this one or the other: its tooltip keeps quiet. */
+  quiet: boolean;
   setOpen: Dispatch<SetStateAction<"sound" | "voice" | null>>;
   canSetVolume: boolean;
   name?: string;
@@ -203,7 +214,7 @@ function Hear({
         leave.current = window.setTimeout(closeMine, 300);
       }}
     >
-      <Tooltip text={kind === "sound" ? s.unavailable ?? "Screen sound" : s.unavailable ?? `${name}'s voice`} hidden={open}>
+      <Tooltip text={kind === "sound" ? s.unavailable ?? "Screen sound" : s.unavailable ?? `${name}'s voice`} hidden={quiet}>
         <button
           type="button"
           className={styles.round}

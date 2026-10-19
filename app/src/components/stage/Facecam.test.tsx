@@ -53,7 +53,8 @@ describe("the facecam", () => {
     const props = renderFacecam();
 
     const swap = screen.getByRole("button", { name: "Swap views" });
-    expect(swap).toHaveAccessibleDescription("Swap views");
+    // Its tooltip says what its name says: a screen reader hears it once (spec 0133).
+    expect(swap).not.toHaveAccessibleDescription();
     await userEvent.setup().click(swap);
 
     expect(props.onSwap).toHaveBeenCalledTimes(1);

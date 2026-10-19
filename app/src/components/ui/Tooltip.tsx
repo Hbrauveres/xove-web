@@ -39,6 +39,7 @@ type Trigger = ReactElement<{
   onFocus?: (e: FocusEvent<HTMLElement>) => void;
   onBlur?: (e: FocusEvent<HTMLElement>) => void;
   "aria-describedby"?: string;
+  "aria-label"?: string;
 }>;
 
 /**
@@ -108,10 +109,12 @@ export function Tooltip({ text, children, hidden = false }: { text?: string; chi
     },
     [childRef],
   );
+  // Quiet or not, it describes its control: a screen reader hears what a drop-up hides. Unless it
+  // only repeats the control's name, which would be heard twice.
+  const describes = Boolean(text) && text !== p["aria-label"];
   const trigger = cloneElement(children, {
     ref: setAnchor,
-    // Quiet or not, it describes its control: a screen reader hears what a drop-up hides.
-    "aria-describedby": text ? [p["aria-describedby"], id].filter(Boolean).join(" ") : p["aria-describedby"],
+    "aria-describedby": describes ? [p["aria-describedby"], id].filter(Boolean).join(" ") : p["aria-describedby"],
     onPointerEnter: (e: PointerEvent<HTMLElement>) => {
       p.onPointerEnter?.(e);
       if (e.pointerType !== "mouse" || !text || hidden) return;
@@ -144,7 +147,8 @@ export function Tooltip({ text, children, hidden = false }: { text?: string; chi
           <span ref={tip} id={id} role="tooltip" className={styles.tip} data-shown={shown || undefined}>
             {text}
           </span>,
-          document.body,
+          // In the browser's fullscreen only the fullscreen element is drawn: it floats there.
+          document.fullscreenElement ?? document.body,
         )}
     </>
   );

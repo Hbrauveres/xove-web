@@ -8,6 +8,7 @@ import { useKeyboardLast } from "../../hooks/useTapToggle";
 import { HOLD_MS } from "./stack";
 import styles from "./HearToggles.module.css";
 import { Tooltip } from "../ui/Tooltip";
+import { claimFloating, releaseFloating } from "../ui/floating";
 
 /** What I hear from one person (spec 0123): their screen's sound and their voice, each its own mute. */
 export type Hearing = { sound: Sound; voice: Sound };
@@ -71,6 +72,14 @@ export function HearToggles({
     document.addEventListener("pointerdown", away);
     return () => document.removeEventListener("pointerdown", away);
   }, [open]);
+  // The open slider is one floating thing (spec 0133, #128): a tooltip or a drop-up showing closes
+  // it at once, and opening it closes them.
+  const drawer = useRef<HTMLSpanElement>(null);
+  const [closeSlider] = useState(() => () => setOpen(null));
+  useEffect(() => {
+    if (open) claimFloating(closeSlider, drawer.current);
+    else releaseFloating(closeSlider);
+  }, [open, closeSlider]);
   // What the row's slider sets: the open sound, kept while it rolls up so it doesn't change on the
   // way. Switching, the one it replaces shrinks away while the new one grows, each let go when its
   // own animation ends (spec 0131).
@@ -97,7 +106,7 @@ export function HearToggles({
     const off = Boolean(unavailable) || muted;
     const what = kind === "sound" ? `${name}'s screen sound` : `${name}'s voice`;
     const btn = (
-      <Tooltip text={unavailable ?? what} hidden={open === kind}>
+      <Tooltip text={unavailable ?? what} hidden={open !== null}>
         <button
           type="button"
           className={styles.toggle}
@@ -220,7 +229,7 @@ export function HearToggles({
       {/* In the row: one slider after the buttons, unrolling once; moving between buttons only changes
           what it sets, so the row never moves under the pointer (spec 0131). */}
       {layout === "tray" && (
-        <span className={styles.drawer} data-drawer data-open={open ? true : undefined} inert={!open}>
+        <span ref={drawer} className={styles.drawer} data-drawer data-open={open ? true : undefined} inert={!open}>
           <span className={styles.inner}>
             {leaving && leaving !== shown && (
               <span

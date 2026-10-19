@@ -715,7 +715,6 @@ export function Stage({
         </div>
       </div>
 
-
       {/* Sideways the stage is the screen: over the top bar as well (design decision 9). */}
       {sideways && settingsPanel}
       {/* Sideways at the top centre of the screen, over the top bar's empty middle. */}

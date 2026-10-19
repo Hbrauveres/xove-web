@@ -130,4 +130,16 @@ describe("the stage's two layers (spec 0133, ADR-0072)", () => {
     expect(picture).toMatch(/border-radius:\s*12px/);
     expect(picture).toMatch(/background:\s*#000/);
   });
+
+  it("lifts the controls over the sideways streams row from the row's own sizes, written once", () => {
+    const row = sheet("components/stage/StreamsRow.module.css");
+    const shared = rule(stage, ".stage");
+    expect(shared).toMatch(/--row-content:\s*calc\(var\(--row-head\) \+ var\(--row-head-gap\) \+ var\(--row-pictures\) \* 9 \/ 16 \+ var\(--row-bottom\)/);
+    // The row draws itself from the same values the controls are lifted by, and its arrow too.
+    for (const name of ["--row-head", "--row-head-gap", "--row-pictures", "--row-bottom", "--row-arrow-inset", "--row-arrow"]) {
+      expect(shared, name).toMatch(new RegExp(`${name}:`));
+      expect(row, name).toMatch(new RegExp(`var\\(${name},`));
+    }
+    expect(rule(stage, ".stage[data-row-arrow] [data-viewer-bar]")).toMatch(/var\(--row-arrow-inset\) \+ var\(--row-arrow\)/);
+  });
 });

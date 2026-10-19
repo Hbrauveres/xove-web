@@ -80,6 +80,52 @@ describe("the app's one tooltip (spec 0133)", () => {
     expect(quiet.camera).toHaveAccessibleDescription("Turn on your camera");
   });
 
+  it("shows on keyboard focus, and goes when the focus moves on", () => {
+    const { camera } = setup();
+    act(() => camera.focus());
+    expect(shown()).toHaveTextContent("Turn on your camera");
+    act(() => camera.blur());
+    expect(shown()).toBeNull();
+  });
+
+  it("sits above its control, or below it where there's no room above", () => {
+    const { camera } = setup();
+    const at = (top: number) => {
+      vi.spyOn(camera, "getBoundingClientRect").mockReturnValue({ top, bottom: top + 44, left: 100, right: 144, width: 44, height: 44 } as DOMRect);
+      fireEvent.pointerEnter(camera, { pointerType: "mouse" });
+      act(() => vi.advanceTimersByTime(TIP_REST_MS));
+      const tip = shown() as HTMLElement;
+      fireEvent.pointerLeave(camera, { pointerType: "mouse" });
+      return parseFloat(tip.style.top);
+    };
+    expect(at(400)).toBeLessThan(400);
+    expect(at(2)).toBeGreaterThanOrEqual(46);
+  });
+
+  it("floats inside the browser's fullscreen, where only the fullscreen element is drawn", () => {
+    const { camera } = setup();
+    const full = document.createElement("div");
+    document.body.append(full);
+    Object.defineProperty(document, "fullscreenElement", { configurable: true, get: () => full });
+    try {
+      fireEvent.pointerEnter(camera, { pointerType: "mouse" });
+      act(() => vi.advanceTimersByTime(TIP_REST_MS));
+      expect(full).toContainElement(shown() as HTMLElement);
+    } finally {
+      delete (document as { fullscreenElement?: Element }).fullscreenElement;
+      full.remove();
+    }
+  });
+
+  it("doesn't repeat a control's name to a screen reader", () => {
+    render(
+      <Tooltip text="Settings">
+        <button aria-label="Settings">⚙</button>
+      </Tooltip>,
+    );
+    expect(screen.getByRole("button", { name: "Settings" })).not.toHaveAccessibleDescription();
+  });
+
   it("has nothing to say without text", () => {
     const { camera } = setup({ text: undefined });
     fireEvent.pointerEnter(camera, { pointerType: "mouse" });

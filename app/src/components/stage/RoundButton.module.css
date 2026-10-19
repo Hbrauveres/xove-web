@@ -115,4 +115,3 @@
 .main:not([aria-disabled="true"]):focus-visible .iconHover {
   display: grid;
 }
-

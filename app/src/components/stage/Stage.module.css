@@ -1,9 +1,14 @@
 .stage {
   /* The sideways streams row's sizes, shared with the controls that end above it (spec 0133):
-     its heading, its pictures' width, and its content's height under its fade. */
+     its heading and the gap under it, its pictures' width, its bottom padding, its content's
+     height under its fade, and its arrow's place and size while closed. */
   --row-head: 28px;
+  --row-head-gap: 6px;
   --row-pictures: 112px;
-  --row-content: calc(var(--row-head) + 6px + var(--row-pictures) * 9 / 16 + 10px + env(safe-area-inset-bottom, 0px));
+  --row-bottom: 10px;
+  --row-content: calc(var(--row-head) + var(--row-head-gap) + var(--row-pictures) * 9 / 16 + var(--row-bottom) + env(safe-area-inset-bottom, 0px));
+  --row-arrow-inset: 14px;
+  --row-arrow: 36px;
   min-width: 0;
   /* The column is the 16:9 box (spec 0107): the stage's size comes from its width. */
   container-type: inline-size;
@@ -83,7 +88,6 @@
 .frame:fullscreen .picture {
   border-radius: 0;
 }
-
 
 .frame[data-chrome="hidden"] {
   cursor: none;
@@ -170,8 +174,8 @@
 }
 
 /*
- * The phone (spec 0158): the stage runs edge to edge and still hugs the picture, never taller
- * than 60% of the screen; the info row sits under it; only the feed or the cards scroll.
+ * The phone (spec 0158): the stage runs edge to edge, its box never taller than 60% of the
+ * screen and the view in it hugging the picture; the info row sits under it; only the feed or the cards scroll.
  */
 .stage[data-layout="phone"] {
   flex: 1;
@@ -236,8 +240,8 @@
 }
 
 /*
- * A phone sideways (spec 0160, specs/0160-phone-sideways/design.html): the stage fills the
- * screen height first and hugs the picture, centred, black at its sides where the light glows.
+ * A phone sideways (spec 0160, specs/0160-phone-sideways/design.html): the stage's box is the
+ * screen, and the view in it hugs the picture, centred, black at its sides where the light glows.
  * A top bar and the streams row float over it, and fade with the controls.
  */
 .stage[data-layout="sideways"] {
@@ -317,7 +321,7 @@
    8 px after it, on its line, and go back to the edge when it moves into the open row (specs 0131
    and 0133). The arrow and the sounds share the screen's box, so this is plain layout. */
 .stage[data-row-arrow] [data-viewer-bar] {
-  left: calc(14px + 36px + 8px + env(safe-area-inset-left, 0px));
+  left: calc(var(--row-arrow-inset) + var(--row-arrow) + 8px + env(safe-area-inset-left, 0px));
   /* With the row: the arrow goes into it as it opens, and the sounds slide back to the edge. */
   transition:
     left 0.28s ease,
@@ -327,7 +331,7 @@
 /* The arrow in the open row, or faded with the controls: the sounds slide to the corner (spec 0131). */
 .stage[data-row-arrow][data-row-open] [data-viewer-bar],
 .stage[data-row-arrow][data-chrome="hidden"]:not(:has(:focus-visible)) [data-viewer-bar] {
-  left: calc(14px + env(safe-area-inset-left, 0px));
+  left: calc(var(--row-arrow-inset) + env(safe-area-inset-left, 0px));
 }
 
 /* Sideways where there's no fullscreen button (a phone held sideways is already full): Go live
