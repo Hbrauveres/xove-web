@@ -151,9 +151,10 @@
 }
 
 /* The preview's sound: a round speaker at the top left; its slider slides out to the right. */
-/* The preview whose row is open: its focus ring, so you see which one the row belongs to. */
-.item[data-open] .video {
-  box-shadow: 0 0 0 1.5px rgba(235, 235, 236, 0.6);
+/* The preview whose row is open keeps its hover ring, drawn inside so nothing clips it: one ring,
+   so you see which preview the row belongs to. */
+.item[data-open] .video::after {
+  box-shadow: inset 0 0 0 2px var(--accent);
 }
 
 /* A person with a screen and a camera: their second picture peeks out behind, like a deck. */
@@ -170,8 +171,10 @@
   pointer-events: none;
 }
 
-/* The other picture, faded behind. */
+/* The other picture, faded behind, filling its box (a peek, not the whole picture: no black bar). */
 .behind video {
+  object-fit: cover;
+  background: transparent;
   opacity: 0.5;
 }
 

@@ -74,6 +74,8 @@
 }
 
 .behind video {
+  object-fit: cover;
+  background: transparent;
   opacity: 0.5;
 }
 
