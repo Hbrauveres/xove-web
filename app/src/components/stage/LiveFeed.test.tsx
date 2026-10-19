@@ -81,3 +81,18 @@ describe("the phone's feed of live streams (spec 0158)", () => {
     expect(onPick).toHaveBeenLastCalledWith("user-2");
   });
 });
+
+describe("the phone's feed: muting from a card (spec 0123)", () => {
+  it("has each person's two toggles beside the picture, muting without opening them", async () => {
+    const onPick = vi.fn();
+    const onHear = vi.fn();
+    const heard = { sound: { volume: 1, muted: false }, voice: { volume: 1, muted: false } };
+    render(<LiveFeed others={[RAFA]} liveCount={1} watchersOf={() => []} onPick={onPick} hearOf={() => heard} onHear={onHear} />);
+    const toggle = screen.getByRole("button", { name: "Mute Rafa's screen sound" });
+    // Beside the picture's own button, never inside it.
+    expect(toggle.closest("button[aria-label^='Watch']")).toBeNull();
+    await userEvent.setup().click(toggle);
+    expect(onHear).toHaveBeenCalledWith("user-2", { ...heard, sound: { volume: 1, muted: true } });
+    expect(onPick).not.toHaveBeenCalled();
+  });
+});
