@@ -25,6 +25,7 @@ import { liftButtons, makeRoom, ROOM_GAP as SHEET_GAP } from "./makeRoom";
 import { AlsoLive } from "./AlsoLive";
 import { Ambilight } from "./Ambilight";
 import { CornerGlow } from "./CornerGlow";
+import { StaticGlow } from "./StaticGlow";
 import { NowWatching, STREAM_PLACES } from "./NowWatching";
 // The component, not the type of the same name from ../../types.
 import { LiveFeed as LiveNowFeed } from "./LiveFeed";
@@ -693,6 +694,8 @@ export function Stage({
             {/* One per stream: a stream the browser won't let it read doesn't darken the next one. */}
             {/* Nobody live: each viewfinder corner glows outward, a blurred L (spec 0123, design decision 7). */}
             {!big && <CornerGlow prefs={ambilight} />}
+            {/* Nobody live: the static's bands light the wall round the stage (spec 0136). */}
+            {!big && <StaticGlow prefs={ambilight} />}
             <Ambilight
               key={big ? `${big.person.id}|${stage.mainKind}|${gridKey(shape)}` : "none"}
               video={big ? bigVideoEl : null}

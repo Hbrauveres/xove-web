@@ -27,6 +27,8 @@
   height: var(--arm);
   border: 0 solid rgba(235, 235, 236, 0.32);
   pointer-events: none;
+  /* Lit, as a camera's display: each corner glows softly in its own colour. */
+  filter: drop-shadow(0 0 3px rgba(235, 235, 236, 0.35)) drop-shadow(0 0 10px rgba(235, 235, 236, 0.18));
 }
 
 .corner[data-at="tl"] {
@@ -40,6 +42,7 @@
   right: var(--inset);
   border-width: var(--stroke) var(--stroke) 0 0;
   border-color: var(--accent);
+  filter: drop-shadow(0 0 3px rgba(239, 75, 75, 0.7)) drop-shadow(0 0 12px rgba(239, 75, 75, 0.4));
 }
 
 .corner[data-at="bl"] {

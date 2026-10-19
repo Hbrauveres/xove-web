@@ -46,8 +46,8 @@ describe("the empty stage, a camera waiting (spec 0123, design decisions 6 and 7
     expect(rule(empty, '.corner[data-at="tr"]')).toMatch(/border-color:\s*var\(--accent\)/);
   });
 
-  it("keeps only the display's top line on a small stage", () => {
-    expect(empty).toMatch(/@container \(max-width: 640px\) \{\s*\.meter,\s*\.tags,\s*\.ruler,/);
+  it("has none of the old camera display's clutter (spec 0136)", () => {
+    expect(empty).not.toMatch(/\.(meter|tags|ruler|grid|fps)\b/);
   });
 
   it("glows from blurred L's just outside the stage, the top right red", () => {

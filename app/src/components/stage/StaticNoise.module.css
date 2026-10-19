@@ -4,8 +4,6 @@
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  /* A 90s tube's screen: corners rounded a little more across than down, never a pill. */
-  border-radius: 4.5% / 7%;
 }
 
 .canvas {
@@ -24,12 +22,11 @@
   background: radial-gradient(ellipse 34% 30% at 50% 50%, rgba(15, 15, 17, 0.75), transparent 100%);
 }
 
-/* The glass: darker towards its rounded edges, as a tube's, with a soft sheen high on the left and a
+/* The glass: darker towards its edges, as a tube's, with a soft sheen high on the left and a
    faint line of light along the top edge, where a room's light would catch it. */
 .glass {
   position: absolute;
   inset: 0;
-  border-radius: inherit;
   background:
     radial-gradient(ellipse 60% 40% at 28% 14%, rgba(235, 235, 236, 0.05), transparent 70%),
     radial-gradient(ellipse 80% 80% at 50% 50%, transparent 52%, rgba(15, 15, 17, 0.92) 100%);
@@ -38,13 +35,14 @@
     inset 0 0 40px 10px rgba(0, 0, 0, 0.55);
 }
 
-/* The mouse's reflection: the pointer's shape in soft red neon, just below and right of it, as if
-   on the glass. It fades in over the stage and out when the mouse leaves. */
+/* The mouse glows: the pointer's own shape in soft red neon, right under it, so the pointer itself
+   seems lit. It fades in over the stage and out when the mouse leaves. */
 .glow {
   position: absolute;
   top: 0;
   left: 0;
-  margin: 7px 0 0 6px;
+  /* The outline's tip on the pointer's: the path's tip sits at (4, 2.5) of its 24-unit box. */
+  margin: calc(-2.5px * 22 / 24) 0 0 calc(-4px * 22 / 24);
   opacity: 0;
   color: var(--accent);
   mix-blend-mode: screen;
@@ -57,8 +55,8 @@
 
 .glow svg {
   display: block;
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   /* A neon tube: the outline itself soft but readable, its light spreading round it. */
   fill: none;
   stroke: currentColor;
@@ -68,10 +66,6 @@
 }
 
 /* Draft only (spec 0136): the harness's bar turns the glass off to compare. */
-:global(html[data-static-glass="off"]) .static {
-  border-radius: 0;
-}
-
 :global(html[data-static-glass="off"]) .glass {
   display: none;
 }

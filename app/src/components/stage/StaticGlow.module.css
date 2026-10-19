@@ -1,0 +1,26 @@
+/*
+ * The empty stage's ambilight (see StaticGlow.tsx): the static's rows, stretched a little past the
+ * stage's sides and blurred, behind the stage, so the bands' light spills onto the wall round it.
+ */
+.glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.canvas {
+  position: absolute;
+  inset: -4% -6%;
+  width: 112%;
+  height: 108%;
+  filter: blur(clamp(36px, 4vmin, 64px));
+  opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow {
+    transition: none;
+  }
+}

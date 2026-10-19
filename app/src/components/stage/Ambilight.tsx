@@ -148,6 +148,7 @@ export function Ambilight({ video, prefs, shape = WIDESCREEN }: Props) {
       width={layout.width}
       height={layout.height}
       style={{ ...layout.placement, opacity: lit ? prefs.brightness : 0 }}
+      data-ambilight
       data-on={lit || undefined}
       aria-hidden="true"
     />

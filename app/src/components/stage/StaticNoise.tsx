@@ -1,14 +1,11 @@
 import { useEffect, useRef } from "react";
+import { bandLight } from "./staticBands";
 import styles from "./StaticNoise.module.css";
 
 /** One grain of static is this many CSS pixels: fine, and easy on the eye. */
 const GRAIN = 1.5;
 /** Static flickers at this rate; more is wasted on a faded background. */
 const FPS = 20;
-/** How fast the bands roll down, in CSS pixels a second. */
-const ROLL = 24;
-/** How bright the gaps between the bands are, against the bands themselves. */
-const GAPS = 0.4;
 /** How much the glass bulges: the bands bow this much at the screen's sides (0 is flat). */
 const BULGE = 0.09;
 
@@ -69,20 +66,8 @@ export function StaticNoise() {
     const draw = (t: number) => {
       if (!image || !words) return;
       const s = t / 1000;
-      for (let y = 0; y < h; y++) {
-        // In CSS pixels, so the bands keep their size whatever the grain.
-        const py = y * GRAIN;
-        // The bands roll down together, keeping their sizes; on top, the picture wavers up and down
-        // a little, as a TV losing its vertical hold, and each band's brightness shimmers. The gaps
-        // between them are dimmer snow, never black.
-        const roll = py - s * ROLL + Math.sin(s * 0.9) * 14 + Math.sin(s * 2.7) * 4;
-        const a = Math.sin(roll * 0.03) * 0.5 + 0.5;
-        const b = Math.sin(roll * 0.009 + Math.sin(s * 0.3) * 0.35) * 0.5 + 0.5;
-        const shimmer = 0.82 + 0.18 * Math.sin(s * 1.9 + roll * 0.004);
-        const m = a * 0.55 + b * 0.45;
-        const edge = Math.min(1, Math.max(0, (m - 0.42) / 0.16));
-        gain[y] = (GAPS + (1 - GAPS) * edge * edge * (3 - 2 * edge)) * shimmer;
-      }
+      // In CSS pixels, so the bands keep their size whatever the grain.
+      for (let y = 0; y < h; y++) gain[y] = bandLight(y * GRAIN, s);
       const curve = !flat();
       const mid = h / 2;
       for (let y = 0; y < h; y++) {

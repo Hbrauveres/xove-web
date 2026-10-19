@@ -1690,8 +1690,8 @@ describe("room: theater mode (spec 0104)", () => {
     expect(screen.getByRole("heading", { name: "Nobody's sharing" })).toBeInTheDocument();
     expect(screen.getByLabelText("0 of 6 live, 6 seats open")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Be the first to go live" })).toBeInTheDocument();
-    // No ambilight: the empty stage has its own corner glow (spec 0123).
-    expect(document.querySelector("canvas")).toBeNull();
+    // No video's ambilight: the empty stage has its own corner glow and its static's light (specs 0123 and 0136).
+    expect(document.querySelector("[data-ambilight]")).toBeNull();
   });
 
   it("puts a stream from the activity list on the stage, a camera event with the camera big", async () => {
@@ -2436,7 +2436,7 @@ describe("room: the empty stage glows (spec 0123)", () => {
     const glow = container.querySelector("[data-corner-glow]") as HTMLElement;
     expect(glow.querySelectorAll("i")).toHaveLength(4);
     expect(Number(glow.style.opacity)).toBeGreaterThan(0);
-    expect(container.querySelector("canvas")).toBeNull();
+    expect(container.querySelector("[data-ambilight]")).toBeNull();
   });
 
   it("goes dark with the ambilight switched off", async () => {
