@@ -715,6 +715,8 @@ export function Stage({
               }}
               onClose={() => setRowOpen(false)}
               onPick={(id) => pick(id)}
+              hearOf={hearOf}
+              onHear={setHear}
             />
           )}
         </>

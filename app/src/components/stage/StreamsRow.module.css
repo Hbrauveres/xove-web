@@ -51,6 +51,18 @@
   scrollbar-width: none;
 }
 
+/* A picture and the toggles over its corner. */
+.item {
+  position: relative;
+  flex: none;
+}
+
+.hear {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+}
+
 .picture {
   position: relative;
   display: block;

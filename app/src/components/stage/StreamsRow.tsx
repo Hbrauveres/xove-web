@@ -1,5 +1,6 @@
 import type { LiveFeed as Feed, Sharer } from "../../types";
 import { STREAM_PLACES } from "./NowWatching";
+import { HearToggles, type Hearing } from "./HearToggles";
 import { ScreenVideo } from "./ScreenVideo";
 import styles from "./StreamsRow.module.css";
 
@@ -14,6 +15,9 @@ type Props = {
   /** The arrow button, open: closes it. */
   onClose: () => void;
   onPick: (personId: string) => void;
+  /** What I hear from each person, and muting it from their picture (spec 0123). */
+  hearOf?: (personId: string) => Hearing;
+  onHear?: (personId: string, hearing: Hearing) => void;
 };
 
 const kindOf = (feed: Feed) => (feed.kind === "camera" ? "camera" : "screen");
@@ -46,11 +50,12 @@ function ArrowButton({ up, onClick, className }: { up: boolean; onClick: () => v
 
 /**
  * Sideways (spec 0160): the other live streams in one row of small pictures along the bottom,
- * over a black gradient. Silent, like the upright feed. It slides up when open. A swipe opens
+ * over a black gradient. Silent, like the upright feed; each picture carries that person's two
+ * toggles, their sound and their voice (spec 0123). It slides up when open. A swipe opens
  * and closes it, and so does a round button at the bottom left: an arrow up while it's closed,
  * an arrow down on the row while it's open.
  */
-export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick }: Props) {
+export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, hearOf, onHear }: Props) {
   return (
     <>
       {!open && <ArrowButton up className={styles.toggle} onClick={onOpen} />}
@@ -78,7 +83,7 @@ export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick }:
             const name = s.isMe ? "You" : s.person.name;
             const whose = s.isMe ? "your" : `${s.person.name}'s`;
             return (
-              <li key={s.person.id}>
+              <li key={s.person.id} className={styles.item}>
                 <button
                   type="button"
                   className={styles.picture}
@@ -93,6 +98,12 @@ export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick }:
                   )}
                   <span className={styles.name}>{name}</span>
                 </button>
+                {/* Beside the picture's button, never in it. */}
+                {!s.isMe && hearOf && onHear && (
+                  <span className={styles.hear}>
+                    <HearToggles sharer={s} hearing={hearOf(s.person.id)} onChange={(h) => onHear(s.person.id, h)} />
+                  </span>
+                )}
               </li>
             );
           })}
