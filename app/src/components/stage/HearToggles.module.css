@@ -27,19 +27,38 @@
   height: 15px;
 }
 
-/* One sound's slider: its button at the left, the slider across the preview. */
+.buttons {
+  display: inline-flex;
+  gap: inherit;
+}
+
+/* A sound's slider, on its own line above the buttons, across the preview (spec 0131). */
 .toggles[data-open] {
-  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
+  border-radius: 16px;
 }
 
 .slider {
   display: flex;
-  flex: 1;
+  align-self: stretch;
   align-items: center;
   gap: 8px;
   min-width: 0;
-  padding-right: 8px;
+  padding: 4px 8px 2px;
+  color: var(--text);
+}
+
+.slider > svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+
+/* The button whose slider is open. */
+.toggle[data-active] {
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .range {

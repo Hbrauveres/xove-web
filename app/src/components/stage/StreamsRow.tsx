@@ -62,6 +62,12 @@ export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, h
   // A hold on a picture opens its buttons over it (spec 0131): the pictures are too small to carry them.
   const [held, setHeld] = useState<string | null>(null);
   const hold = useRef<number | undefined>(undefined);
+  const [swapping, setSwapping] = useState<string | null>(null);
+  useEffect(() => {
+    if (!swapping) return;
+    const done = window.setTimeout(() => setSwapping(null), 400);
+    return () => window.clearTimeout(done);
+  }, [swapping]);
   useEffect(() => {
     if (!held) return;
     const away = (e: PointerEvent) => {
@@ -93,6 +99,8 @@ export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, h
             const both = Boolean(s.screen && s.camera);
             const feed = (both && swappedOf?.(s.person.id) ? s.camera : s.screen) ?? s.camera;
             if (!feed) return null;
+            const back = both ? (feed === s.screen ? s.camera : s.screen) : undefined;
+            const backVideo = back && (s.isMe ? back.local : back.remote?.video);
             const what = kindOf(feed);
             const video = s.isMe ? feed.local : feed.remote?.video;
             const name = s.isMe ? "You" : s.person.name;
@@ -104,6 +112,7 @@ export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, h
                 data-person={s.person.id}
                 data-held={held === s.person.id || undefined}
                 data-stacked={both || undefined}
+                data-swapping={swapping === s.person.id || undefined}
                 onPointerDown={() => {
                   if (s.isMe) return;
                   window.clearTimeout(hold.current);
@@ -114,7 +123,11 @@ export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, h
                 onContextMenu={(e) => e.preventDefault()}
               >
                 {/* A screen and a camera: the other picture peeks out behind (spec 0131). */}
-                {both && <span className={styles.behind} aria-hidden="true" />}
+                {both && (
+                  <span className={styles.behind} aria-hidden="true">
+                    {backVideo && <ScreenVideo key={back!.kind} video={backVideo} label="" />}
+                  </span>
+                )}
                 <button
                   type="button"
                   className={styles.picture}
@@ -137,7 +150,17 @@ export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, h
                       hearing={hearOf(s.person.id)}
                       onChange={(h) => onHear(s.person.id, h)}
                       layout="tray"
-                      swap={both && onSwap ? { on: Boolean(swappedOf?.(s.person.id)), onSwap: () => onSwap(s.person.id) } : undefined}
+                      swap={
+                        both && onSwap
+                          ? {
+                              on: Boolean(swappedOf?.(s.person.id)),
+                              onSwap: () => {
+                                setSwapping(s.person.id);
+                                onSwap(s.person.id);
+                              },
+                            }
+                          : undefined
+                      }
                     />
                   </span>
                 )}

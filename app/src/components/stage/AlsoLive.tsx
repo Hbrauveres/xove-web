@@ -34,6 +34,15 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
   // A finger holds a small preview to open its row (spec 0131); a mouse just points at it.
   const [held, setHeld] = useState<string | null>(null);
   const hold = useRef<number | undefined>(undefined);
+  // A slider in use keeps its row open, wherever the mouse goes (spec 0131).
+  const [active, setActive] = useState<string | null>(null);
+  // A swap plays for a moment: the two pictures trade places.
+  const [swapping, setSwapping] = useState<string | null>(null);
+  useEffect(() => {
+    if (!swapping) return;
+    const done = window.setTimeout(() => setSwapping(null), 400);
+    return () => window.clearTimeout(done);
+  }, [swapping]);
   useEffect(() => {
     if (!held) return;
     const away = (e: PointerEvent) => {
@@ -50,6 +59,9 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
           const both = Boolean(s.screen && s.camera);
           const feed = (both && swappedOf?.(id) ? s.camera : s.screen) ?? s.camera;
           if (!feed) return null;
+          // The other picture, behind (a screen and a camera together).
+          const back = both ? (feed === s.screen ? s.camera : s.screen) : undefined;
+          const backVideo = back && (s.isMe ? back.local : back.remote?.video);
           const what = kindOf(feed);
           // My own stream plays from my browser; someone else's from LiveKit, once it arrives.
           const video = s.isMe ? feed.local : feed.remote?.video;
@@ -62,6 +74,8 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
               data-person={id}
               data-stacked={both || undefined}
               data-held={held === id || undefined}
+              data-active={active === id || undefined}
+              data-swapping={swapping === id || undefined}
               onPointerDown={(e) => {
                 if (e.pointerType === "mouse" || s.isMe) return;
                 window.clearTimeout(hold.current);
@@ -72,7 +86,11 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
               onContextMenu={(e) => e.preventDefault()}
             >
               {/* Someone sharing a screen and a camera: the other picture peeks out behind. */}
-              {both && <span className={styles.behind} aria-hidden="true" />}
+              {both && (
+                <span className={styles.behind} aria-hidden="true">
+                  {backVideo && <ScreenVideo key={back!.kind} video={backVideo} label="" />}
+                </span>
+              )}
               <button
                 type="button"
                 className={styles.preview}
@@ -106,7 +124,18 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
                     hearing={hearOf(id)}
                     onChange={(h) => onHear(id, h)}
                     layout="tray"
-                    swap={both && onSwap ? { on: Boolean(swappedOf?.(id)), onSwap: () => onSwap(id) } : undefined}
+                    swap={
+                      both && onSwap
+                        ? {
+                            on: Boolean(swappedOf?.(id)),
+                            onSwap: () => {
+                              setSwapping(id);
+                              onSwap(id);
+                            },
+                          }
+                        : undefined
+                    }
+                    onActive={(on) => setActive((was) => (on ? id : was === id ? null : was))}
                   />
                 </span>
               )}

@@ -29,12 +29,15 @@ export function HearToggles({
   onChange,
   layout = "over",
   swap,
+  onActive,
 }: {
   sharer: Sharer;
   hearing: Hearing;
   onChange: (h: Hearing) => void;
   layout?: "over" | "tray";
   swap?: { on: boolean; onSwap: () => void };
+  /** Told while a slider is open, so what holds the row keeps it open (spec 0131). */
+  onActive?: (active: boolean) => void;
 }) {
   const name = sharer.person.name;
   const noSound = !(sharer.screen && sharer.hasSound) ? "No screen sound" : undefined;
@@ -49,6 +52,21 @@ export function HearToggles({
     idle.current = window.setTimeout(() => setOpen(null), IDLE_MS);
   };
   useEffect(() => () => [...timers.current, idle.current].forEach((t) => window.clearTimeout(t)), []);
+  const tell = useRef(onActive);
+  useEffect(() => {
+    tell.current = onActive;
+  });
+  useEffect(() => tell.current?.(open !== null), [open]);
+  // A press anywhere else closes the slider.
+  const root = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const away = (e: PointerEvent) => {
+      if (!root.current?.contains(e.target as Node)) setOpen(null);
+    };
+    document.addEventListener("pointerdown", away);
+    return () => document.removeEventListener("pointerdown", away);
+  }, [open]);
   const show = (kind: Kind) => {
     setOpen(kind);
     restart();
@@ -76,6 +94,7 @@ export function HearToggles({
         onPointerLeave={(e) => {
           if (e.pointerType === "mouse") clear();
         }}
+        data-active={open === kind || undefined}
         onPointerDown={(e) => {
           if (e.pointerType === "mouse" || unavailable) return;
           clear();
@@ -107,22 +126,18 @@ export function HearToggles({
 
   return (
     <span
+      ref={root}
       className={styles.toggles}
       data-layout={layout}
       data-open={open ?? undefined}
       onClick={(e) => e.stopPropagation()}
-      onPointerLeave={(e) => {
-        if (e.pointerType === "mouse" && open) {
-          clear();
-          timers.current.push(window.setTimeout(() => setOpen(null), 300));
-        }
-      }}
-      onPointerEnter={() => open && clear()}
+      // Moving the mouse away leaves the slider open (4 s idle or a press elsewhere closes it).
+      onPointerMove={() => open && restart()}
     >
-      {open ? (
-        // One sound's slider, its button at the left (spec 0131).
+      {open && (
+        // The sound's slider, on a line above the buttons, which stay (spec 0131).
         <span className={styles.slider}>
-          {button(open)}
+          {open === "sound" ? hearing.sound.muted ? <VolumeOffIcon /> : <SoundIcon /> : hearing.voice.muted ? <VoiceOffIcon /> : <VoiceIcon />}
           <Range
             className={styles.range}
             min={0}
@@ -136,29 +151,28 @@ export function HearToggles({
             }}
           />
         </span>
-      ) : (
-        <>
-          {button("voice")}
-          {button("sound")}
-          {swap && (
-            <button
-              type="button"
-              className={styles.toggle}
-              aria-pressed={swap.on}
-              aria-label={`Swap ${name}'s screen and camera`}
-              title="Swap screen and camera"
-              onClick={(e) => {
-                e.stopPropagation();
-                swap.onSwap();
-              }}
-            >
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path d="M4 7h11M12 4l3 3-3 3M16 13H5M8 10l-3 3 3 3" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
-          )}
-        </>
       )}
+      <span className={styles.buttons}>
+        {button("voice")}
+        {button("sound")}
+        {swap && (
+          <button
+            type="button"
+            className={styles.toggle}
+            aria-pressed={swap.on}
+            aria-label={`Swap ${name}'s screen and camera`}
+            title="Swap screen and camera"
+            onClick={(e) => {
+              e.stopPropagation();
+              swap.onSwap();
+            }}
+          >
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M4 7h11M12 4l3 3-3 3M16 13H5M8 10l-3 3 3 3" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        )}
+      </span>
     </span>
   );
 }
