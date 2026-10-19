@@ -255,3 +255,115 @@
     height: 16px;
   }
 }
+
+/*
+ * The TV turning on (spec 0136), once, as the stage appears, in under a second, smooth rather than
+ * jerky: a point of light glows in the middle and draws a thin glowing line across; the line blooms
+ * into a bluish-white glow that fills the screen and lights the wall round it; the glow settles into
+ * a wide band streaked with scan lines, which opens softly onto the static. Over everything, then
+ * gone; only transforms, opacity and a fixed blur. None for reduced motion.
+ */
+.intro {
+  --intro: 900ms;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+  background: #050506;
+  animation: intro-dark var(--intro) cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.intro i {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* The point: a bright dot in a soft halo, where the tube lights first. */
+.intro i[data-part="dot"] {
+  left: 50%;
+  width: 22vmin;
+  height: 22vmin;
+  margin: -11vmin 0 0 -11vmin;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 3%, rgba(210, 240, 255, 0.85) 6%, rgba(120, 190, 255, 0.35) 22%, transparent 62%);
+  animation: intro-dot var(--intro) cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* The line: drawn across from the point, white in the middle, blue at its ends, glowing. */
+.intro i[data-part="line"] {
+  height: 3px;
+  margin-top: -1.5px;
+  background: linear-gradient(90deg, rgba(110, 170, 255, 0.4), #fff 30%, #fff 70%, rgba(110, 170, 255, 0.4));
+  box-shadow:
+    0 0 6px 1px rgba(200, 235, 255, 0.95),
+    0 0 24px 6px rgba(90, 170, 255, 0.55);
+  transform: scaleX(0.01);
+  animation: intro-line var(--intro) cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* The bloom: the line's glow swelling into a bluish-white light over the whole screen. */
+.intro i[data-part="flare"] {
+  top: 0;
+  height: 100%;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, #fff 0%, #effaff 30%, rgba(110, 205, 255, 0.85) 58%, rgba(40, 90, 180, 0.35) 80%, transparent 100%);
+  filter: blur(8px);
+  transform: scale(0.2, 0.03);
+  animation: intro-flare var(--intro) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* The band: a wide pale band streaked with scan lines, opening onto the picture. */
+.intro i[data-part="band"] {
+  top: 50%;
+  height: 46%;
+  margin-top: -23%;
+  background:
+    repeating-linear-gradient(0deg, rgba(60, 55, 80, 0.3) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(90, 85, 110, 0.14) 0 2px, transparent 2px 7px, rgba(90, 85, 110, 0.1) 7px 8px, transparent 8px 13px),
+    linear-gradient(180deg, transparent, #efeaf6 18%, #fbf9ff 50%, #e4dfec 82%, transparent);
+  box-shadow: 0 0 40px 10px rgba(200, 195, 230, 0.35);
+  filter: blur(1px);
+  animation: intro-band var(--intro) cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes intro-dark {
+  0%, 55% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes intro-dot {
+  0% { opacity: 0; transform: scale(0.3); }
+  8% { opacity: 1; transform: scale(1); }
+  26% { opacity: 1; transform: scale(1.4); }
+  40% { opacity: 0; transform: scale(2); }
+  100% { opacity: 0; }
+}
+
+@keyframes intro-line {
+  0%, 5% { opacity: 0; transform: scaleX(0.01); }
+  8% { opacity: 1; transform: scaleX(0.04); }
+  24% { opacity: 1; transform: scaleX(1); }
+  38% { opacity: 0; transform: scaleX(1); }
+  100% { opacity: 0; transform: scaleX(1); }
+}
+
+@keyframes intro-flare {
+  0%, 18% { opacity: 0; transform: scale(0.2, 0.03); }
+  28% { opacity: 1; transform: scale(0.9, 0.22); }
+  42% { opacity: 1; transform: scale(1.6, 1.7); }
+  56% { opacity: 0.4; transform: scale(1.6, 1.7); }
+  66% { opacity: 0; transform: scale(1.6, 1.7); }
+  100% { opacity: 0; }
+}
+
+@keyframes intro-band {
+  0%, 44% { opacity: 0; transform: scaleY(0.3); }
+  52% { opacity: 1; transform: scaleY(0.35); }
+  66% { opacity: 0.8; transform: scaleY(0.9); }
+  84% { opacity: 0.25; transform: scaleY(2.2); }
+  100% { opacity: 0; transform: scaleY(2.6); }
+}

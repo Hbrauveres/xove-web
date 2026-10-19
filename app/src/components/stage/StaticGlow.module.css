@@ -18,7 +18,29 @@
   filter: blur(clamp(36px, 4vmin, 64px));
 }
 
+/* The turn-on's light on the wall (spec 0136): a bluish-white glow round the stage that swells with
+   the stage's flash and fades with it, 900 ms, once. */
+.flash {
+  position: absolute;
+  inset: -1%;
+  border-radius: 6%;
+  background: rgba(205, 232, 255, 0.85);
+  filter: blur(clamp(36px, 4.5vmin, 72px));
+  opacity: 0;
+  animation: wall-flash 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes wall-flash {
+  0%, 18% { opacity: 0; transform: scale(0.7, 0.15); }
+  42% { opacity: 1; transform: scale(1, 1); }
+  100% { opacity: 0; transform: scale(1.02, 1.02); }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .flash {
+    display: none;
+  }
+
   .glow {
     transition: none;
   }

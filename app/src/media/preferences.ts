@@ -24,7 +24,6 @@ const KEYS = {
   cameraDevice: "xove.camera.device",
   ambilightOn: "xove.ambilight.on",
   ambilightBrightness: "xove.ambilight.brightness",
-  tvStatic: "xove.static.on",
   watchVolume: "xove.watch.volume",
   watchMuted: "xove.watch.muted",
   voiceVolume: "xove.voice.volume",
@@ -90,19 +89,15 @@ export function saveCameraDevice(deviceId: string) {
   write(KEYS.cameraDevice, deviceId);
 }
 
-/**
- * The light around the stage (spec 0104): on or off, and how bright, 0 to 1. And whether the empty
- * stage shows its moving TV static (spec 0136), for anyone who'd rather it were still.
- */
-export type AmbilightPrefs = { on: boolean; brightness: number; tvStatic?: boolean };
+/** The light around the stage (spec 0104): on or off, and how bright, 0 to 1. */
+export type AmbilightPrefs = { on: boolean; brightness: number };
 
-export const DEFAULT_AMBILIGHT: AmbilightPrefs = { on: true, brightness: 0.9, tvStatic: true };
+export const DEFAULT_AMBILIGHT: AmbilightPrefs = { on: true, brightness: 0.9 };
 
 export function loadAmbilight(): AmbilightPrefs {
   const brightness = Number(read(KEYS.ambilightBrightness) ?? DEFAULT_AMBILIGHT.brightness);
   return {
     on: read(KEYS.ambilightOn) !== "false",
-    tvStatic: read(KEYS.tvStatic) !== "false",
     brightness:
       Number.isFinite(brightness) && brightness >= 0 && brightness <= 1 ? brightness : DEFAULT_AMBILIGHT.brightness,
   };
@@ -111,7 +106,6 @@ export function loadAmbilight(): AmbilightPrefs {
 export function saveAmbilight(prefs: AmbilightPrefs) {
   write(KEYS.ambilightOn, String(prefs.on));
   write(KEYS.ambilightBrightness, String(prefs.brightness));
-  write(KEYS.tvStatic, String(prefs.tvStatic));
 }
 
 export function loadWatchPrefs(): WatchPrefs {

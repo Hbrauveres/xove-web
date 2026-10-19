@@ -98,9 +98,9 @@ describe("when the browser's storage fails", () => {
 
 describe("the ambilight (spec 0104)", () => {
   it("is on at 90% until changed, then remembered", () => {
-    expect(loadAmbilight()).toEqual({ on: true, brightness: 0.9, tvStatic: true });
-    saveAmbilight({ on: false, brightness: 0.4, tvStatic: false });
-    expect(loadAmbilight()).toEqual({ on: false, brightness: 0.4, tvStatic: false });
+    expect(loadAmbilight()).toEqual({ on: true, brightness: 0.9 });
+    saveAmbilight({ on: false, brightness: 0.4 });
+    expect(loadAmbilight()).toEqual({ on: false, brightness: 0.4 });
   });
 
   it("ignores a brightness out of range", () => {

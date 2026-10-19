@@ -3,12 +3,11 @@ import { CameraOnIcon, ScreenOffIcon, ScreenOnIcon } from "./icons";
 import { showToast } from "../ui/toast";
 import styles from "./EmptyStage.module.css";
 import { StaticNoise } from "./StaticNoise";
+import { useState } from "react";
 import { Tooltip } from "../ui/Tooltip";
 
 type Props = {
   canShareScreen?: boolean;
-  /** The moving TV static behind it (spec 0136); off, the stage is its plain dark. */
-  tvStatic?: boolean;
   onStart?: (kind: StreamKind) => void;
 };
 
@@ -22,8 +21,9 @@ type Props = {
 export function EmptyStage({
   canShareScreen = true,
   onStart,
-  tvStatic = true,
 }: Props) {
+  // The TV turning on, once, as the stage appears (spec 0136); gone when it ends.
+  const [turningOn, setTurningOn] = useState(() => !window.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
   const screen = (
     <Tooltip text={canShareScreen ? undefined : "This browser can't share a screen"}>
       <button
@@ -52,7 +52,7 @@ export function EmptyStage({
   );
   return (
     <div className={styles.empty} data-empty>
-      {tvStatic && <StaticNoise />}
+      <StaticNoise />
       {(["tl", "tr", "bl", "br"] as const).map((at) => (
         <span key={at} className={styles.corner} data-at={at} data-mark={at} aria-hidden="true" />
       ))}
@@ -60,6 +60,14 @@ export function EmptyStage({
         <i className={styles.dot} aria-hidden="true" />
         Standby
       </span>
+      {turningOn && (
+        <span className={styles.intro} aria-hidden="true" onAnimationEnd={(e) => e.target === e.currentTarget && setTurningOn(false)}>
+          <i data-part="flare" />
+          <i data-part="band" />
+          <i data-part="line" />
+          <i data-part="dot" />
+        </span>
+      )}
       <div className={styles.focus}>
         <h2 className={styles.title}>Be the first to go live</h2>
         <p className={styles.copy}>

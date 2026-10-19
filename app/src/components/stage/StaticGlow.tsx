@@ -60,6 +60,8 @@ export function StaticGlow({ prefs }: { prefs: AmbilightPrefs }) {
   return (
     <span className={styles.glow} style={{ opacity: prefs.on ? prefs.brightness : 0 }} aria-hidden="true">
       <canvas ref={canvas} className={styles.canvas} />
+      {/* The TV turning on lights the wall too, once, in time with the stage's flash. */}
+      <i className={styles.flash} />
     </span>
   );
 }
