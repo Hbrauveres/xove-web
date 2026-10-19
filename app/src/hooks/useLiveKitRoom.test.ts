@@ -376,6 +376,30 @@ describe("my voice (spec 0123)", () => {
     expect(close).toHaveBeenCalled();
   });
 
+  it("stops the mic at once when it can't be sent, and says so apart from a block", async () => {
+    const close = vi.fn(async () => {});
+    vi.stubGlobal("AudioContext", class { state = "running"; close = close; });
+    const hook = await connected();
+    const local = lastRoom().localParticipant;
+    let captured: FakeLocalMicTrack | undefined;
+    local.createTracks.mockImplementationOnce(async (options?: { audio?: unknown }) => [(captured = new FakeLocalMicTrack(options?.audio))]);
+    local.publishTrack.mockRejectedValueOnce(new Error("not allowed to publish"));
+
+    expect(await start(hook)).toBe("failed");
+    expect(captured!.stopped).toBe(true);
+    expect(close).toHaveBeenCalled();
+    expect(local.mic).toBeNull();
+    expect(hook.result.current.voice).toBe(false);
+  });
+
+  it("wakes the gate's audio when the browser started it suspended (after the permission prompt)", async () => {
+    const resume = vi.fn(async () => {});
+    vi.stubGlobal("AudioContext", class { state = "suspended"; resume = resume; close = async () => {}; });
+    const hook = await connected();
+    await start(hook);
+    expect(resume).toHaveBeenCalledTimes(1);
+  });
+
   it("sends it ungated where the browser has no Web Audio", async () => {
     vi.stubGlobal("AudioContext", undefined);
     const hook = await connected();

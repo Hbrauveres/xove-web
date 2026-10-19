@@ -118,8 +118,8 @@ export type RemoteMedia = {
 
 /** A microphone this browser has (spec 0123). */
 export type MicDevice = { deviceId: string; label: string };
-/** Why my voice couldn't start: the browser refused the mic, or there's none. */
-export type VoiceProblem = "blocked" | "missing" | null;
+/** Why my voice couldn't start: the browser refused the mic, there's none, or it couldn't be sent. */
+export type VoiceProblem = "blocked" | "missing" | "failed" | null;
 
 export type LiveKitRoom = {
   connection: ConnectionState;
@@ -192,6 +192,9 @@ async function gateVoice(track: LocalAudioTrack, line: number) {
   if (typeof AudioContext === "undefined" || typeof track.setProcessor !== "function") return null;
   const context = new AudioContext();
   try {
+    // Made after the permission prompt, the click may no longer count: a suspended context
+    // would send silence.
+    if (context.state === "suspended") await context.resume();
     track.setAudioContext(context);
     const gate = new NoiseGate(line);
     await track.setProcessor(gate);
@@ -613,19 +616,28 @@ export function useLiveKitRoom(): LiveKitRoom {
     async (prefs: VoicePrefs): Promise<VoiceProblem> => {
       const room = roomRef.current;
       if (!room) return null;
+      let track: LocalAudioTrack | undefined;
       try {
-        const [track] = await room.localParticipant.createTracks({ audio: micCaptureOptions(prefs) });
-        if (!track) return "missing";
+        [track] = (await room.localParticipant.createTracks({ audio: micCaptureOptions(prefs) })) as LocalAudioTrack[];
+      } catch (e) {
+        const name = e instanceof DOMException ? e.name : "";
+        return name === "NotFoundError" || name === "OverconstrainedError" ? "missing" : "blocked";
+      }
+      if (!track) return "missing";
+      try {
         const raw = track.mediaStreamTrack;
         closeGate();
-        gateRef.current = await gateVoice(track as LocalAudioTrack, prefs.sensitivity);
+        gateRef.current = await gateVoice(track, prefs.sensitivity);
         await room.localParticipant.publishTrack(track, { source: Track.Source.Microphone });
         setMicInput(gateRef.current?.gate.input ?? raw);
         sync();
         return null;
-      } catch (e) {
-        const name = e instanceof DOMException ? e.name : "";
-        return name === "NotFoundError" || name === "OverconstrainedError" ? "missing" : "blocked";
+      } catch {
+        // Captured but not sent (the connection, or a token that doesn't allow it): the mic stops
+        // at once, so the browser doesn't keep listening.
+        track.stop();
+        closeGate();
+        return "failed";
       }
     },
     [sync],

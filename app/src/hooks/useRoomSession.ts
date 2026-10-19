@@ -454,11 +454,20 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
 
   // ---- my voice (spec 0123): only by my choice, only while I share a screen or a camera ----
   const [voicePrefs, setVoicePrefsState] = useState<VoicePrefs>(loadVoicePrefs);
+  // One start at a time: a second tap while the mic is being asked for does nothing.
+  const startingVoice = useRef(false);
   const toggleVoice = useCallback(async () => {
     if (lk.voice) return lk.stopVoice();
-    const problem = await lk.startVoice(voicePrefs);
-    if (problem === "blocked") showToast("Your browser blocked the microphone. Allow it in the site's settings, then try again.");
-    if (problem === "missing") showToast("No microphone found.");
+    if (startingVoice.current) return;
+    startingVoice.current = true;
+    try {
+      const problem = await lk.startVoice(voicePrefs);
+      if (problem === "blocked") showToast("Your browser blocked the microphone. Allow it in the site's settings, then try again.");
+      if (problem === "missing") showToast("No microphone found.");
+      if (problem === "failed") showToast("Your voice couldn't be sent. Try again in a moment.");
+    } finally {
+      startingVoice.current = false;
+    }
   }, [lk, voicePrefs]);
   const setVoicePrefs = useCallback(
     (next: VoicePrefs) => {

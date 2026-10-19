@@ -2900,6 +2900,19 @@ describe("room: my voice (spec 0123)", () => {
     await waitFor(() => expect(mic()).toBeNull());
   });
 
+  it("asks for the mic once, however fast the mic button is tapped twice", async () => {
+    installFakeApi({ me: member });
+    const user = await readyRoom();
+    await startSharing(user);
+    const local = lastRoom().localParticipant;
+    const asked = local.createTracks.mock.calls.length;
+    const button = within(stage()).getByRole("button", { name: "Share your voice" });
+    fireEvent.click(button);
+    fireEvent.click(button);
+    await waitFor(() => expect(mic()).not.toBeNull());
+    expect(local.createTracks.mock.calls.length - asked).toBe(1);
+  });
+
   it("leaves the voice off and says how to allow it when the browser blocks the mic", async () => {
     installFakeApi({ me: member });
     const user = await readyRoom();
