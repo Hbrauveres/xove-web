@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 import styles from "./StaticNoise.module.css";
 
-/** One grain of static is this many CSS pixels: a coarse, old-TV grain, and little to draw. */
-const GRAIN = 3;
+/** One grain of static is this many CSS pixels: a fine grain, still little to draw. */
+const GRAIN = 2;
 /** Static flickers at this rate; more is wasted on a faded background. */
 const FPS = 20;
 
@@ -55,8 +55,10 @@ export function StaticNoise() {
       const reach = Math.max(18, h * 0.28);
       for (let y = 0; y < h; y++) {
         // Bands of different widths rolling down: bright ones with clear edges, dark gaps between.
-        const a = Math.sin(y * 0.09 - s * 1.1) * 0.5 + 0.5;
-        const b = Math.sin(y * 0.027 + s * 0.4) * 0.5 + 0.5;
+        // In CSS pixels, so the bands keep their size whatever the grain.
+        const py = y * GRAIN;
+        const a = Math.sin(py * 0.03 - s * 1.1) * 0.5 + 0.5;
+        const b = Math.sin(py * 0.009 + s * 0.4) * 0.5 + 0.5;
         const m = a * 0.55 + b * 0.45;
         const edge = Math.min(1, Math.max(0, (m - 0.42) / 0.16));
         const g = 0.12 + 0.88 * edge * edge * (3 - 2 * edge);
