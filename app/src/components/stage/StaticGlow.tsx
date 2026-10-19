@@ -39,7 +39,7 @@ export function StaticGlow({ prefs }: { prefs: AmbilightPrefs }) {
       for (let y = 0; y < rows; y++) {
         // As bright as the static looks on the screen at that height, never brighter: the light
         // comes from it. A touch of blue, as the corner glow's grey.
-        const v = onScreen(bandLight((y + 0.5) * CELL, s)) * 255;
+        const v = onScreen(bandLight((y + 0.5) / rows, s)) * 255;
         ctx.fillStyle = `rgb(${(v * 0.94) | 0}, ${(v * 0.97) | 0}, ${v | 0})`;
         ctx.fillRect(0, y, 1, 1);
       }

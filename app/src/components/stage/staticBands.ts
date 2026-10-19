@@ -3,7 +3,10 @@
  * by the static itself and the light it casts round the stage, so the two roll together.
  */
 
-/** How fast the bands roll down, in CSS pixels a second. */
+/** The bands are drawn for a stage this tall (a desktop's) and scaled to the real one, so a phone
+ * shows the same pattern smaller, not a zoomed-in piece of it. */
+const REF_HEIGHT = 860;
+/** How fast the bands roll down, in pixels of that stage a second. */
 export const ROLL = 24;
 /** How bright the gaps between the bands are, against the bands themselves. */
 export const GAPS = 0.4;
@@ -16,13 +19,13 @@ const MEAN = 0.5;
 export const onScreen = (light: number) => light * MEAN * STRENGTH;
 
 /**
- * The static's brightness (0–1) at `py` CSS pixels from the stage's top, `s` seconds into the
- * page's life. The bands roll down together, keeping their sizes; on top, the picture wavers up
+ * The static's brightness (0–1) at `y`, a share of the stage's height from its top (0–1), `s`
+ * seconds into the page's life. The bands roll down together, keeping their sizes; on top, the picture wavers up
  * and down a little, as a TV losing its vertical hold, and each band's brightness shimmers. The
  * gaps between them are dimmer snow, never black.
  */
-export function bandLight(py: number, s: number) {
-  const roll = py - s * ROLL + Math.sin(s * 0.9) * 14 + Math.sin(s * 2.7) * 4;
+export function bandLight(y: number, s: number) {
+  const roll = y * REF_HEIGHT - s * ROLL + Math.sin(s * 0.9) * 14 + Math.sin(s * 2.7) * 4;
   const a = Math.sin(roll * 0.03) * 0.5 + 0.5;
   const b = Math.sin(roll * 0.009 + Math.sin(s * 0.3) * 0.35) * 0.5 + 0.5;
   const shimmer = 0.82 + 0.18 * Math.sin(s * 1.9 + roll * 0.004);

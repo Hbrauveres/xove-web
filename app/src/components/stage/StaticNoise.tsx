@@ -2,8 +2,10 @@ import { useEffect, useRef } from "react";
 import { bandLight } from "./staticBands";
 import styles from "./StaticNoise.module.css";
 
-/** One grain of static is this many CSS pixels: fine, and easy on the eye. */
+/** One grain of static is this many CSS pixels on a desktop's stage: fine, and easy on the eye. A
+ * smaller stage has a finer grain, down to half, so a phone's static isn't a zoomed-in desktop's. */
 const GRAIN = 1.5;
+const grainFor = (width: number) => Math.min(GRAIN, Math.max(GRAIN / 2, width / 1000));
 /** Static flickers at this rate; more is wasted on a faded background. */
 const FPS = 20;
 /** How much the glass bulges: the bands bow this much at the screen's sides (0 is flat). */
@@ -23,6 +25,7 @@ export function StaticNoise() {
     const still = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
     // Draft only (spec 0136): the harness's bar turns the glass's curve off to compare.
     const flat = () => document.documentElement.dataset.staticGlass === "off";
+    let grain = GRAIN;
     let w = 0;
     let h = 0;
     let image: ImageData | null = null;
@@ -30,29 +33,31 @@ export function StaticNoise() {
     // For each column, how far it bows the rows (the glass's curve), as a share of the row's
     // distance from the middle.
     let bow = new Float32Array(1);
+    // Each row's brightness (0–1), for this moment.
+    let gain = new Float32Array(1);
     const fit = () => {
       const r = el.getBoundingClientRect();
-      w = Math.max(1, Math.ceil(r.width / GRAIN));
-      h = Math.max(1, Math.ceil(r.height / GRAIN));
+      grain = grainFor(r.width);
+      w = Math.max(1, Math.ceil(r.width / grain));
+      h = Math.max(1, Math.ceil(r.height / grain));
       el.width = w;
       el.height = h;
       image = ctx.createImageData(w, h);
       words = new Uint32Array(image.data.buffer);
       bow = new Float32Array(w);
+      gain = new Float32Array(h);
       for (let x = 0; x < w; x++) bow[x] = BULGE * ((x / w - 0.5) * 2) ** 2;
     };
     fit();
     const resized = new ResizeObserver(fit);
     resized.observe(el);
 
-    // Each row's brightness (0–1), for this moment.
-    const gain = new Float32Array(8192);
     let seed = 0x9e3779b9;
     const draw = (t: number) => {
       if (!image || !words) return;
       const s = t / 1000;
-      // In CSS pixels, so the bands keep their size whatever the grain.
-      for (let y = 0; y < h; y++) gain[y] = bandLight(y * GRAIN, s);
+      // As a share of the stage's height, so the bands keep their place whatever the grain or size.
+      for (let y = 0; y < h; y++) gain[y] = bandLight(y / h, s);
       const curve = !flat();
       const mid = h / 2;
       for (let y = 0; y < h; y++) {
