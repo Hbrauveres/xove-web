@@ -68,7 +68,7 @@ export function ViewerBar(props: Props) {
   }, [open, closeSlider]);
 
   return (
-    <div ref={bar} className={styles.bar} data-buttons data-viewer-bar data-settings-only={settingsOnly || undefined}>
+    <div ref={bar} className={styles.bar} data-buttons data-viewer-bar>
       <div className={styles.left}>
         {sound && <Hear kind="sound" s={sound} open={open === "sound"} quiet={open !== null} setOpen={setOpen} canSetVolume={canSetVolume} />}
         {voice && <Hear kind="voice" s={voice} open={open === "voice"} quiet={open !== null} setOpen={setOpen} canSetVolume={canSetVolume} name={voice.name} talking={voice.talking} />}

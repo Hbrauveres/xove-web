@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { StreamKind } from "../../types";
-import { CameraOnIcon, ScreenOffIcon, ScreenOnIcon } from "./icons";
+import { CameraOnIcon, CogIcon, ScreenOffIcon, ScreenOnIcon } from "./icons";
 import { showToast } from "../ui/toast";
 import styles from "./EmptyStage.module.css";
 import { StaticNoise } from "./StaticNoise";
@@ -10,6 +10,8 @@ import { Tooltip } from "../ui/Tooltip";
 type Props = {
   canShareScreen?: boolean;
   onStart?: (kind: StreamKind) => void;
+  /** The settings (spec 0138): a small round button beside the ways to start. */
+  onSettings?: () => void;
 };
 
 /**
@@ -22,6 +24,7 @@ type Props = {
 export function EmptyStage({
   canShareScreen = true,
   onStart,
+  onSettings,
 }: Props) {
   // The TV turning on (spec 0136): only the first time the stage stands by in this visit; once it's
   // on, the last stream stopping doesn't turn it on again. Gone when it ends.
@@ -80,7 +83,7 @@ export function EmptyStage({
         </h2>
         {/* An invitation, not an order (spec 0138): a TV asking what's on. */}
         <p className={styles.copy}>What's on today?</p>
-        <div className={styles.go}>
+        <div className={styles.go} data-buttons>
           {canShareScreen ? (
             <>
               {screen}
@@ -91,6 +94,13 @@ export function EmptyStage({
               {camera}
               {screen}
             </>
+          )}
+          {onSettings && (
+            <Tooltip text="Settings">
+              <button type="button" className={styles.cog} aria-label="Settings" onClick={onSettings}>
+                <CogIcon />
+              </button>
+            </Tooltip>
           )}
         </div>
       </div>

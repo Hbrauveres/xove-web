@@ -2311,9 +2311,15 @@ describe("room: on a phone held upright (spec 0158)", () => {
       addEventListener: () => {},
       removeEventListener: () => {},
     })) as unknown as typeof window.matchMedia;
-    installFakeApi({ me: member });
+    const server = installFakeApi({ me: member });
+    // Someone live: the stage's own buttons (nobody live, the cog is beside the ways to start, spec 0138).
+    server.streams = [someoneSharing("Marina", 2)];
     renderRoom();
     await connected();
+    act(() => {
+      lastRoom().publishScreen("user-2");
+    });
+    await screen.findByLabelText("Marina's shared screen");
     const user = userEvent.setup();
     const overlay = stage().querySelector("[data-overlay]") as HTMLElement;
     const controls = stage().querySelector("[data-buttons]")!.closest("[class*=controls]") as HTMLElement;
@@ -2330,7 +2336,9 @@ describe("room: on a phone held upright (spec 0158)", () => {
     vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function () {
       return { top: frameTop, bottom: frameTop + 560, left: 0, right: 412, width: 412, height: 560, x: 0, y: frameTop } as DOMRect;
     });
-    await user.click(within(stage()).getByRole("button", { name: "Settings" }));
+    // A viewer opens the settings from Go live's menu.
+    await user.click(within(stage()).getByRole("button", { name: "Go live" }));
+    await user.click(within(stage()).getByRole("menuitem", { name: "Settings" }));
     // 600 - (348 - 8) = 260 px up, both layers together.
     await waitFor(() => expect(controls.style.translate).toBe("0 -260px"));
     expect(overlay.style.translate).toBe("0 -260px");

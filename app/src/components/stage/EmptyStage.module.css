@@ -112,18 +112,20 @@
   text-wrap: balance;
 }
 
-/* Two pills of one width, side by side (spec 0138). */
+/*
+ * Two pills of one width, side by side, and the cog beside them (spec 0138). An empty column the
+ * cog's size on the left keeps the pills centred under the heading.
+ */
 .go {
+  --h: 44px;
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
+  grid-template-columns: var(--h) 1fr 1fr var(--h);
   justify-content: center;
   gap: 10px;
   margin-top: 12px;
 }
 
 .go button {
-  --h: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -141,6 +143,18 @@
 .go svg {
   width: 18px;
   height: 18px;
+}
+
+.go::before {
+  content: "";
+}
+
+/* The settings: a small round button, the second way's soft fill. */
+.go .cog {
+  width: var(--h);
+  padding: 0;
+  background: rgba(235, 235, 236, 0.08);
+  color: var(--text);
 }
 
 .primary {
@@ -202,8 +216,11 @@
   margin-top: 8px;
 }
 
-:global(:is([data-layout="phone"], [data-layout="sideways"])) .go button {
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .go {
   --h: 40px;
+}
+
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .go button {
   gap: 6px;
   padding: 0 14px;
   font-size: 13.5px;
@@ -230,8 +247,19 @@
     white-space: nowrap;
   }
 
+  /* No room for the cog beside the pills: it goes centred under them. */
   :global(:is([data-layout="phone"], [data-layout="sideways"])) .go {
+    grid-template-columns: 1fr 1fr;
     margin-top: 0;
+  }
+
+  .go::before {
+    display: none;
+  }
+
+  .go .cog {
+    grid-column: 1 / -1;
+    justify-self: center;
   }
 }
 
@@ -250,8 +278,11 @@
     font-size: 22px;
   }
 
-  .go button {
+  .go {
     --h: 40px;
+  }
+
+  .go button {
     padding: 0 16px;
     font-size: 14px;
   }
@@ -283,8 +314,11 @@
     margin-top: 16px;
   }
 
-  .go button {
+  .go {
     --h: 38px;
+  }
+
+  .go button {
     padding: 0 16px;
     font-size: 13.5px;
   }
@@ -306,8 +340,11 @@
     margin-top: 10px;
   }
 
-  .go button {
+  .go {
     --h: 34px;
+  }
+
+  .go button {
     gap: 6px;
     padding: 0 13px;
     font-size: 13px;
