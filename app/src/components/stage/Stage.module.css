@@ -206,6 +206,8 @@
 .below {
   flex: 1;
   min-height: 0;
+  /* Its end scrolls clear of the phone's home bar (spec 0141). */
+  padding-bottom: var(--safe-bottom);
   overflow-y: auto;
   overscroll-behavior: contain;
 }
