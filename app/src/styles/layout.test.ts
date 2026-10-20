@@ -154,3 +154,48 @@ describe("the stage's two layers (spec 0133, ADR-0072)", () => {
     expect(rule(stage, ".stage[data-row-arrow] [data-viewer-bar]")).toMatch(/var\(--row-arrow-inset\) \+ var\(--row-arrow\)/);
   });
 });
+
+describe("clear of the phone's own bars (spec 0141)", () => {
+  const global = sheet("styles/global.css");
+  const room = sheet("pages/RoomPage.module.css");
+  const stage = sheet("components/stage/Stage.module.css");
+  const queue = sheet("components/room/WaitingRoom.module.css");
+  const home = sheet("pages/HomePage.module.css");
+  const request = sheet("pages/RequestAccessPage.module.css");
+  const admin = sheet("pages/AdminPage.module.css");
+  /** The rules inside the phone-sideways query, which comes last in the sheet. */
+  const sideways = (css: string) => css.slice(css.indexOf("@media (orientation: landscape) and (max-height: 500px)"));
+
+  it("reads the phone's bars from the browser, 0 where there are none", () => {
+    for (const side of ["top", "right", "bottom", "left"]) {
+      expect(global).toContain(`--safe-${side}: env(safe-area-inset-${side}, 0px);`);
+    }
+  });
+
+  it("starts the room's header under the status bar, and ends its list above the home bar", () => {
+    expect(rule(room, ".theater")).toMatch(/padding-top:\s*var\(--safe-top\)/);
+    expect(rule(stage, ".below")).toMatch(/padding-bottom:\s*var\(--safe-bottom\)/);
+  });
+
+  it("pads the other pages' content on every side, never less than the gutter, while their backgrounds run to the edges", () => {
+    for (const [css, selector] of [[queue, ".wrap"], [home, ".wrap"], [request, ".wrap"], [admin, ".shell"]] as const) {
+      const body = rule(css, selector);
+      for (const side of ["top", "right", "bottom", "left"]) expect(body, `${selector} ${side}`).toContain(`var(--safe-${side})`);
+      expect(body).toContain("max(var(--gutter), var(--safe-left))");
+    }
+    expect(rule(home, ".wrap")).toMatch(/background:/);
+  });
+
+  it("fits sign-in sideways: the mark and headline, then what to do, side by side", () => {
+    const css = sideways(home);
+    expect(rule(css, ".card")).toMatch(/flex-direction:\s*row/);
+    expect(rule(css, ".lead,\n  .act")).toMatch(/display:\s*flex/);
+    expect(rule(home, ".lead,\n.act")).toMatch(/display:\s*contents/);
+  });
+
+  it("fits request access sideways in two columns, and request sent in one", () => {
+    const css = sideways(request);
+    expect(rule(css, ".card")).toMatch(/grid-template-columns:\s*minmax\(0, 1fr\) minmax\(0, 1fr\)/);
+    expect(rule(css, ".card:has(.waiting)")).toMatch(/display:\s*flex/);
+  });
+});
