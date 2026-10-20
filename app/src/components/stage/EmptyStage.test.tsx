@@ -4,11 +4,13 @@ import { describe, expect, it, vi } from "vitest";
 import { EmptyStage } from "./EmptyStage";
 
 describe("the empty stage, a camera waiting (spec 0123)", () => {
-  it("asks you to be the first to go live, with the screen first and the camera beside it", async () => {
+  it("asks you to go live, with the screen first and the camera beside it", async () => {
     const onStart = vi.fn();
     render(<EmptyStage onStart={onStart} />);
 
-    expect(screen.getByRole("heading", { name: "Go LIVE" })).toBeInTheDocument();
+    // "Go LIVE", LIVE marked as on the sign-in page (spec 0141).
+    const heading = screen.getByRole("heading", { name: "Go LIVE" });
+    expect(heading.querySelector("em")).toHaveTextContent(/^LIVE$/);
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: /Share your screen/ }));
     await user.click(screen.getByRole("button", { name: /Turn on your camera/ }));
