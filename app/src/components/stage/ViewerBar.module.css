@@ -25,6 +25,25 @@
   bottom: 8px;
 }
 
+/*
+ * Nobody live (spec 0138): the cog alone, at the stage's top right, out of the way of the ways to
+ * start in the middle; the settings open under it. Sideways the top right is the top bar's, so
+ * there it stays with the screen's other controls at the bottom.
+ */
+.bar[data-settings-only] {
+  top: 12px;
+  right: 12px;
+  bottom: auto;
+  left: auto;
+}
+
+:global([data-layout="sideways"]) .bar[data-settings-only] {
+  top: auto;
+  right: calc(12px + 34px + 10px);
+  bottom: calc(12px + (var(--btn, 48px) - 34px) / 2);
+  left: 12px;
+}
+
 .left,
 .right {
   display: flex;

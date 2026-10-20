@@ -38,6 +38,18 @@
   transform: none;
 }
 
+/* Opened from a cog at the top (nobody live, spec 0138): under it, from the top down. */
+:global([data-settings-below]) .panel[data-variant="popover"] {
+  --room: var(--below-row, 56px);
+  top: var(--room);
+  bottom: auto;
+  transform: translateY(-6px);
+}
+
+:global([data-settings-below]) .panel[data-variant="popover"][data-open] {
+  transform: none;
+}
+
 /* Sideways the player is wide and short: the panel uses the width, so no tab scrolls. */
 :global([data-layout="sideways"]) .panel[data-variant="popover"] {
   --w: min(560px, calc(100% - 20px));

@@ -342,6 +342,12 @@ export function Stage({
       const c = cog.getBoundingClientRect();
       host.style.setProperty("--cog-x", `${c.left + c.width / 2 - h.left}px`);
       host.style.setProperty("--above-row", `${h.bottom - (row.getBoundingClientRect().top - sliding) + ROW_GAP}px`);
+      // Nobody live, the cog alone at the top (spec 0138): the settings open under it instead.
+      const r = row.getBoundingClientRect();
+      if (r.top - h.top < h.height / 2) {
+        host.style.setProperty("--below-row", `${r.bottom - h.top + ROW_GAP}px`);
+        host.dataset.settingsBelow = "";
+      } else delete host.dataset.settingsBelow;
     };
     place();
     window.addEventListener("resize", place);

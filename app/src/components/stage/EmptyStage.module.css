@@ -217,6 +217,10 @@
 /* The narrowest phone (280 px): only the pills, so the stage's own buttons in its corner stay
    clear; the heading stays for screen readers. */
 @container (max-width: 300px) {
+  :global(:is([data-layout="phone"], [data-layout="sideways"])) .copy {
+    display: none;
+  }
+
   :global(:is([data-layout="phone"], [data-layout="sideways"])) .title {
     position: absolute;
     width: 1px;
