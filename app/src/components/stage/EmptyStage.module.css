@@ -212,23 +212,21 @@
 }
 
 :global(:is([data-layout="phone"], [data-layout="sideways"])) .go {
-  gap: 8px;
+  /* The stage's own buttons' size (34 px), so all of a phone's buttons on the stage are one size. */
+  --h: 34px;
+  gap: 6px;
   margin-top: 8px;
 }
 
-:global(:is([data-layout="phone"], [data-layout="sideways"])) .go {
-  --h: 40px;
-}
-
 :global(:is([data-layout="phone"], [data-layout="sideways"])) .go button {
-  gap: 6px;
-  padding: 0 14px;
-  font-size: 13.5px;
+  gap: 5px;
+  padding: 0 12px;
+  font-size: 12.5px;
 }
 
 :global(:is([data-layout="phone"], [data-layout="sideways"])) .go svg {
-  width: 17px;
-  height: 17px;
+  width: 15px;
+  height: 15px;
 }
 
 /* The narrowest phone (280 px): only the pills, so the stage's own buttons in its corner stay
