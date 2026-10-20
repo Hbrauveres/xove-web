@@ -175,7 +175,8 @@
     background: #f36a6a;
   }
 
-  .ghost:hover {
+  .ghost:hover,
+  .go .cog.cog:hover {
     background: rgba(235, 235, 236, 0.14);
   }
 }
@@ -188,8 +189,7 @@
 
 /*
  * A phone, upright or sideways (spec 0138): the desktop's screen at a phone's sizes, in the
- * stage's middle: a smaller heading and line, two equal pills (wrapping one under the other where
- * they don't fit side by side), 8 px apart.
+ * stage's middle: a smaller heading and line, and the row's buttons the stage's own size.
  */
 :global(:is([data-layout="phone"], [data-layout="sideways"])) .focus {
   gap: 8px;
@@ -270,8 +270,8 @@
   }
 }
 
-/* A short stage (a phone, upright or sideways): the heading and the buttons, nothing else,
-   centred above the stage's own buttons at the bottom. */
+/* A short stage: finer corners, no line on a desktop's (a phone keeps it), and the way to start
+   in its middle both ways, the stage's own buttons in their corner (spec 0138). */
 @container (max-height: 320px) {
   .empty {
     --arm: 16px;

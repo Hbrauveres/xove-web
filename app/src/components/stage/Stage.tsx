@@ -44,6 +44,8 @@ import styles from "./Stage.module.css";
 
 /** The settings over the cog sit this far above the round buttons (design decision 9). */
 const ROW_GAP = 10;
+/** The settings panel's height at its tallest tab, with its gap: less room than this above the cog, and it scrolls. */
+const PANEL_ROOM = 440;
 
 type Props = {
   /** Everyone with a live stream, the longest sharing first. */
@@ -345,16 +347,19 @@ export function Stage({
       const c = cog.getBoundingClientRect();
       host.style.setProperty("--cog-x", `${c.left + c.width / 2 - h.left}px`);
       host.style.setProperty("--above-row", `${h.bottom - (row.getBoundingClientRect().top - sliding) + ROW_GAP}px`);
-      // Sideways with nobody live, the cog is in the screen's middle: the panel takes the screen's
-      // height instead of the half above it, so it doesn't scroll (spec 0138).
-      if (nobodyLive && sideways) host.style.setProperty("--above-row", `${ROW_GAP}px`);
+      // With nobody live the cog is in the stage's middle (spec 0138): where the room above it is
+      // short of the panel (sideways, a small window), the panel takes the stage's whole height
+      // instead, so it doesn't scroll.
+      const above = row.getBoundingClientRect().top - h.top;
+      if (nobodyLive && (sideways || above < PANEL_ROOM)) host.style.setProperty("--above-row", `${ROW_GAP}px`);
     };
     place();
     window.addEventListener("resize", place);
     // The row changes too (the volume comes and goes with who's on the stage).
     const watch = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(place);
     watch?.observe(host);
-    const row = controlsRef.current.querySelector("[data-buttons]");
+    // The row the cog is in: the controls', or with nobody live the empty stage's (spec 0138).
+    const row = (nobodyLive ? frameRef.current : controlsRef.current)?.querySelector("[data-buttons]");
     if (row) watch?.observe(row);
     // And once the player has finished sliding (a slide doesn't resize anything).
     const box = boxRef.current;
@@ -540,7 +545,8 @@ export function Stage({
         <EmptyStage
           canShareScreen={controls.canShareScreen}
           onStart={startMine}
-          onSettings={toggleSettings}
+          // The cog only while nobody is live: a stream loading has its own (spec 0138).
+          onSettings={big ? undefined : toggleSettings}
         />
       );
 

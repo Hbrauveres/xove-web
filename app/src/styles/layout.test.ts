@@ -188,10 +188,12 @@ describe("clear of the phone's own bars (spec 0141)", () => {
     expect(rule(home, ".wrap")).toMatch(/background:/);
   });
 
-  it("shows LIVE in capitals and the accent on the sign-in page, written as a word (design decision 7)", () => {
-    const em = rule(home, ".title em");
-    expect(em).toMatch(/text-transform:\s*uppercase/);
-    expect(em).toMatch(/color:\s*var\(--accent\)/);
+  it("shows LIVE in capitals and the accent, written as a word (design decision 7)", () => {
+    for (const css of [home, sheet("components/stage/EmptyStage.module.css")]) {
+      const em = rule(css, ".title em");
+      expect(em).toMatch(/text-transform:\s*uppercase/);
+      expect(em).toMatch(/color:\s*var\(--accent\)/);
+    }
   });
 
   it("fits sign-in sideways: the mark and headline, then what to do, side by side", () => {

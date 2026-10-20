@@ -36,6 +36,7 @@ describe("the empty stage, a camera waiting (spec 0123)", () => {
     const { rerender } = render(<EmptyStage />);
     // An invitation, not an order, wherever it is (spec 0138).
     expect(screen.getByText("What's on today?")).toBeInTheDocument();
+    expect(screen.queryByText(/or turn on your camera/i)).not.toBeInTheDocument();
     rerender(<EmptyStage canShareScreen={false} />);
     expect(screen.getByText("What's on today?")).toBeInTheDocument();
     expect(screen.queryByText(/turn on your camera\./i)).not.toBeInTheDocument();
