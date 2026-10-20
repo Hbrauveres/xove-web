@@ -219,19 +219,6 @@
   font-size: 13.5px;
 }
 
-/* A pill's label: the whole act on a desktop, one word on a phone; the spoken name is the act. */
-.short {
-  display: none;
-}
-
-:global(:is([data-layout="phone"], [data-layout="sideways"])) .long {
-  display: none;
-}
-
-:global(:is([data-layout="phone"], [data-layout="sideways"])) .short {
-  display: inline;
-}
-
 :global(:is([data-layout="phone"], [data-layout="sideways"])) .go svg {
   width: 17px;
   height: 17px;

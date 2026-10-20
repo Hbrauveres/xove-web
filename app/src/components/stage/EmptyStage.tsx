@@ -17,7 +17,7 @@ type Props = {
  * right red, as in the logo), a still "Standby" where there's room, and the way to start, over the
  * TV's static; who's here and the seats are said once, below. Where the browser can't share a
  * screen (phones), the camera comes first and the screen is the same pill, greyed, saying why;
- * on a phone their labels are one word, "Camera" and "Screen" (spec 0138). The first time it stands by in a visit, the TV turns on.
+ * their labels are one word, "Screen" and "Camera"; their spoken names say the act (spec 0138). The first time it stands by in a visit, the TV turns on.
  */
 export function EmptyStage({
   canShareScreen = true,
@@ -41,8 +41,7 @@ export function EmptyStage({
         }
       >
         {canShareScreen ? <ScreenOnIcon /> : <ScreenOffIcon />}
-        <span className={styles.long}>Share your screen</span>
-        <span className={styles.short}>Screen</span>
+        Screen
       </button>
     </Tooltip>
   );
@@ -54,8 +53,7 @@ export function EmptyStage({
       onClick={() => onStart?.("camera")}
     >
       <CameraOnIcon />
-      <span className={styles.long}>Turn on your camera</span>
-      <span className={styles.short}>Camera</span>
+      Camera
     </button>
   );
   return (

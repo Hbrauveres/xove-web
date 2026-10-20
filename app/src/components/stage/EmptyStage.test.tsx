@@ -12,6 +12,9 @@ describe("the empty stage, a camera waiting (spec 0123)", () => {
     const heading = screen.getByRole("heading", { name: "Go live" });
     expect(heading.querySelector("em")).toHaveTextContent(/^live$/);
     const user = userEvent.setup();
+    // One word each on the pill; the spoken name says the act (spec 0138).
+    expect(screen.getByRole("button", { name: "Share your screen" })).toHaveTextContent(/^Screen$/);
+    expect(screen.getByRole("button", { name: "Turn on your camera" })).toHaveTextContent(/^Camera$/);
     await user.click(screen.getByRole("button", { name: /Share your screen/ }));
     await user.click(screen.getByRole("button", { name: /Turn on your camera/ }));
     expect(onStart.mock.calls).toEqual([["screen"], ["camera"]]);
@@ -40,7 +43,7 @@ describe("the empty stage, a camera waiting (spec 0123)", () => {
     expect(screen.queryByText(/room sees/)).not.toBeInTheDocument();
     // The same pill as where it can be shared, greyed, still saying why.
     const greyed = screen.getByRole("button", { name: "Share your screen" });
-    expect(greyed).toHaveTextContent("Share your screen");
+    expect(greyed).toHaveTextContent("Screen");
     expect(greyed).toHaveAccessibleDescription("This browser can't share a screen");
   });
 
