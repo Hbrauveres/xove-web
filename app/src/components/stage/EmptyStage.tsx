@@ -1,10 +1,10 @@
+import { useEffect, useState } from "react";
 import type { StreamKind } from "../../types";
 import { CameraOnIcon, ScreenOffIcon, ScreenOnIcon } from "./icons";
 import { showToast } from "../ui/toast";
 import styles from "./EmptyStage.module.css";
 import { StaticNoise } from "./StaticNoise";
 import { tv } from "./staticBands";
-import { useEffect, useState } from "react";
 import { Tooltip } from "../ui/Tooltip";
 
 type Props = {
@@ -13,11 +13,11 @@ type Props = {
 };
 
 /**
- * Nobody is live (spec 0123, calmed in spec 0136): the stage as a camera waiting, like Xovê's mark.
- * Only its viewfinder corners (the top right red, as in the logo), a still "Standby" where there's
- * room, and the way to start; who's here and the seats are said once, below. Where the browser
- * can't share a screen (phones), the camera comes first and the screen is a small greyed button
- * saying why. Nothing moves.
+ * Nobody is live (spec 0123, calmed in spec 0136): a TV on standby. Its viewfinder corners (the top
+ * right red, as in the logo), a still "Standby" where there's room, and the way to start, over the
+ * TV's static; who's here and the seats are said once, below. Where the browser can't share a
+ * screen (phones), the camera comes first and the screen is a small greyed button saying why. The
+ * first time it stands by in a visit, the TV turns on.
  */
 export function EmptyStage({
   canShareScreen = true,

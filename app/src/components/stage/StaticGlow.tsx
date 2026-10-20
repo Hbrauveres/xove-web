@@ -10,9 +10,10 @@ const FPS = 20;
 
 /**
  * The empty stage's ambilight (spec 0136): the static's bands light the wall round the stage as they
- * roll, the way a TV's picture does, never brighter than the static itself. Each row of a small canvas is as bright as the bands at that
- * height; the browser stretches and blurs it behind the stage, which hides the middle, so only the
- * light past its edges shows. It follows the ambilight's switch and brightness.
+ * roll, the way a TV's picture does, never brighter than the static itself. Each row of a small
+ * canvas is as bright as the static at that height; the browser stretches and blurs it behind the
+ * stage, which hides the middle, so only the light past its edges shows. It follows the
+ * ambilight's switch and brightness.
  */
 export function StaticGlow({ prefs }: { prefs: AmbilightPrefs }) {
   const canvas = useRef<HTMLCanvasElement>(null);

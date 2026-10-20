@@ -20,9 +20,9 @@ export const onScreen = (light: number) => light * MEAN * STRENGTH;
 
 /**
  * The static's brightness (0–1) at `y`, a share of the stage's height from its top (0–1), `s`
- * seconds into the page's life. The bands roll down together, keeping their sizes; on top, the picture wavers up
- * and down a little, as a TV losing its vertical hold, and each band's brightness shimmers. The
- * gaps between them are dimmer snow, never black.
+ * seconds into the page's life. The bands roll down together, keeping their sizes; on top, the
+ * picture wavers up and down a little, as a TV losing its vertical hold, and each band's
+ * brightness shimmers. The gaps between them are dimmer snow, never black.
  */
 export function bandLight(y: number, s: number) {
   const roll = y * REF_HEIGHT - s * ROLL + Math.sin(s * 0.9) * 14 + Math.sin(s * 2.7) * 4;

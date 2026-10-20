@@ -23,8 +23,6 @@ export function StaticNoise() {
     const ctx = el?.getContext("2d", { alpha: false });
     if (!el || !ctx) return;
     const still = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
-    // Draft only (spec 0136): the harness's bar turns the glass's curve off to compare.
-    const flat = () => document.documentElement.dataset.staticGlass === "off";
     let grain = GRAIN;
     let w = 0;
     let h = 0;
@@ -58,7 +56,6 @@ export function StaticNoise() {
       const s = t / 1000;
       // As a share of the stage's height, so the bands keep their place whatever the grain or size.
       for (let y = 0; y < h; y++) gain[y] = bandLight(y / h, s);
-      const curve = !flat();
       const mid = h / 2;
       for (let y = 0; y < h; y++) {
         const row = y * w;
@@ -69,7 +66,7 @@ export function StaticNoise() {
           seed ^= seed >>> 17;
           seed ^= seed << 5;
           // Behind curved glass the rows bow towards the middle at the sides.
-          const yy = curve ? (y - fromMid * bow[x]) | 0 : y;
+          const yy = (y - fromMid * bow[x]) | 0;
           const c = ((seed >>> 24) * gain[yy]) | 0;
           words[row + x] = 0xff000000 | (c << 16) | (c << 8) | c;
         }
