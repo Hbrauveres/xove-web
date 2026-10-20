@@ -238,6 +238,11 @@
     clip-path: inset(50%);
     white-space: nowrap;
   }
+
+  /* Nothing above the row: no space above it either, so it sits in the middle. */
+  :global(:is([data-layout="phone"], [data-layout="sideways"])) .go {
+    margin-top: 0;
+  }
 }
 
 /* A small stage (a phone): finer corners, no "Standby", a smaller heading, compact buttons. */
