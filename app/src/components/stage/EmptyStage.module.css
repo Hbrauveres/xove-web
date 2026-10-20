@@ -204,9 +204,22 @@
 
 :global(:is([data-layout="phone"], [data-layout="sideways"])) .go button {
   --h: 40px;
-  gap: 7px;
-  padding: 0 16px;
-  font-size: 14px;
+  gap: 6px;
+  padding: 0 14px;
+  font-size: 13.5px;
+}
+
+/* A pill's label: the whole act on a desktop, one word on a phone; the spoken name is the act. */
+.short {
+  display: none;
+}
+
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .long {
+  display: none;
+}
+
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .short {
+  display: inline;
 }
 
 :global(:is([data-layout="phone"], [data-layout="sideways"])) .go svg {
@@ -214,28 +227,20 @@
   height: 17px;
 }
 
-@container (max-width: 399px) {
-  :global(:is([data-layout="phone"], [data-layout="sideways"])) .go {
-    grid-auto-flow: row;
-  }
-}
-
-/* The narrowest phone (280 px): a little smaller, so the stage's own buttons in its corner stay
-   clear while the heading and pills keep the middle. */
+/* The narrowest phone (280 px): only the pills, so the stage's own buttons in its corner stay
+   clear; the heading stays for screen readers. */
 @container (max-width: 300px) {
   :global(:is([data-layout="phone"], [data-layout="sideways"])) .title {
-    font-size: 17px;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   :global(:is([data-layout="phone"], [data-layout="sideways"])) .go {
-    gap: 4px;
-    margin-top: 4px;
-  }
-
-  :global(:is([data-layout="phone"], [data-layout="sideways"])) .go button {
-    --h: 34px;
-    padding: 0 14px;
-    font-size: 13.5px;
+    margin-top: 0;
   }
 }
 

@@ -16,8 +16,8 @@ type Props = {
  * Nobody is live (spec 0123, calmed in spec 0136): a TV on standby. Its viewfinder corners (the top
  * right red, as in the logo), a still "Standby" where there's room, and the way to start, over the
  * TV's static; who's here and the seats are said once, below. Where the browser can't share a
- * screen (phones), the camera comes first and the screen is the same pill, greyed, saying why
- * (spec 0138). The first time it stands by in a visit, the TV turns on.
+ * screen (phones), the camera comes first and the screen is the same pill, greyed, saying why;
+ * on a phone their labels are one word, "Camera" and "Screen" (spec 0138). The first time it stands by in a visit, the TV turns on.
  */
 export function EmptyStage({
   canShareScreen = true,
@@ -35,12 +35,14 @@ export function EmptyStage({
         type="button"
         className={canShareScreen ? styles.primary : styles.unavailable}
         aria-disabled={canShareScreen ? undefined : true}
+        aria-label="Share your screen"
         onClick={() =>
           canShareScreen ? onStart?.("screen") : showToast("This browser can't share a screen", <ScreenOffIcon />)
         }
       >
         {canShareScreen ? <ScreenOnIcon /> : <ScreenOffIcon />}
-        Share your screen
+        <span className={styles.long}>Share your screen</span>
+        <span className={styles.short}>Screen</span>
       </button>
     </Tooltip>
   );
@@ -48,10 +50,12 @@ export function EmptyStage({
     <button
       type="button"
       className={canShareScreen ? styles.ghost : styles.primary}
+      aria-label="Turn on your camera"
       onClick={() => onStart?.("camera")}
     >
       <CameraOnIcon />
-      Turn on your camera
+      <span className={styles.long}>Turn on your camera</span>
+      <span className={styles.short}>Camera</span>
     </button>
   );
   return (

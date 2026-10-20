@@ -368,10 +368,8 @@ export function Stage({
   // The big video, for the ambilight to read.
   const [bigVideoEl, setBigVideoEl] = useState<HTMLVideoElement | null>(null);
   // The picture's shape, for the view and the box's height (specs 0107 and 0133). 16:9 while empty
-  // or loading; on a phone held upright the empty stage is 4:3, so the way to start has room at a
-  // phone's sizes (spec 0138).
-  const pictureShape = useVideoShape(bigVideoEl);
-  const shape = !big && phone ? 4 / 3 : pictureShape;
+  // or loading.
+  const shape = useVideoShape(bigVideoEl);
   // What I hear from each person (specs 0123 and 0131): their sound and their voice, each with its
   // own volume and one switch that follows them everywhere once touched, for the whole visit.
   const [hearing, setHearing] = useState<Record<string, Choices>>({});
