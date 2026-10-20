@@ -112,14 +112,11 @@
   text-wrap: balance;
 }
 
-/*
- * Two pills of one width, side by side, and the cog beside them (spec 0138). An empty column the
- * cog's size on the left keeps the pills centred under the heading.
- */
+/* Two pills of one width, side by side, and the cog beside them: the row centred as a whole (spec 0138). */
 .go {
   --h: 44px;
   display: grid;
-  grid-template-columns: var(--h) 1fr 1fr var(--h);
+  grid-template-columns: 1fr 1fr var(--h);
   justify-content: center;
   gap: 10px;
   margin-top: 12px;
@@ -143,10 +140,6 @@
 .go svg {
   width: 18px;
   height: 18px;
-}
-
-.go::before {
-  content: "";
 }
 
 /* The settings: a small round button, the second way's soft fill. (Doubled, to win over any
@@ -244,21 +237,6 @@
     overflow: hidden;
     clip-path: inset(50%);
     white-space: nowrap;
-  }
-
-  /* No room for the cog beside the pills: it goes centred under them. */
-  :global(:is([data-layout="phone"], [data-layout="sideways"])) .go {
-    grid-template-columns: 1fr 1fr;
-    margin-top: 0;
-  }
-
-  .go::before {
-    display: none;
-  }
-
-  .go .cog {
-    grid-column: 1 / -1;
-    justify-self: center;
   }
 }
 
