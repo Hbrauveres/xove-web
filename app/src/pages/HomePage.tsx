@@ -21,7 +21,7 @@ export function HomePage() {
             <XoveMark height={40} />
           </p>
           <h1 id="home-title" className={styles.title}>
-            Live with
+            Go <em>LIVE</em> with
             <br />
             your friends.
           </h1>
