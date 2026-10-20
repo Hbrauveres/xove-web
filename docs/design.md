@@ -26,6 +26,9 @@ The pictures are shot from the real app (`design-sheet.mjs`, see [Keeping this p
 
 - **Xovê**, with the circumflex, in every sentence and label. `xove` only where an accent can't go: the domain (`xove.app`), repos, code, image and container names. The wordmark is written in capitals, **XOVE**, and its red corner stands in for the ^.
 - **Short, plain sentences**, in sentence case: "Share your screen", "Full-screen view", "Nobody live · 0 of 6 · 6 free", "Xovê works best from your home screen". No exclamation marks, no jargon.
+- **As short as they can be:** a call to act says the act ("Go LIVE"); a state says plainly what is ("Nobody is sharing yet").
+- **"Go LIVE" is said one way everywhere:** LIVE in capitals and in the accent red, like the room's LIVE marks, on the sign-in page and on the standby screen.
+- **Public words** (the sign-in page, and any page someone sees before the room): a short headline with personality ("Go **LIVE** with your friends."), then one short line with substance: what you do and why it's good ("Share your screen or camera in sharp, fast streams. Watch them play, hang out, help out. Invite only.").
 - **Say what happens, then what to do:** "The room is full. You're 2nd in line." A disabled control says why in its tooltip.
 - **The middle dot (·)** joins short facts on one line: "Marina · Screen", "3 of 6 live · 3 free".
 - **Every control has a spoken name** (`aria-label`) that says what it does or what it shows: "Watch Rafa's screen", "4 people here", "Marina: account, connected".
@@ -102,7 +105,7 @@ Dark only: Xovê is a room for watching screens, so the chrome stays out of the 
 
 | Font | Token | Use |
 | --- | --- | --- |
-| **Bricolage Grotesque** 500 / 700 / 800 | `--font-display` | Headings, the name of who's on the stage, big statements ("Be the first to go live") |
+| **Bricolage Grotesque** 500 / 700 / 800 | `--font-display` | Headings, the name of who's on the stage, big statements ("Go LIVE") |
 | **IBM Plex Sans** 400 / 500 / 600 | `--font-body` | Everything else: body, buttons, names in lists |
 | **IBM Plex Mono** 400 / 500 | `--font-mono` | Counters and times: LIVE, `1:12:41`, section labels like "LIVE NOW", the standby screen's "Standby" |
 
@@ -312,7 +315,7 @@ A slim grey track (**36 × 12 px**, `#3a3a3d`) that looks the same off and on, a
 
 ![The info row under the stage](images/design/info-row.png)
 
-- **The info row:** on the left, who's on the stage (avatar with its ring, name in the display font, LIVE, what (" · voice" while their voice is on), how long) and who's watching (up to 4 avatars and "N watching", me included, never the sharer); with nobody live, an empty circle where the photo goes, **"Nobody's sharing"**, and who's here. On the right, the other streams as **previews** with a name chip (their screen, or their camera when that's all they share), then **the seats**: a dashed box of six little screens (16 × 10 px, 2 px corners), three over three, grey for an open seat and red for each stream live with a steady red light under it, their count in words on hover; gone when all 6 are live. When room runs short, the left gives way first, then the previews scroll with a slim scrollbar, and the box stays put.
+- **The info row:** on the left, who's on the stage (avatar with its ring, name in the display font, LIVE, what (" · voice" while their voice is on), how long) and who's watching (up to 4 avatars and "N watching", me included, never the sharer); with nobody live, an empty circle where the photo goes, **"Nobody is sharing yet"**, and who's here. On the right, the other streams as **previews** with a name chip (their screen, or their camera when that's all they share), then **the seats**: a dashed box of six little screens (16 × 10 px, 2 px corners), three over three, grey for an open seat and red for each stream live with a steady red light under it, their count in words on hover; gone when all 6 are live. When room runs short, the left gives way first, then the previews scroll with a slim scrollbar, and the box stays put.
 - **Previews can be heard:** each person's sound and voice have [one switch each](#what-i-hear-and-go-live), off at first while small; a preview I turn on plays at its own volume, as many as I like. A preview's sounds are downloaded only while I hear them.
 - **Small pictures show their buttons only when asked:** pointing at a desktop preview (128 px; a mouse) or holding it for 500 ms (a finger) opens its **row** outside the picture: the voice (a speaking head), the screen's sound, and a swap when they share a screen and a camera. **Big pictures** (the phone's feed) keep the buttons on the picture, each with its own upright slider.
 - **The row** floats under the preview, or above it where the window has no room under it (the side is chosen once, as it opens, with room for the slider); it's **exactly the picture's width**, centred on the picture (not on what peeks out behind it), and follows its preview. It wears the [panels' glass](#dropdown-panels) (16 px corners, its thin light border, the panels' shadow); its 28 px buttons are clear until hovered and **centred both ways** (5 px above and below while closed). **Resting on a button (120 ms) or holding it unrolls one slider after the buttons**, on the side away from the preview, so the buttons never move under the pointer; the row never changes width. The button whose slider is open has a soft 1 px ring. Moving to the other sound, the old bar shrinks to the left as the new one grows from it. The row stays while its slider is in use and while the pointer travels from the preview to it (250 ms); it closes a moment after the pointer leaves both, or on a press elsewhere. Moving to another preview, its row unrolls from it as the last one rolls back into its own.
@@ -365,7 +368,7 @@ Turning switches layouts at once, and the stage keeps its place in the page, so 
 - **Viewfinder corners**, the screen's only frame: close to the stage's own edges on every layout, sideways too (the stage's buttons sit inside the bottom-right one), the top right red as in the logo. Finer and fainter on small stages (18 px arms, 1.5 px), and each **glows softly in its own colour**.
 - **Their light outside:** each corner glows outward too, a blurred L just outside the stage, a fade with no edge; still, following the ambilight's switch and brightness.
 - **"Standby"**, still, in small grey mono capitals with a grey dot (never red: that would mean recording), on larger stages only. Nothing else imitates equipment: no clock, meter, ruler, format tags or room number.
-- **The way to start**, with no frame of its own: "Be the first to go live", one short line ("Share your screen or turn on your camera.", or "Turn on your camera." where a screen can't be shared), and the ways to start. The second way is a soft fill with no outline. **On phones** the heading and the buttons only, centred above the stage's own buttons: the camera one compact pill, a screen the browser can't share a small greyed round button beside it (a tap says why); under 360 px they shrink again.
+- **The way to start**, with no frame of its own: "Go **LIVE**" (LIVE in the accent), one short line ("Share your screen or turn on your camera.", or "Turn on your camera." where a screen can't be shared), and the ways to start. The second way is a soft fill with no outline. **On phones** the heading and the buttons only, centred above the stage's own buttons: the camera one compact pill, a screen the browser can't share a small greyed round button beside it (a tap says why); under 360 px they shrink again.
 - **The TV's static** behind it all: snow in soft horizontal bands (their gaps at 40% of the bands' brightness), shown at 17% over the stage's dark and darker behind the heading. The bands roll down together keeping their sizes, the picture sways a little as a TV losing its vertical hold, and the bands shimmer, 20 times a second. The grain is 1.5 px on a desktop's stage, finer on smaller ones (down to 0.75 px) and coarser on wider ones, keeping about 1 066 grains across, so a 4K or ultrawide screen costs what a desktop does; the bands are a share of the stage's height, so a phone shows the same picture smaller. Still for reduced motion.
 - **Curved glass, 90s style:** square corners; the glass darker towards its edges, a soft sheen high on the left, a faint line of light along the top; the bands bow gently towards the sides. Not a fisheye.
 - **The static lights the room:** its bands' light spills onto the page round the stage as they roll, measured from the static itself, so it's never brighter than the screen; it follows the ambilight's switch and brightness.
@@ -405,6 +408,25 @@ Turning switches layouts at once, and the stage keeps its place in the page, so 
 
 The phone's upright view, with the stage full width and the info row and feed in a centred column up to 640 px wide. Sideways, a tablet gets the desktop layout.
 
+### Pages outside the room
+
+![The sign-in page on a desktop](images/design/sign-in.png)
+
+Sign-in, request access (and request sent), the room's queue and admin: centred on the page's ground, the wordmark above the heading.
+- **Sign-in:** "Go **LIVE** with your friends." and its line (see [Name and voice](#name-and-voice)), then "Continue with Google" and who can join.
+- **On a phone held sideways, a short page fits the screen** with no scroll. Two columns, each centred, when both have weight: sign-in's mark and headline on the left, what to read and do on the right; request access's title and text on the left, the form and the account on the right. Request sent has too little for two, so it's one centred column, as upright.
+
+![Sign-in sideways on an iPhone](images/design/sign-in-sideways.png) ![Request access sideways](images/design/request-access-sideways.png) ![Request sent sideways](images/design/request-sent-sideways.png)
+
+### The phone's own bars
+
+![The room upright on an iPhone: the header starts under the clock and the Dynamic Island](images/design/phone-bars.png)
+
+Opened from the home screen, Xovê runs on the whole screen, under the status bar, the Dynamic Island or a camera cutout, and over the home bar. **Every page's background runs to the screen's edges, and its content stays inside the bars** (`--safe-top`, `--safe-right`, `--safe-bottom`, `--safe-left` in `global.css`, the browser's own safe areas; 0 on a desktop):
+- **A header starts right under the status bar**, at its usual height, with nothing added between.
+- **A scrolling part's end clears the home bar** (the room's list, admin); mid-scroll, content may pass under it, as in any phone app.
+- **Sideways**, the island or cutout sits at one side: the full view and the sideways room keep their controls clear of it, and every other page pads its content on both sides.
+
 ### The install screen
 
 ![The install screen on Android](images/design/install-android.png) ![The install screen on iPhone](images/design/install-iphone.png)
@@ -437,7 +459,7 @@ What a phone or tablet sees in a browser tab, on every page: the wordmark, the s
 - **A panel's places are fixed.** A set of controls (the sounds I hear, and any like it) keeps every place it will ever have; one that can't be used yet is greyed in place, never left out, and never counts for a summary.
 - **Unavailable, not hidden.** An option that can't be used here stays in its place, greyed out (a text option, like a tab: the faint text colour at 50%; a control, like a round button or a sound I can't hear: 45% opacity), with its reason in its tooltip, so a panel looks the same on every device.
 - **Draft first:** a visual change starts as a draft approved before the work starts: a change to screens that exist, as a prototype in the app itself; a brand-new screen may start as a clickable HTML draft with these tokens and fonts. The approved draft is the reference the code must match.
-- **Check every size:** desktop 1920 × 1080, vertical monitors (1080 × 1920 and 1440 × 2560), a narrow window, phones upright (412 × 915, 360 × 740, and 280 × 653, the narrowest supported) and sideways (915 × 412, 667 × 375), tablets (820 × 1180, 1180 × 820), the empty room and the install screen.
+- **Check every size:** desktop 1920 × 1080, vertical monitors (1080 × 1920 and 1440 × 2560), a narrow window, phones upright (412 × 915, 360 × 740, and 280 × 653, the narrowest supported) and sideways (915 × 412, 667 × 375), tablets (820 × 1180, 1180 × 820), the empty room, the install screen, and every page with an iPhone's bars (393 × 852 upright, 852 × 393 sideways).
 - **Reuse the components:** `RoundButton` styles, `Button`, `Range`, the switch, `Dropdown`, `Segmented`, `Picker`, `DropUp`, `Avatar`, `LiveDot`, `StageNotice`, `Toast`. A new control follows their sizes, motion and focus ring. A choice from a list is a `Picker` (one box, floating, with the slim scrollbar when long), a few options a `Segmented`, and a quick action over a live button a `DropUp`, everywhere in the app.
 - **Panels open over the button that opened them,** never from a side; on a wide, short player they use the width (two columns) rather than scroll. **Panels are frosted, never opaque**; nothing over the video hides the round buttons.
 - **Say what effects cost:** blur, canvases and animations run on every frame; keep them to what's here.
@@ -447,6 +469,8 @@ What a phone or tablet sees in a browser tab, on every page: the wordmark, the s
 - **The pointer stays a pointer:** no glows, trails or effects under it.
 - **Effects are part of the look, not settings:** an effect is calm enough to need no switch to turn it off; reduced motion is the only switch, and it stills or skips them.
 - **Ways to start fit a phone:** the main way is one pill; a way the browser can't offer is a small greyed round button with its reason (not a full-width greyed one); a second way that can be used is a soft fill with no outline.
+- **Clear of the phone's bars:** backgrounds to the screen's edges, content inside the status bar, the island or cutout and the home bar, on every page and layout (see [The phone's own bars](#the-phones-own-bars)).
+- **A short page fits a phone held sideways:** no scroll; two columns, each centred, only when both have weight, otherwise one centred column, as upright.
 - **A first impression plays once:** an intro (the TV turning on) plays the first time in a visit, never again for the same state, and never for reduced motion.
 
 ## Keeping this page current
