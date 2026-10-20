@@ -316,6 +316,17 @@ describe("room: sharing", () => {
     expect(myLiveStream(server)).toBeUndefined();
   });
 
+  it("shows the static with no turn-on when the last stream stops: the TV is already on (spec 0136)", async () => {
+    installFakeApi({ me: member });
+    const user = await readyRoom();
+    await startSharing(user);
+    await user.click(within(controls()).getByRole("button", { name: /stop sharing/i }));
+
+    expect(await screen.findByRole("heading", { name: "Be the first to go live" })).toBeInTheDocument();
+    expect(document.querySelector('[class*="intro"]')).toBeNull();
+    expect(document.querySelector('[class*="flash"]')).toBeNull();
+  });
+
   it("ends the stream when the browser's own Stop sharing bar is used", async () => {
     const server = installFakeApi({ me: member });
     const user = await readyRoom();
@@ -1690,8 +1701,8 @@ describe("room: theater mode (spec 0104)", () => {
     expect(screen.getByRole("heading", { name: "Nobody's sharing" })).toBeInTheDocument();
     expect(screen.getByLabelText("0 of 6 live, 6 seats open")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Be the first to go live" })).toBeInTheDocument();
-    // No ambilight: the empty stage has its own corner glow (spec 0123).
-    expect(document.querySelector("canvas")).toBeNull();
+    // No video's ambilight: the empty stage has its own corner glow and its static's light (specs 0123 and 0136).
+    expect(document.querySelector("[data-ambilight]")).toBeNull();
   });
 
   it("puts a stream from the activity list on the stage, a camera event with the camera big", async () => {
@@ -2436,7 +2447,7 @@ describe("room: the empty stage glows (spec 0123)", () => {
     const glow = container.querySelector("[data-corner-glow]") as HTMLElement;
     expect(glow.querySelectorAll("i")).toHaveLength(4);
     expect(Number(glow.style.opacity)).toBeGreaterThan(0);
-    expect(container.querySelector("canvas")).toBeNull();
+    expect(container.querySelector("[data-ambilight]")).toBeNull();
   });
 
   it("goes dark with the ambilight switched off", async () => {

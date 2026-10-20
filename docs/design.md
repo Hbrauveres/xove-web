@@ -104,7 +104,7 @@ Dark only: Xovê is a room for watching screens, so the chrome stays out of the 
 | --- | --- | --- |
 | **Bricolage Grotesque** 500 / 700 / 800 | `--font-display` | Headings, the name of who's on the stage, big statements ("Be the first to go live") |
 | **IBM Plex Sans** 400 / 500 / 600 | `--font-body` | Everything else: body, buttons, names in lists |
-| **IBM Plex Mono** 400 / 500 | `--font-mono` | Counters and times: LIVE, `1:12:41`, section labels like "LIVE NOW", the empty stage's camera display |
+| **IBM Plex Mono** 400 / 500 | `--font-mono` | Counters and times: LIVE, `1:12:41`, section labels like "LIVE NOW", the standby screen's "Standby" |
 
 | Size token | rem | px | Typical use |
 | --- | --- | --- | --- |
@@ -158,6 +158,8 @@ Body line height is 1.5; headings balance their lines (`text-wrap: balance`). Fo
 | A list unrolling from its pill, its options fading in by their distance (40 ms apart), and rolling back | 220 ms; 150 ms back | `cubic-bezier(0.2, 0.8, 0.2, 1)`; ease-in back |
 | The soft light behind an option pointed at | 160 ms | ease |
 | The player moving up for the settings sheet (upright full view) and back | 260 ms | `cubic-bezier(0.2, 0.8, 0.2, 1)` |
+| The standby static: its bands rolling down (24 px a second on a desktop's stage), swaying and shimmering | 20 updates a second; still with reduced motion | — |
+| The TV turning on: a point, a line, the bloom (peak at about 380 ms), the band opening from the middle | 900 ms, once a visit; none with reduced motion | `cubic-bezier(0.2, 0.8, 0.2, 1)` and kin |
 | A new activity in the pill | 350 ms | ease |
 | Facecam buttons fading | 250 ms | ease |
 | The stage resizing to a new picture | 350 ms | ease |
@@ -310,7 +312,7 @@ A slim grey track (**36 × 12 px**, `#3a3a3d`) that looks the same off and on, a
 
 ![The info row under the stage](images/design/info-row.png)
 
-- **The info row:** on the left, who's on the stage (avatar with its ring, name in the display font, LIVE, what (" · voice" while their voice is on), how long) and who's watching (up to 4 avatars and "N watching", me included, never the sharer); with nobody live, an empty circle where the photo goes, **"Nobody's sharing"**, and who's here. On the right, the other streams as **previews** with a name chip (their screen, or their camera when that's all they share), then **the seats**: a dashed box of six dots, three over three, grey for an open seat and red for each stream live, their count in words on hover; gone when all 6 are live. When room runs short, the left gives way first, then the previews scroll with a slim scrollbar, and the box stays put.
+- **The info row:** on the left, who's on the stage (avatar with its ring, name in the display font, LIVE, what (" · voice" while their voice is on), how long) and who's watching (up to 4 avatars and "N watching", me included, never the sharer); with nobody live, an empty circle where the photo goes, **"Nobody's sharing"**, and who's here. On the right, the other streams as **previews** with a name chip (their screen, or their camera when that's all they share), then **the seats**: a dashed box of six little screens (16 × 10 px, 2 px corners), three over three, grey for an open seat and red for each stream live with a steady red light under it, their count in words on hover; gone when all 6 are live. When room runs short, the left gives way first, then the previews scroll with a slim scrollbar, and the box stays put.
 - **Previews can be heard:** each person's sound and voice have [one switch each](#what-i-hear-and-go-live), off at first while small; a preview I turn on plays at its own volume, as many as I like. A preview's sounds are downloaded only while I hear them.
 - **Small pictures show their buttons only when asked:** pointing at a desktop preview (128 px; a mouse) or holding it for 500 ms (a finger) opens its **row** outside the picture: the voice (a speaking head), the screen's sound, and a swap when they share a screen and a camera. **Big pictures** (the phone's feed) keep the buttons on the picture, each with its own upright slider.
 - **The row** floats under the preview, or above it where the window has no room under it (the side is chosen once, as it opens, with room for the slider); it's **exactly the picture's width**, centred on the picture (not on what peeks out behind it), and follows its preview. It wears the [panels' glass](#dropdown-panels) (16 px corners, its thin light border, the panels' shadow); its 28 px buttons are clear until hovered and **centred both ways** (5 px above and below while closed). **Resting on a button (120 ms) or holding it unrolls one slider after the buttons**, on the side away from the preview, so the buttons never move under the pointer; the row never changes width. The button whose slider is open has a soft 1 px ring. Moving to the other sound, the old bar shrinks to the left as the new one grows from it. The row stays while its slider is in use and while the pointer travels from the preview to it (250 ms); it closes a moment after the pointer leaves both, or on a press elsewhere. Moving to another preview, its row unrolls from it as the last one rolls back into its own.
@@ -358,12 +360,18 @@ Turning switches layouts at once, and the stage keeps its place in the page, so 
 
 ![A tall picture: the box keeps the column's width, the controls at its corners over the dark sides](images/design/stage-tall-picture.png) ![The empty room on a desktop](images/design/room-empty-desktop.png)
 
-**Nobody live, a camera waiting:**
+**Nobody live, a TV on standby:**
 
-- **Viewfinder corners** close to the stage's edges (the stage's buttons sit inside the bottom-right one), the top right red as in the logo, on one flat dark.
-- **Their glow:** each corner glows outward in its own colour, a blurred L just outside the stage, a fade with no edge; still, following the ambilight's switch and brightness.
-- **A quiet camera display** in small grey mono capitals, still but for the clock: a grey dot, "Standby" and the time (never a red dot: that would mean recording); the frame rate (`30` lit in a filled box, what's sent; "60 fps" faint); "Room 01"; an empty L/R meter; `16:9`, HD, Auto; a signal and "Online"; a plain tick ruler; a thirds grid at about 1.6% white. Small stages keep only the top line; sideways, the corners start under the floating top bar and the top line hides.
-- **In a faint focus frame:** "Be the first to go live", a line, and the two ways to start (on a phone, the camera first and the screen greyed).
+- **Viewfinder corners**, the screen's only frame: close to the stage's own edges on every layout, sideways too (the stage's buttons sit inside the bottom-right one), the top right red as in the logo. Finer and fainter on small stages (18 px arms, 1.5 px), and each **glows softly in its own colour**.
+- **Their light outside:** each corner glows outward too, a blurred L just outside the stage, a fade with no edge; still, following the ambilight's switch and brightness.
+- **"Standby"**, still, in small grey mono capitals with a grey dot (never red: that would mean recording), on larger stages only. Nothing else imitates equipment: no clock, meter, ruler, format tags or room number.
+- **The way to start**, with no frame of its own: "Be the first to go live", one short line ("Share your screen or turn on your camera.", or "Turn on your camera." where a screen can't be shared), and the ways to start. The second way is a soft fill with no outline. **On phones** the heading and the buttons only, centred above the stage's own buttons: the camera one compact pill, a screen the browser can't share a small greyed round button beside it (a tap says why); under 360 px they shrink again.
+- **The TV's static** behind it all: snow in soft horizontal bands (their gaps at 40% of the bands' brightness), shown at 17% over the stage's dark and darker behind the heading. The bands roll down together keeping their sizes, the picture sways a little as a TV losing its vertical hold, and the bands shimmer, 20 times a second. The grain is 1.5 px on a desktop's stage, finer on smaller ones (down to 0.75 px) and coarser on wider ones, keeping about 1 066 grains across, so a 4K or ultrawide screen costs what a desktop does; the bands are a share of the stage's height, so a phone shows the same picture smaller. Still for reduced motion.
+- **Curved glass, 90s style:** square corners; the glass darker towards its edges, a soft sheen high on the left, a faint line of light along the top; the bands bow gently towards the sides. Not a fisheye.
+- **The static lights the room:** its bands' light spills onto the page round the stage as they roll, measured from the static itself, so it's never brighter than the screen; it follows the ambilight's switch and brightness.
+- **The TV turns on** the first time the stage stands by in a visit, in 0.9 s, eased and soft-edged: a point of light, a glowing line drawn across, a white bloom filling the screen and lighting the wall, then a grey band that opens from the middle while dimming onto the static. White, with only a hint of the red at the glow's edges. Never again when the last stream stops; none for reduced motion.
+
+![The TV turning on, every 50 ms](images/design/turn-on.png)
 
 ### Phone, upright
 
@@ -433,6 +441,13 @@ What a phone or tablet sees in a browser tab, on every page: the wordmark, the s
 - **Reuse the components:** `RoundButton` styles, `Button`, `Range`, the switch, `Dropdown`, `Segmented`, `Picker`, `DropUp`, `Avatar`, `LiveDot`, `StageNotice`, `Toast`. A new control follows their sizes, motion and focus ring. A choice from a list is a `Picker` (one box, floating, with the slim scrollbar when long), a few options a `Segmented`, and a quick action over a live button a `DropUp`, everywhere in the app.
 - **Panels open over the button that opened them,** never from a side; on a wide, short player they use the width (two columns) rather than scroll. **Panels are frosted, never opaque**; nothing over the video hides the round buttons.
 - **Say what effects cost:** blur, canvases and animations run on every frame; keep them to what's here.
+- **A screen says only what matters.** No readouts that imitate real equipment (clocks, meters, rulers, format tags, made-up numbers), and no frame inside another frame.
+- **One short line under a heading, at most,** saying what to do, not what follows from it.
+- **Light comes from something, never brighter than it:** a glow round a screen or a picture is measured from what's on it.
+- **The pointer stays a pointer:** no glows, trails or effects under it.
+- **Effects are part of the look, not settings:** an effect is calm enough to need no switch to turn it off; reduced motion is the only switch, and it stills or skips them.
+- **Ways to start fit a phone:** the main way is one pill; a way the browser can't offer is a small greyed round button with its reason (not a full-width greyed one); a second way that can be used is a soft fill with no outline.
+- **A first impression plays once:** an intro (the TV turning on) plays the first time in a visit, never again for the same state, and never for reduced motion.
 
 ## Keeping this page current
 

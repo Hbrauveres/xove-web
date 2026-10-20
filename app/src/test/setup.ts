@@ -19,6 +19,9 @@ afterEach(() => {
 });
 
 // jsdom lacks these browser APIs.
+// No canvas: drawing is the browser's to prove. Without this jsdom warns on every render of the
+// standby screen's static (spec 0136); a test that draws stubs its own context.
+HTMLCanvasElement.prototype.getContext = (() => null) as never;
 // The screen picker: the last fake room plays it (`nextPicker`, `nextPickerAudio`).
 Object.defineProperty(navigator, "mediaDevices", {
   configurable: true,

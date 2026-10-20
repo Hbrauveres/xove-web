@@ -265,7 +265,7 @@ describe("also live (specs 0104 and 0123)", () => {
     expect(item(/^Watch Bruno/)).not.toHaveAttribute("data-talking");
   });
 
-  it("shows the seats as six dots, red for each stream live, beside the previews (spec 0123)", () => {
+  it("shows the seats as six little screens, red for each stream live, beside the previews (specs 0123 and 0136)", () => {
     const { container } = render(<Harness others={[ANA, DIEGO]} live={3} free={3} />);
     const box = container.querySelector("[data-free]") as HTMLElement;
     expect(box).toHaveAccessibleName("3 of 6 live, 3 seats open");

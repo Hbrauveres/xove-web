@@ -219,22 +219,25 @@
   text-align: center;
 }
 
-/* The seats (spec 0123): six dots, three over three, red for each stream live. */
+/* The seats (specs 0123 and 0136): six little screens, three over three, red for each stream live,
+   which casts a soft, steady red light under it, as a TV's on a wall. */
 .free {
-  grid-template-columns: repeat(3, 10px);
-  gap: 9px 12px;
+  grid-template-columns: repeat(3, 16px);
+  gap: 10px 10px;
 }
 
 .free i {
-  width: 10px;
+  width: 16px;
   height: 10px;
-  border-radius: 50%;
+  border-radius: 2px;
   background: rgba(235, 235, 236, 0.14);
 }
 
 .free i[data-on] {
   background: var(--accent);
-  box-shadow: 0 0 6px rgba(239, 75, 75, 0.45);
+  box-shadow:
+    0 0 6px rgba(239, 75, 75, 0.45),
+    0 4px 12px rgba(239, 75, 75, 0.35);
 }
 
 @media (max-width: 760px) {

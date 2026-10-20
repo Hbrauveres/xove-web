@@ -1,13 +1,13 @@
 /*
- * Nobody live (spec 0123): the stage as a camera waiting, like Xovê's mark. Thin viewfinder
- * corners, the top right red as in the logo; a quiet readout in the corners; the way to start in a
- * small focus frame. Still: only the clock changes, once a minute.
+ * Nobody live (spec 0123, calmed in spec 0136): a TV on standby, like Xovê's mark. Thin viewfinder
+ * corners, the top right red as in the logo; a still "Standby" where there's room; the way to start
+ * in the middle, with room around it, over the TV's static; the first time, the TV turning on.
  */
 .empty {
   /* Close to the edge, so the stage's own buttons sit inside the bottom-right corner. */
   --inset: 6px;
-  --top: var(--inset);
   --arm: 28px;
+  --stroke: 2px;
   position: absolute;
   inset: 0;
   display: grid;
@@ -24,221 +24,82 @@
   position: absolute;
   width: var(--arm);
   height: var(--arm);
-  border: 0 solid rgba(235, 235, 236, 0.42);
+  border: 0 solid rgba(235, 235, 236, 0.32);
   pointer-events: none;
+  /* Lit, as a camera's display: each corner glows softly in its own colour. */
+  filter: drop-shadow(0 0 3px rgba(235, 235, 236, 0.35)) drop-shadow(0 0 10px rgba(235, 235, 236, 0.18));
 }
 
 .corner[data-at="tl"] {
-  top: var(--top);
+  top: var(--inset);
   left: var(--inset);
-  border-width: 2px 0 0 2px;
+  border-width: var(--stroke) 0 0 var(--stroke);
 }
 
 .corner[data-at="tr"] {
-  top: var(--top);
+  top: var(--inset);
   right: var(--inset);
-  border-width: 2px 2px 0 0;
+  border-width: var(--stroke) var(--stroke) 0 0;
   border-color: var(--accent);
+  filter: drop-shadow(0 0 3px rgba(239, 75, 75, 0.7)) drop-shadow(0 0 12px rgba(239, 75, 75, 0.4));
 }
 
 .corner[data-at="bl"] {
   bottom: var(--inset);
   left: var(--inset);
-  border-width: 0 0 2px 2px;
+  border-width: 0 0 var(--stroke) var(--stroke);
 }
 
 .corner[data-at="br"] {
   bottom: var(--inset);
   right: var(--inset);
-  border-width: 0 2px 2px 0;
+  border-width: 0 var(--stroke) var(--stroke) 0;
 }
 
-/* The readout: small mono capitals, inside the corners. */
+/* "Standby": small mono capitals inside the top-left corner, a still grey dot (red would mean
+   recording). */
 .readout {
   position: absolute;
+  top: calc(var(--inset) + 18px);
+  left: calc(var(--inset) + 18px);
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: rgba(235, 235, 236, 0.55);
+  color: rgba(235, 235, 236, 0.45);
   font: 500 11px/1 var(--font-mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
-.readout[data-at="tl"] {
-  top: calc(var(--top) + 16px);
-  left: calc(var(--inset) + 16px);
-}
-
-.readout[data-at="tr"] {
-  top: calc(var(--top) + 16px);
-  right: calc(var(--inset) + 16px);
-}
-
-.readout[data-at="bl"] {
-  bottom: calc(var(--inset) + 16px);
-  left: calc(var(--inset) + 16px);
-  max-width: calc(100% - 2 * var(--inset) - 160px);
-}
-
-/* The camera's display (spec 0123): fainter than the readout, nothing moves. */
-/* An empty sound meter, L and R. */
-.meter {
-  position: absolute;
-  top: 50%;
-  left: calc(var(--inset) + 18px);
-  display: flex;
-  gap: 8px;
-  transform: translateY(-50%);
-  color: rgba(235, 235, 236, 0.45);
-  font: 500 10px/1 var(--font-mono);
-}
-
-.meter > span {
-  display: grid;
-  justify-items: center;
-  gap: 6px;
-}
-
-.bars {
-  display: grid;
-  gap: 4px;
-}
-
-.bars i {
-  width: 9px;
-  height: 3px;
-  border-radius: 1px;
-  background: rgba(235, 235, 236, 0.12);
-}
-
-/* Format tags, stacked. */
-.tags {
-  position: absolute;
-  top: 50%;
-  right: calc(var(--inset) + 18px);
-  display: grid;
-  justify-items: end;
-  gap: 7px;
-  transform: translateY(-50%);
-  color: rgba(235, 235, 236, 0.5);
-  font: 500 11px/1 var(--font-mono);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.tags b {
-  padding: 3px 4px;
-  border: 1px solid rgba(235, 235, 236, 0.35);
-  border-radius: 3px;
-  font-weight: 500;
-}
-
-/* A plain tick ruler at the bottom's middle, a marker over its centre. */
-.ruler {
-  position: absolute;
-  bottom: calc(var(--inset) + 18px);
-  left: 50%;
-  display: flex;
-  align-items: flex-end;
-  gap: 5px;
-  height: 18px;
-  transform: translateX(-50%);
-  border-bottom: 1px solid rgba(235, 235, 236, 0.3);
-}
-
-.ruler i {
-  width: 1px;
-  height: 5px;
-  background: rgba(235, 235, 236, 0.3);
-}
-
-.ruler i[data-major] {
-  height: 9px;
-  background: rgba(235, 235, 236, 0.45);
-}
-
-.ruler::before {
-  content: "";
-  position: absolute;
-  top: -2px;
-  left: 50%;
-  border: 4px solid transparent;
-  border-top: 5px solid rgba(235, 235, 236, 0.6);
-  transform: translateX(-50%);
-}
-
-/* The frame rate, top middle: 30 lit in its box (what's sent), 60 faint beside it. */
-.readout[data-at="tc"] {
-  top: calc(var(--top) + 13px);
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.fps {
-  gap: 8px;
-  color: rgba(235, 235, 236, 0.3);
-}
-
-.fps b {
-  padding: 3px 5px;
-  border-radius: 3px;
-  background: rgba(235, 235, 236, 0.7);
-  color: #0f0f11;
-  font-weight: 500;
-}
-
-/* A thirds grid, barely there. */
-.grid {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  --g: rgba(235, 235, 236, 0.016);
-  background:
-    linear-gradient(to right, transparent calc(33.333% - 0.5px), var(--g) calc(33.333% - 0.5px), var(--g) calc(33.333% + 0.5px), transparent calc(33.333% + 0.5px), transparent calc(66.666% - 0.5px), var(--g) calc(66.666% - 0.5px), var(--g) calc(66.666% + 0.5px), transparent calc(66.666% + 0.5px)),
-    linear-gradient(to bottom, transparent calc(33.333% - 0.5px), var(--g) calc(33.333% - 0.5px), var(--g) calc(33.333% + 0.5px), transparent calc(33.333% + 0.5px), transparent calc(66.666% - 0.5px), var(--g) calc(66.666% - 0.5px), var(--g) calc(66.666% + 0.5px), transparent calc(66.666% + 0.5px));
-}
-
-/* Standby: a still grey dot (red would mean recording). */
 .dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: rgba(235, 235, 236, 0.45);
+  background: rgba(235, 235, 236, 0.4);
 }
 
-/* The focus frame round the way to start: four short corners, fainter. */
+/* The way to start: a heading, a line, the buttons; no frame of its own. */
 .focus {
   position: relative;
   display: grid;
   justify-items: center;
   gap: 12px;
-  padding: 26px 30px;
-  background:
-    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) top left / 14px 1.5px,
-    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) top left / 1.5px 14px,
-    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) top right / 14px 1.5px,
-    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) top right / 1.5px 14px,
-    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) bottom left / 14px 1.5px,
-    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) bottom left / 1.5px 14px,
-    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) bottom right / 14px 1.5px,
-    linear-gradient(rgba(235, 235, 236, 0.28), rgba(235, 235, 236, 0.28)) bottom right / 1.5px 14px;
-  background-repeat: no-repeat;
 }
 
 .title {
   margin: 0;
-  font: 800 26px/1.1 var(--font-display);
+  font: 800 28px/1.1 var(--font-display);
   letter-spacing: -0.01em;
 }
 
 .copy {
   margin: 0;
-  max-width: 36ch;
+  max-width: 38ch;
   color: var(--text-muted);
   font-size: 14px;
   line-height: 1.5;
+  text-wrap: balance;
 }
 
 .go {
@@ -246,16 +107,17 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
-  margin-top: 6px;
+  margin-top: 12px;
 }
 
 .go button {
+  --h: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 44px;
-  padding: 0 19px;
+  height: var(--h);
+  padding: 0 20px;
   border: 0;
   border-radius: 999px;
   font: inherit;
@@ -274,14 +136,17 @@
   color: var(--accent-ink);
 }
 
+/* The second way: a soft fill, no outline. */
 .ghost {
-  background: rgba(10, 10, 11, 0.72);
-  box-shadow: inset 0 0 0 1px var(--line);
+  background: rgba(235, 235, 236, 0.08);
   color: var(--text);
 }
 
+/* Can't be used here (a phone's screen): a small round greyed button; a tap says why. */
 .unavailable {
-  background: rgba(10, 10, 11, 0.72);
+  width: var(--h);
+  padding: 0 !important;
+  background: rgba(235, 235, 236, 0.06);
   color: var(--text);
   opacity: 0.45;
   cursor: not-allowed;
@@ -293,50 +158,52 @@
   }
 
   .ghost:hover {
-    background: rgba(40, 40, 44, 0.85);
+    background: rgba(235, 235, 236, 0.14);
   }
 }
 
-/* Sideways on a phone the top bar floats over the stage: the corners start under it, and its
-   own "Nobody live" says what the top readouts would. */
-:global([data-layout="sideways"]) .empty {
-  --top: 58px;
-}
-
-:global([data-layout="sideways"]) .readout:is([data-at="tl"], [data-at="tr"], [data-at="tc"]) {
+/* Sideways on a phone the top bar floats over the stage: the corners stay at the screen's edges,
+   as everywhere, and its own "Nobody live" says what "Standby" would. */
+:global([data-layout="sideways"]) .readout {
   display: none;
 }
 
-/* A narrow stage (a phone upright): the two ways to start stacked. */
-@container (max-width: 480px) {
+/* A small stage (a phone): finer corners, no "Standby", a smaller heading, compact buttons. */
+@container (max-width: 640px) {
   .empty {
-    --arm: 22px;
+    --arm: 18px;
+    --stroke: 1.5px;
   }
 
-  .go {
-    flex-direction: column;
-    align-items: stretch;
-    width: min(100%, 240px);
-  }
-
-  .focus {
-    padding: 20px 18px;
-  }
-}
-
-/* A short stage (a phone, sideways or upright): the title and the two ways to start. */
-@container (max-height: 320px) {
-  .empty {
-    --arm: 20px;
-  }
-
-  .focus {
-    gap: 8px;
-    padding: 14px 18px;
+  .readout {
+    display: none;
   }
 
   .title {
-    font-size: 18px;
+    font-size: 22px;
+  }
+
+  .go button {
+    --h: 40px;
+    padding: 0 16px;
+    font-size: 14px;
+  }
+}
+
+/* A short stage (a phone, upright or sideways): the heading and the buttons, nothing else,
+   centred above the stage's own buttons at the bottom. */
+@container (max-height: 320px) {
+  .empty {
+    --arm: 16px;
+    padding: 12px 20px 52px;
+  }
+
+  .focus {
+    gap: 0;
+  }
+
+  .title {
+    font-size: 19px;
   }
 
   .copy {
@@ -344,41 +211,161 @@
   }
 
   .go {
-    gap: 6px;
-    margin-top: 0;
+    gap: 8px;
+    margin-top: 16px;
   }
 
   .go button {
-    height: 36px;
-    padding: 0 14px;
+    --h: 38px;
+    padding: 0 16px;
+    font-size: 13.5px;
+  }
+
+  .go svg {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+/* The narrowest phones (under 360 px): smaller still, so the stage's own buttons stay clear. */
+@container (max-width: 359px) {
+  .title {
+    font-size: 17px;
+  }
+
+  .go {
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .go button {
+    --h: 34px;
+    gap: 6px;
+    padding: 0 13px;
     font-size: 13px;
   }
 
-  .readout {
-    font-size: 10px;
-  }
-
-  .readout[data-at="bl"] {
-    display: none;
+  .go svg {
+    width: 16px;
+    height: 16px;
   }
 }
 
-/* A small or short stage (a phone): only the top line of the display; the rest would crowd it. */
-@container (max-width: 640px) {
-  .meter,
-  .tags,
-  .ruler,
-  .readout[data-at="bl"],
-  .readout[data-at="tc"] {
-    display: none;
-  }
+/*
+ * The TV turning on (spec 0136), once a visit, the first time the stage stands by, in under a second, smooth rather than
+ * jerky: a point of light glows in the middle and draws a thin glowing line across; the line blooms
+ * into a white glow that fills the screen and lights the wall round it; the glow settles into
+ * a dimmer band streaked with scan lines, darkening as it opens softly onto the static. A hint of
+ * the theme's red at the edges of the glow. Over everything, then
+ * gone; only transforms, opacity and a fixed blur. None for reduced motion.
+ */
+.intro {
+  --intro: 900ms;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+  background: #050506;
+  animation: intro-dark var(--intro) cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-@container (max-height: 420px) {
-  .meter,
-  .tags,
-  .ruler,
-  .grid {
-    display: none;
-  }
+.intro i {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* The point: a bright dot in a soft halo, where the tube lights first. */
+.intro i[data-part="dot"] {
+  left: 50%;
+  width: 22vmin;
+  height: 22vmin;
+  margin: -11vmin 0 0 -11vmin;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 3%, rgba(255, 255, 255, 0.8) 6%, rgba(255, 255, 255, 0.3) 22%, rgba(239, 75, 75, 0.1) 42%, transparent 62%);
+  filter: blur(3px);
+  animation: intro-dot var(--intro) cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* The line: drawn across from the point, white, fading at its ends, glowing. */
+.intro i[data-part="line"] {
+  height: 3px;
+  margin-top: -1.5px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.35), #fff 30%, #fff 70%, rgba(255, 255, 255, 0.35));
+  box-shadow:
+    0 0 8px 2px rgba(255, 255, 255, 0.9),
+    0 0 32px 8px rgba(255, 255, 255, 0.45),
+    0 0 56px 14px rgba(239, 75, 75, 0.14);
+  filter: blur(1.5px);
+  transform: scaleX(0.01);
+  animation: intro-line var(--intro) cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* The bloom: the line's glow swelling into a white light over the whole screen. */
+.intro i[data-part="flare"] {
+  top: 0;
+  height: 100%;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, #fff 0%, #fff 30%, rgba(255, 255, 255, 0.8) 58%, rgba(255, 228, 228, 0.3) 78%, rgba(239, 75, 75, 0.1) 90%, transparent 100%);
+  filter: blur(24px);
+  transform: scale(0.2, 0.03);
+  animation: intro-flare var(--intro) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* The band: a wide pale band streaked with scan lines, opening onto the picture. */
+.intro i[data-part="band"] {
+  /* Centred on the screen's middle, so it opens from there. */
+  top: 27%;
+  height: 46%;
+  background:
+    repeating-linear-gradient(0deg, rgba(60, 60, 64, 0.3) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(90, 90, 96, 0.14) 0 2px, transparent 2px 7px, rgba(90, 90, 96, 0.1) 7px 8px, transparent 8px 13px),
+    linear-gradient(180deg, transparent, #b9b9bc 18%, #cfcfd2 50%, #b0b0b4 82%, transparent);
+  box-shadow: 0 0 48px 12px rgba(255, 255, 255, 0.18);
+  filter: blur(4px);
+  animation: intro-band var(--intro) cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes intro-dark {
+  0%, 55% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes intro-dot {
+  0% { opacity: 0; transform: scale(0.3); }
+  8% { opacity: 1; transform: scale(1); }
+  26% { opacity: 1; transform: scale(1.4); }
+  40% { opacity: 0; transform: scale(2); }
+  100% { opacity: 0; }
+}
+
+@keyframes intro-line {
+  0%, 5% { opacity: 0; transform: scaleX(0.01); }
+  8% { opacity: 1; transform: scaleX(0.04); }
+  24% { opacity: 1; transform: scaleX(1); }
+  38% { opacity: 0; transform: scaleX(1); }
+  100% { opacity: 0; transform: scaleX(1); }
+}
+
+@keyframes intro-flare {
+  0%, 18% { opacity: 0; transform: scale(0.2, 0.03); }
+  28% { opacity: 1; transform: scale(0.9, 0.22); }
+  42% { opacity: 1; transform: scale(1.6, 1.7); }
+  /* After the flash the light dims steadily into the dark screen, never snapping off. */
+  50% { opacity: 0.6; transform: scale(1.6, 1.7); }
+  60% { opacity: 0.25; transform: scale(1.6, 1.7); }
+  70% { opacity: 0; transform: scale(1.6, 1.7); }
+  100% { opacity: 0; }
+}
+
+@keyframes intro-band {
+  0%, 44% { opacity: 0; transform: scaleY(0.3); }
+  52% { opacity: 0.75; transform: scaleY(0.35); }
+  64% { opacity: 0.5; transform: scaleY(0.85); }
+  76% { opacity: 0.28; transform: scaleY(1.6); }
+  88% { opacity: 0.1; transform: scaleY(2.3); }
+  100% { opacity: 0; transform: scaleY(2.6); }
 }

@@ -46,8 +46,19 @@ describe("the empty stage, a camera waiting (spec 0123, design decisions 6 and 7
     expect(rule(empty, '.corner[data-at="tr"]')).toMatch(/border-color:\s*var\(--accent\)/);
   });
 
-  it("keeps only the display's top line on a small stage", () => {
-    expect(empty).toMatch(/@container \(max-width: 640px\) \{\s*\.meter,\s*\.tags,\s*\.ruler,/);
+  it("has none of the old camera display's clutter, nor a frame inside the corners (spec 0136)", () => {
+    expect(empty).not.toMatch(/\.(meter|tags|ruler|grid|fps)\b/);
+    expect(rule(empty, ".focus")).not.toMatch(/background|border/);
+  });
+
+  it("shows the seats as little screens, a steady light only under a live one (spec 0136)", () => {
+    const seats = sheet("components/stage/AlsoLive.module.css");
+    const seat = rule(seats, ".free i");
+    expect(seat).toMatch(/width:\s*16px/);
+    expect(seat).toMatch(/height:\s*10px/);
+    expect(seat).not.toMatch(/shadow|animation/);
+    expect(rule(seats, ".free i[data-on]")).toMatch(/box-shadow:[^;]*rgba\(239, 75, 75/);
+    expect(rule(seats, ".free i[data-on]")).not.toMatch(/animation/);
   });
 
   it("glows from blurred L's just outside the stage, the top right red", () => {

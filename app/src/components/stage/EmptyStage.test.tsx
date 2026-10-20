@@ -27,15 +27,27 @@ describe("the empty stage, a camera waiting (spec 0123)", () => {
     expect(onStart).not.toHaveBeenCalled();
   });
 
-  it("has four viewfinder corners, the top right red, and a still display", () => {
+  it("says one short line, and greys the screen it can't share as a small button named for it (spec 0136)", () => {
+    const { rerender } = render(<EmptyStage />);
+    expect(screen.getByText("Share your screen or turn on your camera.")).toBeInTheDocument();
+    rerender(<EmptyStage canShareScreen={false} />);
+    expect(screen.getByText("Turn on your camera.")).toBeInTheDocument();
+    // No "and the room sees it at once": it says what to do, not what follows.
+    expect(screen.queryByText(/room sees/)).not.toBeInTheDocument();
+    // Icon only, still named and saying why.
+    const greyed = screen.getByRole("button", { name: "Share your screen" });
+    expect(greyed).toHaveTextContent("");
+    expect(greyed).toHaveAccessibleDescription("This browser can't share a screen");
+  });
+
+  it("has four viewfinder corners, the top right red, and only a still 'Standby' (spec 0136)", () => {
     const { container } = render(<EmptyStage />);
     expect(container.querySelectorAll("[data-mark]")).toHaveLength(4);
     expect(container.querySelector('[data-mark="tr"]')).toBeInTheDocument();
     const display = container.querySelector("[data-empty]") as HTMLElement;
-    expect(within(display).getByText(/Standby · \d\d:\d\d/)).toBeInTheDocument();
-    expect(within(display).getByText("Room 01")).toBeInTheDocument();
-    expect(within(display).getByText("16:9")).toBeInTheDocument();
-    expect(within(display).getByText("Online")).toBeInTheDocument();
+    expect(within(display).getByText("Standby")).toBeInTheDocument();
+    // The camera display's clutter is gone: no clock, room, format, frame rate or signal.
+    expect(display).not.toHaveTextContent(/\d\d:\d\d|Room 01|16:9|HD|fps|Online/);
   });
 
   it("says nothing the row below says: no names, no seats, no 'nobody'", () => {
