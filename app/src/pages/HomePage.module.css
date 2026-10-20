@@ -75,3 +75,43 @@
   font-size: var(--text-xs);
   color: var(--text-faint);
 }
+
+/* The mark and headline, then what to read and do: one column, side by side on a phone sideways. */
+.lead,
+.act {
+  display: contents;
+}
+
+/*
+ * A phone sideways (spec 0141): the page fits the screen, with no scroll. The mark and headline
+ * on the left, what to read and do on the right, each centred.
+ */
+@media (orientation: landscape) and (max-height: 500px) {
+  .wrap {
+    padding-block: calc(16px + var(--safe-top)) calc(16px + var(--safe-bottom));
+  }
+
+  .card {
+    max-width: 760px;
+    flex-direction: row;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .lead,
+  .act {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .act {
+    gap: 12px;
+  }
+
+  .google {
+    margin-top: 4px;
+  }
+}

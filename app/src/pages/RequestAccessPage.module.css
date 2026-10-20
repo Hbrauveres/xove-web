@@ -158,3 +158,56 @@
   color: var(--text);
   text-decoration: underline;
 }
+
+/*
+ * A phone sideways (spec 0141): the page fits the screen, with no scroll. The mark, title and
+ * copy on the left, the form and the account on the right.
+ */
+@media (orientation: landscape) and (max-height: 500px) {
+  .wrap {
+    padding-block: calc(16px + var(--safe-top)) calc(16px + var(--safe-bottom));
+  }
+
+  .card {
+    max-width: 760px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "brand form"
+      "title form"
+      "copy form"
+      "waiting account";
+    grid-template-rows: auto auto auto 1fr;
+    align-items: start;
+    column-gap: 40px;
+    row-gap: 12px;
+  }
+
+  .brand {
+    grid-area: brand;
+    margin: 0;
+  }
+
+  .title {
+    grid-area: title;
+  }
+
+  .copy {
+    grid-area: copy;
+  }
+
+  .waiting {
+    grid-area: waiting;
+    justify-self: start;
+  }
+
+  .form {
+    grid-area: form;
+    margin-top: 0;
+  }
+
+  .account {
+    grid-area: account;
+    margin-top: 4px;
+  }
+}
