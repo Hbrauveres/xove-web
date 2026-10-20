@@ -74,7 +74,9 @@ export function EmptyStage({
         </span>
       )}
       <div className={styles.focus}>
-        <h2 className={styles.title}>Go live</h2>
+        <h2 className={styles.title}>
+          Go <em>LIVE</em>
+        </h2>
         <p className={styles.copy}>
           {canShareScreen
             ? "Share your screen or turn on your camera."

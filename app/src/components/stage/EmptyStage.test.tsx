@@ -8,7 +8,7 @@ describe("the empty stage, a camera waiting (spec 0123)", () => {
     const onStart = vi.fn();
     render(<EmptyStage onStart={onStart} />);
 
-    expect(screen.getByRole("heading", { name: "Go live" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Go LIVE" })).toBeInTheDocument();
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: /Share your screen/ }));
     await user.click(screen.getByRole("button", { name: /Turn on your camera/ }));
