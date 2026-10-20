@@ -112,16 +112,17 @@
   text-wrap: balance;
 }
 
+/* Two pills of one width, side by side, and the cog beside them: the row centred as a whole (spec 0138). */
 .go {
-  display: flex;
-  flex-wrap: wrap;
+  --h: 44px;
+  display: grid;
+  grid-template-columns: 1fr 1fr var(--h);
   justify-content: center;
   gap: 10px;
   margin-top: 12px;
 }
 
 .go button {
-  --h: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -141,6 +142,15 @@
   height: 18px;
 }
 
+/* The settings: a small round button, the second way's soft fill. (Doubled, to win over any
+   size's padding for the pills: a round button has none.) */
+.go .cog.cog {
+  width: var(--h);
+  padding: 0;
+  background: rgba(235, 235, 236, 0.08);
+  color: var(--text);
+}
+
 .primary {
   background: var(--accent);
   color: var(--accent-ink);
@@ -152,10 +162,8 @@
   color: var(--text);
 }
 
-/* Can't be used here (a phone's screen): a small round greyed button; a tap says why. */
+/* Can't be used here (a phone's screen): the same pill, greyed in place; a tap says why (spec 0138). */
 .unavailable {
-  width: var(--h);
-  padding: 0 !important;
   background: rgba(235, 235, 236, 0.06);
   color: var(--text);
   opacity: 0.45;
@@ -167,7 +175,8 @@
     background: #f36a6a;
   }
 
-  .ghost:hover {
+  .ghost:hover,
+  .go .cog.cog:hover {
     background: rgba(235, 235, 236, 0.14);
   }
 }
@@ -176,6 +185,64 @@
    as everywhere, and its own "Nobody live" says what "Standby" would. */
 :global([data-layout="sideways"]) .readout {
   display: none;
+}
+
+/*
+ * A phone, upright or sideways (spec 0138): the desktop's screen at a phone's sizes, in the
+ * stage's middle: a smaller heading and line, and the row's buttons the stage's own size.
+ */
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .focus {
+  gap: 8px;
+}
+
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .title {
+  font-size: 20px;
+}
+
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .copy {
+  /* Shown on short stages too, as on every other screen. */
+  display: block;
+  font-size: 13px;
+}
+
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .go {
+  /* The stage's own buttons' size (34 px), so all of a phone's buttons on the stage are one size. */
+  --h: 34px;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .go button {
+  gap: 5px;
+  padding: 0 12px;
+  font-size: 12.5px;
+}
+
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .go svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* The narrowest phone (280 px): only the pills, so the stage's own buttons in its corner stay
+   clear; the heading stays for screen readers. */
+@container (max-width: 300px) {
+  :global(:is([data-layout="phone"], [data-layout="sideways"])) .copy {
+    display: none;
+  }
+
+  :global(:is([data-layout="phone"], [data-layout="sideways"])) .title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* Nothing above the row: no space above it either, so it sits in the middle. */
+  :global(:is([data-layout="phone"], [data-layout="sideways"])) .go {
+    margin-top: 0;
+  }
 }
 
 /* A small stage (a phone): finer corners, no "Standby", a smaller heading, compact buttons. */
@@ -193,19 +260,23 @@
     font-size: 22px;
   }
 
-  .go button {
+  .go {
     --h: 40px;
+  }
+
+  .go button {
     padding: 0 16px;
     font-size: 14px;
   }
 }
 
-/* A short stage (a phone, upright or sideways): the heading and the buttons, nothing else,
-   centred above the stage's own buttons at the bottom. */
+/* A short stage: finer corners, no line on a desktop's (a phone keeps it), and the way to start
+   in its middle both ways, the stage's own buttons in their corner (spec 0138). */
 @container (max-height: 320px) {
   .empty {
     --arm: 16px;
-    padding: 12px 20px 52px;
+    /* In the stage's middle both ways (spec 0138); the stage's own buttons sit in its corner. */
+    padding: 12px 20px;
   }
 
   .focus {
@@ -225,8 +296,11 @@
     margin-top: 16px;
   }
 
-  .go button {
+  .go {
     --h: 38px;
+  }
+
+  .go button {
     padding: 0 16px;
     font-size: 13.5px;
   }
@@ -248,8 +322,11 @@
     margin-top: 10px;
   }
 
-  .go button {
+  .go {
     --h: 34px;
+  }
+
+  .go button {
     gap: 6px;
     padding: 0 13px;
     font-size: 13px;

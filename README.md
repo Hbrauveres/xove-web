@@ -21,7 +21,7 @@ This repo is the web app: React 19 and TypeScript, talking to [`xove-api`](https
 
 | | |
 | --- | --- |
-| ![Nobody live on a desktop: the stage as a camera waiting](docs/images/design/room-empty-desktop.png) | **The room, nobody live.** The stage as a camera waiting, its corners glowing, "Go LIVE" and the two ways to start |
+| ![Nobody live on a desktop: the stage as a camera waiting](docs/images/design/room-empty-desktop.png) | **The room, nobody live.** The stage as a camera waiting, its corners glowing, "Go LIVE", "What's on today?" and the ways to start |
 | ![A phone held sideways, with the streams row open](docs/images/design/room-phone-sideways.png) | **A phone held sideways.** The stage fills the screen; the controls fade while a stream plays; a swipe up opens the other streams |
 | ![The install screen on Android](docs/images/design/install-android.png) | **The install screen.** On a phone or tablet in a browser tab, Xovê asks to be installed: it's used from the home screen |
 

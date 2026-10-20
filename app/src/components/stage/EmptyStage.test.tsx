@@ -12,6 +12,9 @@ describe("the empty stage, a camera waiting (spec 0123)", () => {
     const heading = screen.getByRole("heading", { name: "Go live" });
     expect(heading.querySelector("em")).toHaveTextContent(/^live$/);
     const user = userEvent.setup();
+    // One word each on the pill; the spoken name says the act (spec 0138).
+    expect(screen.getByRole("button", { name: "Share your screen" })).toHaveTextContent(/^Screen$/);
+    expect(screen.getByRole("button", { name: "Turn on your camera" })).toHaveTextContent(/^Camera$/);
     await user.click(screen.getByRole("button", { name: /Share your screen/ }));
     await user.click(screen.getByRole("button", { name: /Turn on your camera/ }));
     expect(onStart.mock.calls).toEqual([["screen"], ["camera"]]);
@@ -29,16 +32,19 @@ describe("the empty stage, a camera waiting (spec 0123)", () => {
     expect(onStart).not.toHaveBeenCalled();
   });
 
-  it("says one short line, and greys the screen it can't share as a small button named for it (spec 0136)", () => {
+  it("says one short line, and greys the screen it can't share as the same pill, saying why (specs 0136, 0138)", () => {
     const { rerender } = render(<EmptyStage />);
-    expect(screen.getByText("Share your screen or turn on your camera.")).toBeInTheDocument();
+    // An invitation, not an order, wherever it is (spec 0138).
+    expect(screen.getByText("What's on today?")).toBeInTheDocument();
+    expect(screen.queryByText(/or turn on your camera/i)).not.toBeInTheDocument();
     rerender(<EmptyStage canShareScreen={false} />);
-    expect(screen.getByText("Turn on your camera.")).toBeInTheDocument();
+    expect(screen.getByText("What's on today?")).toBeInTheDocument();
+    expect(screen.queryByText(/turn on your camera\./i)).not.toBeInTheDocument();
     // No "and the room sees it at once": it says what to do, not what follows.
     expect(screen.queryByText(/room sees/)).not.toBeInTheDocument();
-    // Icon only, still named and saying why.
+    // The same pill as where it can be shared, greyed, still saying why.
     const greyed = screen.getByRole("button", { name: "Share your screen" });
-    expect(greyed).toHaveTextContent("");
+    expect(greyed).toHaveTextContent("Screen");
     expect(greyed).toHaveAccessibleDescription("This browser can't share a screen");
   });
 

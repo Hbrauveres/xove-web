@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { StreamKind } from "../../types";
-import { CameraOnIcon, ScreenOffIcon, ScreenOnIcon } from "./icons";
+import { CameraOnIcon, CogIcon, ScreenOffIcon, ScreenOnIcon } from "./icons";
 import { showToast } from "../ui/toast";
 import styles from "./EmptyStage.module.css";
 import { StaticNoise } from "./StaticNoise";
@@ -10,18 +10,21 @@ import { Tooltip } from "../ui/Tooltip";
 type Props = {
   canShareScreen?: boolean;
   onStart?: (kind: StreamKind) => void;
+  /** The settings (spec 0138): a small round button beside the ways to start. */
+  onSettings?: () => void;
 };
 
 /**
  * Nobody is live (spec 0123, calmed in spec 0136): a TV on standby. Its viewfinder corners (the top
  * right red, as in the logo), a still "Standby" where there's room, and the way to start, over the
  * TV's static; who's here and the seats are said once, below. Where the browser can't share a
- * screen (phones), the camera comes first and the screen is a small greyed button saying why. The
- * first time it stands by in a visit, the TV turns on.
+ * screen (phones), the camera comes first and the screen is the same pill, greyed, saying why;
+ * their labels are one word, "Screen" and "Camera"; their spoken names say the act (spec 0138). The first time it stands by in a visit, the TV turns on.
  */
 export function EmptyStage({
   canShareScreen = true,
   onStart,
+  onSettings,
 }: Props) {
   // The TV turning on (spec 0136): only the first time the stage stands by in this visit; once it's
   // on, the last stream stopping doesn't turn it on again. Gone when it ends.
@@ -35,13 +38,13 @@ export function EmptyStage({
         type="button"
         className={canShareScreen ? styles.primary : styles.unavailable}
         aria-disabled={canShareScreen ? undefined : true}
-        aria-label={canShareScreen ? undefined : "Share your screen"}
+        aria-label="Share your screen"
         onClick={() =>
           canShareScreen ? onStart?.("screen") : showToast("This browser can't share a screen", <ScreenOffIcon />)
         }
       >
         {canShareScreen ? <ScreenOnIcon /> : <ScreenOffIcon />}
-        {canShareScreen && "Share your screen"}
+        Screen
       </button>
     </Tooltip>
   );
@@ -49,10 +52,11 @@ export function EmptyStage({
     <button
       type="button"
       className={canShareScreen ? styles.ghost : styles.primary}
+      aria-label="Turn on your camera"
       onClick={() => onStart?.("camera")}
     >
       <CameraOnIcon />
-      Turn on your camera
+      Camera
     </button>
   );
   return (
@@ -77,12 +81,9 @@ export function EmptyStage({
         <h2 className={styles.title}>
           Go <em>live</em>
         </h2>
-        <p className={styles.copy}>
-          {canShareScreen
-            ? "Share your screen or turn on your camera."
-            : "Turn on your camera."}
-        </p>
-        <div className={styles.go}>
+        {/* An invitation, not an order (spec 0138): a TV asking what's on. */}
+        <p className={styles.copy}>What's on today?</p>
+        <div className={styles.go} data-buttons>
           {canShareScreen ? (
             <>
               {screen}
@@ -93,6 +94,13 @@ export function EmptyStage({
               {camera}
               {screen}
             </>
+          )}
+          {onSettings && (
+            <Tooltip text="Settings">
+              <button type="button" className={styles.cog} aria-label="Settings" onClick={onSettings}>
+                <CogIcon />
+              </button>
+            </Tooltip>
           )}
         </div>
       </div>

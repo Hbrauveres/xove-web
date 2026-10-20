@@ -44,6 +44,8 @@ import styles from "./Stage.module.css";
 
 /** The settings over the cog sit this far above the round buttons (design decision 9). */
 const ROW_GAP = 10;
+/** The settings panel's height at its tallest tab, with its gap: less room than this above the cog, and it scrolls. */
+const PANEL_ROOM = 440;
 
 type Props = {
   /** Everyone with a live stream, the longest sharing first. */
@@ -318,6 +320,7 @@ export function Stage({
   useEffect(() => {
     if (!settingsOpen) held.current.delete("settings");
   }, [settingsOpen]);
+  const nobodyLive = !big;
   // The settings open over the cog (design decision 9), or over Go live where they came from
   // its menu (spec 0123): centred on it, just above the round buttons. The panel reads where
   // they are from two variables on what holds it.
@@ -328,8 +331,10 @@ export function Stage({
       // Read each time: turning the phone in the full view moves the buttons to another layer.
       const controls = controlsRef.current;
       if (!controls) return;
-      const cog = controls.querySelector('button[aria-label="Settings"], [data-settings-anchor]');
-      const row = controls.querySelector("[data-buttons]");
+      // Nobody live, the cog sits beside the ways to start, on the empty stage (spec 0138).
+      const scope = nobodyLive ? (frameRef.current ?? controls) : controls;
+      const cog = scope.querySelector('button[aria-label="Settings"], [data-settings-anchor]');
+      const row = nobodyLive ? cog?.closest("[data-buttons]") : controls.querySelector("[data-buttons]");
       const h = host.getBoundingClientRect();
       if (!cog || !row || !h.width) return;
       // The panel goes where the buttons end up: if the player is still sliding back (turning
@@ -342,13 +347,19 @@ export function Stage({
       const c = cog.getBoundingClientRect();
       host.style.setProperty("--cog-x", `${c.left + c.width / 2 - h.left}px`);
       host.style.setProperty("--above-row", `${h.bottom - (row.getBoundingClientRect().top - sliding) + ROW_GAP}px`);
+      // With nobody live the cog is in the stage's middle (spec 0138): where the room above it is
+      // short of the panel (sideways, a small window), the panel takes the stage's whole height
+      // instead, so it doesn't scroll.
+      const above = row.getBoundingClientRect().top - h.top;
+      if (nobodyLive && (sideways || above < PANEL_ROOM)) host.style.setProperty("--above-row", `${ROW_GAP}px`);
     };
     place();
     window.addEventListener("resize", place);
     // The row changes too (the volume comes and goes with who's on the stage).
     const watch = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(place);
     watch?.observe(host);
-    const row = controlsRef.current.querySelector("[data-buttons]");
+    // The row the cog is in: the controls', or with nobody live the empty stage's (spec 0138).
+    const row = (nobodyLive ? frameRef.current : controlsRef.current)?.querySelector("[data-buttons]");
     if (row) watch?.observe(row);
     // And once the player has finished sliding (a slide doesn't resize anything).
     const box = boxRef.current;
@@ -358,7 +369,7 @@ export function Stage({
       watch?.disconnect();
       box?.removeEventListener("transitionend", place);
     };
-  }, [settingsOpen, sideways, onScreen]);
+  }, [settingsOpen, sideways, onScreen, nobodyLive]);
   // The streams row's arrow at the bottom-left, on the buttons' line; lifted above the settings sheet,
   // the buttons are off its line and need no room for it.
   const rowArrow = sideways && Boolean(big) && sharers.length > 1 && !makingRoom;
@@ -534,6 +545,8 @@ export function Stage({
         <EmptyStage
           canShareScreen={controls.canShareScreen}
           onStart={startMine}
+          // The cog only while nobody is live: a stream loading has its own (spec 0138).
+          onSettings={big ? undefined : toggleSettings}
         />
       );
 
@@ -620,17 +633,7 @@ export function Stage({
             onSettings={toggleSettings}
             canSetVolume={canSetVolume()}
           />
-        ) : !big ? (
-          // Nobody live: the empty stage has the ways to start; the settings sit in the corner.
-          <ViewerBar
-            live={false}
-            settingsOnly
-            canShareScreen={controls.canShareScreen}
-            onStart={startMine}
-            onSettings={toggleSettings}
-            canSetVolume={canSetVolume()}
-          />
-        ) : (
+        ) : !big ? null /* Nobody live: the empty stage holds the cog, beside the ways to start (spec 0138). */ : (
           // Your stream: your controls in the middle, your mic with them.
           <PlayerButtons
             {...controls}
