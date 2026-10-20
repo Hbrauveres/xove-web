@@ -104,7 +104,7 @@ Dark only: Xovê is a room for watching screens, so the chrome stays out of the 
 | --- | --- | --- |
 | **Bricolage Grotesque** 500 / 700 / 800 | `--font-display` | Headings, the name of who's on the stage, big statements ("Be the first to go live") |
 | **IBM Plex Sans** 400 / 500 / 600 | `--font-body` | Everything else: body, buttons, names in lists |
-| **IBM Plex Mono** 400 / 500 | `--font-mono` | Counters and times: LIVE, `1:12:41`, section labels like "LIVE NOW", the empty stage's camera display |
+| **IBM Plex Mono** 400 / 500 | `--font-mono` | Counters and times: LIVE, `1:12:41`, section labels like "LIVE NOW", the standby screen's "Standby" |
 
 | Size token | rem | px | Typical use |
 | --- | --- | --- | --- |
@@ -366,7 +366,7 @@ Turning switches layouts at once, and the stage keeps its place in the page, so 
 - **Their light outside:** each corner glows outward too, a blurred L just outside the stage, a fade with no edge; still, following the ambilight's switch and brightness.
 - **"Standby"**, still, in small grey mono capitals with a grey dot (never red: that would mean recording), on larger stages only. Nothing else imitates equipment: no clock, meter, ruler, format tags or room number.
 - **The way to start**, with no frame of its own: "Be the first to go live", one short line ("Share your screen or turn on your camera.", or "Turn on your camera." where a screen can't be shared), and the ways to start. The second way is a soft fill with no outline. **On phones** the heading and the buttons only, centred above the stage's own buttons: the camera one compact pill, a screen the browser can't share a small greyed round button beside it (a tap says why); under 360 px they shrink again.
-- **The TV's static** behind it all: snow in soft horizontal bands (their gaps at 40% of the bands' brightness), shown at 17% over the stage's dark and darker behind the heading. The bands roll down together keeping their sizes, the picture sways a little as a TV losing its vertical hold, and the bands shimmer, 20 times a second. The grain is 1.5 px on a desktop's stage and finer on smaller ones (down to 0.75 px), and the bands are a share of the stage's height, so a phone shows the same picture smaller. Still for reduced motion.
+- **The TV's static** behind it all: snow in soft horizontal bands (their gaps at 40% of the bands' brightness), shown at 17% over the stage's dark and darker behind the heading. The bands roll down together keeping their sizes, the picture sways a little as a TV losing its vertical hold, and the bands shimmer, 20 times a second. The grain is 1.5 px on a desktop's stage, finer on smaller ones (down to 0.75 px) and coarser on wider ones, keeping about 1 066 grains across, so a 4K or ultrawide screen costs what a desktop does; the bands are a share of the stage's height, so a phone shows the same picture smaller. Still for reduced motion.
 - **Curved glass, 90s style:** square corners; the glass darker towards its edges, a soft sheen high on the left, a faint line of light along the top; the bands bow gently towards the sides. Not a fisheye.
 - **The static lights the room:** its bands' light spills onto the page round the stage as they roll, measured from the static itself, so it's never brighter than the screen; it follows the ambilight's switch and brightness.
 - **The TV turns on** the first time the stage stands by in a visit, in 0.9 s, eased and soft-edged: a point of light, a glowing line drawn across, a white bloom filling the screen and lighting the wall, then a grey band that opens from the middle while dimming onto the static. White, with only a hint of the red at the glow's edges. Never again when the last stream stops; none for reduced motion.
@@ -445,6 +445,8 @@ What a phone or tablet sees in a browser tab, on every page: the wordmark, the s
 - **One short line under a heading, at most,** saying what to do, not what follows from it.
 - **Light comes from something, never brighter than it:** a glow round a screen or a picture is measured from what's on it.
 - **The pointer stays a pointer:** no glows, trails or effects under it.
+- **Effects are part of the look, not settings:** an effect is calm enough to need no switch to turn it off; reduced motion is the only switch, and it stills or skips them.
+- **Ways to start fit a phone:** the main way is one pill; a way the browser can't offer is a small greyed round button with its reason (not a full-width greyed one); a second way that can be used is a soft fill with no outline.
 - **A first impression plays once:** an intro (the TV turning on) plays the first time in a visit, never again for the same state, and never for reduced motion.
 
 ## Keeping this page current

@@ -18,7 +18,7 @@ const FPS = 20;
 export function StaticGlow({ prefs }: { prefs: AmbilightPrefs }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   // The turn-on's light on the wall, only with the stage's own turn-on: the first time it stands by.
-  const [turningOn, setTurningOn] = useState(() => !tv.on);
+  const [turningOn, setTurningOn] = useState(() => !tv.on && !window.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
   useEffect(() => {
     const el = canvas.current;
     const ctx = el?.getContext("2d");
@@ -26,11 +26,14 @@ export function StaticGlow({ prefs }: { prefs: AmbilightPrefs }) {
     const still = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
     // The canvas covers the stage only; CSS stretches it past the edges.
     let rows = 1;
+    // Sizing a canvas clears it: still, it's drawn again at once; moving, the next frame does.
+    let redraw = () => {};
     const fit = () => {
       const r = el.parentElement!.getBoundingClientRect();
       rows = Math.max(1, Math.ceil(r.height / CELL));
       el.width = 1;
       el.height = rows;
+      redraw();
     };
     fit();
     const resized = new ResizeObserver(fit);
@@ -53,8 +56,10 @@ export function StaticGlow({ prefs }: { prefs: AmbilightPrefs }) {
       last = t;
       draw(t);
     };
-    if (still) draw(0);
-    else frame = requestAnimationFrame(tick);
+    if (still) {
+      redraw = () => draw(0);
+      draw(0);
+    } else frame = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(frame);
       resized.disconnect();

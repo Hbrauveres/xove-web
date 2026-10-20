@@ -3,9 +3,12 @@ import { bandLight } from "./staticBands";
 import styles from "./StaticNoise.module.css";
 
 /** One grain of static is this many CSS pixels on a desktop's stage: fine, and easy on the eye. A
- * smaller stage has a finer grain, down to half, so a phone's static isn't a zoomed-in desktop's. */
+ * smaller stage has a finer grain, down to half, so a phone's static isn't a zoomed-in desktop's;
+ * a stage wider than a desktop's keeps about the same number of grains across (a coarser grain), so
+ * a 4K or ultrawide screen costs what a desktop does. */
 const GRAIN = 1.5;
-const grainFor = (width: number) => Math.min(GRAIN, Math.max(GRAIN / 2, width / 1000));
+const ACROSS = 1066;
+const grainFor = (width: number) => Math.max(Math.min(GRAIN, Math.max(GRAIN / 2, width / 1000)), width / ACROSS);
 /** Static flickers at this rate; more is wasted on a faded background. */
 const FPS = 20;
 /** How much the glass bulges: the bands bow this much at the screen's sides (0 is flat). */
@@ -33,6 +36,8 @@ export function StaticNoise() {
     let bow = new Float32Array(1);
     // Each row's brightness (0–1), for this moment.
     let gain = new Float32Array(1);
+    // Sizing a canvas clears it: still, it's drawn again at once; moving, the next frame does.
+    let redraw = () => {};
     const fit = () => {
       const r = el.getBoundingClientRect();
       grain = grainFor(r.width);
@@ -45,6 +50,7 @@ export function StaticNoise() {
       bow = new Float32Array(w);
       gain = new Float32Array(h);
       for (let x = 0; x < w; x++) bow[x] = BULGE * ((x / w - 0.5) * 2) ** 2;
+      redraw();
     };
     fit();
     const resized = new ResizeObserver(fit);
@@ -82,8 +88,10 @@ export function StaticNoise() {
       last = t;
       draw(t);
     };
-    if (still) draw(0);
-    else frame = requestAnimationFrame(tick);
+    if (still) {
+      redraw = () => draw(0);
+      draw(0);
+    } else frame = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(frame);
       resized.disconnect();

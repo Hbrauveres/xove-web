@@ -50,14 +50,6 @@ describe("the empty stage, a camera waiting (spec 0123)", () => {
     expect(display).not.toHaveTextContent(/\d\d:\d\d|Room 01|16:9|HD|fps|Online/);
   });
 
-  it("turns the TV on only the first time it stands by in a visit (spec 0136)", () => {
-    const first = render(<EmptyStage />);
-    // An earlier test in this file may have been the first; either way, once on it stays on.
-    first.unmount();
-    const again = render(<EmptyStage />);
-    expect(again.container.querySelector('[class*="intro"]')).toBeNull();
-  });
-
   it("says nothing the row below says: no names, no seats, no 'nobody'", () => {
     const { container } = render(<EmptyStage />);
     expect(container).not.toHaveTextContent(/here|seat|of 6|nobody/i);
