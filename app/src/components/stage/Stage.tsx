@@ -318,6 +318,7 @@ export function Stage({
   useEffect(() => {
     if (!settingsOpen) held.current.delete("settings");
   }, [settingsOpen]);
+  const nobodyLive = !big;
   // The settings open over the cog (design decision 9), or over Go live where they came from
   // its menu (spec 0123): centred on it, just above the round buttons. The panel reads where
   // they are from two variables on what holds it.
@@ -329,9 +330,9 @@ export function Stage({
       const controls = controlsRef.current;
       if (!controls) return;
       // Nobody live, the cog sits beside the ways to start, on the empty stage (spec 0138).
-      const scope = big ? controls : (frameRef.current ?? controls);
+      const scope = nobodyLive ? (frameRef.current ?? controls) : controls;
       const cog = scope.querySelector('button[aria-label="Settings"], [data-settings-anchor]');
-      const row = big ? controls.querySelector("[data-buttons]") : cog?.closest("[data-buttons]");
+      const row = nobodyLive ? cog?.closest("[data-buttons]") : controls.querySelector("[data-buttons]");
       const h = host.getBoundingClientRect();
       if (!cog || !row || !h.width) return;
       // The panel goes where the buttons end up: if the player is still sliding back (turning
@@ -346,7 +347,7 @@ export function Stage({
       host.style.setProperty("--above-row", `${h.bottom - (row.getBoundingClientRect().top - sliding) + ROW_GAP}px`);
       // Sideways with nobody live, the cog is in the screen's middle: the panel takes the screen's
       // height instead of the half above it, so it doesn't scroll (spec 0138).
-      if (!big && sideways) host.style.setProperty("--above-row", `${ROW_GAP}px`);
+      if (nobodyLive && sideways) host.style.setProperty("--above-row", `${ROW_GAP}px`);
     };
     place();
     window.addEventListener("resize", place);
@@ -363,7 +364,7 @@ export function Stage({
       watch?.disconnect();
       box?.removeEventListener("transitionend", place);
     };
-  }, [settingsOpen, sideways, onScreen]);
+  }, [settingsOpen, sideways, onScreen, nobodyLive]);
   // The streams row's arrow at the bottom-left, on the buttons' line; lifted above the settings sheet,
   // the buttons are off its line and need no room for it.
   const rowArrow = sideways && Boolean(big) && sharers.length > 1 && !makingRoom;
