@@ -21,14 +21,14 @@ export function HomePage() {
             <XoveMark height={40} />
           </p>
           <h1 id="home-title" className={styles.title}>
-            Let me
+            Live with
             <br />
-            see that.
+            your friends.
           </h1>
         </div>
         <div className={styles.act}>
           <p className={styles.copy}>
-            Xovê is for everyone who just wants to watch their friends play. Share your screen or camera in a fast, sharp room with a live-stream feel, and have fun together or help each other out. Invite only.
+            Share your screen or camera in sharp, fast streams. Watch them play, hang out, help out. Invite only.
           </p>
 
           {error && (
