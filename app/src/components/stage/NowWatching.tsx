@@ -50,7 +50,7 @@ export function NowWatching({ sharer, watchers = [], others = [], compact = fals
         )}
         <div className={styles.text}>
           <Heading className={styles.name}>
-            {sharer ? `${sharer.isMe ? "You" : sharer.person.name} · ${whatOf(sharer)}` : "Nobody's sharing"}
+            {sharer ? `${sharer.isMe ? "You" : sharer.person.name} · ${whatOf(sharer)}` : "Nobody is sharing yet"}
           </Heading>
           <p className={styles.meta}>
             {sharer ? (
@@ -73,7 +73,7 @@ export function NowWatching({ sharer, watchers = [], others = [], compact = fals
         {/* As on the phone (spec 0123): an empty circle where the live person's photo goes. */}
         <span className={`${styles.nobody} ${styles.nobodyBig}`} aria-hidden="true" />
         <div className={styles.text}>
-          <h2 className={styles.name}>Nobody's sharing</h2>
+          <h2 className={styles.name}>Nobody is sharing yet</h2>
           <p className={styles.meta}>
             {others.length > 0 && (
               <span className={styles.row}>

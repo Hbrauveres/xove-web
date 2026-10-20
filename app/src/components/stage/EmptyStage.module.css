@@ -93,6 +93,16 @@
   letter-spacing: -0.01em;
 }
 
+/*
+ * LIVE in the accent, as on the sign-in page and the room's live marks (spec 0141). Written
+ * "live" and shown in capitals, so a screen reader says the word, not its letters.
+ */
+.title em {
+  font-style: normal;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
 .copy {
   margin: 0;
   max-width: 38ch;

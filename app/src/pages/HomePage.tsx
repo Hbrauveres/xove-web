@@ -16,29 +16,33 @@ export function HomePage() {
   return (
     <main className={styles.wrap}>
       <section className={styles.card} aria-labelledby="home-title">
-        <p className={styles.brand}>
-          <XoveMark height={40} />
-        </p>
-        <h1 id="home-title" className={styles.title}>
-          One screen.
-          <br />
-          Everyone watching.
-        </h1>
-        <p className={styles.copy}>
-          A private room for your group. Whoever shares takes the stage; everyone else sees it live. Invite only.
-        </p>
-
-        {error && (
-          <p className={styles.error} role="alert">
-            {ERRORS[error] ?? "Something went wrong signing you in. Try again."}
+        <div className={styles.lead}>
+          <p className={styles.brand}>
+            <XoveMark height={40} />
           </p>
-        )}
+          <h1 id="home-title" className={styles.title}>
+            Go <em>live</em> with
+            <br />
+            your friends.
+          </h1>
+        </div>
+        <div className={styles.act}>
+          <p className={styles.copy}>
+            Share your screen or camera in sharp, fast streams. Watch them play, hang out, help out. Invite only.
+          </p>
 
-        <a className={styles.google} href={GOOGLE_LOGIN_URL}>
-          <GoogleMark />
-          Continue with Google
-        </a>
-        <p className={styles.note}>New here? Sign in and ask for access. The owner approves each person.</p>
+          {error && (
+            <p className={styles.error} role="alert">
+              {ERRORS[error] ?? "Something went wrong signing you in. Try again."}
+            </p>
+          )}
+
+          <a className={styles.google} href={GOOGLE_LOGIN_URL}>
+            <GoogleMark />
+            Continue with Google
+          </a>
+          <p className={styles.note}>New here? Sign in and ask for access. The owner approves each person.</p>
+        </div>
       </section>
     </main>
   );
