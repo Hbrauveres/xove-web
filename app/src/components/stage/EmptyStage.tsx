@@ -16,8 +16,8 @@ type Props = {
  * Nobody is live (spec 0123, calmed in spec 0136): a TV on standby. Its viewfinder corners (the top
  * right red, as in the logo), a still "Standby" where there's room, and the way to start, over the
  * TV's static; who's here and the seats are said once, below. Where the browser can't share a
- * screen (phones), the screen's button is greyed and says why (spec 0138). The first time it stands
- * by in a visit, the TV turns on.
+ * screen (phones), the camera comes first and the screen is the same pill, greyed, saying why
+ * (spec 0138). The first time it stands by in a visit, the TV turns on.
  */
 export function EmptyStage({
   canShareScreen = true,
@@ -29,21 +29,18 @@ export function EmptyStage({
   useEffect(() => {
     tv.on = true;
   }, []);
-  // Two short ways, the same on every screen (spec 0138): Screen, then Camera. Their spoken names
-  // say the whole act; where a screen can't be shared, it's greyed and a tap says why.
   const screen = (
     <Tooltip text={canShareScreen ? undefined : "This browser can't share a screen"}>
       <button
         type="button"
         className={canShareScreen ? styles.primary : styles.unavailable}
         aria-disabled={canShareScreen ? undefined : true}
-        aria-label="Share your screen"
         onClick={() =>
           canShareScreen ? onStart?.("screen") : showToast("This browser can't share a screen", <ScreenOffIcon />)
         }
       >
         {canShareScreen ? <ScreenOnIcon /> : <ScreenOffIcon />}
-        Screen
+        Share your screen
       </button>
     </Tooltip>
   );
@@ -51,11 +48,10 @@ export function EmptyStage({
     <button
       type="button"
       className={canShareScreen ? styles.ghost : styles.primary}
-      aria-label="Turn on your camera"
       onClick={() => onStart?.("camera")}
     >
       <CameraOnIcon />
-      Camera
+      Turn on your camera
     </button>
   );
   return (
@@ -77,10 +73,26 @@ export function EmptyStage({
         </span>
       )}
       <div className={styles.focus}>
-        <h2 className={styles.title}>Start sharing</h2>
+        <h2 className={styles.title}>
+          Go <em>live</em>
+        </h2>
+        <p className={styles.copy}>
+          {canShareScreen
+            ? "Share your screen or turn on your camera."
+            : "Turn on your camera."}
+        </p>
         <div className={styles.go}>
-          {screen}
-          {camera}
+          {canShareScreen ? (
+            <>
+              {screen}
+              {camera}
+            </>
+          ) : (
+            <>
+              {camera}
+              {screen}
+            </>
+          )}
         </div>
       </div>
     </div>

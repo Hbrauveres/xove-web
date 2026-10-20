@@ -4,45 +4,42 @@ import { describe, expect, it, vi } from "vitest";
 import { EmptyStage } from "./EmptyStage";
 
 describe("the empty stage, a camera waiting (spec 0123)", () => {
-  it("asks you to start sharing: Screen first, Camera beside it, each named for the whole act (spec 0138)", async () => {
+  it("asks you to go live, with the screen first and the camera beside it", async () => {
     const onStart = vi.fn();
     render(<EmptyStage onStart={onStart} />);
 
-    expect(screen.getByRole("heading", { name: "Start sharing" })).toBeInTheDocument();
-    const [first, second] = screen.getAllByRole("button");
-    expect(first).toHaveTextContent("Screen");
-    expect(first).toHaveAccessibleName("Share your screen");
-    expect(second).toHaveTextContent("Camera");
-    expect(second).toHaveAccessibleName("Turn on your camera");
+    // "Go LIVE", LIVE marked as on the sign-in page and read as a word (spec 0141).
+    const heading = screen.getByRole("heading", { name: "Go live" });
+    expect(heading.querySelector("em")).toHaveTextContent(/^live$/);
     const user = userEvent.setup();
-    await user.click(first);
-    await user.click(second);
+    await user.click(screen.getByRole("button", { name: /Share your screen/ }));
+    await user.click(screen.getByRole("button", { name: /Turn on your camera/ }));
     expect(onStart.mock.calls).toEqual([["screen"], ["camera"]]);
   });
 
-  it("greys the screen in place where it can't be shared, saying why, and keeps the camera beside it", async () => {
+  it("puts the camera first where a screen can't be shared, the screen greyed with its reason", async () => {
     const onStart = vi.fn();
     render(<EmptyStage canShareScreen={false} onStart={onStart} />);
 
     const [first, second] = screen.getAllByRole("button");
-    expect(first).toHaveAccessibleName("Share your screen");
-    expect(first).toHaveTextContent("Screen");
-    expect(first).toHaveAttribute("aria-disabled", "true");
-    expect(first).toHaveAccessibleDescription("This browser can't share a screen");
-    expect(second).toHaveAccessibleName("Turn on your camera");
-    const user = userEvent.setup();
-    await user.click(first);
+    expect(first).toHaveAccessibleName(/Turn on your camera/);
+    expect(second).toHaveAttribute("aria-disabled", "true");
+    expect(second).toHaveAccessibleDescription("This browser can't share a screen");
+    await userEvent.setup().click(second);
     expect(onStart).not.toHaveBeenCalled();
-    await user.click(second);
-    expect(onStart).toHaveBeenCalledWith("camera");
   });
 
-  it("says nothing more than the heading and the two buttons: no line under it (spec 0138)", () => {
-    const { container, rerender } = render(<EmptyStage />);
-    expect(container.querySelector("[data-empty] p")).not.toBeInTheDocument();
+  it("says one short line, and greys the screen it can't share as the same pill, saying why (specs 0136, 0138)", () => {
+    const { rerender } = render(<EmptyStage />);
+    expect(screen.getByText("Share your screen or turn on your camera.")).toBeInTheDocument();
     rerender(<EmptyStage canShareScreen={false} />);
-    expect(container.querySelector("[data-empty] p")).not.toBeInTheDocument();
+    expect(screen.getByText("Turn on your camera.")).toBeInTheDocument();
+    // No "and the room sees it at once": it says what to do, not what follows.
     expect(screen.queryByText(/room sees/)).not.toBeInTheDocument();
+    // The same pill as where it can be shared, greyed, still saying why.
+    const greyed = screen.getByRole("button", { name: "Share your screen" });
+    expect(greyed).toHaveTextContent("Share your screen");
+    expect(greyed).toHaveAccessibleDescription("This browser can't share a screen");
   });
 
   it("has four viewfinder corners, the top right red, and only a still 'Standby' (spec 0136)", () => {

@@ -80,53 +80,65 @@
 }
 
 /* The way to start: a heading, a line, the buttons; no frame of its own. */
-/*
- * The same on every screen (spec 0138): a quiet heading that names the act, and the two ways under
- * it, sized per screen on an 8 px grid. A desktop's: a 24 px heading, 48 px pills, 24 px between.
- */
 .focus {
-  --title: 24px;
-  --h: 48px;
-  --label: 15px;
-  --icon: 18px;
-  --space: 24px;
   position: relative;
   display: grid;
   justify-items: center;
-  gap: var(--space);
+  gap: 12px;
 }
 
 .title {
   margin: 0;
-  font: 700 var(--title) / 1.2 var(--font-display);
+  font: 800 28px/1.1 var(--font-display);
   letter-spacing: -0.01em;
+}
+
+/*
+ * LIVE in the accent, as on the sign-in page and the room's live marks (spec 0141). Written
+ * "live" and shown in capitals, so a screen reader says the word, not its letters.
+ */
+.title em {
+  font-style: normal;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.copy {
+  margin: 0;
+  max-width: 38ch;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.5;
+  text-wrap: balance;
 }
 
 .go {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: calc(var(--space) / 2);
+  gap: 10px;
+  margin-top: 12px;
 }
 
 .go button {
+  --h: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   height: var(--h);
-  padding: 0 calc(var(--h) / 2.4);
+  padding: 0 20px;
   border: 0;
   border-radius: 999px;
   font: inherit;
-  font-size: var(--label);
+  font-size: 14.5px;
   font-weight: 600;
   cursor: pointer;
 }
 
 .go svg {
-  width: var(--icon);
-  height: var(--icon);
+  width: 18px;
+  height: 18px;
 }
 
 .primary {
@@ -140,7 +152,7 @@
   color: var(--text);
 }
 
-/* Can't be used here (a phone's screen): greyed in place; a tap says why. */
+/* Can't be used here (a phone's screen): the same pill, greyed in place; a tap says why (spec 0138). */
 .unavailable {
   background: rgba(235, 235, 236, 0.06);
   color: var(--text);
@@ -165,15 +177,66 @@
 }
 
 /*
- * A phone, upright or sideways (spec 0138): a phone's sizes, as its own apps use them: a 17 px
- * heading, 44 px pills (the smallest comfortable touch target), 16 px between.
+ * A phone, upright or sideways (spec 0138): the desktop's screen at a phone's sizes, in the
+ * stage's middle: a smaller heading and line, two equal pills (wrapping one under the other where
+ * they don't fit side by side), 8 px apart.
  */
 :global(:is([data-layout="phone"], [data-layout="sideways"])) .focus {
-  --title: 17px;
-  --h: 44px;
-  --label: 15px;
-  --icon: 18px;
-  --space: 16px;
+  gap: 8px;
+}
+
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .title {
+  font-size: 20px;
+}
+
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .copy {
+  font-size: 13px;
+}
+
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .go {
+  /* Two pills of one width, side by side; one under the other where they don't fit. */
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .go button {
+  --h: 40px;
+  gap: 7px;
+  padding: 0 16px;
+  font-size: 14px;
+}
+
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .go svg {
+  width: 17px;
+  height: 17px;
+}
+
+@container (max-width: 399px) {
+  :global(:is([data-layout="phone"], [data-layout="sideways"])) .go {
+    grid-auto-flow: row;
+  }
+}
+
+/* The narrowest phone (280 px): a little smaller, so the stage's own buttons in its corner stay
+   clear while the heading and pills keep the middle. */
+@container (max-width: 300px) {
+  :global(:is([data-layout="phone"], [data-layout="sideways"])) .title {
+    font-size: 17px;
+  }
+
+  :global(:is([data-layout="phone"], [data-layout="sideways"])) .go {
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  :global(:is([data-layout="phone"], [data-layout="sideways"])) .go button {
+    --h: 34px;
+    padding: 0 14px;
+    font-size: 13.5px;
+  }
 }
 
 /* A small stage (a phone): finer corners, no "Standby", a smaller heading, compact buttons. */
@@ -187,20 +250,76 @@
     display: none;
   }
 
-  /* A small window gets a phone's sizes too. */
-  .focus {
-    --title: 17px;
-    --h: 44px;
-    --space: 16px;
+  .title {
+    font-size: 22px;
+  }
+
+  .go button {
+    --h: 40px;
+    padding: 0 16px;
+    font-size: 14px;
   }
 }
 
-/* A short stage (a phone, upright or sideways): the heading and the buttons, nothing else, in
-   the stage's middle both ways (spec 0141); the stage's own buttons sit in its corners. */
+/* A short stage (a phone, upright or sideways): the heading and the buttons, nothing else,
+   centred above the stage's own buttons at the bottom. */
 @container (max-height: 320px) {
   .empty {
     --arm: 16px;
+    /* In the stage's middle both ways (spec 0138); the stage's own buttons sit in its corner. */
     padding: 12px 20px;
+  }
+
+  .focus {
+    gap: 0;
+  }
+
+  .title {
+    font-size: 19px;
+  }
+
+  .copy {
+    display: none;
+  }
+
+  .go {
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .go button {
+    --h: 38px;
+    padding: 0 16px;
+    font-size: 13.5px;
+  }
+
+  .go svg {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+/* The narrowest phones (under 360 px): smaller still, so the stage's own buttons stay clear. */
+@container (max-width: 359px) {
+  .title {
+    font-size: 17px;
+  }
+
+  .go {
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .go button {
+    --h: 34px;
+    gap: 6px;
+    padding: 0 13px;
+    font-size: 13px;
+  }
+
+  .go svg {
+    width: 16px;
+    height: 16px;
   }
 }
 
