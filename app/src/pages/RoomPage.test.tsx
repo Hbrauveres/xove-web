@@ -81,14 +81,14 @@ describe("room: watching", () => {
     installFakeApi({ me: member });
     renderRoom();
 
-    expect(await screen.findByRole("heading", { name: "Nobody's sharing" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Nobody is sharing yet" })).toBeInTheDocument();
   });
 
   it("marks the page as the room, which turns off pull-to-refresh only here", async () => {
     installFakeApi({ me: member });
     renderRoom();
 
-    await screen.findByRole("heading", { name: "Nobody's sharing" });
+    await screen.findByRole("heading", { name: "Nobody is sharing yet" });
     expect(document.querySelector("[data-room]")).not.toBeNull();
   });
 
@@ -322,7 +322,7 @@ describe("room: sharing", () => {
     await startSharing(user);
     await user.click(within(controls()).getByRole("button", { name: /stop sharing/i }));
 
-    expect(await screen.findByRole("heading", { name: "Be the first to go live" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Go live" })).toBeInTheDocument();
     expect(document.querySelector('[class*="intro"]')).toBeNull();
     expect(document.querySelector('[class*="flash"]')).toBeNull();
   });
@@ -1698,9 +1698,9 @@ describe("room: theater mode (spec 0104)", () => {
     renderRoom();
     await connected();
 
-    expect(screen.getByRole("heading", { name: "Nobody's sharing" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Nobody is sharing yet" })).toBeInTheDocument();
     expect(screen.getByLabelText("0 of 6 live, 6 seats open")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Be the first to go live" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Go live" })).toBeInTheDocument();
     // No video's ambilight: the empty stage has its own corner glow and its static's light (specs 0123 and 0136).
     expect(document.querySelector("[data-ambilight]")).toBeNull();
   });
@@ -2218,7 +2218,7 @@ describe("room: under the stage (spec 0107)", () => {
       lastRoom().join("user-7", "Bruno Lima");
     });
 
-    expect(screen.getByRole("heading", { name: "Nobody's sharing" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Nobody is sharing yet" })).toBeInTheDocument();
     expect(await screen.findByText("Ana and Bruno are here.")).toBeInTheDocument();
   });
 });
@@ -2358,7 +2358,7 @@ describe("room: on a phone held upright (spec 0158)", () => {
     renderRoom();
     await connected();
 
-    expect(screen.getByRole("heading", { name: "Nobody's sharing" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Nobody is sharing yet" })).toBeInTheDocument();
     expect(screen.getByText("6 seats open")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /^Here/ })).toBeInTheDocument();
     expect(await screen.findByText("here 5 min")).toBeInTheDocument();
@@ -2694,12 +2694,12 @@ describe("room: on a phone sideways (spec 0160)", () => {
     expect(screen.queryByRole("heading", { name: /^Here/ })).toBeNull();
   });
 
-  it("with nobody live, shows the camera waiting, Nobody's sharing and the seats, and the camera button", async () => {
+  it("with nobody live, shows the camera waiting, Nobody is sharing yet and the seats, and the camera button", async () => {
     phoneSideways();
     installFakeApi({ me: member });
     renderRoom();
     await connected();
-    expect(screen.getByRole("heading", { name: "Nobody's sharing" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Nobody is sharing yet" })).toBeInTheDocument();
     expect(screen.getByText("6 seats open")).toBeInTheDocument();
     expect(stageLayer().querySelectorAll("[data-mark]")).toHaveLength(4);
     expect(within(stageLayer()).getByRole("button", { name: /camera/i })).toBeInTheDocument();
@@ -2931,7 +2931,7 @@ describe("room: the full-screen view on a phone (spec 0171)", () => {
       lastRoom().unpublish("user-2", "screen_share");
     });
     // The empty stage, still in the full view.
-    expect(await within(stage()).findByText("Be the first to go live")).toBeInTheDocument();
+    expect(await within(stage()).findByRole("heading", { name: "Go live" })).toBeInTheDocument();
     expect(layoutOf(view)).toBe("sideways");
     await user.click(within(stage()).getByRole("button", { name: "Exit full-screen view" }));
     expect(layoutOf(view)).toBe("phone");
