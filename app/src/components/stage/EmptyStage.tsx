@@ -16,8 +16,8 @@ type Props = {
  * Nobody is live (spec 0123, calmed in spec 0136): a TV on standby. Its viewfinder corners (the top
  * right red, as in the logo), a still "Standby" where there's room, and the way to start, over the
  * TV's static; who's here and the seats are said once, below. Where the browser can't share a
- * screen (phones), the two ways are two round icon buttons of one size, the camera first and the
- * screen greyed, saying why (spec 0141). The first time it stands by in a visit, the TV turns on.
+ * screen (phones), the screen's button is greyed and says why (spec 0138). The first time it stands
+ * by in a visit, the TV turns on.
  */
 export function EmptyStage({
   canShareScreen = true,
@@ -29,38 +29,34 @@ export function EmptyStage({
   useEffect(() => {
     tv.on = true;
   }, []);
+  // Two short ways, the same on every screen (spec 0138): Screen, then Camera. Their spoken names
+  // say the whole act; where a screen can't be shared, it's greyed and a tap says why.
   const screen = (
     <Tooltip text={canShareScreen ? undefined : "This browser can't share a screen"}>
       <button
         type="button"
-        className={canShareScreen ? styles.primary : `${styles.unavailable} ${styles.round}`}
+        className={canShareScreen ? styles.primary : styles.unavailable}
         aria-disabled={canShareScreen ? undefined : true}
-        aria-label={canShareScreen ? undefined : "Share your screen"}
+        aria-label="Share your screen"
         onClick={() =>
           canShareScreen ? onStart?.("screen") : showToast("This browser can't share a screen", <ScreenOffIcon />)
         }
       >
         {canShareScreen ? <ScreenOnIcon /> : <ScreenOffIcon />}
-        {canShareScreen && "Share your screen"}
+        Screen
       </button>
     </Tooltip>
   );
-  const camera = canShareScreen ? (
-    <button type="button" className={styles.ghost} onClick={() => onStart?.("camera")}>
+  const camera = (
+    <button
+      type="button"
+      className={canShareScreen ? styles.ghost : styles.primary}
+      aria-label="Turn on your camera"
+      onClick={() => onStart?.("camera")}
+    >
       <CameraOnIcon />
-      Turn on your camera
+      Camera
     </button>
-  ) : (
-    <Tooltip text="Turn on your camera">
-      <button
-        type="button"
-        className={`${styles.primary} ${styles.round}`}
-        aria-label="Turn on your camera"
-        onClick={() => onStart?.("camera")}
-      >
-        <CameraOnIcon />
-      </button>
-    </Tooltip>
   );
   return (
     <div className={styles.empty} data-empty>
@@ -81,23 +77,10 @@ export function EmptyStage({
         </span>
       )}
       <div className={styles.focus}>
-        <h2 className={styles.title}>
-          Go <em>live</em>
-        </h2>
-        {/* Where a screen can't be shared, the camera's button says it all: no line (spec 0138). */}
-        {canShareScreen && <p className={styles.copy}>Share your screen or turn on your camera.</p>}
+        <h2 className={styles.title}>Start sharing</h2>
         <div className={styles.go}>
-          {canShareScreen ? (
-            <>
-              {screen}
-              {camera}
-            </>
-          ) : (
-            <>
-              {camera}
-              {screen}
-            </>
-          )}
+          {screen}
+          {camera}
         </div>
       </div>
     </div>

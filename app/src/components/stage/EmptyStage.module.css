@@ -87,29 +87,11 @@
   gap: 12px;
 }
 
+/* A quiet heading (spec 0138): it names the act, the buttons do it. */
 .title {
   margin: 0;
-  font: 800 28px/1.1 var(--font-display);
+  font: 700 22px/1.2 var(--font-display);
   letter-spacing: -0.01em;
-}
-
-/*
- * LIVE in the accent, as on the sign-in page and the room's live marks (spec 0141). Written
- * "live" and shown in capitals, so a screen reader says the word, not its letters.
- */
-.title em {
-  font-style: normal;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-.copy {
-  margin: 0;
-  max-width: 38ch;
-  color: var(--text-muted);
-  font-size: 14px;
-  line-height: 1.5;
-  text-wrap: balance;
 }
 
 .go {
@@ -152,22 +134,7 @@
   color: var(--text);
 }
 
-/*
- * Where a screen can't be shared (phones, spec 0141): the two ways are round icon buttons of one
- * size, side by side, centred under the heading; their names are their tooltips.
- */
-.go .round {
-  --h: 48px;
-  width: var(--h);
-  padding: 0;
-}
-
-.go .round svg {
-  width: 22px;
-  height: 22px;
-}
-
-/* Can't be used here (a phone's screen): greyed; a tap says why. */
+/* Can't be used here (a phone's screen): greyed in place; a tap says why. */
 .unavailable {
   background: rgba(235, 235, 236, 0.06);
   color: var(--text);
@@ -203,13 +170,19 @@
   }
 
   .title {
-    font-size: 22px;
+    font-size: 17px;
   }
 
   .go button {
-    --h: 40px;
-    padding: 0 16px;
-    font-size: 14px;
+    --h: 36px;
+    gap: 7px;
+    padding: 0 15px;
+    font-size: 13.5px;
+  }
+
+  .go svg {
+    width: 17px;
+    height: 17px;
   }
 }
 
@@ -225,35 +198,16 @@
     gap: 0;
   }
 
-  .title {
-    font-size: 19px;
-  }
-
-  .copy {
-    display: none;
-  }
-
   .go {
     gap: 8px;
-    margin-top: 16px;
-  }
-
-  .go button {
-    --h: 38px;
-    padding: 0 16px;
-    font-size: 13.5px;
-  }
-
-  .go svg {
-    width: 17px;
-    height: 17px;
+    margin-top: 12px;
   }
 }
 
 /* The narrowest phones (under 360 px): smaller still, so the stage's own buttons stay clear. */
 @container (max-width: 359px) {
   .title {
-    font-size: 17px;
+    font-size: 16px;
   }
 
   .go {
@@ -271,19 +225,6 @@
   .go svg {
     width: 16px;
     height: 16px;
-  }
-}
-
-/* The round buttons keep one size on every phone; only the narrowest stage (280 px) takes a
-   smaller one, clear of the stage's own buttons (spec 0138). */
-@container (max-width: 300px) {
-  .go .round {
-    --h: 40px;
-  }
-
-  .go .round svg {
-    width: 18px;
-    height: 18px;
   }
 }
 
