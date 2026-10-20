@@ -212,26 +212,12 @@
   }
 
   /*
-   * Request sent: no form, so the right column holds where it stands, "Waiting for approval" and
-   * who's signed in, level with the title and copy. No rule: nothing above it to set apart.
+   * Request sent: no form, so too little for two columns. One centred column, as upright; it
+   * fits the screen sideways.
    */
   .card:has(.waiting) {
-    grid-template-areas:
-      "brand ."
-      "title waiting"
-      "copy account";
-    grid-template-rows: auto auto auto;
-    align-content: center;
-  }
-
-  .card:has(.waiting) .waiting {
-    align-self: end;
-    margin: 0;
-  }
-
-  .card:has(.waiting) .account {
-    margin: 0;
-    padding-top: 0;
-    border-top: none;
+    max-width: 440px;
+    display: flex;
+    align-items: stretch;
   }
 }
