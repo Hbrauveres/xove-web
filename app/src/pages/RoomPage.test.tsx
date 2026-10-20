@@ -327,6 +327,22 @@ describe("room: sharing", () => {
     expect(document.querySelector('[class*="flash"]')).toBeNull();
   });
 
+  it("puts the settings beside the ways to start when nobody is live, not in a corner (spec 0138)", async () => {
+    installFakeApi({ me: member });
+    renderRoom();
+    await connected();
+    const empty = await waitFor(() => stage().querySelector<HTMLElement>("[data-empty]")!);
+    // The row: Screen, Camera, then the cog; the stage's own controls hold no cog.
+    expect(within(empty).getAllByRole("button").map((b) => b.getAttribute("aria-label"))).toEqual([
+      "Share your screen",
+      "Turn on your camera",
+      "Settings",
+    ]);
+    expect(within(stage()).getAllByRole("button", { name: "Settings" })).toHaveLength(1);
+    await userEvent.setup().click(within(empty).getByRole("button", { name: "Settings" }));
+    expect(screen.getByRole("dialog", { name: "Settings" })).toBeInTheDocument();
+  });
+
   it("ends the stream when the browser's own Stop sharing bar is used", async () => {
     const server = installFakeApi({ me: member });
     const user = await readyRoom();
