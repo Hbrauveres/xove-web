@@ -158,6 +158,36 @@
   display: none;
 }
 
+/*
+ * On a phone, upright or sideways, the two buttons alone, in the stage's middle (spec 0138): the
+ * heading stays for screen readers, so the stage still has its name, but isn't shown.
+ */
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .go {
+  margin-top: 0;
+}
+
+/* One size of button on every phone, upright or sideways. */
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .go button {
+  --h: 40px;
+  gap: 7px;
+  padding: 0 16px;
+  font-size: 14px;
+}
+
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .go svg {
+  width: 17px;
+  height: 17px;
+}
+
 /* A small stage (a phone): finer corners, no "Standby", a smaller heading, compact buttons. */
 @container (max-width: 640px) {
   .empty {
@@ -225,29 +255,6 @@
   .go svg {
     width: 16px;
     height: 16px;
-  }
-}
-
-/* The narrowest stage (a 280 px phone): tighter still, so the stage's own buttons in its corner
-   stay clear while the heading and buttons keep the middle (spec 0138). */
-@container (max-width: 300px) {
-  .title {
-    font-size: 15px;
-  }
-
-  .go {
-    margin-top: 6px;
-  }
-
-  .go button {
-    --h: 30px;
-    padding: 0 11px;
-    font-size: 12.5px;
-  }
-
-  .go svg {
-    width: 15px;
-    height: 15px;
   }
 }
 
