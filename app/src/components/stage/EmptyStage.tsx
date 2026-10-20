@@ -77,13 +77,11 @@ export function EmptyStage({
         </span>
       )}
       <div className={styles.focus}>
+        <h2 className={styles.title}>
+          Go <em>live</em>
+        </h2>
         {/* An invitation, not an order (spec 0138): a TV asking what's on. */}
-        <h2 className={styles.title}>What's on today?</h2>
-        <p className={styles.copy}>
-          {canShareScreen
-            ? "Share your screen or turn on your camera."
-            : "Turn on your camera."}
-        </p>
+        <p className={styles.copy}>What's on today?</p>
         <div className={styles.go}>
           {canShareScreen ? (
             <>

@@ -322,7 +322,7 @@ describe("room: sharing", () => {
     await startSharing(user);
     await user.click(within(controls()).getByRole("button", { name: /stop sharing/i }));
 
-    expect(await screen.findByRole("heading", { name: "What's on today?" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Go live" })).toBeInTheDocument();
     expect(document.querySelector('[class*="intro"]')).toBeNull();
     expect(document.querySelector('[class*="flash"]')).toBeNull();
   });
@@ -1700,7 +1700,7 @@ describe("room: theater mode (spec 0104)", () => {
 
     expect(screen.getByRole("heading", { name: "Nobody is sharing yet" })).toBeInTheDocument();
     expect(screen.getByLabelText("0 of 6 live, 6 seats open")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "What's on today?" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Go live" })).toBeInTheDocument();
     // No video's ambilight: the empty stage has its own corner glow and its static's light (specs 0123 and 0136).
     expect(document.querySelector("[data-ambilight]")).toBeNull();
   });
@@ -2931,7 +2931,7 @@ describe("room: the full-screen view on a phone (spec 0171)", () => {
       lastRoom().unpublish("user-2", "screen_share");
     });
     // The empty stage, still in the full view.
-    expect(await within(stage()).findByRole("heading", { name: "What's on today?" })).toBeInTheDocument();
+    expect(await within(stage()).findByRole("heading", { name: "Go live" })).toBeInTheDocument();
     expect(layoutOf(view)).toBe("sideways");
     await user.click(within(stage()).getByRole("button", { name: "Exit full-screen view" }));
     expect(layoutOf(view)).toBe("phone");

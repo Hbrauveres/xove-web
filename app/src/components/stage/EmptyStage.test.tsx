@@ -4,12 +4,13 @@ import { describe, expect, it, vi } from "vitest";
 import { EmptyStage } from "./EmptyStage";
 
 describe("the empty stage, a camera waiting (spec 0123)", () => {
-  it("asks what's on today, with the screen first and the camera beside it", async () => {
+  it("asks you to go live, with the screen first and the camera beside it", async () => {
     const onStart = vi.fn();
     render(<EmptyStage onStart={onStart} />);
 
-    // An invitation, not an order (spec 0138).
-    expect(screen.getByRole("heading", { name: "What's on today?" })).toBeInTheDocument();
+    // "Go LIVE", LIVE marked as on the sign-in page and read as a word (spec 0141).
+    const heading = screen.getByRole("heading", { name: "Go live" });
+    expect(heading.querySelector("em")).toHaveTextContent(/^live$/);
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: /Share your screen/ }));
     await user.click(screen.getByRole("button", { name: /Turn on your camera/ }));
@@ -30,9 +31,11 @@ describe("the empty stage, a camera waiting (spec 0123)", () => {
 
   it("says one short line, and greys the screen it can't share as the same pill, saying why (specs 0136, 0138)", () => {
     const { rerender } = render(<EmptyStage />);
-    expect(screen.getByText("Share your screen or turn on your camera.")).toBeInTheDocument();
+    // An invitation, not an order, wherever it is (spec 0138).
+    expect(screen.getByText("What's on today?")).toBeInTheDocument();
     rerender(<EmptyStage canShareScreen={false} />);
-    expect(screen.getByText("Turn on your camera.")).toBeInTheDocument();
+    expect(screen.getByText("What's on today?")).toBeInTheDocument();
+    expect(screen.queryByText(/turn on your camera\./i)).not.toBeInTheDocument();
     // No "and the room sees it at once": it says what to do, not what follows.
     expect(screen.queryByText(/room sees/)).not.toBeInTheDocument();
     // The same pill as where it can be shared, greyed, still saying why.
