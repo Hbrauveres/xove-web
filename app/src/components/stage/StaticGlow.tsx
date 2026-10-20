@@ -18,7 +18,7 @@ const FPS = 20;
 export function StaticGlow({ prefs }: { prefs: AmbilightPrefs }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   // The turn-on's light on the wall, only with the stage's own turn-on: the first time it stands by.
-  const [turningOn] = useState(() => !tv.on);
+  const [turningOn, setTurningOn] = useState(() => !tv.on);
   useEffect(() => {
     const el = canvas.current;
     const ctx = el?.getContext("2d");
@@ -64,7 +64,7 @@ export function StaticGlow({ prefs }: { prefs: AmbilightPrefs }) {
     <span className={styles.glow} style={{ opacity: prefs.on ? prefs.brightness : 0 }} aria-hidden="true">
       <canvas ref={canvas} className={styles.canvas} />
       {/* The TV turning on lights the wall too, once, in time with the stage's flash. */}
-      {turningOn && <i className={styles.flash} />}
+      {turningOn && <i className={styles.flash} onAnimationEnd={() => setTurningOn(false)} />}
     </span>
   );
 }
