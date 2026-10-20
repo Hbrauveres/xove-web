@@ -316,6 +316,17 @@ describe("room: sharing", () => {
     expect(myLiveStream(server)).toBeUndefined();
   });
 
+  it("shows the static with no turn-on when the last stream stops: the TV is already on (spec 0136)", async () => {
+    installFakeApi({ me: member });
+    const user = await readyRoom();
+    await startSharing(user);
+    await user.click(within(controls()).getByRole("button", { name: /stop sharing/i }));
+
+    expect(await screen.findByRole("heading", { name: "Be the first to go live" })).toBeInTheDocument();
+    expect(document.querySelector('[class*="intro"]')).toBeNull();
+    expect(document.querySelector('[class*="flash"]')).toBeNull();
+  });
+
   it("ends the stream when the browser's own Stop sharing bar is used", async () => {
     const server = installFakeApi({ me: member });
     const user = await readyRoom();
