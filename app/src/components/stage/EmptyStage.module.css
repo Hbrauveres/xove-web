@@ -152,10 +152,23 @@
   color: var(--text);
 }
 
-/* Can't be used here (a phone's screen): a small round greyed button; a tap says why. */
-.unavailable {
+/*
+ * Where a screen can't be shared (phones, spec 0141): the two ways are round icon buttons of one
+ * size, side by side, centred under the heading; their names are their tooltips.
+ */
+.go .round {
+  --h: 48px;
   width: var(--h);
-  padding: 0 !important;
+  padding: 0;
+}
+
+.go .round svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* Can't be used here (a phone's screen): greyed; a tap says why. */
+.unavailable {
   background: rgba(235, 235, 236, 0.06);
   color: var(--text);
   opacity: 0.45;
@@ -200,12 +213,12 @@
   }
 }
 
-/* A short stage (a phone, upright or sideways): the heading and the buttons, nothing else,
-   centred above the stage's own buttons at the bottom. */
+/* A short stage (a phone, upright or sideways): the heading and the buttons, nothing else, in
+   the stage's middle both ways (spec 0141); the stage's own buttons sit in its corners. */
 @container (max-height: 320px) {
   .empty {
     --arm: 16px;
-    padding: 12px 20px 52px;
+    padding: 12px 20px;
   }
 
   .focus {
@@ -258,6 +271,19 @@
   .go svg {
     width: 16px;
     height: 16px;
+  }
+}
+
+/* The round buttons keep one size on every phone; only the narrowest stage (280 px) takes a
+   smaller one, clear of the stage's own buttons (spec 0138). */
+@container (max-width: 300px) {
+  .go .round {
+    --h: 40px;
+  }
+
+  .go .round svg {
+    width: 18px;
+    height: 18px;
   }
 }
 

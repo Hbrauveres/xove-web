@@ -33,13 +33,25 @@ describe("the empty stage, a camera waiting (spec 0123)", () => {
     const { rerender } = render(<EmptyStage />);
     expect(screen.getByText("Share your screen or turn on your camera.")).toBeInTheDocument();
     rerender(<EmptyStage canShareScreen={false} />);
-    expect(screen.getByText("Turn on your camera.")).toBeInTheDocument();
+    // Where a screen can't be shared, no line at all: the camera's button says it (spec 0138).
+    expect(screen.queryByText(/Turn on your camera\./)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Share your screen or/)).not.toBeInTheDocument();
     // No "and the room sees it at once": it says what to do, not what follows.
     expect(screen.queryByText(/room sees/)).not.toBeInTheDocument();
     // Icon only, still named and saying why.
     const greyed = screen.getByRole("button", { name: "Share your screen" });
     expect(greyed).toHaveTextContent("");
     expect(greyed).toHaveAccessibleDescription("This browser can't share a screen");
+  });
+
+  it("offers the two ways as round icon buttons where a screen can't be shared, named by their tooltips (spec 0138)", () => {
+    render(<EmptyStage canShareScreen={false} />);
+    const camera = screen.getByRole("button", { name: "Turn on your camera" });
+    const greyed = screen.getByRole("button", { name: "Share your screen" });
+    expect(camera).toHaveTextContent("");
+    expect(greyed).toHaveTextContent("");
+    expect(camera.className).toEqual(expect.stringContaining("round"));
+    expect(greyed.className).toEqual(expect.stringContaining("round"));
   });
 
   it("has four viewfinder corners, the top right red, and only a still 'Standby' (spec 0136)", () => {

@@ -16,8 +16,8 @@ type Props = {
  * Nobody is live (spec 0123, calmed in spec 0136): a TV on standby. Its viewfinder corners (the top
  * right red, as in the logo), a still "Standby" where there's room, and the way to start, over the
  * TV's static; who's here and the seats are said once, below. Where the browser can't share a
- * screen (phones), the camera comes first and the screen is a small greyed button saying why. The
- * first time it stands by in a visit, the TV turns on.
+ * screen (phones), the two ways are two round icon buttons of one size, the camera first and the
+ * screen greyed, saying why (spec 0141). The first time it stands by in a visit, the TV turns on.
  */
 export function EmptyStage({
   canShareScreen = true,
@@ -33,7 +33,7 @@ export function EmptyStage({
     <Tooltip text={canShareScreen ? undefined : "This browser can't share a screen"}>
       <button
         type="button"
-        className={canShareScreen ? styles.primary : styles.unavailable}
+        className={canShareScreen ? styles.primary : `${styles.unavailable} ${styles.round}`}
         aria-disabled={canShareScreen ? undefined : true}
         aria-label={canShareScreen ? undefined : "Share your screen"}
         onClick={() =>
@@ -45,15 +45,22 @@ export function EmptyStage({
       </button>
     </Tooltip>
   );
-  const camera = (
-    <button
-      type="button"
-      className={canShareScreen ? styles.ghost : styles.primary}
-      onClick={() => onStart?.("camera")}
-    >
+  const camera = canShareScreen ? (
+    <button type="button" className={styles.ghost} onClick={() => onStart?.("camera")}>
       <CameraOnIcon />
       Turn on your camera
     </button>
+  ) : (
+    <Tooltip text="Turn on your camera">
+      <button
+        type="button"
+        className={`${styles.primary} ${styles.round}`}
+        aria-label="Turn on your camera"
+        onClick={() => onStart?.("camera")}
+      >
+        <CameraOnIcon />
+      </button>
+    </Tooltip>
   );
   return (
     <div className={styles.empty} data-empty>
@@ -77,11 +84,8 @@ export function EmptyStage({
         <h2 className={styles.title}>
           Go <em>live</em>
         </h2>
-        <p className={styles.copy}>
-          {canShareScreen
-            ? "Share your screen or turn on your camera."
-            : "Turn on your camera."}
-        </p>
+        {/* Where a screen can't be shared, the camera's button says it all: no line (spec 0138). */}
+        {canShareScreen && <p className={styles.copy}>Share your screen or turn on your camera.</p>}
         <div className={styles.go}>
           {canShareScreen ? (
             <>
