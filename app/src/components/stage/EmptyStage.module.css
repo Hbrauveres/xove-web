@@ -191,17 +191,9 @@
   font-size: 20px;
 }
 
-:global(:is([data-layout="phone"], [data-layout="sideways"])) /*
- * LIVE in the accent, as on the sign-in page and the room's live marks (spec 0141). Written
- * "live" and shown in capitals, so a screen reader says the word, not its letters.
- */
-.title em {
-  font-style: normal;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-.copy {
+:global(:is([data-layout="phone"], [data-layout="sideways"])) .copy {
+  /* Shown on short stages too, as on every other screen. */
+  display: block;
   font-size: 13px;
 }
 
@@ -278,17 +270,7 @@
     font-size: 19px;
   }
 
-  /*
- * LIVE in the accent, as on the sign-in page and the room's live marks (spec 0141). Written
- * "live" and shown in capitals, so a screen reader says the word, not its letters.
- */
-.title em {
-  font-style: normal;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-.copy {
+  .copy {
     display: none;
   }
 
