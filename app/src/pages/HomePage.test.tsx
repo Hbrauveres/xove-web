@@ -16,9 +16,9 @@ describe("home page", () => {
     installFakeApi({ me: null });
     renderApp("/");
 
+    // Two lines; "live" is a word to a screen reader, shown in capitals.
     const title = await screen.findByRole("heading", { level: 1 });
-    expect(title).toHaveTextContent(/^Go LIVE with\s*your friends\.$/);
-    expect(title.querySelector("em")).toHaveTextContent(/^LIVE$/);
+    expect(title.innerHTML).toBe("Go <em>live</em> with<br>your friends.");
     expect(
       screen.getByText("Share your screen or camera in sharp, fast streams. Watch them play, hang out, help out. Invite only."),
     ).toBeInTheDocument();

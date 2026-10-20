@@ -65,6 +65,11 @@
 }
 
 /* A phone sideways (spec 0160): no header or footer; the stage takes the whole screen. */
+/* Its stage keeps its own controls clear of the phone's bars, so the room adds none (spec 0141). */
+.theater[data-layout="sideways"] {
+  padding-top: 0;
+}
+
 .theater[data-layout="sideways"] .middle {
   container-type: normal;
   padding: 0;

@@ -174,6 +174,8 @@ describe("clear of the phone's own bars (spec 0141)", () => {
 
   it("starts the room's header under the status bar, and ends its list above the home bar", () => {
     expect(rule(room, ".theater")).toMatch(/padding-top:\s*var\(--safe-top\)/);
+    // Sideways and in the full view, the stage keeps its own controls clear: the room adds nothing.
+    expect(rule(room, '.theater[data-layout="sideways"]')).toMatch(/padding-top:\s*0/);
     expect(rule(stage, ".below")).toMatch(/padding-bottom:\s*var\(--safe-bottom\)/);
   });
 
@@ -184,6 +186,14 @@ describe("clear of the phone's own bars (spec 0141)", () => {
       expect(body).toContain("max(var(--gutter), var(--safe-left))");
     }
     expect(rule(home, ".wrap")).toMatch(/background:/);
+  });
+
+  it("shows LIVE in capitals and the accent, written as a word (design decision 7)", () => {
+    for (const css of [home, sheet("components/stage/EmptyStage.module.css")]) {
+      const em = rule(css, ".title em");
+      expect(em).toMatch(/text-transform:\s*uppercase/);
+      expect(em).toMatch(/color:\s*var\(--accent\)/);
+    }
   });
 
   it("fits sign-in sideways: the mark and headline, then what to do, side by side", () => {

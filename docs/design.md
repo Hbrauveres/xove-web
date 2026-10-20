@@ -27,7 +27,7 @@ The pictures are shot from the real app (`design-sheet.mjs`, see [Keeping this p
 - **Xovê**, with the circumflex, in every sentence and label. `xove` only where an accent can't go: the domain (`xove.app`), repos, code, image and container names. The wordmark is written in capitals, **XOVE**, and its red corner stands in for the ^.
 - **Short, plain sentences**, in sentence case: "Share your screen", "Full-screen view", "Nobody live · 0 of 6 · 6 free", "Xovê works best from your home screen". No exclamation marks, no jargon.
 - **As short as they can be:** a call to act says the act ("Go LIVE"); a state says plainly what is ("Nobody is sharing yet").
-- **"Go LIVE" is said one way everywhere:** LIVE in capitals and in the accent red, like the room's LIVE marks, on the sign-in page and on the standby screen.
+- **"Go LIVE" is said one way everywhere:** LIVE in capitals and in the accent red, like the room's LIVE marks, on the sign-in page and on the standby screen. It's written as the word ("live") and set in capitals by its style, so a screen reader says the word, not its letters.
 - **Public words** (the sign-in page, and any page someone sees before the room): a short headline with personality ("Go **LIVE** with your friends."), then one short line with substance: what you do and why it's good ("Share your screen or camera in sharp, fast streams. Watch them play, hang out, help out. Invite only.").
 - **Say what happens, then what to do:** "The room is full. You're 2nd in line." A disabled control says why in its tooltip.
 - **The middle dot (·)** joins short facts on one line: "Marina · Screen", "3 of 6 live · 3 free".
@@ -425,7 +425,7 @@ Sign-in, request access (and request sent), the room's queue and admin: centred 
 Opened from the home screen, Xovê runs on the whole screen, under the status bar, the Dynamic Island or a camera cutout, and over the home bar. **Every page's background runs to the screen's edges, and its content stays inside the bars** (`--safe-top`, `--safe-right`, `--safe-bottom`, `--safe-left` in `global.css`, the browser's own safe areas; 0 on a desktop):
 - **A header starts right under the status bar**, at its usual height, with nothing added between.
 - **A scrolling part's end clears the home bar** (the room's list, admin); mid-scroll, content may pass under it, as in any phone app.
-- **Sideways**, the island or cutout sits at one side: the full view and the sideways room keep their controls clear of it, and every other page pads its content on both sides.
+- **The sideways room and the full view** run their picture from the screen's very top; the stage keeps its own top bar and buttons clear of the bars (the room adds nothing above it). Sideways, the island or cutout sits at one side; every other page pads its content on both sides.
 
 ### The install screen
 
