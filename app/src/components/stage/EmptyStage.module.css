@@ -149,8 +149,9 @@
   content: "";
 }
 
-/* The settings: a small round button, the second way's soft fill. */
-.go .cog {
+/* The settings: a small round button, the second way's soft fill. (Doubled, to win over any
+   size's padding for the pills: a round button has none.) */
+.go .cog.cog {
   width: var(--h);
   padding: 0;
   background: rgba(235, 235, 236, 0.08);
