@@ -228,6 +228,29 @@
   }
 }
 
+/* The narrowest stage (a 280 px phone): tighter still, so the stage's own buttons in its corner
+   stay clear while the heading and buttons keep the middle (spec 0138). */
+@container (max-width: 300px) {
+  .title {
+    font-size: 15px;
+  }
+
+  .go {
+    margin-top: 6px;
+  }
+
+  .go button {
+    --h: 30px;
+    padding: 0 11px;
+    font-size: 12.5px;
+  }
+
+  .go svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
 /*
  * The TV turning on (spec 0136), once a visit, the first time the stage stands by, in under a second, smooth rather than
  * jerky: a point of light glows in the middle and draws a thin glowing line across; the line blooms
