@@ -223,9 +223,9 @@
   height: 15px;
 }
 
-/* A phone's shortest stages (under 210 px tall, a 360 px phone held upright): no line, so the
+/* A phone's shortest stages (a 360 px phone held upright: under 190 px inside): no line, so the
    pills stay clear of the corner's buttons. */
-@container (max-height: 210px) {
+@container (max-height: 190px) {
   :global(:is([data-layout="phone"], [data-layout="sideways"])) .copy {
     display: none;
   }
