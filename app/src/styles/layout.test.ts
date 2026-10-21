@@ -218,7 +218,8 @@ describe("the standby screen, balanced on every screen (spec 0138)", () => {
     const go = rule(empty, ".go");
     expect(go).toMatch(/display:\s*grid/);
     expect(go).toMatch(/grid-template-columns:\s*1fr 1fr;/);
-    expect(go).toMatch(/justify-content:\s*center/);
+    // Centred by its column (the heading's), which centres every part.
+    expect(rule(empty, ".focus")).toMatch(/justify-items:\s*center/);
     expect(empty).not.toMatch(/\.go::before/);
   });
 

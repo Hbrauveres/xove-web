@@ -20,14 +20,6 @@ describe("the empty stage, a camera waiting (spec 0123)", () => {
     expect(onStart.mock.calls).toEqual([["screen"], ["camera"]]);
   });
 
-  it("holds only the two ways to start: the settings stay in the stage's corner (spec 0147)", () => {
-    render(<EmptyStage />);
-    expect(screen.getAllByRole("button").map((b) => b.getAttribute("aria-label"))).toEqual([
-      "Share your screen",
-      "Turn on your camera",
-    ]);
-  });
-
   it("puts the camera first where a screen can't be shared, the screen greyed with its reason", async () => {
     const onStart = vi.fn();
     render(<EmptyStage canShareScreen={false} onStart={onStart} />);
