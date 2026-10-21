@@ -214,11 +214,12 @@ describe("the standby screen, balanced on every screen (spec 0138)", () => {
   const empty = sheet("components/stage/EmptyStage.module.css");
   const phone = ':global(:is([data-layout="phone"], [data-layout="sideways"]))';
 
-  it("lays the ways to start out as one row: two pills of one width and the cog, centred as a whole", () => {
+  it("lays the ways to start out as one row: two pills of one width, centred", () => {
     const go = rule(empty, ".go");
     expect(go).toMatch(/display:\s*grid/);
-    expect(go).toMatch(/grid-template-columns:\s*1fr 1fr var\(--h\)/);
-    expect(go).toMatch(/justify-content:\s*center/);
+    expect(go).toMatch(/grid-template-columns:\s*1fr 1fr;/);
+    // Centred by its column (the heading's), which centres every part.
+    expect(rule(empty, ".focus")).toMatch(/justify-items:\s*center/);
     expect(empty).not.toMatch(/\.go::before/);
   });
 
@@ -226,10 +227,12 @@ describe("the standby screen, balanced on every screen (spec 0138)", () => {
     expect(rule(empty, ".go")).toMatch(/--h:\s*44px/);
     expect(rule(empty, `${phone} .go`)).toMatch(/--h:\s*34px/);
     expect(rule(empty, ".go button")).toMatch(/height:\s*var\(--h\)/);
-    // The cog is round: no pill padding, whatever the size's rules say.
-    const cog = rule(empty, ".go .cog.cog");
-    expect(cog).toMatch(/width:\s*var\(--h\)/);
-    expect(cog).toMatch(/padding:\s*0/);
+  });
+
+  it("drops the line before the buttons on a phone's shortest stage, keeping the corner clear (spec 0147)", () => {
+    const shortest = empty.slice(empty.indexOf("@container (max-height: 190px)"));
+    expect(empty).toContain("@container (max-height: 190px)");
+    expect(rule(shortest, `  ${phone} .copy`)).toMatch(/display:\s*none/);
   });
 
   it("keeps a short stage's way to start in its middle, not pushed up for the corner buttons", () => {

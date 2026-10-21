@@ -34,6 +34,8 @@ type Props = {
   onSettings: () => void;
   /** Where the browser can't set a page's volume (iPhones): a tap turns a sound on and off, no slider. */
   canSetVolume: boolean;
+  /** Only the settings at the right (nobody live). */
+  settingsOnly?: boolean;
 };
 
 /**
@@ -41,7 +43,7 @@ type Props = {
  * them, the right corner is you. Your stream's own controls live only on your stream.
  */
 export function ViewerBar(props: Props) {
-  const { sound, voice, live, micOn, onMic, canShareScreen, full, onStart, onSettings, canSetVolume } = props;
+  const { sound, voice, live, micOn, onMic, canShareScreen, full, onStart, onSettings, canSetVolume, settingsOnly } = props;
   const [open, setOpen] = useState<"sound" | "voice" | null>(null);
   const [menu, setMenu] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
@@ -72,7 +74,13 @@ export function ViewerBar(props: Props) {
         {voice && <Hear kind="voice" s={voice} open={open === "voice"} quiet={open !== null} setOpen={setOpen} canSetVolume={canSetVolume} name={voice.name} talking={voice.talking} />}
       </div>
       <div className={styles.right}>
-        {live ? (
+        {settingsOnly ? (
+          <Tooltip text={"Settings"}>
+            <button type="button" className={styles.round} aria-label="Settings" onClick={onSettings}>
+              <CogIcon />
+            </button>
+          </Tooltip>
+        ) : live ? (
           <Tooltip text={micOn ? "Mute your voice" : "Share your voice"}>
             <button
               type="button"
