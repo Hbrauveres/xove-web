@@ -230,6 +230,8 @@ export class Room {
     camera: null as { trackSid: string; track: FakeLocalCameraTrack; options?: unknown } | null,
     /** My voice, while it's on (spec 0123). */
     mic: null as { trackSid: string; track: FakeLocalMicTrack; options?: unknown } | null,
+    /** LiveKit hears my voice right now (spec 0129). */
+    isSpeaking: false,
     /** Tests set this to an error name to play the microphone refused or missing. */
     nextMic: "allow" as "allow" | "NotAllowedError" | "NotFoundError",
     /** Tests set this to an error name ("NotAllowedError", "NotFoundError") to play the camera refused or missing. */
@@ -452,6 +454,13 @@ export class Room {
     const p = this.remoteParticipants.get(identity);
     if (!p || p.isSpeaking === speaking) return;
     p.isSpeaking = speaking;
+    this.emit(RoomEvent.ActiveSpeakersChanged, [...this.remoteParticipants.values()].filter((x) => x.isSpeaking));
+  }
+
+  /** I start or stop speaking into my mic, as LiveKit hears it (spec 0129). */
+  setMeSpeaking(speaking: boolean) {
+    if (this.localParticipant.isSpeaking === speaking) return;
+    this.localParticipant.isSpeaking = speaking;
     this.emit(RoomEvent.ActiveSpeakersChanged, [...this.remoteParticipants.values()].filter((x) => x.isSpeaking));
   }
 

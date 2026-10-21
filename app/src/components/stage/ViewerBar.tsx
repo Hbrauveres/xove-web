@@ -26,6 +26,8 @@ type Props = {
   /** You, at the right: your mic while you're live, or Go live. */
   live: boolean;
   micOn?: boolean;
+  /** My mic is picking up my voice right now (spec 0129). */
+  micTalking?: boolean;
   onMic?: () => void;
   canShareScreen: boolean;
   /** All 6 places are taken: Go live's ways to start are greyed, saying why. */
@@ -43,7 +45,7 @@ type Props = {
  * them, the right corner is you. Your stream's own controls live only on your stream.
  */
 export function ViewerBar(props: Props) {
-  const { sound, voice, live, micOn, onMic, canShareScreen, full, onStart, onSettings, canSetVolume, settingsOnly } = props;
+  const { sound, voice, live, micOn, onMic, canShareScreen, full, onStart, onSettings, canSetVolume, settingsOnly, micTalking } = props;
   const [open, setOpen] = useState<"sound" | "voice" | null>(null);
   const [menu, setMenu] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
@@ -86,6 +88,7 @@ export function ViewerBar(props: Props) {
               type="button"
               className={styles.round}
               data-on={micOn || undefined}
+              data-talking={micTalking || undefined}
               aria-pressed={Boolean(micOn)}
               aria-label={micOn ? "Mute your voice" : "Share your voice"}
               onClick={onMic}

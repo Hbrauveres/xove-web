@@ -52,6 +52,14 @@
   color: var(--accent-ink);
 }
 
+/* My mic, on and hearing me (spec 0129, draft): the live pill wears a voice's green ring and glow. */
+.live[data-talking] {
+  box-shadow:
+    0 0 0 2px rgba(43, 205, 104, 0.9),
+    0 0 6px 1px rgba(22, 163, 74, 0.6),
+    0 0 14px 2px rgba(22, 163, 74, 0.28);
+}
+
 /* Can't be used right now (a full room, no sound): faded, and says why in its tooltip. */
 .disabled {
   opacity: 0.45;

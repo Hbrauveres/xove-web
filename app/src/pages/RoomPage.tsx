@@ -246,6 +246,7 @@ function Room({ pollMs, seat, onSignOut }: Props & { seat: RoomSeat; onSignOut: 
               onSettings: toggleSettings,
               onGoTo: goToSetting,
               voice: session.voice,
+              voiceSpeaking: session.voiceSpeaking,
               onVoice: session.toggleVoice,
             }}
             settingsPanel={sheet ? undefined : settingsPanel}

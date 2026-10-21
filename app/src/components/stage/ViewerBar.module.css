@@ -131,6 +131,22 @@
     0 0 9px 1px rgba(22, 163, 74, 0.25);
 }
 
+/*
+ * My own mic, on and hearing me (spec 0129, draft): it keeps its red, and wears the same green
+ * ring and glow as a voice I hear while it speaks.
+ */
+.round[data-on][data-talking] {
+  color: var(--accent-ink);
+  box-shadow:
+    0 0 0 2px rgba(43, 205, 104, 0.9),
+    0 0 6px 1px rgba(22, 163, 74, 0.6),
+    0 0 14px 2px rgba(22, 163, 74, 0.28);
+}
+
+.round[data-on][data-talking] svg {
+  filter: none;
+}
+
 .round[data-talking] svg {
   filter: drop-shadow(0 0 2px rgba(22, 163, 74, 0.6)) drop-shadow(0 0 4px rgba(22, 163, 74, 0.3));
 }

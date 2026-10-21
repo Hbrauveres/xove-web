@@ -69,6 +69,8 @@ export type RoomSession = {
   busy: boolean;
   /** My voice (spec 0123): sent only while it's on, alongside my screen or camera. */
   voice: boolean;
+  /** My mic is picking up my voice right now (spec 0129). */
+  voiceSpeaking: boolean;
   toggleVoice: () => void;
   /** How my voice is captured (remembered); a change applies at once while it's on. */
   voicePrefs: VoicePrefs;
@@ -549,6 +551,7 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
     error: api.error ?? lk.error,
     busy: api.busy || isStarting || isChanging,
     voice: lk.voice,
+    voiceSpeaking: lk.voiceSpeaking,
     toggleVoice: () => void toggleVoice(),
     voicePrefs,
     setVoicePrefs,

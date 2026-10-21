@@ -42,6 +42,8 @@ type Props = {
   onSettings: () => void;
   /** My voice is on, and turning it on or off (spec 0123). */
   voice?: boolean;
+  /** My mic is picking up my voice right now (spec 0129). */
+  voiceSpeaking?: boolean;
   onVoice?: () => void;
   /** With the settings open, a live button's gesture goes to its setting there (spec 0115). */
   onGoTo?: (kind: StreamKind) => void;

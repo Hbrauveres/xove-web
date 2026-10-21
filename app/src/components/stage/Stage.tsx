@@ -137,6 +137,8 @@ export function Stage({
     saveVoiceHearing(next);
   };
   const micOn = Boolean(controls.voice);
+  // My mic hears me (spec 0129): it lights as others see my voice light.
+  const micTalking = micOn && Boolean(controls.voiceSpeaking);
   const toggleMic = () => controls.onVoice?.();
 
   // Who is big comes from the room (spec 0104), which the previews and the activity can change too.
@@ -613,6 +615,7 @@ export function Stage({
             }}
             live={meLive}
             micOn={micOn}
+            micTalking={micTalking}
             onMic={toggleMic}
             canShareScreen={controls.canShareScreen}
             full={controls.free <= 0}
@@ -639,7 +642,7 @@ export function Stage({
             onSettings={toggleSettings}
             onMenuChange={onMenuChange}
             extra={
-              <div className={`${round.pill} ${micOn ? round.live : ""}`}>
+              <div className={`${round.pill} ${micOn ? round.live : ""}`} data-talking={micTalking || undefined}>
                 <Tooltip text={micOn ? "Mute your voice" : "Share your voice"}>
                   <button
                     type="button"

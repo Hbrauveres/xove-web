@@ -170,6 +170,8 @@ export type LiveKitRoom = {
   pickCamera: (deviceId: string, prefs: SharePrefs) => Promise<void>;
   /** My voice is being sent (spec 0123). */
   voice: boolean;
+  /** My mic is picking up my voice right now, as LiveKit hears it (spec 0129). */
+  voiceSpeaking: boolean;
   /** My voice as it's sent (through the gate), for Test in the settings. */
   localVoice?: MediaTrack;
   /** The microphone itself, before the gate, for its level in the settings. */
@@ -276,6 +278,7 @@ export function useLiveKitRoom(): LiveKitRoom {
   const [presence, setPresence] = useState<ActivityEvent[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [voice, setVoice] = useState(false);
+  const [voiceSpeaking, setVoiceSpeaking] = useState(false);
   const [localVoice, setLocalVoice] = useState<MediaTrack | undefined>(undefined);
 
   // Read the whole picture from the Room after any change, instead of
@@ -320,6 +323,7 @@ export function useLiveKitRoom(): LiveKitRoom {
     setLocal({ screen, camera });
     const mic = me.getTrackPublication(Track.Source.Microphone)?.track;
     setVoice(Boolean(mic));
+    setVoiceSpeaking(Boolean(mic) && me.isSpeaking);
     setLocalVoice(mic);
     const surface = (screen?.mediaStreamTrack.getSettings?.() as { displaySurface?: string } | undefined)?.displaySurface;
     setScreenSurface(surface === "monitor" || surface === "window" || surface === "browser" ? surface : undefined);
@@ -732,6 +736,7 @@ export function useLiveKitRoom(): LiveKitRoom {
     cameraId: sentCamera || cameraId,
     pickCamera,
     voice,
+    voiceSpeaking,
     localVoice,
     startVoice,
     stopVoice,
