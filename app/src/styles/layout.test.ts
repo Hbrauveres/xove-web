@@ -228,6 +228,12 @@ describe("the standby screen, balanced on every screen (spec 0138)", () => {
     expect(rule(empty, ".go button")).toMatch(/height:\s*var\(--h\)/);
   });
 
+  it("drops the line before the buttons on a phone's shortest stage, keeping the corner clear (spec 0147)", () => {
+    const shortest = empty.slice(empty.indexOf("@container (max-height: 190px)"));
+    expect(empty).toContain("@container (max-height: 190px)");
+    expect(rule(shortest, `  ${phone} .copy`)).toMatch(/display:\s*none/);
+  });
+
   it("keeps a short stage's way to start in its middle, not pushed up for the corner buttons", () => {
     const short = empty.slice(empty.indexOf("@container (max-height: 320px)"));
     expect(rule(short, ".empty")).toMatch(/padding:\s*12px 20px;/);

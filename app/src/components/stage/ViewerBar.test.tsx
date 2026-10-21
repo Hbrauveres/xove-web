@@ -209,4 +209,9 @@ describe("the bar over someone else's stream (spec 0123): me, at the right", () 
     rerender(<ViewerBar {...base} live micOn onMic={onMic} />);
     expect(screen.getByRole("button", { name: "Mute your voice" })).toHaveAttribute("data-on");
   });
+
+  it("is only the settings over an empty stage, in the corner (spec 0147)", () => {
+    render(<ViewerBar {...base} settingsOnly />);
+    expect(screen.getAllByRole("button").map((b) => b.getAttribute("aria-label"))).toEqual(["Settings"]);
+  });
 });
