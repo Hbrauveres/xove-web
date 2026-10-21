@@ -33,6 +33,16 @@
   display: flex;
 }
 
+/* Fading with the controls, part by part: my mic stays, so I always see whether it hears me
+   (spec 0129). */
+.buttons > * {
+  transition: opacity 0.25s ease;
+}
+
+:global([data-chrome="hidden"]:not(:has(:focus-visible))) .buttons > :not(:has([data-stays])) {
+  opacity: 0;
+}
+
 /* The phone held upright (spec 0106): smaller buttons, closer together. Its full-screen
    view and a phone held sideways keep the desktop's 48 px and 10 px. */
 :global([data-layout="phone"]) .buttons {

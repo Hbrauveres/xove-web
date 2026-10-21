@@ -89,6 +89,8 @@ export function ViewerBar(props: Props) {
               className={styles.round}
               data-on={micOn || undefined}
               data-talking={micTalking || undefined}
+              // While I'm live my mic never fades with the controls: I always see whether it hears me (spec 0129).
+              data-stays
               aria-pressed={Boolean(micOn)}
               aria-label={micOn ? "Mute your voice" : "Share your voice"}
               onClick={onMic}

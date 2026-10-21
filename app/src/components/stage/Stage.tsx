@@ -642,7 +642,8 @@ export function Stage({
             onSettings={toggleSettings}
             onMenuChange={onMenuChange}
             extra={
-              <div className={`${round.pill} ${micOn ? round.live : ""}`} data-talking={micTalking || undefined}>
+              // My mic never fades with the controls: I always see whether it hears me (spec 0129).
+              <div className={`${round.pill} ${micOn ? round.live : ""}`} data-talking={micTalking || undefined} data-stays>
                 <Tooltip text={micOn ? "Mute your voice" : "Share your voice"}>
                   <button
                     type="button"
