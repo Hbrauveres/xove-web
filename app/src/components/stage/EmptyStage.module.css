@@ -112,7 +112,7 @@
   text-wrap: balance;
 }
 
-/* Two pills of one width, side by side, and the cog beside them: the row centred as a whole (spec 0138). */
+/* Two pills of one width, side by side, alone in the row, centred (specs 0138, 0147). */
 .go {
   --h: 44px;
   display: grid;
@@ -142,15 +142,6 @@
   height: 18px;
 }
 
-/* The settings: a small round button, the second way's soft fill. (Doubled, to win over any
-   size's padding for the pills: a round button has none.) */
-.go .cog.cog {
-  width: var(--h);
-  padding: 0;
-  background: rgba(235, 235, 236, 0.08);
-  color: var(--text);
-}
-
 .primary {
   background: var(--accent);
   color: var(--accent-ink);
@@ -175,8 +166,7 @@
     background: #f36a6a;
   }
 
-  .ghost:hover,
-  .go .cog.cog:hover {
+  .ghost:hover {
     background: rgba(235, 235, 236, 0.14);
   }
 }
@@ -224,7 +214,7 @@
 }
 
 /* A phone's shortest stages (a 360 px phone held upright: under 190 px inside): no line, so the
-   pills stay clear of the corner's buttons. */
+   pills stay clear of the corner's buttons (spec 0147). */
 @container (max-height: 190px) {
   :global(:is([data-layout="phone"], [data-layout="sideways"])) .copy {
     display: none;

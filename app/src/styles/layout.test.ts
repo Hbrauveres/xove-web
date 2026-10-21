@@ -226,10 +226,6 @@ describe("the standby screen, balanced on every screen (spec 0138)", () => {
     expect(rule(empty, ".go")).toMatch(/--h:\s*44px/);
     expect(rule(empty, `${phone} .go`)).toMatch(/--h:\s*34px/);
     expect(rule(empty, ".go button")).toMatch(/height:\s*var\(--h\)/);
-    // The cog is round: no pill padding, whatever the size's rules say.
-    const cog = rule(empty, ".go .cog.cog");
-    expect(cog).toMatch(/width:\s*var\(--h\)/);
-    expect(cog).toMatch(/padding:\s*0/);
   });
 
   it("keeps a short stage's way to start in its middle, not pushed up for the corner buttons", () => {
