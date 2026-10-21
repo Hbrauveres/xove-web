@@ -214,10 +214,10 @@ describe("the standby screen, balanced on every screen (spec 0138)", () => {
   const empty = sheet("components/stage/EmptyStage.module.css");
   const phone = ':global(:is([data-layout="phone"], [data-layout="sideways"]))';
 
-  it("lays the ways to start out as one row: two pills of one width and the cog, centred as a whole", () => {
+  it("lays the ways to start out as one row: two pills of one width, centred", () => {
     const go = rule(empty, ".go");
     expect(go).toMatch(/display:\s*grid/);
-    expect(go).toMatch(/grid-template-columns:\s*1fr 1fr var\(--h\)/);
+    expect(go).toMatch(/grid-template-columns:\s*1fr 1fr;/);
     expect(go).toMatch(/justify-content:\s*center/);
     expect(empty).not.toMatch(/\.go::before/);
   });

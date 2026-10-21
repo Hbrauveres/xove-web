@@ -545,8 +545,6 @@ export function Stage({
         <EmptyStage
           canShareScreen={controls.canShareScreen}
           onStart={startMine}
-          // The cog only while nobody is live: a stream loading has its own (spec 0138).
-          onSettings={big ? undefined : toggleSettings}
         />
       );
 
@@ -633,7 +631,17 @@ export function Stage({
             onSettings={toggleSettings}
             canSetVolume={canSetVolume()}
           />
-        ) : !big ? null /* Nobody live: the empty stage holds the cog, beside the ways to start (spec 0138). */ : (
+        ) : !big ? (
+          // Nobody live: the cog in the corner, beside fullscreen (draft: the standby's cog back in the corner).
+          <ViewerBar
+            live={false}
+            settingsOnly
+            canShareScreen={controls.canShareScreen}
+            onStart={startMine}
+            onSettings={toggleSettings}
+            canSetVolume={canSetVolume()}
+          />
+        ) : (
           // Your stream: your controls in the middle, your mic with them.
           <PlayerButtons
             {...controls}

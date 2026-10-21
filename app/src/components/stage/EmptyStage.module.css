@@ -116,7 +116,7 @@
 .go {
   --h: 44px;
   display: grid;
-  grid-template-columns: 1fr 1fr var(--h);
+  grid-template-columns: 1fr 1fr;
   justify-content: center;
   gap: 10px;
   margin-top: 12px;
@@ -221,6 +221,14 @@
 :global(:is([data-layout="phone"], [data-layout="sideways"])) .go svg {
   width: 15px;
   height: 15px;
+}
+
+/* A phone's shortest stages (under 210 px tall, a 360 px phone held upright): no line, so the
+   pills stay clear of the corner's buttons. */
+@container (max-height: 210px) {
+  :global(:is([data-layout="phone"], [data-layout="sideways"])) .copy {
+    display: none;
+  }
 }
 
 /* The narrowest phone (280 px): only the pills, so the stage's own buttons in its corner stay

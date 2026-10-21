@@ -327,19 +327,18 @@ describe("room: sharing", () => {
     expect(document.querySelector('[class*="flash"]')).toBeNull();
   });
 
-  it("puts the settings beside the ways to start when nobody is live, not in a corner (spec 0138)", async () => {
+  it("keeps the settings in the corner beside fullscreen when nobody is live, the ways to start alone in the middle", async () => {
     installFakeApi({ me: member });
     renderRoom();
     await connected();
     const empty = await waitFor(() => stage().querySelector<HTMLElement>("[data-empty]")!);
-    // The row: Screen, Camera, then the cog; the stage's own controls hold no cog.
     expect(within(empty).getAllByRole("button").map((b) => b.getAttribute("aria-label"))).toEqual([
       "Share your screen",
       "Turn on your camera",
-      "Settings",
     ]);
-    expect(within(stage()).getAllByRole("button", { name: "Settings" })).toHaveLength(1);
-    await userEvent.setup().click(within(empty).getByRole("button", { name: "Settings" }));
+    const cog = within(stage()).getByRole("button", { name: "Settings" });
+    expect(empty).not.toContainElement(cog);
+    await userEvent.setup().click(cog);
     expect(screen.getByRole("dialog", { name: "Settings" })).toBeInTheDocument();
   });
 
