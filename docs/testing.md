@@ -70,6 +70,8 @@ The page, the hooks, the client and the room's logic all run for real; only the 
 
 ## The look's values
 
+*Being replaced:* tests that read CSS text and check literal values block moving the look to tokens; they become checks that the CSS uses the tokens, while the contrast test below stays.
+
 The design sheet's values are tested where they live, in the stylesheets: the palette and its contrast (`styles/palette.test.ts`), the sliders and the switch (`styles/controls.test.ts`), the layout's sizes (`styles/layout.test.ts`). From the palette's test, every text colour on every surface:
 
 ```ts
@@ -83,6 +85,20 @@ for (const bg of ["ground", "surface", "surface-raised"]) {
 ## Pictures and sizes
 
 jsdom has no real layout, so how each screen looks is checked in a real headless browser: the [design sheet](design.md)'s pictures are shot from the running app, with fake people and moving pictures, at every size the design sheet lists (desktops, vertical monitors, phones upright and sideways, tablets). A visual change retakes them in the same pull request, and compares them with the design it was drawn from. What a headless browser can't do (gestures, the install prompt, Safari, real fullscreen) is checked by hand on real phones.
+
+## Test rules
+
+Every test earns its place, and runs alone, in any order, fast.
+
+- **Useful:** a test protects a behaviour that matters and could break; a failure means a real bug. No CSS text or literal values (`#ffffff`, `44px`), no props echoed back, no tests of the fakes rather than the app, no "renders without crashing", no two tests for the same behaviour. A test of removed code leaves with it.
+- **One test file per file with logic**, beside it, named the same. Logic is tested where it lives, as plain functions; a page's tests check only the wiring, split by feature.
+- **Read the page as a person does:** roles, names, labels, `aria-pressed`, `aria-expanded`, `aria-disabled`, `userEvent`; never markup details or class names. A `data-*` attribute only when it's the only sign of a state.
+- **Independent:** each test builds its own data with factories (`test/factories/`), nothing shared at module level; after every test, the setup resets everything shared (storage, spies and mocks, globals, timers, and every shared piece of the app through its reset function). Nothing is restored inside a test's body, where a failure would skip it. The order is shuffled on every run, so a dependence shows at once.
+- **No real waiting:** every delay (debounce, retry, hover, hold, idle, animation) on fake timers, and a fixed clock (`vi.setSystemTime`) for anything that shows a time. `findBy` and `waitFor` keep the default 1 s: a test that needs longer is waiting in real time.
+- **Fast:** a test under about 100 ms, a file under about 1.5 s, the whole suite in about 10 s; a file that grows past that splits by feature, so the workers share the load.
+- **A flaky test is a bug:** fix its cause (usually time or shared state); never re-run it to pass.
+
+These rules are being applied as the app is reorganised ([Architecture](architecture.md#where-the-code-is-going)); some of today's tests don't follow them yet.
 
 ## Running them
 
