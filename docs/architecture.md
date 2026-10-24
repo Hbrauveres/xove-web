@@ -163,6 +163,59 @@ Sharing a screen or a camera is in [Media](media.md).
 
 **Installing.** On Android, "Get Xovê" opens the browser's install prompt, caught as the page loads (`install/prompt.ts`), since a browser offers it only once; with none, it points to the browser menu's "Install app". On iPhone and iPad, it shows Safari's Share steps. The manifest (`public/site.webmanifest`) has what Chrome checks before offering an install and `"display": "fullscreen"`, so the app opens without a browser bar.
 
+## Where the code is going
+
+The modules above are the app as it is today. It's being reorganised, with no change of behaviour, into the structure below; each step moves whole areas, and this page's tables follow as they move. Every component, today's and the next version's, with its pictures and its future folder: [Components](components/README.md).
+
+### The structure
+
+By feature, with everything that belongs together side by side:
+
+```
+app/src/
+├── app/            the shell: routes, providers, the app component
+├── core/           one per app, no UI: the API client, auth, the LiveKit adapter, devices, preferences
+├── shared/         reused by two or more features
+│   ├── ui/<name>/  the building blocks: face, icon button, menu, slider, switch, panel, icons…
+│   ├── hooks/  utils/  constants/  enums/  types/
+│   └── styles/     tokens.css (every colour, size, spacing, duration, easing and layer), global.css
+└── features/
+    ├── room/       header/  people/  stage/  chat/  queue/   (areas, each a folder of components)
+    │               state/   hooks/  utils/  constants/  enums/  types/   room.page.tsx
+    ├── settings/   home/   request-access/   admin/
+```
+
+- **A component is a folder:** `person-row/person-row.component.tsx`, `person-row.component.module.css`, `person-row.component.test.tsx` and `index.ts` (its only export). Nothing else: its helpers go to the feature's `utils/`, its constants to `constants/`, its enums to `enums/`, its types to `types/`.
+- **Names:** kebab-case with the type as a suffix: `.component.tsx`, `.page.tsx`, `.hook.ts`, `.util.ts`, `.service.ts`, `.adapter.ts`, `.store.ts`, `.model.ts`, `.selectors.ts`, `.constants.ts`, `.enum.ts`, `.types.ts`; tests `.test.ts(x)`.
+- **Where a thing lives:** used by one feature, in that feature; by two or more, in `shared/`; one per app with no UI, in `core/`.
+- **Imports go one way:** `features` → `shared`, `core`; `shared` → `core` only for types; `core` → nothing in the app. A feature uses another only through its `index.ts`, and no file imports another component's CSS.
+
+### The rules
+
+- **One job per file.** If describing it needs "and", it's two files. Components about 150 lines at most, hooks and services about 200, any file 300.
+- **One test file beside every file with logic**, testing that file's behaviour ([Testing](testing.md#test-rules)).
+- **Each building block exists once**, with variants: one icon button, one menu (one floating system: anchor, outside press, Escape, focus return, one open at a time), one face, one switch, one set of icons.
+- **Tokens only:** no literal colour, duration or easing in a component's CSS.
+- **Components never find each other through the page** (`querySelector`, labels, `data-*` used as hooks): a ref, a context, or CSS.
+- **No module-level mutable state.** Hooks return stable values; effects only sync with something outside React.
+- **Comments say why**, never history: no issue or spec numbers in the code.
+
+### The state, in layers
+
+From the edge in, each layer talking only to its neighbours:
+
+```mermaid
+flowchart LR
+  AD[Adapters in core/<br/>API, LiveKit, devices, preferences] --> M[Room model<br/>pure functions]
+  M --> ST[Room store<br/>one provider]
+  ST --> SE[Selectors and hooks<br/>usePeople, useStage, useHearing]
+  SE --> UI[Components]
+  UI -->|intents| ST
+  ST -->|commands| AD
+```
+
+The model is the room as data: people keyed by one `PersonId` (me included, as anyone else), streams, watches, hearing, activity, one state machine per stream. The components see data and intents, never LiveKit's or the API's objects.
+
 ## Repository layout
 
 ```

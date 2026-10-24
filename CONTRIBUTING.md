@@ -14,5 +14,6 @@
 - Tests come with every change.
 - **The API changes first.** A web change that needs a new API field ships in [`xove-api`](https://github.com/Hbrauveres/xove-api) first; this repo's release is tagged only once that API version is live in production, and the web app still works without the field.
 - No secrets, server details or personal data in code, config or docs. Settings are environment variables; their values live outside this repo.
-- `docs/` changes in the same pull request as the behaviour it describes.
+- `docs/` changes in the same pull request as the behaviour it describes; a component added, moved or removed updates [Components](docs/components/README.md).
+- The code follows the [structure and its rules](docs/architecture.md#where-the-code-is-going) and the [test rules](docs/testing.md#test-rules): one job per file, one test file beside every file with logic, tokens only, tests independent and fast.
 - A red pipeline on `main` is fixed before anything else is merged.
