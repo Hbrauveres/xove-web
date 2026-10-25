@@ -1,0 +1,6428 @@
+[
+  {
+    "tool": "code",
+    "rule": "crossCss",
+    "file": "src/components/stage/PlayerButtons.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "crossCss",
+    "file": "src/components/stage/SettingsPanel.tsx",
+    "count": 2,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "cssText",
+    "file": "src/brand/brand.test.ts",
+    "count": 4,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "domQuery",
+    "file": "src/components/stage/AlsoLive.tsx",
+    "count": 2,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "domQuery",
+    "file": "src/components/stage/Facecam.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "domQuery",
+    "file": "src/components/stage/PreviewTray.tsx",
+    "count": 2,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "domQuery",
+    "file": "src/components/stage/Stage.tsx",
+    "count": 4,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "domQuery",
+    "file": "src/components/ui/Picker.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "domQuery",
+    "file": "src/main.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/api/client.ts",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/brand/iconSvg.ts",
+    "count": 2,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/brand/mark.ts",
+    "count": 3,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/brand/markTimeline.ts",
+    "count": 2,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/brand/useMarkAnimation.test.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/brand/useMarkAnimation.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/brand/XoveIcon.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/brand/XoveMark.tsx",
+    "count": 2,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/room/AccountButton.module.css",
+    "count": 5,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/room/AccountButton.tsx",
+    "count": 2,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/room/ActivityBell.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/room/ActivityBell.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/room/ActivityList.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/room/ActivityList.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/room/ActivityPill.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/room/ActivityPill.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/room/activityText.ts",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/room/PeopleButton.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/room/PeopleButton.tsx",
+    "count": 2,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/room/RoomFooter.module.css",
+    "count": 2,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/room/RoomFooter.tsx",
+    "count": 2,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/room/RoomHeader.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/room/RoomHeader.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/room/SeatOffer.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/room/WaitingRoom.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/room/WaitingRoom.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/AlsoLive.module.css",
+    "count": 9,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/AlsoLive.test.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/AlsoLive.tsx",
+    "count": 10,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/Ambilight.tsx",
+    "count": 3,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/CornerGlow.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/EmptyStage.module.css",
+    "count": 7,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/EmptyStage.test.tsx",
+    "count": 3,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/EmptyStage.tsx",
+    "count": 4,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/Facecam.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/Facecam.test.tsx",
+    "count": 2,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/Facecam.tsx",
+    "count": 2,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/HearToggles.module.css",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/HearToggles.tsx",
+    "count": 7,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/HereCards.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/HereCards.tsx",
+    "count": 2,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/hereFor.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/icons.tsx",
+    "count": 5,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/LiveFeed.module.css",
+    "count": 4,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/LiveFeed.tsx",
+    "count": 8,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/makeRoom.ts",
+    "count": 3,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/MicTest.module.css",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/MicTest.tsx",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/NowWatching.module.css",
+    "count": 7,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/NowWatching.tsx",
+    "count": 7,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/PlayerButtons.module.css",
+    "count": 2,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/PlayerButtons.test.tsx",
+    "count": 2,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/PlayerButtons.tsx",
+    "count": 10,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/PreviewTray.module.css",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/PreviewTray.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/RoundButton.module.css",
+    "count": 4,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/ScreenVideo.tsx",
+    "count": 2,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/SettingsPanel.module.css",
+    "count": 4,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/SettingsPanel.tsx",
+    "count": 15,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/stack.ts",
+    "count": 2,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/Stage.module.css",
+    "count": 21,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/Stage.tsx",
+    "count": 51,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/StageDots.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/StageDots.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/StageOverlay.module.css",
+    "count": 2,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/StageOverlay.tsx",
+    "count": 3,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/staticBands.ts",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/StaticGlow.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/StaticGlow.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/StaticNoise.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/StaticNoise.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/StreamsRow.module.css",
+    "count": 6,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/StreamsRow.test.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/StreamsRow.tsx",
+    "count": 6,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/usePreviewTray.ts",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/ViewerBar.module.css",
+    "count": 4,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/ViewerBar.tsx",
+    "count": 8,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/stage/VoiceAudio.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/ui/Avatar.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/ui/Avatar.tsx",
+    "count": 2,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/ui/cue.module.css",
+    "count": 2,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/ui/Dropdown.module.css",
+    "count": 2,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/ui/Dropdown.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/ui/DropUp.tsx",
+    "count": 2,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/ui/floating.ts",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/ui/Picker.module.css",
+    "count": 3,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/ui/Picker.tsx",
+    "count": 11,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/ui/Range.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/ui/Range.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/ui/Toast.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/ui/toast.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/ui/Toast.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/ui/Tooltip.module.css",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/components/ui/Tooltip.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/hooks/useFullscreenElement.ts",
+    "count": 4,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/hooks/useInstalled.ts",
+    "count": 2,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/hooks/useLiveKitRoom.ts",
+    "count": 10,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/hooks/useMicLevel.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/hooks/usePinnedRow.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/hooks/useRoomLayout.ts",
+    "count": 5,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/hooks/useRoomSeat.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/hooks/useRoomSession.ts",
+    "count": 13,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/hooks/useStagePick.ts",
+    "count": 2,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/hooks/useStageSwipe.test.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/hooks/useStageSwipe.ts",
+    "count": 5,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/hooks/useStreams.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/hooks/useTapToggle.ts",
+    "count": 2,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/hooks/useVideoShape.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/install/device.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/install/prompt.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/main.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/media/ambilight.ts",
+    "count": 3,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/media/hearing.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/media/noiseGate.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/media/preferences.ts",
+    "count": 8,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/media/shareSettings.test.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/media/shareSettings.ts",
+    "count": 6,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/media/stagePick.test.ts",
+    "count": 2,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/media/stagePick.ts",
+    "count": 2,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/pages/AdminPage.module.css",
+    "count": 2,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/pages/HomePage.module.css",
+    "count": 4,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/pages/InstallPage.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/pages/InstallPage.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/pages/RequestAccessPage.module.css",
+    "count": 3,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/pages/RoomPage.module.css",
+    "count": 6,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/pages/RoomPage.test.tsx",
+    "count": 32,
+    "owner": "#184 the room page's tests"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/pages/RoomPage.tsx",
+    "count": 12,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/styles/global.css",
+    "count": 3,
+    "owner": "#185 shared: tokens"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/test/fakeApi.ts",
+    "count": 2,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/test/fakeLiveKit.ts",
+    "count": 7,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/test/setup.ts",
+    "count": 1,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/types.ts",
+    "count": 4,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/room/AccountButton.module.css",
+    "count": 9,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/room/ActivityBell.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/room/ActivityList.module.css",
+    "count": 7,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/room/ActivityPill.module.css",
+    "count": 7,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/room/PeopleButton.module.css",
+    "count": 7,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/room/SeatOffer.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/AlsoLive.module.css",
+    "count": 18,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/Ambilight.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/CornerGlow.module.css",
+    "count": 3,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/EmptyStage.module.css",
+    "count": 35,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/Facecam.module.css",
+    "count": 7,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/HearToggles.module.css",
+    "count": 24,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/LiveFeed.module.css",
+    "count": 5,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/MicTest.module.css",
+    "count": 10,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/NowWatching.module.css",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/PreviewTray.module.css",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/RoundButton.module.css",
+    "count": 4,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/ScreenVideo.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/SettingsPanel.module.css",
+    "count": 13,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/Stage.module.css",
+    "count": 15,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/StageDots.module.css",
+    "count": 5,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/StageNotice.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/StageOverlay.module.css",
+    "count": 4,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/StaticGlow.module.css",
+    "count": 3,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/StaticNoise.module.css",
+    "count": 5,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/StreamsRow.module.css",
+    "count": 14,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/stage/ViewerBar.module.css",
+    "count": 24,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/ui/Button.module.css",
+    "count": 4,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/ui/cue.module.css",
+    "count": 10,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/ui/Dropdown.module.css",
+    "count": 5,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/ui/DropUp.module.css",
+    "count": 7,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/ui/LiveDot.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/ui/Picker.module.css",
+    "count": 20,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/ui/Range.module.css",
+    "count": 10,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/ui/Segmented.module.css",
+    "count": 9,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/ui/Toast.module.css",
+    "count": 4,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/components/ui/Tooltip.module.css",
+    "count": 2,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/pages/HomePage.module.css",
+    "count": 4,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/pages/InstallPage.module.css",
+    "count": 2,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "literal",
+    "file": "src/pages/RequestAccessPage.module.css",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "livekit",
+    "file": "src/hooks/useLiveKitRoom.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "code",
+    "rule": "livekit",
+    "file": "src/media/noiseGate.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "code",
+    "rule": "livekit",
+    "file": "src/media/shareSettings.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/api/client.test.ts",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/api/client.ts",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/auth/AuthProvider.tsx",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/auth/guards.tsx",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/brand/brand.test.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/brand/iconSvg.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/brand/mark.test.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/brand/mark.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/brand/markTimeline.test.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/brand/markTimeline.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/brand/parts.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/brand/useMarkAnimation.test.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/brand/useMarkAnimation.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/brand/XoveIcon.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/brand/XoveMark.test.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/brand/XoveMark.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/AccountButton.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/AccountButton.test.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/AccountButton.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/ActivityBell.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/ActivityBell.test.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/ActivityBell.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/ActivityIcon.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/ActivityList.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/ActivityList.test.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/ActivityList.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/ActivityPill.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/ActivityPill.test.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/ActivityPill.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/activityText.ts",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/PeopleButton.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/PeopleButton.test.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/PeopleButton.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/RoomFooter.module.css",
+    "count": 1,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/RoomFooter.tsx",
+    "count": 1,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/RoomHeader.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/RoomHeader.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/SeatOffer.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/SeatOffer.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/WaitingRoom.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/room/WaitingRoom.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/AlsoLive.module.css",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/AlsoLive.test.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/AlsoLive.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/Ambilight.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/Ambilight.test.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/Ambilight.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/CornerGlow.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/CornerGlow.test.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/CornerGlow.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/EmptyStage.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/EmptyStage.test.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/EmptyStage.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/Facecam.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/Facecam.test.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/Facecam.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/HearToggles.module.css",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/HearToggles.test.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/HearToggles.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/HereCards.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/HereCards.test.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/HereCards.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/hereFor.test.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/hereFor.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/icons.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/LiveFeed.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/LiveFeed.test.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/LiveFeed.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/makeRoom.test.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/makeRoom.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/MicTest.module.css",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/MicTest.test.tsx",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/MicTest.tsx",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/NowWatching.module.css",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/NowWatching.test.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/NowWatching.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/PlayerButtons.module.css",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/PlayerButtons.test.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/PlayerButtons.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/PreviewTray.module.css",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/PreviewTray.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/RoundButton.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/ScreenVideo.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/ScreenVideo.test.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/ScreenVideo.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/SettingsPanel.module.css",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/SettingsPanel.test.tsx",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/SettingsPanel.tsx",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/stack.ts",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/Stage.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/Stage.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/StageDots.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/StageDots.test.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/StageDots.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/StageNotice.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/StageNotice.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/StageOverlay.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/StageOverlay.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/staticBands.test.ts",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/staticBands.ts",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/StaticGlow.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/StaticGlow.test.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/StaticGlow.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/StaticNoise.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/StaticNoise.test.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/StaticNoise.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/StreamsRow.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/StreamsRow.test.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/StreamsRow.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/usePreviewTray.ts",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/ViewerBar.module.css",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/ViewerBar.test.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/ViewerBar.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/stage/VoiceAudio.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Avatar.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Avatar.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Button.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Button.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/cue.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Dropdown.module.css",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Dropdown.test.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Dropdown.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/DropUp.module.css",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/DropUp.test.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/DropUp.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/floating.test.ts",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/floating.ts",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/FullPageMessage.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/FullPageMessage.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/LiveDot.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/LiveDot.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/PersonAvatar.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/PersonAvatar.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Picker.module.css",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Picker.test.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Picker.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Range.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Range.test.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Range.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Segmented.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Segmented.test.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Segmented.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Toast.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/toast.test.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Toast.test.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/toast.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Toast.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Tooltip.module.css",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Tooltip.test.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/components/ui/Tooltip.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useFullscreenElement.test.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useFullscreenElement.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useInstalled.test.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useInstalled.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useLiveKitRoom.test.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useLiveKitRoom.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useMicLevel.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/usePinnedRow.test.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/usePinnedRow.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useRoomLayout.test.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useRoomLayout.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useRoomSeat.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useRoomSession.test.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useRoomSession.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useStagePick.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useStageSwipe.test.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useStageSwipe.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useStreams.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useTapToggle.test.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useTapToggle.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useVideoShape.test.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/hooks/useVideoShape.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/install/device.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/install/prompt.test.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/install/prompt.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/media/ambilight.test.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/media/ambilight.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/media/hearing.test.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/media/hearing.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/media/noiseGate.test.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/media/noiseGate.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/media/preferences.test.ts",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/media/preferences.ts",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/media/shareSettings.test.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/media/shareSettings.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/media/stagePick.test.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/media/stagePick.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/pages/AdminPage.module.css",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/pages/AdminPage.test.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/pages/AdminPage.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/pages/HomePage.module.css",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/pages/HomePage.test.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/pages/HomePage.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/pages/InstallPage.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/pages/InstallPage.test.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/pages/InstallPage.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/pages/RequestAccessPage.module.css",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/pages/RequestAccessPage.test.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/pages/RequestAccessPage.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/pages/RoomPage.module.css",
+    "count": 1,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/pages/RoomPage.test.tsx",
+    "count": 1,
+    "owner": "#184 the room page's tests"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/pages/RoomPage.tsx",
+    "count": 1,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/test/fakeApi.ts",
+    "count": 1,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/test/fakeLiveKit.ts",
+    "count": 1,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/test/renderApp.tsx",
+    "count": 1,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/test/setup.test.tsx",
+    "count": 1,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/test/setup.ts",
+    "count": 1,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "code",
+    "rule": "naming",
+    "file": "src/types.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/auth/AuthProvider.tsx",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/auth/guards.tsx",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/brand/iconSvg.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/brand/parts.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/brand/XoveIcon.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/room/ActivityIcon.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/room/activityText.ts",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/room/RoomFooter.tsx",
+    "count": 1,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/room/RoomHeader.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/room/SeatOffer.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/room/WaitingRoom.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/stage/icons.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/stage/PreviewTray.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/stage/stack.ts",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/stage/Stage.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/stage/StageNotice.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/stage/StageOverlay.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/stage/usePreviewTray.ts",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/stage/VoiceAudio.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/ui/Avatar.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/ui/Button.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/ui/FullPageMessage.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/ui/LiveDot.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/components/ui/PersonAvatar.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/hooks/useMicLevel.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/hooks/useRoomSeat.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/hooks/useStagePick.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/hooks/useStreams.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/install/device.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/main.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "noTest",
+    "file": "src/types.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "code",
+    "rule": "orphanTest",
+    "file": "src/brand/brand.test.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "realWait",
+    "file": "src/pages/RoomPage.test.tsx",
+    "count": 30,
+    "owner": "#184 the room page's tests"
+  },
+  {
+    "tool": "code",
+    "rule": "sharedData",
+    "file": "src/brand/brand.test.ts",
+    "count": 3,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "sharedData",
+    "file": "src/components/stage/HereCards.test.tsx",
+    "count": 3,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "sharedData",
+    "file": "src/hooks/useTapToggle.test.ts",
+    "count": 2,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "size",
+    "file": "src/components/stage/SettingsPanel.tsx",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "size",
+    "file": "src/components/stage/Stage.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "size",
+    "file": "src/components/stage/ViewerBar.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "size",
+    "file": "src/components/ui/Picker.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "size",
+    "file": "src/hooks/useLiveKitRoom.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "code",
+    "rule": "size",
+    "file": "src/hooks/useRoomSession.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "code",
+    "rule": "size",
+    "file": "src/test/fakeLiveKit.ts",
+    "count": 1,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/api/client.test.ts",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/api/client.ts",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/auth/AuthProvider.tsx",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/auth/guards.tsx",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/brand/brand.test.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/brand/iconSvg.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/brand/mark.test.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/brand/mark.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/brand/markTimeline.test.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/brand/markTimeline.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/brand/parts.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/brand/useMarkAnimation.test.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/brand/useMarkAnimation.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/brand/XoveIcon.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/brand/XoveMark.test.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/brand/XoveMark.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/AccountButton.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/AccountButton.test.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/AccountButton.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/ActivityBell.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/ActivityBell.test.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/ActivityBell.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/ActivityIcon.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/ActivityList.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/ActivityList.test.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/ActivityList.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/ActivityPill.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/ActivityPill.test.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/ActivityPill.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/activityText.ts",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/PeopleButton.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/PeopleButton.test.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/PeopleButton.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/RoomFooter.module.css",
+    "count": 1,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/RoomFooter.tsx",
+    "count": 1,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/RoomHeader.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/RoomHeader.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/SeatOffer.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/SeatOffer.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/WaitingRoom.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/room/WaitingRoom.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/AlsoLive.module.css",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/AlsoLive.test.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/AlsoLive.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/Ambilight.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/Ambilight.test.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/Ambilight.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/CornerGlow.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/CornerGlow.test.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/CornerGlow.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/EmptyStage.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/EmptyStage.test.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/EmptyStage.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/Facecam.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/Facecam.test.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/Facecam.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/HearToggles.module.css",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/HearToggles.test.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/HearToggles.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/HereCards.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/HereCards.test.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/HereCards.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/hereFor.test.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/hereFor.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/icons.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/LiveFeed.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/LiveFeed.test.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/LiveFeed.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/makeRoom.test.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/makeRoom.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/MicTest.module.css",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/MicTest.test.tsx",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/MicTest.tsx",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/NowWatching.module.css",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/NowWatching.test.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/NowWatching.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/PlayerButtons.module.css",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/PlayerButtons.test.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/PlayerButtons.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/PreviewTray.module.css",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/PreviewTray.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/RoundButton.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/ScreenVideo.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/ScreenVideo.test.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/ScreenVideo.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/SettingsPanel.module.css",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/SettingsPanel.test.tsx",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/SettingsPanel.tsx",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/stack.ts",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/Stage.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/Stage.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/StageDots.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/StageDots.test.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/StageDots.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/StageNotice.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/StageNotice.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/StageOverlay.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/StageOverlay.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/staticBands.test.ts",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/staticBands.ts",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/StaticGlow.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/StaticGlow.test.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/StaticGlow.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/StaticNoise.module.css",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/StaticNoise.test.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/StaticNoise.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/StreamsRow.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/StreamsRow.test.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/StreamsRow.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/usePreviewTray.ts",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/ViewerBar.module.css",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/ViewerBar.test.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/ViewerBar.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/stage/VoiceAudio.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Avatar.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Avatar.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Button.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Button.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/cue.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Dropdown.module.css",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Dropdown.test.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Dropdown.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/DropUp.module.css",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/DropUp.test.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/DropUp.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/floating.test.ts",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/floating.ts",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/FullPageMessage.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/FullPageMessage.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/LiveDot.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/LiveDot.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/PersonAvatar.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/PersonAvatar.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Picker.module.css",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Picker.test.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Picker.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Range.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Range.test.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Range.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Segmented.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Segmented.test.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Segmented.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Toast.module.css",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/toast.test.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Toast.test.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/toast.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Toast.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Tooltip.module.css",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Tooltip.test.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/components/ui/Tooltip.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useFullscreenElement.test.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useFullscreenElement.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useInstalled.test.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useInstalled.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useLiveKitRoom.test.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useLiveKitRoom.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useMicLevel.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/usePinnedRow.test.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/usePinnedRow.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useRoomLayout.test.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useRoomLayout.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useRoomSeat.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useRoomSession.test.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useRoomSession.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useStagePick.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useStageSwipe.test.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useStageSwipe.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useStreams.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useTapToggle.test.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useTapToggle.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useVideoShape.test.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/hooks/useVideoShape.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/install/device.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/install/prompt.test.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/install/prompt.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/media/ambilight.test.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/media/ambilight.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/media/hearing.test.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/media/hearing.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/media/noiseGate.test.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/media/noiseGate.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/media/preferences.test.ts",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/media/preferences.ts",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/media/shareSettings.test.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/media/shareSettings.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/media/stagePick.test.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/media/stagePick.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/pages/AdminPage.module.css",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/pages/AdminPage.test.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/pages/AdminPage.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/pages/HomePage.module.css",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/pages/HomePage.test.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/pages/HomePage.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/pages/InstallPage.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/pages/InstallPage.test.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/pages/InstallPage.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/pages/RequestAccessPage.module.css",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/pages/RequestAccessPage.test.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/pages/RequestAccessPage.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/pages/RoomPage.module.css",
+    "count": 1,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/pages/RoomPage.test.tsx",
+    "count": 1,
+    "owner": "#184 the room page's tests"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/pages/RoomPage.tsx",
+    "count": 1,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "code",
+    "rule": "structure",
+    "file": "src/styles/global.css",
+    "count": 1,
+    "owner": "#185 shared: tokens"
+  },
+  {
+    "tool": "copies",
+    "rule": "copied-block",
+    "file": "src/components/room/SeatOffer.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "copies",
+    "rule": "copied-block",
+    "file": "src/components/room/WaitingRoom.module.css",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "copies",
+    "rule": "copied-block",
+    "file": "src/components/stage/HereCards.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "copies",
+    "rule": "copied-block",
+    "file": "src/components/stage/LiveFeed.module.css",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "copies",
+    "rule": "copied-block",
+    "file": "src/components/stage/PlayerButtons.module.css",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "copies",
+    "rule": "copied-block",
+    "file": "src/components/stage/SettingsPanel.module.css",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "copies",
+    "rule": "copied-block",
+    "file": "src/components/stage/StaticGlow.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "copies",
+    "rule": "copied-block",
+    "file": "src/components/stage/StaticNoise.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/api/client.ts",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/components/room/ActivityList.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/components/room/ActivityPill.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/components/room/SeatOffer.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/components/stage/AlsoLive.tsx",
+    "count": 2,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/components/stage/HearToggles.tsx",
+    "count": 2,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/components/stage/LiveFeed.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/components/stage/NowWatching.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/components/stage/PlayerButtons.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/components/stage/SettingsPanel.tsx",
+    "count": 3,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/components/stage/stack.ts",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/components/stage/Stage.tsx",
+    "count": 5,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/components/stage/StreamsRow.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/components/stage/ViewerBar.tsx",
+    "count": 2,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/components/ui/Dropdown.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/components/ui/Picker.tsx",
+    "count": 2,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/hooks/useLiveKitRoom.ts",
+    "count": 3,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/hooks/useRoomSession.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/hooks/useStagePick.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/hooks/useStageSwipe.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(complexity)",
+    "file": "src/pages/RoomPage.tsx",
+    "count": 1,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/room/AccountButton.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/room/ActivityPill.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/room/PeopleButton.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/room/SeatOffer.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/stage/AlsoLive.tsx",
+    "count": 2,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/stage/Ambilight.tsx",
+    "count": 2,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/stage/EmptyStage.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/stage/Facecam.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/stage/HearToggles.tsx",
+    "count": 2,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/stage/LiveFeed.tsx",
+    "count": 2,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/stage/MicTest.tsx",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/stage/NowWatching.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/stage/PlayerButtons.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/stage/PreviewTray.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/stage/ScreenVideo.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/stage/SettingsPanel.tsx",
+    "count": 2,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/stage/Stage.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/stage/StaticNoise.tsx",
+    "count": 2,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/stage/StreamsRow.tsx",
+    "count": 2,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/stage/ViewerBar.tsx",
+    "count": 2,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/ui/Dropdown.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/ui/DropUp.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/ui/Picker.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/components/ui/Tooltip.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/hooks/useLiveKitRoom.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/hooks/useRoomSession.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/hooks/useStageSwipe.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/pages/AdminPage.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/pages/InstallPage.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/pages/RoomPage.tsx",
+    "count": 1,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-params)",
+    "file": "src/brand/mark.ts",
+    "count": 2,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/auth/AuthProvider.tsx",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/brand/iconSvg.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/brand/mark.ts",
+    "count": 38,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/brand/markTimeline.ts",
+    "count": 18,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/brand/useMarkAnimation.ts",
+    "count": 5,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/room/ActivityList.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/room/ActivityPill.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/room/activityText.ts",
+    "count": 5,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/room/PeopleButton.tsx",
+    "count": 2,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/room/SeatOffer.tsx",
+    "count": 3,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/stage/Ambilight.tsx",
+    "count": 6,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/stage/Facecam.tsx",
+    "count": 4,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/stage/hereFor.ts",
+    "count": 4,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/stage/makeRoom.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/stage/MicTest.tsx",
+    "count": 3,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/stage/NowWatching.tsx",
+    "count": 3,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/stage/PlayerButtons.tsx",
+    "count": 2,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/stage/SettingsPanel.tsx",
+    "count": 2,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/stage/Stage.tsx",
+    "count": 5,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/stage/StageDots.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/stage/staticBands.ts",
+    "count": 22,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/stage/StaticGlow.tsx",
+    "count": 6,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/stage/StaticNoise.tsx",
+    "count": 15,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/stage/ViewerBar.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/ui/Avatar.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/ui/PersonAvatar.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/ui/Picker.tsx",
+    "count": 3,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/ui/Range.tsx",
+    "count": 2,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/components/ui/Tooltip.tsx",
+    "count": 2,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/features/room/utils/who-is-here.util.ts",
+    "count": 2,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/hooks/useLiveKitRoom.ts",
+    "count": 2,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/hooks/useMicLevel.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/hooks/usePinnedRow.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/hooks/useRoomSession.ts",
+    "count": 12,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/hooks/useVideoShape.ts",
+    "count": 2,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/media/ambilight.ts",
+    "count": 22,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/media/noiseGate.ts",
+    "count": 2,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/media/shareSettings.ts",
+    "count": 3,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/media/stagePick.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/shared/hooks/use-elapsed.hook.ts",
+    "count": 8,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/shared/utils/time-ago.util.ts",
+    "count": 5,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(click-events-have-key-events)",
+    "file": "src/components/stage/HearToggles.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(click-events-have-key-events)",
+    "file": "src/components/stage/LiveFeed.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(interactive-supports-focus)",
+    "file": "src/components/stage/SettingsPanel.tsx",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(interactive-supports-focus)",
+    "file": "src/components/ui/Segmented.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(label-has-associated-control)",
+    "file": "src/components/room/AccountButton.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(media-has-caption)",
+    "file": "src/components/stage/ScreenVideo.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(media-has-caption)",
+    "file": "src/components/stage/VoiceAudio.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(no-noninteractive-element-interactions)",
+    "file": "src/components/brand/XoveMark.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(no-noninteractive-element-interactions)",
+    "file": "src/components/stage/AlsoLive.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(no-noninteractive-element-interactions)",
+    "file": "src/components/stage/HearToggles.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(no-noninteractive-element-interactions)",
+    "file": "src/components/stage/SettingsPanel.tsx",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(no-noninteractive-element-interactions)",
+    "file": "src/components/stage/StreamsRow.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(no-noninteractive-tabindex)",
+    "file": "src/components/brand/XoveMark.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(no-noninteractive-tabindex)",
+    "file": "src/components/stage/Facecam.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(no-static-element-interactions)",
+    "file": "src/components/room/SeatOffer.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(no-static-element-interactions)",
+    "file": "src/components/stage/Facecam.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(no-static-element-interactions)",
+    "file": "src/components/stage/LiveFeed.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(no-static-element-interactions)",
+    "file": "src/components/stage/PreviewTray.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(no-static-element-interactions)",
+    "file": "src/components/ui/Dropdown.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(no-static-element-interactions)",
+    "file": "src/components/ui/DropUp.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(no-static-element-interactions)",
+    "file": "src/components/ui/Picker.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(prefer-tag-over-role)",
+    "file": "src/components/brand/XoveIcon.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(prefer-tag-over-role)",
+    "file": "src/components/brand/XoveMark.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(prefer-tag-over-role)",
+    "file": "src/components/room/PeopleButton.tsx",
+    "count": 2,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(prefer-tag-over-role)",
+    "file": "src/components/room/SeatOffer.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(prefer-tag-over-role)",
+    "file": "src/components/room/WaitingRoom.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(prefer-tag-over-role)",
+    "file": "src/components/stage/AlsoLive.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(prefer-tag-over-role)",
+    "file": "src/components/stage/HearToggles.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(prefer-tag-over-role)",
+    "file": "src/components/stage/SettingsPanel.tsx",
+    "count": 2,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(prefer-tag-over-role)",
+    "file": "src/components/stage/StageNotice.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(prefer-tag-over-role)",
+    "file": "src/components/ui/DropUp.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(prefer-tag-over-role)",
+    "file": "src/components/ui/FullPageMessage.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(prefer-tag-over-role)",
+    "file": "src/components/ui/Picker.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(prefer-tag-over-role)",
+    "file": "src/components/ui/Segmented.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(prefer-tag-over-role)",
+    "file": "src/components/ui/Toast.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(prefer-tag-over-role)",
+    "file": "src/pages/InstallPage.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(prefer-tag-over-role)",
+    "file": "src/pages/RequestAccessPage.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "lint",
+    "rule": "react-hooks(exhaustive-deps)",
+    "file": "src/components/stage/Stage.tsx",
+    "count": 2,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "react(only-export-components)",
+    "file": "src/auth/AuthProvider.tsx",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "lint",
+    "rule": "react(only-export-components)",
+    "file": "src/components/stage/NowWatching.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "react(only-export-components)",
+    "file": "src/components/ui/Tooltip.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "react(refs)",
+    "file": "src/components/ui/Tooltip.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "react(set-state-in-effect)",
+    "file": "src/auth/AuthProvider.tsx",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "lint",
+    "rule": "react(set-state-in-effect)",
+    "file": "src/components/stage/Stage.tsx",
+    "count": 3,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "react(set-state-in-effect)",
+    "file": "src/hooks/useMicLevel.ts",
+    "count": 1,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "lint",
+    "rule": "react(set-state-in-effect)",
+    "file": "src/hooks/useRoomSession.ts",
+    "count": 2,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "lint",
+    "rule": "react(set-state-in-effect)",
+    "file": "src/hooks/useStreams.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "lint",
+    "rule": "react(set-state-in-effect)",
+    "file": "src/pages/AdminPage.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/api/client.ts",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/components/stage/AlsoLive.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/components/stage/Facecam.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/components/stage/HearToggles.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/components/stage/MicTest.tsx",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/components/stage/PreviewTray.tsx",
+    "count": 4,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/components/stage/SettingsPanel.tsx",
+    "count": 6,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/components/stage/Stage.tsx",
+    "count": 5,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/components/stage/StreamsRow.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/components/stage/ViewerBar.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/components/ui/Dropdown.tsx",
+    "count": 3,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/components/ui/DropUp.tsx",
+    "count": 4,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/components/ui/Picker.tsx",
+    "count": 4,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/components/ui/Range.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/components/ui/Segmented.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/components/ui/Tooltip.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/hooks/useInstalled.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/hooks/useLiveKitRoom.ts",
+    "count": 16,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/hooks/usePinnedRow.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/hooks/useRoomSession.ts",
+    "count": 3,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/hooks/useStageSwipe.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/hooks/useTapToggle.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/install/prompt.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/media/preferences.ts",
+    "count": 6,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/media/shareSettings.ts",
+    "count": 3,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(no-non-null-assertion)",
+    "file": "src/components/stage/AlsoLive.tsx",
+    "count": 2,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(no-non-null-assertion)",
+    "file": "src/components/stage/LiveFeed.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(no-non-null-assertion)",
+    "file": "src/components/stage/Stage.tsx",
+    "count": 2,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(no-non-null-assertion)",
+    "file": "src/components/stage/StaticGlow.tsx",
+    "count": 2,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(no-non-null-assertion)",
+    "file": "src/components/stage/StreamsRow.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(no-non-null-assertion)",
+    "file": "src/main.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS18048",
+    "file": "src/brand/mark.test.ts",
+    "count": 10,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS18048",
+    "file": "src/hooks/useLiveKitRoom.test.ts",
+    "count": 2,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS18048",
+    "file": "src/hooks/useRoomSession.ts",
+    "count": 4,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS18048",
+    "file": "src/media/ambilight.test.ts",
+    "count": 3,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS18048",
+    "file": "src/media/shareSettings.ts",
+    "count": 13,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS18048",
+    "file": "src/pages/RoomPage.test.tsx",
+    "count": 3,
+    "owner": "#184 the room page's tests"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2322",
+    "file": "src/components/stage/Ambilight.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2322",
+    "file": "src/components/stage/StageDots.test.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2322",
+    "file": "src/components/stage/StreamsRow.tsx",
+    "count": 2,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2322",
+    "file": "src/media/ambilight.test.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2322",
+    "file": "src/media/stagePick.ts",
+    "count": 2,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2345",
+    "file": "src/api/client.ts",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2345",
+    "file": "src/brand/mark.test.ts",
+    "count": 3,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2345",
+    "file": "src/components/stage/EmptyStage.test.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2345",
+    "file": "src/components/stage/HereCards.test.tsx",
+    "count": 3,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2345",
+    "file": "src/components/stage/LiveFeed.test.tsx",
+    "count": 7,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2345",
+    "file": "src/components/stage/SettingsPanel.tsx",
+    "count": 7,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2345",
+    "file": "src/components/stage/Stage.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2345",
+    "file": "src/components/ui/DropUp.test.tsx",
+    "count": 3,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2345",
+    "file": "src/hooks/useLiveKitRoom.ts",
+    "count": 6,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2345",
+    "file": "src/hooks/useRoomSession.ts",
+    "count": 3,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2345",
+    "file": "src/test/fakeApi.ts",
+    "count": 2,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/room/AccountButton.tsx",
+    "count": 4,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/room/ActivityList.test.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/room/ActivityPill.test.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/room/PeopleButton.tsx",
+    "count": 2,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/stage/AlsoLive.test.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/stage/AlsoLive.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/stage/EmptyStage.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/stage/Facecam.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/stage/LiveFeed.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/stage/NowWatching.test.tsx",
+    "count": 2,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/stage/PlayerButtons.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/stage/SettingsPanel.tsx",
+    "count": 10,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/stage/Stage.tsx",
+    "count": 7,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/stage/StreamsRow.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/stage/ViewerBar.test.tsx",
+    "count": 2,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/stage/ViewerBar.tsx",
+    "count": 4,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/ui/floating.ts",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/ui/Picker.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/components/ui/Segmented.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/hooks/useLiveKitRoom.ts",
+    "count": 4,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/hooks/useRoomSession.ts",
+    "count": 2,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/media/hearing.ts",
+    "count": 2,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/pages/RoomPage.tsx",
+    "count": 3,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2375",
+    "file": "src/test/fakeLiveKit.ts",
+    "count": 1,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2379",
+    "file": "src/components/stage/SettingsPanel.test.tsx",
+    "count": 5,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2379",
+    "file": "src/components/ui/Tooltip.test.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2379",
+    "file": "src/test/fakeApi.ts",
+    "count": 1,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2412",
+    "file": "src/api/client.ts",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2412",
+    "file": "src/media/noiseGate.ts",
+    "count": 3,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2412",
+    "file": "src/test/fakeLiveKit.ts",
+    "count": 3,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/brand/brand.test.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/brand/mark.test.ts",
+    "count": 6,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/brand/markTimeline.test.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/components/brand/useMarkAnimation.ts",
+    "count": 2,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/components/room/AccountButton.test.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/components/room/ActivityList.test.tsx",
+    "count": 3,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/components/stage/SettingsPanel.test.tsx",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/components/stage/SettingsPanel.tsx",
+    "count": 2,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/components/stage/staticBands.test.ts",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/components/stage/StaticNoise.tsx",
+    "count": 2,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/components/ui/Segmented.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/hooks/useLiveKitRoom.test.ts",
+    "count": 3,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/media/ambilight.test.ts",
+    "count": 5,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/media/shareSettings.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/pages/RoomPage.test.tsx",
+    "count": 11,
+    "owner": "#184 the room page's tests"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/test/fakeLiveKit.ts",
+    "count": 1,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/test/setup.test.tsx",
+    "count": 2,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/test/setup.ts",
+    "count": 2,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2769",
+    "file": "src/api/client.ts",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2769",
+    "file": "src/components/ui/Tooltip.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "unused",
+    "rule": "export",
+    "file": "src/api/client.ts",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "unused",
+    "rule": "export",
+    "file": "src/components/stage/Ambilight.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "unused",
+    "rule": "export",
+    "file": "src/components/stage/icons.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "unused",
+    "rule": "export",
+    "file": "src/components/stage/Stage.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "unused",
+    "rule": "export",
+    "file": "src/components/stage/staticBands.ts",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "unused",
+    "rule": "export",
+    "file": "src/components/ui/Picker.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "unused",
+    "rule": "export",
+    "file": "src/components/ui/toast.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "unused",
+    "rule": "export",
+    "file": "src/hooks/usePinnedRow.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "unused",
+    "rule": "export",
+    "file": "src/hooks/useRoomSession.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "unused",
+    "rule": "export",
+    "file": "src/hooks/useStageSwipe.ts",
+    "count": 3,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "unused",
+    "rule": "export",
+    "file": "src/hooks/useStreams.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "unused",
+    "rule": "export",
+    "file": "src/install/prompt.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "unused",
+    "rule": "export",
+    "file": "src/media/ambilight.ts",
+    "count": 2,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "unused",
+    "rule": "export",
+    "file": "src/media/noiseGate.ts",
+    "count": 2,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "unused",
+    "rule": "export",
+    "file": "src/media/preferences.ts",
+    "count": 1,
+    "owner": "#180 core: API client, auth, preferences"
+  },
+  {
+    "tool": "unused",
+    "rule": "export",
+    "file": "src/media/shareSettings.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "unused",
+    "rule": "file",
+    "file": "src/components/ui/LiveDot.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "unused",
+    "rule": "type",
+    "file": "src/brand/mark.ts",
+    "count": 2,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "unused",
+    "rule": "type",
+    "file": "src/components/stage/ViewerBar.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "unused",
+    "rule": "type",
+    "file": "src/components/ui/Picker.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "unused",
+    "rule": "type",
+    "file": "src/components/ui/Segmented.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "unused",
+    "rule": "type",
+    "file": "src/core/api/api.types.ts",
+    "count": 3,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "unused",
+    "rule": "type",
+    "file": "src/hooks/useLiveKitRoom.ts",
+    "count": 4,
+    "owner": "#181 core: LiveKit adapter, devices"
+  },
+  {
+    "tool": "unused",
+    "rule": "type",
+    "file": "src/hooks/useStreams.ts",
+    "count": 1,
+    "owner": "#182 the room's model and store"
+  },
+  {
+    "tool": "unused",
+    "rule": "type",
+    "file": "src/install/prompt.ts",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "unused",
+    "rule": "type",
+    "file": "src/media/hearing.ts",
+    "count": 1,
+    "owner": "#183 the room's hooks"
+  },
+  {
+    "tool": "unused",
+    "rule": "type",
+    "file": "src/test/fakeApi.ts",
+    "count": 2,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "unused",
+    "rule": "type",
+    "file": "src/types.ts",
+    "count": 3,
+    "owner": "#182 the room's model and store"
+  }
+]
