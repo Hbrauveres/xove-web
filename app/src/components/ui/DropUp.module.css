@@ -70,15 +70,6 @@
 }
 
 /* Opened by a finger: 44 px controls, the app's height for touch. */
-.wrap[data-touch] .dropup {
-  --ctl: 44px;
-  --pick-font: var(--text-sm);
-}
-
-.wrap[data-touch] .row {
-  height: 44px;
-  font-size: var(--text-sm);
-}
 
 @media (prefers-reduced-motion: reduce) {
   .dropup,

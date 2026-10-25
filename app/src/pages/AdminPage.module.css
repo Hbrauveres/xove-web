@@ -1,9 +1,7 @@
 .shell {
   max-width: 1000px;
   margin-inline: auto;
-  /* Clear of the phone's bars (spec 0141). */
-  padding: var(--safe-top) max(var(--gutter), var(--safe-right)) calc(40px + var(--safe-bottom))
-    max(var(--gutter), var(--safe-left));
+  padding: 0 var(--gutter) 40px var(--gutter);
 }
 
 .header {

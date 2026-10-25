@@ -78,7 +78,7 @@
 /* The row of a small preview: the preview's width whatever is open, the panels' glass, the buttons
    centred and clear until hovered (spec 0131). The space to the slider is the slider's own padding,
    so closed, the buttons sit in the middle. */
-.toggles[data-layout="tray"] {
+.toggles {
   box-sizing: border-box;
   flex-direction: column;
   align-items: center;
@@ -93,28 +93,28 @@
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
 }
 
-.toggles[data-layout="tray"] .buttons {
+.toggles .buttons {
   gap: 6px;
 }
 
-.toggles[data-layout="tray"] .toggle {
+.toggles .toggle {
   width: 28px;
   height: 28px;
   background: transparent;
 }
 
-.toggles[data-layout="tray"] .toggle svg {
+.toggles .toggle svg {
   width: 15px;
   height: 15px;
 }
 
 @media (hover: hover) {
-  .toggles[data-layout="tray"] .toggle:not([aria-disabled="true"]):hover {
+  .toggles .toggle:not([aria-disabled="true"]):hover {
     background: rgba(255, 255, 255, 0.08);
   }
 }
 
-.toggles[data-layout="tray"] .toggle[data-active] {
+.toggles .toggle[data-active] {
   background: rgba(255, 255, 255, 0.1);
 }
 
@@ -219,64 +219,10 @@
   }
 }
 
-/* Over a big picture (the phone's feed): each sound's own slider, upright over its button, the
-   stage's glass pill unrolling from it (spec 0131). */
-.anchor {
-  position: relative;
-  display: inline-grid;
-}
-
-.upright {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  width: 30px;
-  height: 108px;
-  margin-left: -15px;
-  border: 1px solid var(--panel-line);
-  border-radius: 999px;
-  background: var(--panel);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
-  clip-path: inset(100% 0 0 0 round 999px);
-  transition: clip-path var(--unroll);
-  pointer-events: none;
-}
-
-.upright[data-open] {
-  clip-path: inset(0 round 999px);
-  pointer-events: auto;
-}
-
-/* Bridges the gap to the button, so a finger or the pointer can travel. */
-.upright::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 100%;
-  height: 10px;
-}
-
-.uprightRange {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 82px;
-  margin: 0;
-  transform: translate(-50%, -50%) rotate(-90deg);
-}
-
-.upright[data-muted] .uprightRange {
-  opacity: 0.35;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .toggle,
   .toggle::before,
-  .drawer,
-  .upright {
+  .drawer {
     transition: none;
   }
 

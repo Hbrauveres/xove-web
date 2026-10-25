@@ -20,13 +20,6 @@
 
 /* Above the open streams row, 6 px clear of its pictures, and the full view's settings sheet,
    8 px, as the sounds (spec 0133). */
-:global([data-row-open]) .overlay {
-  padding-bottom: 6px;
-}
-
-:global([data-sheet-lift]) .overlay {
-  padding-bottom: 8px;
-}
 
 /* The fullscreen button, at the right. */
 .top {

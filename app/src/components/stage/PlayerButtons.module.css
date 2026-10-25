@@ -10,16 +10,6 @@
   z-index: 2;
 }
 
-/* Above the open streams row (sideways): 6 px clear of its pictures; above the full view's
-   settings sheet, 8 px (spec 0133). */
-:global([data-row-open]) .row {
-  padding-bottom: 6px;
-}
-
-:global([data-sheet-lift]) .row {
-  padding-bottom: 8px;
-}
-
 .buttons {
   --gap: 10px;
   display: flex;
@@ -33,12 +23,6 @@
   display: flex;
 }
 
-/* The phone held upright (spec 0106): smaller buttons, closer together. Its full-screen
-   view and a phone held sideways keep the desktop's 48 px and 10 px. */
-:global([data-layout="phone"]) .buttons {
-  --gap: 8px;
-}
-
 /* A narrow stage (spec 0133): closer together, and centred clear of the fullscreen button in the
    corner (34 px, 12 px in, and an 8 px gap) on both sides. */
 @container (max-width: 359px) {
@@ -46,8 +30,7 @@
     padding-inline: calc(12px + 34px + 8px);
   }
 
-  .buttons,
-  :global([data-layout]) .buttons {
+  .buttons {
     --gap: 6px;
   }
 }
