@@ -28,7 +28,11 @@ export function PersonAvatar({ name, email, src, size = 36 }: Props) {
     );
   }
   return (
-    <span className={`${styles.avatar} ${styles.initial}`} style={{ width: size, height: size, fontSize: size * 0.42 }} aria-hidden="true">
+    <span
+      className={`${styles.avatar} ${styles.initial}`}
+      style={{ width: size, height: size, fontSize: size * 0.42 }}
+      aria-hidden="true"
+    >
       {initial}
     </span>
   );

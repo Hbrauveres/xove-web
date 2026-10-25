@@ -10,7 +10,15 @@ import { AlsoLive } from "./AlsoLive";
 import type { Hearing } from "./HearToggles";
 
 const bruno = () =>
-  aSharer({ id: "user-7", name: "Bruno", kinds: ["screen", "camera"], hasSound: true, sound: aTrack(), hasVoice: true, voice: aTrack() });
+  aSharer({
+    id: "user-7",
+    name: "Bruno",
+    kinds: ["screen", "camera"],
+    hasSound: true,
+    sound: aTrack(),
+    hasVoice: true,
+    voice: aTrack(),
+  });
 const ana = () => aSharer({ id: "user-3", name: "Ana", kinds: ["screen"], hasSound: true, sound: aTrack() });
 const diego = () => aSharer({ id: "user-9", name: "Diego", kinds: ["camera"] });
 const HEARD: Hearing = { sound: { volume: 1, muted: false }, voice: { volume: 1, muted: false } };
@@ -90,9 +98,11 @@ describe("also live (specs 0104 and 0123)", () => {
 
     await user.hover(preview(/^Watch your screen/));
     const row = await screen.findByRole("group", { name: "Your stream" });
-    expect(within(row).getAllByRole("button").map((b) => b.getAttribute("aria-label"))).toEqual([
-      "Swap your screen and camera",
-    ]);
+    expect(
+      within(row)
+        .getAllByRole("button")
+        .map((b) => b.getAttribute("aria-label")),
+    ).toEqual(["Swap your screen and camera"]);
     await user.click(within(row).getByRole("button"));
     expect(preview(/^Watch your camera/)).toBeInTheDocument();
   });
@@ -123,11 +133,11 @@ describe("also live (specs 0104 and 0123)", () => {
     expect(within(item(/^Watch Bruno/)).queryByRole("button", { name: /Mute|Swap/ })).not.toBeInTheDocument();
 
     const row = await rowOf("Bruno");
-    expect(within(row).getAllByRole("button").map((b) => b.getAttribute("aria-label"))).toEqual([
-      "Mute Bruno's voice",
-      "Mute Bruno's screen sound",
-      "Swap Bruno's screen and camera",
-    ]);
+    expect(
+      within(row)
+        .getAllByRole("button")
+        .map((b) => b.getAttribute("aria-label")),
+    ).toEqual(["Mute Bruno's voice", "Mute Bruno's screen sound", "Swap Bruno's screen and camera"]);
     expect(item(/^Watch Bruno/).contains(row)).toBe(false);
     expect(item(/^Watch Bruno/)).toHaveAttribute("data-open");
   });
@@ -223,15 +233,21 @@ describe("also live (specs 0104 and 0123)", () => {
   it("greys a sound that isn't there, in its place, saying why", async () => {
     render(<Harness others={[diego()]} />);
     const row = await rowOf("Diego");
-    expect(within(row).getByRole("button", { name: "Diego: No screen sound" })).toHaveAttribute("aria-disabled", "true");
-    expect(within(row).getByRole("button", { name: "Diego: Diego's mic is off" })).toHaveAttribute("aria-disabled", "true");
+    expect(within(row).getByRole("button", { name: "Diego: No screen sound" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
+    expect(within(row).getByRole("button", { name: "Diego: Diego's mic is off" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
   });
 
   it("stacks a screen and a camera: the other picture behind, and the swap trades them (spec 0131, AC-3)", async () => {
     const user = onFakeClock();
     render(<Harness others={[bruno()]} />);
     expect(item(/^Watch Bruno's screen/)).toHaveAttribute("data-stacked");
-    expect(item(/^Watch Bruno's screen/).querySelector(":scope > span[aria-hidden=\"true\"] video")).not.toBeNull();
+    expect(item(/^Watch Bruno's screen/).querySelector(':scope > span[aria-hidden="true"] video')).not.toBeNull();
 
     const row = await rowOf("Bruno", user);
     await user.click(within(row).getByRole("button", { name: "Swap Bruno's screen and camera" }));

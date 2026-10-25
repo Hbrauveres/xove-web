@@ -8,7 +8,11 @@ updates:
     directory: /app
     schedule: { interval: weekly }
     cooldown: { default-days: 7 }
-    groups: { npm: { patterns: ["*"] } }
+    groups:
+      # The code checks' tools, pinned, in their own PR: a new version can bring new findings
+      # (docs/architecture.md, "The checks"), and that PR fixes them before it merges.
+      checks: { patterns: [oxlint, typescript, prettier, knip, jscpd] }
+      npm: { patterns: ["*"], exclude-patterns: [oxlint, typescript, prettier, knip, jscpd] }
 
   - package-ecosystem: docker
     directory: /app

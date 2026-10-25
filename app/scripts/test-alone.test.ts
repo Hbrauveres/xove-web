@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { inParallel, patternFor, ranAsTargeted } from "./test-alone";
+import { inParallel, patternFor, ranAsTargeted } from "./test-alone.ts";
 
 describe("running each test alone", () => {
   it("matches exactly the listed test, as Vitest names it, its brackets and marks taken literally", () => {
@@ -10,7 +10,11 @@ describe("running each test alone", () => {
   });
 
   it("reads the quotes vitest list escapes, and lets an it.each's placeholder match each case", () => {
-    expect(new RegExp(patternFor('timeAgo > says \\"just now\\" under 45 seconds').pattern).test('timeAgo > says "just now" under 45 seconds')).toBe(true);
+    expect(
+      new RegExp(patternFor('timeAgo > says \\"just now\\" under 45 seconds').pattern).test(
+        'timeAgo > says "just now" under 45 seconds',
+      ),
+    ).toBe(true);
     const each = patternFor("share presets > %s: has its content hint");
     expect(each.cases).toBe(true);
     expect(new RegExp(each.pattern).test("share presets > sharp: has its content hint")).toBe(true);

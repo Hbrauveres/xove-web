@@ -6,7 +6,15 @@ import { DropUp } from "../ui/DropUp";
 import drop from "../ui/DropUp.module.css";
 import { Picker } from "../ui/Picker";
 import { showToast } from "../ui/toast";
-import { CameraOffIcon, CameraOnIcon, CogIcon, ScreenOffIcon, ScreenOnIcon, ScreenShareIcon, WindowIcon } from "./icons";
+import {
+  CameraOffIcon,
+  CameraOnIcon,
+  CogIcon,
+  ScreenOffIcon,
+  ScreenOnIcon,
+  ScreenShareIcon,
+  WindowIcon,
+} from "./icons";
 import round from "./RoundButton.module.css";
 import styles from "./PlayerButtons.module.css";
 import { Tooltip } from "../ui/Tooltip";
@@ -236,4 +244,3 @@ function Icon({ kind, off }: { kind: StreamKind; off: boolean }) {
     </>
   );
 }
-

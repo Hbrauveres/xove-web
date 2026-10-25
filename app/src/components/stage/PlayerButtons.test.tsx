@@ -39,7 +39,8 @@ function setup(props: Partial<Parameters<typeof PlayerButtons>[0]> = {}) {
     ...props,
   };
   const view = render(<PlayerButtons {...base} />);
-  const rerender = (next: Partial<Parameters<typeof PlayerButtons>[0]>) => view.rerender(<PlayerButtons {...base} {...next} />);
+  const rerender = (next: Partial<Parameters<typeof PlayerButtons>[0]>) =>
+    view.rerender(<PlayerButtons {...base} {...next} />);
   return { user, rerender, ...handlers };
 }
 
@@ -206,7 +207,11 @@ describe("stream buttons: when they can't be used", () => {
     expect(onStop).not.toHaveBeenCalled();
     rest(stop);
     expect(within(dropUp(stop)!).getByRole("button", { name: "Change" })).toBeDisabled();
-    expect(within(dropUp(screen.getByRole("button", { name: "Turn off your camera" }))!).getByRole("button", { name: /^Camera:/ })).toBeDisabled();
+    expect(
+      within(dropUp(screen.getByRole("button", { name: "Turn off your camera" }))!).getByRole("button", {
+        name: /^Camera:/,
+      }),
+    ).toBeDisabled();
     expect(onChangeWindow).not.toHaveBeenCalled();
   });
 
@@ -250,7 +255,8 @@ describe("stream buttons: when they can't be used", () => {
 });
 
 describe("icons: one state system (spec 0106)", () => {
-  const icon = (button: HTMLElement) => [...button.querySelectorAll("svg[data-icon]")].map((s) => s.getAttribute("data-icon"));
+  const icon = (button: HTMLElement) =>
+    [...button.querySelectorAll("svg[data-icon]")].map((s) => s.getAttribute("data-icon"));
 
   it("shows a crossed monitor while not sharing, with the share icon for hover and focus", () => {
     setup();
@@ -277,4 +283,3 @@ describe("icons: one state system (spec 0106)", () => {
     expect(icon(screen.getByRole("button", { name: "Turn off your camera" }))).toEqual(["camera-on"]);
   });
 });
-

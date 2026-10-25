@@ -11,12 +11,18 @@ import { iconSvg } from "./iconSvg";
 const shipped = Object.keys(import.meta.glob("../../public/*")).map((p) => p.split("/").pop());
 /** The page's <link> tags, as rel → href. */
 const links = new Map(
-  [...html.matchAll(/<link\b[^>]*>/g)].map(([tag]) => [/rel="([^"]+)"/.exec(tag)?.[1], /href="([^"]+)"/.exec(tag)?.[1]]),
+  [...html.matchAll(/<link\b[^>]*>/g)].map(([tag]) => [
+    /rel="([^"]+)"/.exec(tag)?.[1],
+    /href="([^"]+)"/.exec(tag)?.[1],
+  ]),
 );
 const href = (rel: string) => links.get(rel);
 /** The page's <meta name> tags, as name → content. */
 const metas = new Map(
-  [...html.matchAll(/<meta\b[^>]*>/g)].map(([tag]) => [/name="([^"]+)"/.exec(tag)?.[1], /content="([^"]+)"/.exec(tag)?.[1]]),
+  [...html.matchAll(/<meta\b[^>]*>/g)].map(([tag]) => [
+    /name="([^"]+)"/.exec(tag)?.[1],
+    /content="([^"]+)"/.exec(tag)?.[1],
+  ]),
 );
 const meta = (name: string) => metas.get(name);
 
@@ -29,7 +35,14 @@ describe("Xovê's icon in the browser and on phones (spec 0111, FR-4)", () => {
   });
 
   it("ships every file it links", () => {
-    for (const f of ["favicon.svg", "apple-touch-icon.png", "icon-192.png", "icon-512.png", "icon-maskable-512.png", "site.webmanifest"]) {
+    for (const f of [
+      "favicon.svg",
+      "apple-touch-icon.png",
+      "icon-192.png",
+      "icon-512.png",
+      "icon-maskable-512.png",
+      "site.webmanifest",
+    ]) {
       expect(shipped, f).toContain(f);
     }
   });
@@ -89,10 +102,12 @@ describe("the phone icon files (spec 0113, FR-6b)", () => {
   /** A PNG's size and its top-left pixel (8-bit RGB, as rendered), read without image tools. */
   const pngAt = (name: string) => {
     const buf = readFileSync(`${__dirname}/../../public/${name}`);
-    const width = buf.readUInt32BE(16), height = buf.readUInt32BE(20);
+    const width = buf.readUInt32BE(16),
+      height = buf.readUInt32BE(20);
     const chunks: Buffer[] = [];
-    for (let at = 8; at < buf.length; ) {
-      const len = buf.readUInt32BE(at), type = buf.toString("ascii", at + 4, at + 8);
+    for (let at = 8; at < buf.length;) {
+      const len = buf.readUInt32BE(at),
+        type = buf.toString("ascii", at + 4, at + 8);
       if (type === "IDAT") chunks.push(buf.subarray(at + 8, at + 8 + len));
       at += 12 + len;
     }
@@ -102,7 +117,12 @@ describe("the phone icon files (spec 0113, FR-6b)", () => {
   };
 
   it("ships the three sizes, on the soft black ground (spec 0121)", () => {
-    for (const [name, size] of [["apple-touch-icon.png", 180], ["icon-192.png", 192], ["icon-512.png", 512], ["icon-maskable-512.png", 512]] as const) {
+    for (const [name, size] of [
+      ["apple-touch-icon.png", 180],
+      ["icon-192.png", 192],
+      ["icon-512.png", 512],
+      ["icon-maskable-512.png", 512],
+    ] as const) {
       const png = pngAt(name);
       expect([png.width, png.height], name).toEqual([size, size]);
       expect(png.colorType, name).toBe(2);

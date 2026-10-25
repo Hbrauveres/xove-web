@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { timeAgo } from "./useElapsed";
+import { timeAgo } from "./time-ago.util";
 
 describe("timeAgo", () => {
   const now = 1_000_000_000_000;

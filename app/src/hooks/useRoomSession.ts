@@ -1,7 +1,25 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { loadCameraPrefs, loadSharePrefs, loadVoicePrefs, saveCameraPrefs, saveSharePrefs, saveVoicePrefs, type SharePrefs, type VoicePrefs } from "../media/preferences";
-import type { ActivityEvent, CameraDevice, ConnectionState, Friend, LiveFeed, MediaTrack, Sharer, StreamKind } from "../types";
-import type { LiveStream, RoomSeatsState } from "../api/types";
+import {
+  loadCameraPrefs,
+  loadSharePrefs,
+  loadVoicePrefs,
+  saveCameraPrefs,
+  saveSharePrefs,
+  saveVoicePrefs,
+  type SharePrefs,
+  type VoicePrefs,
+} from "../media/preferences";
+import type {
+  ActivityEvent,
+  CameraDevice,
+  ConnectionState,
+  Friend,
+  LiveFeed,
+  MediaTrack,
+  Sharer,
+  StreamKind,
+} from "../types";
+import type { LiveStream, RoomSeatsState } from "@core/api/api.types";
 import { useLiveKitRoom, type CameraProblem, type Capture, type MicDevice, type ScreenSurface } from "./useLiveKitRoom";
 import { showToast } from "../components/ui/toast";
 import { useStreams } from "./useStreams";
@@ -86,7 +104,8 @@ const KINDS: StreamKind[] = ["screen", "camera"];
 
 /** Same person, same colour, in every browser. */
 // Ids differ only at the end ("user-3", "user-7"): the golden angle spreads them around the wheel.
-const hueOf = (id: string) => Math.round(([...id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 9973, 7) * 137.508) % 360);
+const hueOf = (id: string) =>
+  Math.round(([...id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 9973, 7) * 137.508) % 360);
 
 const firstName = (name: string | null | undefined) => name?.trim().split(/\s+/)[0] || "Someone";
 
@@ -184,7 +203,13 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
   const [streamEvents, setStreamEvents] = useState<ActivityEvent[]>([]);
   const previous = useRef<Set<string> | undefined>(undefined);
   const streamKeys = useMemo(
-    () => (live ? [...live].map((s) => `${s.mine ? me.id : identityOf(s.userId)}|${s.kind}`).sort().join(",") : null),
+    () =>
+      live
+        ? [...live]
+            .map((s) => `${s.mine ? me.id : identityOf(s.userId)}|${s.kind}`)
+            .sort()
+            .join(",")
+        : null,
     [live, me.id],
   );
   useEffect(() => {
@@ -217,7 +242,9 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
     lastConnection.current = lk.connection;
     if (before === "reconnecting" && lk.connection === "connected") {
       setConnectionEvents((prev) =>
-        [...prev, { id: `conn${++streamSeq}`, at: Date.now(), kind: "reconnected" as const, actorId: me.id }].slice(-30),
+        [...prev, { id: `conn${++streamSeq}`, at: Date.now(), kind: "reconnected" as const, actorId: me.id }].slice(
+          -30,
+        ),
       );
     }
   }, [lk.connection, me.id]);
@@ -462,7 +489,8 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
     startingVoice.current = true;
     try {
       const problem = await lk.startVoice(voicePrefs);
-      if (problem === "blocked") showToast("Your browser blocked the microphone. Allow it in the site's settings, then try again.");
+      if (problem === "blocked")
+        showToast("Your browser blocked the microphone. Allow it in the site's settings, then try again.");
       if (problem === "missing") showToast("No microphone found.");
       if (problem === "failed") showToast("Your voice couldn't be sent. Try again in a moment.");
     } finally {

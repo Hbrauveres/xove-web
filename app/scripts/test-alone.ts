@@ -49,7 +49,10 @@ const vitest = (...args: string[]) => run("npx", ["vitest", "run", ...args], { m
 async function main(filter?: string) {
   const out = join(mkdtempSync(join(tmpdir(), "test-alone-")), "list.json");
   await run("npx", ["vitest", "list", `--json=${out}`, ...(filter ? [filter] : [])], { maxBuffer: 64 * 1024 * 1024 });
-  const tests = (JSON.parse(readFileSync(out, "utf8")) as { name: string; file: string }[]).map((t) => ({ ...t, file: relative(process.cwd(), t.file) }));
+  const tests = (JSON.parse(readFileSync(out, "utf8")) as { name: string; file: string }[]).map((t) => ({
+    ...t,
+    file: relative(process.cwd(), t.file),
+  }));
   if (tests.length === 0) {
     console.error(`No tests found${filter ? ` for "${filter}"` : ""}: nothing was proven.`);
     process.exit(1);
@@ -58,7 +61,10 @@ async function main(filter?: string) {
   const limit = Math.max(1, Math.floor(availableParallelism() / 2));
 
   console.log(`${files.length} files alone, ${limit} at a time…`);
-  const filesFailed = await inParallel(files.map((f) => ({ label: f, go: () => vitest(f) })), limit);
+  const filesFailed = await inParallel(
+    files.map((f) => ({ label: f, go: () => vitest(f) })),
+    limit,
+  );
   console.log(`${tests.length} tests alone, ${limit} at a time…`);
   const testsFailed = await inParallel(
     tests.map((t) => ({
@@ -74,7 +80,9 @@ async function main(filter?: string) {
 
   for (const f of filesFailed) console.error(`FAIL alone (file): ${f}`);
   for (const t of testsFailed) console.error(`FAIL alone (test): ${t}`);
-  console.log(`${files.length - filesFailed.length} of ${files.length} files and ${tests.length - testsFailed.length} of ${tests.length} tests pass alone.`);
+  console.log(
+    `${files.length - filesFailed.length} of ${files.length} files and ${tests.length - testsFailed.length} of ${tests.length} tests pass alone.`,
+  );
   process.exit(filesFailed.length || testsFailed.length ? 1 : 0);
 }
 

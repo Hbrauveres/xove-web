@@ -3,7 +3,19 @@ import type { StreamKind } from "../../types";
 import { Range } from "../ui/Range";
 import { showToast } from "../ui/toast";
 import { FULL_ROOM } from "./PlayerButtons";
-import { CameraOffIcon, CameraOnIcon, CogIcon, MicIcon, MicOffIcon, ScreenOffIcon, ScreenOnIcon, SoundIcon, VoiceIcon, VoiceOffIcon, VolumeOffIcon } from "./icons";
+import {
+  CameraOffIcon,
+  CameraOnIcon,
+  CogIcon,
+  MicIcon,
+  MicOffIcon,
+  ScreenOffIcon,
+  ScreenOnIcon,
+  SoundIcon,
+  VoiceIcon,
+  VoiceOffIcon,
+  VolumeOffIcon,
+} from "./icons";
 import styles from "./ViewerBar.module.css";
 import { Tooltip } from "../ui/Tooltip";
 import { claimFloating, releaseFloating } from "../ui/floating";
@@ -43,7 +55,8 @@ type Props = {
  * them, the right corner is you. Your stream's own controls live only on your stream.
  */
 export function ViewerBar(props: Props) {
-  const { sound, voice, live, micOn, onMic, canShareScreen, full, onStart, onSettings, canSetVolume, settingsOnly } = props;
+  const { sound, voice, live, micOn, onMic, canShareScreen, full, onStart, onSettings, canSetVolume, settingsOnly } =
+    props;
   const [open, setOpen] = useState<"sound" | "voice" | null>(null);
   const [menu, setMenu] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
@@ -70,8 +83,28 @@ export function ViewerBar(props: Props) {
   return (
     <div ref={bar} className={styles.bar} data-buttons data-viewer-bar>
       <div className={styles.left}>
-        {sound && <Hear kind="sound" s={sound} open={open === "sound"} quiet={open !== null} setOpen={setOpen} canSetVolume={canSetVolume} />}
-        {voice && <Hear kind="voice" s={voice} open={open === "voice"} quiet={open !== null} setOpen={setOpen} canSetVolume={canSetVolume} name={voice.name} talking={voice.talking} />}
+        {sound && (
+          <Hear
+            kind="sound"
+            s={sound}
+            open={open === "sound"}
+            quiet={open !== null}
+            setOpen={setOpen}
+            canSetVolume={canSetVolume}
+          />
+        )}
+        {voice && (
+          <Hear
+            kind="voice"
+            s={voice}
+            open={open === "voice"}
+            quiet={open !== null}
+            setOpen={setOpen}
+            canSetVolume={canSetVolume}
+            name={voice.name}
+            talking={voice.talking}
+          />
+        )}
       </div>
       <div className={styles.right}>
         {settingsOnly ? (
@@ -128,7 +161,14 @@ export function ViewerBar(props: Props) {
                   }}
                 />
                 <span className={styles.sep} />
-                <MenuItem icon={<CogIcon />} label="Settings" onPick={() => { setMenu(false); onSettings(); }} />
+                <MenuItem
+                  icon={<CogIcon />}
+                  label="Settings"
+                  onPick={() => {
+                    setMenu(false);
+                    onSettings();
+                  }}
+                />
               </div>
             )}
           </span>
@@ -138,7 +178,17 @@ export function ViewerBar(props: Props) {
   );
 }
 
-function MenuItem({ icon, label, unavailable, onPick }: { icon: ReactNode; label: string; unavailable?: string; onPick: () => void }) {
+function MenuItem({
+  icon,
+  label,
+  unavailable,
+  onPick,
+}: {
+  icon: ReactNode;
+  label: string;
+  unavailable?: string;
+  onPick: () => void;
+}) {
   return (
     <Tooltip text={unavailable}>
       <button
@@ -196,8 +246,13 @@ function Hear({
   useEffect(() => () => [rest, leave, hold, idle].forEach((t) => window.clearTimeout(t.current)), []);
 
   const silent = Boolean(s.unavailable) || s.muted || s.volume === 0;
-  const label = s.unavailable ?? (kind === "sound" ? `${s.muted ? "Unmute" : "Mute"} the screen's sound` : `${s.muted ? "Unmute" : "Mute"} ${name}'s voice`);
-  const icon = kind === "sound" ? (silent ? <VolumeOffIcon /> : <SoundIcon />) : silent ? <VoiceOffIcon /> : <VoiceIcon />;
+  const label =
+    s.unavailable ??
+    (kind === "sound"
+      ? `${s.muted ? "Unmute" : "Mute"} the screen's sound`
+      : `${s.muted ? "Unmute" : "Mute"} ${name}'s voice`);
+  const icon =
+    kind === "sound" ? silent ? <VolumeOffIcon /> : <SoundIcon /> : silent ? <VoiceOffIcon /> : <VoiceIcon />;
   return (
     <span
       className={styles.anchor}
@@ -214,7 +269,10 @@ function Hear({
         leave.current = window.setTimeout(closeMine, 300);
       }}
     >
-      <Tooltip text={kind === "sound" ? s.unavailable ?? "Screen sound" : s.unavailable ?? `${name}'s voice`} hidden={quiet}>
+      <Tooltip
+        text={kind === "sound" ? (s.unavailable ?? "Screen sound") : (s.unavailable ?? `${name}'s voice`)}
+        hidden={quiet}
+      >
         <button
           type="button"
           className={styles.round}
@@ -247,7 +305,8 @@ function Hear({
               return;
             }
             if (s.unavailable) {
-              if (pointer.current !== "mouse") showToast(s.unavailable, kind === "sound" ? <VolumeOffIcon /> : <VoiceOffIcon />);
+              if (pointer.current !== "mouse")
+                showToast(s.unavailable, kind === "sound" ? <VolumeOffIcon /> : <VoiceOffIcon />);
               return;
             }
             s.onChange({ ...s, muted: !s.muted });

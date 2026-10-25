@@ -20,7 +20,9 @@ describe("home page", () => {
     const title = await screen.findByRole("heading", { level: 1 });
     expect(title.innerHTML).toBe("Go <em>live</em> with<br>your friends.");
     expect(
-      screen.getByText("Share your screen or camera in sharp, fast streams. Watch them play, hang out, help out. Invite only."),
+      screen.getByText(
+        "Share your screen or camera in sharp, fast streams. Watch them play, hang out, help out. Invite only.",
+      ),
     ).toBeInTheDocument();
   });
 });

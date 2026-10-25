@@ -60,7 +60,8 @@ describe("the icon (spec 0111)", () => {
   });
 
   it("keeps its own spacing around the O", () => {
-    const oLeft = i.ring.cx - 50, oTop = i.ring.cy - 50;
+    const oLeft = i.ring.cx - 50,
+      oTop = i.ring.cy - 50;
     expect(oLeft - i.frame.left).toBe(ICON_SPACING.left);
     expect(i.frame.right - (oLeft + 100)).toBe(ICON_SPACING.right);
     expect(oTop - i.frame.top).toBe(ICON_SPACING.top);

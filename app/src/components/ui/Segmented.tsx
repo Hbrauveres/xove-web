@@ -20,7 +20,10 @@ type Props<T extends string> = {
  */
 export function Segmented<T extends string>({ label, options, value, onChange, disabled = false }: Props<T>) {
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
-  const at = Math.max(0, options.findIndex((o) => o.value === value));
+  const at = Math.max(
+    0,
+    options.findIndex((o) => o.value === value),
+  );
 
   const onKeyDown = (e: KeyboardEvent) => {
     const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];

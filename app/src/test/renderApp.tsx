@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
-import App from "../App";
+import { App } from "@app/app.component";
 import { AuthProvider } from "../auth/AuthProvider";
 
 /** Renders the whole app at a given URL, the way the browser would. */

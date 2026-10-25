@@ -58,7 +58,9 @@
   appearance: none;
   -webkit-appearance: none;
   cursor: ew-resize;
-  transition: height 0.12s, margin-top 0.12s;
+  transition:
+    height 0.12s,
+    margin-top 0.12s;
 }
 
 .meter input:hover::-webkit-slider-thumb,

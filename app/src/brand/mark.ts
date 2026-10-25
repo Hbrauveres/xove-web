@@ -25,8 +25,18 @@ export type Point = readonly [number, number];
 /** A stroke: a line or a polyline, its ends square to itself. */
 export type Stroke = { points: Point[]; cap: "butt"; join: "miter" };
 /** A letter's strokes; `clip` cuts them flat at the cap height (the V's tips). */
-export type Letter = { letter: "X" | "O" | "V" | "E"; left: number; strokes: Stroke[]; clip?: { x: number; width: number } };
-export type Corner = { at: "top-left" | "bottom-left" | "bottom-right" | "top-right"; points: Point[]; red: boolean; width: number };
+export type Letter = {
+  letter: "X" | "O" | "V" | "E";
+  left: number;
+  strokes: Stroke[];
+  clip?: { x: number; width: number };
+};
+export type Corner = {
+  at: "top-left" | "bottom-left" | "bottom-right" | "top-right";
+  points: Point[];
+  red: boolean;
+  width: number;
+};
 export type Box = { x: number; y: number; width: number; height: number };
 
 const stroke = (...points: Point[]): Stroke => ({ points, cap: "butt", join: "miter" });
@@ -42,17 +52,26 @@ function corners(left: number, right: number, top: number, bottom: number, arm: 
     red: at === "top-right",
     width,
   });
-  return [c("top-left", left, top, 1, 1), c("bottom-left", left, bottom, 1, -1), c("bottom-right", right, bottom, -1, -1), c("top-right", right, top, -1, 1)];
+  return [
+    c("top-left", left, top, 1, 1),
+    c("bottom-left", left, bottom, 1, -1),
+    c("bottom-right", right, bottom, -1, -1),
+    c("top-right", right, top, -1, 1),
+  ];
 }
 
 function letterX(x0: number): Letter {
   // Square ends whose outer corners touch the cap line and the X's sides.
   const phi = Math.atan2(CAP, WIDTH.X);
-  const dx = (STROKE / 2) * Math.sin(phi), dy = (STROKE / 2) * Math.cos(phi);
+  const dx = (STROKE / 2) * Math.sin(phi),
+    dy = (STROKE / 2) * Math.cos(phi);
   return {
     letter: "X",
     left: x0,
-    strokes: [stroke([x0 + dx, dy], [x0 + WIDTH.X - dx, CAP - dy]), stroke([x0 + dx, CAP - dy], [x0 + WIDTH.X - dx, dy])],
+    strokes: [
+      stroke([x0 + dx, dy], [x0 + WIDTH.X - dx, CAP - dy]),
+      stroke([x0 + dx, CAP - dy], [x0 + WIDTH.X - dx, dy]),
+    ],
   };
 }
 
@@ -70,7 +89,10 @@ function letterE(x0: number): Letter {
   return {
     letter: "E",
     left: x0,
-    strokes: [stroke([x0 + WIDTH.E, i], [x0 + i, i], [x0 + i, CAP - i], [x0 + WIDTH.E, CAP - i]), stroke([x0 + i, CAP / 2], [x0 + WIDTH.E - 7, CAP / 2])],
+    strokes: [
+      stroke([x0 + WIDTH.E, i], [x0 + i, i], [x0 + i, CAP - i], [x0 + WIDTH.E, CAP - i]),
+      stroke([x0 + i, CAP / 2], [x0 + WIDTH.E - 7, CAP / 2]),
+    ],
   };
 }
 
@@ -78,7 +100,9 @@ const ring = (cx: number, cy: number, width = STROKE) => ({ cx, cy, r: 50 - widt
 const dot = (cx: number, cy: number, r = DOT_R) => ({ cx, cy, r });
 
 export function wordMark() {
-  const left = STROKE / 2, top = -PAD, bottom = CAP + PAD;
+  const left = STROKE / 2,
+    top = -PAD,
+    bottom = CAP + PAD;
   let x = left + PAD;
   const xLetter = letterX(x);
   x += WIDTH.X + GAP;
@@ -128,10 +152,16 @@ export function iconMark(optical: Optical = "large") {
   const o = OPTICAL[optical];
   const h = o.stroke / 2;
   // The large icon's box, outer edges included: the O 100 across, its spacing around it.
-  const outerLeft = 0, oLeft = STROKE / 2 + ICON_SPACING.left, oTop = STROKE / 2 + ICON_SPACING.top;
+  const outerLeft = 0,
+    oLeft = STROKE / 2 + ICON_SPACING.left,
+    oTop = STROKE / 2 + ICON_SPACING.top;
   const outerRight = oLeft + 100 + ICON_SPACING.right + STROKE / 2;
-  const outerTop = 0, outerBottom = oTop + 100 + ICON_SPACING.bottom + STROKE / 2;
-  const left = outerLeft + h, right = outerRight - h, top = outerTop + h, bottom = outerBottom - h;
+  const outerTop = 0,
+    outerBottom = oTop + 100 + ICON_SPACING.bottom + STROKE / 2;
+  const left = outerLeft + h,
+    right = outerRight - h,
+    top = outerTop + h,
+    bottom = outerBottom - h;
   const size = (outerBottom - outerTop) / o.fill;
   const viewBox: Box = {
     x: (outerLeft + outerRight) / 2 - size / 2,
@@ -152,4 +182,5 @@ export type WordMark = ReturnType<typeof wordMark>;
 export type IconMark = ReturnType<typeof iconMark>;
 
 /** Points as an SVG `points` attribute. */
-export const pointsAttr = (points: readonly Point[]) => points.map(([x, y]) => `${+x.toFixed(2)},${+y.toFixed(2)}`).join(" ");
+export const pointsAttr = (points: readonly Point[]) =>
+  points.map(([x, y]) => `${+x.toFixed(2)},${+y.toFixed(2)}`).join(" ");

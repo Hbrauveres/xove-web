@@ -17,7 +17,6 @@ import {
   saveWatchPrefs,
 } from "./preferences";
 
-
 describe("the sharer's choices", () => {
   it("default to 1080p Smooth", () => {
     expect(loadSharePrefs()).toEqual({ quality: "1080p", mode: "smooth" });
@@ -110,7 +109,12 @@ describe("the ambilight (spec 0104)", () => {
 describe("my voice's choices (spec 0123)", () => {
   it("starts with the browser's cleaning on, isolation off and a low line", () => {
     expect(loadVoicePrefs()).toEqual(DEFAULT_VOICE);
-    expect(DEFAULT_VOICE).toMatchObject({ echoCancellation: true, noiseSuppression: true, autoGainControl: true, voiceIsolation: false });
+    expect(DEFAULT_VOICE).toMatchObject({
+      echoCancellation: true,
+      noiseSuppression: true,
+      autoGainControl: true,
+      voiceIsolation: false,
+    });
   });
 
   it("remembers the mic, the processing and the line", () => {

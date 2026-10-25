@@ -8,7 +8,7 @@ How the web app is tested, with a real example of each kind, and how to run the 
 | --- | --- | --- |
 | [Rules as plain functions](#rules-as-plain-functions) | The decisions, with no browser: which layout, which quality, how the ambilight is laid out, who is big | `useRoomLayout.test.ts`, `media/*.test.ts`, `brand/*.test.ts` |
 | [Components](#components) | One component's output for given props | `components/**/*.test.tsx` |
-| [Pages, used like a person](#pages-used-like-a-person) | Whole flows: a page at a URL, with a fake API and a fake LiveKit | `pages/*.test.tsx`, `App.test.tsx`, `hooks/*.test.ts` |
+| [Pages, used like a person](#pages-used-like-a-person) | Whole flows: a page at a URL, with a fake API and a fake LiveKit | `pages/*.test.tsx`, `app/app.component.test.tsx`, `hooks/*.test.ts` |
 | [The style check](#the-style-check) | What the stylesheets promise: text readable on every surface, rules no browser drops, motion off when asked | `scripts/check-styles.ts` |
 | [Pictures and sizes](#pictures-and-sizes) | Each screen on every device size | The design sheet's pictures |
 

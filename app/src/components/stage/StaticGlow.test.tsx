@@ -19,8 +19,16 @@ function setup() {
     return ctx as never;
   });
   vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({ width: 1532, height: 862 } as DOMRect);
-  vi.stubGlobal("ResizeObserver", class { observe() {} disconnect() {} });
-  vi.spyOn(window, "matchMedia").mockImplementation((q: string) => ({ matches: q.includes("reduce"), addEventListener() {}, removeEventListener() {} }) as never);
+  vi.stubGlobal(
+    "ResizeObserver",
+    class {
+      observe() {}
+      disconnect() {}
+    },
+  );
+  vi.spyOn(window, "matchMedia").mockImplementation(
+    (q: string) => ({ matches: q.includes("reduce"), addEventListener() {}, removeEventListener() {} }) as never,
+  );
   return fills;
 }
 
@@ -44,7 +52,9 @@ describe("the standby screen's light round the stage (spec 0136)", () => {
 describe("the TV turning on, once a visit (spec 0136)", () => {
   it("lights the stage and the wall the first time the stage stands by, and never again", () => {
     setup();
-    vi.spyOn(window, "matchMedia").mockImplementation((q: string) => ({ matches: false, media: q, addEventListener() {}, removeEventListener() {} }) as never);
+    vi.spyOn(window, "matchMedia").mockImplementation(
+      (q: string) => ({ matches: false, media: q, addEventListener() {}, removeEventListener() {} }) as never,
+    );
     const first = render(
       <>
         <StaticGlow prefs={{ on: true, brightness: 1 }} />

@@ -1,10 +1,10 @@
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { INSTALLED_QUERY } from "./hooks/useInstalled";
-import { TOUCH_QUERY } from "./hooks/useRoomLayout";
-import { aUser, installFakeApi } from "./test/fakeApi";
-import { renderApp } from "./test/renderApp";
+import { INSTALLED_QUERY } from "../hooks/useInstalled";
+import { TOUCH_QUERY } from "../hooks/useRoomLayout";
+import { aUser, installFakeApi } from "../test/fakeApi";
+import { renderApp } from "../test/renderApp";
 
 describe("who sees which screen", () => {
   it("shows the Google sign-in to signed-out visitors", async () => {
@@ -48,7 +48,7 @@ describe("who sees which screen", () => {
     installFakeApi({ me: aUser({ status: "MEMBER", admin: true }), requests: [], members: [] });
     renderApp("/room");
 
-    // Admin is in the account menu (spec 0104).
+    // Admin is in the account menu.
     await userEvent.setup().click(await screen.findByRole("button", { name: /: account/ }));
     expect(screen.getByRole("link", { name: /^admin$/i })).toHaveAttribute("href", "/admin");
   });
@@ -68,7 +68,7 @@ describe("who sees which screen", () => {
   });
 });
 
-describe("phones and tablets use the home-screen app (spec 0171)", () => {
+describe("phones and tablets use the home-screen app", () => {
   /** A touch-first device, opened from the home screen or in a browser tab. */
   function touchDevice(installed: boolean) {
     vi.stubGlobal("matchMedia", (q: string) => ({
@@ -79,13 +79,16 @@ describe("phones and tablets use the home-screen app (spec 0171)", () => {
     }));
   }
 
-  it.each(["/", "/room", "/admin", "/request-access"])("shows only the install screen at %s in a browser tab", async (path) => {
-    touchDevice(false);
-    installFakeApi({ me: aUser({ status: "MEMBER", admin: true }) });
-    renderApp(path);
-    expect(await screen.findByRole("heading", { name: /works best from your home screen/ })).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: /continue with google/i })).toBeNull();
-  });
+  it.each(["/", "/room", "/admin", "/request-access"])(
+    "shows only the install screen at %s in a browser tab",
+    async (path) => {
+      touchDevice(false);
+      installFakeApi({ me: aUser({ status: "MEMBER", admin: true }) });
+      renderApp(path);
+      expect(await screen.findByRole("heading", { name: /works best from your home screen/ })).toBeInTheDocument();
+      expect(screen.queryByRole("link", { name: /continue with google/i })).toBeNull();
+    },
+  );
 
   it("works as today from the home screen", async () => {
     touchDevice(true);

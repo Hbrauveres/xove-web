@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiError, api } from "../api/client";
-import type { SeatStatus } from "../api/types";
+import type { SeatStatus } from "@core/api/api.types";
 
 /** How often the waiting screen asks for its place. The poll also tells the API it's still there. */
 export const SEAT_POLL_MS = 2000;

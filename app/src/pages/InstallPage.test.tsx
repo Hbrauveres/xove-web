@@ -4,7 +4,8 @@ import { describe, expect, it, vi } from "vitest";
 import { listenForInstall } from "../install/prompt";
 import { InstallPage } from "./InstallPage";
 
-const APPLE = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile Safari/604.1";
+const APPLE =
+  "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile Safari/604.1";
 const ANDROID = "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 Chrome/141.0 Mobile Safari/537.36";
 
 function on(userAgent: string) {
@@ -17,7 +18,6 @@ function offerPrompt() {
   window.dispatchEvent(event);
   return event;
 }
-
 
 describe("the install screen (spec 0171)", () => {
   it("says the same on every device, with an i that shows and hides why", async () => {
@@ -39,7 +39,11 @@ describe("the install screen (spec 0171)", () => {
     on(APPLE);
     render(<InstallPage />);
     const steps = screen.getAllByRole("listitem").map((li) => li.textContent);
-    expect(steps).toEqual(["Tap Share in Safari's bar", "Choose Add to Home Screen", "Open Xovê from your home screen"]);
+    expect(steps).toEqual([
+      "Tap Share in Safari's bar",
+      "Choose Add to Home Screen",
+      "Open Xovê from your home screen",
+    ]);
     expect(screen.queryByRole("button", { name: /Get Xovê/ })).toBeNull();
   });
 

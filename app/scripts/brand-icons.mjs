@@ -17,15 +17,13 @@ function maskable(svg) {
   const cx = x + w / 2;
   const cy = y + h / 2;
   const box = [cx - side / 2, cy - side / 2, side, side].map((n) => +n.toFixed(2)).join(" ");
-  return svg
-    .replace(/viewBox="[^"]+"/, `viewBox="${box}"`)
-    .replace(/<rect [^>]*\/>/, (r) =>
-      r
-        .replace(/x="[^"]+"/, `x="${+(cx - side / 2).toFixed(2)}"`)
-        .replace(/y="[^"]+"/, `y="${+(cy - side / 2).toFixed(2)}"`)
-        .replace(/width="[^"]+"/, `width="${+side.toFixed(2)}"`)
-        .replace(/height="[^"]+"/, `height="${+side.toFixed(2)}"`),
-    );
+  return svg.replace(/viewBox="[^"]+"/, `viewBox="${box}"`).replace(/<rect [^>]*\/>/, (r) =>
+    r
+      .replace(/x="[^"]+"/, `x="${+(cx - side / 2).toFixed(2)}"`)
+      .replace(/y="[^"]+"/, `y="${+(cy - side / 2).toFixed(2)}"`)
+      .replace(/width="[^"]+"/, `width="${+side.toFixed(2)}"`)
+      .replace(/height="[^"]+"/, `height="${+side.toFixed(2)}"`),
+  );
 }
 
 if (process.argv.includes("--phone")) {

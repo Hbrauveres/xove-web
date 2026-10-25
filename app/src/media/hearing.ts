@@ -10,7 +10,11 @@ export type Choices = { sound: { volume: number; muted?: boolean }; voice: { vol
  * once I touch it; untouched, heard while they're on the stage and off while they're small. Each
  * volume is theirs once set, else my last one.
  */
-export function hearingOf(mine: Choices | undefined, onStage: boolean, defaults: { sound: number; voice: number }): Heard {
+export function hearingOf(
+  mine: Choices | undefined,
+  onStage: boolean,
+  defaults: { sound: number; voice: number },
+): Heard {
   return {
     sound: { volume: mine?.sound.volume ?? defaults.sound, muted: mine?.sound.muted ?? !onStage },
     voice: { volume: mine?.voice.volume ?? defaults.voice, muted: mine?.voice.muted ?? !onStage },

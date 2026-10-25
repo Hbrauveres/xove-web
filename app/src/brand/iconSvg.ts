@@ -1,7 +1,9 @@
 import { iconMark, pointsAttr, type Optical } from "./mark.ts";
 
 /** The icon files' colours, which can't read the page's tokens: the soft black ground (also the ink on a light browser; spec 0121), white and red. */
-const GROUND = "#0c0c0d", WHITE = "#ebebec", RED = "#ef4b4b";
+const GROUND = "#0c0c0d",
+  WHITE = "#ebebec",
+  RED = "#ef4b4b";
 
 /**
  * The icon as a standalone SVG file (specs 0111 and 0113). scripts/brand-icons.mjs writes it.

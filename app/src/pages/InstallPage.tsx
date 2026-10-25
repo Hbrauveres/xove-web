@@ -8,8 +8,22 @@ import styles from "./InstallPage.module.css";
 function ShareIcon() {
   return (
     <svg className={styles.safari} viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 3v12M8 7l4-4 4 4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M6 11v9h12v-9" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M12 3v12M8 7l4-4 4 4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6 11v9h12v-9"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -93,7 +107,14 @@ export function InstallPage() {
           <div className={styles.action}>
             <button type="button" className={styles.get} onClick={get}>
               <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-                <path d="M12 4v11M7 10l5 5 5-5M5 20h14" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                <path
+                  d="M12 4v11M7 10l5 5 5-5M5 20h14"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
               Get Xovê
             </button>

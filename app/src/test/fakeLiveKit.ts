@@ -141,7 +141,11 @@ export class FakeLocalMicTrack extends FakeLocalTrack {
   /** The capture's options, as the app asked (the mic picked, its processing). */
   options: unknown;
   constructor(options?: unknown) {
-    super("audio", Track.Source.Microphone, new FakeMediaStreamTrack((options as { deviceId?: string } | undefined)?.deviceId));
+    super(
+      "audio",
+      Track.Source.Microphone,
+      new FakeMediaStreamTrack((options as { deviceId?: string } | undefined)?.deviceId),
+    );
     this.options = options;
   }
   /** Captures again with new options: another mic or other processing, same published track. */
@@ -454,7 +458,10 @@ export class Room {
     const p = this.remoteParticipants.get(identity);
     if (!p || p.isSpeaking === speaking) return;
     p.isSpeaking = speaking;
-    this.emit(RoomEvent.ActiveSpeakersChanged, [...this.remoteParticipants.values()].filter((x) => x.isSpeaking));
+    this.emit(
+      RoomEvent.ActiveSpeakersChanged,
+      [...this.remoteParticipants.values()].filter((x) => x.isSpeaking),
+    );
   }
 
   /** Whether this browser downloads someone's voice. */

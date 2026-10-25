@@ -1,8 +1,14 @@
 import { vi } from "vitest";
-import type { AccessRequestView, LiveStream, Me, MemberView, StreamKind, StreamSettings } from "../api/types";
+import type { AccessRequestView, LiveStream, Me, MemberView, StreamKind, StreamSettings } from "@core/api/api.types";
 
 type Reply = { status: number; body?: unknown };
-export type Call = { method: string; path: string; headers: Record<string, string>; body: unknown; keepalive?: boolean };
+export type Call = {
+  method: string;
+  path: string;
+  headers: Record<string, string>;
+  body: unknown;
+  keepalive?: boolean;
+};
 
 /** The signed-in user's id inside the fake API. /api/me doesn't expose ids, so tests never need it. */
 export const MY_USER_ID = 999;
@@ -11,7 +17,9 @@ export const MY_USER_ID = 999;
  * A tiny in-memory version of the Java API, installed as window.fetch.
  * Tests change `server.me`, `server.requests`... and assert on `server.calls`.
  */
-export function installFakeApi(initial: { me?: Me | null; requests?: AccessRequestView[]; members?: MemberView[] } = {}) {
+export function installFakeApi(
+  initial: { me?: Me | null; requests?: AccessRequestView[]; members?: MemberView[] } = {},
+) {
   const server = {
     me: initial.me ?? null,
     requests: initial.requests ?? [],
@@ -166,9 +174,7 @@ export function installFakeApi(initial: { me?: Me | null; requests?: AccessReque
 export type FakeStream = Omit<LiveStream, "mine">;
 
 export type SeatAnswer =
-  | { status: "in" }
-  | { status: "waiting"; place: number }
-  | { status: "offered"; until: string; seconds: number };
+  { status: "in" } | { status: "waiting"; place: number } | { status: "offered"; until: string; seconds: number };
 
 /** Someone else's live stream: a screen at 1080p Smooth unless said otherwise, started a minute ago. */
 export const someoneSharing = (

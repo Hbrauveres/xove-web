@@ -11,8 +11,16 @@
 
 export type Frame = { slide: number; settle: number; eye: { sx: number; sy: number } };
 
-const SLIDE = 600, SETTLE = 380, PAUSE = 160, HOLD = 320;
-const CLOSE_1 = 80, OPEN_1 = 130, BETWEEN = 70, CLOSE_2 = 70, OPEN_2 = 240, CALM = 260;
+const SLIDE = 600,
+  SETTLE = 380,
+  PAUSE = 160,
+  HOLD = 320;
+const CLOSE_1 = 80,
+  OPEN_1 = 130,
+  BETWEEN = 70,
+  CLOSE_2 = 70,
+  OPEN_2 = 240,
+  CALM = 260;
 
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const easeIn = (t: number) => t * t * t;
@@ -20,7 +28,8 @@ const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 // Past 1, then back: a small spring.
 const easeBack = (t: number) => 1 + 2.4 * Math.pow(t - 1, 3) + 1.4 * Math.pow(t - 1, 2);
 
-const SHUT = 0.06, WIDE = 1.08;
+const SHUT = 0.06,
+  WIDE = 1.08;
 
 type Step = { ms: number; at: (t: number) => Frame };
 const still = (slide: number, settle: number): Frame => ({ slide, settle, eye: { sx: 1, sy: 1 } });

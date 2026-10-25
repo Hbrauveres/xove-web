@@ -22,7 +22,7 @@ Everything is in `app/src`:
 | `api/` | The HTTP client (`client.ts`) and the API's types (`types.ts`): one function per endpoint, the CSRF header, errors as `ApiError` |
 | `auth/` | Who is signed in (`AuthProvider`, which asks `GET /api/me` once and on demand) and the route guards (`guards.tsx`) |
 | `pages/` | One component per route: `HomePage`, `RequestAccessPage`, `RoomPage`, `AdminPage`, and `InstallPage` |
-| `hooks/` | The room's state and the browser's: the seat and the queue (`useRoomSeat`), the streams (`useStreams`), the LiveKit connection (`useLiveKitRoom`), both put together for the room (`useRoomSession`), who's on the stage (`useStagePick`), the layout (`useRoomLayout`), swipes (`useStageSwipe`), the video's shape (`useVideoShape`), the round buttons' row holding the clicked button still (`usePinnedRow`), and small ones (`useElapsed`, `useFullscreenElement`, `useInstalled`) |
+| `hooks/` | The room's state and the browser's: the seat and the queue (`useRoomSeat`), the streams (`useStreams`), the LiveKit connection (`useLiveKitRoom`), both put together for the room (`useRoomSession`), who's on the stage (`useStagePick`), the layout (`useRoomLayout`), swipes (`useStageSwipe`), the video's shape (`useVideoShape`), the round buttons' row holding the clicked button still (`usePinnedRow`), and small ones (`useFullscreenElement`, `useInstalled`); the stream's elapsed time is `shared/hooks/use-elapsed.hook.ts` |
 | `media/` | How screens and cameras are sent (`shareSettings.ts`), the ambilight's drawing (`ambilight.ts`), who is big by default (`stagePick.ts`), choices kept in the browser (`preferences.ts`) |
 | `components/stage/` | The player and what's on it: the stage, the ambilight, the controls by owner: my own stream's round buttons (`PlayerButtons`; their icons in `icons.tsx`, the drop-ups on live ones) and, over someone else's stream, `ViewerBar` (what I hear at the left, each sound its own button and slider; my mic or Go live at the right); the voice I hear (`VoiceAudio`), each person's switches and volumes held by the stage for the visit (the rule in `media/hearing.ts`), and the previews' buttons (`HearToggles`: over a big picture, or in a small preview's row, `PreviewTray`, which floats on its own layer over the page and follows its preview, opened through `usePreviewTray`; a preview's stack, its swap's moment and the finger's hold in `stack.ts`); the settings panel (`SettingsPanel`, its Voice tab's mic level in `MicTest`, and `makeRoom`, which moves the player up for its sheet in the upright full view), the facecam, the previews, the phone's feed and row, the empty stage (`EmptyStage`, a TV on standby: the ways to start, alone in their row; with nobody live the settings are `ViewerBar`'s settings-only form, in the corner; its corners' glow in `CornerGlow`; its TV static in `StaticNoise`, a small canvas the page draws 20 times a second, its grain and bands scaled to the stage; the static's light round the stage in `StaticGlow`; both read their bands from `staticBands.ts`, so they roll together, and its `tv` flag lets the TV's turn-on play only the first time the stage stands by in a visit), the info row. The stage is two layers: its box holds every control (the round buttons, the sounds, Go live, the fullscreen button, the dots) and takes the taps; a view inside it holds the picture and its ambilight in the picture's shape. Sideways and in a phone's upright full view the box is the whole screen; there `makeRoom` moves the view up for the settings sheet, and the controls end above the sheet from its height; in the upright normal view `liftButtons` lifts the buttons over the video where a tall player reaches under the sheet |
 | `components/room/` | The room around the stage: header, footer, people, activity (pill, bell, list), account menu, the waiting screen and the seat offer |
@@ -32,7 +32,7 @@ Everything is in `app/src`:
 | `styles/` | The design tokens (`global.css`) and the tests that check them |
 | `test/` | The test helpers: a fake API, a fake LiveKit, and rendering the app at a URL ([Testing](testing.md)) |
 
-At the top, `main.tsx` starts the app (and listens for the install prompt first), `App.tsx` holds the routes, and `types.ts` the room's shared types (a person, a stream, a sharer).
+At the top, `main.tsx` starts the app (and listens for the install prompt first), `app/app.component.tsx` holds the routes, and `types.ts` the room's shared types (a person, a stream, a sharer).
 
 ```mermaid
 flowchart TD
@@ -46,7 +46,7 @@ flowchart TD
   C --> M
   P --> AU[auth]
   AU --> A
-  APP[App.tsx] --> I[install]
+  APP[app/app.component.tsx] --> I[install]
   APP --> P
 ```
 
@@ -54,7 +54,7 @@ Pages put the room together; components draw it; hooks own the state and talk to
 
 ## Routes
 
-`App.tsx` maps each route to a page behind a guard:
+`app/app.component.tsx` maps each route to a page behind a guard:
 
 | Route | Guard | Shows |
 | --- | --- | --- |
@@ -165,7 +165,7 @@ Sharing a screen or a camera is in [Media](media.md).
 
 ## Where the code is going
 
-The modules above are the app as it is today. It's being reorganised, with no change of behaviour, into the structure below; each step moves whole areas, and this page's tables follow as they move. Every component, today's and the next version's, with its pictures and its future folder: [Components](components/README.md).
+The modules above are the app as it is today. It's being reorganised, with no change of behaviour, into the structure below. Each step moves whole areas, and this page's tables follow as they move. The four folders exist already, each with its first file: `app/app.component.tsx`, `core/api/api.types.ts`, `shared/hooks/use-elapsed.hook.ts` (with `shared/utils/time-ago.util.ts`), and `features/room/utils/who-is-here.util.ts`. Every component, today's and the next version's, with its pictures and its future folder: [Components](components/README.md).
 
 ### The structure
 
@@ -188,7 +188,8 @@ app/src/
 - **A component is a folder:** `person-row/person-row.component.tsx`, `person-row.component.module.css`, `person-row.component.test.tsx` and `index.ts` (its only export). Nothing else: its helpers go to the feature's `utils/`, its constants to `constants/`, its enums to `enums/`, its types to `types/`.
 - **Names:** kebab-case with the type as a suffix: `.component.tsx`, `.page.tsx`, `.hook.ts`, `.util.ts`, `.service.ts`, `.adapter.ts`, `.store.ts`, `.model.ts`, `.selectors.ts`, `.constants.ts`, `.enum.ts`, `.types.ts`; tests `.test.ts(x)`.
 - **Where a thing lives:** used by one feature, in that feature; by two or more, in `shared/`; one per app with no UI, in `core/`.
-- **Imports go one way:** `features` → `shared`, `core`; `shared` → `core` only for types; `core` → nothing in the app. A feature uses another only through its `index.ts`, and no file imports another component's CSS.
+- **Short names:** `@app/…`, `@core/…`, `@shared/…` and `@features/…` (in `tsconfig.app.json`'s `paths` and Vite's `resolve.alias`), never long relative paths into another folder.
+- **Imports go one way:** `features` → `shared`, `core`; `shared` → `core` only for types (`import type`); `core` → nothing in the app. The lint rule enforces it, by short name and by relative path. A feature uses another only through its `index.ts`, and no file imports another component's CSS.
 
 ### The rules
 
@@ -199,6 +200,52 @@ app/src/
 - **Components never find each other through the page** (`querySelector`, labels, `data-*` used as hooks): a ref, a context, or CSS.
 - **No module-level mutable state.** Hooks return stable values; effects only sync with something outside React.
 - **Comments say why**, never history: no issue or spec numbers in the code.
+- **Functions stay small and plain:**
+  - at most 60 lines
+  - complexity at most 10
+  - nesting at most 3 levels
+  - at most 4 parameters (more go in one object)
+  - no `any`, no forced `!`, no `as` outside tests
+  - a number other than 0, 1 or -1 goes in a named constant
+  - named exports only
+- **Layout:** Prettier, 120 characters. Nobody lays code out by hand.
+
+### The checks
+
+Every rule a tool can measure runs in the commit checks as `3 · Code checks`, on the whole app's code.
+
+**What's exempt, and why:**
+- **Tests** (`*.test.ts(x)`, `src/test/`, its fakes and factories) are exempt from the size, number and escape-hatch limits. A `describe` block is long by nature, and expected values belong in the test. They keep their own rules ([Testing](testing.md#test-rules)).
+- **`scripts/`** (the checks themselves) is exempt from the same limits. It's tooling run with Node, not part of the app.
+- **The copy check skips tests.** Tests repeat their arrange steps on purpose, so each one reads on its own.
+- **No exemption from the escape hatches' own back door.** A comment that switches a check off (`oxlint-disable`, `@ts-ignore`, `@ts-expect-error`, `@ts-nocheck`, `jscpd:ignore`, `prettier-ignore`) is a finding in app code. Fix the code instead.
+
+| Check | Catches | Run it |
+| --- | --- | --- |
+| TypeScript | The build: `strict`, `noImplicitOverride`, `noFallthroughCasesInSwitch`. `tsconfig.strict.json` adds `noUncheckedIndexedAccess` (a value read from a list may be missing) and `exactOptionalPropertyTypes` (an optional field set to `undefined` by mistake). | `npm run build`; the strict config through the guard |
+| oxlint | Hooks' dependencies, accessibility, unused code, the import direction, the size and shape limits above, escape hatches, unexplained numbers, default exports | through the guard |
+| jscpd | A block of code copied into another place (8 lines or 60 tokens, CSS included) | `npm run check:copies` |
+| knip | Files nothing imports, exports nothing uses | `npm run check:unused` |
+| The code check | The structure's rules: folders and names, a test beside every file with logic, tokens in CSS, no DOM queries between components, LiveKit only in `core/`, no history in comments, lines over 120 characters (Prettier doesn't wrap strings and comments), comments that switch a check off, and the tests' own rules | `npm run check:code -- <folder> --all` |
+| Prettier | Layout | `npm run format` fixes, `npm run format:check` checks |
+| The size budget | The built JavaScript and styles, compressed, against `checks/size-budget.json` | `npm run build && npm run check:size` |
+
+**The guard and its list.** `npm run guard` runs TypeScript's strict config, oxlint, jscpd, knip and the code check, and compares what they find with `checks/known-findings.json`:
+
+- **The list** is what today's code still breaks: counts per tool, rule and file. Each entry names the step that owns it (`checks/owners.json`).
+- **Recorded findings** show as warnings.
+- **The guard fails** on:
+  - a finding the list doesn't allow, in an old file as much as a new one
+  - a recorded finding that's gone: lower the list with `npm run guard -- --record` in the same change
+  - a list that allows more than `main`'s
+- **The list only shrinks.** Each step of the reorganisation clears its own areas. When it's empty, the two stricter TypeScript settings move into the main config.
+- **A tool that goes quiet fails.** If a tool reports nothing where the list expects findings (a setting lost, its output changed), that's an error, not a clean-up, and it can't be recorded.
+- **The tools are pinned** (oxlint, TypeScript, Prettier, knip, jscpd at exact versions). Dependabot proposes their upgrades in a PR of their own (the `checks` group). An upgrade that brings new findings fixes them in that PR, since the list can't grow.
+
+**The size budget.**
+- **Today:** JavaScript 292 kB and styles 19 kB, compressed (kB as Vite prints them), about 10% above what the app weighs today.
+- **Over budget fails.** So does falling more than 10% under it: a lighter app lowers its budget, so the room it freed isn't quietly used up.
+- **Raising a budget** is a deliberate change in `checks/size-budget.json`, in the PR that needs it, saying why.
 
 ### The state, in layers
 
@@ -224,7 +271,9 @@ app/                  the web app: everything its image is built from
   public/             the favicon, the phone icons, site.webmanifest
   Dockerfile, Caddyfile, caddy/   the image: the Vite build served by Caddy, built from source
   compose.yaml        runs the image (locally and in the checks)
-  scripts/            brand-icons.mjs (the favicon from the mark's geometry)
+  scripts/            the checks (guard, check-code, check-styles, check-size), test-alone, brand-icons.mjs (the favicon from the mark's geometry)
+  checks/             the guard's list of known findings, who owns them, the size budget
+  tsconfig.strict.json, .oxlintrc.json, .jscpd.json, knip.json, .prettierrc.json   the checks' settings
 docs/                 these pages, and the design sheet's pictures
 .github/workflows/    the commit checks and the releases
 ```

@@ -8,7 +8,10 @@
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 120ms ease, border-color 120ms ease, transform 80ms ease;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    transform 80ms ease;
 }
 
 .button:active {

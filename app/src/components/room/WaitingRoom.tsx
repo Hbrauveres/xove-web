@@ -49,7 +49,9 @@ export function WaitingRoom({ seat, onSignOut }: Props) {
       <button type="button" className={styles.signOut} onClick={onSignOut}>
         Sign out
       </button>
-      {status?.status === "offered" && <SeatOffer seconds={status.seconds} onEnter={seat.accept} onCancel={seat.cancel} />}
+      {status?.status === "offered" && (
+        <SeatOffer seconds={status.seconds} onEnter={seat.accept} onCancel={seat.cancel} />
+      )}
     </main>
   );
 }

@@ -18,7 +18,13 @@ function Bruno({ voiceOff = false, noSound = false, canSetVolume = true, talking
       {...base()}
       canSetVolume={canSetVolume}
       sound={{ ...sound, onChange: setSound, unavailable: noSound ? "No sound in this stream" : undefined }}
-      voice={{ ...voice, onChange: setVoice, unavailable: voiceOff ? "Bruno's mic is off" : undefined, name: "Bruno", talking }}
+      voice={{
+        ...voice,
+        onChange: setVoice,
+        unavailable: voiceOff ? "Bruno's mic is off" : undefined,
+        name: "Bruno",
+        talking,
+      }}
     />
   );
 }
@@ -198,7 +204,9 @@ describe("the bar over someone else's stream (spec 0123): me, at the right", () 
     expect(onStart).not.toHaveBeenCalled();
 
     rerender(<ViewerBar {...base()} onStart={onStart} full />);
-    expect(screen.getByRole("menuitem", { name: "Turn on your camera" })).toHaveAccessibleDescription(/6 streams are live/);
+    expect(screen.getByRole("menuitem", { name: "Turn on your camera" })).toHaveAccessibleDescription(
+      /6 streams are live/,
+    );
   });
 
   it("shows my mic instead while I'm live, red while it's on", async () => {

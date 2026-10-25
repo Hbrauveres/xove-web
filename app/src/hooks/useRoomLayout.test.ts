@@ -1,6 +1,13 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { NARROW_UPRIGHT_QUERY, PORTRAIT_QUERY, SMALL_QUERY, TOUCH_QUERY, layoutFor, useRoomLayout } from "./useRoomLayout";
+import {
+  NARROW_UPRIGHT_QUERY,
+  PORTRAIT_QUERY,
+  SMALL_QUERY,
+  TOUCH_QUERY,
+  layoutFor,
+  useRoomLayout,
+} from "./useRoomLayout";
 
 describe("which layout the room uses (specs 0158 and 0160)", () => {
   const phone = { touch: true, small: true };
@@ -22,7 +29,6 @@ describe("which layout the room uses (specs 0158 and 0160)", () => {
     expect(layoutFor({ ...desktop, portrait: true, narrowUpright: false })).toBe("desktop");
     expect(layoutFor({ ...desktop, portrait: false, narrowUpright: false })).toBe("desktop");
   });
-
 });
 
 /** A screen of this size, touch-first or not, that can turn. */

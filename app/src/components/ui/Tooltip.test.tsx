@@ -100,7 +100,14 @@ describe("the app's one tooltip (spec 0133)", () => {
   it("sits above its control, or below it where there's no room above", () => {
     const { camera } = setup();
     const at = (top: number) => {
-      vi.spyOn(camera, "getBoundingClientRect").mockReturnValue({ top, bottom: top + 44, left: 100, right: 144, width: 44, height: 44 } as DOMRect);
+      vi.spyOn(camera, "getBoundingClientRect").mockReturnValue({
+        top,
+        bottom: top + 44,
+        left: 100,
+        right: 144,
+        width: 44,
+        height: 44,
+      } as DOMRect);
       fireEvent.pointerEnter(camera, { pointerType: "mouse" });
       act(() => vi.advanceTimersByTime(TIP_REST_MS));
       const tip = shown() as HTMLElement;

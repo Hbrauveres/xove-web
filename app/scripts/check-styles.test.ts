@@ -1,6 +1,6 @@
 import postcss from "postcss";
 import { describe, expect, it } from "vitest";
-import { contrast, contrastProblems, mixedVendorRules, reducedMotionProblems, tokensOf } from "./check-styles";
+import { contrast, contrastProblems, mixedVendorRules, reducedMotionProblems, tokensOf } from "./check-styles.ts";
 
 const tokens = (css: string) => tokensOf(postcss.parse(css));
 /** A palette that passes, with one token changed. */
@@ -16,7 +16,9 @@ const palette = (change: Record<string, string> = {}) => {
     "accent-ink": "#3a0808",
     ...change,
   };
-  return `:root { ${Object.entries(base).map(([k, v]) => `--${k}: ${v};`).join(" ")} }`;
+  return `:root { ${Object.entries(base)
+    .map(([k, v]) => `--${k}: ${v};`)
+    .join(" ")} }`;
 };
 
 describe("the style check: contrast", () => {
@@ -38,21 +40,27 @@ describe("the style check: contrast", () => {
 
   it("names a colour it can't measure, instead of letting it pass", () => {
     for (const unread of ["#111", "rgb(20, 20, 20)", "var(--black)"]) {
-      expect(contrastProblems(tokens(palette({ ground: unread })))).toContain(`--text on --ground: "${unread}" isn't a #rrggbb colour this check can measure`);
+      expect(contrastProblems(tokens(palette({ ground: unread })))).toContain(
+        `--text on --ground: "${unread}" isn't a #rrggbb colour this check can measure`,
+      );
     }
   });
 });
 
 describe("the style check: one browser per rule", () => {
   it("names a rule that mixes -webkit- and -moz- pseudo-elements", () => {
-    const css = postcss.parse(".r::-webkit-slider-thumb, .r::-moz-range-thumb { width: 12px; }\n.r::-webkit-slider-thumb { height: 12px; }");
+    const css = postcss.parse(
+      ".r::-webkit-slider-thumb, .r::-moz-range-thumb { width: 12px; }\n.r::-webkit-slider-thumb { height: 12px; }",
+    );
     expect(mixedVendorRules(css, "Range.module.css")).toEqual([expect.stringMatching(/^Range\.module\.css:1: /)]);
   });
 });
 
 describe("the style check: reduced motion", () => {
   it("passes when one rule stops every animation and transition", () => {
-    const css = postcss.parse("@media (prefers-reduced-motion: reduce) { *, *::before { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }");
+    const css = postcss.parse(
+      "@media (prefers-reduced-motion: reduce) { *, *::before { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }",
+    );
     expect(reducedMotionProblems(css)).toEqual([]);
   });
 

@@ -6,15 +6,30 @@ import { StaticNoise } from "./StaticNoise";
 function setup() {
   const drawn = vi.fn();
   vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockImplementation(
-    () => ({ createImageData: (w: number, h: number) => ({ data: new Uint8ClampedArray(w * h * 4) }), putImageData: drawn }) as never,
+    () =>
+      ({
+        createImageData: (w: number, h: number) => ({ data: new Uint8ClampedArray(w * h * 4) }),
+        putImageData: drawn,
+      }) as never,
   );
   vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({ width: 412, height: 232 } as DOMRect);
-  vi.stubGlobal("ResizeObserver", class { observe() {} disconnect() {} });
+  vi.stubGlobal(
+    "ResizeObserver",
+    class {
+      observe() {}
+      disconnect() {}
+    },
+  );
   return drawn;
 }
 
 const reducedMotion = (on: boolean) =>
-  vi.spyOn(window, "matchMedia").mockImplementation((q: string) => ({ matches: on && q.includes("reduce"), addEventListener() {}, removeEventListener() {} }) as never);
+  vi
+    .spyOn(window, "matchMedia")
+    .mockImplementation(
+      (q: string) =>
+        ({ matches: on && q.includes("reduce"), addEventListener() {}, removeEventListener() {} }) as never,
+    );
 
 describe("the standby screen's static (spec 0136)", () => {
   it("keeps drawing while it's on the screen", () => {
@@ -40,7 +55,16 @@ describe("the standby screen's static (spec 0136)", () => {
     // Sizing a canvas clears it; the browser reports the size once just after it's watched, and on
     // every resize after.
     let resized = () => {};
-    vi.stubGlobal("ResizeObserver", class { constructor(cb: () => void) { resized = cb; } observe() {} disconnect() {} });
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        constructor(cb: () => void) {
+          resized = cb;
+        }
+        observe() {}
+        disconnect() {}
+      },
+    );
     render(<StaticNoise />);
     expect(drawn).toHaveBeenCalledTimes(1);
     resized();

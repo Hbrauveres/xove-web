@@ -65,9 +65,7 @@ describe("the phone's feed of live streams (spec 0158)", () => {
   });
 
   it("is silent: no speaker, no volume, and no sound played", () => {
-    const { container } = render(
-      <LiveFeed others={[rafa()]} liveCount={2} watchersOf={() => []} onPick={vi.fn()} />,
-    );
+    const { container } = render(<LiveFeed others={[rafa()]} liveCount={2} watchersOf={() => []} onPick={vi.fn()} />);
     expect(screen.queryByRole("button", { name: /sound|mute|volume/i })).toBeNull();
     expect(screen.queryByRole("slider")).toBeNull();
     expect(container.querySelector("audio")).toBeNull();
@@ -88,7 +86,16 @@ describe("the phone's feed: hearing from a card (specs 0123 and 0131)", () => {
     const onPick = vi.fn();
     const onHear = vi.fn();
     const heard = { sound: { volume: 1, muted: false }, voice: { volume: 1, muted: false } };
-    render(<LiveFeed others={[rafa()]} liveCount={1} watchersOf={() => []} onPick={onPick} hearOf={() => heard} onHear={onHear} />);
+    render(
+      <LiveFeed
+        others={[rafa()]}
+        liveCount={1}
+        watchersOf={() => []}
+        onPick={onPick}
+        hearOf={() => heard}
+        onHear={onHear}
+      />,
+    );
     const toggle = screen.getByRole("button", { name: "Mute Rafa's screen sound" });
     // Beside the picture's own button, never inside it.
     expect(toggle.closest("button[aria-label^='Watch']")).toBeNull();
@@ -100,7 +107,16 @@ describe("the phone's feed: hearing from a card (specs 0123 and 0131)", () => {
   it("opens a sound's slider upright over its button on a hold, in the stage's style (spec 0131, AC-5)", async () => {
     const onHear = vi.fn();
     const heard = { sound: { volume: 0.4, muted: false }, voice: { volume: 1, muted: false } };
-    render(<LiveFeed others={[rafa()]} liveCount={1} watchersOf={() => []} onPick={vi.fn()} hearOf={() => heard} onHear={onHear} />);
+    render(
+      <LiveFeed
+        others={[rafa()]}
+        liveCount={1}
+        watchersOf={() => []}
+        onPick={vi.fn()}
+        hearOf={() => heard}
+        onHear={onHear}
+      />,
+    );
     const button = screen.getByRole("button", { name: "Mute Rafa's screen sound" });
     const slider = screen.getByRole("slider", { name: "Rafa's screen sound volume" });
     expect(slider.closest("[inert]")).not.toBeNull();

@@ -118,13 +118,7 @@ export function ActivityPill({ events, people, meId, connection, isLive, watchin
         </svg>
       </button>
 
-      <Dropdown
-        open={open}
-        label="Activity"
-        align="center"
-        anchor={anchor}
-        onClose={close}
-      >
+      <Dropdown open={open} label="Activity" align="center" anchor={anchor} onClose={close}>
         <DropdownSection scroll>
           <ActivityList
             events={events}

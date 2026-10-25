@@ -11,8 +11,20 @@ export function aSharer({ id = "user-7", name = "Bruno", kinds = ["screen"], ...
   const feeds = Object.fromEntries(
     kinds.map((kind) => [
       kind,
-      { kind, startedAt: Date.now(), settings: { quality: "1080p", mode: "smooth" }, remote: { video: aTrack(), setQuality: () => {} } },
+      {
+        kind,
+        startedAt: Date.now(),
+        settings: { quality: "1080p", mode: "smooth" },
+        remote: { video: aTrack(), setQuality: () => {} },
+      },
     ]),
   );
-  return { person: { id, name, hue: 100, online: true }, isMe: false, since: Date.now(), hasSound: false, ...feeds, ...extra };
+  return {
+    person: { id, name, hue: 100, online: true },
+    isMe: false,
+    since: Date.now(),
+    hasSound: false,
+    ...feeds,
+    ...extra,
+  };
 }

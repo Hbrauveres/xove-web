@@ -45,7 +45,9 @@ describe("ambilight drawn by the graphics pipeline (spec 0118)", () => {
     expect(draws).toHaveLength(9);
     // Every canvas pixel is drawn exactly once: no gap, no dent at the corners.
     const hits = new Uint8Array(L.width * L.height);
-    for (const { dst: [dx, dy, dw, dh] } of draws) {
+    for (const {
+      dst: [dx, dy, dw, dh],
+    } of draws) {
       for (let y = dy; y < dy + dh; y++) for (let x = dx; x < dx + dw; x++) hits[at(x, y)]++;
     }
     expect(hits.every((n) => n === 1)).toBe(true);
@@ -67,7 +69,8 @@ describe("ambilight drawn by the graphics pipeline (spec 0118)", () => {
 
   it("fades smoothly outward: never brighter further out, and no big steps", () => {
     const m = fadeMask(L);
-    const { x, y, w, h } = L.stage, row = y + h / 2;
+    const { x, y, w, h } = L.stage,
+      row = y + h / 2;
     let last = 255;
     for (let px = x + w; px < L.width; px++) {
       const a = m[at(px, row)];
@@ -79,7 +82,8 @@ describe("ambilight drawn by the graphics pipeline (spec 0118)", () => {
 
   it("wraps round the corners: as bright diagonally out from a corner as straight out from a side", () => {
     const m = fadeMask(L);
-    const { x, y } = L.stage, d = 10;
+    const { x, y } = L.stage,
+      d = 10;
     const straight = m[at(x - d, y + 30)];
     const diagonal = m[at(x - Math.round(d / Math.SQRT2), y - Math.round(d / Math.SQRT2))];
     expect(Math.abs(straight - diagonal)).toBeLessThanOrEqual(4);

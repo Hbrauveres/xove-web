@@ -37,7 +37,17 @@ describe("the row holds the button under the pointer when its width changes (spe
     const { getByRole, getByTestId } = render(createElement(Row));
     const camera = getByRole("button");
     let left = 400;
-    camera.getBoundingClientRect = () => ({ left, right: left + 48, top: 0, bottom: 48, width: 48, height: 48, x: left, y: 0, toJSON() {} });
+    camera.getBoundingClientRect = () => ({
+      left,
+      right: left + 48,
+      top: 0,
+      bottom: 48,
+      width: 48,
+      height: 48,
+      x: left,
+      y: 0,
+      toJSON() {},
+    });
 
     fireEvent.pointerOver(camera);
     // The camera's arrow went away and the centred row pushed the camera 9 px right.

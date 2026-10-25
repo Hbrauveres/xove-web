@@ -41,7 +41,11 @@ function Harness({ onStep, enabled = true }: { onStep: (d: 1 | -1) => void; enab
 }
 
 const reduced = (on: boolean) =>
-  vi.stubGlobal("matchMedia", (q: string) => ({ matches: on && q.includes("reduce"), addEventListener() {}, removeEventListener() {} }));
+  vi.stubGlobal("matchMedia", (q: string) => ({
+    matches: on && q.includes("reduce"),
+    addEventListener() {},
+    removeEventListener() {},
+  }));
 
 beforeEach(() => {
   vi.useFakeTimers();

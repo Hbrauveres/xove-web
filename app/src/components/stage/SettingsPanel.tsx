@@ -320,12 +320,7 @@ function ScreenTab(props: Props & { cue?: number }) {
                 <span>{screenSurface ? SURFACE[screenSurface] : "Your screen"}</span>
               </span>
               <Tooltip text={"Pick another window or tab; viewers keep watching the same stream"}>
-                <button
-                  type="button"
-                  className={styles.button}
-                  disabled={busy}
-                  onClick={onChangeWindow}
-                >
+                <button type="button" className={styles.button} disabled={busy} onClick={onChangeWindow}>
                   <CueRing n={props.cue} />
                   Change
                 </button>

@@ -2,7 +2,13 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { capOf } from "../media/shareSettings";
 import { aUser, installFakeApi } from "../test/fakeApi";
-import { FakeLocalCameraTrack, FakeLocalMicTrack, FakeLocalScreenTrack, FakeMediaStreamTrack, lastRoom } from "../test/fakeLiveKit";
+import {
+  FakeLocalCameraTrack,
+  FakeLocalMicTrack,
+  FakeLocalScreenTrack,
+  FakeMediaStreamTrack,
+  lastRoom,
+} from "../test/fakeLiveKit";
 import { NoiseGate } from "../media/noiseGate";
 import { DEFAULT_VOICE } from "../media/preferences";
 import { useLiveKitRoom, type Capture } from "./useLiveKitRoom";
@@ -315,7 +321,13 @@ describe("my voice (spec 0123)", () => {
 
     const local = lastRoom().localParticipant;
     expect(local.createTracks).toHaveBeenLastCalledWith({
-      audio: { deviceId: { ideal: "mic-2" }, echoCancellation: true, noiseSuppression: true, autoGainControl: true, voiceIsolation: false },
+      audio: {
+        deviceId: { ideal: "mic-2" },
+        echoCancellation: true,
+        noiseSuppression: true,
+        autoGainControl: true,
+        voiceIsolation: false,
+      },
     });
     expect(local.mic?.options).toEqual({ source: "microphone" });
     await waitFor(() => expect(hook.result.current.voice).toBe(true));
@@ -339,7 +351,9 @@ describe("my voice (spec 0123)", () => {
     await act(async () => {
       await hook.result.current.applyVoice({ ...VOICE, micId: "mic-1", echoCancellation: false });
     });
-    expect(track.restartTrack).toHaveBeenLastCalledWith(expect.objectContaining({ deviceId: { ideal: "mic-1" }, echoCancellation: false }));
+    expect(track.restartTrack).toHaveBeenLastCalledWith(
+      expect.objectContaining({ deviceId: { ideal: "mic-1" }, echoCancellation: false }),
+    );
     expect(lastRoom().localParticipant.mic!.track).toBe(track);
   });
 
@@ -356,7 +370,12 @@ describe("my voice (spec 0123)", () => {
 
   it("sends it through the noise gate at my sensitivity, and moves the line live (ADR-0071)", async () => {
     const close = vi.fn(async () => {});
-    vi.stubGlobal("AudioContext", class { close = close; });
+    vi.stubGlobal(
+      "AudioContext",
+      class {
+        close = close;
+      },
+    );
     const hook = await connected();
     await start(hook);
 
@@ -376,11 +395,19 @@ describe("my voice (spec 0123)", () => {
 
   it("stops the mic at once when it can't be sent, and says so apart from a block", async () => {
     const close = vi.fn(async () => {});
-    vi.stubGlobal("AudioContext", class { state = "running"; close = close; });
+    vi.stubGlobal(
+      "AudioContext",
+      class {
+        state = "running";
+        close = close;
+      },
+    );
     const hook = await connected();
     const local = lastRoom().localParticipant;
     let captured: FakeLocalMicTrack | undefined;
-    local.createTracks.mockImplementationOnce(async (options?: { audio?: unknown }) => [(captured = new FakeLocalMicTrack(options?.audio))]);
+    local.createTracks.mockImplementationOnce(async (options?: { audio?: unknown }) => [
+      (captured = new FakeLocalMicTrack(options?.audio)),
+    ]);
     local.publishTrack.mockRejectedValueOnce(new Error("not allowed to publish"));
 
     expect(await start(hook)).toBe("failed");
@@ -392,7 +419,14 @@ describe("my voice (spec 0123)", () => {
 
   it("wakes the gate's audio when the browser started it suspended (after the permission prompt)", async () => {
     const resume = vi.fn(async () => {});
-    vi.stubGlobal("AudioContext", class { state = "suspended"; resume = resume; close = async () => {}; });
+    vi.stubGlobal(
+      "AudioContext",
+      class {
+        state = "suspended";
+        resume = resume;
+        close = async () => {};
+      },
+    );
     const hook = await connected();
     await start(hook);
     expect(resume).toHaveBeenCalledTimes(1);

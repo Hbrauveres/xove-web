@@ -1,0 +1,11 @@
+{
+  // The app's config plus two settings today's code doesn't meet yet. npm run guard runs it and
+  // compares what it finds with checks/known-findings.json; once that list is empty they move into
+  // tsconfig.app.json and this file goes.
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.strict.tsbuildinfo",
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true
+  }
+}

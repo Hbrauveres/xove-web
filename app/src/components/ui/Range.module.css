@@ -39,7 +39,10 @@
   background: #ffffff;
   appearance: none;
   -webkit-appearance: none;
-  transition: width 0.12s, height 0.12s, margin-top 0.12s;
+  transition:
+    width 0.12s,
+    height 0.12s,
+    margin-top 0.12s;
 }
 
 .range:hover::-webkit-slider-thumb,
@@ -68,7 +71,9 @@
   border: 0;
   border-radius: 50%;
   background: #ffffff;
-  transition: width 0.12s, height 0.12s;
+  transition:
+    width 0.12s,
+    height 0.12s;
 }
 
 .range:hover::-moz-range-thumb,
