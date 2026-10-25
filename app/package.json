@@ -14,7 +14,9 @@
     "test:alone": "node scripts/test-alone.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check:code": "node scripts/check-code.ts"
+    "check:code": "node scripts/check-code.ts",
+    "check:copies": "jscpd",
+    "check:unused": "knip --no-progress"
   },
   "dependencies": {
     "livekit-client": "^2.22.4",

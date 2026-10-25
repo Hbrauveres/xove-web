@@ -1,0 +1,10 @@
+{
+  "path": ["src"],
+  "ignore": ["**/*.test.ts", "**/*.test.tsx", "**/test/**"],
+  "minLines": 8,
+  "minTokens": 60,
+  "reporters": ["json"],
+  "output": "node_modules/.tmp/jscpd",
+  "silent": true,
+  "absolute": false
+}
