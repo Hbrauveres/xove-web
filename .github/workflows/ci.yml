@@ -144,6 +144,11 @@ jobs:
       - name: Vitest
         run: npm test
 
+      # Contrast, rules a browser would drop, reduced motion: read from the stylesheets, which the
+      # tests never do (docs/testing.md).
+      - name: Style check
+        run: npm run check:styles
+
   vuln-scan:
     name: 3 · Vulnerability scan
     needs: validate
