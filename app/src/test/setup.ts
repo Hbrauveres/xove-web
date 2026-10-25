@@ -1,21 +1,40 @@
 import "@testing-library/jest-dom/vitest";
 import { cleanup, configure } from "@testing-library/react";
 import { afterEach, vi } from "vitest";
-import { fakeCameras, fakeMics, rooms } from "./fakeLiveKit";
+import { resetTv } from "../components/stage/staticBands";
+import { resetFloating } from "../components/ui/floating";
+import { resetToast } from "../components/ui/toast";
+import { resetTooltipWarmth } from "../components/ui/Tooltip";
+import { resetInstallPrompt } from "../install/prompt";
+import { fakeCameras, fakeMics, resetFakeLiveKit, rooms } from "./fakeLiveKit";
 
-// findBy and waitFor wait up to 3 s, not 1 s: CI's runners are slower than a laptop,
-// and a room test waiting on a few polls ran out there.
-configure({ asyncUtilTimeout: 3000 });
+// findBy and waitFor give up after 1 s: a wait that needs longer is a delay that belongs on fake
+// timers, and a stuck test fails fast instead of hiding for seconds.
+configure({ asyncUtilTimeout: 1000 });
 
 // No WebRTC in jsdom: every test gets the fake LiveKit instead of the real package.
 vi.mock("livekit-client", () => import("./fakeLiveKit"));
 
+/** Everything one test can leave behind, put back after every test, so no test sees another's.
+ * Spies, stubbed globals and variables are the runner's (vite.config.ts); a new piece of shared
+ * state in the app gets a reset beside it, called here. */
 afterEach(() => {
   cleanup();
-  rooms.length = 0;
-  vi.unstubAllGlobals();
   vi.useRealTimers();
-  document.cookie = "XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  localStorage.clear();
+  sessionStorage.clear();
+  for (const cookie of document.cookie.split(";")) {
+    const name = cookie.split("=")[0].trim();
+    if (!name) continue;
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+  }
+  resetFakeLiveKit();
+  resetToast();
+  resetFloating();
+  resetTooltipWarmth();
+  resetInstallPrompt();
+  resetTv();
 });
 
 // jsdom lacks these browser APIs.
