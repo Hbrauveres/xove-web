@@ -1,6 +1,6 @@
 /**
- * Who's in the room, for an empty stage (spec 0107): up to three names, then "and N others". The
- * stage itself asks you to go live (spec 0123), so this doesn't.
+ * Who's in the room, for an empty stage: up to three names, then "and N others". The stage itself
+ * asks you to go live, so this doesn't.
  */
 export function whoIsHere(names: string[]): string {
   if (names.length === 0) return "Nobody else is here yet.";

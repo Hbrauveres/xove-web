@@ -2,7 +2,6 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import type { Friend, Sharer } from "../../types";
 import { NowWatching } from "./NowWatching";
-import { whoIsHere } from "./whoIsHere";
 
 const feed = (kind: "screen" | "camera", minutesAgo: number) => ({
   kind,
@@ -89,16 +88,6 @@ describe("now watching: an empty stage (specs 0107 and 0123)", () => {
 
     expect(screen.getByText("Nobody else is here yet.")).toBeInTheDocument();
     expect(container.querySelectorAll("[data-here]")).toHaveLength(0);
-  });
-
-  it("names up to three, then counts the others", () => {
-    // The stage asks you to go live, so this line doesn't (spec 0123: each thing said once).
-    expect(whoIsHere(["Bruno"])).toBe("Bruno is here.");
-    expect(whoIsHere(["Bruno", "Ana"])).toBe("Bruno and Ana are here.");
-    expect(whoIsHere(["Bruno", "Ana", "Diego", "Carla", "Leo", "Rui", "Bia"])).toBe(
-      "Bruno, Ana and 5 others are here.",
-    );
-    expect(whoIsHere([])).toBe("Nobody else is here yet.");
   });
 
   it("shows the avatars of the first four at most", () => {

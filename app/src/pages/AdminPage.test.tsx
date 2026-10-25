@@ -1,7 +1,7 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import type { AccessRequestView, MemberView } from "../api/types";
+import type { AccessRequestView, MemberView } from "@core/api/api.types";
 import { aUser, installFakeApi } from "../test/fakeApi";
 import { renderApp } from "../test/renderApp";
 

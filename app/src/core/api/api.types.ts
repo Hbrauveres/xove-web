@@ -27,10 +27,10 @@ export type MemberView = {
   admin: boolean;
 };
 
-/** What a stream shows (spec 0060). Never a microphone. */
+/** What a stream shows. Never a microphone. */
 export type StreamKind = "screen" | "camera";
 
-/** What a stream is sent with (spec 0086); its person can change it while sharing. A camera goes up to 720p. */
+/** What a stream is sent with; its person can change it while sharing. A camera goes up to 720p. */
 export type StreamSettings = {
   quality: "1080p" | "720p" | "480p";
   mode: "smooth" | "sharp";
@@ -56,11 +56,11 @@ export type StreamsState = {
   free: number;
   /** False when the API doesn't know this person is in the room (after a restart): enter again. */
   seated: boolean;
-  /** How full the room is (spec 0104). Missing from an older API. */
+  /** How full the room is. Missing from an older API. */
   seats?: RoomSeatsState;
-  /** Who has which stream on their stage (spec 0104). Missing from an older API. */
+  /** Who has which stream on their stage. Missing from an older API. */
   watching?: Watcher[];
-  /** Everyone with a seat, since when (spec 0158). Missing from an older API. */
+  /** Everyone with a seat, since when. Missing from an older API. */
   here?: Arrival[];
 };
 
@@ -88,7 +88,7 @@ export type LiveKitAccess = {
 };
 
 /**
- * POST /api/room/enter (spec 0060): in the room, waiting in the queue at `place`
+ * POST /api/room/enter: in the room, waiting in the queue at `place`
  * (1 is next), or a seat held for this person until `until` (ISO timestamp), which is
  * `seconds` from now (the countdown uses the seconds: a browser's clock may be wrong).
  */

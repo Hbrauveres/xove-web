@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { api, ApiError } from "../api/client";
-import type { Me } from "../api/types";
+import type { Me } from "@core/api/api.types";
 
 export type AuthState = { status: "loading" } | { status: "signedOut" } | { status: "signedIn"; me: Me };
 

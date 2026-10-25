@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import { api, ApiError } from "../api/client";
-import type { Me } from "../api/types";
+import type { Me } from "@core/api/api.types";
 import { useAuth } from "../auth/AuthProvider";
 import { Button } from "../components/ui/Button";
 import { PersonAvatar } from "../components/ui/PersonAvatar";

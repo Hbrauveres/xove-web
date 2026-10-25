@@ -19,7 +19,7 @@ import type {
   Sharer,
   StreamKind,
 } from "../types";
-import type { LiveStream, RoomSeatsState } from "../api/types";
+import type { LiveStream, RoomSeatsState } from "@core/api/api.types";
 import { useLiveKitRoom, type CameraProblem, type Capture, type MicDevice, type ScreenSurface } from "./useLiveKitRoom";
 import { showToast } from "../components/ui/toast";
 import { useStreams } from "./useStreams";

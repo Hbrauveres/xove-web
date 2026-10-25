@@ -12,7 +12,7 @@ import {
   type RemoteTrackPublication,
 } from "livekit-client";
 import { ApiError, api } from "../api/client";
-import type { SharingConnection } from "../api/types";
+import type { SharingConnection } from "@core/api/api.types";
 import { NoiseGate } from "../media/noiseGate";
 import { loadCameraDevice, saveCameraDevice, type SharePrefs, type VoicePrefs } from "../media/preferences";
 import {

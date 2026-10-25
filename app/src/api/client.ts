@@ -8,7 +8,7 @@ import type {
   StreamKind,
   StreamSettings,
   StreamsState,
-} from "./types";
+} from "@core/api/api.types";
 
 /** An error the API answered with. `message` is safe to show to the user. */
 export class ApiError extends Error {

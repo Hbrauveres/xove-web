@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiError, api } from "../api/client";
-import type { SharingConnection, StreamKind, StreamSettings, StreamsState } from "../api/types";
+import type { SharingConnection, StreamKind, StreamSettings, StreamsState } from "@core/api/api.types";
 
 /** How often every open room asks the API which streams are live. */
 export const STREAMS_POLL_MS = 2000;

@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import type { RoomSeatsState } from "../../api/types";
+import type { RoomSeatsState } from "@core/api/api.types";
 import type { Friend, StreamKind } from "../../types";
 import { Avatar } from "../ui/Avatar";
 import { Dropdown, DropdownSection } from "../ui/Dropdown";
