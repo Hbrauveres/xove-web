@@ -99,7 +99,7 @@ Dark only: Xovê is a room for watching screens, so the chrome stays out of the 
 - **Avatars** without a photo get the person's own hue: `hsl(<hue> 42% 38%)` with a white initial.
 - **The empty stage** is one flat dark (`#0f0f11`: a gradient this dim shows bands); its corners glow softly, each in its own colour (a slightly blue grey, the top right red).
 - **The ambilight** takes its colour from the picture, never from the palette.
-- **Contrast:** every text colour reaches 4.5:1 on every surface, 3:1 for faint labels. `styles/palette.test.ts` computes it and rejects the old palettes (amber, blue-tinted greys).
+- **Contrast:** every text colour reaches 4.5:1 on every surface, 3:1 for faint labels. `npm run check:styles` computes it on every push ([Testing](testing.md#the-style-check)).
 
 ## Type
 
@@ -293,7 +293,7 @@ A slim grey track (**36 × 12 px**, `#3a3a3d`) that looks the same off and on, a
 
 **Settings rows** (every settings list): the label on the panel's type scale (12 px, regular, white at 82%), never heavier or bigger than the panel's title; what a row does in its tooltip, not under it; the label 3 px inside its heading; the switch ending 12 px in from the column's edge, where a picker's arrow does.
 
-`styles/controls.test.ts` checks the sliders' and the switch's values.
+The sliders' rules stay one browser per rule, checked by `npm run check:styles` ([Testing](testing.md#the-style-check)).
 
 ### Dropdown panels
 

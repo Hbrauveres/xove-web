@@ -9,7 +9,7 @@ How the web app is tested, with a real example of each kind, and how to run the 
 | [Rules as plain functions](#rules-as-plain-functions) | The decisions, with no browser: which layout, which quality, how the ambilight is laid out, who is big | `useRoomLayout.test.ts`, `media/*.test.ts`, `brand/*.test.ts` |
 | [Components](#components) | One component's output for given props | `components/**/*.test.tsx` |
 | [Pages, used like a person](#pages-used-like-a-person) | Whole flows: a page at a URL, with a fake API and a fake LiveKit | `pages/*.test.tsx`, `App.test.tsx`, `hooks/*.test.ts` |
-| [The look's values](#the-looks-values) | The design tokens and controls: colours, contrast, sizes | `styles/*.test.ts` |
+| [The style check](#the-style-check) | What the stylesheets promise: text readable on every surface, rules no browser drops, motion off when asked | `scripts/check-styles.ts` |
 | [Pictures and sizes](#pictures-and-sizes) | Each screen on every device size | The design sheet's pictures |
 
 All of it runs with Vitest, Testing Library and jsdom (a browser's page model in Node, without WebRTC or real layout).
@@ -48,6 +48,7 @@ Most tests render a real page, or the whole app at a URL (`test/renderApp.tsx`),
 
 - **`test/fakeApi.ts`** replaces `fetch` with a small in-memory API. A test sets its state (who I am, who's sharing, a forced failure), and checks the requests the app sent (`server.calls`), headers included, so the CSRF token is tested too.
 - **`test/fakeLiveKit.ts`** replaces `livekit-client` (jsdom has no WebRTC). A test plays the other people: someone joins (`lastRoom().join(...)`), starts a screen (`publishScreen(...)`), or the browser's own "Stop sharing" bar is used (`browserStopsMyShare()`). What the next screen pick is (a window, a tab or the whole screen) is `nextSurface`. Voices too: someone's mic (`publishVoice`, `muteVoice`), who's speaking (`setSpeaking`), and my own mic, allowed, blocked or missing (`nextMic`), with the gate set on it (`setProcessor`).
+- **Factories** (`test/factories/`) make each test's own data, fresh on every call: `aSharer()` (someone sharing, with new tracks), `aTrack()`, and `onFakeClock()` (fake timers on a fixed clock, with a `userEvent` that moves them along).
 - **No canvas:** jsdom has none, so `test/setup.ts` makes every canvas give no drawing context; what draws (the ambilight, the standby screen's static) does nothing in tests. A test of the drawing stubs its own context (`vi.spyOn(HTMLCanvasElement.prototype, "getContext")`), and how it looks is checked in a real browser.
 
 The room page takes a short poll interval in tests, so nothing waits 2 seconds. From `pages/RoomPage.test.tsx`:
@@ -68,19 +69,15 @@ it("stops the video and ends the stream", async () => {
 
 The page, the hooks, the client and the room's logic all run for real; only the network and the video are fake. Hooks with logic of their own (the LiveKit connection, the room session, swipes) also have tests that render them alone (`renderHook`, or a small harness component for swipes).
 
-## The look's values
+## The style check
 
-*Being replaced:* tests that read CSS text and check literal values block moving the look to tokens; they become checks that the CSS uses the tokens, while the contrast test below stays.
+Tests never read CSS: a stylesheet's text says nothing about what a person sees, and checking literal values (`#ffffff`, `44px`) only blocks moving the look to tokens. What the stylesheets must promise is checked by `npm run check:styles` (`scripts/check-styles.ts`), which parses them with PostCSS and runs in the commit checks after the tests:
 
-The design sheet's values are tested where they live, in the stylesheets: the palette and its contrast (`styles/palette.test.ts`), the sliders and the switch (`styles/controls.test.ts`), the layout's sizes (`styles/layout.test.ts`). From the palette's test, every text colour on every surface:
+- **Contrast:** every text colour on every surface meets its ratio (4.5:1; faint labels 3:1), and the ink on red too.
+- **One browser per rule:** no rule mixes `::-webkit-` and `::-moz-` selectors, since a browser drops a whole rule with a selector it doesn't know.
+- **Reduced motion:** `global.css` keeps the rule that stops every animation and transition for anyone who asks.
 
-```ts
-for (const bg of ["ground", "surface", "surface-raised"]) {
-  for (const [fg, min] of [["text", 4.5], ["text-muted", 4.5], ["accent", 4.5], ["text-faint", 3]] as const) {
-    expect(ratio(token(fg)!, token(bg)!), `${fg} on ${bg}`).toBeGreaterThanOrEqual(min);
-  }
-}
-```
+Its own test (`scripts/check-styles.test.ts`) feeds it small stylesheets that pass and fail. How the look comes out on screen is checked in a real browser, below.
 
 ## Pictures and sizes
 
@@ -93,19 +90,24 @@ Every test earns its place, and runs alone, in any order, fast.
 - **Useful:** a test protects a behaviour that matters and could break; a failure means a real bug. No CSS text or literal values (`#ffffff`, `44px`), no props echoed back, no tests of the fakes rather than the app, no "renders without crashing", no two tests for the same behaviour. A test of removed code leaves with it.
 - **One test file per file with logic**, beside it, named the same. Logic is tested where it lives, as plain functions; a page's tests check only the wiring, split by feature.
 - **Read the page as a person does:** roles, names, labels, `aria-pressed`, `aria-expanded`, `aria-disabled`, `userEvent`; never markup details or class names. A `data-*` attribute only when it's the only sign of a state.
-- **Independent:** each test builds its own data with factories (`test/factories/`), nothing shared at module level; after every test, the setup resets everything shared (storage, spies and mocks, globals, timers, and every shared piece of the app through its reset function). Nothing is restored inside a test's body, where a failure would skip it. The order is shuffled on every run, so a dependence shows at once.
-- **No real waiting:** every delay (debounce, retry, hover, hold, idle, animation) on fake timers, and a fixed clock (`vi.setSystemTime`) for anything that shows a time. `findBy` and `waitFor` keep the default 1 s: a test that needs longer is waiting in real time.
+- **Its own data and its own setup, the most important rule:** each test builds what it needs (people from factories, its own fakes, its clock, its storage) in the test, or in a `beforeEach` that builds it fresh; never once for a whole file, never in a `beforeAll`. Every test passes alone, first, last, or alongside any other.
+- **Clean after every test, by the setup, not the test:** `test/setup.ts` clears the page, storage and cookies, puts back real timers, the media queries and the fake LiveKit, removes the stand-ins a test defined for what jsdom lacks (fullscreen, touch points), and calls the reset of every piece of the app that keeps state between renders (the toast, the floating piece, the tooltip's warmth, the install prompt, the TV); Vitest itself puts back every spy, stubbed global and variable (`restoreMocks`, `unstubGlobals`, `unstubEnvs`). Nothing is restored inside a test's body, where a failure would skip it. A new piece of shared state gets a reset beside it, called there, and a pair of tests in `test/setup.test.tsx`.
+- **A new order every run:** the tests in each file are shuffled on every run, so a test that leans on another fails at once. The run prints its seed (`Running tests with seed "…"`); `npm test -- --sequence.seed=<seed>` replays that order. Each file runs in its own environment, so files can't lean on each other.
+- **No real waiting:** every delay (debounce, retry, hover, hold, idle, animation) on fake timers, and a fixed clock for anything that shows a time (`onFakeClock()`). `findBy` and `waitFor` give up after 1 s, and move fake timers along by themselves: a test that needs longer is waiting in real time.
 - **Fast:** a test under about 100 ms, a file under about 1.5 s, the whole suite in about 10 s; a file that grows past that splits by feature, so the workers share the load.
 - **A flaky test is a bug:** fix its cause (usually time or shared state); never re-run it to pass.
 
-These rules are being applied as the app is reorganised ([Architecture](architecture.md#where-the-code-is-going)); some of today's tests don't follow them yet.
+These rules are being applied as the app is reorganised ([Architecture](architecture.md#where-the-code-is-going)). Every test already has its own data and setup and passes alone and shuffled; the room page's tests still wait in real time, and are split by feature in a later step.
 
 ## Running them
 
 ```bash
 cd app
-npm test                 # once, as the checks do
+npm test                 # once, as the checks do (shuffled; prints its seed)
+npm test -- --sequence.seed=<seed>   # the same order again
 npm run test:watch       # again on every save
+npm run check:styles     # contrast, per-browser rules, reduced motion
+npm run test:alone       # every file, then every test, run alone (slow; before a PR that changes tests)
 npm run build            # type check, then the production build
 ```
 
@@ -114,13 +116,13 @@ npm run build            # type check, then the production build
 - Named after the behaviour, as a sentence: `"ends the stream when the browser's own Stop sharing bar is used"`.
 - Arrange, act, assert, separated by blank lines.
 - Asserts on what a person sees (text, roles, names) or on what the app sent, not on internals.
-- No sleeps: `findBy…` and `waitFor` for what comes later, fake timers when time matters.
+- No sleeps: `findBy…` and `waitFor` for what comes later, `onFakeClock()` when time matters.
 - A call the app makes after a render (a fake's `toHaveBeenCalled…`) is checked inside the `waitFor`, next to what it waits for, not right after it: on a slow machine it can land a moment later.
 
 ## Before opening a pull request
 
 ```bash
-cd app && npm test && npm run build
+cd app && npm test && npm run check:styles && npm run build
 ```
 
 If that passes, the checks' unit test and build stages will too.

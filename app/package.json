@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check:styles": "node scripts/check-styles.ts"
+    "check:styles": "node scripts/check-styles.ts",
+    "test:alone": "node scripts/test-alone.ts"
   },
   "dependencies": {
     "livekit-client": "^2.22.4",

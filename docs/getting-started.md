@@ -27,6 +27,8 @@ npm run dev          # http://localhost:5173
 
 Vite forwards every `/api` request to `http://localhost:8080`, so the web app talks to a local API without any CORS setup. It keeps the browser's address, so the API's redirects, Google's sign-in callback included, come back to `http://localhost:5173`. Without the API running, you'll see the home page and a failed sign-in.
 
+The tests, the style check and running every test alone: [Testing](testing.md#running-them).
+
 ## Run the API next to it
 
 The API lives in [`xove-api`](https://github.com/Hbrauveres/xove-api). Its [Getting started](https://github.com/Hbrauveres/xove-api/blob/main/docs/getting-started.md) runs it on `http://localhost:8080` with a database (and, for video, a LiveKit server in development mode). Then open http://localhost:5173, sign in with Google, and you land in the room.
