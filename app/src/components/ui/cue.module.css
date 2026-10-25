@@ -14,14 +14,18 @@
   }
 
   50% {
-    box-shadow: 0 0 0 1.5px rgba(239, 75, 75, 0.95), 0 0 14px rgba(239, 75, 75, 0.35);
+    box-shadow:
+      0 0 0 1.5px rgba(239, 75, 75, 0.95),
+      0 0 14px rgba(239, 75, 75, 0.35);
   }
 }
 
 /* After the pulses: back up, and held. */
 @keyframes settle {
   to {
-    box-shadow: 0 0 0 1.5px rgba(239, 75, 75, 0.95), 0 0 14px rgba(239, 75, 75, 0.35);
+    box-shadow:
+      0 0 0 1.5px rgba(239, 75, 75, 0.95),
+      0 0 14px rgba(239, 75, 75, 0.35);
   }
 }
 
@@ -38,6 +42,8 @@
 @media (prefers-reduced-motion: reduce) {
   .cue {
     animation: none;
-    box-shadow: 0 0 0 1.5px rgba(239, 75, 75, 0.95), 0 0 14px rgba(239, 75, 75, 0.35);
+    box-shadow:
+      0 0 0 1.5px rgba(239, 75, 75, 0.95),
+      0 0 14px rgba(239, 75, 75, 0.35);
   }
 }

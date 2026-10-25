@@ -5,9 +5,7 @@
   /* Clear of the phone's bars (spec 0141). */
   padding: calc(48px + var(--safe-top)) max(var(--gutter), var(--safe-right)) calc(48px + var(--safe-bottom))
     max(var(--gutter), var(--safe-left));
-  background:
-    radial-gradient(60% 50% at 50% 0%, var(--accent-soft), transparent 70%),
-    var(--ground);
+  background: radial-gradient(60% 50% at 50% 0%, var(--accent-soft), transparent 70%), var(--ground);
 }
 
 .card {
@@ -69,7 +67,9 @@
   color: #1f1f1f;
   font-weight: 600;
   text-decoration: none;
-  transition: transform 80ms ease, box-shadow 120ms ease;
+  transition:
+    transform 80ms ease,
+    box-shadow 120ms ease;
 }
 
 .google:hover {

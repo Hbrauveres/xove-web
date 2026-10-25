@@ -59,7 +59,18 @@ function ArrowButton({ up, onClick, className }: { up: boolean; onClick: () => v
  * and closes it, and so does a round button at the bottom left: an arrow up while it's closed,
  * an arrow down on the row while it's open.
  */
-export function StreamsRow({ others, liveCount, open, onOpen, onClose, onPick, hearOf, onHear, swappedOf, onSwap }: Props) {
+export function StreamsRow({
+  others,
+  liveCount,
+  open,
+  onOpen,
+  onClose,
+  onPick,
+  hearOf,
+  onHear,
+  swappedOf,
+  onSwap,
+}: Props) {
   // A hold on a picture opens its buttons over it (spec 0131): the pictures are too small to carry them.
   const [held, setHeld] = useState<string | null>(null);
   const hold = useHold();

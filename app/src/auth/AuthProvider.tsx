@@ -2,10 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
 import { api, ApiError } from "../api/client";
 import type { Me } from "../api/types";
 
-export type AuthState =
-  | { status: "loading" }
-  | { status: "signedOut" }
-  | { status: "signedIn"; me: Me };
+export type AuthState = { status: "loading" } | { status: "signedOut" } | { status: "signedIn"; me: Me };
 
 type AuthContextValue = {
   state: AuthState;

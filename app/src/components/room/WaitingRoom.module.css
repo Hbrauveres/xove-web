@@ -5,8 +5,8 @@
   justify-items: center;
   gap: 16px;
   /* Clear of the phone's bars (spec 0141). */
-  padding: max(var(--gutter), var(--safe-top)) max(var(--gutter), var(--safe-right)) max(var(--gutter), var(--safe-bottom))
-    max(var(--gutter), var(--safe-left));
+  padding: max(var(--gutter), var(--safe-top)) max(var(--gutter), var(--safe-right))
+    max(var(--gutter), var(--safe-bottom)) max(var(--gutter), var(--safe-left));
 }
 
 .card {

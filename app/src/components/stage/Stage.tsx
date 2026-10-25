@@ -529,13 +529,7 @@ export function Stage({
   const chrome = playing ? (chromeShown ? "shown" : "hidden") : undefined;
 
   const body = () => {
-    if (!big || !main)
-      return (
-        <EmptyStage
-          canShareScreen={controls.canShareScreen}
-          onStart={startMine}
-        />
-      );
+    if (!big || !main) return <EmptyStage canShareScreen={controls.canShareScreen} onStart={startMine} />;
 
     // My own stream as everyone sees it, without its sound (it would echo). Sharing
     // the whole screen shows the page inside itself: sharing a tab or window avoids it.

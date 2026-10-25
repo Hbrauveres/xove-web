@@ -20,11 +20,18 @@ export function useMarkAnimation(svg: RefObject<SVGSVGElement | null>, mark: Wor
       const el = svg.current;
       if (!el) return;
       const { dx, dy, textShift } = mark.closed;
-      const lx = dx.left * f.slide, rx = dx.right * f.slide;
-      el.querySelector("[data-letters]")?.setAttribute("transform", `translate(${+(textShift * f.slide).toFixed(2)},0)`);
-      const ty = dy.top * f.settle, by = dy.bottom * f.settle;
+      const lx = dx.left * f.slide,
+        rx = dx.right * f.slide;
+      el.querySelector("[data-letters]")?.setAttribute(
+        "transform",
+        `translate(${+(textShift * f.slide).toFixed(2)},0)`,
+      );
+      const ty = dy.top * f.settle,
+        by = dy.bottom * f.settle;
       const move = (at: string, x: number, y: number) =>
-        el.querySelector(`[data-side="${at}"]`)?.setAttribute("transform", `translate(${+x.toFixed(2)},${+y.toFixed(2)})`);
+        el
+          .querySelector(`[data-side="${at}"]`)
+          ?.setAttribute("transform", `translate(${+x.toFixed(2)},${+y.toFixed(2)})`);
       move("top-left", lx, ty);
       move("bottom-left", lx, by);
       move("bottom-right", rx, by);
@@ -38,7 +45,11 @@ export function useMarkAnimation(svg: RefObject<SVGSVGElement | null>, mark: Wor
       const dot = el.querySelector("[data-dot]");
       const { cx, cy } = mark.dot;
       if (f.eye.sx === 1 && f.eye.sy === 1) dot?.removeAttribute("transform");
-      else dot?.setAttribute("transform", `translate(${cx},${cy}) scale(${f.eye.sx},${f.eye.sy}) translate(${-cx},${-cy})`);
+      else
+        dot?.setAttribute(
+          "transform",
+          `translate(${cx},${cy}) scale(${f.eye.sx},${f.eye.sy}) translate(${-cx},${-cy})`,
+        );
     },
     [svg, mark],
   );

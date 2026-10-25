@@ -42,7 +42,9 @@ export function ScreenVideo({ video, sound, label, volume = 1, muted = false, on
     const check = () => {
       const box = el.clientWidth / el.clientHeight;
       const picture = el.videoWidth / el.videoHeight;
-      setFill(Number.isFinite(box) && Number.isFinite(picture) && picture > 0 && Math.abs(picture / box - 1) < SAME_SHAPE);
+      setFill(
+        Number.isFinite(box) && Number.isFinite(picture) && picture > 0 && Math.abs(picture / box - 1) < SAME_SHAPE,
+      );
     };
     check();
     const watch = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(check);

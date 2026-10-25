@@ -9,7 +9,6 @@ type Props = {
   onCancel: () => void;
 };
 
-
 /**
  * A seat is free for me (spec 0060): enter within the time, or cancel. With no answer,
  * the API moves me to the end of the queue and offers the seat to the next person.

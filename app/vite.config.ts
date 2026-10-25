@@ -1,6 +1,6 @@
 /// <reference types="vitest/config" />
-import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -9,12 +9,12 @@ export default defineConfig({
     proxy: {
       // Keeps the browser's address (no changeOrigin) and sends X-Forwarded-*, so the
       // API builds its links, Google's callback included, on localhost:5173.
-      '/api': { target: 'http://localhost:8080', xfwd: true },
+      "/api": { target: "http://localhost:8080", xfwd: true },
     },
   },
   test: {
-    environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
+    environment: "jsdom",
+    setupFiles: ["./src/test/setup.ts"],
     // Every test starts clean (docs/testing.md): each file in its own environment, and every spy,
     // stubbed global and stubbed variable put back after each test, by the runner, not by the test.
     isolate: true,
@@ -26,6 +26,6 @@ export default defineConfig({
     restoreMocks: true,
     unstubGlobals: true,
     unstubEnvs: true,
-    css: { modules: { classNameStrategy: 'non-scoped' } },
+    css: { modules: { classNameStrategy: "non-scoped" } },
   },
-})
+});

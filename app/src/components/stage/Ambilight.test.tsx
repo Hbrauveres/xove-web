@@ -3,7 +3,14 @@ import { describe, expect, it, vi } from "vitest";
 import { easeFor, glowLayout } from "../../media/ambilight";
 import { Ambilight, EASE_MS, SLOW_EASE, SLOW_SAMPLE_MS } from "./Ambilight";
 
-type Recorded = { pictureDraws: number; pixelReads: number; blurs: string[]; composites: string[]; masks: number; alphas: number[] };
+type Recorded = {
+  pictureDraws: number;
+  pixelReads: number;
+  blurs: string[];
+  composites: string[];
+  masks: number;
+  alphas: number[];
+};
 
 /**
  * jsdom has no canvas: a 2D context that records what the ambilight asks of it, in `rec`.
@@ -64,7 +71,16 @@ function playingVideo(playing = true) {
 function setup() {
   const rec: Recorded = { pictureDraws: 0, pixelReads: 0, blurs: [], composites: [], masks: 0, alphas: [] };
   const tab = { hidden: false };
-  vi.useFakeTimers({ toFake: ["setTimeout", "setInterval", "clearInterval", "requestAnimationFrame", "cancelAnimationFrame", "performance"] });
+  vi.useFakeTimers({
+    toFake: [
+      "setTimeout",
+      "setInterval",
+      "clearInterval",
+      "requestAnimationFrame",
+      "cancelAnimationFrame",
+      "performance",
+    ],
+  });
   vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockImplementation(fakeContext(rec) as never);
   vi.spyOn(document, "hidden", "get").mockImplementation(() => tab.hidden);
   return { rec, tab, updates: () => rec.pictureDraws / 9 };
@@ -174,7 +190,8 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
   it("updates slowly when the system asks for reduced motion", () => {
     const { rec, updates } = setup();
     vi.spyOn(window, "matchMedia").mockImplementation(
-      (query: string) => ({ matches: query.includes("reduce"), addEventListener() {}, removeEventListener() {} }) as never,
+      (query: string) =>
+        ({ matches: query.includes("reduce"), addEventListener() {}, removeEventListener() {} }) as never,
     );
     render(<Ambilight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
     advance(1000);
@@ -224,4 +241,3 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
     expect(light.style.left).toBe(l.placement.left);
   });
 });
-

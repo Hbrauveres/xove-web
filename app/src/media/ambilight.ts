@@ -72,7 +72,10 @@ export type EdgeDraw = { at: string; src: Rect; dst: Rect };
  */
 export function edgeDraws(l: GlowLayout, w: number, h: number): EdgeDraw[] {
   const { x, y, w: sw, h: sh } = l.stage;
-  const x1 = x + sw, y1 = y + sh, R = l.width - x1, B = l.height - y1;
+  const x1 = x + sw,
+    y1 = y + sh,
+    R = l.width - x1,
+    B = l.height - y1;
   // Never more than the picture itself, however small it is.
   const e = Math.min(STRIP, w, h);
   return [

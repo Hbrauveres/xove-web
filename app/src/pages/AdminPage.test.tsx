@@ -47,7 +47,9 @@ describe("admin page", () => {
     await user.click(await screen.findByRole("button", { name: /approve/i }));
 
     expect(await screen.findByText(/no one is waiting/i)).toBeInTheDocument();
-    expect(server.calls.some((c) => c.method === "POST" && c.path === "/api/admin/access-requests/7/approve")).toBe(true);
+    expect(server.calls.some((c) => c.method === "POST" && c.path === "/api/admin/access-requests/7/approve")).toBe(
+      true,
+    );
   });
 
   it("declines a request", async () => {

@@ -27,7 +27,8 @@ describe("the mark's animation timeline (spec 0111, FR-4a)", () => {
 
   it("never jumps: each step starts where the last one ended", () => {
     for (let t = 1; t < TOTAL_MS; t++) {
-      const a = frameAt(t - 1), b = frameAt(t);
+      const a = frameAt(t - 1),
+        b = frameAt(t);
       expect(Math.abs(b.eye.sy - a.eye.sy)).toBeLessThan(0.2);
       expect(Math.abs(b.eye.sx - a.eye.sx)).toBeLessThan(0.05);
       expect(Math.abs(b.slide - a.slide)).toBeLessThan(0.02);

@@ -123,7 +123,12 @@ export function screenPublishOptions(mode: ShareMode): TrackPublishOptions {
     scalabilityMode: "L1T3",
     screenShareEncoding: { maxBitrate: preset.maxBitrate, maxFramerate: preset.fps },
     screenShareSimulcastLayers: lower.map(
-      (l) => ({ width: l.width, height: l.height, encoding: { maxBitrate: l.maxBitrate, maxFramerate: l.fps } }) as VideoPreset,
+      (l) =>
+        ({
+          width: l.width,
+          height: l.height,
+          encoding: { maxBitrate: l.maxBitrate, maxFramerate: l.fps },
+        }) as VideoPreset,
     ),
     // Smooth: lower the resolution before the frame rate. Sharp: the other way round.
     degradationPreference: degradationOf(mode),
@@ -165,7 +170,12 @@ export function cameraPublishOptions(mode: ShareMode): TrackPublishOptions {
     scalabilityMode: "L1T3",
     videoEncoding: { maxBitrate: preset.maxBitrate, maxFramerate: preset.fps },
     videoSimulcastLayers: lower.map(
-      (l) => ({ width: l.width, height: l.height, encoding: { maxBitrate: l.maxBitrate, maxFramerate: l.fps } }) as VideoPreset,
+      (l) =>
+        ({
+          width: l.width,
+          height: l.height,
+          encoding: { maxBitrate: l.maxBitrate, maxFramerate: l.fps },
+        }) as VideoPreset,
     ),
     degradationPreference: degradationOf(mode),
   };

@@ -78,6 +78,7 @@ Object.defineProperty(window, "matchMedia", { writable: true, value: desktopMatc
  * what jsdom lacks and a test defines for itself (fullscreen, a touch screen's touch points). */
 function resetBrowserStandIns() {
   window.matchMedia = desktopMatchMedia as never;
-  for (const own of ["fullscreenElement", "exitFullscreen"]) delete (document as unknown as Record<string, unknown>)[own];
+  for (const own of ["fullscreenElement", "exitFullscreen"])
+    delete (document as unknown as Record<string, unknown>)[own];
   delete (navigator as unknown as Record<string, unknown>).maxTouchPoints;
 }

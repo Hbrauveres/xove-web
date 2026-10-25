@@ -55,7 +55,9 @@
   border-radius: 22px;
   background: var(--ground);
   color: var(--text);
-  box-shadow: 0 0 0 1px var(--line), 0 10px 30px color-mix(in srgb, var(--accent) 18%, transparent);
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 10px 30px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 
 .title {

@@ -71,7 +71,11 @@ export class NoiseGate implements TrackProcessor<Track.Kind.Audio, AudioProcesso
       const was = state.open;
       state = gateStep(state, levelOf(samples), this.line, TICK_MS);
       if (state.open !== was) {
-        gain.gain.setTargetAtTime(state.open ? 1 : 0, audioContext.currentTime, (state.open ? ATTACK_MS : RELEASE_MS) / 3000);
+        gain.gain.setTargetAtTime(
+          state.open ? 1 : 0,
+          audioContext.currentTime,
+          (state.open ? ATTACK_MS : RELEASE_MS) / 3000,
+        );
       }
     }, TICK_MS);
     this.processedTrack = out.stream.getAudioTracks()[0];

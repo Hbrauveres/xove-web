@@ -9,7 +9,8 @@ type Props = Omit<InputHTMLAttributes<HTMLInputElement>, "type">;
  * the track, so `--fill` tells the stylesheet how far the white goes.
  */
 export function Range({ className, style, min = 0, max = 100, value, ...rest }: Props) {
-  const lo = Number(min), hi = Number(max);
+  const lo = Number(min),
+    hi = Number(max);
   const at = hi > lo ? (Number(value) - lo) / (hi - lo) : 0;
   // No value (or not a number): an empty fill, never an invalid one that drops the track.
   const fill = `${Number.isFinite(at) ? +(Math.min(1, Math.max(0, at)) * 100).toFixed(2) : 0}%`;

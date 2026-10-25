@@ -9,7 +9,13 @@ import { levelOf } from "../media/noiseGate";
 export function useMicLevel(input: MediaStreamTrack | undefined, on: boolean): number {
   const [level, setLevel] = useState(0);
   useEffect(() => {
-    if (!on || !input || typeof MediaStreamTrack === "undefined" || !(input instanceof MediaStreamTrack) || typeof AudioContext === "undefined") {
+    if (
+      !on ||
+      !input ||
+      typeof MediaStreamTrack === "undefined" ||
+      !(input instanceof MediaStreamTrack) ||
+      typeof AudioContext === "undefined"
+    ) {
       setLevel(0);
       return;
     }

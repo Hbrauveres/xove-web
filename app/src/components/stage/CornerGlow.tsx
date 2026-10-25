@@ -10,7 +10,12 @@ import styles from "./CornerGlow.module.css";
  */
 export function CornerGlow({ prefs }: { prefs: AmbilightPrefs }) {
   return (
-    <span className={styles.glow} data-corner-glow style={{ opacity: prefs.on ? prefs.brightness : 0 }} aria-hidden="true">
+    <span
+      className={styles.glow}
+      data-corner-glow
+      style={{ opacity: prefs.on ? prefs.brightness : 0 }}
+      aria-hidden="true"
+    >
       {(["tl", "tr", "bl", "br"] as const).map((at) => (
         <i key={at} data-at={at} />
       ))}

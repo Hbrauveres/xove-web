@@ -19,13 +19,12 @@ type Props = {
  * screen (phones), the camera comes first and the screen is the same pill, greyed, saying why;
  * their labels are one word, "Screen" and "Camera"; their spoken names say the act (spec 0138). The first time it stands by in a visit, the TV turns on.
  */
-export function EmptyStage({
-  canShareScreen = true,
-  onStart,
-}: Props) {
+export function EmptyStage({ canShareScreen = true, onStart }: Props) {
   // The TV turning on (spec 0136): only the first time the stage stands by in this visit; once it's
   // on, the last stream stopping doesn't turn it on again. Gone when it ends.
-  const [turningOn, setTurningOn] = useState(() => !tv.on && !window.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
+  const [turningOn, setTurningOn] = useState(
+    () => !tv.on && !window.matchMedia?.("(prefers-reduced-motion: reduce)").matches,
+  );
   useEffect(() => {
     tv.on = true;
   }, []);
@@ -67,7 +66,11 @@ export function EmptyStage({
         Standby
       </span>
       {turningOn && (
-        <span className={styles.intro} aria-hidden="true" onAnimationEnd={(e) => e.target === e.currentTarget && setTurningOn(false)}>
+        <span
+          className={styles.intro}
+          aria-hidden="true"
+          onAnimationEnd={(e) => e.target === e.currentTarget && setTurningOn(false)}
+        >
           <i data-part="flare" />
           <i data-part="band" />
           <i data-part="line" />

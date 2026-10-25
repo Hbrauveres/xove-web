@@ -79,13 +79,16 @@ describe("phones and tablets use the home-screen app (spec 0171)", () => {
     }));
   }
 
-  it.each(["/", "/room", "/admin", "/request-access"])("shows only the install screen at %s in a browser tab", async (path) => {
-    touchDevice(false);
-    installFakeApi({ me: aUser({ status: "MEMBER", admin: true }) });
-    renderApp(path);
-    expect(await screen.findByRole("heading", { name: /works best from your home screen/ })).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: /continue with google/i })).toBeNull();
-  });
+  it.each(["/", "/room", "/admin", "/request-access"])(
+    "shows only the install screen at %s in a browser tab",
+    async (path) => {
+      touchDevice(false);
+      installFakeApi({ me: aUser({ status: "MEMBER", admin: true }) });
+      renderApp(path);
+      expect(await screen.findByRole("heading", { name: /works best from your home screen/ })).toBeInTheDocument();
+      expect(screen.queryByRole("link", { name: /continue with google/i })).toBeNull();
+    },
+  );
 
   it("works as today from the home screen", async () => {
     touchDevice(true);

@@ -26,7 +26,11 @@ describe("api client", () => {
   it("says what a stream shows and which connection and track send it when starting one", async () => {
     const server = installFakeApi();
 
-    await api.streams.start("screen", { participantSid: "PA_me", trackSid: "TR_screen" }, { quality: "720p", mode: "sharp" });
+    await api.streams.start(
+      "screen",
+      { participantSid: "PA_me", trackSid: "TR_screen" },
+      { quality: "720p", mode: "sharp" },
+    );
 
     expect(server.calls.at(-1)!.path).toBe("/api/streams");
     expect(server.calls.at(-1)!.body).toEqual({
@@ -43,7 +47,11 @@ describe("api client", () => {
     document.cookie = "XSRF-TOKEN=abc-123";
 
     await api.streams.watching({ sharerId: 7, kind: "camera" });
-    expect(server.calls.at(-1)).toMatchObject({ method: "PUT", path: "/api/streams/watching", body: { sharerId: 7, kind: "camera" } });
+    expect(server.calls.at(-1)).toMatchObject({
+      method: "PUT",
+      path: "/api/streams/watching",
+      body: { sharerId: 7, kind: "camera" },
+    });
     expect(server.calls.at(-1)!.headers["X-XSRF-TOKEN"]).toBe("abc-123");
 
     await api.streams.watching(null);

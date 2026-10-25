@@ -6,7 +6,10 @@
   --row-head-gap: 6px;
   --row-pictures: 112px;
   --row-bottom: 10px;
-  --row-content: calc(var(--row-head) + var(--row-head-gap) + var(--row-pictures) * 9 / 16 + var(--row-bottom) + env(safe-area-inset-bottom, 0px));
+  --row-content: calc(
+    var(--row-head) + var(--row-head-gap) + var(--row-pictures) * 9 / 16 + var(--row-bottom) +
+      env(safe-area-inset-bottom, 0px)
+  );
   --row-arrow-inset: 14px;
   --row-arrow: 36px;
   min-width: 0;

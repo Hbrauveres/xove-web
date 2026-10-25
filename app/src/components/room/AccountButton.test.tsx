@@ -84,7 +84,9 @@ describe("account button on the phone (spec 0158)", () => {
     const { user } = setup({ footer: <FooterItems /> });
     await user.click(screen.getByRole("button", { name: /account/ }));
     const menu = screen.getByRole("dialog");
-    const footer = within(menu).getByText(/Made by Hbrauveres/).closest("[data-footer]");
+    const footer = within(menu)
+      .getByText(/Made by Hbrauveres/)
+      .closest("[data-footer]");
     expect(footer).not.toBeNull();
     expect(footer).toHaveTextContent("Buy me a coffee");
     expect(footer).toHaveTextContent("GitHub");

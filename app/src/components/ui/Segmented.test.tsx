@@ -39,7 +39,18 @@ describe("Segmented, the app's segmented control", () => {
   });
 
   it("tells its stylesheet where the sliding pill goes", () => {
-    render(<Segmented label="Quality" options={[{ value: "1080p", label: "1080p" }, { value: "720p", label: "720p" }, { value: "480p", label: "480p" }]} value="720p" onChange={() => {}} />);
+    render(
+      <Segmented
+        label="Quality"
+        options={[
+          { value: "1080p", label: "1080p" },
+          { value: "720p", label: "720p" },
+          { value: "480p", label: "480p" },
+        ]}
+        value="720p"
+        onChange={() => {}}
+      />,
+    );
     const group = screen.getByRole("radiogroup");
     expect(group.style.getPropertyValue("--n")).toBe("3");
     expect(group.style.getPropertyValue("--i")).toBe("1");

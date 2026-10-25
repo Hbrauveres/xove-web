@@ -48,7 +48,9 @@ describe("share presets", () => {
     expect(publish.simulcast).toBe(true);
     expect(publish.scalabilityMode).toBe("L1T3");
     expect(publish.screenShareEncoding).toEqual({ maxBitrate: 8_000_000, maxFramerate: 30 });
-    expect(publish.screenShareSimulcastLayers?.map((l) => [l.height, l.encoding.maxBitrate, l.encoding.maxFramerate])).toEqual([
+    expect(
+      publish.screenShareSimulcastLayers?.map((l) => [l.height, l.encoding.maxBitrate, l.encoding.maxFramerate]),
+    ).toEqual([
       [720, 4_000_000, 30],
       [480, 2_000_000, 30],
     ]);

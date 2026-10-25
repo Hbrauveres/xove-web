@@ -290,7 +290,8 @@ export function useLiveKitRoom(): LiveKitRoom {
     for (const p of people) {
       const screen = remoteVideo(p, "screen");
       const camera = remoteVideo(p, "camera");
-      const soundPublication = p.getTrackPublication(Track.Source.ScreenShareAudio) as RemoteTrackPublication | undefined;
+      const soundPublication = p.getTrackPublication(Track.Source.ScreenShareAudio) as
+        RemoteTrackPublication | undefined;
       const sound = soundPublication?.track;
       const voicePublication = p.getTrackPublication(Track.Source.Microphone) as RemoteTrackPublication | undefined;
       if (screen || camera || soundPublication || voicePublication) {
@@ -321,7 +322,8 @@ export function useLiveKitRoom(): LiveKitRoom {
     const mic = me.getTrackPublication(Track.Source.Microphone)?.track;
     setVoice(Boolean(mic));
     setLocalVoice(mic);
-    const surface = (screen?.mediaStreamTrack.getSettings?.() as { displaySurface?: string } | undefined)?.displaySurface;
+    const surface = (screen?.mediaStreamTrack.getSettings?.() as { displaySurface?: string } | undefined)
+      ?.displaySurface;
     setScreenSurface(surface === "monitor" || surface === "window" || surface === "browser" ? surface : undefined);
   }, []);
 
@@ -447,8 +449,7 @@ export function useLiveKitRoom(): LiveKitRoom {
         // Turning a camera off unpublishes it (LiveKit's own "disable" only mutes it),
         // so the API hears that the stream ended.
         const track = room.localParticipant.getTrackPublication(Track.Source.Camera)?.track as
-          | LocalVideoTrack
-          | undefined;
+          LocalVideoTrack | undefined;
         if (track) await room.localParticipant.unpublishTrack(track, true);
       }
       sync();
@@ -466,7 +467,8 @@ export function useLiveKitRoom(): LiveKitRoom {
   const publishCapture = useCallback(
     async (capture: Capture, prefs: SharePrefs): Promise<StartedStream | null> => {
       const room = roomRef.current;
-      const failed = capture.kind === "screen" ? "Couldn't start sharing your screen." : "Couldn't turn on your camera.";
+      const failed =
+        capture.kind === "screen" ? "Couldn't start sharing your screen." : "Couldn't turn on your camera.";
       if (!room) {
         discardCapture(capture);
         setError("Not connected to the video server yet.");
@@ -500,8 +502,7 @@ export function useLiveKitRoom(): LiveKitRoom {
 
   const applySettings = useCallback(async (kind: StreamKind, prefs: SharePrefs) => {
     const track = roomRef.current?.localParticipant.getTrackPublication(SOURCE[kind])?.track as
-      | LocalVideoTrack
-      | undefined;
+      LocalVideoTrack | undefined;
     if (!track) return;
     track.mediaStreamTrack.contentHint = contentHintOf(prefs.mode);
     // Viewers' apps also stop asking for more than the cap (they read it from the
@@ -652,8 +653,7 @@ export function useLiveKitRoom(): LiveKitRoom {
   }, [sync]);
   const applyVoice = useCallback(async (prefs: VoicePrefs) => {
     const track = roomRef.current?.localParticipant.getTrackPublication(Track.Source.Microphone)?.track as
-      | (LocalAudioTrack & { restartTrack?: (o: unknown) => Promise<void> })
-      | undefined;
+      (LocalAudioTrack & { restartTrack?: (o: unknown) => Promise<void> }) | undefined;
     await track?.restartTrack?.(micCaptureOptions(prefs));
     // Another mic: the meter follows it (the gate is handed the new one by LiveKit).
     if (track) setMicInput(gateRef.current?.gate.input ?? track.mediaStreamTrack);
@@ -666,8 +666,7 @@ export function useLiveKitRoom(): LiveKitRoom {
   const pickCamera = useCallback(
     async (deviceId: string, prefs: SharePrefs) => {
       const track = roomRef.current?.localParticipant.getTrackPublication(Track.Source.Camera)?.track as
-        | LocalVideoTrack
-        | undefined;
+        LocalVideoTrack | undefined;
       if (!track) {
         saveCameraDevice(deviceId);
         setCameraId(deviceId);

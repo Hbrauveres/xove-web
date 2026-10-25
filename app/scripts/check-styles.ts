@@ -22,7 +22,9 @@ export function tokensOf(root: Root) {
 }
 
 const luminance = (hex: string) => {
-  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((x) => (x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4));
+  const [r, g, b] = [1, 3, 5]
+    .map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+    .map((x) => (x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4));
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 };
 /** The contrast ratio between two `#rrggbb` colours, 1 to 21. */
@@ -54,7 +56,10 @@ export function mixedVendorRules(root: Root, file: string) {
   const problems: string[] = [];
   root.walkRules((rule) => {
     const vendors = new Set([...rule.selector.matchAll(/::-(webkit|moz)-/g)].map(([, v]) => v));
-    if (vendors.size > 1) problems.push(`${file}:${rule.source?.start?.line}: "${rule.selector}" mixes -webkit- and -moz-; split it in two rules`);
+    if (vendors.size > 1)
+      problems.push(
+        `${file}:${rule.source?.start?.line}: "${rule.selector}" mixes -webkit- and -moz-; split it in two rules`,
+      );
   });
   return problems;
 }
@@ -71,13 +76,18 @@ export function reducedMotionProblems(globalCss: Root) {
       if (every && props.has("animation-duration") && props.has("transition-duration")) found = true;
     });
   });
-  return found ? [] : ["global.css: no rule under @media (prefers-reduced-motion: reduce) stops every animation and transition (*)"];
+  return found
+    ? []
+    : ["global.css: no rule under @media (prefers-reduced-motion: reduce) stops every animation and transition (*)"];
 }
 
 /** Every check over the app's stylesheets under `src`. */
 export function checkStyles(src: string) {
   const files = readdirSync(src, { recursive: true, encoding: "utf8" }).filter((p) => p.endsWith(".css"));
-  const parsed = files.map((file) => ({ file, root: postcss.parse(readFileSync(join(src, file), "utf8"), { from: file }) }));
+  const parsed = files.map((file) => ({
+    file,
+    root: postcss.parse(readFileSync(join(src, file), "utf8"), { from: file }),
+  }));
   const global = parsed.find((p) => p.file.endsWith("styles/global.css"));
   if (!global) return ["src/styles/global.css not found"];
   return [
@@ -90,6 +100,10 @@ export function checkStyles(src: string) {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const problems = checkStyles(join(import.meta.dirname, "../src"));
   for (const p of problems) console.error(p);
-  console.log(problems.length ? `${problems.length} style problems.` : "Styles: contrast, browser rules and reduced motion all hold.");
+  console.log(
+    problems.length
+      ? `${problems.length} style problems.`
+      : "Styles: contrast, browser rules and reduced motion all hold.",
+  );
   process.exit(problems.length ? 1 : 0);
 }

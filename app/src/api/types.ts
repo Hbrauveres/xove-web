@@ -93,6 +93,4 @@ export type LiveKitAccess = {
  * `seconds` from now (the countdown uses the seconds: a browser's clock may be wrong).
  */
 export type SeatStatus =
-  | { status: "in" }
-  | { status: "waiting"; place: number }
-  | { status: "offered"; until: string; seconds: number };
+  { status: "in" } | { status: "waiting"; place: number } | { status: "offered"; until: string; seconds: number };

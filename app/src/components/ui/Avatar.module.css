@@ -10,7 +10,9 @@
 }
 
 .onAir {
-  box-shadow: 0 0 0 2px var(--ground), 0 0 0 4px var(--accent);
+  box-shadow:
+    0 0 0 2px var(--ground),
+    0 0 0 4px var(--accent);
 }
 
 /* The same ring, drawn inside the avatar's edge (spec 0107): its outer edge is the avatar's. */

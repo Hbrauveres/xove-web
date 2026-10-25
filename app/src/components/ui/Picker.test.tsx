@@ -34,7 +34,9 @@ describe("Picker, the app's one-box picker", () => {
     await user.click(pill);
     expect(pill).toHaveAttribute("aria-expanded", "true");
     const list = screen.getByRole("radiogroup", { name: "Camera" });
-    const names = within(list).getAllByRole("radio").map((r) => r.textContent);
+    const names = within(list)
+      .getAllByRole("radio")
+      .map((r) => r.textContent);
     expect(names).toEqual(["MacBook Pro camera", "OBS Virtual Camera"]);
   });
 
@@ -69,10 +71,14 @@ describe("Picker, the app's one-box picker", () => {
   it("can be told to close (its drop-up was left), and says when it opens or closes", async () => {
     const onOpenChange = vi.fn();
     const user = userEvent.setup();
-    const { rerender } = render(<Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} onOpenChange={onOpenChange} />);
+    const { rerender } = render(
+      <Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} onOpenChange={onOpenChange} />,
+    );
     await user.click(screen.getByRole("button", { name: "Camera: Webcam C920" }));
     expect(onOpenChange).toHaveBeenLastCalledWith(true);
-    rerender(<Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} onOpenChange={onOpenChange} closed />);
+    rerender(
+      <Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} onOpenChange={onOpenChange} closed />,
+    );
     expect(screen.getByRole("button", { name: "Camera: Webcam C920" })).toHaveAttribute("aria-expanded", "false");
     // Closed from outside, it says so too: the player lets its controls fade again.
     expect(onOpenChange).toHaveBeenLastCalledWith(false);
@@ -81,7 +87,9 @@ describe("Picker, the app's one-box picker", () => {
   it("says its list closed when it goes away open (its stream stopped)", async () => {
     const onOpenChange = vi.fn();
     const user = userEvent.setup();
-    const view = render(<Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} onOpenChange={onOpenChange} />);
+    const view = render(
+      <Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} onOpenChange={onOpenChange} />,
+    );
     await user.click(screen.getByRole("button", { name: "Camera: Webcam C920" }));
     view.unmount();
     expect(onOpenChange).toHaveBeenLastCalledWith(false);
@@ -101,7 +109,7 @@ describe("Picker: floating over its panel (spec 0111)", () => {
     );
     const at: Record<string, [number, number]> = { list: [40, 140], under: [80, 120], far: [300, 340] };
     vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
-      const key = this.getAttribute("role") === "radiogroup" ? "list" : this.dataset.testid ?? "";
+      const key = this.getAttribute("role") === "radiogroup" ? "list" : (this.dataset.testid ?? "");
       const [top, bottom] = at[key] ?? [0, 0];
       return { top, bottom, left: 0, right: 300, width: 300, height: bottom - top, x: 0, y: top } as DOMRect;
     });
@@ -145,11 +153,24 @@ describe("Picker: floating over its panel (spec 0111)", () => {
         <div data-testid="under">Quality</div>
       </div>,
     );
-    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({ top: 40, bottom: 140, left: 0, right: 300, width: 300, height: 100, x: 0, y: 40 } as DOMRect);
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({
+      top: 40,
+      bottom: 140,
+      left: 0,
+      right: 300,
+      width: 300,
+      height: 100,
+      x: 0,
+      y: 40,
+    } as DOMRect);
     await user.click(screen.getByRole("button", { name: "Camera: Webcam C920" }));
     const under = screen.getByTestId("under");
     expect(under.style.maskImage).toMatch(/transparent/);
-    view.rerender(<div data-list-host><div data-testid="under">Quality</div></div>);
+    view.rerender(
+      <div data-list-host>
+        <div data-testid="under">Quality</div>
+      </div>,
+    );
     expect(under.style.maskImage).toBe("");
   });
 
@@ -197,7 +218,9 @@ describe("Picker: long names and an upward list (spec 0114)", () => {
     const pill = screen.getByRole("button", { name: "Camera: EMEET STUDIO Virtual Camera" });
     expect(pill).toHaveAccessibleDescription("EMEET STUDIO Virtual Camera");
     await user.click(pill);
-    expect(screen.getByRole("radio", { name: "EMEET PIXY (328f:00c0)" })).toHaveAccessibleDescription("EMEET PIXY (328f:00c0)");
+    expect(screen.getByRole("radio", { name: "EMEET PIXY (328f:00c0)" })).toHaveAccessibleDescription(
+      "EMEET PIXY (328f:00c0)",
+    );
   });
 
   it("opens an upward list scrolled to the pill's end", async () => {
@@ -245,13 +268,17 @@ describe("Picker: opened on request (spec 0115)", () => {
 
 describe("Picker: cued (spec 0123, design decision 11)", () => {
   it("draws the cue's ring over its list, round the pill and the open list together", () => {
-    const { container } = render(<Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} openSignal={1} cue={1} />);
+    const { container } = render(
+      <Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} openSignal={1} cue={1} />,
+    );
     const ring = container.querySelector("[data-cue]") as HTMLElement;
     expect(ring).not.toBeNull();
     // Above the list (z-index 10), reaching down by the list's height.
     expect(ring.style.zIndex).toBe("11");
     expect(ring.style.bottom).toBe("calc(-1 * var(--list-h, 0px))");
-    expect(ring.compareDocumentPosition(screen.getByRole("radiogroup")) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(
+      ring.compareDocumentPosition(screen.getByRole("radiogroup")) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
   });
 
   it("reaches up instead when the list opens upward, and draws no ring when not cued", () => {

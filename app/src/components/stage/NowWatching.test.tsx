@@ -46,7 +46,6 @@ describe("now watching (spec 0104)", () => {
     render(<NowWatching sharer={{ ...bruno(false), isMe: true }} />);
     expect(screen.getByRole("heading", { name: "You" })).toBeInTheDocument();
   });
-
 });
 
 const friend = (id: string, name: string): Friend => ({ id, name, hue: 100, online: true });
@@ -96,7 +95,9 @@ describe("now watching: an empty stage (specs 0107 and 0123)", () => {
     // The stage asks you to go live, so this line doesn't (spec 0123: each thing said once).
     expect(whoIsHere(["Bruno"])).toBe("Bruno is here.");
     expect(whoIsHere(["Bruno", "Ana"])).toBe("Bruno and Ana are here.");
-    expect(whoIsHere(["Bruno", "Ana", "Diego", "Carla", "Leo", "Rui", "Bia"])).toBe("Bruno, Ana and 5 others are here.");
+    expect(whoIsHere(["Bruno", "Ana", "Diego", "Carla", "Leo", "Rui", "Bia"])).toBe(
+      "Bruno, Ana and 5 others are here.",
+    );
     expect(whoIsHere([])).toBe("Nobody else is here yet.");
   });
 

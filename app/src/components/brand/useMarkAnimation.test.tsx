@@ -7,7 +7,11 @@ import { XoveMark } from "./XoveMark";
 function onScreen() {
   const motion = { reduced: false };
   vi.useFakeTimers({ toFake: ["requestAnimationFrame", "cancelAnimationFrame", "performance", "setTimeout"] });
-  vi.stubGlobal("matchMedia", (q: string) => ({ matches: q.includes("reduce") && motion.reduced, addEventListener() {}, removeEventListener() {} }));
+  vi.stubGlobal("matchMedia", (q: string) => ({
+    matches: q.includes("reduce") && motion.reduced,
+    addEventListener() {},
+    removeEventListener() {},
+  }));
   return { motion };
 }
 

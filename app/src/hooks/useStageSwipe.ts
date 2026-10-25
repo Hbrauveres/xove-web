@@ -84,7 +84,8 @@ export function useStageSwipe(slide: RefObject<HTMLElement | null>, options: Opt
     if (axis === "vertical") {
       // Up opens, down closes; the picture doesn't move (spec 0160).
       const height = slide.current?.getBoundingClientRect().height || 1;
-      const way = cancelled || !latest.current.enabled ? 0 : swipeOutcome(y - s.y, x - s.x, performance.now() - s.at, height);
+      const way =
+        cancelled || !latest.current.enabled ? 0 : swipeOutcome(y - s.y, x - s.x, performance.now() - s.at, height);
       if (way === 1) latest.current.onOpen?.();
       if (way === -1) latest.current.onClose?.();
       return;

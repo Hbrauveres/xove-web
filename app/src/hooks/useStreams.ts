@@ -74,7 +74,8 @@ export function useStreams(pollMs: number = STREAMS_POLL_MS): Streams {
     [run],
   );
   const changeSettings = useCallback(
-    async (kind: StreamKind, settings: StreamSettings) => (await run(() => api.streams.settings(kind, settings))) === "ok",
+    async (kind: StreamKind, settings: StreamSettings) =>
+      (await run(() => api.streams.settings(kind, settings))) === "ok",
     [run],
   );
   const stop = useCallback(async (kind: StreamKind) => (await run(() => api.streams.stop(kind))) === "ok", [run]);

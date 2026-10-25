@@ -12,7 +12,9 @@ const SLIDER_ROOM = 32;
 /** What Tab stops at, in order. */
 const TABBABLE = 'button, input, [href], [tabindex]:not([tabindex="-1"])';
 const tabbables = (root: ParentNode) =>
-  [...root.querySelectorAll<HTMLElement>(TABBABLE)].filter((el) => !el.closest("[inert]") && !(el as HTMLButtonElement).disabled);
+  [...root.querySelectorAll<HTMLElement>(TABBABLE)].filter(
+    (el) => !el.closest("[inert]") && !(el as HTMLButtonElement).disabled,
+  );
 
 /** How long a row takes to roll back into its preview, at most (its transition ends it sooner). */
 const OUT_MS = 320;
@@ -158,7 +160,10 @@ function Row({
         } else if (e.key === "Tab" && !e.shiftKey && e.target === inRow.at(-1)) {
           // On to whatever follows the preview.
           const next = tabbables(document).find(
-            (el) => !open.anchor.contains(el) && !e.currentTarget.contains(el) && open.anchor.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING,
+            (el) =>
+              !open.anchor.contains(el) &&
+              !e.currentTarget.contains(el) &&
+              open.anchor.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING,
           );
           if (next) {
             e.preventDefault();
@@ -166,7 +171,9 @@ function Row({
           }
         }
       }}
-      onTransitionEnd={(e) => leaving && e.target === e.currentTarget && e.propertyName === "clip-path" && onGone(open.id)}
+      onTransitionEnd={(e) =>
+        leaving && e.target === e.currentTarget && e.propertyName === "clip-path" && onGone(open.id)
+      }
     >
       {children}
     </div>

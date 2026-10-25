@@ -18,7 +18,9 @@ const FPS = 20;
 export function StaticGlow({ prefs }: { prefs: AmbilightPrefs }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   // The turn-on's light on the wall, only with the stage's own turn-on: the first time it stands by.
-  const [turningOn, setTurningOn] = useState(() => !tv.on && !window.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
+  const [turningOn, setTurningOn] = useState(
+    () => !tv.on && !window.matchMedia?.("(prefers-reduced-motion: reduce)").matches,
+  );
   useEffect(() => {
     const el = canvas.current;
     const ctx = el?.getContext("2d");

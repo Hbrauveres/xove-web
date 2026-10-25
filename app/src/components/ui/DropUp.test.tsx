@@ -9,7 +9,13 @@ function onDevice() {
   const device = { hover: true };
   vi.useFakeTimers();
   vi.spyOn(window, "matchMedia").mockImplementation(
-    (q: string) => ({ matches: q.includes("hover: hover") ? device.hover : false, media: q, addEventListener() {}, removeEventListener() {} }) as unknown as MediaQueryList,
+    (q: string) =>
+      ({
+        matches: q.includes("hover: hover") ? device.hover : false,
+        media: q,
+        addEventListener() {},
+        removeEventListener() {},
+      }) as unknown as MediaQueryList,
   );
   return { device };
 }
@@ -17,7 +23,13 @@ function onDevice() {
 function setup(props: Partial<Parameters<typeof DropUp>[0]> = {}) {
   const onLeave = vi.fn();
   render(
-    <DropUp label="The window you share" enabled onLeave={onLeave} trigger={<button>Stop sharing your screen</button>} {...props}>
+    <DropUp
+      label="The window you share"
+      enabled
+      onLeave={onLeave}
+      trigger={<button>Stop sharing your screen</button>}
+      {...props}
+    >
       <button>Change</button>
     </DropUp>,
   );
@@ -144,8 +156,8 @@ describe("DropUp, the quick-access pill over a live button", () => {
         </DropUp>
       </div>,
     );
-    const [screenUp, cameraUp] = ["Stop sharing your screen", "Turn off your camera"].map(
-      (name) => screen.getByRole("button", { name }).closest("[data-dropup]")!,
+    const [screenUp, cameraUp] = ["Stop sharing your screen", "Turn off your camera"].map((name) =>
+      screen.getByRole("button", { name }).closest("[data-dropup]")!,
     );
     fireEvent.pointerEnter(screenUp);
     act(() => vi.advanceTimersByTime(OPEN_DELAY_MS));
@@ -260,17 +272,29 @@ describe("DropUp, the quick-access pill over a live button", () => {
 
   it("keeps its button, and the keyboard's focus on it, when the stream starts or stops", () => {
     onDevice();
-    const view = render(<DropUp label="x" enabled={false} trigger={<button>Turn on your camera</button>}><button>Change</button></DropUp>);
+    const view = render(
+      <DropUp label="x" enabled={false} trigger={<button>Turn on your camera</button>}>
+        <button>Change</button>
+      </DropUp>,
+    );
     const button = screen.getByRole("button", { name: "Turn on your camera" });
     button.focus();
-    view.rerender(<DropUp label="x" enabled trigger={<button>Turn on your camera</button>}><button>Change</button></DropUp>);
+    view.rerender(
+      <DropUp label="x" enabled trigger={<button>Turn on your camera</button>}>
+        <button>Change</button>
+      </DropUp>,
+    );
     expect(screen.getByRole("button", { name: "Turn on your camera" })).toBe(button);
     expect(button).toHaveFocus();
   });
 
   it("isn't there while the stream is off", () => {
     onDevice();
-    render(<DropUp label="x" enabled={false} trigger={<button>a</button>}><button>Change</button></DropUp>);
+    render(
+      <DropUp label="x" enabled={false} trigger={<button>a</button>}>
+        <button>Change</button>
+      </DropUp>,
+    );
     expect(screen.queryByRole("button", { name: "Change" })).not.toBeInTheDocument();
   });
 });
@@ -296,7 +320,12 @@ describe("DropUp redirected: another panel shows the setting (spec 0115)", () =>
     const redirect = vi.fn();
     const onStop = vi.fn();
     render(
-      <DropUp label="Your camera" enabled redirect={redirect} trigger={<button onClick={onStop}>Turn off your camera</button>}>
+      <DropUp
+        label="Your camera"
+        enabled
+        redirect={redirect}
+        trigger={<button onClick={onStop}>Turn off your camera</button>}
+      >
         <button>Integrated Webcam</button>
       </DropUp>,
     );
@@ -321,7 +350,12 @@ describe("DropUp redirected: another panel shows the setting (spec 0115)", () =>
     device.hover = false;
     const onStop = vi.fn();
     render(
-      <DropUp label="Your camera" enabled redirect={vi.fn()} trigger={<button onClick={onStop}>Turn off your camera</button>}>
+      <DropUp
+        label="Your camera"
+        enabled
+        redirect={vi.fn()}
+        trigger={<button onClick={onStop}>Turn off your camera</button>}
+      >
         <button>Integrated Webcam</button>
       </DropUp>,
     );

@@ -23,10 +23,38 @@ export default function App() {
   if (touch && !installed) return <InstallPage />;
   return (
     <Routes>
-      <Route path="/" element={<RedirectIfSignedIn><HomePage /></RedirectIfSignedIn>} />
-      <Route path="/request-access" element={<RequireNonMember><RequestAccessPage /></RequireNonMember>} />
-      <Route path="/room" element={<RequireMember><RoomPage /></RequireMember>} />
-      <Route path="/admin" element={<RequireAdmin><AdminPage /></RequireAdmin>} />
+      <Route
+        path="/"
+        element={
+          <RedirectIfSignedIn>
+            <HomePage />
+          </RedirectIfSignedIn>
+        }
+      />
+      <Route
+        path="/request-access"
+        element={
+          <RequireNonMember>
+            <RequestAccessPage />
+          </RequireNonMember>
+        }
+      />
+      <Route
+        path="/room"
+        element={
+          <RequireMember>
+            <RoomPage />
+          </RequireMember>
+        }
+      />
+      <Route
+        path="/admin"
+        element={
+          <RequireAdmin>
+            <AdminPage />
+          </RequireAdmin>
+        }
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
