@@ -2,8 +2,8 @@ import { XoveIcon } from "../../components/brand/XoveIcon";
 import { BigScreenArt } from "./big-screen-art";
 import styles from "./phone-notice.page.module.css";
 
-/** The mark's size at the top of the screen, as in the design sheet. */
-const MARK_PX = 26;
+/** The icon's box: its viewfinder draws 22 px tall in it, as in the sketch (the icon has room around it). */
+const MARK_PX = 36;
 
 /** What a phone or a tablet sees on every page: Xovê is for a laptop or a desktop, for now. */
 export function PhoneNoticePage() {
