@@ -95,34 +95,3 @@ describe("now watching: an empty stage (specs 0107 and 0123)", () => {
     expect(container.querySelectorAll("[data-here]")).toHaveLength(4);
   });
 });
-
-describe("now watching, compact for the phone (spec 0158)", () => {
-  it("says who and what on one line, then LIVE, the time and who's watching in words", () => {
-    const { container } = render(
-      <NowWatching compact sharer={bruno(false)} watchers={people("Henrique", "Diego", "Ana")} />,
-    );
-
-    expect(screen.getByRole("heading", { name: "Bruno · Screen" })).toBeInTheDocument();
-    expect(screen.getByText("LIVE")).toBeInTheDocument();
-    expect(screen.getByText("12:40")).toBeInTheDocument();
-    expect(screen.getByText("3 watching")).toBeInTheDocument();
-    // Words only: no avatars of who's watching.
-    expect(container.querySelectorAll("[data-watcher]")).toHaveLength(0);
-    expect(container.querySelector('[data-ring="inside"]')).toBeInTheDocument();
-    expect(container.querySelector("[data-compact]")).toBeInTheDocument();
-  });
-
-  it("says nobody's sharing and the seats open when the stage is empty (spec 0123)", () => {
-    const { rerender } = render(<NowWatching compact sharer={null} free={6} />);
-
-    expect(screen.getByRole("heading", { name: "Nobody is sharing yet" })).toBeInTheDocument();
-    expect(screen.getByText("6 seats open")).toBeInTheDocument();
-    rerender(<NowWatching compact sharer={null} free={1} />);
-    expect(screen.getByText("1 seat open")).toBeInTheDocument();
-  });
-
-  it("can be a smaller heading, for the cards of a feed", () => {
-    render(<NowWatching compact level={3} sharer={bruno(true)} />);
-    expect(screen.getByRole("heading", { level: 3, name: "Bruno · Screen with camera" })).toBeInTheDocument();
-  });
-});

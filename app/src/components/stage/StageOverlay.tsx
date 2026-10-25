@@ -2,40 +2,22 @@ import styles from "./StageOverlay.module.css";
 import { Tooltip } from "../ui/Tooltip";
 
 type Props = {
-  /** The player is fullscreen (or, on a phone, in the full-screen view): the button leaves it. */
+  /** The player is fullscreen: the button leaves it. */
   fullscreen: boolean;
   onFullscreen: () => void;
-  /** On a phone or tablet the button opens the full-screen view, not the player's fullscreen (spec 0171). */
-  view?: boolean;
-  /** Sideways on a phone the room is already in the full-screen view: no button. */
-  hidden?: boolean;
 };
 
 /**
  * What sits over the video: the fullscreen button. Who is live, and for how long, is in the
  * info row under the stage (spec 0104).
  */
-export function StageOverlay({ fullscreen, onFullscreen, view = false, hidden = false }: Props) {
-  if (hidden) return null;
-  const label = view
-    ? fullscreen
-      ? "Exit full-screen view"
-      : "Full-screen view"
-    : fullscreen
-      ? "Exit fullscreen"
-      : "Fullscreen";
+export function StageOverlay({ fullscreen, onFullscreen }: Props) {
+  const label = fullscreen ? "Exit fullscreen" : "Fullscreen";
   return (
     <div className={styles.overlay} data-overlay>
       <div className={styles.top}>
         <Tooltip text={label}>
-          <button
-            type="button"
-            // A button, never the start of a swipe (spec 0159).
-            data-no-swipe
-            className={styles.iconButton}
-            onClick={onFullscreen}
-            aria-label={label}
-          >
+          <button type="button" className={styles.iconButton} onClick={onFullscreen} aria-label={label}>
             <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
               <path
                 // Corners pointing out to enter, pointing in to leave.

@@ -3,10 +3,9 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router";
 import { useAuth } from "../auth/AuthProvider";
 import { AccountButton } from "../components/room/AccountButton";
-import { ActivityBell } from "../components/room/ActivityBell";
 import { ActivityPill } from "../components/room/ActivityPill";
 import { PeopleButton } from "../components/room/PeopleButton";
-import { FooterItems, RoomFooter } from "../components/room/RoomFooter";
+import { RoomFooter } from "../components/room/RoomFooter";
 import { RoomHeader } from "../components/room/RoomHeader";
 import { WaitingRoom } from "../components/room/WaitingRoom";
 import { loadAmbilight } from "../media/preferences";
@@ -14,7 +13,6 @@ import { canShareScreen } from "../media/shareSettings";
 import { SettingsPanel } from "../components/stage/SettingsPanel";
 import { Stage } from "../components/stage/Stage";
 import { useFullscreenElement, useFullscreenHost } from "../hooks/useFullscreenElement";
-import { TOUCH_QUERY, useRoomLayout } from "../hooks/useRoomLayout";
 import { SEAT_POLL_MS, useRoomSeat, type RoomSeat } from "../hooks/useRoomSeat";
 import { useRoomSession } from "../hooks/useRoomSession";
 import { useStagePick } from "../hooks/useStagePick";
@@ -85,26 +83,9 @@ function Room({ pollMs, seat, onSignOut }: Props & { seat: RoomSeat; onSignOut: 
     [people, watchingOf, bigId],
   );
   const others = useMemo(() => people.filter((p) => p.id !== meId), [people, meId]);
-  // A phone or tablet held upright (specs 0158 and 0160): the same room, laid out for it.
-  const layout = useRoomLayout();
-  // The full-screen view (spec 0171): the sideways layout while the phone stays upright, by
-  // the fullscreen button. Turning doesn't change it, so turning back returns to where it was.
-  const [fullView, setFullView] = useState(false);
-  const phone = layout === "upright" && !fullView;
-  const sideways = layout === "sideways" || (layout === "upright" && fullView);
-  const touch = window.matchMedia?.(TOUCH_QUERY).matches ?? false;
-  const toggleFullView = useCallback(() => setFullView((on) => !on), []);
-  // Either phone view: the bell, and the footer's items in my menu (specs 0158 and 0160).
-  const handheld = phone || sideways;
-  // For the phone's feed: who has each sharer on their stage, as under the stage.
-  const watchersOf = useCallback(
-    (id: string) => people.filter((p) => p.id !== id && watchingOf[p.id]?.sharerId === id),
-    [people, watchingOf],
-  );
   const watching = stage.big && stage.mainKind ? { personId: stage.big.person.id, kind: stage.mainKind } : null;
 
-  // The settings for what I send (spec 0107), from the cog: a popover over it, or a
-  // bottom sheet on a phone held upright (its full-screen view too). A phone shows only Camera.
+  // The settings for what I send, from the cog: a popover over it.
   const [settingsOpen, setSettingsOpen] = useState(false);
   const toggleSettings = useCallback(() => setSettingsOpen((open) => !open), []);
   const closeSettings = useCallback(() => setSettingsOpen(false), []);
@@ -112,13 +93,12 @@ function Room({ pollMs, seat, onSignOut }: Props & { seat: RoomSeat; onSignOut: 
   // makes the same request twice still count.
   const [goTo, setGoTo] = useState<{ kind: StreamKind; n: number }>();
   const goToSetting = useCallback((kind: StreamKind) => setGoTo((was) => ({ kind, n: (was?.n ?? 0) + 1 })), []);
-  const sheet = layout === "upright";
   const settingsPanel = (
     <SettingsPanel
-      variant={sheet ? "sheet" : "popover"}
+      variant="popover"
       open={settingsOpen}
       onClose={closeSettings}
-      screenTab={canShareScreen() && !(touch && layout !== "desktop")}
+      screenTab={canShareScreen()}
       mine={session.mine}
       prefs={session.prefs}
       onPrefsChange={session.setPrefs}
@@ -132,7 +112,6 @@ function Room({ pollMs, seat, onSignOut }: Props & { seat: RoomSeat; onSignOut: 
       onPreviewCamera={session.previewCamera}
       cameraProblem={session.cameraProblem}
       busy={session.busy}
-      fullView={sheet && fullView}
       goTo={goTo}
       voice={session.voice}
       voicePrefs={session.voicePrefs}
@@ -154,7 +133,7 @@ function Room({ pollMs, seat, onSignOut }: Props & { seat: RoomSeat; onSignOut: 
     return () => window.clearInterval(timer);
   }, [seated, reenter, participantSid, pollMs]);
 
-  // People, then (on a phone) the bell, then me at the far right (spec 0158).
+  // People, then me at the far right.
   const myButtons = (
     <>
       <PeopleButton
@@ -164,16 +143,6 @@ function Room({ pollMs, seat, onSignOut }: Props & { seat: RoomSeat; onSignOut: 
         watchingOf={session.watchingOf}
         seats={session.seats}
       />
-      {handheld && (
-        <ActivityBell
-          events={session.activity}
-          people={session.knownPeople}
-          meId={session.me.id}
-          isLive={isLive}
-          watching={watching}
-          onWatch={stage.pick}
-        />
-      )}
       <AccountButton
         me={session.me}
         isAdmin={me?.admin ?? false}
@@ -181,33 +150,26 @@ function Room({ pollMs, seat, onSignOut }: Props & { seat: RoomSeat; onSignOut: 
         ambilight={ambilight}
         onAmbilightChange={setAmbilight}
         onSignOut={onSignOut}
-        footer={handheld ? <FooterItems /> : undefined}
       />
     </>
   );
 
   return (
-    <div className={styles.theater} data-room data-layout={phone ? "phone" : sideways ? "sideways" : undefined}>
-      {/* Sideways there's no header: my buttons sit in the stage's top bar (spec 0160). */}
-      {!sideways && (
-        <RoomHeader
-          middle={
-            // On the phone the bell takes the pill's place, on the right (spec 0158).
-            !phone && (
-              <ActivityPill
-                events={session.activity}
-                people={session.knownPeople}
-                meId={session.me.id}
-                connection={session.connection}
-                isLive={isLive}
-                watching={watching}
-                onWatch={stage.pick}
-              />
-            )
-          }
-          right={myButtons}
-        />
-      )}
+    <div className={styles.theater} data-room>
+      <RoomHeader
+        middle={
+          <ActivityPill
+            events={session.activity}
+            people={session.knownPeople}
+            meId={session.me.id}
+            connection={session.connection}
+            isLive={isLive}
+            watching={watching}
+            onWatch={stage.pick}
+          />
+        }
+        right={myButtons}
+      />
 
       {/* One column as wide as the stage can be: the stage and its info row share its edges. */}
       <main className={styles.middle}>
@@ -218,17 +180,6 @@ function Room({ pollMs, seat, onSignOut }: Props & { seat: RoomSeat; onSignOut: 
             ambilight={ambilight}
             watchers={watchers}
             others={others}
-            layout={phone ? "phone" : sideways ? "sideways" : undefined}
-            topRight={sideways ? myButtons : undefined}
-            fullView={
-              touch && layout !== "desktop"
-                ? { on: fullView, toggle: toggleFullView, hidden: layout === "sideways" }
-                : undefined
-            }
-            watchersOf={watchersOf}
-            people={people}
-            meId={meId}
-            arrivedAt={session.arrivedAt}
             controls={{
               mine: session.mine,
               free: session.free,
@@ -248,8 +199,7 @@ function Room({ pollMs, seat, onSignOut }: Props & { seat: RoomSeat; onSignOut: 
               voice: session.voice,
               onVoice: session.toggleVoice,
             }}
-            settingsPanel={sheet ? undefined : settingsPanel}
-            sheetOpen={sheet && settingsOpen}
+            settingsPanel={settingsPanel}
           />
         </div>
         {/* Over the bottom of the middle: the column is sized exactly, nothing may push it. */}
@@ -260,7 +210,7 @@ function Room({ pollMs, seat, onSignOut }: Props & { seat: RoomSeat; onSignOut: 
         )}
       </main>
 
-      {!handheld && <RoomFooter />}
+      <RoomFooter />
 
       {fullscreen &&
         session.error &&
@@ -270,7 +220,6 @@ function Room({ pollMs, seat, onSignOut }: Props & { seat: RoomSeat; onSignOut: 
           </p>,
           overPage,
         )}
-      {sheet && createPortal(settingsPanel, overPage)}
     </div>
   );
 }

@@ -45,7 +45,7 @@
     "tool": "code",
     "rule": "domQuery",
     "file": "src/components/stage/Stage.tsx",
-    "count": 4,
+    "count": 3,
     "owner": "#190 room: stage, Stage split"
   },
   {
@@ -131,20 +131,6 @@
     "file": "src/components/room/AccountButton.tsx",
     "count": 2,
     "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/room/ActivityBell.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/room/ActivityBell.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -338,44 +324,9 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/stage/HereCards.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/HereCards.tsx",
-    "count": 2,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/hereFor.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/stage/icons.tsx",
     "count": 5,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/LiveFeed.module.css",
-    "count": 4,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/LiveFeed.tsx",
-    "count": 8,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -409,7 +360,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/NowWatching.tsx",
-    "count": 7,
+    "count": 5,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -493,22 +444,8 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/Stage.tsx",
-    "count": 51,
+    "count": 22,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/StageDots.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/StageDots.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -521,7 +458,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/StageOverlay.tsx",
-    "count": 3,
+    "count": 1,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -558,27 +495,6 @@
     "file": "src/components/stage/StaticNoise.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/StreamsRow.module.css",
-    "count": 6,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/StreamsRow.test.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/StreamsRow.tsx",
-    "count": 6,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -751,13 +667,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/hooks/useRoomLayout.ts",
-    "count": 5,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/hooks/useRoomSeat.ts",
     "count": 1,
     "owner": "#182 the room's model and store"
@@ -779,30 +688,9 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/hooks/useStageSwipe.test.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/hooks/useStageSwipe.ts",
-    "count": 5,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/hooks/useStreams.ts",
     "count": 1,
     "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/hooks/useTapToggle.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -864,7 +752,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/media/stagePick.ts",
-    "count": 2,
+    "count": 1,
     "owner": "#183 the room's hooks"
   },
   {
@@ -899,14 +787,14 @@
     "tool": "code",
     "rule": "history",
     "file": "src/pages/RoomPage.test.tsx",
-    "count": 32,
+    "count": 25,
     "owner": "#184 the room page's tests"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/pages/RoomPage.tsx",
-    "count": 12,
+    "count": 5,
     "owner": "#192 room: queue, footer, page"
   },
   {
@@ -975,23 +863,9 @@
   {
     "tool": "code",
     "rule": "lineLength",
-    "file": "src/components/stage/LiveFeed.tsx",
-    "count": 2,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "lineLength",
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 2,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "lineLength",
-    "file": "src/components/stage/StreamsRow.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -1020,13 +894,6 @@
     "file": "src/components/room/AccountButton.module.css",
     "count": 9,
     "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "literal",
-    "file": "src/components/room/ActivityBell.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -1101,13 +968,6 @@
   {
     "tool": "code",
     "rule": "literal",
-    "file": "src/components/stage/LiveFeed.module.css",
-    "count": 5,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "literal",
     "file": "src/components/stage/MicTest.module.css",
     "count": 10,
     "owner": "#193 settings"
@@ -1157,13 +1017,6 @@
   {
     "tool": "code",
     "rule": "literal",
-    "file": "src/components/stage/StageDots.module.css",
-    "count": 5,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "literal",
     "file": "src/components/stage/StageNotice.module.css",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
@@ -1188,13 +1041,6 @@
     "file": "src/components/stage/StaticNoise.module.css",
     "count": 5,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "literal",
-    "file": "src/components/stage/StreamsRow.module.css",
-    "count": 14,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -1440,27 +1286,6 @@
     "file": "src/components/room/AccountButton.tsx",
     "count": 1,
     "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/ActivityBell.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/ActivityBell.test.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/ActivityBell.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -1724,65 +1549,9 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/stage/HereCards.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/HereCards.test.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/HereCards.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/hereFor.test.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/hereFor.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/components/stage/icons.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/LiveFeed.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/LiveFeed.test.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/LiveFeed.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -1948,27 +1717,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/stage/StageDots.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/StageDots.test.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/StageDots.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/components/stage/StageNotice.module.css",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
@@ -2049,27 +1797,6 @@
     "file": "src/components/stage/StaticNoise.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/StreamsRow.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/StreamsRow.test.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/StreamsRow.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -2410,20 +2137,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/hooks/useRoomLayout.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/hooks/useRoomLayout.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/hooks/useRoomSeat.ts",
     "count": 1,
     "owner": "#182 the room's model and store"
@@ -2452,37 +2165,9 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/hooks/useStageSwipe.test.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/hooks/useStageSwipe.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/hooks/useStreams.ts",
     "count": 1,
     "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/hooks/useTapToggle.test.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/hooks/useTapToggle.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -2929,7 +2614,7 @@
     "tool": "code",
     "rule": "realWait",
     "file": "src/pages/RoomPage.test.tsx",
-    "count": 30,
+    "count": 17,
     "owner": "#184 the room page's tests"
   },
   {
@@ -2938,20 +2623,6 @@
     "file": "src/brand/brand.test.ts",
     "count": 3,
     "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "sharedData",
-    "file": "src/components/stage/HereCards.test.tsx",
-    "count": 3,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "sharedData",
-    "file": "src/hooks/useTapToggle.test.ts",
-    "count": 2,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -3134,27 +2805,6 @@
     "file": "src/components/room/AccountButton.tsx",
     "count": 1,
     "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/ActivityBell.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/ActivityBell.test.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/ActivityBell.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -3418,65 +3068,9 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/stage/HereCards.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/HereCards.test.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/HereCards.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/hereFor.test.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/hereFor.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/components/stage/icons.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/LiveFeed.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/LiveFeed.test.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/LiveFeed.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -3642,27 +3236,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/stage/StageDots.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/StageDots.test.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/StageDots.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/components/stage/StageNotice.module.css",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
@@ -3743,27 +3316,6 @@
     "file": "src/components/stage/StaticNoise.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/StreamsRow.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/StreamsRow.test.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/StreamsRow.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -4104,20 +3656,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/hooks/useRoomLayout.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/hooks/useRoomLayout.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/hooks/useRoomSeat.ts",
     "count": 1,
     "owner": "#182 the room's model and store"
@@ -4146,37 +3684,9 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/hooks/useStageSwipe.test.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/hooks/useStageSwipe.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/hooks/useStreams.ts",
     "count": 1,
     "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/hooks/useTapToggle.test.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/hooks/useTapToggle.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -4384,20 +3894,6 @@
   {
     "tool": "copies",
     "rule": "copied-block",
-    "file": "src/components/stage/HereCards.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "copies",
-    "rule": "copied-block",
-    "file": "src/components/stage/LiveFeed.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "copies",
-    "rule": "copied-block",
     "file": "src/components/stage/PlayerButtons.module.css",
     "count": 1,
     "owner": "#191 today's stage pieces"
@@ -4468,20 +3964,6 @@
   {
     "tool": "lint",
     "rule": "eslint(complexity)",
-    "file": "src/components/stage/LiveFeed.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
-    "file": "src/components/stage/NowWatching.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
     "file": "src/components/stage/PlayerButtons.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
@@ -4504,15 +3986,8 @@
     "tool": "lint",
     "rule": "eslint(complexity)",
     "file": "src/components/stage/Stage.tsx",
-    "count": 5,
+    "count": 2,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
-    "file": "src/components/stage/StreamsRow.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "lint",
@@ -4555,13 +4030,6 @@
     "file": "src/hooks/useStagePick.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
-    "file": "src/hooks/useStageSwipe.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "lint",
@@ -4636,23 +4104,9 @@
   {
     "tool": "lint",
     "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/stage/LiveFeed.tsx",
-    "count": 2,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
     "file": "src/components/stage/MicTest.tsx",
     "count": 1,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/stage/NowWatching.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "lint",
@@ -4695,13 +4149,6 @@
     "file": "src/components/stage/StaticNoise.tsx",
     "count": 2,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/stage/StreamsRow.tsx",
-    "count": 2,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "lint",
@@ -4751,13 +4198,6 @@
     "file": "src/hooks/useRoomSession.ts",
     "count": 1,
     "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/hooks/useStageSwipe.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "lint",
@@ -4867,13 +4307,6 @@
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/stage/hereFor.ts",
-    "count": 4,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
     "file": "src/components/stage/makeRoom.ts",
     "count": 1,
     "owner": "#179 phones removed"
@@ -4884,13 +4317,6 @@
     "file": "src/components/stage/MicTest.tsx",
     "count": 3,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/stage/NowWatching.tsx",
-    "count": 3,
-    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "lint",
@@ -4910,15 +4336,8 @@
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
     "file": "src/components/stage/Stage.tsx",
-    "count": 5,
+    "count": 2,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/stage/StageDots.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "lint",
@@ -5041,24 +4460,10 @@
   },
   {
     "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/media/stagePick.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "lint",
     "rule": "jsx-a11y(click-events-have-key-events)",
     "file": "src/components/stage/HearToggles.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(click-events-have-key-events)",
-    "file": "src/components/stage/LiveFeed.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "lint",
@@ -5125,13 +4530,6 @@
   },
   {
     "tool": "lint",
-    "rule": "jsx-a11y(no-noninteractive-element-interactions)",
-    "file": "src/components/stage/StreamsRow.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "lint",
     "rule": "jsx-a11y(no-noninteractive-tabindex)",
     "file": "src/components/brand/XoveMark.tsx",
     "count": 1,
@@ -5157,13 +4555,6 @@
     "file": "src/components/stage/Facecam.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(no-static-element-interactions)",
-    "file": "src/components/stage/LiveFeed.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "lint",
@@ -5344,7 +4735,7 @@
     "tool": "lint",
     "rule": "react(set-state-in-effect)",
     "file": "src/components/stage/Stage.tsx",
-    "count": 3,
+    "count": 2,
     "owner": "#190 room: stage, Stage split"
   },
   {
@@ -5428,15 +4819,8 @@
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
     "file": "src/components/stage/Stage.tsx",
-    "count": 5,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/components/stage/StreamsRow.tsx",
     "count": 1,
-    "owner": "#179 phones removed"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "lint",
@@ -5511,20 +4895,6 @@
   {
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
-    "file": "src/hooks/useStageSwipe.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/hooks/useTapToggle.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
     "file": "src/media/preferences.ts",
     "count": 6,
     "owner": "#180 core: API client, auth, preferences"
@@ -5546,13 +4916,6 @@
   {
     "tool": "lint",
     "rule": "typescript(no-non-null-assertion)",
-    "file": "src/components/stage/LiveFeed.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(no-non-null-assertion)",
     "file": "src/components/stage/Stage.tsx",
     "count": 2,
     "owner": "#190 room: stage, Stage split"
@@ -5563,13 +4926,6 @@
     "file": "src/components/stage/StaticGlow.tsx",
     "count": 2,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(no-non-null-assertion)",
-    "file": "src/components/stage/StreamsRow.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "lint",
@@ -5630,29 +4986,8 @@
   {
     "tool": "tsc",
     "rule": "TS2322",
-    "file": "src/components/stage/StageDots.test.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2322",
-    "file": "src/components/stage/StreamsRow.tsx",
-    "count": 2,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2322",
     "file": "src/media/ambilight.test.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2322",
-    "file": "src/media/stagePick.ts",
-    "count": 2,
     "owner": "#183 the room's hooks"
   },
   {
@@ -5675,20 +5010,6 @@
     "file": "src/components/stage/EmptyStage.test.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2345",
-    "file": "src/components/stage/HereCards.test.tsx",
-    "count": 3,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2345",
-    "file": "src/components/stage/LiveFeed.test.tsx",
-    "count": 7,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "tsc",
@@ -5791,13 +5112,6 @@
   {
     "tool": "tsc",
     "rule": "TS2375",
-    "file": "src/components/stage/LiveFeed.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
     "file": "src/components/stage/NowWatching.test.tsx",
     "count": 2,
     "owner": "#191 today's stage pieces"
@@ -5820,15 +5134,8 @@
     "tool": "tsc",
     "rule": "TS2375",
     "file": "src/components/stage/Stage.tsx",
-    "count": 7,
+    "count": 5,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
-    "file": "src/components/stage/StreamsRow.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "tsc",
@@ -6144,13 +5451,6 @@
     "file": "src/hooks/useRoomSession.ts",
     "count": 1,
     "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
-    "file": "src/hooks/useStageSwipe.ts",
-    "count": 3,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "unused",
