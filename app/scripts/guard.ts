@@ -48,14 +48,13 @@ export function fromJscpd(json: string): Finding[] {
 
 /** knip's `--reporter json`: dead files, unused exports and unused types, per file. */
 export function fromKnip(json: string): Finding[] {
+  const KINDS = ["files", "exports", "types", "enumMembers", "namespaceMembers", "duplicates"] as const;
   const { issues } = JSON.parse(json) as {
-    issues: { file: string; files: unknown[]; exports: unknown[]; types: unknown[] }[];
+    issues: (Record<(typeof KINDS)[number], unknown[] | undefined> & { file: string })[];
   };
-  return issues.flatMap((i) => [
-    ...i.files.map(() => ({ tool: "unused", rule: "file", file: i.file })),
-    ...i.exports.map(() => ({ tool: "unused", rule: "export", file: i.file })),
-    ...i.types.map(() => ({ tool: "unused", rule: "type", file: i.file })),
-  ]);
+  return issues.flatMap((i) =>
+    KINDS.flatMap((kind) => (i[kind] ?? []).map(() => ({ tool: "unused", rule: kind, file: i.file }))),
+  );
 }
 
 /** The step that clears a file's findings: the longest matching path prefix in checks/owners.json. */
@@ -94,6 +93,14 @@ export function compare(now: Map<string, Known>, known: Known[], main?: Known[])
         `fixed: ${r.file}: ${r.tool} ${r.rule}, ${n} (the list says ${r.count}); run npm run guard -- --record`,
       );
   }
+  // A tool that suddenly reports nothing it used to has most likely stopped working (a setting lost,
+  // its output changed), not had everything fixed at once: that must not pass as a clean-up.
+  for (const tool of new Set(known.map((k) => k.tool))) {
+    const before = known.filter((k) => k.tool === tool).reduce((s, k) => s + k.count, 0);
+    const after = [...now.values()].filter((n) => n.tool === tool).reduce((s, n) => s + n.count, 0);
+    if (before > 0 && after === 0)
+      errors.push(`silent: ${tool} reported nothing, against ${before} recorded; check that it still runs`);
+  }
   if (main) {
     const before = new Map(main.map((k) => [keyOf(k), k.count]));
     for (const [k, r] of record)
@@ -108,6 +115,8 @@ export function compare(now: Map<string, Known>, known: Known[], main?: Known[])
 
 /** The list to write after a fix: today's counts, never above what was recorded, sorted. */
 export function recordOf(now: Map<string, Known>, known: Known[], owners: [string, string][]) {
+  const silent = compare(now, known).errors.filter((e) => e.startsWith("silent:"));
+  if (silent.length) return { refused: silent };
   const record = new Map(known.map((k) => [keyOf(k), k]));
   const over = [...now.values()].filter((n) => record.size > 0 && n.count > (record.get(keyOf(n))?.count ?? 0));
   if (over.length) return { refused: over.map((n) => `${n.file}: ${n.tool} ${n.rule}`) };
@@ -150,11 +159,18 @@ async function mainRecord(): Promise<Known[] | undefined> {
     console.warn("origin/main isn't fetched here: skipping the check against main's list.");
     return undefined;
   }
+  let text: string;
   try {
-    return JSON.parse((await run("git", ["show", `origin/main:app/${KNOWN}`])).stdout) as Known[];
-  } catch {
-    return undefined; // main has no list yet: this is the change that adds it
+    text = (await run("git", ["show", `origin/main:app/${KNOWN}`])).stdout;
+  } catch (e) {
+    // Only "main has no list yet" (the change that adds it) is a reason to skip; anything else fails.
+    if (/does not exist|exists on disk, but not in/.test(String((e as { stderr?: string }).stderr ?? e))) {
+      console.warn("main has no list of known findings yet: this change adds it.");
+      return undefined;
+    }
+    throw e;
   }
+  return JSON.parse(text) as Known[];
 }
 
 async function main(args: string[]) {

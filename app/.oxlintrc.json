@@ -42,7 +42,8 @@
         "ignoreArrayIndexes": true,
         "ignoreDefaultValues": true
       }
-    ]
+    ],
+    "typescript/ban-ts-comment": "error"
   },
   "overrides": [
     {
@@ -53,7 +54,7 @@
           {
             "patterns": [
               {
-                "regex": "^@(app|features|shared)/|(^|/)(app|features|shared)/",
+                "regex": "^@(app|features|shared)/|^(\\.\\./)+(app|features|shared)(/|$)",
                 "message": "core/ uses nothing else in the app"
               }
             ]
@@ -69,8 +70,13 @@
           {
             "patterns": [
               {
-                "regex": "^@(app|features)/|(^|/)(app|features)/",
+                "regex": "^@(app|features)/|^(\\.\\./)+(app|features)(/|$)",
                 "message": "shared/ may use core/ only"
+              },
+              {
+                "regex": "^@(core)/|^(\\.\\./)+(core)(/|$)",
+                "allowTypeImports": true,
+                "message": "shared/ may use core/ only for its types"
               }
             ]
           }
@@ -85,7 +91,7 @@
           {
             "patterns": [
               {
-                "regex": "^@app/|(^|/)app/",
+                "regex": "^@(app)/|^(\\.\\./)+(app)(/|$)",
                 "message": "features/ may use shared/ and core/, never app/"
               }
             ]

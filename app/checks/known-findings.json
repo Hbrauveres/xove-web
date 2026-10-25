@@ -228,21 +228,21 @@
     "rule": "history",
     "file": "src/components/room/SeatOffer.tsx",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/components/room/WaitingRoom.module.css",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/components/room/WaitingRoom.tsx",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "code",
@@ -515,14 +515,14 @@
     "rule": "history",
     "file": "src/components/stage/StageOverlay.module.css",
     "count": 2,
-    "owner": "#190 room: stage, Stage split"
+    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/StageOverlay.tsx",
     "count": 3,
-    "owner": "#190 room: stage, Stage split"
+    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
@@ -585,7 +585,7 @@
     "rule": "history",
     "file": "src/components/stage/usePreviewTray.ts",
     "count": 1,
-    "owner": "#190 room: stage, Stage split"
+    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
@@ -988,6 +988,76 @@
   },
   {
     "tool": "code",
+    "rule": "lineLength",
+    "file": "src/brand/iconSvg.ts",
+    "count": 2,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "lineLength",
+    "file": "src/components/stage/AlsoLive.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "lineLength",
+    "file": "src/components/stage/EmptyStage.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "lineLength",
+    "file": "src/components/stage/icons.tsx",
+    "count": 4,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "lineLength",
+    "file": "src/components/stage/LiveFeed.tsx",
+    "count": 2,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "lineLength",
+    "file": "src/components/stage/SettingsPanel.tsx",
+    "count": 2,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "lineLength",
+    "file": "src/components/stage/StreamsRow.tsx",
+    "count": 1,
+    "owner": "#179 phones removed"
+  },
+  {
+    "tool": "code",
+    "rule": "lineLength",
+    "file": "src/components/ui/Picker.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "lineLength",
+    "file": "src/pages/HomePage.tsx",
+    "count": 3,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "lineLength",
+    "file": "src/test/fakeLiveKit.ts",
+    "count": 1,
+    "owner": "#195 the sweep"
+  },
+  {
+    "tool": "code",
     "rule": "literal",
     "file": "src/components/room/AccountButton.module.css",
     "count": 9,
@@ -1026,7 +1096,7 @@
     "rule": "literal",
     "file": "src/components/room/SeatOffer.module.css",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "code",
@@ -1145,7 +1215,7 @@
     "rule": "literal",
     "file": "src/components/stage/StageOverlay.module.css",
     "count": 4,
-    "owner": "#190 room: stage, Stage split"
+    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
@@ -1551,28 +1621,28 @@
     "rule": "naming",
     "file": "src/components/room/SeatOffer.module.css",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/room/SeatOffer.tsx",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/room/WaitingRoom.module.css",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/room/WaitingRoom.tsx",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "code",
@@ -1964,14 +2034,14 @@
     "rule": "naming",
     "file": "src/components/stage/StageOverlay.module.css",
     "count": 1,
-    "owner": "#190 room: stage, Stage split"
+    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/stage/StageOverlay.tsx",
     "count": 1,
-    "owner": "#190 room: stage, Stage split"
+    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
@@ -2055,7 +2125,7 @@
     "rule": "naming",
     "file": "src/components/stage/usePreviewTray.ts",
     "count": 1,
-    "owner": "#190 room: stage, Stage split"
+    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
@@ -2181,14 +2251,14 @@
     "rule": "naming",
     "file": "src/components/ui/FullPageMessage.module.css",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/ui/FullPageMessage.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -2811,14 +2881,14 @@
     "rule": "noTest",
     "file": "src/components/room/SeatOffer.tsx",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "code",
     "rule": "noTest",
     "file": "src/components/room/WaitingRoom.tsx",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "code",
@@ -2860,14 +2930,14 @@
     "rule": "noTest",
     "file": "src/components/stage/StageOverlay.tsx",
     "count": 1,
-    "owner": "#190 room: stage, Stage split"
+    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
     "rule": "noTest",
     "file": "src/components/stage/usePreviewTray.ts",
     "count": 1,
-    "owner": "#190 room: stage, Stage split"
+    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
@@ -2895,7 +2965,7 @@
     "rule": "noTest",
     "file": "src/components/ui/FullPageMessage.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -3308,28 +3378,28 @@
     "rule": "structure",
     "file": "src/components/room/SeatOffer.module.css",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/room/SeatOffer.tsx",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/room/WaitingRoom.module.css",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/room/WaitingRoom.tsx",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "code",
@@ -3721,14 +3791,14 @@
     "rule": "structure",
     "file": "src/components/stage/StageOverlay.module.css",
     "count": 1,
-    "owner": "#190 room: stage, Stage split"
+    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/stage/StageOverlay.tsx",
     "count": 1,
-    "owner": "#190 room: stage, Stage split"
+    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
@@ -3812,7 +3882,7 @@
     "rule": "structure",
     "file": "src/components/stage/usePreviewTray.ts",
     "count": 1,
-    "owner": "#190 room: stage, Stage split"
+    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
@@ -3938,14 +4008,14 @@
     "rule": "structure",
     "file": "src/components/ui/FullPageMessage.module.css",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/ui/FullPageMessage.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -4470,14 +4540,14 @@
     "rule": "copied-block",
     "file": "src/components/room/SeatOffer.module.css",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "copies",
     "rule": "copied-block",
     "file": "src/components/room/WaitingRoom.module.css",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "copies",
@@ -4547,7 +4617,7 @@
     "rule": "eslint(complexity)",
     "file": "src/components/room/SeatOffer.tsx",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "lint",
@@ -4694,7 +4764,7 @@
     "rule": "eslint(max-lines-per-function)",
     "file": "src/components/room/SeatOffer.tsx",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "lint",
@@ -4953,7 +5023,7 @@
     "rule": "eslint(no-magic-numbers)",
     "file": "src/components/room/SeatOffer.tsx",
     "count": 3,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "lint",
@@ -5091,13 +5161,6 @@
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
-    "file": "src/features/room/utils/who-is-here.util.ts",
-    "count": 2,
-    "owner": "#195 the sweep"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
     "file": "src/hooks/useLiveKitRoom.ts",
     "count": 2,
     "owner": "#181 core: LiveKit adapter, devices"
@@ -5157,20 +5220,6 @@
     "file": "src/media/stagePick.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/shared/hooks/use-elapsed.hook.ts",
-    "count": 8,
-    "owner": "#195 the sweep"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/shared/utils/time-ago.util.ts",
-    "count": 5,
-    "owner": "#195 the sweep"
   },
   {
     "tool": "lint",
@@ -5275,7 +5324,7 @@
     "rule": "jsx-a11y(no-static-element-interactions)",
     "file": "src/components/room/SeatOffer.tsx",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "lint",
@@ -5345,14 +5394,14 @@
     "rule": "jsx-a11y(prefer-tag-over-role)",
     "file": "src/components/room/SeatOffer.tsx",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "lint",
     "rule": "jsx-a11y(prefer-tag-over-role)",
     "file": "src/components/room/WaitingRoom.tsx",
     "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "lint",
@@ -5394,7 +5443,7 @@
     "rule": "jsx-a11y(prefer-tag-over-role)",
     "file": "src/components/ui/FullPageMessage.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
@@ -6231,196 +6280,189 @@
   },
   {
     "tool": "unused",
-    "rule": "export",
+    "rule": "exports",
     "file": "src/api/client.ts",
     "count": 1,
     "owner": "#180 core: API client, auth, preferences"
   },
   {
     "tool": "unused",
-    "rule": "export",
+    "rule": "exports",
     "file": "src/components/stage/Ambilight.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "unused",
-    "rule": "export",
+    "rule": "exports",
     "file": "src/components/stage/icons.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "unused",
-    "rule": "export",
+    "rule": "exports",
     "file": "src/components/stage/Stage.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "unused",
-    "rule": "export",
+    "rule": "exports",
     "file": "src/components/stage/staticBands.ts",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "unused",
-    "rule": "export",
+    "rule": "exports",
     "file": "src/components/ui/Picker.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "unused",
-    "rule": "export",
+    "rule": "exports",
     "file": "src/components/ui/toast.ts",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "unused",
-    "rule": "export",
+    "rule": "exports",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
   },
   {
     "tool": "unused",
-    "rule": "export",
+    "rule": "exports",
     "file": "src/hooks/useRoomSession.ts",
     "count": 1,
     "owner": "#182 the room's model and store"
   },
   {
     "tool": "unused",
-    "rule": "export",
+    "rule": "exports",
     "file": "src/hooks/useStageSwipe.ts",
     "count": 3,
     "owner": "#179 phones removed"
   },
   {
     "tool": "unused",
-    "rule": "export",
+    "rule": "exports",
     "file": "src/hooks/useStreams.ts",
     "count": 1,
     "owner": "#182 the room's model and store"
   },
   {
     "tool": "unused",
-    "rule": "export",
+    "rule": "exports",
     "file": "src/install/prompt.ts",
     "count": 1,
     "owner": "#179 phones removed"
   },
   {
     "tool": "unused",
-    "rule": "export",
+    "rule": "exports",
     "file": "src/media/ambilight.ts",
     "count": 2,
     "owner": "#183 the room's hooks"
   },
   {
     "tool": "unused",
-    "rule": "export",
+    "rule": "exports",
     "file": "src/media/noiseGate.ts",
     "count": 2,
     "owner": "#181 core: LiveKit adapter, devices"
   },
   {
     "tool": "unused",
-    "rule": "export",
+    "rule": "exports",
     "file": "src/media/preferences.ts",
     "count": 1,
     "owner": "#180 core: API client, auth, preferences"
   },
   {
     "tool": "unused",
-    "rule": "export",
+    "rule": "exports",
     "file": "src/media/shareSettings.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
   },
   {
     "tool": "unused",
-    "rule": "file",
+    "rule": "files",
     "file": "src/components/ui/LiveDot.tsx",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "unused",
-    "rule": "type",
+    "rule": "types",
     "file": "src/brand/mark.ts",
     "count": 2,
     "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "unused",
-    "rule": "type",
+    "rule": "types",
     "file": "src/components/stage/ViewerBar.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
   },
   {
     "tool": "unused",
-    "rule": "type",
+    "rule": "types",
     "file": "src/components/ui/Picker.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "unused",
-    "rule": "type",
+    "rule": "types",
     "file": "src/components/ui/Segmented.tsx",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "unused",
-    "rule": "type",
-    "file": "src/core/api/api.types.ts",
-    "count": 3,
-    "owner": "#195 the sweep"
-  },
-  {
-    "tool": "unused",
-    "rule": "type",
+    "rule": "types",
     "file": "src/hooks/useLiveKitRoom.ts",
     "count": 4,
     "owner": "#181 core: LiveKit adapter, devices"
   },
   {
     "tool": "unused",
-    "rule": "type",
+    "rule": "types",
     "file": "src/hooks/useStreams.ts",
     "count": 1,
     "owner": "#182 the room's model and store"
   },
   {
     "tool": "unused",
-    "rule": "type",
+    "rule": "types",
     "file": "src/install/prompt.ts",
     "count": 1,
     "owner": "#179 phones removed"
   },
   {
     "tool": "unused",
-    "rule": "type",
+    "rule": "types",
     "file": "src/media/hearing.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
   },
   {
     "tool": "unused",
-    "rule": "type",
+    "rule": "types",
     "file": "src/test/fakeApi.ts",
     "count": 2,
     "owner": "#195 the sweep"
   },
   {
     "tool": "unused",
-    "rule": "type",
+    "rule": "types",
     "file": "src/types.ts",
     "count": 3,
     "owner": "#182 the room's model and store"

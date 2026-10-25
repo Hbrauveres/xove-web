@@ -35,7 +35,7 @@ describe("the guard: reading each tool", () => {
     const copy = '{"duplicates":[{"firstFile":{"name":"src/a.ts"},"secondFile":{"name":"src/b.ts"}}]}';
     expect(fromJscpd(copy).map((f) => f.file)).toEqual(["src/a.ts", "src/b.ts"]);
     const knip = '{"issues":[{"file":"src/a.ts","files":[{}],"exports":[{},{}],"types":[{}]}]}';
-    expect(fromKnip(knip).map((f) => f.rule)).toEqual(["file", "export", "export", "type"]);
+    expect(fromKnip(knip).map((f) => f.rule)).toEqual(["files", "exports", "exports", "types"]);
   });
 
   it("fails loudly on output it can't read, instead of counting none", () => {
@@ -91,5 +91,22 @@ describe("the guard: the list that only shrinks", () => {
     const first = recordOf(countAll([finding("src/components/stage/Stage.tsx")]), [], owners);
     expect(first.list?.[0]?.owner).toBe("#190 stage");
     expect(ownerOf("src/somewhere/else.ts", owners)).toBe("#195 the sweep");
+  });
+
+  it("fails when a tool that had findings suddenly reports none, and won't record that", () => {
+    const now = countAll([finding("src/a.ts")]);
+    const recorded = [known("src/a.ts", 1), known("src/b.ts", 3, "TS2532", "tsc")];
+    expect(compare(now, recorded).errors).toContain(
+      "silent: tsc reported nothing, against 3 recorded; check that it still runs",
+    );
+    expect(recordOf(now, recorded, []).refused).toEqual([
+      "silent: tsc reported nothing, against 3 recorded; check that it still runs",
+    ]);
+  });
+
+  it("reads every kind of unused code knip reports", () => {
+    const knip =
+      '{"issues":[{"file":"src/a.ts","files":[],"exports":[],"types":[],"enumMembers":[{}],"namespaceMembers":[{}],"duplicates":[{}]}]}';
+    expect(fromKnip(knip).map((f) => f.rule)).toEqual(["enumMembers", "namespaceMembers", "duplicates"]);
   });
 });

@@ -1,6 +1,6 @@
 /** Shapes returned by the Java API. Keep in sync with the records in api/. */
 
-export type UserStatus = "NONE" | "PENDING" | "MEMBER" | "DECLINED";
+type UserStatus = "NONE" | "PENDING" | "MEMBER" | "DECLINED";
 
 export type Me = {
   email: string;
@@ -68,10 +68,10 @@ export type StreamsState = {
 export type RoomSeatsState = { total: number; taken: number; waiting: number };
 
 /** `userId` has had a seat since `since` (ISO timestamp); `mine` when that's me. */
-export type Arrival = { userId: number; since: string; mine: boolean };
+type Arrival = { userId: number; since: string; mine: boolean };
 
 /** `userId` has `sharerId`'s `kind` on their stage; `mine` when that's me. */
-export type Watcher = { userId: number; sharerId: number; kind: StreamKind; mine: boolean };
+type Watcher = { userId: number; sharerId: number; kind: StreamKind; mine: boolean };
 
 /** Which LiveKit connection and track a stream comes from. Required to start one. */
 export type SharingConnection = {

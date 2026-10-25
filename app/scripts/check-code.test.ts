@@ -48,4 +48,14 @@ describe("the code check", () => {
       rules("shared/utils/d.util.test.ts", 'const BRUNO = aSharer({ name: "Bruno" });\n', ["shared/utils/d.util.ts"]),
     ).toContain("sharedData");
   });
+
+  it("names a comment that switches a check off, and a line past Prettier's width, outside tests", () => {
+    const code = (text: string) => rules("shared/utils/e.util.ts", text, ["shared/utils/e.util.test.ts"]);
+    for (const off of ["// oxlint-disable-next-line", "// @ts-ignore", "// @ts-expect-error", "/* eslint-disable */"])
+      expect(code(off + "\n")).toContain("disable");
+    expect(code(`const s = "${"x".repeat(120)}";\n`)).toContain("lineLength");
+    expect(rules("shared/utils/e.util.test.ts", "// @ts-ignore\n", ["shared/utils/e.util.ts"])).not.toContain(
+      "disable",
+    );
+  });
 });

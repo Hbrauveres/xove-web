@@ -21,11 +21,15 @@ export const RULES = {
   realWait: "test waits in real time: a sleep or a waitFor/findBy timeout over 1 s (use fake timers and a fixed clock)",
   sharedData: "test data or let shared at file level (build it per test with a factory)",
   cssText: "test reads CSS as text (check that tokens are used, or check in the browser)",
+  disable: "a comment that switches a check off (oxlint-disable, @ts-ignore, @ts-expect-error…): fix the code instead",
+  lineLength: "a line over 120 characters (Prettier doesn't wrap strings and comments: break them yourself)",
 } as const;
 
 export type Rule = keyof typeof RULES;
 export type Finding = { rule: Rule; file: string; line: number; text: string };
 
+/** Prettier's width (.prettierrc.json): what it can't wrap must stay inside it too. */
+const MAX_LINE = 120;
 const isTest = (f: string) => /\.(spec|test)\.tsx?$/.test(f);
 const isCode = (f: string) => /\.tsx?$/.test(f) && !isTest(f) && !f.endsWith(".d.ts");
 const noLogic = (f: string) =>
@@ -90,6 +94,9 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
     )
       add("sharedData", n, l);
     if (isTest(r) && /readFileSync\(|\?raw["']/.test(l)) add("cssText", n, l);
+    if (isCode(r) && /(oxlint|eslint)-disable|@ts-(ignore|expect-error|nocheck)|jscpd:ignore|prettier-ignore/.test(l))
+      add("disable", n, l);
+    if (isCode(r) && l.length > MAX_LINE) add("lineLength", n, `${l.length} characters`);
   });
   return out;
 }

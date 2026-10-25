@@ -1,4 +1,13 @@
 [
+  ["src/app/", "#194 home, request access, admin, the shell"],
+  ["src/core/", "#180 core: API client, auth, preferences"],
+  ["src/shared/", "#186 shared: the basic blocks"],
+  ["src/features/", "#192 room: queue, footer, page"],
+  ["src/components/room/WaitingRoom", "#192 room: queue, footer, page"],
+  ["src/components/room/SeatOffer", "#192 room: queue, footer, page"],
+  ["src/components/stage/StageOverlay", "#191 today's stage pieces"],
+  ["src/components/stage/usePreviewTray", "#191 today's stage pieces"],
+  ["src/components/ui/FullPageMessage", "#188 shared: Panel, Page shell"],
   ["src/install/", "#179 phones removed"],
   ["src/pages/InstallPage", "#179 phones removed"],
   ["src/hooks/useInstalled", "#179 phones removed"],

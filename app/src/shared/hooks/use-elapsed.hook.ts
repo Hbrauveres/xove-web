@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { CLOCK_DIGITS, MS_PER_SECOND, SECONDS_PER_HOUR, SECONDS_PER_MINUTE } from "../constants/time.constants";
+
+const twoDigits = (n: number) => String(n).padStart(CLOCK_DIGITS, "0");
 
 /** "mm:ss" or "h:mm:ss" since a timestamp, ticking every second. */
 export function useElapsed(since: number | null): string {
@@ -6,15 +9,14 @@ export function useElapsed(since: number | null): string {
 
   useEffect(() => {
     if (since === null) return;
-    const timer = window.setInterval(() => setNow(Date.now()), 1000);
+    const timer = window.setInterval(() => setNow(Date.now()), MS_PER_SECOND);
     return () => window.clearInterval(timer);
   }, [since]);
 
   if (since === null) return "0:00";
-  const total = Math.max(0, Math.floor((now - since) / 1000));
-  const h = Math.floor(total / 3600);
-  const m = Math.floor((total % 3600) / 60);
-  const s = total % 60;
-  const ss = String(s).padStart(2, "0");
-  return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${ss}` : `${m}:${ss}`;
+  const total = Math.max(0, Math.floor((now - since) / MS_PER_SECOND));
+  const h = Math.floor(total / SECONDS_PER_HOUR);
+  const m = Math.floor((total % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE);
+  const s = total % SECONDS_PER_MINUTE;
+  return h > 0 ? `${h}:${twoDigits(m)}:${twoDigits(s)}` : `${m}:${twoDigits(s)}`;
 }
