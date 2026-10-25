@@ -9,15 +9,25 @@ import { promisify } from "node:util";
 
 const run = promisify(execFile);
 
-/** Vitest's `-t` matches a test's full name as `vitest list` prints it (describe > test): this one only. */
+/** `it.each`'s placeholders, which `vitest list` prints as written ("%s: has its hint", "$name"). */
+const PLACEHOLDER = /%[sdifjo#%]|\$\w+/g;
+
+/**
+ * Vitest's `-t` pattern for one test as `vitest list` names it (describe > test, its quotes escaped):
+ * that test only, or every case of an `it.each`, which then run together (`cases`).
+ */
 export function patternFor(listedName: string) {
-  return `^${listedName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`;
+  const name = listedName.replace(/\\"/g, '"');
+  const parts = name.split(PLACEHOLDER).map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  return { pattern: `^${parts.join(".+?")}$`, cases: parts.length > 1 };
 }
 
-/** A run of one test proves something only if that one test ran and passed: a pattern that matched
- * nothing skips everything, and Vitest calls that a pass. */
-export function ranExactlyOne(output: string) {
-  return /Tests\s+1 passed\b/.test(output) && !/\bfailed\b/.test(output.split("Tests")[1] ?? "");
+/** A run proves something only if what it targeted ran and passed: a pattern that matched nothing
+ * skips everything, and Vitest calls that a pass. One test, or at least one case of an `it.each`. */
+export function ranAsTargeted(output: string, cases: boolean) {
+  const summary = output.split(/\n\s*Tests\s+/)[1]?.split("\n")[0] ?? "";
+  const passed = Number(/(\d+) passed/.exec(summary)?.[1] ?? 0);
+  return !/failed/.test(summary) && (cases ? passed >= 1 : passed === 1);
 }
 
 /** Runs `jobs` at most `limit` at a time; returns the labels of those that failed. */
@@ -50,8 +60,9 @@ async function main(filter?: string) {
     tests.map((t) => ({
       label: `${t.file} > ${t.name}`,
       go: async () => {
-        const { stdout } = await vitest(t.file, "-t", patternFor(t.name));
-        if (!ranExactlyOne(stdout)) throw new Error("not exactly one test ran");
+        const { pattern, cases } = patternFor(t.name);
+        const { stdout } = await vitest(t.file, "-t", pattern);
+        if (!ranAsTargeted(stdout, cases)) throw new Error("not what was targeted ran");
       },
     })),
     limit,
