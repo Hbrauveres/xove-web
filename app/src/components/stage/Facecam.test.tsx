@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { FakeTrack } from "../../test/fakeLiveKit";
 import { Facecam, type FacecamPlace } from "./Facecam";
 
@@ -34,8 +34,6 @@ function renderFacecam(overrides: Partial<React.ComponentProps<typeof Facecam>> 
   );
   return props;
 }
-
-afterEach(() => vi.restoreAllMocks());
 
 describe("the facecam", () => {
   it("plays the small video, where it was put", () => {

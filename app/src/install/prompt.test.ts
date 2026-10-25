@@ -1,5 +1,5 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
-import { forgetPrompt, installPrompt, listenForInstall, onInstalled, resetInstallPrompt } from "./prompt";
+import { describe, expect, it, vi } from "vitest";
+import { installPrompt, listenForInstall, onInstalled, resetInstallPrompt } from "./prompt";
 
 /** Chrome's install prompt event, as far as the page sees it. */
 function promptEvent() {
@@ -7,8 +7,6 @@ function promptEvent() {
   event.prompt = vi.fn(async () => {});
   return event;
 }
-
-afterEach(() => forgetPrompt());
 
 describe("the browser's install prompt (spec 0171)", () => {
   it("keeps the prompt, so the Get Xovê button can open it later", () => {

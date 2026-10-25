@@ -1,6 +1,6 @@
 import { act, fireEvent, render } from "@testing-library/react";
 import { createElement } from "react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { heldShift, usePinnedRow } from "./usePinnedRow";
 
 describe("keeping the clicked button still (spec 0106)", () => {
@@ -25,8 +25,6 @@ describe("the row holds the button under the pointer when its width changes (spe
       },
     );
   });
-  afterEach(() => vi.unstubAllGlobals());
-
   function Row() {
     const { ref } = usePinnedRow<HTMLDivElement>();
     return createElement("div", { ref, "data-testid": "row" }, createElement("button", null, "Camera"));

@@ -6,7 +6,8 @@ import { onFakeClock } from "../../test/factories/clock.factory";
 import { TIP_REST_MS } from "../ui/Tooltip";
 import { ViewerBar, type Sound } from "./ViewerBar";
 
-const base = { live: false, canShareScreen: true, onStart: vi.fn(), onSettings: vi.fn(), canSetVolume: true };
+// Fresh handlers per render, so no test sees another's calls.
+const base = () => ({ live: false, canShareScreen: true, onStart: vi.fn(), onSettings: vi.fn(), canSetVolume: true });
 
 /** The bar over Bruno's stream, with his screen's sound and voice held like the stage holds them. */
 function Bruno({ voiceOff = false, noSound = false, canSetVolume = true, talking = false }) {
@@ -14,7 +15,7 @@ function Bruno({ voiceOff = false, noSound = false, canSetVolume = true, talking
   const [voice, setVoice] = useState<Sound>({ volume: 1, muted: false });
   return (
     <ViewerBar
-      {...base}
+      {...base()}
       canSetVolume={canSetVolume}
       sound={{ ...sound, onChange: setSound, unavailable: noSound ? "No sound in this stream" : undefined }}
       voice={{ ...voice, onChange: setVoice, unavailable: voiceOff ? "Bruno's mic is off" : undefined, name: "Bruno", talking }}
@@ -70,7 +71,7 @@ describe("the bar over someone else's stream (spec 0123): what I hear", () => {
   it("an open slider is one floating thing: my mic's tooltip closes it at once, no grace (spec 0133, #128)", () => {
     vi.useFakeTimers();
     const sound = { volume: 1, muted: false, onChange: vi.fn() };
-    render(<ViewerBar {...base} live micOn onMic={vi.fn()} sound={sound} voice={{ ...sound, name: "Bruno" }} />);
+    render(<ViewerBar {...base()} live micOn onMic={vi.fn()} sound={sound} voice={{ ...sound, name: "Bruno" }} />);
     const voice = screen.getByRole("button", { name: "Mute Bruno's voice" });
     const isOpen = () => screen.getByRole("slider", { name: "Bruno's voice volume" }).closest("[inert]") === null;
     fireEvent.pointerEnter(voice.parentElement!, { pointerType: "mouse" });
@@ -170,7 +171,7 @@ describe("the bar over someone else's stream (spec 0123): me, at the right", () 
     const onStart = vi.fn();
     const onSettings = vi.fn();
     const user = userEvent.setup();
-    render(<ViewerBar {...base} onStart={onStart} onSettings={onSettings} />);
+    render(<ViewerBar {...base()} onStart={onStart} onSettings={onSettings} />);
     expect(screen.queryByRole("button", { name: /voice/i })).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Go live" }));
@@ -188,7 +189,7 @@ describe("the bar over someone else's stream (spec 0123): me, at the right", () 
   it("greys the ways to start where they can't be used, saying why", async () => {
     const onStart = vi.fn();
     const user = userEvent.setup();
-    const { rerender } = render(<ViewerBar {...base} onStart={onStart} canShareScreen={false} />);
+    const { rerender } = render(<ViewerBar {...base()} onStart={onStart} canShareScreen={false} />);
     await user.click(screen.getByRole("button", { name: "Go live" }));
     const screenItem = screen.getByRole("menuitem", { name: "Share your screen" });
     expect(screenItem).toHaveAttribute("aria-disabled", "true");
@@ -196,22 +197,22 @@ describe("the bar over someone else's stream (spec 0123): me, at the right", () 
     await user.click(screenItem);
     expect(onStart).not.toHaveBeenCalled();
 
-    rerender(<ViewerBar {...base} onStart={onStart} full />);
+    rerender(<ViewerBar {...base()} onStart={onStart} full />);
     expect(screen.getByRole("menuitem", { name: "Turn on your camera" })).toHaveAccessibleDescription(/6 streams are live/);
   });
 
   it("shows my mic instead while I'm live, red while it's on", async () => {
     const onMic = vi.fn();
-    const { rerender } = render(<ViewerBar {...base} live micOn={false} onMic={onMic} />);
+    const { rerender } = render(<ViewerBar {...base()} live micOn={false} onMic={onMic} />);
     expect(screen.queryByRole("button", { name: "Go live" })).not.toBeInTheDocument();
     await userEvent.setup().click(screen.getByRole("button", { name: "Share your voice" }));
     expect(onMic).toHaveBeenCalledTimes(1);
-    rerender(<ViewerBar {...base} live micOn onMic={onMic} />);
+    rerender(<ViewerBar {...base()} live micOn onMic={onMic} />);
     expect(screen.getByRole("button", { name: "Mute your voice" })).toHaveAttribute("data-on");
   });
 
   it("is only the settings over an empty stage, in the corner (spec 0147)", () => {
-    render(<ViewerBar {...base} settingsOnly />);
+    render(<ViewerBar {...base()} settingsOnly />);
     expect(screen.getAllByRole("button").map((b) => b.getAttribute("aria-label"))).toEqual(["Settings"]);
   });
 });

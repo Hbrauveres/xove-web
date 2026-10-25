@@ -10,7 +10,7 @@ const people: Friend[] = [
   { id: "user-7", name: "Bruno", hue: 210, online: true },
   { id: "user-9", name: "Diego", hue: 90, online: true },
 ];
-const now = Date.now();
+// Each event's time is worked out when the test makes it, so "13 min" can't go stale for a test that runs later.
 const ev = (
   id: string,
   kind: ActivityEvent["kind"],
@@ -21,10 +21,10 @@ const ev = (
   id,
   kind,
   actorId,
-  at: now - minutesAgo * 60_000,
+  at: Date.now() - minutesAgo * 60_000,
   stream,
 });
-const EVENTS: ActivityEvent[] = [
+const events = (): ActivityEvent[] => [
   ev("1", "joined", "me", 15),
   ev("2", "started", "user-7", 13, "screen"),
   ev("3", "joined", "user-9", 9),
@@ -39,7 +39,7 @@ function setup(watching: { personId: string; kind: "screen" | "camera" } | null 
   const onWatch = vi.fn();
   render(
     <ActivityList
-      events={EVENTS}
+      events={events()}
       people={people}
       meId="me"
       unseen={new Set(["8", "7"])}

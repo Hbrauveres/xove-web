@@ -1,7 +1,5 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { claimFloating, dismissFloating, insideFloating, releaseFloating, resetFloating } from "./floating";
-
-afterEach(() => resetFloating());
 
 describe("one floating piece at a time (spec 0133)", () => {
   it("closes what floats when another appears", () => {

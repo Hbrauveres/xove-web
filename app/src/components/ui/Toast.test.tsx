@@ -1,13 +1,9 @@
 import { act, render, screen } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Toast } from "./Toast";
-import { clearToast, showToast, TOAST_MS } from "./toast";
+import { showToast, TOAST_MS } from "./toast";
 
 beforeEach(() => vi.useFakeTimers());
-afterEach(() => {
-  act(() => clearToast());
-  vi.useRealTimers();
-});
 
 const pill = () => screen.getByRole("status");
 

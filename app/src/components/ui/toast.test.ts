@@ -1,8 +1,7 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { currentToast, resetToast, showToast, subscribeToast, TOAST_MS } from "./toast";
 
 beforeEach(() => vi.useFakeTimers());
-afterEach(() => resetToast());
 
 describe("the toast's state", () => {
   it("shows one message at a time, the newest replacing it, gone after its time", () => {

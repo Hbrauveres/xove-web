@@ -1,9 +1,8 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { resetTooltipWarmth, TIP_REST_MS, Tooltip } from "./Tooltip";
 
 beforeEach(() => vi.useFakeTimers());
-afterEach(() => vi.useRealTimers());
 
 const shown = () => document.querySelector('[role="tooltip"][data-shown]');
 
