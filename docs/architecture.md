@@ -165,7 +165,7 @@ Sharing a screen or a camera is in [Media](media.md).
 
 ## Where the code is going
 
-The modules above are the app as it is today. It's being reorganised, with no change of behaviour, into the structure below; each step moves whole areas, and this page's tables follow as they move. Every component, today's and the next version's, with its pictures and its future folder: [Components](components/README.md).
+The modules above are the app as it is today. It's being reorganised, with no change of behaviour, into the structure below. Each step moves whole areas, and this page's tables follow as they move. The four folders exist already, each with its first file: `app/app.component.tsx`, `core/api/api.types.ts`, `shared/hooks/use-elapsed.hook.ts` (with `shared/utils/time-ago.util.ts`), and `features/room/utils/who-is-here.util.ts`. Every component, today's and the next version's, with its pictures and its future folder: [Components](components/README.md).
 
 ### The structure
 
@@ -188,6 +188,7 @@ app/src/
 - **A component is a folder:** `person-row/person-row.component.tsx`, `person-row.component.module.css`, `person-row.component.test.tsx` and `index.ts` (its only export). Nothing else: its helpers go to the feature's `utils/`, its constants to `constants/`, its enums to `enums/`, its types to `types/`.
 - **Names:** kebab-case with the type as a suffix: `.component.tsx`, `.page.tsx`, `.hook.ts`, `.util.ts`, `.service.ts`, `.adapter.ts`, `.store.ts`, `.model.ts`, `.selectors.ts`, `.constants.ts`, `.enum.ts`, `.types.ts`; tests `.test.ts(x)`.
 - **Where a thing lives:** used by one feature, in that feature; by two or more, in `shared/`; one per app with no UI, in `core/`.
+- **Short names:** `@app/…`, `@core/…`, `@shared/…` and `@features/…` (in `tsconfig.app.json`'s `paths` and Vite's `resolve.alias`), never long relative paths into another folder.
 - **Imports go one way:** `features` → `shared`, `core`; `shared` → `core` only for types; `core` → nothing in the app. A feature uses another only through its `index.ts`, and no file imports another component's CSS.
 
 ### The rules
@@ -199,6 +200,44 @@ app/src/
 - **Components never find each other through the page** (`querySelector`, labels, `data-*` used as hooks): a ref, a context, or CSS.
 - **No module-level mutable state.** Hooks return stable values; effects only sync with something outside React.
 - **Comments say why**, never history: no issue or spec numbers in the code.
+- **Functions stay small and plain:**
+  - at most 60 lines
+  - complexity at most 10
+  - nesting at most 3 levels
+  - at most 4 parameters (more go in one object)
+  - no `any`, no forced `!`, no `as` outside tests
+  - a number other than 0, 1 or -1 goes in a named constant
+  - named exports only
+- **Layout:** Prettier, 120 characters. Nobody lays code out by hand.
+
+### The checks
+
+Every rule a tool can measure runs in the commit checks as `3 · Code checks`, on the whole app's code. Tests are exempt from the size, number and escape-hatch limits, and keep their own rules ([Testing](testing.md#test-rules)).
+
+| Check | Catches | Run it |
+| --- | --- | --- |
+| TypeScript | The build: `strict`, `noImplicitOverride`, `noFallthroughCasesInSwitch`. `tsconfig.strict.json` adds `noUncheckedIndexedAccess` (a value read from a list may be missing) and `exactOptionalPropertyTypes` (an optional field set to `undefined` by mistake). | `npm run build`; the strict config through the guard |
+| oxlint | Hooks' dependencies, accessibility, unused code, the import direction, the size and shape limits above, escape hatches, unexplained numbers, default exports | through the guard |
+| jscpd | A block of code copied into another place (8 lines or 60 tokens, CSS included) | `npm run check:copies` |
+| knip | Files nothing imports, exports nothing uses | `npm run check:unused` |
+| The code check | The structure's rules: folders and names, a test beside every file with logic, tokens in CSS, no DOM queries between components, LiveKit only in `core/`, no history in comments, and the tests' own rules | `npm run check:code -- <folder> --all` |
+| Prettier | Layout | `npm run format` fixes, `npm run format:check` checks |
+| The size budget | The built JavaScript and styles, compressed, against `checks/size-budget.json` | `npm run build && npm run check:size` |
+
+**The guard and its list.** `npm run guard` runs TypeScript's strict config, oxlint, jscpd, knip and the code check, and compares what they find with `checks/known-findings.json`:
+
+- **The list** is what today's code still breaks: counts per tool, rule and file. Each entry names the step that owns it (`checks/owners.json`).
+- **Recorded findings** show as warnings.
+- **The guard fails** on:
+  - a finding the list doesn't allow, in an old file as much as a new one
+  - a recorded finding that's gone: lower the list with `npm run guard -- --record` in the same change
+  - a list that allows more than `main`'s
+- **The list only shrinks.** Each step of the reorganisation clears its own areas. When it's empty, the two stricter TypeScript settings move into the main config.
+
+**The size budget.**
+- **Today:** JavaScript 292 kB and styles 19 kB, compressed (kB as Vite prints them), about 10% above what the app weighs today.
+- **Over budget fails.** So does falling more than 10% under it: a lighter app lowers its budget, so the room it freed isn't quietly used up.
+- **Raising a budget** is a deliberate change in `checks/size-budget.json`, in the PR that needs it, saying why.
 
 ### The state, in layers
 
@@ -224,7 +263,9 @@ app/                  the web app: everything its image is built from
   public/             the favicon, the phone icons, site.webmanifest
   Dockerfile, Caddyfile, caddy/   the image: the Vite build served by Caddy, built from source
   compose.yaml        runs the image (locally and in the checks)
-  scripts/            brand-icons.mjs (the favicon from the mark's geometry)
+  scripts/            the checks (guard, check-code, check-styles, check-size), test-alone, brand-icons.mjs (the favicon from the mark's geometry)
+  checks/             the guard's list of known findings, who owns them, the size budget
+  tsconfig.strict.json, .oxlintrc.json, .jscpd.json, knip.json, .prettierrc.json   the checks' settings
 docs/                 these pages, and the design sheet's pictures
 .github/workflows/    the commit checks and the releases
 ```

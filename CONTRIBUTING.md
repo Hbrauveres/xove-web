@@ -4,9 +4,9 @@
 
 1. Every change starts as an issue and a written spec (numbered requirements and testable acceptance criteria), then a plan and small tasks. Code comes after they're approved.
 2. Branch from an up-to-date `main`: `feat/…`, `fix/…`, `docs/…`, `ci/…`, `chore/…`.
-3. Make the change **with its tests**, and run them locally ([Testing](docs/testing.md)).
+3. Make the change **with its tests**, and run them and the checks locally: `npm test`, `npm run guard`, `npm run format` ([Testing](docs/testing.md), [the checks](docs/architecture.md#the-checks)).
 4. Commit with [Conventional Commits](https://www.conventionalcommits.org/) and the area in parentheses: `feat(web): keep the stage when the sharer reloads`.
-5. Push. **Every push runs the commit checks** (build, validate the image, tests and the style check, vulnerability scan, SAST), even before a pull request exists.
+5. Push. **Every push runs the commit checks** (build, validate the image, tests and the style check, the code checks, vulnerability scan, SAST), even before a pull request exists.
 6. Open the pull request when the branch is green. It's **squash-merged**: its title becomes the one commit on `main`, so it must be a conventional commit too. Merging deploys to staging; a version tag releases to production.
 
 ## Rules that don't bend
@@ -16,4 +16,5 @@
 - No secrets, server details or personal data in code, config or docs. Settings are environment variables; their values live outside this repo.
 - `docs/` changes in the same pull request as the behaviour it describes; a component added, moved or removed updates [Components](docs/components/README.md).
 - The code follows the [structure and its rules](docs/architecture.md#where-the-code-is-going) and the [test rules](docs/testing.md#test-rules): one job per file, one test file beside every file with logic, tokens only, and every test with its own data and its own setup, passing alone and in any order, fast.
+- **Nothing new for the checks.** `npm run guard` fails on any finding its list of known findings doesn't allow. A change that clears some lowers the list in the same pull request. The list never grows.
 - A red pipeline on `main` is fixed before anything else is merged.
