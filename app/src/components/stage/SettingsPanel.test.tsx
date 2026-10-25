@@ -32,7 +32,6 @@ function setup(props: Partial<Parameters<typeof SettingsPanel>[0]> = {}) {
   };
   const user = userEvent.setup({ advanceTimers: moveFakeTimers });
   const all = {
-    variant: "popover" as const,
     open: true,
     screenTab: true,
     mine: { screen: false, camera: false },
@@ -122,15 +121,9 @@ describe("the settings panel: tabs", () => {
     );
   });
 
-  it("as a sheet, draws only the chosen tab", () => {
-    setup({ variant: "sheet" });
-    expect(panel().querySelectorAll('[role="tabpanel"]')).toHaveLength(1);
-  });
-
-  it("is drawn over the cog or as a sheet, and leaves once closed", async () => {
+  it("leaves once closed", async () => {
     vi.useFakeTimers();
-    const { rerender } = setup({ variant: "sheet" });
-    expect(panel()).toHaveAttribute("data-variant", "sheet");
+    const { rerender } = setup();
     rerender({ open: false });
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
   });
@@ -311,14 +304,6 @@ describe("the settings panel: going to a setting (spec 0115)", () => {
     expect(second).not.toBe(first);
   });
 
-  it("in the sheet, going from Screen to Camera still opens its list", () => {
-    const all = { variant: "sheet" as const, mine: { screen: true, camera: true }, cameraVideo: track() };
-    const { rerender } = setup({ ...all, goTo: undefined });
-    expect(within(panel()).getByRole("tab", { name: /Screen/ })).toHaveAttribute("aria-selected", "true");
-    rerender({ ...all, goTo: { kind: "camera", n: 1 } });
-    expect(within(panel()).getByRole("button", { name: /^Camera: / })).toHaveAttribute("aria-expanded", "true");
-  });
-
   it("never goes to a tab that can't be used (Screen on a phone)", () => {
     const { rerender } = setup({ screenTab: false, goTo: undefined });
     rerender({ screenTab: false, goTo: { kind: "screen", n: 1 } });
@@ -333,7 +318,6 @@ describe("the settings panel: React's development double-mount", () => {
     render(
       <StrictMode>
         <SettingsPanel
-          variant="sheet"
           open
           screenTab={false}
           mine={{ screen: false, camera: false }}
@@ -357,7 +341,6 @@ describe("the settings panel: leaving", () => {
     const onPreviewCamera = vi.fn();
     const view = render(
       <SettingsPanel
-        variant="popover"
         open
         screenTab={false}
         mine={{ screen: false, camera: false }}

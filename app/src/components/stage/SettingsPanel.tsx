@@ -17,7 +17,6 @@ import { Segmented } from "../ui/Segmented";
 import { showToast } from "../ui/toast";
 import { CameraOnIcon, CloseIcon, MicIcon, ScreenOffIcon, ScreenShareIcon, WindowIcon } from "./icons";
 import { NO_SCREEN, NO_SOUND } from "./PlayerButtons";
-import { FULL_VIEW_SHEET } from "./makeRoom";
 import styles from "./SettingsPanel.module.css";
 import cueStyles from "../ui/cue.module.css";
 import { MicTest } from "./MicTest";
@@ -35,8 +34,6 @@ const SURFACE: Record<ScreenSurface, string> = {
 type Tab = "screen" | "camera" | "voice";
 
 type Props = {
-  /** Over the cog, inside the player (desktop, tablets, a phone held sideways), or a bottom sheet (a phone held upright). */
-  variant: "popover" | "sheet";
   open: boolean;
   onClose: () => void;
   /** False on a phone, or where the browser can't share a screen: the Screen tab is greyed out. */
@@ -60,8 +57,6 @@ type Props = {
   busy?: boolean;
   /** I'm sharing my screen without sound: the Screen tab says how to share it. */
   noSound?: boolean;
-  /** The sheet in the upright full-screen view: a little shorter, so the player can fit above it. */
-  fullView?: boolean;
   /** A live button's gesture with the panel open: go to this setting and cue it (spec 0115). */
   goTo?: { kind: StreamKind; n: number };
   /** My voice (spec 0123): on or off, how it's captured, the mics, and its own track for the level. */
@@ -84,7 +79,7 @@ type Cue = { kind: Tab; n: number } | null;
  * Camera tab shows my camera; while it's off, only I see it, and only while the tab is open.
  */
 export function SettingsPanel(props: Props) {
-  const { variant, open, onClose, screenTab, mine, onPreviewCamera } = props;
+  const { open, onClose, screenTab, mine, onPreviewCamera } = props;
   // Both tabs always show; one that can't be used here is greyed out, not hidden (design decision 2).
   const tabs: Tab[] = ["screen", "camera", "voice"];
   const usable: Tab[] = screenTab ? tabs : ["camera", "voice"];
@@ -180,12 +175,9 @@ export function SettingsPanel(props: Props) {
       className={styles.panel}
       role="dialog"
       aria-label="Settings"
-      data-variant={variant}
-      style={props.fullView ? ({ "--sheet-height": `${FULL_VIEW_SHEET * 100}%` } as CSSProperties) : undefined}
       data-open={shown || undefined}
       inert={!open || undefined}
       onKeyDown={onKeyDown}
-      data-no-swipe
     >
       <div className={styles.head}>
         <h2>Settings</h2>
@@ -237,7 +229,7 @@ export function SettingsPanel(props: Props) {
       {/* Over the cog every tab is drawn in one cell, the hidden ones invisible, so the panel is as
           tall as its tallest tab and switching never moves the tabs (design decision 9). */}
       <div className={styles.panes}>
-        {(variant === "popover" ? usable : [tab]).map((t) => (
+        {usable.map((t) => (
           <div
             key={t}
             id={`${tabId(t)}-panel`}

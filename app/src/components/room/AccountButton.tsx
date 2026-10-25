@@ -1,4 +1,4 @@
-import { useRef, useState, type ReactNode } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router";
 import { saveAmbilight, type AmbilightPrefs } from "../../media/preferences";
 import type { ConnectionState, Friend } from "../../types";
@@ -14,8 +14,6 @@ type Props = {
   ambilight: AmbilightPrefs;
   onAmbilightChange: (prefs: AmbilightPrefs) => void;
   onSignOut: () => void;
-  /** On a phone, the footer's items, at the end of the menu (spec 0158). */
-  footer?: ReactNode;
 };
 
 const STATE: Record<ConnectionState, string> = {
@@ -29,7 +27,7 @@ const STATE: Record<ConnectionState, string> = {
  * My account (spec 0104): my avatar, with a dot for the connection. It opens my name, role and
  * connection; the ambilight's switch and brightness (remembered); Admin for admins; Sign out.
  */
-export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightChange, onSignOut, footer }: Props) {
+export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightChange, onSignOut }: Props) {
   const [open, setOpen] = useState(false);
   const anchor = useRef<HTMLDivElement>(null);
   const button = useRef<HTMLButtonElement>(null);
@@ -113,12 +111,6 @@ export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightC
             Sign out
           </button>
         </DropdownSection>
-
-        {footer && (
-          <DropdownSection className={styles.footer}>
-            <div data-footer>{footer}</div>
-          </DropdownSection>
-        )}
       </Dropdown>
     </div>
   );

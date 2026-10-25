@@ -1,11 +1,10 @@
-import { useRef, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import type { ScreenSurface } from "../../hooks/useLiveKitRoom";
 import { usePinnedRow } from "../../hooks/usePinnedRow";
 import type { CameraDevice, StreamKind } from "../../types";
 import { DropUp } from "../ui/DropUp";
 import drop from "../ui/DropUp.module.css";
 import { Picker } from "../ui/Picker";
-import { showToast } from "../ui/toast";
 import {
   CameraOffIcon,
   CameraOnIcon,
@@ -20,7 +19,7 @@ import styles from "./PlayerButtons.module.css";
 import { Tooltip } from "../ui/Tooltip";
 
 export const FULL_ROOM = "6 streams are live, the most at once. You can start yours when one stops.";
-/** Why the screen button and the Screen tab are greyed out on a phone. */
+/** Why the screen button and the Screen tab are greyed out where the browser can't share a screen. */
 export const NO_SCREEN = "This browser can't share a screen";
 export const NO_SOUND =
   "No sound is being shared. Share a tab, or a window with “Share this app's audio too”, with Change.";
@@ -33,7 +32,7 @@ type Props = {
   /** The browser's cameras, and the one in use. */
   cameras: CameraDevice[];
   camera: string | null;
-  /** False where the browser can't share a screen (phones): its button is greyed out, not hidden. */
+  /** False where the browser can't share a screen: its button is greyed out, not hidden. */
   canShareScreen: boolean;
   /** I'm sharing my screen, but my browser gave no sound. */
   noSound?: boolean;
@@ -128,7 +127,7 @@ function StreamButton({
   onGoTo,
 }: Props & { kind: StreamKind }) {
   const live = mine[kind];
-  // Unavailable, not hidden: a phone's screen button is greyed out, saying why (design decision 2).
+  // Unavailable, not hidden: where the browser can't share a screen, its button is greyed out, saying why.
   const unavailable = kind === "screen" && !canShareScreen;
   const full = !live && (free <= 0 || unavailable);
   const blocked = full || busy;
@@ -140,8 +139,6 @@ function StreamButton({
   // Counts what's been done from the drop-up (Change, a camera picked): each one closes it.
   const [done, setDone] = useState(0);
 
-  // A finger has no tooltip: touching a greyed-out button says why in a toast (design decision 10).
-  const pointer = useRef("mouse");
   const button = (
     <div className={styles.control}>
       <div className={`${round.pill} ${live ? round.live : ""} ${full ? round.disabled : ""}`}>
@@ -153,13 +150,7 @@ function StreamButton({
             aria-label={label}
             aria-pressed={live}
             aria-disabled={blocked || undefined}
-            onPointerDown={(e) => {
-              pointer.current = e.pointerType;
-            }}
             onClick={() => {
-              if (full && (pointer.current === "touch" || pointer.current === "pen")) {
-                showToast(tip, kind === "camera" ? <CameraOffIcon /> : <ScreenOffIcon />);
-              }
               if (blocked) return;
               if (live) onStop(kind);
               else onStart(kind);

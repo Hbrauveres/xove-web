@@ -129,7 +129,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/room/AccountButton.tsx",
-    "count": 2,
+    "count": 1,
     "owner": "#189 room: header"
   },
   {
@@ -191,13 +191,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/room/RoomFooter.tsx",
-    "count": 2,
-    "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/room/RoomHeader.module.css",
     "count": 1,
     "owner": "#189 room: header"
@@ -248,7 +241,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/AlsoLive.tsx",
-    "count": 10,
+    "count": 9,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -318,7 +311,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/HearToggles.tsx",
-    "count": 7,
+    "count": 6,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -327,13 +320,6 @@
     "file": "src/components/stage/icons.tsx",
     "count": 5,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/makeRoom.ts",
-    "count": 3,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -381,7 +367,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/PlayerButtons.tsx",
-    "count": 10,
+    "count": 8,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -430,7 +416,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/stack.ts",
-    "count": 2,
+    "count": 1,
     "owner": "#190 room: stage, Stage split"
   },
   {
@@ -499,13 +485,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/stage/usePreviewTray.ts",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/stage/ViewerBar.module.css",
     "count": 4,
     "owner": "#191 today's stage pieces"
@@ -514,7 +493,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/ViewerBar.tsx",
-    "count": 8,
+    "count": 7,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -557,13 +536,6 @@
     "rule": "history",
     "file": "src/components/ui/Dropdown.tsx",
     "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/ui/DropUp.tsx",
-    "count": 2,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
@@ -864,7 +836,7 @@
     "tool": "code",
     "rule": "lineLength",
     "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 2,
+    "count": 1,
     "owner": "#193 settings"
   },
   {
@@ -1076,13 +1048,6 @@
     "file": "src/components/ui/DropUp.module.css",
     "count": 7,
     "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "literal",
-    "file": "src/components/ui/LiveDot.module.css",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
@@ -1556,20 +1521,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/stage/makeRoom.test.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/makeRoom.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/components/stage/MicTest.module.css",
     "count": 1,
     "owner": "#193 settings"
@@ -1937,20 +1888,6 @@
     "file": "src/components/ui/FullPageMessage.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/LiveDot.module.css",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/LiveDot.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
@@ -2550,13 +2487,6 @@
   {
     "tool": "code",
     "rule": "noTest",
-    "file": "src/components/ui/LiveDot.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
     "file": "src/components/ui/PersonAvatar.tsx",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
@@ -2637,13 +2567,6 @@
     "file": "src/components/stage/Stage.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "size",
-    "file": "src/components/stage/ViewerBar.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
@@ -3075,20 +2998,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/stage/makeRoom.test.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/makeRoom.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/components/stage/MicTest.module.css",
     "count": 1,
     "owner": "#193 settings"
@@ -3456,20 +3365,6 @@
     "file": "src/components/ui/FullPageMessage.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/LiveDot.module.css",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/LiveDot.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
@@ -4098,7 +3993,7 @@
     "tool": "lint",
     "rule": "eslint(max-lines-per-function)",
     "file": "src/components/stage/HearToggles.tsx",
-    "count": 2,
+    "count": 1,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -4307,13 +4202,6 @@
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/stage/makeRoom.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
     "file": "src/components/stage/MicTest.tsx",
     "count": 3,
     "owner": "#193 settings"
@@ -4329,7 +4217,7 @@
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
     "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 2,
+    "count": 1,
     "owner": "#193 settings"
   },
   {
@@ -4506,13 +4394,6 @@
     "file": "src/components/brand/XoveMark.tsx",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(no-noninteractive-element-interactions)",
-    "file": "src/components/stage/AlsoLive.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "lint",
@@ -4812,7 +4693,7 @@
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
     "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 6,
+    "count": 5,
     "owner": "#193 settings"
   },
   {
@@ -4840,7 +4721,7 @@
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
     "file": "src/components/ui/DropUp.tsx",
-    "count": 4,
+    "count": 3,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
@@ -5015,7 +4896,7 @@
     "tool": "tsc",
     "rule": "TS2345",
     "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 7,
+    "count": 5,
     "owner": "#193 settings"
   },
   {
@@ -5057,7 +4938,7 @@
     "tool": "tsc",
     "rule": "TS2375",
     "file": "src/components/room/AccountButton.tsx",
-    "count": 4,
+    "count": 3,
     "owner": "#189 room: header"
   },
   {
@@ -5211,7 +5092,7 @@
     "tool": "tsc",
     "rule": "TS2379",
     "file": "src/components/stage/SettingsPanel.test.tsx",
-    "count": 5,
+    "count": 4,
     "owner": "#193 settings"
   },
   {
@@ -5276,13 +5157,6 @@
     "file": "src/components/brand/useMarkAnimation.ts",
     "count": 2,
     "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
-    "file": "src/components/room/AccountButton.test.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
   },
   {
     "tool": "tsc",
@@ -5486,13 +5360,6 @@
     "file": "src/media/shareSettings.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "unused",
-    "rule": "files",
-    "file": "src/components/ui/LiveDot.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "unused",

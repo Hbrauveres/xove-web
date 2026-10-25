@@ -5,8 +5,6 @@ import {
   type CSSProperties,
   type FocusEvent,
   type KeyboardEvent,
-  type MouseEvent as ReactMouseEvent,
-  type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
 import { claimFloating, dismissFloating, releaseFloating } from "./floating";
@@ -16,19 +14,13 @@ import styles from "./DropUp.module.css";
 export const OPEN_DELAY_MS = 120;
 /** A slip of the pointer outside shorter than this doesn't close it. */
 export const LEAVE_GRACE_MS = 300;
-/** By touch: how long a press is held on the button to open it (a long press, as on any phone). */
-export const HOLD_MS = 500;
-/** By touch: a finger that moves further than this is scrolling, not holding. */
-const HOLD_SLOP_PX = 10;
-/** A finger or a pen; anything else (a mouse, or a browser that doesn't say) hovers. */
-const touchLike = (e: ReactPointerEvent) => e.pointerType === "touch" || e.pointerType === "pen";
 
 type Props = {
   /** Its name for screen readers. */
   label: string;
   /** Only while its stream is live. */
   enabled: boolean;
-  /** The round button it belongs to; a click or a tap on it does what it always does. */
+  /** The round button it belongs to; a click on it does what it always does. */
   trigger: ReactNode;
   /** Told when it closes because the pointer left (a picker inside closes too). */
   onLeave?: () => void;
@@ -37,38 +29,28 @@ type Props = {
   /** A new value closes it: its action is done (a camera picked, Change). */
   closeSignal?: number;
   /**
-   * Another panel already shows these controls (the settings, spec 0115): the gestures (resting
-   * the mouse, the 500 ms hold) call this instead of opening, and nothing opens over the button.
+   * Another panel already shows these controls (the settings): resting the mouse calls this
+   * instead of opening, and nothing opens over the button.
    */
   redirect?: () => void;
   children: ReactNode;
 };
 
 /**
- * Quick access over a live round button (the Player controls design, decision 3).
- * With a mouse: resting on the button unrolls one frosted pill above it, centred, after a
- * short pause; moving up into it keeps it open (the gap is bridged); leaving closes it, even
- * right after a click, with a short grace for a slip. The keyboard's focus opens it too.
- * By touch: a press held on the button opens it instead, and it stays until a tap outside,
- * its action done, or the button pressed again. A plain click or tap still does what the
- * button does.
+ * Quick access over a live round button: resting the mouse on the button unrolls one frosted
+ * pill above it, centred, after a short pause; moving up into it keeps it open (the gap is
+ * bridged); leaving closes it, even right after a click, with a short grace for a slip. The
+ * keyboard's focus opens it too. A click still does what the button does.
  */
 export function DropUp({ label, enabled, trigger, onLeave, width, closeSignal, redirect, children }: Props) {
   const [open, setOpen] = useState(false);
-  // Opened by a finger: pinned until a tap outside or its action is done.
-  const [byTouch, setByTouch] = useState(false);
   const opening = useRef<number | undefined>(undefined);
   const leaving = useRef<number | undefined>(undefined);
-  const holding = useRef<{ timer: number; x: number; y: number } | null>(null);
-  // The tap that ends a hold (or closes it again) isn't a tap on the button.
-  const swallow = useRef(false);
   const root = useRef<HTMLDivElement>(null);
 
   const clear = () => {
     window.clearTimeout(opening.current);
     window.clearTimeout(leaving.current);
-    if (holding.current) window.clearTimeout(holding.current.timer);
-    holding.current = null;
   };
   useEffect(() => clear, []);
 
@@ -78,32 +60,15 @@ export function DropUp({ label, enabled, trigger, onLeave, width, closeSignal, r
   if (enabled !== wasEnabled || closeSignal !== lastSignal) {
     setWasEnabled(enabled);
     setLastSignal(closeSignal);
-    if (open) {
-      setOpen(false);
-      setByTouch(false);
-    }
+    if (open) setOpen(false);
   }
-
-  // Pinned open by a finger: a press anywhere else closes it.
-  useEffect(() => {
-    if (!open || !byTouch) return;
-    const away = (e: PointerEvent) => {
-      if (root.current?.contains(e.target as Node)) return;
-      setOpen(false);
-      setByTouch(false);
-      onLeave?.();
-    };
-    document.addEventListener("pointerdown", away);
-    return () => document.removeEventListener("pointerdown", away);
-  }, [open, byTouch, onLeave]);
 
   const close = () => {
     clear();
     setOpen(false);
-    setByTouch(false);
     onLeave?.();
   };
-  // One floating thing at a time, across the app (spec 0133, #128): opening closes any other drop-up
+  // One floating thing at a time, across the app: opening closes any other drop-up
   // or tooltip at once, without its grace, and a tooltip showing closes this one.
   const closeMe = useRef(close);
   useEffect(() => {
@@ -116,62 +81,16 @@ export function DropUp({ label, enabled, trigger, onLeave, width, closeSignal, r
   }, [open, me]);
   const closeOthers = () => dismissFloating(me);
 
-  // ---- a mouse
-  const onPointerEnter = (e: ReactPointerEvent) => {
-    if (touchLike(e)) return;
+  // ---- the mouse
+  const onPointerEnter = () => {
     if (!open) closeOthers();
     window.clearTimeout(leaving.current);
     if (open) return;
     opening.current = window.setTimeout(() => (redirect ? redirect() : setOpen(true)), OPEN_DELAY_MS);
   };
-  const onPointerLeave = (e: ReactPointerEvent) => {
-    if (touchLike(e) || byTouch) return;
+  const onPointerLeave = () => {
     window.clearTimeout(opening.current);
     leaving.current = window.setTimeout(close, LEAVE_GRACE_MS);
-  };
-
-  // ---- a finger (or a pen): press and hold the button
-  const onTriggerDown = (e: ReactPointerEvent) => {
-    if (!touchLike(e)) return;
-    // A hold's tap may never come (a long press often ends with no click): a new press starts clean.
-    swallow.current = false;
-    if (open && byTouch) {
-      // Pressed again: closes, and this tap doesn't stop the stream.
-      swallow.current = true;
-      close();
-      return;
-    }
-    const x = e.clientX;
-    const y = e.clientY;
-    const timer = window.setTimeout(() => {
-      holding.current = null;
-      swallow.current = true;
-      if (redirect) {
-        redirect();
-        return;
-      }
-      closeOthers();
-      setByTouch(true);
-      setOpen(true);
-    }, HOLD_MS);
-    holding.current = { timer, x, y };
-  };
-  const onTriggerMove = (e: ReactPointerEvent) => {
-    const hold = holding.current;
-    if (!hold || Math.hypot(e.clientX - hold.x, e.clientY - hold.y) <= HOLD_SLOP_PX) return;
-    window.clearTimeout(hold.timer);
-    holding.current = null;
-  };
-  const onTriggerUp = () => {
-    if (!holding.current) return;
-    window.clearTimeout(holding.current.timer);
-    holding.current = null;
-  };
-  const onTriggerClick = (e: ReactMouseEvent) => {
-    if (!swallow.current) return;
-    swallow.current = false;
-    e.preventDefault();
-    e.stopPropagation();
   };
 
   // ---- the keyboard: only its focus opens it; a click's focus doesn't keep it open
@@ -189,7 +108,6 @@ export function DropUp({ label, enabled, trigger, onLeave, width, closeSignal, r
     }
   };
   const onBlur = (e: FocusEvent) => {
-    if (byTouch) return;
     if (!root.current?.contains(e.relatedTarget as Node | null) && !root.current?.matches(":hover")) setOpen(false);
   };
   const onKeyDown = (e: KeyboardEvent) => {
@@ -217,23 +135,13 @@ export function DropUp({ label, enabled, trigger, onLeave, width, closeSignal, r
       className={styles.wrap}
       data-dropup
       data-open={open}
-      data-touch={byTouch || undefined}
       onPointerEnter={onPointerEnter}
       onPointerLeave={onPointerLeave}
       onFocus={onFocus}
       onBlur={onBlur}
       onKeyDown={onKeyDown}
     >
-      <div
-        className={styles.trigger}
-        data-dropup-trigger
-        onPointerDown={onTriggerDown}
-        onPointerMove={onTriggerMove}
-        onPointerUp={onTriggerUp}
-        onPointerCancel={onTriggerUp}
-        onClickCapture={onTriggerClick}
-        onContextMenu={(e) => e.preventDefault()}
-      >
+      <div className={styles.trigger} data-dropup-trigger>
         {trigger}
       </div>
       <div

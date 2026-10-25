@@ -95,7 +95,6 @@ function Room({ pollMs, seat, onSignOut }: Props & { seat: RoomSeat; onSignOut: 
   const goToSetting = useCallback((kind: StreamKind) => setGoTo((was) => ({ kind, n: (was?.n ?? 0) + 1 })), []);
   const settingsPanel = (
     <SettingsPanel
-      variant="popover"
       open={settingsOpen}
       onClose={closeSettings}
       screenTab={canShareScreen()}

@@ -64,10 +64,6 @@ export const CHROME_IDLE_MS = 2500;
 const NO_SCREEN_SOUND = "No screen sound";
 const NO_SOUND_HERE = "No sound in this stream";
 
-/** iPhones and iPads ignore a page's volume (only their buttons change it). */
-const canSetVolume = () =>
-  !/iPad|iPhone|iPod/.test(navigator.userAgent) && !(navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-
 /** The light's grid for a shape: a new grid starts a fresh light (spec 0107). */
 const gridKey = (shape: number) => {
   const { cols, rows } = gridFor(shape);
@@ -383,7 +379,6 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
             full={controls.free <= 0}
             onStart={startMine}
             onSettings={toggleSettings}
-            canSetVolume={canSetVolume()}
           />
         ) : !big ? (
           // Nobody live: the empty stage has the ways to start; the settings sit in the corner, beside
@@ -394,7 +389,6 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
             canShareScreen={controls.canShareScreen}
             onStart={startMine}
             onSettings={toggleSettings}
-            canSetVolume={canSetVolume()}
           />
         ) : (
           // Your stream: your controls in the middle, your mic with them.
