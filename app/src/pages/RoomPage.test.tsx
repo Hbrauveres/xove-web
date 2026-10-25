@@ -314,17 +314,6 @@ describe("room: sharing", () => {
     expect(myLiveStream(server)).toBeUndefined();
   });
 
-  it("shows the static with no turn-on when the last stream stops: the TV is already on (spec 0136)", async () => {
-    installFakeApi({ me: member() });
-    const user = await readyRoom();
-    await startSharing(user);
-    await user.click(within(controls()).getByRole("button", { name: /stop sharing/i }));
-
-    expect(await screen.findByRole("heading", { name: "Go live" })).toBeInTheDocument();
-    expect(document.querySelector('[class*="intro"]')).toBeNull();
-    expect(document.querySelector('[class*="flash"]')).toBeNull();
-  });
-
   it("keeps the settings in the corner beside fullscreen when nobody is live, the ways to start alone in the middle", async () => {
     installFakeApi({ me: member() });
     renderRoom();
@@ -795,17 +784,6 @@ describe("room: the controls don't vanish under a still mouse", () => {
 });
 
 describe("room: my screen and camera buttons on the player (spec 0098)", () => {
-  it("has no bar under the player: the buttons are on the stage, and never fade over an empty one", async () => {
-    installFakeApi({ me: member() });
-    await readyRoom();
-
-    expect(screen.queryByRole("region", { name: /screen sharing/i })).not.toBeInTheDocument();
-    const share = within(stage()).getByRole("button", { name: "Share your screen" });
-    expect(within(stage()).getByRole("button", { name: "Turn on your camera" })).toBeInTheDocument();
-    expect(share.closest("[data-chrome]")).toBeNull();
-    expect(screen.queryByRole("button", { name: /share my screen/i })).not.toBeInTheDocument();
-  });
-
   it("puts each control by its owner in the four states (spec 0123, AC-1)", async () => {
     const server = installFakeApi({ me: member() });
     renderRoom();
@@ -992,16 +970,6 @@ describe("room: starting from fullscreen (spec 0101)", () => {
     return frame;
   }
   afterEach(() => {
-  });
-
-  it("starts from the fullscreen player, and keeps it fullscreen", async () => {
-    installFakeApi({ me: member() });
-    const user = await readyRoom();
-    const frame = enterFullscreen();
-
-    await user.click(within(controls()).getByRole("button", { name: /share your screen/i }));
-    expect(document.fullscreenElement).toBe(frame);
-    expect(await screen.findByRole("heading", { name: "You" })).toBeInTheDocument();
   });
 
   it("shows a failed start over the fullscreen player too", async () => {

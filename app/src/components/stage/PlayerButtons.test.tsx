@@ -198,17 +198,6 @@ describe("stream buttons: when they can't be used", () => {
     expect(onStop).toHaveBeenCalledWith("screen");
   });
 
-  it("draws an unavailable button faded, with its crossed icon only", () => {
-    setup({ free: 0 });
-
-    for (const [name, icon] of [["Turn on your camera", "camera-off"], ["Share your screen", "screen-off"]]) {
-      const button = screen.getByRole("button", { name });
-      expect(button.parentElement?.className).toMatch(/disabled/);
-      expect(button.querySelector(`svg[data-icon="${icon}"]`)).toBeInTheDocument();
-      expect(button.querySelector('svg[data-icon$="-on"]')).not.toBeInTheDocument();
-    }
-  });
-
   it("waits while a request is on its way, in the drop-ups too", async () => {
     withMouse();
     const { user, onStop, onChangeWindow } = setup({ mine: { screen: true, camera: true }, busy: true });

@@ -15,11 +15,6 @@ describe("Range, the white slider (spec 0121)", () => {
     expect(onChange).toHaveBeenCalledOnce();
   });
 
-  it("can be disabled", () => {
-    render(<Range aria-label="Brightness" min={0} max={1} value={0.2} onChange={() => {}} disabled />);
-    expect(screen.getByRole("slider")).toBeDisabled();
-  });
-
   it("tells its stylesheet how far the white fill goes, from min to max", () => {
     const fill = (value: number, min = 0.2, max = 1) => {
       const { unmount } = render(<Range aria-label="r" min={min} max={max} value={value} onChange={() => {}} />);

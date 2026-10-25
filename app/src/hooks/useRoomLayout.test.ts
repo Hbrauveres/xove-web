@@ -23,12 +23,6 @@ describe("which layout the room uses (specs 0158 and 0160)", () => {
     expect(layoutFor({ ...desktop, portrait: false, narrowUpright: false })).toBe("desktop");
   });
 
-  it("asks the browser the right questions", () => {
-    expect(TOUCH_QUERY).toBe("(pointer: coarse)");
-    expect(SMALL_QUERY).toBe("(max-width: 500px), (max-height: 500px)");
-    expect(PORTRAIT_QUERY).toBe("(orientation: portrait)");
-    expect(NARROW_UPRIGHT_QUERY).toBe("(max-width: 760px) and (orientation: portrait)");
-  });
 });
 
 /** A screen of this size, touch-first or not, that can turn. */

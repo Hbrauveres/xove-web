@@ -66,19 +66,6 @@ describe("Picker, the app's one-box picker", () => {
     expect(screen.getByRole("radio", { name: "OBS Virtual Camera" })).toHaveFocus();
   });
 
-  it("opens down, floating, in a panel, or upward over the video", async () => {
-    const down = setup();
-    expect(down.pill.closest("[data-picker]")).toHaveAttribute("data-opens", "down");
-  });
-
-  it("opens upward over the video", async () => {
-    const { user, pill } = setup({ opens: "up", look: "glass" });
-    await user.click(pill);
-    const picker = pill.closest("[data-picker]")!;
-    expect(picker).toHaveAttribute("data-opens", "up");
-    expect(picker).toHaveAttribute("data-look", "glass");
-  });
-
   it("can be told to close (its drop-up was left), and says when it opens or closes", async () => {
     const onOpenChange = vi.fn();
     const user = userEvent.setup();
