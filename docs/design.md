@@ -134,7 +134,7 @@ Body line height is 1.5; headings balance their lines (`text-wrap: balance`). Fo
 
 - **Frosted glass** for things floating over the stage or the page: dark at 72–74% with a blur (8 px for the round buttons, 22 px for panels).
 - **Clear cuts:** stacked panel sections are separated by a 2 px gap that shows the page behind, never a drawn line.
-- **Touch targets** are at least about 36 px (the switch keeps a 36 × 20 px target; the stage's dots an 18 px one around a 6 px dot).
+- **Touch targets** are at least about 36 px (the switch keeps a 36 × 20 px target).
 
 ## Motion
 
@@ -430,6 +430,7 @@ Its content stays clear of the phone's bars (the browser's safe areas).
 - **A picture is drawn from the mark:** an illustration uses the mark's own parts (its viewfinder corners, the top right one red, and the red dot), not a new style.
 - **Point to the next step in words when a button wouldn't help:** a short address to type beats a copy button that moves nobody.
 - **An apology is said once, at the start:** "Sorry, …", then what to do.
+- **A headline's key words in the accent:** one short phrase in red, as "LIVE" on sign-in and "big screen" on the phone screen; never a whole line.
 - **A first impression plays once:** an intro (the TV turning on) plays the first time in a visit, never again for the same state, and never for reduced motion.
 
 ## Keeping this page current

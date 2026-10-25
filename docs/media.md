@@ -34,7 +34,7 @@ sequenceDiagram
 
 Sound is captured as music: no echo cancellation, no noise suppression, no automatic volume, in stereo, and sent at 128 kbit/s without silence skipping (`dtx: false`, which chops quiet moments). Whether a share has sound depends on the browser and the system: Chrome offers it for a tab, for a window where the system supports it, and for the whole screen on Windows; Firefox and Safari offer none. A screen without sound says so in its button's tooltip (with a mouse, in the settings' Screen tab), and viewers see its sound button greyed ("No sound in this stream").
 
-**While sharing**, the settings panel (from the cog) has what's shared and Change, the camera list, and each stream's quality and mode; with a mouse, resting on a live button unrolls the same quick access (Change; the camera list), and by touch a 500 ms press and hold does:
+**While sharing**, the settings panel (from the cog) has what's shared and Change, the camera list, and each stream's quality and mode; with a mouse, resting on a live button unrolls the same quick access (Change; the camera list):
 
 - **Change** opens the picker again and swaps the new pick into the same LiveKit track (`replaceTrack`): no new stream for the API or the viewers. The sound follows: swapped, added as a new track, or removed.
 - **A camera list** switches the camera being sent (`restartTrack` on the same track).

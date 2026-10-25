@@ -36,7 +36,7 @@ type Tab = "screen" | "camera" | "voice";
 type Props = {
   open: boolean;
   onClose: () => void;
-  /** False on a phone, or where the browser can't share a screen: the Screen tab is greyed out. */
+  /** False where the browser can't share a screen: the Screen tab is greyed out. */
   screenTab: boolean;
   /** Which of my streams are live. */
   mine: Record<StreamKind, boolean>;
@@ -301,7 +301,7 @@ function ScreenTab(props: Props & { cue?: number }) {
   const { mine, screenSurface, onChangeWindow, busy, noSound } = props;
   return (
     <>
-      {/* What you pick: on its own column sideways (design decision 9). */}
+      {/* What you pick (design decision 9). */}
       <div className={styles.lead}>
         {mine.screen ? (
           <div className={styles.group}>
@@ -338,7 +338,7 @@ function CameraTab(props: Props & { cue?: number }) {
     !cameraVideo && cameraProblem ? (cameraProblem === "blocked" ? CAMERA_BLOCKED : "No camera found.") : null;
   return (
     <>
-      {/* What you see: its own column sideways (spec 0111, design decisions 3 and 4). */}
+      {/* What you see (spec 0111, design decisions 3 and 4). */}
       <div className={styles.lead}>
         <div className={styles.group}>
           <p className={styles.heading}>Preview</p>

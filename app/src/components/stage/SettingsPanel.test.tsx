@@ -248,7 +248,7 @@ describe("the settings panel: the Camera tab's preview (spec 0111)", () => {
     const names = ["Preview", "Camera", "Quality", "Mode"];
     const headings = [...tab.querySelectorAll("p")].map((p) => p.textContent).filter((t) => names.includes(t ?? ""));
     expect(headings).toEqual(names);
-    // The preview is alone in its group: sideways that group is the left column.
+    // The preview is alone in its group.
     const previewGroup = within(tab).getByText("Preview").parentElement!;
     expect(previewGroup.querySelector("video")).not.toBeNull();
     expect(within(previewGroup).queryByRole("button", { name: /^Camera:/ })).toBeNull();

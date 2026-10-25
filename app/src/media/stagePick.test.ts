@@ -24,5 +24,3 @@ describe("who is big", () => {
     expect(stagePick(["user-3", "user-9"], null)).toBe("user-3");
   });
 });
-
-// Spec 0159: swiping the phone's stage steps through the people live, in the feed's order.

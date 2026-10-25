@@ -74,7 +74,7 @@ describe("now watching: who's watching (spec 0107)", () => {
 });
 
 describe("now watching: an empty stage (specs 0107 and 0123)", () => {
-  it("says nobody's sharing, with who's here, as on the phone", () => {
+  it("says nobody's sharing, with who's here", () => {
     const { container } = render(<NowWatching sharer={null} others={people("Bruno", "Ana", "Diego")} />);
 
     expect(screen.getByRole("heading", { name: "Nobody is sharing yet" })).toBeInTheDocument();

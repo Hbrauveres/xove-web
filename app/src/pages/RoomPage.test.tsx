@@ -779,6 +779,21 @@ describe("room: the player's labels and bars", () => {
     fireEvent.pointerMove(frame);
     await waitFor(() => expect(frame).toHaveAttribute("data-chrome", "hidden"), { timeout: 4000 });
   });
+
+  it("show on a press on the player, its dark sides included, without a move first", async () => {
+    const server = installFakeApi({ me: member() });
+    server.streams = [someoneSharing("Bruno Lima", 7)];
+    renderRoom();
+    await connected();
+    act(() => {
+      lastRoom().publishScreen("user-7");
+    });
+    const frame = (await screen.findByLabelText("Bruno's shared screen")).closest("[data-chrome]")!;
+    expect(frame).toHaveAttribute("data-chrome", "hidden");
+
+    fireEvent.pointerDown(frame, { pointerType: "mouse" });
+    expect(frame).toHaveAttribute("data-chrome", "shown");
+  });
 });
 
 describe("room: the controls don't vanish under a still mouse", () => {

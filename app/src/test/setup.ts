@@ -59,7 +59,7 @@ Object.defineProperty(navigator, "mediaDevices", {
   },
 });
 // Media queries: a desktop window that matches none of them. Put back after every test, since a test
-// may swap it for a phone's.
+// may swap it for a phone's or a tablet's.
 const desktopMatchMedia = (query: string) => ({
   matches: false,
   media: query,
@@ -73,10 +73,9 @@ const desktopMatchMedia = (query: string) => ({
 Object.defineProperty(window, "matchMedia", { writable: true, value: desktopMatchMedia });
 
 /** The browser stand-ins a test may replace, back as setup made them: the media queries, and none of
- * what jsdom lacks and a test defines for itself (fullscreen, a touch screen's touch points). */
+ * what jsdom lacks and a test defines for itself (fullscreen). */
 function resetBrowserStandIns() {
   window.matchMedia = desktopMatchMedia as never;
   for (const own of ["fullscreenElement", "exitFullscreen"])
     delete (document as unknown as Record<string, unknown>)[own];
-  delete (navigator as unknown as Record<string, unknown>).maxTouchPoints;
 }

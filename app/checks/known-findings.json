@@ -290,7 +290,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/Facecam.tsx",
-    "count": 2,
+    "count": 1,
     "owner": "#190 room: stage, Stage split"
   },
   {
@@ -710,7 +710,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/media/stagePick.test.ts",
-    "count": 2,
+    "count": 1,
     "owner": "#183 the room's hooks"
   },
   {

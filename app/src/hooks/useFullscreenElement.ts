@@ -9,7 +9,7 @@ const playerFullscreen = () => {
 /**
  * The element shown fullscreen, or null (spec 0101). While there is one, only it and
  * what's inside it can be seen, so windows meant for the page go inside it. The whole page
- * fullscreen on a phone (spec 0160) doesn't count: everything is still in view.
+ * fullscreen (an installed app, spec 0160) doesn't count: everything is still in view.
  */
 export function useFullscreenElement(): Element | null {
   const [element, setElement] = useState<Element | null>(playerFullscreen);
