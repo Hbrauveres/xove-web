@@ -13,7 +13,8 @@
     "check:styles": "node scripts/check-styles.ts",
     "test:alone": "node scripts/test-alone.ts",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "check:code": "node scripts/check-code.ts"
   },
   "dependencies": {
     "livekit-client": "^2.22.4",

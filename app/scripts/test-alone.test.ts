@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { inParallel, patternFor, ranAsTargeted } from "./test-alone";
+import { inParallel, patternFor, ranAsTargeted } from "./test-alone.ts";
 
 describe("running each test alone", () => {
   it("matches exactly the listed test, as Vitest names it, its brackets and marks taken literally", () => {

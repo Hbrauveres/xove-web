@@ -1,6 +1,6 @@
 import postcss from "postcss";
 import { describe, expect, it } from "vitest";
-import { contrast, contrastProblems, mixedVendorRules, reducedMotionProblems, tokensOf } from "./check-styles";
+import { contrast, contrastProblems, mixedVendorRules, reducedMotionProblems, tokensOf } from "./check-styles.ts";
 
 const tokens = (css: string) => tokensOf(postcss.parse(css));
 /** A palette that passes, with one token changed. */
