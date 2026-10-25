@@ -5,25 +5,25 @@ import type { AccessRequestView, MemberView } from "../api/types";
 import { aUser, installFakeApi } from "../test/fakeApi";
 import { renderApp } from "../test/renderApp";
 
-const admin = aUser({ email: "admin@example.com", name: "Admin", status: "MEMBER", admin: true });
+const admin = () => aUser({ email: "admin@example.com", name: "Admin", status: "MEMBER", admin: true });
 
-const request: AccessRequestView = {
+const request = (): AccessRequestView => ({
   id: 7,
   email: "bruno@example.com",
   name: "Bruno",
   avatarUrl: null,
   message: "it's me",
   createdAt: new Date().toISOString(),
-};
+});
 
-const members: MemberView[] = [
+const members = (): MemberView[] => [
   { id: 1, email: "admin@example.com", name: "Admin", avatarUrl: null, admin: true },
   { id: 2, email: "ana@example.com", name: "Ana Souza", avatarUrl: null, admin: false },
 ];
 
 describe("admin page", () => {
   it("shows the drawn mark with 'admin' beside it (spec 0111)", async () => {
-    installFakeApi({ me: admin, requests: [], members });
+    installFakeApi({ me: admin(), requests: [], members: members() });
     renderApp("/admin");
 
     expect(await screen.findByRole("img", { name: "Xovê" })).toBeInTheDocument();
@@ -32,7 +32,7 @@ describe("admin page", () => {
   });
 
   it("lists pending requests with their message", async () => {
-    installFakeApi({ me: admin, requests: [request], members });
+    installFakeApi({ me: admin(), requests: [request()], members: members() });
     renderApp("/admin");
 
     expect(await screen.findByText("bruno@example.com")).toBeInTheDocument();
@@ -40,7 +40,7 @@ describe("admin page", () => {
   });
 
   it("approves a request and refreshes the list", async () => {
-    const server = installFakeApi({ me: admin, requests: [request], members });
+    const server = installFakeApi({ me: admin(), requests: [request()], members: members() });
     renderApp("/admin");
     const user = userEvent.setup();
 
@@ -51,7 +51,7 @@ describe("admin page", () => {
   });
 
   it("declines a request", async () => {
-    const server = installFakeApi({ me: admin, requests: [request], members });
+    const server = installFakeApi({ me: admin(), requests: [request()], members: members() });
     renderApp("/admin");
     const user = userEvent.setup();
 
@@ -62,7 +62,7 @@ describe("admin page", () => {
   });
 
   it("asks for confirmation before removing a member", async () => {
-    const server = installFakeApi({ me: admin, requests: [], members });
+    const server = installFakeApi({ me: admin(), requests: [], members: members() });
     renderApp("/admin");
     const user = userEvent.setup();
 
@@ -78,7 +78,7 @@ describe("admin page", () => {
   });
 
   it("never offers to remove an admin", async () => {
-    installFakeApi({ me: admin, requests: [], members });
+    installFakeApi({ me: admin(), requests: [], members: members() });
     renderApp("/admin");
 
     const adminRow = (await screen.findByText("admin@example.com")).closest("li")!;
@@ -87,7 +87,7 @@ describe("admin page", () => {
   });
 
   it("shows the API's error when an action fails", async () => {
-    const server = installFakeApi({ me: admin, requests: [request], members });
+    const server = installFakeApi({ me: admin(), requests: [request()], members: members() });
     server.failures.set("POST /api/admin/access-requests/7/approve", {
       status: 409,
       body: { detail: "This request was already decided" },

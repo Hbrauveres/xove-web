@@ -46,3 +46,12 @@ export function clearToast() {
   current = null;
   tell();
 }
+
+/** Only for tests: back to how the page started, with no toast, no listener and the count at 0. */
+export function resetToast() {
+  clearTimeout(timer);
+  timer = undefined;
+  current = null;
+  next = 0;
+  listeners.clear();
+}

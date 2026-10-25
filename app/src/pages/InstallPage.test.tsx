@@ -1,7 +1,7 @@
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, describe, expect, it, vi } from "vitest";
-import { forgetPrompt, listenForInstall } from "../install/prompt";
+import { describe, expect, it, vi } from "vitest";
+import { listenForInstall } from "../install/prompt";
 import { InstallPage } from "./InstallPage";
 
 const APPLE = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile Safari/604.1";
@@ -18,10 +18,6 @@ function offerPrompt() {
   return event;
 }
 
-afterEach(() => {
-  vi.restoreAllMocks();
-  forgetPrompt();
-});
 
 describe("the install screen (spec 0171)", () => {
   it("says the same on every device, with an i that shows and hides why", async () => {
@@ -73,7 +69,6 @@ describe("the install screen (spec 0171)", () => {
     Object.defineProperty(navigator, "maxTouchPoints", { configurable: true, get: () => 5 });
     render(<InstallPage />);
     expect(screen.getByText(/Safari's bar/)).toBeInTheDocument();
-    Object.defineProperty(navigator, "maxTouchPoints", { configurable: true, get: () => 0 });
   });
 
   it("without a prompt, Get Xovê points to the menu line instead", async () => {

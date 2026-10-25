@@ -25,14 +25,15 @@ const sharer = (id: string, name: string, kinds: ("screen" | "camera")[]): Share
   sound: new FakeTrack() as unknown as MediaTrack,
 });
 
-const RAFA = sharer("user-2", "Rafa", ["screen"]);
-const DUDA = sharer("user-3", "Duda", ["camera"]);
+// Made per test: built at load, its "38 minutes ago" went stale for a test that ran later.
+const rafa = () => sharer("user-2", "Rafa", ["screen"]);
+const duda = () => sharer("user-3", "Duda", ["camera"]);
 const watcher = (id: string): Friend => ({ id, name: id, hue: 1, online: true });
 
 function feed(onPick = vi.fn()) {
   render(
     <LiveFeed
-      others={[RAFA, DUDA]}
+      others={[rafa(), duda()]}
       liveCount={3}
       watchersOf={(id) => (id === "user-2" ? [watcher("a"), watcher("b"), watcher("c")] : [])}
       onPick={onPick}
@@ -65,7 +66,7 @@ describe("the phone's feed of live streams (spec 0158)", () => {
 
   it("is silent: no speaker, no volume, and no sound played", () => {
     const { container } = render(
-      <LiveFeed others={[RAFA]} liveCount={2} watchersOf={() => []} onPick={vi.fn()} />,
+      <LiveFeed others={[rafa()]} liveCount={2} watchersOf={() => []} onPick={vi.fn()} />,
     );
     expect(screen.queryByRole("button", { name: /sound|mute|volume/i })).toBeNull();
     expect(screen.queryByRole("slider")).toBeNull();
@@ -87,7 +88,7 @@ describe("the phone's feed: hearing from a card (specs 0123 and 0131)", () => {
     const onPick = vi.fn();
     const onHear = vi.fn();
     const heard = { sound: { volume: 1, muted: false }, voice: { volume: 1, muted: false } };
-    render(<LiveFeed others={[RAFA]} liveCount={1} watchersOf={() => []} onPick={onPick} hearOf={() => heard} onHear={onHear} />);
+    render(<LiveFeed others={[rafa()]} liveCount={1} watchersOf={() => []} onPick={onPick} hearOf={() => heard} onHear={onHear} />);
     const toggle = screen.getByRole("button", { name: "Mute Rafa's screen sound" });
     // Beside the picture's own button, never inside it.
     expect(toggle.closest("button[aria-label^='Watch']")).toBeNull();
@@ -99,13 +100,14 @@ describe("the phone's feed: hearing from a card (specs 0123 and 0131)", () => {
   it("opens a sound's slider upright over its button on a hold, in the stage's style (spec 0131, AC-5)", async () => {
     const onHear = vi.fn();
     const heard = { sound: { volume: 0.4, muted: false }, voice: { volume: 1, muted: false } };
-    render(<LiveFeed others={[RAFA]} liveCount={1} watchersOf={() => []} onPick={vi.fn()} hearOf={() => heard} onHear={onHear} />);
+    render(<LiveFeed others={[rafa()]} liveCount={1} watchersOf={() => []} onPick={vi.fn()} hearOf={() => heard} onHear={onHear} />);
     const button = screen.getByRole("button", { name: "Mute Rafa's screen sound" });
     const slider = screen.getByRole("slider", { name: "Rafa's screen sound volume" });
     expect(slider.closest("[inert]")).not.toBeNull();
 
+    vi.useFakeTimers();
     fireEvent.pointerDown(button, { pointerType: "touch" });
-    await act(() => new Promise((r) => setTimeout(r, 550)));
+    act(() => vi.advanceTimersByTime(550));
     expect(slider.closest("[inert]")).toBeNull();
     expect(slider).toHaveAttribute("aria-orientation", "vertical");
     expect(slider).toHaveValue("0.4");

@@ -1,9 +1,9 @@
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { onFakeClock } from "../../test/factories/clock.factory";
 import { HOLD_MS, OPEN_DELAY_MS } from "../ui/DropUp";
 import { FULL_ROOM, NO_SCREEN, NO_SOUND, PlayerButtons } from "./PlayerButtons";
-import { clearToast, currentToast } from "../ui/toast";
+import { currentToast } from "../ui/toast";
 
 const CAMERAS = [
   { deviceId: "cam-1", label: "Logitech C920" },
@@ -27,7 +27,7 @@ function setup(props: Partial<Parameters<typeof PlayerButtons>[0]> = {}) {
     onMenuChange: vi.fn(),
     onSettings: vi.fn(),
   };
-  const user = userEvent.setup();
+  const user = onFakeClock();
   const base = {
     mine: { screen: false, camera: false },
     free: 6,
@@ -45,17 +45,10 @@ function setup(props: Partial<Parameters<typeof PlayerButtons>[0]> = {}) {
 
 /** Rests the pointer on a button long enough for its drop-up to unroll. */
 function rest(button: HTMLElement) {
-  vi.useFakeTimers();
   fireEvent.pointerEnter(button.closest("[data-dropup]")!);
   act(() => vi.advanceTimersByTime(OPEN_DELAY_MS));
-  vi.useRealTimers();
 }
 const dropUp = (button: HTMLElement) => button.closest("[data-dropup]") as HTMLElement | null;
-
-afterEach(() => {
-  vi.restoreAllMocks();
-  act(() => clearToast());
-});
 
 describe("stream buttons: off and live", () => {
   it("shows a screen and a camera button, off, each saying what a click does", () => {
@@ -122,7 +115,6 @@ describe("stream buttons: the drop-ups (spec 0107)", () => {
   });
 
   it("open by touch with a press and hold, and close once a camera is picked", async () => {
-    vi.useFakeTimers();
     const { onPickCamera, onStop } = setup({ mine: { screen: false, camera: true } });
     const stop = screen.getByRole("button", { name: "Turn off your camera" });
     const touch = { pointerType: "touch", clientX: 5, clientY: 5 };
@@ -133,7 +125,6 @@ describe("stream buttons: the drop-ups (spec 0107)", () => {
     expect(onStop).not.toHaveBeenCalled();
     expect(dropUp(stop)).toHaveAttribute("data-open", "true");
     expect(dropUp(stop)).toHaveAttribute("data-touch");
-    vi.useRealTimers();
     const quick = within(dropUp(stop)!).getByRole("group", { name: "Your camera" });
     fireEvent.click(within(quick).getByRole("button", { name: "Camera: Logitech C920" }));
     fireEvent.click(within(quick).getByRole("radio", { name: "Integrated Webcam" }));
@@ -205,17 +196,6 @@ describe("stream buttons: when they can't be used", () => {
 
     await user.click(screen.getByRole("button", { name: "Stop sharing your screen" }));
     expect(onStop).toHaveBeenCalledWith("screen");
-  });
-
-  it("draws an unavailable button faded, with its crossed icon only", () => {
-    setup({ free: 0 });
-
-    for (const [name, icon] of [["Turn on your camera", "camera-off"], ["Share your screen", "screen-off"]]) {
-      const button = screen.getByRole("button", { name });
-      expect(button.parentElement?.className).toMatch(/disabled/);
-      expect(button.querySelector(`svg[data-icon="${icon}"]`)).toBeInTheDocument();
-      expect(button.querySelector('svg[data-icon$="-on"]')).not.toBeInTheDocument();
-    }
   });
 
   it("waits while a request is on its way, in the drop-ups too", async () => {

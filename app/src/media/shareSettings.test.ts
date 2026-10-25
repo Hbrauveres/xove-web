@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   CAMERA_QUALITIES,
   DEFAULT_CAMERA,
@@ -152,8 +152,6 @@ describe("camera presets", () => {
 });
 
 describe("staying on Xovê after the picker (spec 0101)", () => {
-  afterEach(() => vi.unstubAllGlobals());
-
   it("has no controller where the browser has none", () => {
     expect(newCaptureController()).toBeUndefined();
   });

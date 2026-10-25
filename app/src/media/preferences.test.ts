@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   DEFAULT_VOICE,
   loadAmbilight,
@@ -17,7 +17,6 @@ import {
   saveWatchPrefs,
 } from "./preferences";
 
-afterEach(() => localStorage.clear());
 
 describe("the sharer's choices", () => {
   it("default to 1080p Smooth", () => {
@@ -92,7 +91,6 @@ describe("when the browser's storage fails", () => {
     expect(() => saveWatchPrefs({ volume: 0.5, muted: false })).not.toThrow();
     expect(loadSharePrefs()).toEqual({ quality: "1080p", mode: "smooth" });
     expect(loadWatchPrefs()).toEqual({ volume: 1, muted: false });
-    vi.restoreAllMocks();
   });
 });
 

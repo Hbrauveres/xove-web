@@ -1,5 +1,5 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { capOf } from "../media/shareSettings";
 import { aUser, installFakeApi } from "../test/fakeApi";
 import { FakeLocalCameraTrack, FakeLocalMicTrack, FakeLocalScreenTrack, FakeMediaStreamTrack, lastRoom } from "../test/fakeLiveKit";
@@ -7,13 +7,11 @@ import { NoiseGate } from "../media/noiseGate";
 import { DEFAULT_VOICE } from "../media/preferences";
 import { useLiveKitRoom, type Capture } from "./useLiveKitRoom";
 
-const member = aUser({ name: "Henrique Brauveres", status: "MEMBER" });
+const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
 const PREFS = { quality: "720p", mode: "sharp" } as const;
 
-afterEach(() => localStorage.clear());
-
 async function connected() {
-  installFakeApi({ me: member });
+  installFakeApi({ me: member() });
   const hook = renderHook(() => useLiveKitRoom());
   await waitFor(() => expect(hook.result.current.connection).toBe("connected"));
   return hook;
@@ -141,20 +139,21 @@ describe("change window (spec 0098)", () => {
   });
 });
 
-describe("staying on Xovê after the picker (spec 0101)", () => {
+/** This test's own CaptureController: the focus behaviours the app asked of it, in order. */
+function captureController() {
   const behaviours: string[] = [];
   class FakeCaptureController {
     setFocusBehavior(behaviour: string) {
       behaviours.push(behaviour);
     }
   }
-  afterEach(() => {
-    behaviours.length = 0;
-    vi.unstubAllGlobals();
-  });
+  vi.stubGlobal("CaptureController", FakeCaptureController);
+  return { behaviours, FakeCaptureController };
+}
 
+describe("staying on Xovê after the picker (spec 0101)", () => {
   it("asks the browser to stay on Xovê when a screen is picked, and when it's changed", async () => {
-    vi.stubGlobal("CaptureController", FakeCaptureController);
+    const { behaviours, FakeCaptureController } = captureController();
     const hook = await connected();
     const local = await shareScreen(hook, true);
 
@@ -300,7 +299,6 @@ describe("sound on phones (a tap unlocks it)", () => {
 });
 
 describe("my voice (spec 0123)", () => {
-  afterEach(() => vi.unstubAllGlobals());
   const VOICE = { ...DEFAULT_VOICE, micId: "mic-2", sensitivity: 0.2 };
 
   async function start(hook: Awaited<ReturnType<typeof connected>>, prefs = VOICE) {

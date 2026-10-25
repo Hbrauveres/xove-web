@@ -40,3 +40,7 @@ export function bandLight(y: number, s: number) {
  * stops. Set once the stage has stood by.
  */
 export const tv = { on: false };
+/** Only for tests: the TV hasn't turned on yet. */
+export function resetTv() {
+  tv.on = false;
+}

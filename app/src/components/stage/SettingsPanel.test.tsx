@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import userEvent from "@testing-library/user-event";
 import { StrictMode } from "react";
 import { describe, expect, it, vi } from "vitest";
+import { moveFakeTimers } from "../../test/factories/clock.factory";
 import type { SharePrefs } from "../../media/preferences";
 import type { StreamKind } from "../../types";
 import { CAMERA_BLOCKED } from "../../hooks/useLiveKitRoom";
@@ -9,7 +10,7 @@ import { NO_SOUND } from "./PlayerButtons";
 import { CUE_MS, SettingsPanel } from "./SettingsPanel";
 import { NO_SCREEN } from "./PlayerButtons";
 import { DEFAULT_VOICE } from "../../media/preferences";
-import { clearToast, currentToast } from "../ui/toast";
+import { currentToast } from "../ui/toast";
 
 const PREFS: Record<StreamKind, SharePrefs> = {
   screen: { quality: "1080p", mode: "smooth" },
@@ -29,7 +30,7 @@ function setup(props: Partial<Parameters<typeof SettingsPanel>[0]> = {}) {
     onPickCamera: vi.fn(),
     onPreviewCamera: vi.fn(),
   };
-  const user = userEvent.setup();
+  const user = userEvent.setup({ advanceTimers: moveFakeTimers });
   const all = {
     variant: "popover" as const,
     open: true,
@@ -74,7 +75,6 @@ describe("the settings panel: tabs", () => {
     fireEvent.pointerDown(screenTab, { pointerType: "touch" });
     fireEvent.click(screenTab);
     expect(currentToast()?.text).toBe(NO_SCREEN);
-    act(() => clearToast());
   });
 
   it("marks with a red dot the tab of what I'm sending", () => {
@@ -110,6 +110,7 @@ describe("the settings panel: tabs", () => {
   });
 
   it("is drawn over the cog or as a sheet, and leaves once closed", async () => {
+    vi.useFakeTimers();
     const { rerender } = setup({ variant: "sheet" });
     expect(panel()).toHaveAttribute("data-variant", "sheet");
     rerender({ open: false });
@@ -216,7 +217,6 @@ describe("the settings panel: the keyboard", () => {
     expect(within(panel()).getByRole("tab", { name: /Camera/ })).toHaveAttribute("aria-selected", "true");
     rerender({ open: false });
     expect(cog).toHaveFocus();
-    cog.remove();
   });
 });
 
@@ -254,10 +254,8 @@ describe("the settings panel: going to a setting (spec 0115)", () => {
     expect(change.querySelector("[data-cue]")).not.toBeNull();
     fireEvent.pointerDown(document.body);
     expect(change.querySelector("[data-cue]")).toBeNull();
-    live.remove();
     // Change itself stays: its focus isn't lost to a cue.
     expect(within(panel()).getByRole("button", { name: "Change" })).toBe(change);
-    vi.useRealTimers();
   });
 
   it("switches to Camera, opens its list and cues it; the list stays open after the cue", () => {
@@ -270,7 +268,6 @@ describe("the settings panel: going to a setting (spec 0115)", () => {
     expect(pill.closest("[data-picker]")!.parentElement!.querySelector("[data-cue]")).not.toBeNull();
     act(() => vi.advanceTimersByTime(CUE_MS));
     expect(within(panel()).getByRole("button", { name: /^Camera: / })).toHaveAttribute("aria-expanded", "true");
-    vi.useRealTimers();
   });
 
   it("a second request starts the camera's cue over", () => {
@@ -284,7 +281,6 @@ describe("the settings panel: going to a setting (spec 0115)", () => {
     const second = panel().querySelector("[data-cue]");
     expect(second).not.toBeNull();
     expect(second).not.toBe(first);
-    vi.useRealTimers();
   });
 
   it("in the sheet, going from Screen to Camera still opens its list", () => {
@@ -370,6 +366,5 @@ describe("the settings panel: the Voice tab (spec 0123)", () => {
     await user.click(isolation);
     expect(onVoicePrefs).not.toHaveBeenCalled();
     expect(currentToast()?.text).toBe("This browser can't isolate a voice");
-    clearToast();
   });
 });

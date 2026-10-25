@@ -1,13 +1,13 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { loadAmbilight } from "../../media/preferences";
 import type { ConnectionState, Friend } from "../../types";
 import { AccountButton } from "./AccountButton";
 import { FooterItems } from "./RoomFooter";
 
-const me: Friend = { id: "me", name: "Henrique", hue: 36, online: true };
+const me = (): Friend => ({ id: "me", name: "Henrique", hue: 36, online: true });
 
 function setup(props: Partial<Parameters<typeof AccountButton>[0]> = {}) {
   const onSignOut = vi.fn();
@@ -15,7 +15,7 @@ function setup(props: Partial<Parameters<typeof AccountButton>[0]> = {}) {
   const view = render(
     <MemoryRouter>
       <AccountButton
-        me={me}
+        me={me()}
         isAdmin
         connection={"connected" as ConnectionState}
         ambilight={{ on: true, brightness: 0.9 }}
@@ -27,8 +27,6 @@ function setup(props: Partial<Parameters<typeof AccountButton>[0]> = {}) {
   );
   return { user: userEvent.setup(), onSignOut, onAmbilightChange, view };
 }
-
-afterEach(() => localStorage.clear());
 
 describe("account button (spec 0104)", () => {
   it("is my avatar with a dot that follows the connection", () => {

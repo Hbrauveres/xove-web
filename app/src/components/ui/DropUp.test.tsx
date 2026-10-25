@@ -1,20 +1,18 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { DropUp, HOLD_MS, LEAVE_GRACE_MS, OPEN_DELAY_MS } from "./DropUp";
 import { TIP_REST_MS, Tooltip } from "./Tooltip";
 
-let hover = true;
-beforeEach(() => {
+/** Each test's own clock and pointer: fake timers, and a mouse that can hover unless the test says
+ * `device.hover = false` (a touch screen). */
+function onDevice() {
+  const device = { hover: true };
   vi.useFakeTimers();
-  hover = true;
   vi.spyOn(window, "matchMedia").mockImplementation(
-    (q: string) => ({ matches: q.includes("hover: hover") ? hover : false, media: q, addEventListener() {}, removeEventListener() {} }) as unknown as MediaQueryList,
+    (q: string) => ({ matches: q.includes("hover: hover") ? device.hover : false, media: q, addEventListener() {}, removeEventListener() {} }) as unknown as MediaQueryList,
   );
-});
-afterEach(() => {
-  vi.useRealTimers();
-  vi.restoreAllMocks();
-});
+  return { device };
+}
 
 function setup(props: Partial<Parameters<typeof DropUp>[0]> = {}) {
   const onLeave = vi.fn();
@@ -31,7 +29,7 @@ function setup(props: Partial<Parameters<typeof DropUp>[0]> = {}) {
 describe("DropUp by touch: press and hold", () => {
   const touch = { pointerType: "touch", clientX: 10, clientY: 10 };
   function touchSetup(props: Partial<Parameters<typeof DropUp>[0]> = {}) {
-    hover = false;
+    onDevice().device.hover = false;
     const onStop = vi.fn();
     const view = render(
       <div>
@@ -54,6 +52,7 @@ describe("DropUp by touch: press and hold", () => {
   }
 
   it("opens after a 500 ms press and hold, and that press doesn't stop the stream", () => {
+    onDevice();
     const { onStop, shown, hold } = touchSetup();
     hold();
     expect(HOLD_MS).toBe(500);
@@ -62,6 +61,7 @@ describe("DropUp by touch: press and hold", () => {
   });
 
   it("leaves a short tap alone: it still stops the stream", () => {
+    onDevice();
     const { onStop, shown, hold } = touchSetup();
     hold(150);
     expect(shown()).toBe(false);
@@ -69,6 +69,7 @@ describe("DropUp by touch: press and hold", () => {
   });
 
   it("doesn't open when the finger moves away (a scroll)", () => {
+    onDevice();
     const { shown, trigger } = touchSetup();
     fireEvent.pointerDown(trigger, touch);
     fireEvent.pointerMove(trigger, { ...touch, clientX: 40 });
@@ -77,6 +78,7 @@ describe("DropUp by touch: press and hold", () => {
   });
 
   it("stays open when the finger lifts, until a tap outside", () => {
+    onDevice();
     const { shown, hold } = touchSetup();
     hold();
     act(() => vi.advanceTimersByTime(LEAVE_GRACE_MS * 3));
@@ -86,6 +88,7 @@ describe("DropUp by touch: press and hold", () => {
   });
 
   it("closes when its action is done (a camera picked, Change), told by its owner", () => {
+    onDevice();
     const { shown, hold, view } = touchSetup({ closeSignal: 0 });
     hold();
     view.rerender(
@@ -99,6 +102,7 @@ describe("DropUp by touch: press and hold", () => {
   });
 
   it("closes when the button is pressed again, without stopping the stream", () => {
+    onDevice();
     const { onStop, shown, hold, trigger } = touchSetup();
     hold();
     fireEvent.pointerDown(trigger, touch);
@@ -109,6 +113,7 @@ describe("DropUp by touch: press and hold", () => {
   });
 
   it("offers no text selection or long-press menu on the button", () => {
+    onDevice();
     const { trigger } = touchSetup();
     const menu = new MouseEvent("contextmenu", { bubbles: true, cancelable: true });
     trigger.dispatchEvent(menu);
@@ -118,6 +123,7 @@ describe("DropUp by touch: press and hold", () => {
 
 describe("DropUp, the quick-access pill over a live button", () => {
   it("opens a short pause after the pointer arrives, not at once", () => {
+    onDevice();
     const { wrap, shown } = setup();
     fireEvent.pointerEnter(wrap);
     expect(shown()).toBe(false);
@@ -127,6 +133,7 @@ describe("DropUp, the quick-access pill over a live button", () => {
   });
 
   it("closes at once when the pointer moves on to another live button: one at a time (spec 0133, #128)", () => {
+    onDevice();
     render(
       <div>
         <DropUp label="The window you share" enabled trigger={<button>Stop sharing your screen</button>}>
@@ -153,6 +160,7 @@ describe("DropUp, the quick-access pill over a live button", () => {
   });
 
   it("keeps open while a tooltip inside it shows, and closes when one outside shows (spec 0133)", () => {
+    onDevice();
     render(
       <div>
         <DropUp label="Your camera" enabled trigger={<button>Turn off your camera</button>}>
@@ -183,6 +191,7 @@ describe("DropUp, the quick-access pill over a live button", () => {
   });
 
   it("opening closes a tooltip showing elsewhere (spec 0133)", () => {
+    onDevice();
     render(
       <div>
         <DropUp label="Your camera" enabled trigger={<button>Turn off your camera</button>}>
@@ -204,6 +213,7 @@ describe("DropUp, the quick-access pill over a live button", () => {
   });
 
   it("forgives a slip outside shorter than the grace, and closes after it", () => {
+    onDevice();
     const { wrap, shown, onLeave } = setup();
     fireEvent.pointerEnter(wrap);
     act(() => vi.advanceTimersByTime(OPEN_DELAY_MS));
@@ -220,6 +230,7 @@ describe("DropUp, the quick-access pill over a live button", () => {
   });
 
   it("closes when the pointer leaves even right after a click inside", () => {
+    onDevice();
     const { wrap, shown } = setup();
     fireEvent.pointerEnter(wrap);
     act(() => vi.advanceTimersByTime(OPEN_DELAY_MS));
@@ -231,6 +242,7 @@ describe("DropUp, the quick-access pill over a live button", () => {
   });
 
   it("opens for the keyboard's focus, and closes with Escape", () => {
+    onDevice();
     const { wrap, shown } = setup();
     const trigger = screen.getByRole("button", { name: "Stop sharing your screen" });
     vi.spyOn(trigger, "matches").mockReturnValue(true);
@@ -241,11 +253,13 @@ describe("DropUp, the quick-access pill over a live button", () => {
   });
 
   it("is out of reach while closed", () => {
+    onDevice();
     setup();
     expect(document.querySelector("[data-dropup] [role=group]")).toHaveAttribute("inert");
   });
 
   it("keeps its button, and the keyboard's focus on it, when the stream starts or stops", () => {
+    onDevice();
     const view = render(<DropUp label="x" enabled={false} trigger={<button>Turn on your camera</button>}><button>Change</button></DropUp>);
     const button = screen.getByRole("button", { name: "Turn on your camera" });
     button.focus();
@@ -255,6 +269,7 @@ describe("DropUp, the quick-access pill over a live button", () => {
   });
 
   it("isn't there while the stream is off", () => {
+    onDevice();
     render(<DropUp label="x" enabled={false} trigger={<button>a</button>}><button>Change</button></DropUp>);
     expect(screen.queryByRole("button", { name: "Change" })).not.toBeInTheDocument();
   });
@@ -264,6 +279,7 @@ describe("DropUp redirected: another panel shows the setting (spec 0115)", () =>
   const touch = { pointerType: "touch", clientX: 10, clientY: 10 };
 
   it("resting the mouse calls the redirect after the same pause, and nothing opens", () => {
+    onDevice();
     const redirect = vi.fn();
     const { wrap, shown } = setup({ redirect });
     fireEvent.pointerEnter(wrap, { pointerType: "mouse" });
@@ -275,7 +291,8 @@ describe("DropUp redirected: another panel shows the setting (spec 0115)", () =>
   });
 
   it("the 500 ms hold calls the redirect, opens nothing, and its tap doesn't stop the stream", () => {
-    hover = false;
+    const { device } = onDevice();
+    device.hover = false;
     const redirect = vi.fn();
     const onStop = vi.fn();
     render(
@@ -300,7 +317,8 @@ describe("DropUp redirected: another panel shows the setting (spec 0115)", () =>
   });
 
   it("a hold that ends with no click doesn't eat the next tap", () => {
-    hover = false;
+    const { device } = onDevice();
+    device.hover = false;
     const onStop = vi.fn();
     render(
       <DropUp label="Your camera" enabled redirect={vi.fn()} trigger={<button onClick={onStop}>Turn off your camera</button>}>
@@ -320,6 +338,7 @@ describe("DropUp redirected: another panel shows the setting (spec 0115)", () =>
   });
 
   it("the keyboard's focus doesn't redirect, nor open it", () => {
+    onDevice();
     const redirect = vi.fn();
     const { wrap, shown } = setup({ redirect });
     const button = wrap.querySelector("button")!;

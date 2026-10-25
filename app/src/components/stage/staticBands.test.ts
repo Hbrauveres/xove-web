@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { GAPS, STRENGTH, bandLight, onScreen } from "./staticBands";
+import { GAPS, STRENGTH, bandLight, onScreen, resetTv, tv } from "./staticBands";
 
 /** The bands down a stage `rows` tall, at 20 even points, `s` seconds in. */
 const bands = (rows: number, s: number) => Array.from({ length: 20 }, (_, i) => bandLight(Math.round((i / 20) * rows) / rows, s));
@@ -33,5 +33,13 @@ describe("the standby screen's static bands (spec 0136)", () => {
   it("lights the room no brighter than the static looks on the screen", () => {
     expect(onScreen(1)).toBeCloseTo(0.5 * STRENGTH);
     expect(onScreen(0.4)).toBeLessThan(onScreen(1));
+  });
+});
+
+describe("the TV's turn-on, once a visit (spec 0136)", () => {
+  it("resets to not turned on", () => {
+    tv.on = true;
+    resetTv();
+    expect(tv.on).toBe(false);
   });
 });

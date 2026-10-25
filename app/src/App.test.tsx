@@ -1,6 +1,6 @@
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { INSTALLED_QUERY } from "./hooks/useInstalled";
 import { TOUCH_QUERY } from "./hooks/useRoomLayout";
 import { aUser, installFakeApi } from "./test/fakeApi";
@@ -78,7 +78,6 @@ describe("phones and tablets use the home-screen app (spec 0171)", () => {
       removeEventListener() {},
     }));
   }
-  afterEach(() => vi.unstubAllGlobals());
 
   it.each(["/", "/room", "/admin", "/request-access"])("shows only the install screen at %s in a browser tab", async (path) => {
     touchDevice(false);

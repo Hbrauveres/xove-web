@@ -1,18 +1,20 @@
 import { act, renderHook } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { useFullscreenElement } from "./useFullscreenElement";
 
-let fullscreen: Element | null = null;
-Object.defineProperty(document, "fullscreenElement", { configurable: true, get: () => fullscreen });
-afterEach(() => {
-  fullscreen = null;
-});
+/** Each test's own fullscreen: `page.fullscreen` is what the browser says is fullscreen (setup removes it after). */
+function onPage() {
+  const page = { fullscreen: null as Element | null };
+  Object.defineProperty(document, "fullscreenElement", { configurable: true, get: () => page.fullscreen });
+  return { page };
+}
 
 describe("the fullscreen element (specs 0101 and 0160)", () => {
   it("is the player when the player is fullscreen", () => {
+    const { page } = onPage();
     const hook = renderHook(() => useFullscreenElement());
     const player = document.createElement("div");
-    fullscreen = player;
+    page.fullscreen = player;
     act(() => {
       document.dispatchEvent(new Event("fullscreenchange"));
     });
@@ -20,8 +22,9 @@ describe("the fullscreen element (specs 0101 and 0160)", () => {
   });
 
   it("is none when the whole page is fullscreen: windows stay in the page", () => {
+    const { page } = onPage();
     const hook = renderHook(() => useFullscreenElement());
-    fullscreen = document.documentElement;
+    page.fullscreen = document.documentElement;
     act(() => {
       document.dispatchEvent(new Event("fullscreenchange"));
     });

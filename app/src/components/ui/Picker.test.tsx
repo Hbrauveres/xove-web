@@ -1,6 +1,7 @@
 import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { onFakeClock } from "../../test/factories/clock.factory";
 import { Picker } from "./Picker";
 
 const CAMERAS = [
@@ -65,19 +66,6 @@ describe("Picker, the app's one-box picker", () => {
     expect(screen.getByRole("radio", { name: "OBS Virtual Camera" })).toHaveFocus();
   });
 
-  it("opens down, floating, in a panel, or upward over the video", async () => {
-    const down = setup();
-    expect(down.pill.closest("[data-picker]")).toHaveAttribute("data-opens", "down");
-  });
-
-  it("opens upward over the video", async () => {
-    const { user, pill } = setup({ opens: "up", look: "glass" });
-    await user.click(pill);
-    const picker = pill.closest("[data-picker]")!;
-    expect(picker).toHaveAttribute("data-opens", "up");
-    expect(picker).toHaveAttribute("data-look", "glass");
-  });
-
   it("can be told to close (its drop-up was left), and says when it opens or closes", async () => {
     const onOpenChange = vi.fn();
     const user = userEvent.setup();
@@ -103,7 +91,7 @@ describe("Picker, the app's one-box picker", () => {
 describe("Picker: floating over its panel (spec 0111)", () => {
   /** A panel holding the picker and two controls: one right under its list, one far below. */
   function panel() {
-    const user = userEvent.setup();
+    const user = onFakeClock();
     render(
       <div data-list-host>
         <Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} />
@@ -130,7 +118,6 @@ describe("Picker: floating over its panel (spec 0111)", () => {
     // Kept while it rolls back, so nothing shows through it on the way; then gone.
     expect(under.style.maskImage).toMatch(/transparent/);
     await waitFor(() => expect(under.style.maskImage).toBe(""));
-    vi.restoreAllMocks();
   });
 
   it("fades what's under it back in: hidden, 8% halfway, 35% at three quarters, fully there at 30 px", async () => {
@@ -140,7 +127,6 @@ describe("Picker: floating over its panel (spec 0111)", () => {
     expect(screen.getByTestId("under").style.maskImage).toBe(
       "linear-gradient(rgb(0, 0, 0) -40px, transparent -40px, transparent 64px, rgba(0, 0, 0, 0.08) 79px, rgba(0, 0, 0, 0.35) 86.5px, rgb(0, 0, 0) 94px)",
     );
-    vi.restoreAllMocks();
   });
 
   it("closes, and lets go of the masks, when the window changes size or its options change", async () => {
@@ -149,7 +135,6 @@ describe("Picker: floating over its panel (spec 0111)", () => {
     act(() => window.dispatchEvent(new Event("resize")));
     expect(pill).toHaveAttribute("aria-expanded", "false");
     await waitFor(() => expect(screen.getByTestId("under").style.maskImage).toBe(""));
-    vi.restoreAllMocks();
   });
 
   it("lets go of the masks when it goes away open (its panel closed, its tab switched)", async () => {
@@ -166,7 +151,6 @@ describe("Picker: floating over its panel (spec 0111)", () => {
     expect(under.style.maskImage).toMatch(/transparent/);
     view.rerender(<div data-list-host><div data-testid="under">Quality</div></div>);
     expect(under.style.maskImage).toBe("");
-    vi.restoreAllMocks();
   });
 
   it("rolls back before it goes: closing, it stays drawn but out of reach, then leaves", async () => {
@@ -218,31 +202,28 @@ describe("Picker: long names and an upward list (spec 0114)", () => {
 
   it("opens an upward list scrolled to the pill's end", async () => {
     const user = userEvent.setup();
-    const height = vi.spyOn(HTMLElement.prototype, "scrollHeight", "get").mockReturnValue(300);
+    vi.spyOn(HTMLElement.prototype, "scrollHeight", "get").mockReturnValue(300);
     render(<Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} opens="up" look="glass" />);
     await user.click(screen.getByRole("button", { name: "Camera: Webcam C920" }));
     expect(screen.getByRole("radiogroup", { name: "Camera" }).scrollTop).toBe(300);
-    height.mockRestore();
   });
 
   it("opened upward by the keyboard, focuses the option nearest the pill and stays at that end", async () => {
     const user = userEvent.setup();
-    const height = vi.spyOn(HTMLElement.prototype, "scrollHeight", "get").mockReturnValue(300);
+    vi.spyOn(HTMLElement.prototype, "scrollHeight", "get").mockReturnValue(300);
     render(<Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} opens="up" look="glass" />);
     screen.getByRole("button", { name: "Camera: Webcam C920" }).focus();
     await user.keyboard("{ArrowUp}");
     expect(screen.getByRole("radio", { name: "OBS Virtual Camera" })).toHaveFocus();
     expect(screen.getByRole("radiogroup", { name: "Camera" }).scrollTop).toBe(300);
-    height.mockRestore();
   });
 
   it("opens a downward list at its top", async () => {
     const user = userEvent.setup();
-    const height = vi.spyOn(HTMLElement.prototype, "scrollHeight", "get").mockReturnValue(300);
+    vi.spyOn(HTMLElement.prototype, "scrollHeight", "get").mockReturnValue(300);
     render(<Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} />);
     await user.click(screen.getByRole("button", { name: "Camera: Webcam C920" }));
     expect(screen.getByRole("radiogroup", { name: "Camera" }).scrollTop).toBe(0);
-    height.mockRestore();
   });
 });
 

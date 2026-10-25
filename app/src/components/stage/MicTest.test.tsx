@@ -1,12 +1,10 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { FakeTrack } from "../../test/fakeLiveKit";
 import type { MediaTrack } from "../../types";
 import { MicTest } from "./MicTest";
 
 const meter = () => screen.getByRole("slider", { name: "Mic sensitivity" }).parentElement!;
-
-afterEach(() => vi.useRealTimers());
 
 describe("the Voice tab's mic level (spec 0123)", () => {
   it("shows the level green when it's over the line (sent), faint under it", () => {

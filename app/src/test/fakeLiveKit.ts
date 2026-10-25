@@ -53,11 +53,12 @@ export class FakeTrack {
   }
 }
 
-/** The cameras this browser has (`navigator.mediaDevices.enumerateDevices`, see setup.ts). */
-export const fakeCameras = [
+const CAMERAS = [
   { deviceId: "cam-1", label: "Logitech C920" },
   { deviceId: "cam-2", label: "Integrated Webcam" },
 ];
+/** The cameras this browser has (`navigator.mediaDevices.enumerateDevices`, see setup.ts). */
+export const fakeCameras = CAMERAS.map((c) => ({ ...c }));
 
 /** The browser's captured screen, as a MediaStreamTrack. */
 export class FakeMediaStreamTrack {
@@ -155,11 +156,12 @@ export class FakeLocalMicTrack extends FakeLocalTrack {
   });
 }
 
-/** The fake microphones (`enumerateDevices`, see setup.ts). */
-export const fakeMics = [
+const MICS = [
   { deviceId: "mic-1", label: "Headset (USB)" },
   { deviceId: "mic-2", label: "MacBook Pro microphone" },
 ];
+/** The fake microphones (`enumerateDevices`, see setup.ts). */
+export const fakeMics = MICS.map((m) => ({ ...m }));
 
 /** The screen's video, wrapped by the app after the browser's picker. */
 export class LocalVideoTrack extends FakeLocalScreenTrack {
@@ -505,6 +507,14 @@ export class Room {
 }
 
 export const rooms: Room[] = [];
+
+/** After every test (setup.ts): no room, the ids counting from 1, the browser's devices as they were. */
+export function resetFakeLiveKit() {
+  rooms.length = 0;
+  publishSeq = 0;
+  fakeCameras.splice(0, fakeCameras.length, ...CAMERAS.map((c) => ({ ...c })));
+  fakeMics.splice(0, fakeMics.length, ...MICS.map((m) => ({ ...m })));
+}
 export const lastRoom = () => {
   const room = rooms.at(-1);
   if (!room) throw new Error("No LiveKit room was created");
