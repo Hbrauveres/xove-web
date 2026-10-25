@@ -149,6 +149,43 @@ jobs:
       - name: Style check
         run: npm run check:styles
 
+  code-checks:
+    name: 3 · Code checks
+    needs: validate
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # The guard compares the list of known findings with main's: the list may only shrink.
+      - name: Fetch main
+        run: git fetch --no-tags --depth=1 origin main:refs/remotes/origin/main
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # TypeScript's strict config, the lint rules, copies, unused code and the code check, against
+      # checks/known-findings.json (docs/architecture.md, "The checks").
+      - name: Guard
+        run: npm run guard
+
+      - name: Formatting
+        run: npm run format:check
+
+      - name: Build
+        run: npm run build
+
+      - name: Size budget
+        run: npm run check:size
+
   vuln-scan:
     name: 3 · Vulnerability scan
     needs: validate
