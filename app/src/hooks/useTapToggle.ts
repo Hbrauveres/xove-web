@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 /** Further than this, a finger is dragging (a swipe), not tapping. */
 const TAP_SLOP = 10;
@@ -43,23 +43,4 @@ export function useTapToggle({ shown, onShow, onHide }: { shown: boolean; onShow
       tap.current = null;
     },
   };
-}
-
-/**
- * Whether the keyboard, not a press, came last (spec 0131): the keyboard's focus keeps the controls
- * up, but a finger's tap leaves focus on the button it pressed, and that mustn't keep them for good.
- */
-export function useKeyboardLast() {
-  const pressed = useRef(false);
-  useEffect(() => {
-    const press = () => (pressed.current = true);
-    const key = () => (pressed.current = false);
-    document.addEventListener("pointerdown", press, true);
-    document.addEventListener("keydown", key, true);
-    return () => {
-      document.removeEventListener("pointerdown", press, true);
-      document.removeEventListener("keydown", key, true);
-    };
-  }, []);
-  return () => !pressed.current;
 }

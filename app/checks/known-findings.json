@@ -808,7 +808,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/hooks/useTapToggle.ts",
-    "count": 2,
+    "count": 1,
     "owner": "#179 phones removed"
   },
   {

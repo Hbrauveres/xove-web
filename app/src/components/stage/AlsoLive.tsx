@@ -5,7 +5,7 @@ import { stackOf, useHold, useSwapping } from "./stack";
 import { HearToggles, type Hearing } from "./HearToggles";
 import { PreviewTray } from "./PreviewTray";
 import { usePreviewTray } from "./usePreviewTray";
-import { useKeyboardLast } from "../../hooks/useTapToggle";
+import { useKeyboardLast } from "@shared/hooks/use-keyboard-last.hook";
 import { seatsOpen } from "./NowWatching";
 import styles from "./AlsoLive.module.css";
 import { Tooltip } from "../ui/Tooltip";

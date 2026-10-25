@@ -4,7 +4,7 @@ import { Range } from "../ui/Range";
 import { showToast } from "../ui/toast";
 import { SoundIcon, VoiceIcon, VoiceOffIcon, VolumeOffIcon } from "./icons";
 import type { Sound } from "./ViewerBar";
-import { useKeyboardLast } from "../../hooks/useTapToggle";
+import { useKeyboardLast } from "@shared/hooks/use-keyboard-last.hook";
 import { HOLD_MS } from "./stack";
 import styles from "./HearToggles.module.css";
 import { Tooltip } from "../ui/Tooltip";

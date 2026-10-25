@@ -1,6 +1,6 @@
-import { act, renderHook } from "@testing-library/react";
+import { renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { useKeyboardLast, useTapToggle } from "./useTapToggle";
+import { useTapToggle } from "./useTapToggle";
 
 type Ev = Parameters<ReturnType<typeof useTapToggle>["down"]>[0];
 const picture = document.createElement("div");
@@ -64,20 +64,5 @@ describe("a tap shows or hides the controls (spec 0131, design decision 16)", ()
     tap().up(ev("mouse", 100, 100, 50));
     expect(onShow).toHaveBeenCalledTimes(2);
     expect(onHide).not.toHaveBeenCalled();
-  });
-});
-
-describe("whether the keyboard moved the focus last (spec 0131)", () => {
-  it("is the keyboard until a press, and again after a key", () => {
-    const { result } = renderHook(() => useKeyboardLast());
-    expect(result.current()).toBe(true);
-    act(() => {
-      document.dispatchEvent(new Event("pointerdown"));
-    });
-    expect(result.current()).toBe(false);
-    act(() => {
-      document.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab" }));
-    });
-    expect(result.current()).toBe(true);
   });
 });
