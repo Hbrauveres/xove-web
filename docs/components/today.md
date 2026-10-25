@@ -12,7 +12,7 @@ Pictures: the room at 1920 × 1080, with fake people and moving pictures.
 | [The stage](#the-stage) | The stream and everything on and around it. |
 | [Around the room](#around-the-room) | The settings, the footer, the queue and the pages outside the room. |
 | [Building blocks](#building-blocks) | The shared controls, and the copies that become one |
-| [Removed](#removed) | Phone-only code |
+| [Removed](#removed) | Phone-only code, and what phones and tablets see instead |
 
 ## The header
 
@@ -96,7 +96,7 @@ The stream being watched, as large as the room allows, with its controls in the 
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/Stage.tsx` (one file holds audio, quality, fullscreen, the controls' idle, gestures and layouts) | Split into `features/room/stage/stage/`, `stage-light/`, `screen-video/`, `voice-audio/`, `stage-notice/`, with hooks for hearing and the idle | Kept, split into its pieces |
+| `components/stage/Stage.tsx` (one file holds audio, quality, fullscreen, and the controls' idle) | Split into `features/room/stage/stage/`, `stage-light/`, `screen-video/`, `voice-audio/`, `stage-notice/`, with hooks for hearing and the idle | Kept, split into its pieces |
 
 ### Stage light (ambilight)
 
@@ -247,7 +247,7 @@ The room's footer: credits and links.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/room/RoomFooter.tsx` (its phone half goes) | `features/room/room-footer/` | Kept; decided again with the next version |
+| `components/room/RoomFooter.tsx` | `features/room/room-footer/` | Kept; decided again with the next version |
 
 ### Waiting room
 
@@ -315,16 +315,22 @@ The shared controls today, and the copies that become one component each.
 | Icons | `components/stage/icons.tsx`, `components/room/ActivityIcon.tsx`, and inline drawings in 14 files | `shared/ui/icons/` | Merged |
 | Toast | `components/ui/Toast.tsx`, `toast.ts` | `shared/ui/toast/` | Kept |
 | Full-page message | `components/ui/FullPageMessage.tsx` | `shared/ui/page-shell/`, with the pages' copied shells | Merged |
-| LIVE dot | `components/ui/LiveDot.tsx` | — | Removed: nothing uses it |
 
 ## Removed
 
-Phone support is paused, so its code goes, with its tests.
+Phone support is paused, so its code went, with its tests.
 
 | What | Today |
 | --- | --- |
 | The install screen and prompt | `pages/InstallPage.tsx`, `install/`, `hooks/useInstalled.ts` |
 | Swipes and taps | `hooks/useStageSwipe.ts`, `hooks/useTapToggle.ts`, `components/stage/StageDots.tsx` |
 | The phone's layouts | The phone and sideways branches of `Stage`, `RoomPage` and `hooks/useRoomLayout.ts`; `components/room/ActivityBell.tsx`; `components/stage/StreamsRow.tsx`, `LiveFeed.tsx`, `HereCards.tsx`, `hereFor.ts`, `makeRoom.ts`; the compact Now watching; the phone half of the footer; the safe areas |
+| The LIVE dot | `components/ui/LiveDot.tsx`: nothing used it |
+
+### In their place: the phone notice
+
+<img src="../images/design/phone-notice.png" width="200" alt="The screen phones and tablets see">
+
+What a phone or a tablet sees on every page: the mark, a computer drawn from it, "See you on the big screen." and one line ([how it looks](../design.md#phones-and-tablets-see-you-on-the-big-screen)). Already in the new structure: `features/phone-notice/` (the page, and `big-screen-art/` for the drawing), chosen by `app/root.component.tsx` with `core/devices/is-handheld.util.ts`.
 
 Not pictured here, but listed with their area above: the stage's notices, the voice's audio element, the mic test inside the settings, the toast and the tooltip.

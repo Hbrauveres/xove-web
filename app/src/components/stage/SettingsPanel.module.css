@@ -36,8 +36,6 @@
   transform: none;
 }
 
-/* Sideways the player is wide and short: the panel uses the width, so no tab scrolls. */
-
 .head {
   display: flex;
   align-items: center;
@@ -184,9 +182,6 @@
 .lead {
   display: contents;
 }
-
-/* The left column stays put while the right one scrolls (spec 0123): pinned at the
-   top of its area, which spans every row the right column can have. */
 
 .panes::-webkit-scrollbar {
   width: 4px;

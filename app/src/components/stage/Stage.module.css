@@ -154,8 +154,6 @@
   inset: 0;
 }
 
-/* The fullscreen button sits level with the round buttons' row, whose buttons are 48 px. */
-
 /* A narrow stage's compact buttons (spec 0133): the fullscreen button stays level with them. */
 @container (max-width: 359px) {
   .stage [data-overlay],

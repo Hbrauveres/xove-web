@@ -5,16 +5,14 @@ A private room where invited friends share their screens and cameras and watch e
 This repo is the web app: React 19 and TypeScript, talking to [`xove-api`](https://github.com/Hbrauveres/xove-api) for everything about who's in the room, and to a [LiveKit](https://livekit.io) server for the video.
 
 <p align="center">
-  <img src="docs/images/design/room-desktop.png" alt="The room on a desktop: one screen big on the stage with ambilight, the other live streams as previews" width="72%">
-  &nbsp;
-  <img src="docs/images/design/room-phone-upright.png" alt="The room on a phone held upright: the stage on top, the other streams as a feed" width="20%">
+  <img src="docs/images/design/room-desktop.png" alt="The room on a desktop: one screen big on the stage with ambilight, the other live streams as previews" width="90%">
 </p>
 
 ## What it does
 
 - **Share a screen, a window or a tab**, with its sound, and a camera on top of it or on its own, and **talk**: a voice sent with them, when the sharer turns it on, through a noise gate they set.
 - **Watch in theater mode:** the picked stream fills the stage in its own shape, with ambilight around it; you hear its sound and its sharer's voice, each muted or set on its own; the others play silently as previews, each with its own mutes.
-- **On a phone,** as an installed home-screen app: the stage on top and a feed upright, full screen with a row of streams sideways, swipes to change who's on the stage.
+- **On a laptop or a desktop.** Phones and tablets see one screen asking them to come back on a computer.
 - **Invited only:** sign in with Google, ask for access, an admin approves.
 
 ## The UI
@@ -22,10 +20,10 @@ This repo is the web app: React 19 and TypeScript, talking to [`xove-api`](https
 | | |
 | --- | --- |
 | ![Nobody live on a desktop: the stage as a camera waiting](docs/images/design/room-empty-desktop.png) | **The room, nobody live.** The stage as a camera waiting, its corners glowing, "Go LIVE", "What's on today?" and the ways to start |
-| ![A phone held sideways, with the streams row open](docs/images/design/room-phone-sideways.png) | **A phone held sideways.** The stage fills the screen; the controls fade while a stream plays; a swipe up opens the other streams |
-| ![The install screen on Android](docs/images/design/install-android.png) | **The install screen.** On a phone or tablet in a browser tab, Xovê asks to be installed: it's used from the home screen |
+| ![A tall picture on the stage, the controls at its corners](docs/images/design/stage-tall-picture.png) | **A tall picture.** The stage takes the picture's own shape; the controls fade while a stream plays |
+| ![The screen phones and tablets see](docs/images/design/phone-notice.png) | **On a phone or a tablet.** "See you on the big screen.": Xovê is for laptops and desktops for now |
 
-Every screen, on every device, is in the [design sheet](docs/design.md).
+Every screen is in the [design sheet](docs/design.md).
 
 ## The design
 
@@ -40,11 +38,14 @@ Every screen, on every device, is in the [design sheet](docs/design.md).
 app/src/
   api/          the HTTP client and the API's types
   auth/         who is signed in, and the route guards
-  pages/        one per route (home, request access, room, admin), and the install screen
-  hooks/        the room's state: the seat, the streams, the LiveKit connection, the layout
+  app/          the root (the app, or the phone notice) and the routes
+  pages/        one per route (home, request access, room, admin)
+  hooks/        the room's state: the seat, the streams, the LiveKit connection
   media/        sending screens and cameras, the ambilight, who is big
   components/   stage, room, share, ui, brand: each with its CSS module
-  install/      phones and tablets: the device, the install prompt
+  core/         what the app is built on: the API's types, the device
+  features/     whole features in their own folders (the phone notice)
+  shared/       small pieces any feature uses
   styles/       the design tokens and their tests
   test/         a fake API and a fake LiveKit for the tests
 ```
@@ -60,7 +61,7 @@ React 19, TypeScript, Vite, React Router, CSS modules and `livekit-client`, test
 - **Polling, not a socket, for the room's state.** Every open room asks the API every 2 seconds; LiveKit already carries the live media, and polling keeps the API simple to restart and the page simple to resume.
 - **LiveKit tuned for screens.** VP9 in three layers, a quality cap instead of tight bitrate limits, adaptive stream and dynacast, so each viewer downloads only what fits the player and the sharer's upload drops when nobody watches the top layer ([Media](docs/media.md)).
 - **The ambilight on the graphics pipeline.** A small canvas, drawn from the picture's edges, blurred and stretched, with no pixel reads: a 4K monitor costs the same, and protected streams light too.
-- **One room, a layout per device.** Chosen from the pointer and the screen's size, switched on turning without moving the stage, so the video and a share never reload; a home-screen app on phones.
+- **Desktop only, for now.** One layout that follows the window, without moving the stage, so the video and a share never reload; a device whose main pointer is a finger gets one screen and makes no call to the API.
 - **Tested like a person uses it.** Pages rendered at a URL with an in-memory fake API and a fake LiveKit, found by role and label; the design sheet's pictures shot from the real app ([Testing](docs/testing.md)).
 
 ## Run it and test it
