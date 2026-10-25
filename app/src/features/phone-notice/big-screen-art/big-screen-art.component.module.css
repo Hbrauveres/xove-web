@@ -1,0 +1,26 @@
+.art {
+  width: 150px;
+  height: auto;
+}
+
+.frame {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.corner,
+.red {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 5;
+}
+
+.red {
+  stroke: var(--accent);
+}
+
+.dot {
+  fill: var(--accent);
+}

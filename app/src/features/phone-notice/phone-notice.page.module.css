@@ -1,0 +1,44 @@
+/* The mark at the top, then the drawing and the words centred together; clear of the phone's bars. */
+.page {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: calc(64px + env(safe-area-inset-top, 0px)) max(28px, env(safe-area-inset-right, 0px))
+    calc(40px + env(safe-area-inset-bottom, 0px)) max(28px, env(safe-area-inset-left, 0px));
+  background: var(--ground);
+  color: var(--text);
+}
+
+.middle {
+  margin-block: auto;
+  display: grid;
+  justify-items: center;
+  gap: 22px;
+  max-width: 34ch;
+}
+
+.title {
+  margin: 0;
+  font: 700 var(--text-2xl) / 1.08 var(--font-display);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.title em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.copy {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-md);
+  line-height: 1.6;
+}
+
+.copy code {
+  font: 500 1em var(--font-mono);
+  color: var(--text);
+}

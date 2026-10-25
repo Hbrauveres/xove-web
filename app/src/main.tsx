@@ -2,19 +2,13 @@
 import { listenForInstall } from "./install/prompt";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router";
 import "./styles/global.css";
-import { App } from "@app/app.component";
-import { AuthProvider } from "./auth/AuthProvider";
+import { Root } from "@app/root.component";
 
 listenForInstall();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </BrowserRouter>
+    <Root />
   </StrictMode>,
 );
