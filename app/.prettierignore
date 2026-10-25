@@ -4,3 +4,4 @@ node_modules
 package-lock.json
 public
 compose.yaml
+checks/known-findings.json
