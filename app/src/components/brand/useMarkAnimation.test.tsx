@@ -1,18 +1,15 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { TOTAL_MS } from "../../brand/markTimeline";
 import { XoveMark } from "./XoveMark";
 
-let reduced = false;
-beforeEach(() => {
-  reduced = false;
+/** Each test's own animation clock, and reduced motion off unless the test says `motion.reduced = true`. */
+function onScreen() {
+  const motion = { reduced: false };
   vi.useFakeTimers({ toFake: ["requestAnimationFrame", "cancelAnimationFrame", "performance", "setTimeout"] });
-  vi.stubGlobal("matchMedia", (q: string) => ({ matches: q.includes("reduce") && reduced, addEventListener() {}, removeEventListener() {} }));
-});
-afterEach(() => {
-  vi.useRealTimers();
-  vi.unstubAllGlobals();
-});
+  vi.stubGlobal("matchMedia", (q: string) => ({ matches: q.includes("reduce") && motion.reduced, addEventListener() {}, removeEventListener() {} }));
+  return { motion };
+}
 
 const mark = () => screen.getByRole("img", { name: "Xovê" });
 const side = (at: string) => mark().querySelector(`[data-side="${at}"]`)!;
@@ -25,6 +22,7 @@ const advance = (ms: number) =>
 
 describe("the wordmark's hover animation (spec 0111, FR-4a)", () => {
   it("keeps the left corners, slides the word left and the right corners in, blinks, and comes back to rest", () => {
+    onScreen();
     render(<XoveMark height={26} />);
     fireEvent.pointerEnter(mark());
 
@@ -49,6 +47,7 @@ describe("the wordmark's hover animation (spec 0111, FR-4a)", () => {
   });
 
   it("plays from the keyboard's focus too", () => {
+    onScreen();
     render(<XoveMark height={26} />);
     expect(mark()).toHaveAttribute("tabindex", "0");
     fireEvent.focus(mark());
@@ -57,6 +56,7 @@ describe("the wordmark's hover animation (spec 0111, FR-4a)", () => {
   });
 
   it("doesn't restart while it plays", () => {
+    onScreen();
     render(<XoveMark height={26} />);
     fireEvent.pointerEnter(mark());
     advance(500);
@@ -70,7 +70,8 @@ describe("the wordmark's hover animation (spec 0111, FR-4a)", () => {
   });
 
   it("doesn't play with reduced motion", () => {
-    reduced = true;
+    const { motion } = onScreen();
+    motion.reduced = true;
     render(<XoveMark height={26} />);
     fireEvent.pointerEnter(mark());
     advance(500);

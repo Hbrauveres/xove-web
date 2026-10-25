@@ -108,3 +108,16 @@ describe("after every test, the fake LiveKit is new", { shuffle: false }, () => 
     expect(fakeMics[0].label).toBe("Headset (USB)");
   });
 });
+
+describe("after every test, the browser's stand-ins are as setup made them", { shuffle: false }, () => {
+  it("1. leaves a phone's media queries and a fullscreen page", () => {
+    window.matchMedia = ((query: string) => ({ matches: true, media: query })) as never;
+    Object.defineProperty(document, "fullscreenElement", { configurable: true, get: () => document.body });
+    document.exitFullscreen = async () => {};
+  });
+  it("2. finds a desktop window and no fullscreen", () => {
+    expect(window.matchMedia("(pointer: coarse)").matches).toBe(false);
+    expect(document.fullscreenElement).toBeUndefined();
+    expect("exitFullscreen" in document).toBe(false);
+  });
+});

@@ -9,9 +9,9 @@ const people: Friend[] = [
   { id: "user-3", name: "Ana", hue: 300, online: true },
   { id: "user-9", name: "Diego", hue: 90, online: true },
 ];
-let seq = 0;
+// A fresh id per event: they only need to differ, and a counter at file level would carry over.
 const ev = (kind: ActivityEvent["kind"], actorId: string, stream?: "screen" | "camera"): ActivityEvent => ({
-  id: `e${++seq}`,
+  id: crypto.randomUUID(),
   kind,
   actorId,
   at: Date.now(),

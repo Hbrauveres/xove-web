@@ -7,13 +7,13 @@ import { NoiseGate } from "../media/noiseGate";
 import { DEFAULT_VOICE } from "../media/preferences";
 import { useLiveKitRoom, type Capture } from "./useLiveKitRoom";
 
-const member = aUser({ name: "Henrique Brauveres", status: "MEMBER" });
+const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
 const PREFS = { quality: "720p", mode: "sharp" } as const;
 
 afterEach(() => localStorage.clear());
 
 async function connected() {
-  installFakeApi({ me: member });
+  installFakeApi({ me: member() });
   const hook = renderHook(() => useLiveKitRoom());
   await waitFor(() => expect(hook.result.current.connection).toBe("connected"));
   return hook;

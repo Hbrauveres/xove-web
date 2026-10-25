@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { useRef, useState } from "react";
 import { describe, expect, it } from "vitest";
+import { onFakeClock } from "../../test/factories/clock.factory";
 import { Dropdown, DropdownSection } from "./Dropdown";
 
 /** A button with its dropdown, as the header uses them. */
@@ -50,7 +50,7 @@ const panel = (name: string) => screen.queryByRole("dialog", { name: `${name} pa
 
 describe("dropdown (spec 0104)", () => {
   it("opens as a named panel of sections, and closes with Escape, the focus back on its button", async () => {
-    const user = userEvent.setup();
+    const user = onFakeClock();
     render(<Trigger name="People" />);
 
     await user.click(screen.getByRole("button", { name: "People" }));
@@ -63,7 +63,7 @@ describe("dropdown (spec 0104)", () => {
   });
 
   it("closes on a click outside, not on a click inside", async () => {
-    const user = userEvent.setup();
+    const user = onFakeClock();
     render(
       <>
         <Trigger name="People" />
@@ -80,7 +80,7 @@ describe("dropdown (spec 0104)", () => {
   });
 
   it("keeps only one open at a time", async () => {
-    const user = userEvent.setup();
+    const user = onFakeClock();
     render(
       <>
         <Trigger name="People" />
@@ -97,7 +97,7 @@ describe("dropdown (spec 0104)", () => {
   });
 
   it("as a menu: opens on its first item and moves with the arrow keys", async () => {
-    const user = userEvent.setup();
+    const user = onFakeClock();
     render(<Trigger name="Account" role="menu" />);
 
     await user.click(screen.getByRole("button", { name: "Account" }));
@@ -111,7 +111,7 @@ describe("dropdown (spec 0104)", () => {
   });
 
   it("unrolls by its height and rolls back up the same way, never by a fade or clip that stops its blur", async () => {
-    const user = userEvent.setup();
+    const user = onFakeClock();
     render(<Trigger name="People" />);
 
     await user.click(screen.getByRole("button", { name: "People" }));

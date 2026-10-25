@@ -7,7 +7,7 @@ import type { ConnectionState, Friend } from "../../types";
 import { AccountButton } from "./AccountButton";
 import { FooterItems } from "./RoomFooter";
 
-const me: Friend = { id: "me", name: "Henrique", hue: 36, online: true };
+const me = (): Friend => ({ id: "me", name: "Henrique", hue: 36, online: true });
 
 function setup(props: Partial<Parameters<typeof AccountButton>[0]> = {}) {
   const onSignOut = vi.fn();
@@ -15,7 +15,7 @@ function setup(props: Partial<Parameters<typeof AccountButton>[0]> = {}) {
   const view = render(
     <MemoryRouter>
       <AccountButton
-        me={me}
+        me={me()}
         isAdmin
         connection={"connected" as ConnectionState}
         ambilight={{ on: true, brightness: 0.9 }}

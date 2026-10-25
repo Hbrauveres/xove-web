@@ -40,6 +40,7 @@ afterEach(() => {
   resetTooltipWarmth();
   resetInstallPrompt();
   resetTv();
+  resetBrowserStandIns();
 });
 
 // jsdom lacks these browser APIs.
@@ -59,16 +60,24 @@ Object.defineProperty(navigator, "mediaDevices", {
     removeEventListener: () => {},
   },
 });
-Object.defineProperty(window, "matchMedia", {
-  writable: true,
-  value: (query: string) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    addListener: () => {},
-    removeListener: () => {},
-    dispatchEvent: () => false,
-  }),
+// Media queries: a desktop window that matches none of them. Put back after every test, since a test
+// may swap it for a phone's.
+const desktopMatchMedia = (query: string) => ({
+  matches: false,
+  media: query,
+  onchange: null,
+  addEventListener: () => {},
+  removeEventListener: () => {},
+  addListener: () => {},
+  removeListener: () => {},
+  dispatchEvent: () => false,
 });
+Object.defineProperty(window, "matchMedia", { writable: true, value: desktopMatchMedia });
+
+/** The browser stand-ins a test may replace, back as setup made them: the media queries, and none of
+ * what jsdom lacks and a test defines for itself (fullscreen, a touch screen's touch points). */
+function resetBrowserStandIns() {
+  window.matchMedia = desktopMatchMedia as never;
+  for (const own of ["fullscreenElement", "exitFullscreen"]) delete (document as unknown as Record<string, unknown>)[own];
+  delete (navigator as unknown as Record<string, unknown>).maxTouchPoints;
+}

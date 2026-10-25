@@ -9,7 +9,7 @@ import { FakeLocalScreenTrack, lastRoom } from "../test/fakeLiveKit";
 import { NARROW_UPRIGHT_QUERY, PORTRAIT_QUERY, SMALL_QUERY, TOUCH_QUERY } from "../hooks/useRoomLayout";
 import { RoomPage } from "./RoomPage";
 
-const member = aUser({ name: "Henrique Brauveres", status: "MEMBER" });
+const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
 const FAST_POLL = 50;
 const myOldStream = () => ({ ...someoneSharing("Henrique"), userId: MY_USER_ID });
 
@@ -32,7 +32,7 @@ const stage = () => screen.getByRole("region", { name: /shared screen/i });
 
 describe("room: joining the video room", () => {
   it("connects to LiveKit with the address and token from the API", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     renderRoom();
 
     await connected();
@@ -40,7 +40,7 @@ describe("room: joining the video room", () => {
   });
 
   it("says so when video isn't available, and the rest of the room still works", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.failures.set("POST /api/livekit/token", {
       status: 503,
       body: { status: 503, detail: "Video isn't set up on this server yet." },
@@ -54,7 +54,7 @@ describe("room: joining the video room", () => {
   });
 
   it("lists the people connected, and notes who joins and leaves", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     renderRoom();
     await connected();
 
@@ -78,14 +78,14 @@ describe("room: joining the video room", () => {
 
 describe("room: watching", () => {
   it("shows a free stage when nobody is sharing", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     renderRoom();
 
     expect(await screen.findByRole("heading", { name: "Nobody is sharing yet" })).toBeInTheDocument();
   });
 
   it("marks the page as the room, which turns off pull-to-refresh only here", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     renderRoom();
 
     await screen.findByRole("heading", { name: "Nobody is sharing yet" });
@@ -93,7 +93,7 @@ describe("room: watching", () => {
   });
 
   it("plays the sharer's screen once their video arrives", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
     renderRoom();
     await connected();
@@ -111,7 +111,7 @@ describe("room: watching", () => {
   });
 
   it("picks up a new sharer from the API without reloading", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     renderRoom();
     expect(await screen.findByLabelText("0 of 6 live, 6 seats open")).toBeInTheDocument();
     // "0 of 6 live" shows before the first answer too; the feed only logs changes
@@ -131,7 +131,7 @@ describe("room: watching", () => {
 
   // Spec 0038, AC-8: the API ends the stream when LiveKit says the sharer left.
   it("logs 'stopped sharing' when the stream ends from outside", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Ana Souza", 7)];
     renderRoom();
     expect(await screen.findByRole("heading", { name: "Ana" })).toBeInTheDocument();
@@ -192,12 +192,10 @@ const tickedQuality = (kind: MenuKind = "Screen") =>
     .find((r) => r.getAttribute("aria-checked") === "true")?.textContent;
 
 describe("room: sharing", () => {
-  afterEach(() => localStorage.clear());
-
   // Spec 0107, AC-3: no setup window.
   it("starts at once with the defaults the first time, sending the CSRF token, the kind, the connection and the settings", async () => {
     document.cookie = "XSRF-TOKEN=abc123";
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
 
     await pickScreen(user);
@@ -213,7 +211,7 @@ describe("room: sharing", () => {
   });
 
   it("names what's shared by what the browser says was picked: a tab, a window, the whole screen", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     lastRoom().localParticipant.nextSurface = "browser";
     await startSharing(user);
@@ -225,7 +223,7 @@ describe("room: sharing", () => {
   it("starts with the settings remembered from last time", async () => {
     localStorage.setItem("xove.share.quality", "720p");
     localStorage.setItem("xove.share.mode", "sharp");
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
 
     await startSharing(user);
@@ -236,7 +234,7 @@ describe("room: sharing", () => {
   });
 
   it("does nothing if the picker is closed without choosing", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     lastRoom().localParticipant.nextPicker = "cancel";
 
@@ -249,7 +247,7 @@ describe("room: sharing", () => {
   });
 
   it("says so when the browser gives no screen", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     lastRoom().localParticipant.nextPicker = "no-video";
 
@@ -264,7 +262,7 @@ describe("room: sharing", () => {
   // picker is there but fails. Removing the picker instead raced the room's next render,
   // which hides the button (it failed on CI's slower machine).
   it("says so when the browser's picker fails", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     lastRoom().localParticipant.getDisplayMedia.mockImplementation(async () => {
       throw new TypeError("getDisplayMedia is not supported here");
@@ -277,7 +275,7 @@ describe("room: sharing", () => {
   });
 
   it("stops sharing and says so when the screen track can't be identified", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     lastRoom().localParticipant.screenTrackSid = undefined;
     await pickScreen(user);
@@ -289,7 +287,7 @@ describe("room: sharing", () => {
 
   // Spec 0060: several screens at once, nobody is pushed out.
   it("shares alongside someone else, without asking anyone to stop", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno", 7)];
     renderRoom();
     await connected();
@@ -305,7 +303,7 @@ describe("room: sharing", () => {
   });
 
   it("stops the video and ends the stream", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
 
@@ -317,7 +315,7 @@ describe("room: sharing", () => {
   });
 
   it("shows the static with no turn-on when the last stream stops: the TV is already on (spec 0136)", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
     await user.click(within(controls()).getByRole("button", { name: /stop sharing/i }));
@@ -328,7 +326,7 @@ describe("room: sharing", () => {
   });
 
   it("keeps the settings in the corner beside fullscreen when nobody is live, the ways to start alone in the middle", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     renderRoom();
     await connected();
     const empty = await waitFor(() => stage().querySelector<HTMLElement>("[data-empty]")!);
@@ -343,7 +341,7 @@ describe("room: sharing", () => {
   });
 
   it("ends the stream when the browser's own Stop sharing bar is used", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
 
@@ -357,7 +355,7 @@ describe("room: sharing", () => {
 
   // AC-1: six streams at once; a seventh can't start, and the buttons say why.
   it("says the room is full of streams, and waits for a free place", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [1, 2, 3].flatMap((id) => [
       someoneSharing(`P${id}`, id, "screen"),
       someoneSharing(`P${id}`, id, "camera"),
@@ -382,7 +380,7 @@ describe("room: sharing", () => {
 
   // Every deploy restarts the API, which forgets the streams: mine is registered again.
   it("registers my screen again when the API forgot it", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
 
@@ -398,7 +396,7 @@ describe("room: sharing", () => {
   });
 
   it("stops my screen when the places filled up while the API forgot it", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
 
@@ -411,7 +409,7 @@ describe("room: sharing", () => {
   });
 
   it("ends my stream after a reload, when nothing is being sent", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [myOldStream()];
     renderRoom();
 
@@ -420,7 +418,7 @@ describe("room: sharing", () => {
   });
 
   it("shows the API's message when starting the stream fails, and stops the video", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.failures.set("POST /api/streams", {
       status: 403,
       body: { status: 403, detail: "Members only" },
@@ -434,11 +432,9 @@ describe("room: sharing", () => {
 });
 
 describe("room: what the screen is sent with", () => {
-  afterEach(() => localStorage.clear());
-
   it("captures the best quality and sends it with the mode's settings, capped at the chosen quality", async () => {
     localStorage.setItem("xove.share.quality", "720p");
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
 
@@ -457,7 +453,7 @@ describe("room: what the screen is sent with", () => {
   it("sends Sharp as detail, at the quality remembered from last time", async () => {
     localStorage.setItem("xove.share.quality", "480p");
     localStorage.setItem("xove.share.mode", "sharp");
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
 
@@ -468,7 +464,7 @@ describe("room: what the screen is sent with", () => {
   });
 
   it("tells the sharer when their browser gave no sound", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     lastRoom().localParticipant.nextPickerAudio = false;
 
@@ -478,7 +474,7 @@ describe("room: what the screen is sent with", () => {
   });
 
   it("says nothing about sound when it is being shared", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
 
@@ -487,10 +483,8 @@ describe("room: what the screen is sent with", () => {
 });
 
 describe("room: changing the stream while sharing", () => {
-  afterEach(() => localStorage.clear());
-
   it("changes the quality live from my player: same stream, and the API tells everyone", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
     const local = lastRoom().localParticipant;
@@ -511,7 +505,7 @@ describe("room: changing the stream while sharing", () => {
 
   it("can raise the quality again while sharing", async () => {
     localStorage.setItem("xove.share.quality", "480p");
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
     const video = lastRoom().localParticipant.screens[0].track;
@@ -525,7 +519,7 @@ describe("room: changing the stream while sharing", () => {
   });
 
   it("changes the mode live: marked for detail, keeping sharpness", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
     const video = lastRoom().localParticipant.screens[0].track;
@@ -538,7 +532,7 @@ describe("room: changing the stream while sharing", () => {
   });
 
   it("puts the old settings back when the API refuses the change", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.failures.set("POST /api/streams/screen/settings", {
       status: 409,
       body: { status: 409, detail: "Only the person sharing can change how their stream is sent." },
@@ -558,7 +552,7 @@ describe("room: changing the stream while sharing", () => {
   });
 
   it("stops everything when Stop is pressed after a change", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
     const local = lastRoom().localParticipant;
@@ -577,7 +571,7 @@ describe("room: changing the stream while sharing", () => {
 
 describe("room: the sharer sees what they send", () => {
   it("plays my own screen on the stage, without its sound", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
 
     await startSharing(user);
@@ -594,10 +588,8 @@ describe("room: the sharer sees what they send", () => {
 });
 
 describe("room: the viewer's quality and volume", () => {
-  afterEach(() => localStorage.clear());
-
   const watchBruno = async (options: { height?: number; withSound?: boolean; layers?: number } = {}) => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
     const view = renderRoom();
     await connected();
@@ -681,7 +673,7 @@ describe("room: the viewer's quality and volume", () => {
   });
 
   it("closes the settings when another stream takes the stage (spec 0123)", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7), someoneSharing("Ana Souza", 3)];
     renderRoom();
     await connected();
@@ -696,7 +688,7 @@ describe("room: the viewer's quality and volume", () => {
   });
 
   it("gives the sharer's own player nothing to hear; the cog opens the settings for what I send", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
 
@@ -709,10 +701,8 @@ describe("room: the viewer's quality and volume", () => {
 });
 
 describe("room: viewers follow the sharer's changes", () => {
-  afterEach(() => localStorage.clear());
-
   it("asks for Auto, at most the sharer's quality", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
     renderRoom();
     await connected();
@@ -746,7 +736,7 @@ describe("room: viewers follow the sharer's changes", () => {
 
 describe("room: the player's labels and bars", () => {
   it("show while the mouse moves over the player, and fade when it stops or leaves", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
     renderRoom();
     await connected();
@@ -771,7 +761,7 @@ describe("room: the player's labels and bars", () => {
 
 describe("room: the controls don't vanish under a still mouse", () => {
   async function playing() {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
     renderRoom();
     await connected();
@@ -784,8 +774,6 @@ describe("room: the controls don't vanish under a still mouse", () => {
     return frame;
   }
   afterEach(() => {
-    delete (document as { fullscreenElement?: unknown }).fullscreenElement;
-    vi.restoreAllMocks();
   });
 
   it("ignores a 'mouse left' while the player is fullscreen: there's nothing outside it", async () => {
@@ -808,7 +796,7 @@ describe("room: the controls don't vanish under a still mouse", () => {
 
 describe("room: my screen and camera buttons on the player (spec 0098)", () => {
   it("has no bar under the player: the buttons are on the stage, and never fade over an empty one", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     await readyRoom();
 
     expect(screen.queryByRole("region", { name: /screen sharing/i })).not.toBeInTheDocument();
@@ -819,7 +807,7 @@ describe("room: my screen and camera buttons on the player (spec 0098)", () => {
   });
 
   it("puts each control by its owner in the four states (spec 0123, AC-1)", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     renderRoom();
     await connected();
     const row = () =>
@@ -857,7 +845,7 @@ describe("room: my screen and camera buttons on the player (spec 0098)", () => {
   });
 
   it("fade with the player's bars over a stream", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
     renderRoom();
     await connected();
@@ -873,7 +861,7 @@ describe("room: my screen and camera buttons on the player (spec 0098)", () => {
   });
 
   it("stay while the settings are open", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
     const frame = (await screen.findByLabelText("Your shared screen")).closest("[data-chrome]")!;
@@ -895,7 +883,7 @@ describe("room: my screen and camera buttons on the player (spec 0098)", () => {
 
 describe("room: fullscreen (spec 0098)", () => {
   it("enters fullscreen, and leaves it with the same button", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
     renderRoom();
     await connected();
@@ -918,30 +906,26 @@ describe("room: fullscreen (spec 0098)", () => {
     document.exitFullscreen = exit;
     const user = userEvent.setup();
 
-    try {
-      await user.click(within(stage()).getByRole("button", { name: "Fullscreen" }));
-      expect(enter).toHaveBeenCalled();
+    await user.click(within(stage()).getByRole("button", { name: "Fullscreen" }));
+    expect(enter).toHaveBeenCalled();
 
-      await user.click(await within(stage()).findByRole("button", { name: "Exit fullscreen" }));
-      expect(exit).toHaveBeenCalled();
-      expect(enter).toHaveBeenCalledTimes(1);
-      expect(await within(stage()).findByRole("button", { name: "Fullscreen" })).toBeInTheDocument();
-    } finally {
-      delete (document as { fullscreenElement?: unknown }).fullscreenElement;
-    }
+    await user.click(await within(stage()).findByRole("button", { name: "Exit fullscreen" }));
+    expect(exit).toHaveBeenCalled();
+    expect(enter).toHaveBeenCalledTimes(1);
+    expect(await within(stage()).findByRole("button", { name: "Fullscreen" })).toBeInTheDocument();
   });
 });
 
 describe("room: fullscreen from the empty stage (spec 0111)", () => {
   it("has the fullscreen button with nobody live", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     renderRoom();
     await connected();
     expect(await within(stage()).findByRole("button", { name: "Fullscreen" })).toBeInTheDocument();
   });
 
   it("keeps it when the only stream stops in fullscreen, and it leaves fullscreen", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
     renderRoom();
     await connected();
@@ -961,24 +945,20 @@ describe("room: fullscreen from the empty stage (spec 0111)", () => {
     });
     document.exitFullscreen = exit;
     const user = userEvent.setup();
-    try {
-      await user.click(within(stage()).getByRole("button", { name: "Fullscreen" }));
-      act(() => {
-        server.streams = [];
-        lastRoom().unpublish("user-7", "screen_share");
-      });
-      expect(await screen.findByLabelText("0 of 6 live, 6 seats open")).toBeInTheDocument();
-      await user.click(await within(stage()).findByRole("button", { name: "Exit fullscreen" }));
-      expect(exit).toHaveBeenCalled();
-    } finally {
-      delete (document as { fullscreenElement?: unknown }).fullscreenElement;
-    }
+    await user.click(within(stage()).getByRole("button", { name: "Fullscreen" }));
+    act(() => {
+      server.streams = [];
+      lastRoom().unpublish("user-7", "screen_share");
+    });
+    expect(await screen.findByLabelText("0 of 6 live, 6 seats open")).toBeInTheDocument();
+    await user.click(await within(stage()).findByRole("button", { name: "Exit fullscreen" }));
+    expect(exit).toHaveBeenCalled();
   });
 });
 
 describe("room: the player's fullscreen while the whole page is fullscreen (spec 0160)", () => {
   it("puts the player fullscreen instead of leaving the page's", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
     renderRoom();
     await connected();
@@ -995,13 +975,9 @@ describe("room: the player's fullscreen while the whole page is fullscreen (spec
     const exit = vi.fn(async () => {});
     frame.requestFullscreen = enter;
     document.exitFullscreen = exit;
-    try {
-      await userEvent.setup().click(within(stage()).getByRole("button", { name: "Fullscreen" }));
-      expect(enter).toHaveBeenCalled();
-      expect(exit).not.toHaveBeenCalled();
-    } finally {
-      delete (document as { fullscreenElement?: unknown }).fullscreenElement;
-    }
+    await userEvent.setup().click(within(stage()).getByRole("button", { name: "Fullscreen" }));
+    expect(enter).toHaveBeenCalled();
+    expect(exit).not.toHaveBeenCalled();
   });
 });
 
@@ -1016,11 +992,10 @@ describe("room: starting from fullscreen (spec 0101)", () => {
     return frame;
   }
   afterEach(() => {
-    delete (document as { fullscreenElement?: unknown }).fullscreenElement;
   });
 
   it("starts from the fullscreen player, and keeps it fullscreen", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     const frame = enterFullscreen();
 
@@ -1030,7 +1005,7 @@ describe("room: starting from fullscreen (spec 0101)", () => {
   });
 
   it("shows a failed start over the fullscreen player too", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     const frame = enterFullscreen();
     lastRoom().localParticipant.nextPicker = "no-video";
@@ -1042,10 +1017,8 @@ describe("room: starting from fullscreen (spec 0101)", () => {
 });
 
 describe("room: change window and pick a camera (spec 0098)", () => {
-  afterEach(() => localStorage.clear());
-
   it("with the settings open, resting on the live screen button goes to Screen and cues Change (spec 0115)", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
     const real = window.matchMedia;
@@ -1059,11 +1032,10 @@ describe("room: change window and pick a camera (spec 0098)", () => {
     await waitFor(() => expect(panel.getByRole("tab", { name: (n) => n.startsWith("Screen") })).toHaveAttribute("aria-selected", "true"));
     expect(panel.getByRole("button", { name: "Change" }).querySelector("[data-cue]")).not.toBeNull();
     expect(stop.closest("[data-dropup]")).toHaveAttribute("data-open", "false");
-    vi.restoreAllMocks();
   });
 
   it("swaps what my screen shares from the settings, on the same stream", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     const local = lastRoom().localParticipant;
     local.nextPickerAudio = false;
@@ -1094,7 +1066,7 @@ describe("room: change window and pick a camera (spec 0098)", () => {
   });
 
   it("keeps my share when the picker is closed", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
     const local = lastRoom().localParticipant;
@@ -1108,7 +1080,7 @@ describe("room: change window and pick a camera (spec 0098)", () => {
   });
 
   it("switches my camera from the settings without stopping it", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     await user.click(within(controls()).getByRole("button", { name: /turn on your camera/i }));
     await waitFor(() => expect(myLiveStream(server, "camera")).toBeDefined());
@@ -1127,7 +1099,7 @@ describe("room: change window and pick a camera (spec 0098)", () => {
 
 describe("room: the player on touch screens and keyboards", () => {
   const watchBruno = async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
     const view = renderRoom();
     await connected();
@@ -1186,7 +1158,7 @@ describe("room: the player on touch screens and keyboards", () => {
   });
 
   it("doesn't hide anything over an empty stage", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     renderRoom();
     await screen.findByLabelText("0 of 6 live, 6 seats open");
 
@@ -1195,10 +1167,8 @@ describe("room: the player on touch screens and keyboards", () => {
 });
 
 describe("room: quick changes while sharing", () => {
-  afterEach(() => localStorage.clear());
-
   it("applies changes in order, and the last one wins everywhere", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
     const video = lastRoom().localParticipant.screens[0].track;
@@ -1222,7 +1192,7 @@ describe("room: waiting for a seat", () => {
     ({ status: "offered", until: new Date(Date.now() + seconds * 1000).toISOString(), seconds }) as const;
 
   it("waits with its place in the queue when the room is full, without joining the video", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.seat = { status: "waiting", place: 3 };
     renderRoom();
 
@@ -1236,7 +1206,7 @@ describe("room: waiting for a seat", () => {
   });
 
   it("offers the seat in a popup with a countdown, and Enter room takes it", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.seat = { status: "waiting", place: 1 };
     renderRoom();
     await screen.findByText(/you're next/i);
@@ -1258,7 +1228,7 @@ describe("room: waiting for a seat", () => {
   });
 
   it("leaves the queue on Cancel, and can join it again", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.seat = offered(60);
     renderRoom();
     const offer = await screen.findByRole("dialog", { name: /it's your turn/i });
@@ -1278,7 +1248,7 @@ describe("room: waiting for a seat", () => {
   });
 
   it("goes back to waiting when the offer runs out", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.seat = offered(1);
     renderRoom();
     await screen.findByRole("dialog", { name: /it's your turn/i });
@@ -1292,7 +1262,7 @@ describe("room: waiting for a seat", () => {
   });
 
   it("tells the API when the waiting tab closes, so the place is kept for a while", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.seat = { status: "waiting", place: 2 };
     renderRoom();
     await screen.findByText(/you're number 2 in line/i);
@@ -1308,7 +1278,7 @@ describe("room: waiting for a seat", () => {
   });
 
   it("enters again when the API forgot the seat (after a restart), staying in the room", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     renderRoom();
     await connected();
     const room = lastRoom();
@@ -1328,7 +1298,7 @@ describe("room: waiting for a seat", () => {
   });
 
   it("goes to the queue when the API forgot the seat and the room filled up", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     renderRoom();
     await connected();
     const room = lastRoom();
@@ -1347,8 +1317,6 @@ describe("room: waiting for a seat", () => {
 // ---- cameras (spec 0060) ----
 
 describe("room: my camera", () => {
-  afterEach(() => localStorage.clear());
-
   /** Clicks "Turn on your camera": it's sent at once (spec 0107). */
   async function turnOnCamera(user: User) {
     await user.click(within(controls()).getByRole("button", { name: /turn on your camera/i }));
@@ -1357,7 +1325,7 @@ describe("room: my camera", () => {
 
   // AC-3
   it("asks for the camera only after the click, never for a microphone, and sends it at once", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     const local = lastRoom().localParticipant;
     expect(local.createTracks).not.toHaveBeenCalled();
@@ -1372,7 +1340,7 @@ describe("room: my camera", () => {
   });
 
   it("starts at 720p the first time, and with the settings remembered after that", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     await turnOnCamera(user);
     await waitFor(() => expect(myLiveStream(server, "camera")).toBeDefined());
@@ -1386,7 +1354,7 @@ describe("room: my camera", () => {
 
   // Spec 0107: the Camera tab's preview.
   it("turns the camera on for the settings' preview only, and off when they close", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     const local = lastRoom().localParticipant;
 
@@ -1403,7 +1371,7 @@ describe("room: my camera", () => {
   });
 
   it("asks for the camera when the tab opens, and says how to allow it when it's refused", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     lastRoom().localParticipant.nextCamera = "NotAllowedError";
 
@@ -1414,7 +1382,7 @@ describe("room: my camera", () => {
   });
 
   it("sends the preview's camera as is when the camera button is pressed: no second ask", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     const local = lastRoom().localParticipant;
     await openMenu(user, "Camera");
@@ -1432,7 +1400,7 @@ describe("room: my camera", () => {
 
   it("starts with the camera settings remembered from last time", async () => {
     localStorage.setItem("xove.camera.quality", "480p");
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     await turnOnCamera(user);
     await waitFor(() => expect(myLiveStream(server, "camera")).toBeDefined());
@@ -1443,7 +1411,7 @@ describe("room: my camera", () => {
 
   // AC-2
   it("shares the screen and the camera together, as 2 of the 6 places", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
 
     await startSharing(user);
@@ -1455,7 +1423,7 @@ describe("room: my camera", () => {
   });
 
   it("turns the camera off: stops sending it and ends its stream, the screen stays", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
     await turnOnCamera(user);
@@ -1473,7 +1441,7 @@ describe("room: my camera", () => {
   });
 
   it("says so when the browser blocks the camera, and sends nothing", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     lastRoom().localParticipant.nextCamera = "NotAllowedError";
 
@@ -1485,7 +1453,7 @@ describe("room: my camera", () => {
   });
 
   it("says so when there's no camera", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     lastRoom().localParticipant.nextCamera = "NotFoundError";
 
@@ -1495,7 +1463,7 @@ describe("room: my camera", () => {
   });
 
   it("shows someone's camera on the stage when that's all they share", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7, "camera")];
     renderRoom();
     await connected();
@@ -1517,7 +1485,7 @@ describe("room: several people sharing", () => {
   const thumbnails = () => screen.getByRole("list", { name: /other streams/i });
 
   async function threeSharing() {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [
       someoneSharing("Ana Souza", 3, "screen", undefined, minutesAgo(10)),
       someoneSharing("Bruno Lima", 7, "screen", undefined, minutesAgo(5)),
@@ -1571,7 +1539,7 @@ describe("room: several people sharing", () => {
   });
 
   it("shows no previews with one sharer, just the seats", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Ana Souza", 3)];
     renderRoom();
     await screen.findByRole("heading", { name: "Ana" });
@@ -1597,7 +1565,7 @@ describe("room: several people sharing", () => {
 
 describe("room: the facecam", () => {
   async function brunoWithBoth() {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7, "screen"), someoneSharing("Bruno Lima", 7, "camera")];
     renderRoom();
     await connected();
@@ -1670,7 +1638,7 @@ describe("room: the facecam", () => {
   });
 
   it("works on the sharer's own preview too", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
     await user.click(within(controls()).getByRole("button", { name: /turn on your camera/i }));
@@ -1686,7 +1654,7 @@ describe("room: the facecam", () => {
 
 describe("room: theater mode (spec 0104)", () => {
   it("has no sidebar or old header: a logo, the activity pill, people and account up top, and the footer", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     renderRoom();
     await connected();
 
@@ -1709,7 +1677,7 @@ describe("room: theater mode (spec 0104)", () => {
   });
 
   it("with nobody live: the empty stage, no light, and the info row says so", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     renderRoom();
     await connected();
 
@@ -1721,7 +1689,7 @@ describe("room: theater mode (spec 0104)", () => {
   });
 
   it("puts a stream from the activity list on the stage, a camera event with the camera big", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     renderRoom();
     await connected();
     act(() => {
@@ -1745,7 +1713,7 @@ describe("room: theater mode (spec 0104)", () => {
   });
 
   it("shows who watches what in the people panel", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
     server.watching = [{ userId: 3, sharerId: 7, kind: "screen", mine: false }];
     renderRoom();
@@ -1767,7 +1735,7 @@ describe("room: theater mode (spec 0104)", () => {
 describe("room: what's on my stage is reported (spec 0104)", () => {
   const minutesAgo = (m: number) => new Date(Date.now() - m * 60_000);
   async function anaAndBruno() {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [
       someoneSharing("Ana Souza", 3, "screen", undefined, minutesAgo(10)),
       someoneSharing("Bruno Lima", 7, "screen", undefined, minutesAgo(5)),
@@ -1804,7 +1772,7 @@ describe("room: what's on my stage is reported (spec 0104)", () => {
   });
 
   it("tries a failed report again a moment later", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.failures.set("PUT /api/streams/watching", { status: 503, body: { status: 503, detail: "Deploying" } });
     server.streams = [someoneSharing("Ana Souza", 3)];
     renderRoom();
@@ -1820,7 +1788,7 @@ describe("room: what's on my stage is reported (spec 0104)", () => {
   }, 12000);
 
   it("reports nothing while the stream is still loading", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Ana Souza", 3)];
     renderRoom();
     await connected();
@@ -1856,7 +1824,7 @@ describe("room: whose sound plays", () => {
   const thumbnails = () => screen.getByRole("list", { name: /other streams/i });
 
   async function anaAndBrunoWithSound() {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [
       someoneSharing("Ana Souza", 3, "screen", undefined, minutesAgo(10)),
       someoneSharing("Bruno Lima", 7, "screen", undefined, minutesAgo(5)),
@@ -1929,7 +1897,7 @@ describe("room: whose sound plays", () => {
 
   it("locks a screen without sound on mute, for the big player and a thumbnail, until it gets sound (spec 0098)", async () => {
     localStorage.setItem("xove.watch.volume", "0.6");
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [
       someoneSharing("Ana Souza", 3, "screen", undefined, minutesAgo(10)),
       someoneSharing("Bruno Lima", 7, "screen", undefined, minutesAgo(5)),
@@ -1960,11 +1928,10 @@ describe("room: whose sound plays", () => {
     const slider = within(stage()).getByRole("slider", { name: "Screen sound volume" });
     await waitFor(() => expect(slider.closest("[inert]")).toBeNull());
     expect(slider).toHaveValue("0.6");
-    localStorage.clear();
   });
 
   it("greys a camera's screen sound, and its voice while the mic is off (spec 0123)", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [
       someoneSharing("Ana Souza", 3, "camera", undefined, minutesAgo(10)),
       someoneSharing("Bruno Lima", 7, "camera", undefined, minutesAgo(5)),
@@ -2022,10 +1989,8 @@ describe("room: whose sound plays", () => {
 });
 
 describe("room: my settings for each of my streams", () => {
-  afterEach(() => localStorage.clear());
-
   it("changes the camera's quality live from the settings, apart from the screen's", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
     await user.click(within(controls()).getByRole("button", { name: /turn on your camera/i }));
@@ -2049,7 +2014,7 @@ describe("room: my settings for each of my streams", () => {
 
 describe("room: the feed names each stream", () => {
   it("says when someone turns their camera on and off", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     renderRoom();
     await connected();
 
@@ -2068,12 +2033,11 @@ describe("room: the feed names each stream", () => {
 // ---- found in review (spec 0060) ----
 
 describe("room: after the review", () => {
-  afterEach(() => localStorage.clear());
   const minutesAgo = (m: number) => new Date(Date.now() - m * 60_000);
   const thumbnails = () => screen.getByRole("list", { name: /other streams/i });
 
   it("keeps sending my screen when registering it again fails for another reason, and tries again", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
     server.failures.set("POST /api/streams", { status: 503, body: { status: 503, detail: "Starting up" } });
@@ -2090,7 +2054,7 @@ describe("room: after the review", () => {
   });
 
   it("puts a refused screen change back even when the camera changes right after", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
     await user.click(within(controls()).getByRole("button", { name: /turn on your camera/i }));
@@ -2113,7 +2077,7 @@ describe("room: after the review", () => {
   });
 
   it("forgets a viewer's pick once that person stops, even if they share again later", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [
       someoneSharing("Ana Souza", 3, "screen", undefined, minutesAgo(10)),
       someoneSharing("Bruno Lima", 7, "screen", undefined, minutesAgo(5)),
@@ -2137,7 +2101,7 @@ describe("room: after the review", () => {
   });
 
   it("swaps the facecam for one person only", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [
       someoneSharing("Ana Souza", 3, "screen", undefined, minutesAgo(10)),
       someoneSharing("Ana Souza", 3, "camera", undefined, minutesAgo(10)),
@@ -2177,7 +2141,7 @@ describe("room: the stage hugs the picture (spec 0107)", () => {
     });
 
   it("is 16:9 while empty and while a stream loads, then takes the picture's shape", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     renderRoom();
     await connected();
     await screen.findByLabelText("0 of 6 live, 6 seats open");
@@ -2202,7 +2166,7 @@ describe("room: the stage hugs the picture (spec 0107)", () => {
 
 describe("room: under the stage (spec 0107)", () => {
   it("shows who's watching the stage: me included, never the sharer", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
     // Ana watches Bruno; Bruno's own stage shows himself, which doesn't count.
     server.watching = [
@@ -2223,7 +2187,7 @@ describe("room: under the stage (spec 0107)", () => {
   });
 
   it("invites someone to go live on an empty stage, naming who's here", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     renderRoom();
     await connected();
     expect(await screen.findByText("Nobody else is here yet.")).toBeInTheDocument();
@@ -2263,15 +2227,9 @@ function phoneWindow(upright = true) {
 }
 
 describe("room: on a phone held upright (spec 0158)", () => {
-  const desktopMatchMedia = window.matchMedia;
-  afterEach(() => {
-    window.matchMedia = desktopMatchMedia;
-    vi.restoreAllMocks();
-  });
-
   it("has the wordmark, then people, the bell and my account at the far right, and no footer", async () => {
     phoneWindow();
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const { container } = renderRoom();
     await connected();
 
@@ -2301,7 +2259,7 @@ describe("room: on a phone held upright (spec 0158)", () => {
       addEventListener: () => {},
       removeEventListener: () => {},
     })) as unknown as typeof window.matchMedia;
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     renderRoom();
     await connected();
     const user = userEvent.setup();
@@ -2319,14 +2277,15 @@ describe("room: on a phone held upright (spec 0158)", () => {
   });
 
   it("never leaves the round buttons behind the settings sheet with a tall player (spec 0118)", async () => {
+    const desktop = window.matchMedia;
     window.matchMedia = ((query: string) => ({
-      ...desktopMatchMedia(query),
+      ...desktop(query),
       matches: [TOUCH_QUERY, SMALL_QUERY, PORTRAIT_QUERY, NARROW_UPRIGHT_QUERY].includes(query),
       media: query,
       addEventListener: () => {},
       removeEventListener: () => {},
     })) as unknown as typeof window.matchMedia;
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     renderRoom();
     await connected();
     const user = userEvent.setup();
@@ -2359,7 +2318,7 @@ describe("room: on a phone held upright (spec 0158)", () => {
 
   it("puts the footer's items at the end of my account menu", async () => {
     phoneWindow();
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     renderRoom();
     const user = userEvent.setup();
     await user.click(await connected());
@@ -2368,7 +2327,7 @@ describe("room: on a phone held upright (spec 0158)", () => {
 
   it("with nobody live, says so and lists who's here as cards", async () => {
     phoneWindow();
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.here = [{ userId: MY_USER_ID, since: new Date(Date.now() - 5 * 60_000).toISOString(), mine: true }];
     renderRoom();
     await connected();
@@ -2382,7 +2341,7 @@ describe("room: on a phone held upright (spec 0158)", () => {
 
   it("with someone live, shows them under the stage and the others in the feed, which stays silent", async () => {
     phoneWindow();
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7), someoneSharing("Ana Souza", 3)];
     renderRoom();
     await connected();
@@ -2408,7 +2367,7 @@ describe("room: on a phone held upright (spec 0158)", () => {
 
   it("has no LIVE badge over the stage: LIVE is in the line under it", async () => {
     phoneWindow();
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
     renderRoom();
     await connected();
@@ -2424,7 +2383,7 @@ describe("room: on a phone held upright (spec 0158)", () => {
 
   it("keeps the same video playing when the phone turns", async () => {
     const win = phoneWindow();
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
     renderRoom();
     await connected();
@@ -2444,19 +2403,12 @@ describe("room: on a phone held upright (spec 0158)", () => {
 });
 
 describe("room: the empty stage glows (spec 0123)", () => {
-  const desktopMatchMedia = window.matchMedia;
-  afterEach(() => {
-    window.matchMedia = desktopMatchMedia;
-    localStorage.clear();
-    vi.restoreAllMocks();
-  });
-
   it.each([
     ["on desktop", false],
     ["on a phone", true],
   ])("lights its corners at the ambilight's brightness %s, with no ambilight canvas", async (_, upright) => {
     if (upright) phoneWindow();
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const { container } = renderRoom();
     await connected();
     const glow = container.querySelector("[data-corner-glow]") as HTMLElement;
@@ -2467,7 +2419,7 @@ describe("room: the empty stage glows (spec 0123)", () => {
 
   it("goes dark with the ambilight switched off", async () => {
     localStorage.setItem("xove.ambilight.on", "false");
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const { container } = renderRoom();
     await connected();
     expect((container.querySelector("[data-corner-glow]") as HTMLElement).style.opacity).toBe("0");
@@ -2475,17 +2427,11 @@ describe("room: the empty stage glows (spec 0123)", () => {
 });
 
 describe("room: swiping the phone's stage (spec 0159)", () => {
-  const desktopMatchMedia = window.matchMedia;
-  afterEach(() => {
-    window.matchMedia = desktopMatchMedia;
-    vi.restoreAllMocks();
-  });
-
   /** Three people sharing their screens, in this order (the longest first), on a phone. */
   async function threeLive(withSound = false) {
     phoneWindow();
     vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({ width: 400, height: 225 } as DOMRect);
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const ago = (s: number) => new Date(Date.now() - s * 1000);
     server.streams = [
       someoneSharing("Marina", 2, "screen", undefined, ago(300)),
@@ -2547,7 +2493,7 @@ describe("room: swiping the phone's stage (spec 0159)", () => {
   it("leaves the stage alone when the drag starts on the facecam", async () => {
     phoneWindow();
     vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({ width: 400, height: 225 } as DOMRect);
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [
       someoneSharing("Bruno", 7, "screen", undefined, new Date(Date.now() - 300_000)),
       someoneSharing("Bruno", 7, "camera", undefined, new Date(Date.now() - 300_000)),
@@ -2600,7 +2546,7 @@ describe("room: swiping the phone's stage (spec 0159)", () => {
 
   it("doesn't swipe on the desktop layout", async () => {
     vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({ width: 400, height: 225 } as DOMRect);
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Marina", 2, "screen", undefined, new Date(Date.now() - 300_000)), someoneSharing("Rafa", 3)];
     renderRoom();
     await connected();
@@ -2652,16 +2598,10 @@ function phoneSideways() {
 }
 
 describe("room: on a phone sideways (spec 0160)", () => {
-  const desktopMatchMedia = window.matchMedia;
-  afterEach(() => {
-    window.matchMedia = desktopMatchMedia;
-    vi.restoreAllMocks();
-  });
-
   async function sidewaysWith(names: string[], withSound = false) {
     const phone = phoneSideways();
     vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({ width: 732, height: 412 } as DOMRect);
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = names.map((n, i) => someoneSharing(n, i + 2, "screen", undefined, new Date(Date.now() - (300 - i * 50) * 1000)));
     const view = renderRoom();
     await connected();
@@ -2711,7 +2651,7 @@ describe("room: on a phone sideways (spec 0160)", () => {
 
   it("with nobody live, shows the camera waiting, Nobody is sharing yet and the seats, and the camera button", async () => {
     phoneSideways();
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     renderRoom();
     await connected();
     expect(screen.getByRole("heading", { name: "Nobody is sharing yet" })).toBeInTheDocument();
@@ -2799,7 +2739,7 @@ describe("room: on a phone sideways (spec 0160)", () => {
   it("opens the row only from a drag on the picture, not the black sides or the facecam", async () => {
     phoneSideways();
     vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({ width: 732, height: 412 } as DOMRect);
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [
       someoneSharing("Bruno", 7, "screen", undefined, new Date(Date.now() - 300_000)),
       someoneSharing("Bruno", 7, "camera", undefined, new Date(Date.now() - 300_000)),
@@ -2822,7 +2762,7 @@ describe("room: on a phone sideways (spec 0160)", () => {
   it("doesn't open the row from the empty stage, and has no tab with nobody else live", async () => {
     phoneSideways();
     vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({ width: 732, height: 412 } as DOMRect);
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     renderRoom();
     await connected();
     const empty = stageLayer().querySelector("[data-empty]")!;
@@ -2877,17 +2817,11 @@ describe("room: on a phone sideways (spec 0160)", () => {
 });
 
 describe("room: the full-screen view on a phone (spec 0171)", () => {
-  const desktopMatchMedia = window.matchMedia;
-  afterEach(() => {
-    window.matchMedia = desktopMatchMedia;
-    vi.restoreAllMocks();
-  });
-
   /** A phone held upright, someone live. */
   async function upright() {
     const phone = phoneSideways();
     phone.turn();
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Marina", 2), someoneSharing("Rafa", 3)];
     const view = renderRoom();
     await connected();
@@ -2930,7 +2864,7 @@ describe("room: the full-screen view on a phone (spec 0171)", () => {
   it("keeps the button when the only stream stops in the full view, and it leaves it (spec 0111)", async () => {
     const phone = phoneSideways();
     phone.turn();
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Marina", 2)];
     const view = renderRoom();
     await connected();
@@ -2955,7 +2889,7 @@ describe("room: the full-screen view on a phone (spec 0171)", () => {
   it("puts the facecam under the top bar on entering the full view (spec 0111)", async () => {
     const phone = phoneSideways();
     phone.turn();
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Marina", 2, "screen"), someoneSharing("Marina", 2, "camera")];
     renderRoom();
     await connected();
@@ -3017,11 +2951,10 @@ describe("room: the full-screen view on a phone (spec 0171)", () => {
 });
 
 describe("room: my voice (spec 0123)", () => {
-  afterEach(() => localStorage.clear());
   const mic = () => lastRoom().localParticipant.mic;
 
   it("shows my mic only while I'm live, off at first, and turns my voice on and off; it takes no place", async () => {
-    const server = installFakeApi({ me: member });
+    const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     expect(within(stage()).queryByRole("button", { name: /your voice/i })).not.toBeInTheDocument();
 
@@ -3038,7 +2971,7 @@ describe("room: my voice (spec 0123)", () => {
   });
 
   it("asks for the mic once, however fast the mic button is tapped twice", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
     const local = lastRoom().localParticipant;
@@ -3051,7 +2984,7 @@ describe("room: my voice (spec 0123)", () => {
   });
 
   it("leaves the voice off and says how to allow it when the browser blocks the mic", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
     lastRoom().localParticipant.nextMic = "NotAllowedError";
@@ -3062,7 +2995,7 @@ describe("room: my voice (spec 0123)", () => {
   });
 
   it("turns the voice off when my last stream stops: a voice never travels alone", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
     await user.click(within(stage()).getByRole("button", { name: "Share your voice" }));
@@ -3072,7 +3005,7 @@ describe("room: my voice (spec 0123)", () => {
   });
 
   it("the Voice tab: the mic picked and its processing, applied live and remembered; the line moves without a restart", async () => {
-    installFakeApi({ me: member });
+    installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
     await user.click(within(stage()).getByRole("button", { name: "Share your voice" }));

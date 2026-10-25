@@ -1,16 +1,19 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { aUser, installFakeApi, MY_USER_ID, someoneSharing } from "../test/fakeApi";
 import { ConnectionState, lastRoom, RoomEvent } from "../test/fakeLiveKit";
 import type { Friend } from "../types";
 import { useRoomSession } from "./useRoomSession";
 
-const me: Friend = { id: "me", name: "Henrique", hue: 36, online: true };
-const member = aUser({ name: "Henrique Brauveres", status: "MEMBER" });
+const me = (): Friend => ({ id: "me", name: "Henrique", hue: 36, online: true });
+const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
 
+// The session polls the API every 50 ms here: on fake timers, so waitFor moves the polls along.
 async function session() {
-  const server = installFakeApi({ me: member });
-  const hook = renderHook(() => useRoomSession(me, 50));
+  vi.useFakeTimers();
+  const server = installFakeApi({ me: member() });
+  const self = me();
+  const hook = renderHook(() => useRoomSession(self, 50));
   await waitFor(() => expect(hook.result.current.connection).toBe("connected"));
   return { server, hook };
 }
