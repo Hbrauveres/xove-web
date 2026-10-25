@@ -12,6 +12,10 @@ import { fakeCameras, fakeMics, resetFakeLiveKit, rooms } from "./fakeLiveKit";
 // timers, and a stuck test fails fast instead of hiding for seconds.
 configure({ asyncUtilTimeout: 1000 });
 
+// Testing Library moves fake timers along while findBy and waitFor wait, but only when it sees Jest's
+// global: this one hands it Vitest's, so a test on a fake clock (factories/clock.factory.ts) waits the same way.
+(globalThis as { jest?: unknown }).jest = { advanceTimersByTime: (ms: number) => vi.advanceTimersByTime(ms) };
+
 // No WebRTC in jsdom: every test gets the fake LiveKit instead of the real package.
 vi.mock("livekit-client", () => import("./fakeLiveKit"));
 
@@ -20,6 +24,7 @@ vi.mock("livekit-client", () => import("./fakeLiveKit"));
  * state in the app gets a reset beside it, called here. */
 afterEach(() => {
   cleanup();
+  document.body.innerHTML = "";
   vi.useRealTimers();
   localStorage.clear();
   sessionStorage.clear();
