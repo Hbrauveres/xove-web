@@ -25,6 +25,10 @@ const EDGE = 8;
 let warmUntil = 0;
 /** Whether a tooltip just hid, so the next one shows at once. */
 const warm = () => Date.now() < warmUntil;
+/** Only for tests: no tooltip hid just now, so the next one waits for its rest. */
+export function resetTooltipWarmth() {
+  warmUntil = 0;
+}
 /** Hands an element to a ref of either kind. */
 function assignRef<T>(ref: Ref<T> | undefined, el: T | null) {
   if (typeof ref === "function") ref(el);

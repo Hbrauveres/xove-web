@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { TIP_REST_MS, Tooltip } from "./Tooltip";
+import { resetTooltipWarmth, TIP_REST_MS, Tooltip } from "./Tooltip";
 
 beforeEach(() => vi.useFakeTimers());
 afterEach(() => vi.useRealTimers());
@@ -40,6 +40,16 @@ describe("the app's one tooltip (spec 0133)", () => {
     fireEvent.pointerLeave(camera, { pointerType: "mouse" });
     fireEvent.pointerEnter(cog, { pointerType: "mouse" });
     expect(shown()).toHaveTextContent("Settings");
+  });
+
+  it("waits for its rest again once reset, however recently another one hid", () => {
+    const { camera, cog } = setup();
+    fireEvent.pointerEnter(camera, { pointerType: "mouse" });
+    act(() => vi.advanceTimersByTime(TIP_REST_MS));
+    fireEvent.pointerLeave(camera, { pointerType: "mouse" });
+    resetTooltipWarmth();
+    fireEvent.pointerEnter(cog, { pointerType: "mouse" });
+    expect(shown()).toBeNull();
   });
 
   it("shows only one at a time", () => {

@@ -5,19 +5,22 @@ let kept: InstallPrompt | null = null;
 const installed = new Set<() => void>();
 let listening = false;
 
+const onOffered = (e: Event) => {
+  // Kept for the "Get Xovê" button, instead of the browser's own mini bar.
+  e.preventDefault();
+  kept = e as InstallPrompt;
+};
+const onAppInstalled = () => {
+  kept = null;
+  installed.forEach((f) => f());
+};
+
 /** Starts listening, once, as early as the page loads (`main.tsx`). */
 export function listenForInstall() {
   if (listening) return;
   listening = true;
-  window.addEventListener("beforeinstallprompt", (e) => {
-    // Kept for the "Get Xovê" button, instead of the browser's own mini bar.
-    e.preventDefault();
-    kept = e as InstallPrompt;
-  });
-  window.addEventListener("appinstalled", () => {
-    kept = null;
-    installed.forEach((f) => f());
-  });
+  window.addEventListener("beforeinstallprompt", onOffered);
+  window.addEventListener("appinstalled", onAppInstalled);
 }
 
 /** The prompt the browser offered, if any. */
@@ -49,4 +52,13 @@ export function onInstalled(f: () => void) {
 /** Only for tests. */
 export function forgetPrompt() {
   kept = null;
+}
+
+/** Only for tests: no prompt kept, nobody waiting for the install, and not listening. */
+export function resetInstallPrompt() {
+  window.removeEventListener("beforeinstallprompt", onOffered);
+  window.removeEventListener("appinstalled", onAppInstalled);
+  kept = null;
+  installed.clear();
+  listening = false;
 }

@@ -26,6 +26,11 @@ export function dismissFloating(keep?: () => void) {
   }
 }
 
+/** Only for tests: nothing floats, and nothing is closed on the way. */
+export function resetFloating() {
+  current = null;
+}
+
 /** Whether `node` is inside what floats now: then it belongs to it and mustn't close it. */
 export function insideFloating(node: Node | null) {
   return Boolean(node && current?.area?.contains(node));
