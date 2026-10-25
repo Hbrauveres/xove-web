@@ -1,52 +1,50 @@
 import { act, render } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { easeFor, glowLayout } from "../../media/ambilight";
 import { Ambilight, EASE_MS, SLOW_EASE, SLOW_SAMPLE_MS } from "./Ambilight";
 
+type Recorded = { pictureDraws: number; pixelReads: number; blurs: string[]; composites: string[]; masks: number; alphas: number[] };
+
 /**
- * jsdom has no canvas: a 2D context that records what the ambilight asks of it. `pictureDraws`
- * counts updates (each draws the video nine times); `getImageData` must never be called.
+ * jsdom has no canvas: a 2D context that records what the ambilight asks of it, in `rec`.
+ * `pictureDraws` counts updates (each draws the video nine times); `getImageData` must never be called.
  */
-let pictureDraws = 0;
-let pixelReads = 0;
-let blurs: string[] = [];
-let composites: string[] = [];
-let masks = 0;
-let alphas: number[] = [];
-function fakeContext(this: HTMLCanvasElement) {
-  return {
-    canvas: this,
-    _alpha: 1,
-    set globalAlpha(a: number) {
-      this._alpha = a;
-      alphas.push(a);
-    },
-    get globalAlpha() {
-      return this._alpha;
-    },
-    _filter: "none",
-    set filter(f: string) {
-      this._filter = f;
-      if (f.startsWith("blur")) blurs.push(f);
-    },
-    get filter() {
-      return this._filter;
-    },
-    set globalCompositeOperation(op: string) {
-      composites.push(op);
-    },
-    clearRect: () => {},
-    drawImage: (source: unknown) => {
-      if (source instanceof HTMLVideoElement) pictureDraws++;
-    },
-    createImageData: (w: number, h: number) => ({ width: w, height: h, data: new Uint8ClampedArray(w * h * 4) }),
-    putImageData: () => {
-      masks++;
-    },
-    getImageData: () => {
-      pixelReads++;
-      return { data: new Uint8ClampedArray(4) };
-    },
+function fakeContext(rec: Recorded) {
+  return function (this: HTMLCanvasElement) {
+    return {
+      canvas: this,
+      _alpha: 1,
+      set globalAlpha(a: number) {
+        this._alpha = a;
+        rec.alphas.push(a);
+      },
+      get globalAlpha() {
+        return this._alpha;
+      },
+      _filter: "none",
+      set filter(f: string) {
+        this._filter = f;
+        if (f.startsWith("blur")) rec.blurs.push(f);
+      },
+      get filter() {
+        return this._filter;
+      },
+      set globalCompositeOperation(op: string) {
+        rec.composites.push(op);
+      },
+      clearRect: () => {},
+      drawImage: (source: unknown) => {
+        if (source instanceof HTMLVideoElement) rec.pictureDraws++;
+      },
+      createImageData: (w: number, h: number) => ({ width: w, height: h, data: new Uint8ClampedArray(w * h * 4) }),
+      putImageData: () => {
+        rec.masks++;
+      },
+      getImageData: () => {
+        rec.pixelReads++;
+        return { data: new Uint8ClampedArray(4) };
+      },
+    };
   };
 }
 
@@ -59,24 +57,18 @@ function playingVideo(playing = true) {
   return video;
 }
 
-/** Updates so far: each one draws the picture nine times. */
-const updates = () => pictureDraws / 9;
-
-let hidden = false;
-beforeEach(() => {
-  pictureDraws = pixelReads = masks = 0;
-  alphas = [];
-  blurs = [];
-  composites = [];
-  hidden = false;
+/**
+ * Each test's own canvas, tab and clock: fake timers (animation frames included), a recorded 2D
+ * context, and the tab's visibility to set. `updates()` is how many times the light was drawn.
+ */
+function setup() {
+  const rec: Recorded = { pictureDraws: 0, pixelReads: 0, blurs: [], composites: [], masks: 0, alphas: [] };
+  const tab = { hidden: false };
   vi.useFakeTimers({ toFake: ["setTimeout", "setInterval", "clearInterval", "requestAnimationFrame", "cancelAnimationFrame", "performance"] });
-  vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockImplementation(fakeContext as never);
-  Object.defineProperty(document, "hidden", { configurable: true, get: () => hidden });
-});
-afterEach(() => {
-  vi.useRealTimers();
-  vi.restoreAllMocks();
-});
+  vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockImplementation(fakeContext(rec) as never);
+  vi.spyOn(document, "hidden", "get").mockImplementation(() => tab.hidden);
+  return { rec, tab, updates: () => rec.pictureDraws / 9 };
+}
 
 const advance = (ms: number) =>
   act(() => {
@@ -85,6 +77,7 @@ const advance = (ms: number) =>
 
 describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () => {
   it("updates once per screen refresh while the video plays, about 60 times a second", () => {
+    const { updates } = setup();
     render(<Ambilight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
     advance(1000);
     expect(updates()).toBeGreaterThanOrEqual(55);
@@ -92,23 +85,26 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
   });
 
   it("never reads the picture's pixels: it only draws, so any stream gets its light", () => {
+    const { rec, updates } = setup();
     render(<Ambilight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
     advance(500);
-    expect(pixelReads).toBe(0);
+    expect(rec.pixelReads).toBe(0);
     expect(updates()).toBeGreaterThan(0);
   });
 
   it("blurs the edges once per update, then cuts them with the fade mask made once", () => {
+    const { rec, updates } = setup();
     render(<Ambilight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
     advance(200);
-    expect(masks).toBe(1);
-    expect(blurs.length).toBeGreaterThanOrEqual(updates());
-    expect(composites).toContain("destination-in");
+    expect(rec.masks).toBe(1);
+    expect(rec.blurs.length).toBeGreaterThanOrEqual(updates());
+    expect(rec.composites).toContain("destination-in");
   });
 
   it("draws nothing while the tab is hidden, and starts again when it's back", () => {
+    const { tab, updates } = setup();
     render(<Ambilight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
-    hidden = true;
+    tab.hidden = true;
     act(() => {
       document.dispatchEvent(new Event("visibilitychange"));
     });
@@ -116,7 +112,7 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
     advance(1000);
     expect(updates() - before).toBeLessThanOrEqual(1);
 
-    hidden = false;
+    tab.hidden = false;
     act(() => {
       document.dispatchEvent(new Event("visibilitychange"));
     });
@@ -125,6 +121,7 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
   });
 
   it("draws nothing, and fades the light out, when the video is paused; no light without a video", () => {
+    const { updates } = setup();
     const { container, rerender } = render(
       <Ambilight video={playingVideo(false)} prefs={{ on: true, brightness: 0.9 }} />,
     );
@@ -137,6 +134,7 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
   });
 
   it("stops drawing when a playing video is paused", () => {
+    const { updates } = setup();
     const video = playingVideo();
     let playing = true;
     Object.defineProperty(video, "paused", { configurable: true, get: () => !playing });
@@ -156,6 +154,7 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
   });
 
   it("draws nothing, and fades out, when switched off", () => {
+    const { updates } = setup();
     const { container } = render(<Ambilight video={playingVideo()} prefs={{ on: false, brightness: 0.9 }} />);
     advance(1000);
     expect(updates()).toBe(0);
@@ -163,6 +162,7 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
   });
 
   it("shows the light at the chosen brightness", () => {
+    setup();
     const { container, rerender } = render(<Ambilight video={playingVideo()} prefs={{ on: true, brightness: 0.4 }} />);
     advance(200);
     expect(container.querySelector("canvas")).toHaveStyle({ opacity: "0.4" });
@@ -172,6 +172,7 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
   });
 
   it("updates slowly when the system asks for reduced motion", () => {
+    const { rec, updates } = setup();
     vi.spyOn(window, "matchMedia").mockImplementation(
       (query: string) => ({ matches: query.includes("reduce"), addEventListener() {}, removeEventListener() {} }) as never,
     );
@@ -181,18 +182,20 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
     expect(updates()).toBeGreaterThanOrEqual(2);
     expect(updates()).toBeLessThanOrEqual(3);
     // A gentle step each time, not a jump to the new picture.
-    expect(alphas.slice(1)).toEqual(alphas.slice(1).map(() => SLOW_EASE));
+    expect(rec.alphas.slice(1)).toEqual(rec.alphas.slice(1).map(() => SLOW_EASE));
   });
 
   it("jumps to the picture the first time, then eases by the time between updates", () => {
+    const { rec } = setup();
     render(<Ambilight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
     advance(200);
-    expect(alphas[0]).toBe(1);
+    expect(rec.alphas[0]).toBe(1);
     const expected = easeFor(1000 / 60, EASE_MS);
-    for (const a of alphas.slice(2)) expect(a).toBeCloseTo(expected, 1);
+    for (const a of rec.alphas.slice(2)) expect(a).toBeCloseTo(expected, 1);
   });
 
   it("waits for the picture's size before drawing anything", () => {
+    const { updates } = setup();
     const video = playingVideo();
     Object.defineProperty(video, "videoWidth", { configurable: true, get: () => 0 });
     render(<Ambilight video={video} prefs={{ on: true, brightness: 0.9 }} />);
@@ -201,6 +204,7 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
   });
 
   it("stops drawing once it's gone", () => {
+    const { updates } = setup();
     const { unmount } = render(<Ambilight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
     advance(200);
     unmount();
@@ -210,6 +214,7 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
   });
 
   it("sizes and places its canvas from the stage's shape, the margin included (specs 0107 and 0118)", () => {
+    setup();
     const { container } = render(
       <Ambilight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} shape={9 / 16} />,
     );

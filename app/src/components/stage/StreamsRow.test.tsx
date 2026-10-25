@@ -18,12 +18,12 @@ const sharer = (id: string, name: string, kind: "screen" | "camera"): Sharer => 
   hasSound: true,
   sound: new FakeTrack() as unknown as MediaTrack,
 });
-const RAFA = sharer("user-3", "Rafa", "screen");
-const DUDA = sharer("user-4", "Duda", "camera");
+const rafa = () => sharer("user-3", "Rafa", "screen");
+const duda = () => sharer("user-4", "Duda", "camera");
 
 function row(open: boolean, onPick = vi.fn(), onOpen = vi.fn(), onClose = vi.fn()) {
   const view = render(
-    <StreamsRow others={[RAFA, DUDA]} liveCount={3} open={open} onOpen={onOpen} onClose={onClose} onPick={onPick} />,
+    <StreamsRow others={[rafa(), duda()]} liveCount={3} open={open} onOpen={onOpen} onClose={onClose} onPick={onPick} />,
   );
   return { ...view, onPick, onOpen, onClose };
 }
@@ -81,9 +81,11 @@ describe("the streams row: hearing from a picture (specs 0123 and 0131)", () => 
   // A finger holds the picture for half a second (spec 0131).
   async function hold(name: RegExp) {
     const li = screen.getByRole("button", { name }).closest("li")!;
+    vi.useFakeTimers();
     fireEvent.pointerDown(li, { pointerType: "touch" });
-    await act(() => new Promise((r) => setTimeout(r, 550)));
+    act(() => vi.advanceTimersByTime(550));
     fireEvent.pointerUp(li, { pointerType: "touch" });
+    vi.useRealTimers();
     return li;
   }
 
@@ -91,7 +93,7 @@ describe("the streams row: hearing from a picture (specs 0123 and 0131)", () => 
     const onPick = vi.fn();
     const onHear = vi.fn();
     render(
-      <StreamsRow others={[{ ...RAFA, hasVoice: true }]} liveCount={2} open onOpen={() => {}} onClose={() => {}} onPick={onPick} hearOf={() => heard} onHear={onHear} />,
+      <StreamsRow others={[{ ...rafa(), hasVoice: true }]} liveCount={2} open onOpen={() => {}} onClose={() => {}} onPick={onPick} hearOf={() => heard} onHear={onHear} />,
     );
     expect(screen.queryByRole("button", { name: "Mute Rafa's voice" })).not.toBeInTheDocument();
 
@@ -106,7 +108,7 @@ describe("the streams row: hearing from a picture (specs 0123 and 0131)", () => 
   it("ignores only the click that ends a hold: the next tap on the picture watches it", async () => {
     const onPick = vi.fn();
     render(
-      <StreamsRow others={[{ ...RAFA, hasVoice: true }]} liveCount={2} open onOpen={() => {}} onClose={() => {}} onPick={onPick} hearOf={() => heard} onHear={() => {}} />,
+      <StreamsRow others={[{ ...rafa(), hasVoice: true }]} liveCount={2} open onOpen={() => {}} onClose={() => {}} onPick={onPick} hearOf={() => heard} onHear={() => {}} />,
     );
     const li = await hold(/^Watch Rafa/);
     fireEvent.click(within(li).getByRole("button", { name: /^Watch Rafa/ }));
@@ -117,7 +119,7 @@ describe("the streams row: hearing from a picture (specs 0123 and 0131)", () => 
 
   it("stacks a screen and a camera, with a swap among the held buttons (spec 0131)", async () => {
     const onSwap = vi.fn();
-    const both: Sharer = { ...RAFA, camera: { ...DUDA.camera!, kind: "camera" } };
+    const both: Sharer = { ...rafa(), camera: { ...duda().camera!, kind: "camera" } };
     render(
       <StreamsRow others={[both]} liveCount={2} open onOpen={() => {}} onClose={() => {}} onPick={() => {}} hearOf={() => heard} onHear={() => {}} swappedOf={() => false} onSwap={onSwap} />,
     );
@@ -129,7 +131,7 @@ describe("the streams row: hearing from a picture (specs 0123 and 0131)", () => 
   });
 
   it("lights a heard voice's picture while they speak, and not while muted (spec 0131)", () => {
-    const speaking = { ...RAFA, hasVoice: true, speaking: true };
+    const speaking = { ...rafa(), hasVoice: true, speaking: true };
     const { rerender } = render(
       <StreamsRow others={[speaking]} liveCount={2} open onOpen={() => {}} onClose={() => {}} onPick={() => {}} hearOf={() => heard} onHear={() => {}} />,
     );

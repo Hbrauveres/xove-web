@@ -1,12 +1,13 @@
 import { render } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { EmptyStage } from "./EmptyStage";
+import { StaticGlow } from "./StaticGlow";
 import { STRENGTH } from "./staticBands";
 
-const fills: string[] = [];
-
-beforeEach(() => {
-  fills.length = 0;
-  vi.resetModules();
+/** Each test's own stage: a canvas recording what it fills, the stage's size, and reduced motion
+ * answered for the reduced-motion test. Returns what was filled, in order. */
+function setup() {
+  const fills: string[] = [];
   vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockImplementation(() => {
     const ctx = {
       fillStyle: "",
@@ -20,20 +21,20 @@ beforeEach(() => {
   vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({ width: 1532, height: 862 } as DOMRect);
   vi.stubGlobal("ResizeObserver", class { observe() {} disconnect() {} });
   vi.spyOn(window, "matchMedia").mockImplementation((q: string) => ({ matches: q.includes("reduce"), addEventListener() {}, removeEventListener() {} }) as never);
-});
-afterEach(() => vi.restoreAllMocks());
+  return fills;
+}
 
 describe("the standby screen's light round the stage (spec 0136)", () => {
-  it("is never brighter than the static looks on the screen", async () => {
-    const { StaticGlow } = await import("./StaticGlow");
+  it("is never brighter than the static looks on the screen", () => {
+    const fills = setup();
     render(<StaticGlow prefs={{ on: true, brightness: 1 }} />);
     expect(fills.length).toBeGreaterThan(0);
     const brightest = Math.max(...fills.flatMap((f) => f.match(/\d+/g)!.map(Number)));
     expect(brightest).toBeLessThanOrEqual(Math.ceil(255 * 0.5 * STRENGTH));
   });
 
-  it("follows the ambilight: switched off, there's no light and nothing is drawn", async () => {
-    const { StaticGlow } = await import("./StaticGlow");
+  it("follows the ambilight: switched off, there's no light and nothing is drawn", () => {
+    const fills = setup();
     const { container } = render(<StaticGlow prefs={{ on: false, brightness: 1 }} />);
     expect(fills).toHaveLength(0);
     expect((container.firstChild as HTMLElement).style.opacity).toBe("0");
@@ -41,10 +42,9 @@ describe("the standby screen's light round the stage (spec 0136)", () => {
 });
 
 describe("the TV turning on, once a visit (spec 0136)", () => {
-  it("lights the stage and the wall the first time the stage stands by, and never again", async () => {
+  it("lights the stage and the wall the first time the stage stands by, and never again", () => {
+    setup();
     vi.spyOn(window, "matchMedia").mockImplementation((q: string) => ({ matches: false, media: q, addEventListener() {}, removeEventListener() {} }) as never);
-    const { EmptyStage } = await import("./EmptyStage");
-    const { StaticGlow } = await import("./StaticGlow");
     const first = render(
       <>
         <StaticGlow prefs={{ on: true, brightness: 1 }} />
@@ -65,8 +65,8 @@ describe("the TV turning on, once a visit (spec 0136)", () => {
     expect(again.container.querySelector('[class*="flash"]')).toBeNull();
   });
 
-  it("doesn't turn on for anyone who asks for reduced motion", async () => {
-    const { EmptyStage } = await import("./EmptyStage");
+  it("doesn't turn on for anyone who asks for reduced motion", () => {
+    setup();
     const { container } = render(<EmptyStage />);
     expect(container.querySelector('[class*="intro"]')).toBeNull();
   });

@@ -1,7 +1,8 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { onFakeClock } from "../../test/factories/clock.factory";
 import { TIP_REST_MS } from "../ui/Tooltip";
 import { ViewerBar, type Sound } from "./ViewerBar";
 
@@ -21,8 +22,6 @@ function Bruno({ voiceOff = false, noSound = false, canSetVolume = true, talking
   );
 }
 
-afterEach(() => vi.useRealTimers());
-
 describe("the bar over someone else's stream (spec 0123): what I hear", () => {
   it("mutes one sound with a tap, crossed and pressed, leaving the other", async () => {
     const user = userEvent.setup();
@@ -33,13 +32,14 @@ describe("the bar over someone else's stream (spec 0123): what I hear", () => {
   });
 
   it("opens a sound's own slider when the mouse rests on it, and moving it unmutes", async () => {
-    const user = userEvent.setup();
+    const user = onFakeClock();
     render(<Bruno />);
     await user.click(screen.getByRole("button", { name: "Mute Bruno's voice" }));
     const slider = screen.getByRole("slider", { name: "Bruno's voice volume" });
     expect(slider.closest("[inert]")).not.toBeNull();
     await user.hover(screen.getByRole("button", { name: "Unmute Bruno's voice" }));
-    await vi.waitFor(() => expect(slider.closest("[inert]")).toBeNull());
+    act(() => vi.advanceTimersByTime(150));
+    expect(slider.closest("[inert]")).toBeNull();
     // Only its own: the screen's sound slider stays closed.
     expect(screen.getByRole("slider", { name: "Screen sound volume" }).closest("[inert]")).not.toBeNull();
     fireEvent.change(slider, { target: { value: "0.4" } });

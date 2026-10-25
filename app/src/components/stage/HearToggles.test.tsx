@@ -1,25 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, describe, expect, it, vi } from "vitest";
-import { FakeTrack } from "../../test/fakeLiveKit";
-import type { MediaTrack, Sharer } from "../../types";
-import { clearToast, currentToast } from "../ui/toast";
+import { describe, expect, it, vi } from "vitest";
+import { aSharer } from "../../test/factories/sharer.factory";
+import type { Sharer } from "../../types";
+import { currentToast } from "../ui/toast";
 import { HearToggles, type Hearing } from "./HearToggles";
 
-const track = () => new FakeTrack() as unknown as MediaTrack;
-const remote = { video: track(), setQuality: () => {} };
-const bruno = (extra: Partial<Sharer> = {}): Sharer => ({
-  person: { id: "user-7", name: "Bruno", hue: 100, online: true },
-  isMe: false,
-  since: Date.now(),
-  screen: { kind: "screen", startedAt: Date.now(), settings: { quality: "1080p", mode: "smooth" }, remote },
-  hasSound: true,
-  hasVoice: true,
-  ...extra,
-});
+const bruno = (extra: Partial<Sharer> = {}) => aSharer({ hasSound: true, hasVoice: true, ...extra });
 const HEARD: Hearing = { sound: { volume: 1, muted: false }, voice: { volume: 0.7, muted: false } };
-
-afterEach(() => clearToast());
 
 describe("a preview's two toggles (spec 0123)", () => {
   it("mutes that person's sound or voice for me, each on its own, keeping its volume", async () => {
