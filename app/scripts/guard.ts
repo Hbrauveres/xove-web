@@ -31,8 +31,9 @@ export function fromTsc(output: string): Finding[] {
 
 /** oxlint's `-f json`: `{ diagnostics: [{ code: "eslint(complexity)", filename }] }`. */
 export function fromOxlint(json: string): Finding[] {
-  const { diagnostics } = JSON.parse(json) as { diagnostics: { code: string; filename: string }[] };
-  return diagnostics.map((d) => ({ tool: "lint", rule: d.code, file: d.filename }));
+  const { diagnostics } = JSON.parse(json) as { diagnostics: { code?: string; filename: string }[] };
+  // A file the linter can't parse has no rule: it's still a finding, and a loud one.
+  return diagnostics.map((d) => ({ tool: "lint", rule: d.code ?? "parse-error", file: d.filename }));
 }
 
 /** jscpd's report: each copied block counts once in each file that holds it. */
