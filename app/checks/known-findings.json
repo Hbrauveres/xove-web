@@ -730,13 +730,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/hooks/useInstalled.ts",
-    "count": 2,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/hooks/useLiveKitRoom.ts",
     "count": 10,
     "owner": "#181 core: LiveKit adapter, devices"
@@ -821,27 +814,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/install/device.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/install/prompt.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/main.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/media/ambilight.ts",
     "count": 3,
     "owner": "#183 the room's hooks"
@@ -908,20 +880,6 @@
     "file": "src/pages/HomePage.module.css",
     "count": 4,
     "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/pages/InstallPage.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/pages/InstallPage.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -1321,13 +1279,6 @@
     "file": "src/pages/HomePage.module.css",
     "count": 4,
     "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "literal",
-    "file": "src/pages/InstallPage.module.css",
-    "count": 2,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -2424,20 +2375,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/hooks/useInstalled.test.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/hooks/useInstalled.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/hooks/useLiveKitRoom.test.ts",
     "count": 1,
     "owner": "#181 core: LiveKit adapter, devices"
@@ -2564,27 +2501,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/install/device.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/install/prompt.test.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/install/prompt.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/media/ambilight.test.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -2707,27 +2623,6 @@
     "file": "src/pages/HomePage.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/InstallPage.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/InstallPage.test.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/InstallPage.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -3008,13 +2903,6 @@
     "file": "src/hooks/useStreams.ts",
     "count": 1,
     "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/install/device.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -4181,20 +4069,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/hooks/useInstalled.test.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/hooks/useInstalled.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/hooks/useLiveKitRoom.test.ts",
     "count": 1,
     "owner": "#181 core: LiveKit adapter, devices"
@@ -4321,27 +4195,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/install/device.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/install/prompt.test.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/install/prompt.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/media/ambilight.test.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -4464,27 +4317,6 @@
     "file": "src/pages/HomePage.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/InstallPage.module.css",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/InstallPage.test.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/InstallPage.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "code",
@@ -4933,13 +4765,6 @@
     "file": "src/pages/AdminPage.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/pages/InstallPage.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "lint",
@@ -5469,13 +5294,6 @@
   {
     "tool": "lint",
     "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/pages/InstallPage.tsx",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(prefer-tag-over-role)",
     "file": "src/pages/RequestAccessPage.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
@@ -5672,13 +5490,6 @@
   {
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
-    "file": "src/hooks/useInstalled.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
     "file": "src/hooks/useLiveKitRoom.ts",
     "count": 16,
     "owner": "#181 core: LiveKit adapter, devices"
@@ -5708,13 +5519,6 @@
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
     "file": "src/hooks/useTapToggle.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/install/prompt.ts",
     "count": 1,
     "owner": "#179 phones removed"
   },
@@ -6358,13 +6162,6 @@
   {
     "tool": "unused",
     "rule": "exports",
-    "file": "src/install/prompt.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
     "file": "src/media/ambilight.ts",
     "count": 2,
     "owner": "#183 the room's hooks"
@@ -6438,13 +6235,6 @@
     "file": "src/hooks/useStreams.ts",
     "count": 1,
     "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "unused",
-    "rule": "types",
-    "file": "src/install/prompt.ts",
-    "count": 1,
-    "owner": "#179 phones removed"
   },
   {
     "tool": "unused",

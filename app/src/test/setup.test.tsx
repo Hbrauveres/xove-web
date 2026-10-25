@@ -4,7 +4,6 @@ import { tv } from "../components/stage/staticBands";
 import { claimFloating } from "../components/ui/floating";
 import { currentToast, showToast } from "../components/ui/toast";
 import { TIP_REST_MS, Tooltip } from "../components/ui/Tooltip";
-import { installPrompt, listenForInstall } from "../install/prompt";
 import { fakeCameras, fakeMics, rooms } from "./fakeLiveKit";
 
 // Each pair: the first test leaves something behind, the second finds it gone. The pairs run in
@@ -49,21 +48,18 @@ describe("after every test, spies, globals, variables and timers are put back", 
 });
 
 describe("after every test, the app's shared pieces are reset", { shuffle: false }, () => {
-  it("1. leaves a toast, something floating, the TV on and an install listener", () => {
+  it("1. leaves a toast, something floating and the TV on", () => {
     vi.useFakeTimers();
     showToast("Left behind");
     claimFloating(() => {
       throw new Error("a closed piece from an earlier test was closed again");
     });
     tv.on = true;
-    listenForInstall();
   });
-  it("2. finds no toast, nothing floating, the TV off and nobody listening", () => {
+  it("2. finds no toast, nothing floating, and the TV off", () => {
     expect(currentToast()).toBeNull();
     expect(() => claimFloating(() => {})).not.toThrow();
     expect(tv.on).toBe(false);
-    window.dispatchEvent(new Event("beforeinstallprompt", { cancelable: true }));
-    expect(installPrompt()).toBeNull();
   });
 });
 
