@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import type { Friend } from "../../types";
 import { PeopleButton } from "./PeopleButton";
 
-const people: Friend[] = [
+const people = (): Friend[] => [
   { id: "me", name: "Henrique", hue: 36, online: true },
   { id: "user-7", name: "Bruno", hue: 210, online: true },
   { id: "user-3", name: "Ana", hue: 300, online: true },
@@ -14,7 +14,7 @@ const people: Friend[] = [
 function setup(props: Partial<Parameters<typeof PeopleButton>[0]> = {}) {
   render(
     <PeopleButton
-      people={people}
+      people={people()}
       meId="me"
       sharing={{ "user-7": { screen: true, camera: true }, "user-3": { screen: true, camera: false } }}
       watchingOf={{ me: { sharerId: "user-7", kind: "screen" }, "user-9": { sharerId: "user-3", kind: "screen" } }}

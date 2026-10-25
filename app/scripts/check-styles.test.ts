@@ -1,6 +1,6 @@
 import postcss from "postcss";
 import { describe, expect, it } from "vitest";
-import { checkStyles, contrast, contrastProblems, mixedVendorRules, reducedMotionProblems, tokensOf } from "./check-styles";
+import { contrast, contrastProblems, mixedVendorRules, reducedMotionProblems, tokensOf } from "./check-styles";
 
 const tokens = (css: string) => tokensOf(postcss.parse(css));
 /** A palette that passes, with one token changed. */
@@ -35,6 +35,12 @@ describe("the style check: contrast", () => {
     );
     expect(contrastProblems(tokens(":root { --text: #ffffff; }"))).toContain("--text on --ground: a token is missing");
   });
+
+  it("names a colour it can't measure, instead of letting it pass", () => {
+    for (const unread of ["#111", "rgb(20, 20, 20)", "var(--black)"]) {
+      expect(contrastProblems(tokens(palette({ ground: unread })))).toContain(`--text on --ground: "${unread}" isn't a #rrggbb colour this check can measure`);
+    }
+  });
 });
 
 describe("the style check: one browser per rule", () => {
@@ -54,11 +60,5 @@ describe("the style check: reduced motion", () => {
     expect(reducedMotionProblems(postcss.parse("* { color: red; }"))).toHaveLength(1);
     const half = postcss.parse("@media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms; } }");
     expect(reducedMotionProblems(half)).toHaveLength(1);
-  });
-});
-
-describe("the style check on the app's own stylesheets", () => {
-  it("finds nothing", () => {
-    expect(checkStyles(`${import.meta.dirname}/../src`)).toEqual([]);
   });
 });

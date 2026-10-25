@@ -1,5 +1,5 @@
 import { act, renderHook } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { NARROW_UPRIGHT_QUERY, PORTRAIT_QUERY, SMALL_QUERY, TOUCH_QUERY, layoutFor, useRoomLayout } from "./useRoomLayout";
 
 describe("which layout the room uses (specs 0158 and 0160)", () => {
@@ -52,8 +52,6 @@ function screenOf(width: number, height: number, touch: boolean) {
     },
   };
 }
-
-afterEach(() => vi.unstubAllGlobals());
 
 describe("the room's layout follows the screen (spec 0160)", () => {
   it("phone 412 × 915 upright, then sideways at 915 × 412", () => {

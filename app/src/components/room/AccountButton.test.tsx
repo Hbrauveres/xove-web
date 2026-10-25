@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { loadAmbilight } from "../../media/preferences";
 import type { ConnectionState, Friend } from "../../types";
 import { AccountButton } from "./AccountButton";
@@ -27,8 +27,6 @@ function setup(props: Partial<Parameters<typeof AccountButton>[0]> = {}) {
   );
   return { user: userEvent.setup(), onSignOut, onAmbilightChange, view };
 }
-
-afterEach(() => localStorage.clear());
 
 describe("account button (spec 0104)", () => {
   it("is my avatar with a dot that follows the connection", () => {

@@ -50,6 +50,10 @@ async function main(filter?: string) {
   const out = join(mkdtempSync(join(tmpdir(), "test-alone-")), "list.json");
   await run("npx", ["vitest", "list", `--json=${out}`, ...(filter ? [filter] : [])], { maxBuffer: 64 * 1024 * 1024 });
   const tests = (JSON.parse(readFileSync(out, "utf8")) as { name: string; file: string }[]).map((t) => ({ ...t, file: relative(process.cwd(), t.file) }));
+  if (tests.length === 0) {
+    console.error(`No tests found${filter ? ` for "${filter}"` : ""}: nothing was proven.`);
+    process.exit(1);
+  }
   const files = [...new Set(tests.map((t) => t.file))];
   const limit = Math.max(1, Math.floor(availableParallelism() / 2));
 

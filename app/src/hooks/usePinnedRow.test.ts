@@ -1,6 +1,6 @@
 import { act, fireEvent, render } from "@testing-library/react";
 import { createElement } from "react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { heldShift, usePinnedRow } from "./usePinnedRow";
 
 describe("keeping the clicked button still (spec 0106)", () => {
@@ -12,25 +12,28 @@ describe("keeping the clicked button still (spec 0106)", () => {
 });
 
 describe("the row holds the button under the pointer when its width changes (spec 0106)", () => {
-  let resized: () => void = () => {};
-  beforeEach(() => {
+  /** This test's own ResizeObserver: `resize.now()` tells the row its width changed. */
+  function onResize() {
+    const resize = { now: () => {} };
     vi.stubGlobal(
       "ResizeObserver",
       class {
         constructor(cb: () => void) {
-          resized = cb;
+          resize.now = cb;
         }
         observe() {}
         disconnect() {}
       },
     );
-  });
+    return resize;
+  }
   function Row() {
     const { ref } = usePinnedRow<HTMLDivElement>();
     return createElement("div", { ref, "data-testid": "row" }, createElement("button", null, "Camera"));
   }
 
   it("moves the row back when a change in the row pushes the button under the pointer, and recentres once the pointer leaves", () => {
+    const resize = onResize();
     const { getByRole, getByTestId } = render(createElement(Row));
     const camera = getByRole("button");
     let left = 400;
@@ -39,7 +42,7 @@ describe("the row holds the button under the pointer when its width changes (spe
     fireEvent.pointerOver(camera);
     // The camera's arrow went away and the centred row pushed the camera 9 px right.
     left = 409;
-    act(() => resized());
+    act(() => resize.now());
 
     expect(getByTestId("row").style.transform).toBe("translateX(-9px)");
 
@@ -50,9 +53,10 @@ describe("the row holds the button under the pointer when its width changes (spe
   });
 
   it("does nothing while the pointer isn't on the row", () => {
+    const resize = onResize();
     const { getByTestId } = render(createElement(Row));
 
-    act(() => resized());
+    act(() => resize.now());
 
     expect(getByTestId("row").style.transform).toBe("");
   });

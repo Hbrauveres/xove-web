@@ -97,7 +97,7 @@ Every test earns its place, and runs alone, in any order, fast.
 - **Fast:** a test under about 100 ms, a file under about 1.5 s, the whole suite in about 10 s; a file that grows past that splits by feature, so the workers share the load.
 - **A flaky test is a bug:** fix its cause (usually time or shared state); never re-run it to pass.
 
-These rules are being applied as the app is reorganised ([Architecture](architecture.md#where-the-code-is-going)). Every test already has its own data and setup and passes alone and shuffled; the room page's tests still wait in real time, and are split by feature in a later step.
+These rules are being applied as the app is reorganised ([Architecture](architecture.md#where-the-code-is-going)). Every test passes alone and shuffled, and every test outside the phone-only files (removed with phone support) builds its own data and setup; the room page's tests still wait in real time, and are split by feature in a later step.
 
 ## Running them
 

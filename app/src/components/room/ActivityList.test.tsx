@@ -1,16 +1,15 @@
 import { render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { onFakeClock } from "../../test/factories/clock.factory";
 import type { ActivityEvent, Friend } from "../../types";
 import { ActivityList } from "./ActivityList";
 
-const people: Friend[] = [
+const people = (): Friend[] => [
   { id: "me", name: "Henrique", hue: 36, online: true },
   { id: "user-3", name: "Ana", hue: 300, online: true },
   { id: "user-7", name: "Bruno", hue: 210, online: true },
   { id: "user-9", name: "Diego", hue: 90, online: true },
 ];
-// Each event's time is worked out when the test makes it, so "13 min" can't go stale for a test that runs later.
 const ev = (
   id: string,
   kind: ActivityEvent["kind"],
@@ -36,11 +35,13 @@ const events = (): ActivityEvent[] => [
 ];
 
 function setup(watching: { personId: string; kind: "screen" | "camera" } | null = null) {
+  // A fixed clock: "13 min" is the same whenever the test runs.
+  const user = onFakeClock();
   const onWatch = vi.fn();
   render(
     <ActivityList
       events={events()}
-      people={people}
+      people={people()}
       meId="me"
       unseen={new Set(["8", "7"])}
       // Bruno's screen and camera and Ana's screen are live; Diego's ended.
@@ -49,7 +50,7 @@ function setup(watching: { personId: string; kind: "screen" | "camera" } | null 
       onWatch={onWatch}
     />,
   );
-  return { onWatch, user: userEvent.setup() };
+  return { onWatch, user };
 }
 
 describe("activity list (spec 0104)", () => {

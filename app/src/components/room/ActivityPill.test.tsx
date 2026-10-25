@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { ActivityEvent, ConnectionState, Friend } from "../../types";
 import { ActivityPill } from "./ActivityPill";
 
-const people: Friend[] = [
+const people = (): Friend[] => [
   { id: "me", name: "Henrique", hue: 36, online: true },
   { id: "user-3", name: "Ana", hue: 300, online: true },
   { id: "user-9", name: "Diego", hue: 90, online: true },
@@ -22,7 +22,7 @@ function Pill({ events, connection = "connected" }: { events: ActivityEvent[]; c
   return (
     <ActivityPill
       events={events}
-      people={people}
+      people={people()}
       meId="me"
       connection={connection}
       isLive={() => true}

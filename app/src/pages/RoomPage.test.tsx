@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { cameraCaptureOptions, cameraPublishOptions, capOf, screenCaptureRequest, screenPublishOptions } from "../media/shareSettings";
 import { AuthProvider } from "../auth/AuthProvider";
 import { aUser, installFakeApi, MY_USER_ID, myLiveStream, someoneSharing } from "../test/fakeApi";
@@ -762,9 +762,6 @@ describe("room: the controls don't vanish under a still mouse", () => {
     expect(frame).toHaveAttribute("data-chrome", "shown");
     return frame;
   }
-  afterEach(() => {
-  });
-
   it("ignores a 'mouse left' while the player is fullscreen: there's nothing outside it", async () => {
     const frame = await playing();
     Object.defineProperty(document, "fullscreenElement", { configurable: true, get: () => frame });
@@ -969,9 +966,6 @@ describe("room: starting from fullscreen (spec 0101)", () => {
     });
     return frame;
   }
-  afterEach(() => {
-  });
-
   it("shows a failed start over the fullscreen player too", async () => {
     installFakeApi({ me: member() });
     const user = await readyRoom();

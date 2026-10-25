@@ -37,6 +37,10 @@ export function contrastProblems(tokens: Map<string, string>) {
   const check = (fg: string, bg: string, min: number) => {
     const [a, b] = [tokens.get(fg), tokens.get(bg)];
     if (!a || !b) return problems.push(`--${fg} on --${bg}: a token is missing`);
+    // Only a plain #rrggbb can be measured here; anything else (#fff, rgb(), var()) would measure as
+    // nothing and pass unseen, so it's named instead.
+    const unread = [a, b].find((c) => !/^#[0-9a-f]{6}$/i.test(c));
+    if (unread) return problems.push(`--${fg} on --${bg}: "${unread}" isn't a #rrggbb colour this check can measure`);
     const ratio = contrast(a, b);
     if (ratio < min) problems.push(`--${fg} on --${bg}: ${ratio.toFixed(2)}:1, needs ${min}:1`);
   };
