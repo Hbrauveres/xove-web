@@ -2,9 +2,7 @@
   min-height: 100%;
   display: grid;
   place-items: center;
-  /* Clear of the phone's bars (spec 0141). */
-  padding: calc(48px + var(--safe-top)) max(var(--gutter), var(--safe-right)) calc(48px + var(--safe-bottom))
-    max(var(--gutter), var(--safe-left));
+  padding: 48px var(--gutter) 48px var(--gutter);
   background: radial-gradient(60% 50% at 50% 0%, var(--accent-soft), transparent 70%), var(--ground);
 }
 
@@ -86,42 +84,8 @@
   color: var(--text-faint);
 }
 
-/* The mark and headline, then what to read and do: one column, side by side on a phone sideways. */
+/* The mark and headline, then what to read and do, in one column. */
 .lead,
 .act {
   display: contents;
-}
-
-/*
- * A phone sideways (spec 0141): the page fits the screen, with no scroll. The mark and headline
- * on the left, what to read and do on the right, each centred.
- */
-@media (orientation: landscape) and (max-height: 500px) {
-  .wrap {
-    padding-block: calc(16px + var(--safe-top)) calc(16px + var(--safe-bottom));
-  }
-
-  .card {
-    max-width: 760px;
-    flex-direction: row;
-    align-items: center;
-    gap: 40px;
-  }
-
-  .lead,
-  .act {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .act {
-    gap: 12px;
-  }
-
-  .google {
-    margin-top: 4px;
-  }
 }

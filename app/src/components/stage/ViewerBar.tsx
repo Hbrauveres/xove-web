@@ -26,9 +26,7 @@ export type HearSound = Sound & { unavailable?: string; onChange: (s: Sound) => 
 
 /** How long a resting mouse waits before the slider unrolls, as the drop-ups (spec 0107). */
 const REST_MS = 120;
-/** A finger holds this long to open the slider, as the drop-ups. */
-const HOLD_MS = 500;
-/** The slider closes by itself after this long without a touch. */
+/** The slider closes by itself after this long untouched. */
 const IDLE_MS = 4000;
 
 type Props = {
@@ -44,8 +42,6 @@ type Props = {
   full?: boolean;
   onStart: (kind: StreamKind) => void;
   onSettings: () => void;
-  /** Where the browser can't set a page's volume (iPhones): a tap turns a sound on and off, no slider. */
-  canSetVolume: boolean;
   /** Only the settings at the right (nobody live). */
   settingsOnly?: boolean;
 };
@@ -55,8 +51,7 @@ type Props = {
  * them, the right corner is you. Your stream's own controls live only on your stream.
  */
 export function ViewerBar(props: Props) {
-  const { sound, voice, live, micOn, onMic, canShareScreen, full, onStart, onSettings, canSetVolume, settingsOnly } =
-    props;
+  const { sound, voice, live, micOn, onMic, canShareScreen, full, onStart, onSettings, settingsOnly } = props;
   const [open, setOpen] = useState<"sound" | "voice" | null>(null);
   const [menu, setMenu] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
@@ -83,16 +78,7 @@ export function ViewerBar(props: Props) {
   return (
     <div ref={bar} className={styles.bar} data-buttons data-viewer-bar>
       <div className={styles.left}>
-        {sound && (
-          <Hear
-            kind="sound"
-            s={sound}
-            open={open === "sound"}
-            quiet={open !== null}
-            setOpen={setOpen}
-            canSetVolume={canSetVolume}
-          />
-        )}
+        {sound && <Hear kind="sound" s={sound} open={open === "sound"} quiet={open !== null} setOpen={setOpen} />}
         {voice && (
           <Hear
             kind="voice"
@@ -100,7 +86,6 @@ export function ViewerBar(props: Props) {
             open={open === "voice"}
             quiet={open !== null}
             setOpen={setOpen}
-            canSetVolume={canSetVolume}
             name={voice.name}
             talking={voice.talking}
           />
@@ -204,14 +189,13 @@ function MenuItem({
   );
 }
 
-/** One sound: a tap mutes it; resting the mouse or holding opens its own slider (design decision 3). */
+/** One sound: a click mutes it; resting the mouse on it opens its own slider. */
 function Hear({
   kind,
   s,
   open,
   quiet,
   setOpen,
-  canSetVolume,
   name,
   talking,
 }: {
@@ -221,16 +205,12 @@ function Hear({
   /** A slider is open, this one or the other: its tooltip keeps quiet. */
   quiet: boolean;
   setOpen: Dispatch<SetStateAction<"sound" | "voice" | null>>;
-  canSetVolume: boolean;
   name?: string;
   talking?: boolean;
 }) {
   const rest = useRef<number | undefined>(undefined);
   const leave = useRef<number | undefined>(undefined);
-  const hold = useRef<number | undefined>(undefined);
   const idle = useRef<number | undefined>(undefined);
-  const swallow = useRef(false);
-  const pointer = useRef("mouse");
   // Closes this sound's slider only if it's still the open one: moving on to the other sound, its
   // timers must not close the slider just opened there (spec 0133).
   const closeMine = () => setOpen((now) => (now === kind ? null : now));
@@ -239,11 +219,11 @@ function Hear({
     idle.current = window.setTimeout(closeMine, IDLE_MS);
   };
   const show = () => {
-    if (!canSetVolume || s.unavailable) return;
+    if (s.unavailable) return;
     setOpen(kind);
     restart();
   };
-  useEffect(() => () => [rest, leave, hold, idle].forEach((t) => window.clearTimeout(t.current)), []);
+  useEffect(() => () => [rest, leave, idle].forEach((t) => window.clearTimeout(t.current)), []);
 
   const silent = Boolean(s.unavailable) || s.muted || s.volume === 0;
   const label =
@@ -258,13 +238,11 @@ function Hear({
       className={styles.anchor}
       // A voice I hear never fades with the controls: its speaking cue stays (spec 0131).
       data-stays={(kind === "voice" && !s.unavailable && !s.muted) || undefined}
-      onPointerEnter={(e) => {
-        if (e.pointerType !== "mouse") return;
+      onPointerEnter={() => {
         window.clearTimeout(leave.current);
         rest.current = window.setTimeout(show, REST_MS);
       }}
-      onPointerLeave={(e) => {
-        if (e.pointerType !== "mouse") return;
+      onPointerLeave={() => {
         window.clearTimeout(rest.current);
         leave.current = window.setTimeout(closeMine, 300);
       }}
@@ -282,16 +260,6 @@ function Hear({
           aria-disabled={s.unavailable ? true : undefined}
           aria-pressed={s.unavailable ? undefined : s.muted}
           aria-label={label}
-          onPointerDown={(e) => {
-            pointer.current = e.pointerType;
-            if (e.pointerType === "mouse") return;
-            hold.current = window.setTimeout(() => {
-              swallow.current = true;
-              show();
-            }, HOLD_MS);
-          }}
-          onPointerUp={() => window.clearTimeout(hold.current)}
-          onContextMenu={(e) => e.preventDefault()}
           onFocus={(e) => {
             try {
               if (e.currentTarget.matches(":focus-visible")) show();
@@ -300,15 +268,8 @@ function Hear({
             }
           }}
           onClick={() => {
-            if (swallow.current) {
-              swallow.current = false;
-              return;
-            }
-            if (s.unavailable) {
-              if (pointer.current !== "mouse")
-                showToast(s.unavailable, kind === "sound" ? <VolumeOffIcon /> : <VoiceOffIcon />);
-              return;
-            }
+            // Unavailable: its tooltip says why.
+            if (s.unavailable) return;
             s.onChange({ ...s, muted: !s.muted });
             if (open) restart();
           }}
@@ -316,7 +277,7 @@ function Hear({
           {icon}
         </button>
       </Tooltip>
-      {canSetVolume && !s.unavailable && (
+      {!s.unavailable && (
         <span className={styles.slider} data-open={open || undefined} data-muted={s.muted || undefined} inert={!open}>
           <Range
             className={styles.range}

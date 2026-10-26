@@ -1,11 +1,9 @@
 /*
- * The settings panel (the Player controls design). Desktop, tablets and phones held sideways:
- * a popover over the cog (design decision 9), centred on it like the volume's slider, 10 px
- * above the round buttons and inside the player; the stage gives it the cog's place
- * (`--cog-x`) and the row's (`--above-row`). As tall as its tallest tab; a fifth of the
- * player wide, 280 to 320 px; sideways up to 560 px, in two columns. A phone held upright:
- * a bottom sheet over the page. Frosted, one control height (`--ctl`): 30 px over the cog,
- * 44 px in the sheet. Only opacity and transforms move.
+ * The settings panel (the Player controls design): a popover over the cog (design decision 9),
+ * centred on it like the volume's slider, 10 px above the round buttons and inside the player;
+ * the stage gives it the cog's place (`--cog-x`) and the row's (`--above-row`). As tall as its
+ * tallest tab; a fifth of the player wide, 280 to 320 px. Frosted, one control height (`--ctl`,
+ * 30 px). Only opacity and transforms move.
  */
 .panel {
   --ctl: 30px;
@@ -38,34 +36,6 @@
   transform: none;
 }
 
-/* Sideways the player is wide and short: the panel uses the width, so no tab scrolls. */
-:global([data-layout="sideways"]) .panel[data-variant="popover"] {
-  --w: min(560px, calc(100% - 20px));
-}
-
-.panel[data-variant="sheet"] {
-  --ctl: 44px;
-  position: fixed;
-  top: auto;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: auto;
-  max-width: none;
-  height: var(--sheet-height, 62%);
-  max-height: none;
-  min-height: 0;
-  opacity: 1;
-  border-width: 1px 0 0;
-  border-radius: 20px 20px 0 0;
-  transform: translateY(100%);
-  transition: transform var(--unroll);
-}
-
-.panel[data-variant="sheet"][data-open] {
-  transform: none;
-}
-
 .head {
   display: flex;
   align-items: center;
@@ -78,14 +48,6 @@
   font-family: var(--font-display);
   font-weight: 700;
   font-size: var(--text-sm);
-}
-
-.panel[data-variant="sheet"] .head {
-  padding: 12px 12px 8px 16px;
-}
-
-.panel[data-variant="sheet"] .head h2 {
-  font-size: var(--text-md);
 }
 
 .close {
@@ -160,7 +122,7 @@
   color: var(--text);
 }
 
-/* Can't be used here (a phone can't share a screen): greyed out in its place, not hidden. */
+/* Can't be used in this browser (it can't share a screen): greyed out in its place, not hidden. */
 .tab[aria-disabled="true"],
 .tab[aria-disabled="true"]:hover {
   color: var(--text-faint);
@@ -173,20 +135,6 @@
   outline: 2px solid var(--accent);
   outline-offset: -4px;
   border-radius: 8px;
-}
-
-.panel[data-variant="sheet"] .tabs {
-  margin: 0 12px;
-}
-
-.panel[data-variant="sheet"] .tab {
-  padding-block: 10px 9px;
-  font-size: var(--text-xs);
-}
-
-.panel[data-variant="sheet"] .tab svg {
-  width: 18px;
-  height: 18px;
 }
 
 /* What's live: a red dot by its tab's icon. */
@@ -230,53 +178,9 @@
   flex: none;
 }
 
-/* What you pick: in the flow of the tab, or its own column sideways. */
+/* What you pick: in the flow of the tab. */
 .lead {
   display: contents;
-}
-
-:global([data-layout="sideways"]) .panel[data-variant="popover"] .body {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  align-content: start;
-  column-gap: 18px;
-  /* The right column's spacing is its own (below), so the left's tall area adds no gaps. */
-  row-gap: 0;
-}
-
-/* The left column stays put while the right one scrolls (spec 0123): pinned at the
-   top of its area, which spans every row the right column can have. */
-:global([data-layout="sideways"]) .panel[data-variant="popover"] .lead {
-  position: sticky;
-  top: 12px;
-  align-self: start;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  grid-column: 1;
-  grid-row: 1 / span 12;
-}
-
-:global([data-layout="sideways"]) .panel[data-variant="popover"] .body > :not(.lead) {
-  grid-column: 2;
-}
-
-:global([data-layout="sideways"]) .panel[data-variant="popover"] .body > :not(.lead) ~ :not(.lead) {
-  margin-top: 12px;
-}
-
-:global([data-layout="sideways"]) .panel[data-variant="popover"] .preview {
-  max-width: none;
-}
-
-.panel[data-variant="sheet"] .body {
-  gap: 18px;
-  padding: 14px 16px 16px;
-  --seg-font: var(--text-sm);
-  --pick-font: var(--text-sm);
-  /* Over the near-black feed: a lighter track, a near-black pill in it. */
-  --seg-track: rgba(255, 255, 255, 0.1);
-  --seg-pill: #121214;
 }
 
 .panes::-webkit-scrollbar {
@@ -314,10 +218,6 @@
   gap: 6px;
 }
 
-.panel[data-variant="sheet"] .group {
-  gap: 8px;
-}
-
 .heading {
   margin: 0;
   color: var(--text-faint);
@@ -327,18 +227,10 @@
   text-transform: uppercase;
 }
 
-.panel[data-variant="sheet"] .heading {
-  font-size: var(--text-xs);
-}
-
 .hint {
   margin: 0;
   color: var(--text-muted);
   font-size: 11px;
-}
-
-.panel[data-variant="sheet"] .hint {
-  font-size: var(--text-xs);
 }
 
 /* What's shared, and Change: one row as tall as the other controls. */
@@ -402,11 +294,6 @@
   opacity: 0.45;
 }
 
-.panel[data-variant="sheet"] .source,
-.panel[data-variant="sheet"] .button {
-  font-size: var(--text-sm);
-}
-
 /* My camera, centred: LIVE while it's sent, "Only you see this" while it's only mine. */
 .preview {
   position: relative;
@@ -418,10 +305,6 @@
   overflow: hidden;
   border-radius: var(--radius-sm);
   background: #000;
-}
-
-.panel[data-variant="sheet"] .preview {
-  max-width: 280px;
 }
 
 /* The camera refused or missing: said in the preview's place, so it's clear how to allow it. */

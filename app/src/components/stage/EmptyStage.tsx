@@ -16,7 +16,7 @@ type Props = {
  * Nobody is live (spec 0123, calmed in spec 0136): a TV on standby. Its viewfinder corners (the top
  * right red, as in the logo), a still "Standby" where there's room, and the way to start, over the
  * TV's static; who's here and the seats are said once, below. Where the browser can't share a
- * screen (phones), the camera comes first and the screen is the same pill, greyed, saying why;
+ * screen, the camera comes first and the screen is the same pill, greyed, saying why;
  * their labels are one word, "Screen" and "Camera"; their spoken names say the act (spec 0138). The first time it stands by in a visit, the TV turns on.
  */
 export function EmptyStage({ canShareScreen = true, onStart }: Props) {

@@ -61,25 +61,14 @@
   cursor: not-allowed;
 }
 
-/* The phone held upright (spec 0106): 44 px. */
-:global([data-layout="phone"]) .pill {
-  height: 44px;
-}
-
-:global([data-layout="phone"]) .main {
-  width: 44px;
-}
-
 /* A narrow stage (spec 0133): compact, so a row of four and the fullscreen button still fit, down
    to 280 px. Measured on the controls' layer itself, not the window. */
 @container (max-width: 359px) {
-  .pill,
-  :global([data-layout]) .pill {
+  .pill {
     height: 36px;
   }
 
-  .main,
-  :global([data-layout]) .main {
+  .main {
     width: 36px;
   }
 }

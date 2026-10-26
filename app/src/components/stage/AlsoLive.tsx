@@ -1,11 +1,11 @@
 import type { LiveFeed, Sharer } from "../../types";
 import { Avatar } from "../ui/Avatar";
 import { ScreenVideo } from "./ScreenVideo";
-import { stackOf, useHold, useSwapping } from "./stack";
+import { stackOf, useSwapping } from "./stack";
 import { HearToggles, type Hearing } from "./HearToggles";
 import { PreviewTray } from "./PreviewTray";
 import { usePreviewTray } from "./usePreviewTray";
-import { useKeyboardLast } from "../../hooks/useTapToggle";
+import { useKeyboardLast } from "@shared/hooks/use-keyboard-last.hook";
 import { seatsOpen } from "./NowWatching";
 import styles from "./AlsoLive.module.css";
 import { Tooltip } from "../ui/Tooltip";
@@ -32,14 +32,13 @@ const kindOf = (feed: LiveFeed) => (feed.kind === "camera" ? "camera" : "screen"
  * The right of the info row (specs 0104 and 0107): the other live streams as small previews (a
  * click puts one on the stage), then the seats as six dots, red for each stream live (spec 0123).
  * Past their room the previews scroll; the box stays put, and goes when nothing is free. Pointing
- * at a preview (or holding it) opens its row of buttons, to hear that person while they stay small
+ * at a preview opens its row of buttons, to hear that person while they stay small
  * and swap their screen and camera (spec 0131).
  */
 export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swappedOf, onSwap }: Props) {
-  // A small preview's row (spec 0131): pointing at it opens it, a finger's hold pins it.
+  // A small preview's row: pointing at it opens it.
   const tray = usePreviewTray();
   const keyboardLast = useKeyboardLast();
-  const hold = useHold();
   // A swap plays for a moment: the two pictures trade places.
   const [swapping, setSwapping] = useSwapping();
   return (
@@ -65,19 +64,9 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
               data-swapping={swapping === id || undefined}
               data-talking={talking || undefined}
               onPointerEnter={(e) => {
-                if (e.pointerType === "mouse" && (!s.isMe || both)) tray.show(id, e.currentTarget);
+                if (!s.isMe || both) tray.show(id, e.currentTarget);
               }}
-              onPointerLeave={(e) => {
-                if (e.pointerType === "mouse") tray.leave();
-              }}
-              onPointerDown={(e) => {
-                if (e.pointerType === "mouse" || (s.isMe && !both)) return;
-                const li = e.currentTarget;
-                hold.start(() => tray.show(id, li, true));
-              }}
-              onPointerUp={hold.cancel}
-              onPointerCancel={hold.cancel}
-              onContextMenu={(e) => e.preventDefault()}
+              onPointerLeave={() => tray.leave()}
             >
               {/* Someone sharing a screen and a camera: the other picture peeks out behind. */}
               {both && (
@@ -106,10 +95,7 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
                   e.preventDefault();
                   first.focus();
                 }}
-                onClick={() => {
-                  // The click that ends the hold opening the row isn't a tap on the preview.
-                  if (!hold.swallow()) onPick(id);
-                }}
+                onClick={() => onPick(id)}
               >
                 <span className={styles.video} data-picture>
                   {video ? (
@@ -143,7 +129,6 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
               sharer={s}
               hearing={hearOf(id)}
               onChange={(h) => onHear(id, h)}
-              layout="tray"
               swap={
                 both && onSwap
                   ? {

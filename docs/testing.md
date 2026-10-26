@@ -6,7 +6,7 @@ How the web app is tested, with a real example of each kind, and how to run the 
 
 | Kind | What it proves | Example |
 | --- | --- | --- |
-| [Rules as plain functions](#rules-as-plain-functions) | The decisions, with no browser: which layout, which quality, how the ambilight is laid out, who is big | `useRoomLayout.test.ts`, `media/*.test.ts`, `brand/*.test.ts` |
+| [Rules as plain functions](#rules-as-plain-functions) | The decisions, with no browser: which device, which quality, how the ambilight is laid out, who is big | `core/devices/is-handheld.util.test.ts`, `media/*.test.ts`, `brand/*.test.ts` |
 | [Components](#components) | One component's output for given props | `components/**/*.test.tsx` |
 | [Pages, used like a person](#pages-used-like-a-person) | Whole flows: a page at a URL, with a fake API and a fake LiveKit | `pages/*.test.tsx`, `app/app.component.test.tsx`, `hooks/*.test.ts` |
 | [The style check](#the-style-check) | What the stylesheets promise: text readable on every surface, rules no browser drops, motion off when asked | `scripts/check-styles.ts` |
@@ -16,12 +16,12 @@ All of it runs with Vitest, Testing Library and jsdom (a browser's page model in
 
 ## Rules as plain functions
 
-Anything that decides something is a plain function, so its tests need no rendering and cover every case. From `hooks/useRoomLayout.test.ts`:
+Anything that decides something is a plain function, so its tests need no rendering and cover every case. From `core/devices/is-handheld.util.test.ts`, with the media queries answered directly:
 
 ```ts
-it("gives a tablet the upright view held upright, the desktop layout sideways", () => {
-  expect(layoutFor({ ...tablet, portrait: true, narrowUpright: false })).toBe("upright");
-  expect(layoutFor({ ...tablet, portrait: false, narrowUpright: false })).toBe("desktop");
+it("isn't, for a computer, a touch-screen laptop or a narrow window: their main pointer is fine", () => {
+  browser({ "(any-pointer: coarse)": true, "(max-width: 600px)": true });
+  expect(isHandheld()).toBe(false);
 });
 ```
 
@@ -67,7 +67,7 @@ it("stops the video and ends the stream", async () => {
 });
 ```
 
-The page, the hooks, the client and the room's logic all run for real; only the network and the video are fake. Hooks with logic of their own (the LiveKit connection, the room session, swipes) also have tests that render them alone (`renderHook`, or a small harness component for swipes).
+The page, the hooks, the client and the room's logic all run for real; only the network and the video are fake. Hooks with logic of their own (the LiveKit connection, the room session) also have tests that render them alone (`renderHook`).
 
 ## The style check
 
@@ -81,7 +81,7 @@ Its own test (`scripts/check-styles.test.ts`) feeds it small stylesheets that pa
 
 ## Pictures and sizes
 
-jsdom has no real layout, so how each screen looks is checked in a real headless browser: the [design sheet](design.md)'s pictures are shot from the running app, with fake people and moving pictures, at every size the design sheet lists (desktops, vertical monitors, phones upright and sideways, tablets). A visual change retakes them in the same pull request, and compares them with the design it was drawn from. What a headless browser can't do (gestures, the install prompt, Safari, real fullscreen) is checked by hand on real phones.
+jsdom has no real layout, so how each screen looks is checked in a real headless browser: the [design sheet](design.md)'s pictures are shot from the running app, with fake people and moving pictures, at every size the design sheet lists (desktops, vertical monitors, a narrow window, and the screen phones and tablets see). A visual change retakes them in the same pull request, and compares them with the design it was drawn from. What a headless browser can't do (Safari, real fullscreen) is checked by hand.
 
 ## Test rules
 
@@ -97,7 +97,7 @@ Every test earns its place, and runs alone, in any order, fast.
 - **Fast:** a test under about 100 ms, a file under about 1.5 s, the whole suite in about 10 s; a file that grows past that splits by feature, so the workers share the load.
 - **A flaky test is a bug:** fix its cause (usually time or shared state); never re-run it to pass.
 
-These rules are being applied as the app is reorganised ([Architecture](architecture.md#where-the-code-is-going)). Every test passes alone and shuffled, and every test outside the phone-only files (removed with phone support) builds its own data and setup; the room page's tests still wait in real time, and are split by feature in a later step.
+These rules are being applied as the app is reorganised ([Architecture](architecture.md#where-the-code-is-going)). Every test passes alone and shuffled, and builds its own data and setup; the room page's tests still wait in real time, and are split by feature in a later step.
 
 ## Running them
 

@@ -34,7 +34,7 @@
   color: var(--text);
 }
 
-/* A phone: one line still, a little smaller and closer. */
+/* A narrow window: one line still, a little smaller and closer. */
 @media (max-width: 760px) {
   .footer {
     gap: 10px;

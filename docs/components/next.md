@@ -158,7 +158,7 @@ Small pieces used in many places. Each is built once and reused everywhere.
 
 **Why its own component:** Xovê's name and mark, drawn with its red corner. It is the brand: one source, never redrawn by hand.
 
-**Where it's used:** The header, and the phone's header.
+**Where it's used:** The header.
 
 ## The header
 
@@ -174,7 +174,7 @@ The bar along the top.
 
 **Why its own component:** The top bar holds the app's global actions, apart from the room's content, and sits above the stage's light. As one piece it lays out its two ends and spaces its buttons by what the eye sees.
 
-**Where it's used:** The room, at every size; the phone has its own smaller one.
+**Where it's used:** The room, at every size.
 
 ### My picture button
 
@@ -416,7 +416,7 @@ The right column, and what shows of it when it's hidden.
 
 **Why its own component:** Where I write: one pill with the send arrow inside, grey when empty and red when there's something to send.
 
-**Where it's used:** The foot of the chat; the phone's chat too.
+**Where it's used:** The foot of the chat.
 
 ### Chat toast
 

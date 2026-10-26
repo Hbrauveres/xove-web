@@ -99,8 +99,7 @@ export function Facecam({ video, label, place, collapsed, onSwap, onMove, onColl
     <div
       ref={boxRef}
       data-facecam=""
-      // Its own drag, never a swipe of the stage (spec 0159).
-      data-no-swipe
+      // Its own drag: the stage's pointer handlers don't see it.
       className={styles.facecam}
       style={{ left: `${place.x * 100}%`, top: `${place.y * 100}%` }}
       tabIndex={0}

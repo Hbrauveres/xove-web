@@ -21,24 +21,16 @@ import type { Hearing } from "./HearToggles";
 import { ViewerBar, type Sound } from "./ViewerBar";
 import { MicIcon, MicOffIcon } from "./icons";
 import round from "./RoundButton.module.css";
-import { liftButtons, makeRoom, ROOM_GAP as SHEET_GAP } from "./makeRoom";
 import { AlsoLive } from "./AlsoLive";
 import { Ambilight } from "./Ambilight";
 import { CornerGlow } from "./CornerGlow";
 import { StaticGlow } from "./StaticGlow";
 import { NowWatching, STREAM_PLACES } from "./NowWatching";
-// The component, not the type of the same name from ../../types.
-import { LiveFeed as LiveNowFeed } from "./LiveFeed";
-import { HereCards } from "./HereCards";
 import { Toast } from "../ui/Toast";
 import { Tooltip } from "../ui/Tooltip";
 import { useVideoShape } from "../../hooks/useVideoShape";
-import { useStageSwipe } from "../../hooks/useStageSwipe";
-import { useKeyboardLast, useTapToggle } from "../../hooks/useTapToggle";
-import { stepOnStage } from "../../media/stagePick";
+import { useKeyboardLast } from "@shared/hooks/use-keyboard-last.hook";
 import { choose, hearingOf, type Choices } from "../../media/hearing";
-import { StageDots } from "./StageDots";
-import { StreamsRow } from "./StreamsRow";
 import { gridFor } from "../../media/ambilight";
 import styles from "./Stage.module.css";
 
@@ -58,36 +50,12 @@ type Props = {
   watchers?: Friend[];
   /** The others in the room, for an empty stage's invitation (spec 0107). */
   others?: Friend[];
-  /**
-   * The phone's layouts: upright (spec 0158), the compact info row then the feed or who's here;
-   * sideways (spec 0160), the stage filling the screen with a top bar and the streams row.
-   */
-  layout?: "phone" | "sideways";
-  /** Sideways: the people button, the bell and my account, on the right of the top bar. */
-  topRight?: ReactNode;
-  /**
-   * On a phone or tablet (spec 0171): the fullscreen button opens and leaves the full-screen
-   * view instead of the player's fullscreen; `hidden` sideways, where the room is already in it.
-   */
-  fullView?: { on: boolean; toggle: () => void; hidden: boolean };
-  /** On the phone: who has this person's stream on their stage, for the feed's cards. */
-  watchersOf?: (personId: string) => Friend[];
-  /** On the phone, with nobody live: everyone in the room, me included, and when they arrived. */
-  people?: Friend[];
-  meId?: string;
-  arrivedAt?: Record<string, number>;
-  /**
-   * The settings panel, over the cog (spec 0107): inside the player, so it comes along in
-   * fullscreen; sideways on the stage, which is the screen, so it sits above the top bar too.
-   */
+  /** The settings panel, over the cog: inside the player, so it comes along in fullscreen. */
   settingsPanel?: ReactNode;
-  /** The settings sheet is open over the stage: the upright full view makes room for the player. */
-  sheetOpen?: boolean;
 };
 
-const NOBODY: Friend[] = [];
-const NO_ARRIVALS: Record<string, number> = {};
-const nobodyWatching = () => NOBODY;
+/** Where the facecam starts, as shares of the stage: the top right, clear of the buttons. */
+const FACECAM_START: FacecamPlace = { x: 0.73, y: 0.04 };
 
 /** How long the player's labels and bars stay after the mouse stops moving. */
 export const CHROME_IDLE_MS = 2500;
@@ -95,10 +63,6 @@ export const CHROME_IDLE_MS = 2500;
 /** Watching a camera: there's no screen to hear. */
 const NO_SCREEN_SOUND = "No screen sound";
 const NO_SOUND_HERE = "No sound in this stream";
-
-/** iPhones and iPads ignore a page's volume (only their buttons change it). */
-const canSetVolume = () =>
-  !/iPad|iPhone|iPod/.test(navigator.userAgent) && !(navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
 /** The light's grid for a shape: a new grid starts a fresh light (spec 0107). */
 const gridKey = (shape: number) => {
@@ -109,25 +73,7 @@ const gridKey = (shape: number) => {
 const what = (feed: LiveFeed) => (feed.kind === "camera" ? "camera" : "shared screen");
 
 /** Where the big stream plays: in a 16:9 box, with the picture's own shape (spec 0107). */
-export function Stage({
-  sharers,
-  controls,
-  stage,
-  ambilight,
-  watchers,
-  others,
-  layout,
-  watchersOf = nobodyWatching,
-  people = NOBODY,
-  meId = "me",
-  arrivedAt = NO_ARRIVALS,
-  topRight,
-  fullView,
-  settingsPanel,
-  sheetOpen = false,
-}: Props) {
-  const phone = layout === "phone";
-  const sideways = layout === "sideways";
+export function Stage({ sharers, controls, stage, ambilight, watchers, others, settingsPanel }: Props) {
   const frameRef = useRef<HTMLDivElement>(null);
   const [watch, setWatch] = useState<WatchPrefs>(loadWatchPrefs);
   // How I hear the voice of the person I watch (spec 0123): its own volume and mute, remembered.
@@ -162,111 +108,29 @@ export function Stage({
   // Screen and camera together: the screen big, the camera in the facecam over it,
   // unless the viewer swapped them (for that person). Remembered for this visit only.
   const swapped = big ? Boolean(swappedFor[big.person.id]) : false;
-  // It starts at the top right (spec 0111), clear of the round buttons and the fullscreen button
-  // at the bottom right; under the top bar where one lies over the player.
-  // Until it's moved, it follows the layout (turning the phone, the full view keep one stage).
-  const [movedFacecam, setFacecamPlace] = useState<FacecamPlace | null>(null);
-  const facecamPlace = movedFacecam ?? {
-    x: 0.73,
-    y: layout === "sideways" ? 0.18 : 0.04,
-  };
+  // It starts at the top right, clear of the round buttons and the fullscreen button at the bottom right.
+  const [facecamPlace, setFacecamPlace] = useState<FacecamPlace>(FACECAM_START);
   const [facecamCollapsed, setFacecamCollapsed] = useState(false);
   const both = Boolean(big?.screen && big?.camera);
   const main = big ? ((both && swapped ? big.camera : big.screen) ?? big.camera ?? null) : null;
   const small = both && big ? (swapped ? big.screen : big.camera) : undefined;
 
-  // The LIVE label, the name and the bars show while the mouse moves over the player
-  // (or after a tap), and fade when it stops, like YouTube.
+  // The LIVE label, the name and the bars show while the mouse moves over the player, and fade
+  // when it stops, like YouTube.
   const [chromeShown, setChromeShown] = useState(false);
   const idleTimer = useRef<number | undefined>(undefined);
   // Nothing fades while a control has the keyboard focus, or a menu or the volume slider is open.
   const held = useRef(new Set<string>());
-  // Sideways the top bar is part of it too: its focus, and an open panel (spec 0160).
-  const topRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
   const controlsRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<HTMLDivElement>(null);
-  // Sideways and in the upright full view, the stage's box is the whole screen (spec 0133): its
-  // controls sit at the screen's bottom whatever the picture's shape.
-  const onScreen = sideways && Boolean(fullView?.on && !fullView.hidden);
-
-  // The upright full view with the settings sheet open (spec 0107, design decision 6; spec 0112):
-  // the round buttons and the fullscreen button, at the bottom of the screen, move up together
-  // to just above the sheet; the video moves up between the top bar and the sheet at the same
-  // size if it fits there, and stays (never shrunk) if not. The sheet's top is read from the
-  // sheet itself: the visible screen isn't always the stage's height on a real phone.
-  const makingRoom = sideways && Boolean(fullView?.on && !fullView.hidden) && sheetOpen;
-  // The upright normal view (spec 0118): the buttons stay over the player's bottom, and rise
-  // over the video to just above the sheet where a tall player reaches under it.
-  const roomInPlayer = phone && sheetOpen;
-  useLayoutEffect(() => {
-    const box = boxRef.current;
-    const section = stageRef.current;
-    if (!box || !section) return;
-    const place = () => {
-      const frame = frameRef.current;
-      const view = viewRef.current;
-      const inPlayer = [frame?.querySelector<HTMLElement>("[data-overlay]"), controlsRef.current];
-      if (view) view.style.translate = "";
-      section.style.removeProperty("--sheet-h");
-      inPlayer.forEach((el) => el && (el.style.translate = ""));
-      if (!makingRoom && !roomInPlayer) return;
-      const sheet = document.querySelector<HTMLElement>('[role="dialog"][data-variant="sheet"]');
-      if (!sheet) return;
-      if (roomInPlayer) {
-        const row = controlsRef.current?.querySelector<HTMLElement>("[data-buttons]");
-        if (!frame || !row) return;
-        // In layout, from the player's top: a lift in place or still sliding isn't counted.
-        let y = 0;
-        for (let n: HTMLElement | null = row; n && n !== frame; n = n.offsetParent as HTMLElement | null)
-          y += n.offsetTop;
-        const up = liftButtons({
-          rowBottom: frame.getBoundingClientRect().top + y + row.offsetHeight,
-          sheetTop: sheet.offsetTop,
-          max: y - SHEET_GAP,
-        });
-        if (up) inPlayer.forEach((el) => el && (el.style.translate = `0 ${-up}px`));
-        return;
-      }
-      // Fixed to the screen: its layout top, which its slide-in (a transform) doesn't change. The
-      // controls end above it (the stylesheet reads its height); the picture moves up if it fits.
-      const sheetTop = sheet.offsetTop;
-      const s = section.getBoundingClientRect();
-      section.style.setProperty("--sheet-h", `${Math.max(0, s.bottom - sheetTop)}px`);
-      if (!view) return;
-      const top = topRef.current;
-      const bar = top
-        ? Math.max(0, ...[...top.children].map((c) => (c as HTMLElement).offsetTop + (c as HTMLElement).offsetHeight))
-        : 0;
-      // The view's band in layout: centred in the box (its translate is its own centring).
-      const band = { top: box.offsetTop + view.offsetTop - view.offsetHeight / 2, height: view.offsetHeight };
-      const lift = makeRoom({ height: s.height, bar, sheet: s.bottom - sheetTop, band });
-      if (lift) view.style.translate = `-50% calc(-50% - ${lift}px)`;
-    };
-    place();
-    window.addEventListener("resize", place);
-    // The picture's shape can change with the sheet open (another stream, its real size
-    // arriving, the facecam): measure again. A translate doesn't resize, so this can't loop.
-    const watch = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(place);
-    watch?.observe(box);
-    return () => {
-      window.removeEventListener("resize", place);
-      watch?.disconnect();
-    };
-  }, [makingRoom, roomInPlayer]);
-  // The keyboard's focus keeps the controls; a finger's tap doesn't (spec 0131).
+  // The keyboard's focus keeps the controls; a click doesn't.
   const keyboardFocus = useKeyboardLast();
   const focusInside = () =>
-    held.current.size > 0 ||
-    (keyboardFocus() && (frameRef.current?.contains(document.activeElement) ?? false)) ||
-    (keyboardFocus() && (topRef.current?.contains(document.activeElement) ?? false)) ||
-    Boolean(topRef.current?.querySelector('[aria-expanded="true"]'));
-  // An open streams row stays through the idle fade; only a tap hides it, with everything (spec 0131).
-  const [rowAway, setRowAway] = useState(false);
+    held.current.size > 0 || (keyboardFocus() && (frameRef.current?.contains(document.activeElement) ?? false));
   const showChrome = useCallback(() => {
     setChromeShown(true);
-    setRowAway(false);
     window.clearTimeout(idleTimer.current);
     const fade = () => {
       if (focusInside()) idleTimer.current = window.setTimeout(fade, CHROME_IDLE_MS);
@@ -274,9 +138,8 @@ export function Stage({
     };
     idleTimer.current = window.setTimeout(fade, CHROME_IDLE_MS);
   }, []);
-  // A finger lifting off fires pointerleave at once: on touch, only the timer hides.
   const leaveChrome = useCallback((e: React.PointerEvent) => {
-    if (e.pointerType === "touch" || focusInside()) return;
+    if (focusInside()) return;
     // Fullscreen, there's nothing outside the player to leave to. Some browsers still send
     // "left" while the mouse moves over it (Chrome on Windows, on a tall monitor), which hid
     // the controls for good: only the idle timer hides them there.
@@ -307,7 +170,7 @@ export function Stage({
     hold("settings", !settingsOpen);
     onSettings();
   }, [hold, settingsOpen, onSettings]);
-  // Another stream on the stage (a preview, a swipe, a stream ending) closes the settings: they
+  // Another stream on the stage (a preview, a stream ending) closes the settings: they
   // belong to the buttons they opened from, which go with the stream (spec 0123).
   const shownId = useRef(bigId);
   useEffect(() => {
@@ -322,26 +185,18 @@ export function Stage({
   // its menu (spec 0123): centred on it, just above the round buttons. The panel reads where
   // they are from two variables on what holds it.
   useLayoutEffect(() => {
-    const host = sideways ? stageRef.current : frameRef.current;
+    const host = frameRef.current;
     if (!settingsOpen || !host || !controlsRef.current) return;
     const place = () => {
-      // Read each time: turning the phone in the full view moves the buttons to another layer.
       const controls = controlsRef.current;
       if (!controls) return;
       const cog = controls.querySelector('button[aria-label="Settings"], [data-settings-anchor]');
       const row = controls.querySelector("[data-buttons]");
       const h = host.getBoundingClientRect();
       if (!cog || !row || !h.width) return;
-      // The panel goes where the buttons end up: if the player is still sliding back (turning
-      // the phone in the full view with the settings open), take its slide out.
-      const box = boxRef.current;
-      const sliding =
-        box && host !== frameRef.current && box.contains(row)
-          ? box.getBoundingClientRect().top - h.top - box.offsetTop
-          : 0;
       const c = cog.getBoundingClientRect();
       host.style.setProperty("--cog-x", `${c.left + c.width / 2 - h.left}px`);
-      host.style.setProperty("--above-row", `${h.bottom - (row.getBoundingClientRect().top - sliding) + ROW_GAP}px`);
+      host.style.setProperty("--above-row", `${h.bottom - row.getBoundingClientRect().top + ROW_GAP}px`);
     };
     place();
     window.addEventListener("resize", place);
@@ -350,18 +205,11 @@ export function Stage({
     watch?.observe(host);
     const row = controlsRef.current.querySelector("[data-buttons]");
     if (row) watch?.observe(row);
-    // And once the player has finished sliding (a slide doesn't resize anything).
-    const box = boxRef.current;
-    box?.addEventListener("transitionend", place);
     return () => {
       window.removeEventListener("resize", place);
       watch?.disconnect();
-      box?.removeEventListener("transitionend", place);
     };
-  }, [settingsOpen, sideways, onScreen]);
-  // The streams row's arrow at the bottom-left, on the buttons' line; lifted above the settings sheet,
-  // the buttons are off its line and need no room for it.
-  const rowArrow = sideways && Boolean(big) && sharers.length > 1 && !makingRoom;
+  }, [settingsOpen]);
   const playing = Boolean(main && (big?.isMe ? main.local : main.remote));
   useEffect(() => () => window.clearTimeout(idleTimer.current), []);
 
@@ -442,7 +290,6 @@ export function Stage({
     return () => document.removeEventListener("fullscreenchange", follow);
   }, []);
   const toggleFullscreen = () => {
-    // The whole page may be fullscreen on a phone (spec 0160): only the player's own leaves.
     if (document.fullscreenElement && document.fullscreenElement === frameRef.current) {
       void document.exitFullscreen?.().catch(() => {
         /* Already left. */
@@ -450,81 +297,10 @@ export function Stage({
       return;
     }
     frameRef.current?.requestFullscreen?.().catch(() => {
-      /* Not allowed here (some phones and app views). The stage stays inline. */
+      /* Not allowed here. The stage stays inline. */
     });
   };
 
-  // On the phone, a swipe on the picture goes to the next or previous person live (spec 0159).
-  const slideRef = useRef<HTMLDivElement>(null);
-  const order = sharers.map((s) => s.person.id);
-  const swipe = useStageSwipe(slideRef, {
-    // Upright and sideways alike (spec 0160): left and right always changes the stream.
-    enabled: (phone || sideways) && order.length > 1,
-    onStep: (direction) => {
-      const next = stepOnStage(order, bigId, direction);
-      if (next) pick(next);
-    },
-  });
-
-  // Sideways (spec 0160): the streams row, closed at first and each time the phone turns
-  // sideways; a swipe up opens it, a swipe down closes it. It hides with the controls and comes back
-  // open with them (spec 0131).
-  const [rowOpen, setRowOpen] = useState(false);
-  const [rowFor, setRowFor] = useState(layout);
-  if (rowFor !== layout) {
-    setRowFor(layout);
-    setRowOpen(false);
-  }
-  // Nobody live: there's no row to open.
-  if (rowOpen && !big) setRowOpen(false);
-  // Open and not hidden by a tap: hidden, it's closed for screen readers too, and opens again with
-  // the controls.
-  const rowShown = rowOpen && !(rowAway && !chromeShown);
-  const rowSwipe = useStageSwipe(slideRef, {
-    enabled: sideways && Boolean(big),
-    axis: "vertical",
-    onOpen: () => setRowOpen(true),
-    onClose: () => setRowOpen(false),
-  });
-  // Turning sideways shows the controls, so the top bar is there to start with.
-  useEffect(() => {
-    if (sideways) showChrome();
-  }, [sideways, showChrome]);
-  // Touches and moves: the frame's, or sideways the whole screen's, so the black at the
-  // stage's sides counts too. A tap toggles the controls, the open streams row with them (spec 0131).
-  const tap = useTapToggle({
-    shown: chromeShown && playing,
-    onShow: showChrome,
-    onHide: () => {
-      window.clearTimeout(idleTimer.current);
-      setChromeShown(false);
-      setRowAway(true);
-    },
-  });
-  const gestures = {
-    onPointerMove: (e: React.PointerEvent) => {
-      tap.move(e);
-      swipe.onPointerMove(e);
-      rowSwipe.onPointerMove(e);
-    },
-    onPointerDown: (e: React.PointerEvent) => {
-      tap.down(e);
-      // Sideways the whole screen listens, but only a drag that starts on the picture swipes (FR-12).
-      if (sideways && !slideRef.current?.contains(e.target as Node)) return;
-      swipe.onPointerDown(e);
-      rowSwipe.onPointerDown(e);
-    },
-    onPointerUp: (e: React.PointerEvent) => {
-      tap.up(e);
-      swipe.onPointerUp(e);
-      rowSwipe.onPointerUp(e);
-    },
-    onPointerCancel: (e: React.PointerEvent) => {
-      tap.cancel();
-      swipe.onPointerCancel(e);
-      rowSwipe.onPointerCancel(e);
-    },
-  };
   // Only over a playing video: notices and the empty stage never fade.
   const chrome = playing ? (chromeShown ? "shown" : "hidden") : undefined;
 
@@ -555,8 +331,7 @@ export function Stage({
 
     return (
       <>
-        {/* The picture (and its facecam) moves with a swipe; the buttons stay put. */}
-        <div ref={slideRef} className={styles.slide}>
+        <div className={styles.slide}>
           {content}
           {small && (
             <Facecam
@@ -578,18 +353,10 @@ export function Stage({
     <>
       {/* Over a stream and over the empty stage alike, so stopping the only stream in
           fullscreen never strands you there (spec 0111). */}
-      {fullView ? (
-        <StageOverlay view fullscreen={fullView.on} onFullscreen={fullView.toggle} hidden={fullView.hidden} />
-      ) : (
-        <StageOverlay fullscreen={fullscreen} onFullscreen={toggleFullscreen} />
-      )}
+      <StageOverlay fullscreen={fullscreen} onFullscreen={toggleFullscreen} />
 
       {/* Always there: over the empty stage they never fade; over a stream, with the bars. */}
-      <div ref={controlsRef} className={styles.controls} data-no-swipe>
-        {/* Upright and sideways alike: where you are among the people live (specs 0159, 0160). */}
-        {(phone || sideways) && (
-          <StageDots people={sharers.map((s) => s.person)} meId={meId} onStage={bigId} onPick={(id) => pick(id)} />
-        )}
+      <div ref={controlsRef} className={styles.controls}>
         {big && !big.isMe ? (
           // Someone else's stream: what you hear at the left, you at the right (spec 0123, design decision 1).
           <ViewerBar
@@ -612,7 +379,6 @@ export function Stage({
             full={controls.free <= 0}
             onStart={startMine}
             onSettings={toggleSettings}
-            canSetVolume={canSetVolume()}
           />
         ) : !big ? (
           // Nobody live: the empty stage has the ways to start; the settings sit in the corner, beside
@@ -623,7 +389,6 @@ export function Stage({
             canShareScreen={controls.canShareScreen}
             onStart={startMine}
             onSettings={toggleSettings}
-            canSetVolume={canSetVolume()}
           />
         ) : (
           // Your stream: your controls in the middle, your mic with them.
@@ -654,42 +419,31 @@ export function Stage({
   );
 
   return (
-    <section
-      ref={stageRef}
-      className={styles.stage}
-      data-layout={layout}
-      data-chrome={sideways ? chrome : undefined}
-      data-row-arrow={rowArrow || undefined}
-      // Sideways, the open streams row: the controls end above it, from shared values (spec 0133).
-      data-row-open={(sideways && rowShown) || undefined}
-      data-sheet-lift={makingRoom || undefined}
-      data-no-full={(sideways && fullView?.hidden) || undefined}
-      aria-label="Shared screen"
-      {...(sideways ? gestures : {})}
-    >
+    <section ref={stageRef} className={styles.stage} aria-label="Shared screen">
       <div
         ref={boxRef}
         className={styles.box}
         data-shape={shape.toFixed(4)}
         style={{ "--shape": shape } as React.CSSProperties}
       >
-        {/* The controls' layer (spec 0133): the stage's whole box, whatever the picture's shape. It
-            holds the buttons and the view, and takes the taps. */}
+        {/* The controls' layer: the stage's whole box, whatever the picture's shape. It holds the
+            buttons and the view. */}
         <div
           ref={frameRef}
           className={styles.frame}
           data-chrome={chrome}
-          {...(sideways ? {} : gestures)}
+          onPointerMove={showChrome}
+          onPointerDown={showChrome}
           onPointerLeave={leaveChrome}
           onFocus={showChrome}
         >
-          {/* The view (spec 0133): the picture in its own shape, centred, with its light behind it. */}
+          {/* The view: the picture in its own shape, centred, with its light behind it. */}
           <div ref={viewRef} className={styles.view}>
             {/* Behind the picture, outside it: the picture clips what's inside it. */}
             {/* One per stream: a stream the browser won't let it read doesn't darken the next one. */}
-            {/* Nobody live: each viewfinder corner glows outward, a blurred L (spec 0123, design decision 7). */}
+            {/* Nobody live: each viewfinder corner glows outward, a blurred L. */}
             {!big && <CornerGlow prefs={ambilight} />}
-            {/* Nobody live: the static's bands light the wall round the stage (spec 0136). */}
+            {/* Nobody live: the static's bands light the wall round the stage. */}
             {!big && <StaticGlow prefs={ambilight} />}
             <Ambilight
               key={big ? `${big.person.id}|${stage.mainKind}|${gridKey(shape)}` : "none"}
@@ -700,94 +454,33 @@ export function Stage({
             <div className={styles.picture}>{body()}</div>
           </div>
           {chromeLayer}
-          {!sideways && settingsPanel}
+          {settingsPanel}
           {voices.map((v) => (
             <VoiceAudio key={v.id} track={v.track} volume={v.volume} muted={v.muted} />
           ))}
-          {/* The previews I turned on (spec 0131): their screens' sound, at their own volume. */}
+          {/* The previews I turned on: their screens' sound, at their own volume. */}
           {previewSounds.map((p) => (
             <VoiceAudio key={`sound-${p.id}`} track={p.track} volume={p.volume} muted={p.muted} />
           ))}
-          {/* A short message to the user, at the top centre of the player (design decision 10). */}
-          {!sideways && <Toast />}
+          {/* A short message to the user, at the top centre of the player. */}
+          <Toast />
         </div>
       </div>
 
-      {/* Sideways the stage is the screen: over the top bar as well (design decision 9). */}
-      {sideways && settingsPanel}
-      {/* Sideways at the top centre of the screen, over the top bar's empty middle. */}
-      {sideways && (
-        <div className={styles.toastTop}>
-          <Toast />
-        </div>
-      )}
-
-      {sideways ? (
-        <>
-          {/* Over the top, across the screen: who's on the stage, and my buttons (spec 0160). */}
-          <div ref={topRef} className={styles.top} data-fades onFocus={showChrome}>
-            <NowWatching compact sharer={big} watchers={watchers} free={controls.free} />
-            <div className={styles.topRight} data-no-swipe>
-              {topRight}
-            </div>
-          </div>
-          {big && sharers.length > 1 && (
-            <StreamsRow
-              others={sharers.filter((s) => s !== big)}
-              liveCount={STREAM_PLACES - controls.free}
-              open={rowShown}
-              onOpen={() => {
-                setRowOpen(true);
-                showChrome();
-              }}
-              onClose={() => setRowOpen(false)}
-              onPick={(id) => pick(id)}
-              hearOf={hearOf}
-              onHear={setHear}
-              swappedOf={(id) => Boolean(swappedFor[id])}
-              onSwap={toggleSwap}
-            />
-          )}
-        </>
-      ) : phone ? (
-        <>
-          <div className={styles.info}>
-            <NowWatching compact sharer={big} watchers={watchers} free={controls.free} />
-          </div>
-          {/* Only this scrolls on the phone: the stage and its info row stay put (spec 0158). */}
-          <div className={styles.below}>
-            {big ? (
-              <LiveNowFeed
-                others={sharers.filter((s) => s !== big)}
-                liveCount={STREAM_PLACES - controls.free}
-                watchersOf={watchersOf}
-                onPick={(id) => pick(id)}
-                hearOf={hearOf}
-                onHear={setHear}
-                swappedOf={(id) => Boolean(swappedFor[id])}
-                onSwap={toggleSwap}
-              />
-            ) : (
-              <HereCards people={people} meId={meId} arrivedAt={arrivedAt} />
-            )}
-          </div>
-        </>
-      ) : (
-        /* Under the stage, like YouTube's title row (spec 0104). */
-        <div className={styles.info}>
-          <NowWatching sharer={big} watchers={watchers} others={others} />
-          <AlsoLive
-            others={sharers.filter((s) => s !== big)}
-            liveCount={STREAM_PLACES - controls.free}
-            free={controls.free}
-            onPick={(id) => pick(id)}
-            hearOf={hearOf}
-            onHear={setHear}
-            swappedOf={(id) => Boolean(swappedFor[id])}
-            onSwap={toggleSwap}
-          />
-        </div>
-      )}
+      {/* Under the stage, like YouTube's title row. */}
+      <div className={styles.info}>
+        <NowWatching sharer={big} watchers={watchers} others={others} />
+        <AlsoLive
+          others={sharers.filter((s) => s !== big)}
+          liveCount={STREAM_PLACES - controls.free}
+          free={controls.free}
+          onPick={(id) => pick(id)}
+          hearOf={hearOf}
+          onHear={setHear}
+          swappedOf={(id) => Boolean(swappedFor[id])}
+          onSwap={toggleSwap}
+        />
+      </div>
     </section>
   );
 }

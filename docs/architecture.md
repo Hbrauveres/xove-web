@@ -21,18 +21,19 @@ Everything is in `app/src`:
 | --- | --- |
 | `api/` | The HTTP client (`client.ts`) and the API's types (`types.ts`): one function per endpoint, the CSRF header, errors as `ApiError` |
 | `auth/` | Who is signed in (`AuthProvider`, which asks `GET /api/me` once and on demand) and the route guards (`guards.tsx`) |
-| `pages/` | One component per route: `HomePage`, `RequestAccessPage`, `RoomPage`, `AdminPage`, and `InstallPage` |
-| `hooks/` | The room's state and the browser's: the seat and the queue (`useRoomSeat`), the streams (`useStreams`), the LiveKit connection (`useLiveKitRoom`), both put together for the room (`useRoomSession`), who's on the stage (`useStagePick`), the layout (`useRoomLayout`), swipes (`useStageSwipe`), the video's shape (`useVideoShape`), the round buttons' row holding the clicked button still (`usePinnedRow`), and small ones (`useFullscreenElement`, `useInstalled`); the stream's elapsed time is `shared/hooks/use-elapsed.hook.ts` |
+| `pages/` | One component per route: `HomePage`, `RequestAccessPage`, `RoomPage`, `AdminPage` |
+| `hooks/` | The room's state and the browser's: the seat and the queue (`useRoomSeat`), the streams (`useStreams`), the LiveKit connection (`useLiveKitRoom`), both put together for the room (`useRoomSession`), who's on the stage (`useStagePick`), the video's shape (`useVideoShape`), the round buttons' row holding the clicked button still (`usePinnedRow`), and a small one (`useFullscreenElement`); the stream's elapsed time is `shared/hooks/use-elapsed.hook.ts`, and whether the keyboard was used last `shared/hooks/use-keyboard-last.hook.ts` |
 | `media/` | How screens and cameras are sent (`shareSettings.ts`), the ambilight's drawing (`ambilight.ts`), who is big by default (`stagePick.ts`), choices kept in the browser (`preferences.ts`) |
-| `components/stage/` | The player and what's on it: the stage, the ambilight, the controls by owner: my own stream's round buttons (`PlayerButtons`; their icons in `icons.tsx`, the drop-ups on live ones) and, over someone else's stream, `ViewerBar` (what I hear at the left, each sound its own button and slider; my mic or Go live at the right); the voice I hear (`VoiceAudio`), each person's switches and volumes held by the stage for the visit (the rule in `media/hearing.ts`), and the previews' buttons (`HearToggles`: over a big picture, or in a small preview's row, `PreviewTray`, which floats on its own layer over the page and follows its preview, opened through `usePreviewTray`; a preview's stack, its swap's moment and the finger's hold in `stack.ts`); the settings panel (`SettingsPanel`, its Voice tab's mic level in `MicTest`, and `makeRoom`, which moves the player up for its sheet in the upright full view), the facecam, the previews, the phone's feed and row, the empty stage (`EmptyStage`, a TV on standby: the ways to start, alone in their row; with nobody live the settings are `ViewerBar`'s settings-only form, in the corner; its corners' glow in `CornerGlow`; its TV static in `StaticNoise`, a small canvas the page draws 20 times a second, its grain and bands scaled to the stage; the static's light round the stage in `StaticGlow`; both read their bands from `staticBands.ts`, so they roll together, and its `tv` flag lets the TV's turn-on play only the first time the stage stands by in a visit), the info row. The stage is two layers: its box holds every control (the round buttons, the sounds, Go live, the fullscreen button, the dots) and takes the taps; a view inside it holds the picture and its ambilight in the picture's shape. Sideways and in a phone's upright full view the box is the whole screen; there `makeRoom` moves the view up for the settings sheet, and the controls end above the sheet from its height; in the upright normal view `liftButtons` lifts the buttons over the video where a tall player reaches under the sheet |
-| `components/room/` | The room around the stage: header, footer, people, activity (pill, bell, list), account menu, the waiting screen and the seat offer |
-| `components/ui/` | Shared controls: `Button`, `Range`, `Dropdown`, `Segmented`, `Picker` (a list that floats over its panel, masking what's behind it in the nearest `[data-list-host]`; it opens on request too), `DropUp` (its gestures can redirect to an open panel), `Tooltip` (the app's only tooltip, on its own layer, describing its control for screen readers), `floating.ts` (one tooltip or drop-up showing at a time, what floats inside another belonging to it), the cue (`cue.module.css`), `Avatar`, `PersonAvatar`, `LiveDot`, `FullPageMessage`, `Toast` (a short message any component shows with `showToast`) |
+| `components/stage/` | The player and what's on it: the stage, the ambilight, the controls by owner: my own stream's round buttons (`PlayerButtons`; their icons in `icons.tsx`, the drop-ups on live ones) and, over someone else's stream, `ViewerBar` (what I hear at the left, each sound its own button and slider; my mic or Go live at the right); the voice I hear (`VoiceAudio`), each person's switches and volumes held by the stage for the visit (the rule in `media/hearing.ts`), and the previews' buttons (`HearToggles`, in a small preview's row, `PreviewTray`, which floats on its own layer over the page and follows its preview, opened through `usePreviewTray`; a preview's stack and its swap's moment in `stack.ts`); the settings panel (`SettingsPanel`, its Voice tab's mic level in `MicTest`), the facecam, the previews, the empty stage (`EmptyStage`, a TV on standby: the ways to start, alone in their row; with nobody live the settings are `ViewerBar`'s settings-only form, in the corner; its corners' glow in `CornerGlow`; its TV static in `StaticNoise`, a small canvas the page draws 20 times a second, its grain and bands scaled to the stage; the static's light round the stage in `StaticGlow`; both read their bands from `staticBands.ts`, so they roll together, and its `tv` flag lets the TV's turn-on play only the first time the stage stands by in a visit), the info row. The stage is two layers: its box holds every control (the round buttons, the sounds, Go live, the fullscreen button) and takes the pointer; a view inside it holds the picture and its ambilight in the picture's shape |
+| `components/room/` | The room around the stage: header, footer, people, activity (pill, list), account menu, the waiting screen and the seat offer |
+| `components/ui/` | Shared controls: `Button`, `Range`, `Dropdown`, `Segmented`, `Picker` (a list that floats over its panel, masking what's behind it in the nearest `[data-list-host]`; it opens on request too), `DropUp` (its gestures can redirect to an open panel), `Tooltip` (the app's only tooltip, on its own layer, describing its control for screen readers), `floating.ts` (one tooltip or drop-up showing at a time, what floats inside another belonging to it), the cue (`cue.module.css`), `Avatar`, `PersonAvatar`, `FullPageMessage`, `Toast` (a short message any component shows with `showToast`) |
 | `components/brand/`, `brand/` | The mark: its geometry and animation timeline (`brand/`), and the components that draw it (`XoveMark`, `XoveIcon`) |
-| `install/` | Phones and tablets: which device it is, and the browser's install prompt |
+| `core/devices/` | Which device it is: a phone or a tablet (`is-handheld.util.ts`) |
+| `features/phone-notice/` | What phones and tablets see instead of the app ([below](#phones-and-tablets)) |
 | `styles/` | The design tokens (`global.css`) and the tests that check them |
 | `test/` | The test helpers: a fake API, a fake LiveKit, and rendering the app at a URL ([Testing](testing.md)) |
 
-At the top, `main.tsx` starts the app (and listens for the install prompt first), `app/app.component.tsx` holds the routes, and `types.ts` the room's shared types (a person, a stream, a sharer).
+At the top, `main.tsx` starts the app, `app/root.component.tsx` chooses between the app and the phone notice, `app/app.component.tsx` holds the routes, and `types.ts` the room's shared types (a person, a stream, a sharer).
 
 ```mermaid
 flowchart TD
@@ -46,7 +47,9 @@ flowchart TD
   C --> M
   P --> AU[auth]
   AU --> A
-  APP[app/app.component.tsx] --> I[install]
+  R[app/root.component.tsx] --> D[core/devices]
+  R --> N[features/phone-notice]
+  R --> APP[app/app.component.tsx]
   APP --> P
 ```
 
@@ -66,7 +69,9 @@ Pages put the room together; components draw it; hooks own the state and talk to
 
 Sign-in is the API's: "Continue with Google" goes to `/api/oauth2/authorization/google`, and the API sends you back to `/room` or `/request-access`. The guards only read `AuthProvider`'s answer, so a member page never renders for someone who isn't one.
 
-**On a phone or tablet in a browser tab**, the app shows only `InstallPage` instead of any route: Xovê is used from the home screen there, so sign-in happens inside the installed app. A device counts as touch-first when its main pointer is coarse (`pointer: coarse`); the home-screen app is recognised by its display mode (`useInstalled`: `fullscreen` or `standalone`, or `navigator.standalone` on iPhone).
+### Phones and tablets
+
+Xovê is for computers for now. `Root` (`app/root.component.tsx`) decides once, before the router and `AuthProvider`: on a phone or a tablet it shows only the phone notice (`features/phone-notice/`, [how it looks](design.md#phones-and-tablets-see-you-on-the-big-screen)) on every URL, and since `AuthProvider` never mounts, the page makes no call to the API. A device is a phone or a tablet when its main pointer is a finger (`isHandheld`, the media query `pointer: coarse`); a laptop with a touch screen has a fine main pointer, so it gets the app.
 
 ## The room's state
 
@@ -98,14 +103,13 @@ sequenceDiagram
 | The live streams, their settings, who watches what | `useStreams` | The API; polled every 2 s by every open room |
 | Who is connected, their tracks, my own captures | `useLiveKitRoom` | LiveKit |
 | Who's on my stage | `useStagePick` | This page only |
-| The layout | `useRoomLayout` | This page, from media queries |
 | How I send (quality, mode, the camera picked, my mic and its processing and line), the volumes I start from (a screen's sound, a voice), the ambilight's settings | `media/preferences.ts` | The browser (`localStorage`, `xove.*`) |
 | Each person's mutes and volumes, for this visit | `Stage` | This page only |
 | Whether the settings are open, the setting a live button asked for, and the camera's preview | `RoomPage`, `useRoomSession` | This page only |
 
 **Waiting for a seat.** The queue's rules (who's next, how long a place and an offer last) are the API's ([how](https://github.com/Hbrauveres/xove-api/blob/main/docs/architecture.md#seats-and-the-queue)). Without a seat, the waiting screen shows the place in the queue and asks again every 2 seconds; that poll is also how the API knows the page is still there. When a seat is offered, a popup counts down the seconds the API gives ("Enter room" accepts, "Cancel" leaves the queue), and the tab's title says "Your turn". Closing the waiting page sends `POST /api/room/leave` with `keepalive`, so the request survives the tab closing.
 
-**Who's on the stage.** Each viewer picks who is big: a preview, a card in the phone's feed, or a live stream's line in the activity list (a camera's line puts the camera big). By default, and when the big person stops, it's the person sharing the longest (`media/stagePick.ts`). Once the pick has been still for a second, the page reports it (`PUT /api/streams/watching`), and again when a poll shows the API lost it (after a restart), so the people panel can say who watches whom. Only the page that's really in the video room reports, so a second tab doesn't overwrite it.
+**Who's on the stage.** Each viewer picks who is big: a preview, or a live stream's line in the activity list (a camera's line puts the camera big). By default, and when the big person stops, it's the person sharing the longest (`media/stagePick.ts`). Once the pick has been still for a second, the page reports it (`PUT /api/streams/watching`), and again when a poll shows the API lost it (after a restart), so the people panel can say who watches whom. Only the page that's really in the video room reports, so a second tab doesn't overwrite it.
 
 **When the API restarts.** The API keeps the room in memory ([how](https://github.com/Hbrauveres/xove-api/blob/main/docs/architecture.md#memory-and-the-database)). After a restart, an open room asks for its seat again on its next poll, with its LiveKit connection, and registers again what it's still sending; if the places filled up meanwhile, it stops sending. Nobody has to reload.
 
@@ -138,30 +142,15 @@ Every endpoint, who may call it and what it answers, is in [`xove-api`'s API pag
 
 Sharing a screen or a camera is in [Media](media.md).
 
-## Layouts
+## The stage's layout
 
-`useRoomLayout` picks one of three layouts and follows the screen as it turns or the window resizes:
+The room has one layout, theater mode, that follows the window's size ([how it looks](design.md#the-room-theater-mode)). How the code keeps it smooth:
 
-| Device | Upright | Sideways |
-| --- | --- | --- |
-| Phone: touch-first, shorter side ≤ 500 px | `upright` | `sideways` |
-| Tablet: touch-first, larger | `upright` | `desktop` |
-| Anything else | `upright` if the window is ≤ 760 px wide and upright | `desktop` |
-
-`layoutFor` is a plain function of four media queries, so its tests cover every device without a browser. On a tablet held upright, the info row and the feed sit in a column at most 640 px wide. What each layout looks like is in the [design sheet](design.md#screens-and-layouts); how the code keeps them smooth:
-
-- **The stage never moves in the page.** Turning or resizing changes the layout around it, so the video and a share go on without reloading.
+- **The stage never moves in the page.** Resizing changes the layout around it, so the video and a share go on without reloading.
 - **The picture's shape.** `useVideoShape` reads the big video's width ÷ height from its `resize` event (ignoring changes under 1%). The stage's box takes its column's width and a height from it; the view inside takes the picture's shape in container units of the box, centred. The box is a size container, so the controls read its own width: under 360 px they're compact (a container query, not the window).
-- **Swipes** (`useStageSwipe`): left and right change who's on the stage, in the feed's order and wrapping around; the picture follows the finger, and a drag under a quarter of the width springs back unless it was a quick flick. Sideways, a swipe up opens the streams row and a swipe down closes it. Drags that start on a control (`data-no-swipe`) are the control's.
-- **Fading:** what fades over a playing stream is marked `data-fades`; the stage hides it after `CHROME_IDLE_MS` without a touch or a move ([how it looks](design.md#motion)). The controls fade part by part, so a part marked `data-stays` (a heard voice) stays. Only the keyboard's focus holds them up (`useKeyboardLast`): a finger's tap leaves focus behind on the button it pressed. An open streams row stays through the fade; a tap hides it by closing it, and the stage opens it again with the controls.
-- **Taps** (`useTapToggle`): by touch, a tap on empty space shows or hides the controls; a press on a control only keeps them, and a drag (more than 10 px) or a hold (500 ms or more) isn't a tap.
-- **Sideways, the controls are the screen's** because the box is the screen: they sit at its bottom whatever the picture's shape. What rises from the bottom pushes them up as layout, not measured: the streams row's sizes are shared values on the stage (`--row-head`, `--row-pictures`, `--row-content`), so the controls end above the open row (`data-row-open`) and the sounds start after the arrow from its own size; the full view's settings sheet tells its height (`--sheet-h`, `data-sheet-lift`).
-- **The phone's own bars:** `index.html` asks for the whole screen (`viewport-fit=cover`), so the browser reports the status bar, the island or cutout and the home bar as safe areas. `global.css` names them once (`--safe-top`, `--safe-right`, `--safe-bottom`, `--safe-left`, 0 where there are none), and each page pads its own content by them, never the body, so backgrounds still reach the edges ([how it looks](design.md#the-phones-own-bars)).
-- **The pages outside the room** (sign-in, request access) don't use `useRoomLayout`: a CSS media query (wider than tall and at most 500 px high, a phone held sideways) lays them out in two columns so they fit without scrolling.
+- **Fading:** the stage hides the controls after `CHROME_IDLE_MS` without a move or a press on it ([how it looks](design.md#motion)). The controls fade part by part, so a part marked `data-stays` (a heard voice) stays. Only the keyboard's focus holds them up (`useKeyboardLast`): a click leaves focus behind on the button it pressed.
 - **No pull-to-refresh in the room:** while the room is open (`data-room`), the page sets `overscroll-behavior: none`, so a drag down never reloads it.
-- **The full-screen view** is the room's own state (`fullView` in `RoomPage`), not the browser's fullscreen: on a phone, and a tablet held upright, the stage's fullscreen button shows the sideways layout while the device stays upright, and turning doesn't change it ([how it looks](design.md#phone-sideways)). Elsewhere the button uses the browser's fullscreen.
-
-**Installing.** On Android, "Get Xovê" opens the browser's install prompt, caught as the page loads (`install/prompt.ts`), since a browser offers it only once; with none, it points to the browser menu's "Install app". On iPhone and iPad, it shows Safari's Share steps. The manifest (`public/site.webmanifest`) has what Chrome checks before offering an install and `"display": "fullscreen"`, so the app opens without a browser bar.
+- **Fullscreen** is the browser's own, on the stage's box.
 
 ## Where the code is going
 
@@ -243,7 +232,7 @@ Every rule a tool can measure runs in the commit checks as `3 · Code checks`, o
 - **The tools are pinned** (oxlint, TypeScript, Prettier, knip, jscpd at exact versions). Dependabot proposes their upgrades in a PR of their own (the `checks` group). An upgrade that brings new findings fixes them in that PR, since the list can't grow.
 
 **The size budget.**
-- **Today:** JavaScript 292 kB and styles 19 kB, compressed (kB as Vite prints them), about 10% above what the app weighs today.
+- **Today:** JavaScript 286 kB and styles 16 kB, compressed (kB as Vite prints them), about 10% above what the app weighs today.
 - **Over budget fails.** So does falling more than 10% under it: a lighter app lowers its budget, so the room it freed isn't quietly used up.
 - **Raising a budget** is a deliberate change in `checks/size-budget.json`, in the PR that needs it, saying why.
 
@@ -268,7 +257,7 @@ The model is the room as data: people keyed by one `PersonId` (me included, as a
 ```
 app/                  the web app: everything its image is built from
   src/                the modules above
-  public/             the favicon, the phone icons, site.webmanifest
+  public/             the favicon, the home-screen icons, site.webmanifest
   Dockerfile, Caddyfile, caddy/   the image: the Vite build served by Caddy, built from source
   compose.yaml        runs the image (locally and in the checks)
   scripts/            the checks (guard, check-code, check-styles, check-size), test-alone, brand-icons.mjs (the favicon from the mark's geometry)

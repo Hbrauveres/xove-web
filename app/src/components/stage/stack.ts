@@ -1,8 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Sharer } from "../../types";
 
-/** A finger holds this long to show a preview's buttons, as the stage's own (spec 0131). */
-export const HOLD_MS = 500;
 /** How long a swap plays: the picture behind coming forward. */
 const SWAP_MS = 400;
 
@@ -29,33 +27,4 @@ export function useSwapping() {
     return () => window.clearTimeout(done);
   }, [swapping]);
   return [swapping, setSwapping] as const;
-}
-
-/**
- * A finger's hold on a preview: `start` runs `then` after `HOLD_MS` unless the finger lifts first.
- * The click that ends a hold isn't a tap on the preview: `swallow` says so once, and the next tap
- * counts again.
- */
-export function useHold() {
-  const timer = useRef<number | undefined>(undefined);
-  const held = useRef(false);
-  useEffect(() => () => window.clearTimeout(timer.current), []);
-  return {
-    start(then: () => void) {
-      window.clearTimeout(timer.current);
-      held.current = false;
-      timer.current = window.setTimeout(() => {
-        held.current = true;
-        then();
-      }, HOLD_MS);
-    },
-    cancel() {
-      window.clearTimeout(timer.current);
-    },
-    swallow() {
-      const was = held.current;
-      held.current = false;
-      return was;
-    },
-  };
 }

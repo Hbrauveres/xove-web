@@ -1,10 +1,9 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { DropUp, HOLD_MS, LEAVE_GRACE_MS, OPEN_DELAY_MS } from "./DropUp";
+import { DropUp, LEAVE_GRACE_MS, OPEN_DELAY_MS } from "./DropUp";
 import { TIP_REST_MS, Tooltip } from "./Tooltip";
 
-/** Each test's own clock and pointer: fake timers, and a mouse that can hover unless the test says
- * `device.hover = false` (a touch screen). */
+/** Each test's own clock and pointer: fake timers, and a mouse that can hover. */
 function onDevice() {
   const device = { hover: true };
   vi.useFakeTimers();
@@ -37,101 +36,6 @@ function setup(props: Partial<Parameters<typeof DropUp>[0]> = {}) {
   const shown = () => wrap.getAttribute("data-open") === "true";
   return { wrap, shown, onLeave };
 }
-
-describe("DropUp by touch: press and hold", () => {
-  const touch = { pointerType: "touch", clientX: 10, clientY: 10 };
-  function touchSetup(props: Partial<Parameters<typeof DropUp>[0]> = {}) {
-    onDevice().device.hover = false;
-    const onStop = vi.fn();
-    const view = render(
-      <div>
-        <DropUp label="Your camera" enabled trigger={<button onClick={onStop}>Turn off your camera</button>} {...props}>
-          <button>Integrated Webcam</button>
-        </DropUp>
-        <button>Elsewhere</button>
-      </div>,
-    );
-    const trigger = screen.getByRole("button", { name: "Turn off your camera" });
-    const wrap = trigger.closest("[data-dropup]")!;
-    const shown = () => wrap.getAttribute("data-open") === "true";
-    const hold = (ms = HOLD_MS) => {
-      fireEvent.pointerDown(trigger, touch);
-      act(() => vi.advanceTimersByTime(ms));
-      fireEvent.pointerUp(trigger, touch);
-      fireEvent.click(trigger);
-    };
-    return { onStop, trigger, shown, hold, view };
-  }
-
-  it("opens after a 500 ms press and hold, and that press doesn't stop the stream", () => {
-    onDevice();
-    const { onStop, shown, hold } = touchSetup();
-    hold();
-    expect(HOLD_MS).toBe(500);
-    expect(shown()).toBe(true);
-    expect(onStop).not.toHaveBeenCalled();
-  });
-
-  it("leaves a short tap alone: it still stops the stream", () => {
-    onDevice();
-    const { onStop, shown, hold } = touchSetup();
-    hold(150);
-    expect(shown()).toBe(false);
-    expect(onStop).toHaveBeenCalledOnce();
-  });
-
-  it("doesn't open when the finger moves away (a scroll)", () => {
-    onDevice();
-    const { shown, trigger } = touchSetup();
-    fireEvent.pointerDown(trigger, touch);
-    fireEvent.pointerMove(trigger, { ...touch, clientX: 40 });
-    act(() => vi.advanceTimersByTime(HOLD_MS));
-    expect(shown()).toBe(false);
-  });
-
-  it("stays open when the finger lifts, until a tap outside", () => {
-    onDevice();
-    const { shown, hold } = touchSetup();
-    hold();
-    act(() => vi.advanceTimersByTime(LEAVE_GRACE_MS * 3));
-    expect(shown()).toBe(true);
-    fireEvent.pointerDown(screen.getByRole("button", { name: "Elsewhere" }), touch);
-    expect(shown()).toBe(false);
-  });
-
-  it("closes when its action is done (a camera picked, Change), told by its owner", () => {
-    onDevice();
-    const { shown, hold, view } = touchSetup({ closeSignal: 0 });
-    hold();
-    view.rerender(
-      <div>
-        <DropUp label="Your camera" enabled closeSignal={1} trigger={<button>Turn off your camera</button>}>
-          <button>Integrated Webcam</button>
-        </DropUp>
-      </div>,
-    );
-    expect(shown()).toBe(false);
-  });
-
-  it("closes when the button is pressed again, without stopping the stream", () => {
-    onDevice();
-    const { onStop, shown, hold, trigger } = touchSetup();
-    hold();
-    fireEvent.pointerDown(trigger, touch);
-    fireEvent.pointerUp(trigger, touch);
-    fireEvent.click(trigger);
-    expect(shown()).toBe(false);
-    expect(onStop).not.toHaveBeenCalled();
-  });
-
-  it("offers no text selection or long-press menu on the button", () => {
-    onDevice();
-    const { trigger } = touchSetup();
-    const menu = new MouseEvent("contextmenu", { bubbles: true, cancelable: true });
-    trigger.dispatchEvent(menu);
-    expect(menu.defaultPrevented).toBe(true);
-  });
-});
 
 describe("DropUp, the quick-access pill over a live button", () => {
   it("opens a short pause after the pointer arrives, not at once", () => {
@@ -300,8 +204,6 @@ describe("DropUp, the quick-access pill over a live button", () => {
 });
 
 describe("DropUp redirected: another panel shows the setting (spec 0115)", () => {
-  const touch = { pointerType: "touch", clientX: 10, clientY: 10 };
-
   it("resting the mouse calls the redirect after the same pause, and nothing opens", () => {
     onDevice();
     const redirect = vi.fn();
@@ -312,63 +214,6 @@ describe("DropUp redirected: another panel shows the setting (spec 0115)", () =>
     act(() => vi.advanceTimersByTime(1));
     expect(redirect).toHaveBeenCalledOnce();
     expect(shown()).toBe(false);
-  });
-
-  it("the 500 ms hold calls the redirect, opens nothing, and its tap doesn't stop the stream", () => {
-    const { device } = onDevice();
-    device.hover = false;
-    const redirect = vi.fn();
-    const onStop = vi.fn();
-    render(
-      <DropUp
-        label="Your camera"
-        enabled
-        redirect={redirect}
-        trigger={<button onClick={onStop}>Turn off your camera</button>}
-      >
-        <button>Integrated Webcam</button>
-      </DropUp>,
-    );
-    const trigger = screen.getByRole("button", { name: "Turn off your camera" });
-    fireEvent.pointerDown(trigger, touch);
-    act(() => vi.advanceTimersByTime(HOLD_MS));
-    fireEvent.pointerUp(trigger, touch);
-    fireEvent.click(trigger);
-    expect(redirect).toHaveBeenCalledOnce();
-    expect(onStop).not.toHaveBeenCalled();
-    expect(trigger.closest("[data-dropup]")).toHaveAttribute("data-open", "false");
-    // A short tap still stops it.
-    fireEvent.pointerDown(trigger, touch);
-    act(() => vi.advanceTimersByTime(100));
-    fireEvent.pointerUp(trigger, touch);
-    fireEvent.click(trigger);
-    expect(onStop).toHaveBeenCalledOnce();
-  });
-
-  it("a hold that ends with no click doesn't eat the next tap", () => {
-    const { device } = onDevice();
-    device.hover = false;
-    const onStop = vi.fn();
-    render(
-      <DropUp
-        label="Your camera"
-        enabled
-        redirect={vi.fn()}
-        trigger={<button onClick={onStop}>Turn off your camera</button>}
-      >
-        <button>Integrated Webcam</button>
-      </DropUp>,
-    );
-    const trigger = screen.getByRole("button", { name: "Turn off your camera" });
-    fireEvent.pointerDown(trigger, touch);
-    act(() => vi.advanceTimersByTime(HOLD_MS));
-    fireEvent.pointerUp(trigger, touch);
-    // No click after the long press; the next short tap stops the stream.
-    fireEvent.pointerDown(trigger, touch);
-    act(() => vi.advanceTimersByTime(100));
-    fireEvent.pointerUp(trigger, touch);
-    fireEvent.click(trigger);
-    expect(onStop).toHaveBeenCalledOnce();
   });
 
   it("the keyboard's focus doesn't redirect, nor open it", () => {

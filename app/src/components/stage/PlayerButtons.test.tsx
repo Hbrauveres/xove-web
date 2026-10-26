@@ -1,9 +1,8 @@
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { onFakeClock } from "../../test/factories/clock.factory";
-import { HOLD_MS, OPEN_DELAY_MS } from "../ui/DropUp";
+import { OPEN_DELAY_MS } from "../ui/DropUp";
 import { FULL_ROOM, NO_SCREEN, NO_SOUND, PlayerButtons } from "./PlayerButtons";
-import { currentToast } from "../ui/toast";
 
 const CAMERAS = [
   { deviceId: "cam-1", label: "Logitech C920" },
@@ -115,24 +114,6 @@ describe("stream buttons: the drop-ups (spec 0107)", () => {
     expect(dropUp(screen.getByRole("button", { name: "Turn off your camera" }))).not.toBeNull();
   });
 
-  it("open by touch with a press and hold, and close once a camera is picked", async () => {
-    const { onPickCamera, onStop } = setup({ mine: { screen: false, camera: true } });
-    const stop = screen.getByRole("button", { name: "Turn off your camera" });
-    const touch = { pointerType: "touch", clientX: 5, clientY: 5 };
-    fireEvent.pointerDown(stop, touch);
-    act(() => vi.advanceTimersByTime(HOLD_MS));
-    fireEvent.pointerUp(stop, touch);
-    fireEvent.click(stop);
-    expect(onStop).not.toHaveBeenCalled();
-    expect(dropUp(stop)).toHaveAttribute("data-open", "true");
-    expect(dropUp(stop)).toHaveAttribute("data-touch");
-    const quick = within(dropUp(stop)!).getByRole("group", { name: "Your camera" });
-    fireEvent.click(within(quick).getByRole("button", { name: "Camera: Logitech C920" }));
-    fireEvent.click(within(quick).getByRole("radio", { name: "Integrated Webcam" }));
-    expect(onPickCamera).toHaveBeenCalledWith("cam-2");
-    expect(dropUp(stop)).toHaveAttribute("data-open", "false");
-  });
-
   it("the screen's: what's shared, and Change", async () => {
     withMouse();
     const { user, onChangeWindow, onStop } = setup({ mine: { screen: true, camera: false }, screenSurface: "browser" });
@@ -225,7 +206,7 @@ describe("stream buttons: when they can't be used", () => {
     );
   });
 
-  it("greys out the screen button where the browser can't share a screen, saying why (a phone)", async () => {
+  it("greys out the screen button where the browser can't share a screen, saying why", async () => {
     const { user, onStart } = setup({ canShareScreen: false });
     const share = screen.getByRole("button", { name: "Share your screen" });
     expect(share).toHaveAttribute("aria-disabled", "true");
@@ -234,23 +215,6 @@ describe("stream buttons: when they can't be used", () => {
     await user.click(share);
     expect(onStart).not.toHaveBeenCalled();
     expect(screen.getByRole("button", { name: "Turn on your camera" })).not.toHaveAttribute("aria-disabled");
-  });
-
-  it("says why in a toast when a finger touches a greyed-out button, not when a mouse clicks it (design decision 10)", () => {
-    setup({ canShareScreen: false, free: 0 });
-    const share = screen.getByRole("button", { name: "Share your screen" });
-    fireEvent.pointerDown(share, { pointerType: "mouse" });
-    fireEvent.click(share);
-    expect(currentToast()).toBeNull();
-
-    fireEvent.pointerDown(share, { pointerType: "touch" });
-    fireEvent.click(share);
-    expect(currentToast()?.text).toBe(NO_SCREEN);
-
-    const camera = screen.getByRole("button", { name: "Turn on your camera" });
-    fireEvent.pointerDown(camera, { pointerType: "touch" });
-    fireEvent.click(camera);
-    expect(currentToast()?.text).toBe(FULL_ROOM);
   });
 });
 

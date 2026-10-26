@@ -131,8 +131,8 @@ export function Picker<T extends string>({
 
   const optionsIn = () => [...(root.current?.querySelectorAll<HTMLButtonElement>("[role=radio]") ?? [])];
 
-  // Opened upward: no taller than the room above it, up to whatever clips it (a short stage
-  // on a phone); the rest scrolls, as always.
+  // Opened upward: no taller than the room above it, up to whatever clips it (a short
+  // stage); the rest scrolls, as always.
   const list = useRef<HTMLDivElement>(null);
   // Unrolls a frame after it's drawn, so the browser has the rolled-up state to move from.
   const [unrolled, setUnrolled] = useState(false);

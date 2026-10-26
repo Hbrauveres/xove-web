@@ -7,16 +7,15 @@ import { TIP_REST_MS } from "../ui/Tooltip";
 import { ViewerBar, type Sound } from "./ViewerBar";
 
 // Fresh handlers per render, so no test sees another's calls.
-const base = () => ({ live: false, canShareScreen: true, onStart: vi.fn(), onSettings: vi.fn(), canSetVolume: true });
+const base = () => ({ live: false, canShareScreen: true, onStart: vi.fn(), onSettings: vi.fn() });
 
 /** The bar over Bruno's stream, with his screen's sound and voice held like the stage holds them. */
-function Bruno({ voiceOff = false, noSound = false, canSetVolume = true, talking = false }) {
+function Bruno({ voiceOff = false, noSound = false, talking = false }) {
   const [sound, setSound] = useState<Sound>({ volume: 0.8, muted: false });
   const [voice, setVoice] = useState<Sound>({ volume: 1, muted: false });
   return (
     <ViewerBar
       {...base()}
-      canSetVolume={canSetVolume}
       sound={{ ...sound, onChange: setSound, unavailable: noSound ? "No sound in this stream" : undefined }}
       voice={{
         ...voice,
@@ -103,18 +102,6 @@ describe("the bar over someone else's stream (spec 0123): what I hear", () => {
     expect(button).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("opens the slider on a 500 ms hold by touch, and that hold doesn't mute", () => {
-    vi.useFakeTimers();
-    render(<Bruno />);
-    const button = screen.getByRole("button", { name: "Mute the screen's sound" });
-    fireEvent.pointerDown(button, { pointerType: "touch" });
-    act(() => vi.advanceTimersByTime(500));
-    fireEvent.pointerUp(button, { pointerType: "touch" });
-    fireEvent.click(button);
-    expect(screen.getByRole("slider", { name: "Screen sound volume" }).closest("[inert]")).toBeNull();
-    expect(button).toHaveAttribute("aria-pressed", "false");
-  });
-
   it("closes the slider after 4 s without a touch", () => {
     vi.useFakeTimers();
     render(<Bruno />);
@@ -135,14 +122,6 @@ describe("the bar over someone else's stream (spec 0123): what I hear", () => {
     expect(screen.queryByRole("slider")).not.toBeInTheDocument();
     await userEvent.setup().click(sound);
     expect(sound).toHaveAttribute("aria-disabled", "true");
-  });
-
-  it("is on and off only where a page can't set the volume (an iPhone)", async () => {
-    const user = userEvent.setup();
-    render(<Bruno canSetVolume={false} />);
-    expect(screen.queryByRole("slider")).not.toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Mute the screen's sound" }));
-    expect(screen.getByRole("button", { name: "Unmute the screen's sound" })).toBeInTheDocument();
   });
 });
 

@@ -152,7 +152,7 @@
   color: var(--text);
 }
 
-/* Can't be used here (a phone's screen): the same pill, greyed in place; a tap says why (spec 0138). */
+/* Can't be used in this browser: the same pill, greyed in place; its tooltip says why. */
 .unavailable {
   background: rgba(235, 235, 236, 0.06);
   color: var(--text);
@@ -170,79 +170,7 @@
   }
 }
 
-/* Sideways on a phone the top bar floats over the stage: the corners stay at the screen's edges,
-   as everywhere, and its own "Nobody live" says what "Standby" would. */
-:global([data-layout="sideways"]) .readout {
-  display: none;
-}
-
-/*
- * A phone, upright or sideways (spec 0138): the desktop's screen at a phone's sizes, in the
- * stage's middle: a smaller heading and line, and the row's buttons the stage's own size.
- */
-:global(:is([data-layout="phone"], [data-layout="sideways"])) .focus {
-  gap: 8px;
-}
-
-:global(:is([data-layout="phone"], [data-layout="sideways"])) .title {
-  font-size: 20px;
-}
-
-:global(:is([data-layout="phone"], [data-layout="sideways"])) .copy {
-  /* Shown on short stages too, as on every other screen. */
-  display: block;
-  font-size: 13px;
-}
-
-:global(:is([data-layout="phone"], [data-layout="sideways"])) .go {
-  /* The stage's own buttons' size (34 px), so all of a phone's buttons on the stage are one size. */
-  --h: 34px;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-:global(:is([data-layout="phone"], [data-layout="sideways"])) .go button {
-  gap: 5px;
-  padding: 0 12px;
-  font-size: 12.5px;
-}
-
-:global(:is([data-layout="phone"], [data-layout="sideways"])) .go svg {
-  width: 15px;
-  height: 15px;
-}
-
-/* A phone's shortest stages (a 360 px phone held upright: under 190 px inside): no line, so the
-   pills stay clear of the corner's buttons (spec 0147). */
-@container (max-height: 190px) {
-  :global(:is([data-layout="phone"], [data-layout="sideways"])) .copy {
-    display: none;
-  }
-}
-
-/* The narrowest phone (280 px): only the pills, so the stage's own buttons in its corner stay
-   clear; the heading stays for screen readers. */
-@container (max-width: 300px) {
-  :global(:is([data-layout="phone"], [data-layout="sideways"])) .copy {
-    display: none;
-  }
-
-  :global(:is([data-layout="phone"], [data-layout="sideways"])) .title {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-
-  /* Nothing above the row: no space above it either, so it sits in the middle. */
-  :global(:is([data-layout="phone"], [data-layout="sideways"])) .go {
-    margin-top: 0;
-  }
-}
-
-/* A small stage (a phone): finer corners, no "Standby", a smaller heading, compact buttons. */
+/* A small stage (a narrow window): finer corners, no "Standby", a smaller heading, compact buttons. */
 @container (max-width: 640px) {
   .empty {
     --arm: 18px;
@@ -267,7 +195,7 @@
   }
 }
 
-/* A short stage: finer corners, no line on a desktop's (a phone keeps it), and the way to start
+/* A short stage: finer corners, no line, and the way to start
    in its middle both ways, the stage's own buttons in their corner (spec 0138). */
 @container (max-height: 320px) {
   .empty {
@@ -308,7 +236,7 @@
   }
 }
 
-/* The narrowest phones (under 360 px): smaller still, so the stage's own buttons stay clear. */
+/* The narrowest stages (under 360 px): smaller still, so the stage's own buttons stay clear. */
 @container (max-width: 359px) {
   .title {
     font-size: 17px;
