@@ -409,7 +409,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/Stage.tsx",
-    "count": 22,
+    "count": 18,
     "owner": "#190 room: stage, Stage split"
   },
   {
@@ -592,70 +592,28 @@
     "rule": "history",
     "file": "src/hooks/useFullscreenElement.ts",
     "count": 2,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 11,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/hooks/useStagePick.ts",
-    "count": 2,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/hooks/useVideoShape.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/media/ambilight.ts",
     "count": 3,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/media/hearing.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/media/shareSettings.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/media/stagePick.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/media/stagePick.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -696,7 +654,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/pages/RoomPage.tsx",
-    "count": 5,
+    "count": 4,
     "owner": "#192 room: queue, footer, page"
   },
   {
@@ -1901,119 +1859,56 @@
     "rule": "naming",
     "file": "src/hooks/useFullscreenElement.test.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/hooks/useFullscreenElement.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/hooks/usePinnedRow.test.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/hooks/useRoomSession.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/hooks/useStagePick.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/hooks/useVideoShape.test.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/hooks/useVideoShape.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/media/ambilight.test.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/media/ambilight.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/hearing.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/hearing.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/shareSettings.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/shareSettings.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/stagePick.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/stagePick.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -2284,13 +2179,6 @@
   {
     "tool": "code",
     "rule": "noTest",
-    "file": "src/hooks/useStagePick.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
     "file": "src/main.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
@@ -2336,13 +2224,6 @@
     "file": "src/components/ui/Picker.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "size",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
   },
   {
     "tool": "code",
@@ -3231,119 +3112,56 @@
     "rule": "structure",
     "file": "src/hooks/useFullscreenElement.test.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/hooks/useFullscreenElement.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/hooks/usePinnedRow.test.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/hooks/useRoomSession.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/hooks/useStagePick.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/hooks/useVideoShape.test.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/hooks/useVideoShape.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/media/ambilight.test.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/media/ambilight.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/hearing.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/hearing.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/shareSettings.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/shareSettings.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/stagePick.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/stagePick.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -3565,20 +3383,6 @@
   {
     "tool": "lint",
     "rule": "eslint(complexity)",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
-    "file": "src/hooks/useStagePick.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
     "file": "src/pages/RoomPage.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
@@ -3729,13 +3533,6 @@
     "file": "src/components/ui/Tooltip.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
   },
   {
     "tool": "lint",
@@ -3931,28 +3728,21 @@
     "rule": "eslint(no-magic-numbers)",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 2,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
     "file": "src/hooks/useVideoShape.ts",
     "count": 2,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
     "file": "src/media/ambilight.ts",
     "count": 22,
-    "owner": "#183 the room's hooks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "lint",
@@ -4323,14 +4113,7 @@
     "rule": "typescript(consistent-type-assertions)",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "lint",
@@ -4338,13 +4121,6 @@
     "file": "src/components/stage/AlsoLive.tsx",
     "count": 2,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(no-non-null-assertion)",
-    "file": "src/components/stage/Stage.tsx",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "lint",
@@ -4372,7 +4148,7 @@
     "rule": "TS18048",
     "file": "src/media/ambilight.test.ts",
     "count": 3,
-    "owner": "#183 the room's hooks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "tsc",
@@ -4393,7 +4169,7 @@
     "rule": "TS2322",
     "file": "src/media/ambilight.test.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "tsc",
@@ -4559,20 +4335,6 @@
   {
     "tool": "tsc",
     "rule": "TS2375",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
-    "file": "src/media/hearing.ts",
-    "count": 2,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
     "file": "src/pages/RoomPage.tsx",
     "count": 2,
     "owner": "#192 room: queue, footer, page"
@@ -4687,7 +4449,7 @@
     "rule": "TS2532",
     "file": "src/media/ambilight.test.ts",
     "count": 5,
-    "owner": "#183 the room's hooks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "tsc",
@@ -4771,14 +4533,14 @@
     "rule": "exports",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
+    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "unused",
     "rule": "exports",
     "file": "src/media/ambilight.ts",
     "count": 2,
-    "owner": "#183 the room's hooks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "unused",
@@ -4807,13 +4569,6 @@
     "file": "src/components/ui/Segmented.tsx",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "unused",
-    "rule": "types",
-    "file": "src/media/hearing.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
   },
   {
     "tool": "unused",

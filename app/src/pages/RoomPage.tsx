@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router";
 import { useAuth } from "@core/auth/use-auth.hook";
@@ -15,8 +15,13 @@ import { Stage } from "../components/stage/Stage";
 import { useFullscreenElement, useFullscreenHost } from "../hooks/useFullscreenElement";
 import { useRoomStore, type RoomStoreValue } from "@features/room/hooks/use-room-store.hook";
 import { roomEntry } from "@features/room/utils/room-entry.util";
-import { useRoomSession } from "../hooks/useRoomSession";
-import { useStagePick } from "../hooks/useStagePick";
+import { useStage } from "@features/room/hooks/use-stage.hook";
+import { useActivityFeed } from "@features/room/hooks/use-activity-feed.hook";
+import { useMySending } from "@features/room/hooks/use-my-sending.hook";
+import { useMyVoice } from "@features/room/hooks/use-my-voice.hook";
+import { useStreamSync } from "@features/room/hooks/use-stream-sync.hook";
+import { useRoomView } from "@features/room/hooks/use-room-view.hook";
+import { useWatchReport } from "@features/room/hooks/use-watch-report.hook";
 import type { StreamKind } from "@core/api/api.types";
 import styles from "./RoomPage.module.css";
 
@@ -48,15 +53,64 @@ export function RoomPage({ pollMs }: Props = {}) {
 function Room({ room, onSignOut }: { room: RoomStoreValue; onSignOut: () => void }) {
   const { state } = useAuth();
   const isAdmin = state.status === "signedIn" && state.me.admin;
-  const session = useRoomSession(room);
-  // Who is on the stage (spec 0104): the stage, the previews and the activity list can change it.
-  const stage = useStagePick(session.sharers);
-  const { watchStage } = session;
+  const { store, model, video } = room;
+  const view = useRoomView(model, video, store.myName);
+  const { queue, ...sending } = useMySending(room, view.myLive);
+  useStreamSync({
+    store,
+    model,
+    live: view.myLive,
+    publishing: video.publishing,
+    connection: video.connection,
+    connectionOf: store.video.connectionOf,
+    stopSending: store.video.stop,
+    queue,
+  });
+  const voice = useMyVoice({
+    voice: video.voice,
+    sending: video.publishing.screen || video.publishing.camera,
+    startVoice: store.video.startVoice,
+    stopVoice: store.video.stopVoice,
+    applyVoice: store.video.applyVoice,
+    setVoiceLine: store.video.setVoiceLine,
+  });
+  const activity = useActivityFeed(model.activity, video.presence);
+  // What the room's parts are given, until each reads the room's hooks itself.
+  const session = {
+    ...view,
+    ...sending,
+    ...voice,
+    activity,
+    mine: view.myLive,
+    error: model.streamsError ?? video.error,
+    free: model.free,
+    seats: model.seats,
+    myCamera: video.local.camera,
+    cameras: room.devices.cameras,
+    mics: room.devices.mics,
+    cameraId: video.cameraId || room.camera.savedCamera,
+    screenSurface: video.screenSurface,
+    cameraProblem: video.cameraProblem,
+    connection: video.connection,
+    voice: video.voice,
+    localVoice: video.localVoice,
+    micInput: video.micInput,
+  };
+  // Who is on the stage: the stage, the previews and the activity list can change it.
+  const stage = useStage(session.sharers);
   // A stream still loading counts as nothing watched yet ("In the room").
   const stagePersonId = stage.playing ? (stage.big?.person.id ?? null) : null;
-  useEffect(() => {
-    watchStage(stagePersonId && stage.mainKind ? { personId: stagePersonId, kind: stage.mainKind } : null);
-  }, [watchStage, stagePersonId, stage.mainKind]);
+  const onStage = useMemo(
+    () => (stagePersonId && stage.mainKind ? { personId: stagePersonId, kind: stage.mainKind } : null),
+    [stagePersonId, stage.mainKind],
+  );
+  useWatchReport({
+    watching: model.watching,
+    me: model.me,
+    inRoom: model.seated === true && video.connection === "connected",
+    report: store.reportWatching,
+    onStage,
+  });
   // In fullscreen only the player can be seen: the setup window and errors go inside it (spec 0101).
   const fullscreen = useFullscreenElement();
   const overPage = useFullscreenHost();

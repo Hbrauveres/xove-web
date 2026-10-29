@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { choose, hearingOf } from "./hearing";
+import { choose, downloads, hearingOf } from "./hearing.util";
 
 const defaults = { sound: 0.8, voice: 0.6 };
 
-describe("hearing a person (spec 0131, FR-1)", () => {
+describe("hearing a person", () => {
   it("hears someone untouched while they're on the stage, at my last volumes", () => {
     expect(hearingOf(undefined, true, defaults)).toEqual({
       sound: { volume: 0.8, muted: false },
@@ -41,5 +41,18 @@ describe("hearing a person (spec 0131, FR-1)", () => {
     const mine = choose(undefined, was, { ...was, sound: { volume: 0.3, muted: false } });
     expect(hearingOf(mine, false, defaults).sound.volume).toBe(0.3);
     expect(hearingOf(mine, false, defaults).voice.volume).toBe(0.6);
+  });
+});
+
+describe("what the page downloads", () => {
+  it("always the person on the stage's sound and voice, muted or not, so unmuting is instant", () => {
+    const muted = { sound: { volume: 1, muted: true }, voice: { volume: 1, muted: true } };
+    expect([downloads(muted, true, "sound"), downloads(muted, true, "voice")]).toEqual([true, true]);
+  });
+
+  it("a preview's only while I hear it", () => {
+    expect(downloads(undefined, false, "sound")).toBe(false);
+    const heard = { sound: { volume: 1, muted: false }, voice: { volume: 1 } };
+    expect([downloads(heard, false, "sound"), downloads(heard, false, "voice")]).toEqual([true, false]);
   });
 });

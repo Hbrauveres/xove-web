@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { viewerQualities } from "./shareSettings";
+import { viewerQualities } from "./viewer-qualities.util";
 
 describe("what a viewer can pick", () => {
   it("offers the sharer's quality and the ones below it, down to 480p", () => {

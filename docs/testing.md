@@ -25,7 +25,7 @@ it("isn't, for a computer, a touch-screen laptop or a narrow window: their main 
 });
 ```
 
-The same goes for the stream presets (`core/devices/devices.constants.ts`) and how they're sent and capped (`core/livekit/publish-options.util.ts`), the room's state person by person (`core/livekit/room-state.util.ts`), the ambilight's grid and mask (`media/ambilight.ts`), who is big by default (`media/stagePick.ts`), and the mark's geometry and animation (`brand/`): a test fails if the favicon drifts from the geometry.
+The same goes for the stream presets (`core/devices/devices.constants.ts`) and how they're sent and capped (`core/livekit/publish-options.util.ts`), the room's state person by person (`core/livekit/room-state.util.ts`), the ambilight's grid and mask (`media/ambilight.ts`), who is big by default and what I hear (`features/room/utils/*.util.ts`), and the mark's geometry and animation (`brand/`): a test fails if the favicon drifts from the geometry.
 
 ## Components
 
@@ -67,7 +67,7 @@ it("stops the video and ends the stream", async () => {
 });
 ```
 
-The page, the hooks, the client and the room's logic all run for real; only the network and the video are fake. Hooks with logic of their own (the LiveKit connection, the room session) also have tests that render them alone (`renderHook`).
+The page, the hooks, the client and the room's logic all run for real; only the network and the video are fake. Hooks with logic of their own (the LiveKit connection, the room's hooks in `features/room/hooks/`) also have tests that render them alone (`renderHook`).
 
 ## The style check
 
