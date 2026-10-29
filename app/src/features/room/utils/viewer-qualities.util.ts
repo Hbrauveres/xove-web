@@ -1,15 +1,7 @@
-import type { StreamMode, StreamQuality } from "@core/api/api.types";
+import type { StreamQuality } from "@core/api/api.types";
 import { BEST_SCREEN, SHARE_QUALITIES } from "@core/devices/devices.constants";
 
-/** What the room's screens show about a stream's quality and mode. How they're sent is in core/livekit. */
-
 const presetOf = (quality: StreamQuality) => SHARE_QUALITIES.find((q) => q.id === quality) ?? BEST_SCREEN;
-
-/** The modes, plain, as the settings show them, with what each keeps in their tooltips (spec 0107). */
-export const MODE_OPTIONS: { value: StreamMode; label: string; title: string }[] = [
-  { value: "smooth", label: "Smooth", title: "Keeps motion fluid when the connection is tight: games, videos" },
-  { value: "sharp", label: "Sharp", title: "Keeps detail sharp when the connection is tight: text, code" },
-];
 
 /**
  * The qualities a viewer can receive for a screen whose top layer is `height` pixels

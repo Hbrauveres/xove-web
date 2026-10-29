@@ -409,7 +409,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/Stage.tsx",
-    "count": 22,
+    "count": 18,
     "owner": "#190 room: stage, Stage split"
   },
   {
@@ -604,20 +604,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 11,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/hooks/useStagePick.ts",
-    "count": 2,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/hooks/useVideoShape.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -627,34 +613,6 @@
     "rule": "history",
     "file": "src/media/ambilight.ts",
     "count": 3,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/media/hearing.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/media/shareSettings.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/media/stagePick.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/media/stagePick.ts",
-    "count": 1,
     "owner": "#183 the room's hooks"
   },
   {
@@ -696,7 +654,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/pages/RoomPage.tsx",
-    "count": 5,
+    "count": 4,
     "owner": "#192 room: queue, footer, page"
   },
   {
@@ -1927,27 +1885,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/hooks/useRoomSession.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/hooks/useStagePick.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/hooks/useVideoShape.test.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -1970,48 +1907,6 @@
     "tool": "code",
     "rule": "naming",
     "file": "src/media/ambilight.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/hearing.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/hearing.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/shareSettings.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/shareSettings.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/stagePick.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/stagePick.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
   },
@@ -2284,13 +2179,6 @@
   {
     "tool": "code",
     "rule": "noTest",
-    "file": "src/hooks/useStagePick.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
     "file": "src/main.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
@@ -2336,13 +2224,6 @@
     "file": "src/components/ui/Picker.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "size",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
   },
   {
     "tool": "code",
@@ -3257,27 +3138,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/hooks/useRoomSession.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/hooks/useStagePick.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/hooks/useVideoShape.test.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -3300,48 +3160,6 @@
     "tool": "code",
     "rule": "structure",
     "file": "src/media/ambilight.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/hearing.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/hearing.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/shareSettings.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/shareSettings.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/stagePick.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/stagePick.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
   },
@@ -3565,20 +3383,6 @@
   {
     "tool": "lint",
     "rule": "eslint(complexity)",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
-    "file": "src/hooks/useStagePick.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
     "file": "src/pages/RoomPage.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
@@ -3729,13 +3533,6 @@
     "file": "src/components/ui/Tooltip.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
   },
   {
     "tool": "lint",
@@ -3931,13 +3728,6 @@
     "rule": "eslint(no-magic-numbers)",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 2,
     "owner": "#183 the room's hooks"
   },
   {
@@ -4327,24 +4117,10 @@
   },
   {
     "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "lint",
     "rule": "typescript(no-non-null-assertion)",
     "file": "src/components/stage/AlsoLive.tsx",
     "count": 2,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(no-non-null-assertion)",
-    "file": "src/components/stage/Stage.tsx",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "lint",
@@ -4555,20 +4331,6 @@
     "file": "src/components/ui/Segmented.tsx",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
-    "file": "src/media/hearing.ts",
-    "count": 2,
-    "owner": "#183 the room's hooks"
   },
   {
     "tool": "tsc",
@@ -4807,13 +4569,6 @@
     "file": "src/components/ui/Segmented.tsx",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "unused",
-    "rule": "types",
-    "file": "src/media/hearing.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
   },
   {
     "tool": "unused",

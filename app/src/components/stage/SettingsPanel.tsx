@@ -5,7 +5,7 @@ import type { VoicePrefs } from "@core/preferences/preferences.types";
 import { useMicLevel } from "@features/room/hooks/use-mic-level.hook";
 import sw from "../room/AccountButton.module.css";
 import { CAMERA_QUALITIES, SHARE_QUALITIES } from "@core/devices/devices.constants";
-import { MODE_OPTIONS } from "../../media/shareSettings";
+import { MODE_OPTIONS } from "@features/room/constants/stream-modes.constants";
 import type { StreamKind, StreamMode, StreamQuality, StreamSettings } from "@core/api/api.types";
 import type { MediaTrack } from "@core/livekit/livekit.types";
 import { Picker } from "../ui/Picker";

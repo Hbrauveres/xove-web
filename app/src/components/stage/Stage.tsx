@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { loadHearing, saveHearing } from "@core/preferences/preferences.service";
-import type { HearingPrefs } from "@core/preferences/preferences.types";
-import { viewerQualities } from "../../media/shareSettings";
-import type { StagePick } from "../../hooks/useStagePick";
+import { viewerQualities } from "@features/room/utils/viewer-qualities.util";
+import { useHearing } from "@features/room/hooks/use-hearing.hook";
+import type { StagePick } from "@features/room/hooks/use-stage.hook";
 import type { AmbilightPrefs } from "@core/preferences/preferences.types";
 import type { Friend, LiveFeed, Sharer } from "@features/room/types/room-view.types";
 import { EmptyStage } from "./EmptyStage";
@@ -12,8 +11,7 @@ import { StageNotice } from "./StageNotice";
 import { StageOverlay } from "./StageOverlay";
 import { PlayerButtons, type StreamControls } from "./PlayerButtons";
 import { VoiceAudio } from "./VoiceAudio";
-import type { Hearing } from "./HearToggles";
-import { ViewerBar, type Sound } from "./ViewerBar";
+import { ViewerBar } from "./ViewerBar";
 import { MicIcon, MicOffIcon } from "./icons";
 import round from "./RoundButton.module.css";
 import { AlsoLive } from "./AlsoLive";
@@ -26,7 +24,6 @@ import { Toast } from "../ui/Toast";
 import { Tooltip } from "../ui/Tooltip";
 import { useVideoShape } from "../../hooks/useVideoShape";
 import { useKeyboardLast } from "@shared/hooks/use-keyboard-last.hook";
-import { choose, hearingOf, type Choices } from "../../media/hearing";
 import { gridFor } from "../../media/ambilight";
 import styles from "./Stage.module.css";
 
@@ -71,13 +68,6 @@ const what = (feed: LiveFeed) => (feed.kind === "camera" ? "camera" : "shared sc
 /** Where the big stream plays: in a 16:9 box, with the picture's own shape (spec 0107). */
 export function Stage({ sharers, controls, stage, ambilight, watchers, others, settingsPanel }: Props) {
   const frameRef = useRef<HTMLDivElement>(null);
-  const [watch, setWatch] = useState<HearingPrefs>(() => loadHearing("stream"));
-  // How I hear the voice of the person I watch (spec 0123): its own volume and mute, remembered.
-  const [voiceSound, setVoiceSoundState] = useState<Sound>(() => loadHearing("voice"));
-  const setVoiceSound = (next: Sound) => {
-    setVoiceSoundState(next);
-    saveHearing("voice", next);
-  };
   const micOn = Boolean(controls.voice);
   const toggleMic = () => controls.onVoice?.();
 
@@ -214,46 +204,8 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
   // The picture's shape, for the view and the box's height (specs 0107 and 0133). 16:9 while empty
   // or loading.
   const shape = useVideoShape(bigVideoEl);
-  // What I hear from each person (specs 0123 and 0131): their sound and their voice, each with its
-  // own volume and one switch that follows them everywhere once touched, for the whole visit.
-  const [hearing, setHearing] = useState<Record<string, Choices>>({});
-  const hearOf = (id: string): Hearing =>
-    hearingOf(hearing[id], id === bigId, { sound: watch.volume, voice: voiceSound.volume });
-  const setHear = (id: string, next: Hearing) => {
-    const was = hearOf(id);
-    setHearing((prev) => ({ ...prev, [id]: choose(prev[id], was, next) }));
-    // The stage's volumes are where the next person starts: only a change to whoever is on the stage
-    // moves them, so a preview's volume never changes the stage's (spec 0131).
-    if (id !== bigId) return;
-    changeWatch({ volume: next.sound.volume, muted: false });
-    setVoiceSound({ volume: next.voice.volume, muted: false });
-  };
-  // Downloaded: the person on the stage's sound and voice, muted or not, so unmuting is instant; a
-  // preview's only while I hear it (spec 0131, FR-2).
-  useEffect(() => {
-    for (const s of sharers) {
-      if (s.isMe) continue;
-      const big = s.person.id === bigId;
-      const h = hearingOf(hearing[s.person.id], big, { sound: 0, voice: 0 });
-      s.setSoundOn?.(big || !h.sound.muted);
-      s.setVoiceOn?.(big || !h.voice.muted);
-    }
-  }, [sharers, bigId, hearing]);
-  const bigHearing = big && !big.isMe ? hearOf(big.person.id) : null;
-  // The voices that play: the big person's (muted in place while I mute it) and the previews' I hear;
-  // and the previews' screen sounds I hear (the big one's plays with its picture).
-  const notMe = sharers.filter((s) => !s.isMe);
-  const voices = notMe
-    .filter((s) => s.voice && s.hasVoice && (s === big || !hearOf(s.person.id).voice.muted))
-    .map((s) => ({ id: s.person.id, track: s.voice!, ...hearOf(s.person.id).voice }));
-  const previewSounds = notMe
-    .filter((s) => s !== big && s.sound && s.hasSound && !hearOf(s.person.id).sound.muted)
-    .map((s) => ({ id: s.person.id, track: s.sound!, ...hearOf(s.person.id).sound }));
-
-  const changeWatch = (next: HearingPrefs) => {
-    setWatch(next);
-    saveHearing("stream", next);
-  };
+  // What I hear from each person, and what the page downloads: the room's hearing hook.
+  const { hearOf, setHear, bigHearing, voices, previewSounds, stageSound } = useHearing(sharers, bigId);
 
   // Watching is always Auto (spec 0107): the size it's shown at, stepping down when the
   // connection can't keep up. Asked for as soon as the big video arrives, and whenever its
@@ -317,8 +269,8 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
         video={main.remote.video}
         sound={big.sound}
         label={`${big.person.name}'s ${what(main)}`}
-        volume={bigHearing?.sound.volume ?? watch.volume}
-        muted={bigHearing?.sound.muted ?? watch.muted}
+        volume={bigHearing?.sound.volume ?? stageSound.volume}
+        muted={bigHearing?.sound.muted ?? stageSound.muted}
         onVideo={setBigVideoEl}
       />
     ) : (
