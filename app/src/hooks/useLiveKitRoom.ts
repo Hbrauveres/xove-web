@@ -13,41 +13,22 @@ import {
 } from "livekit-client";
 import { ApiError, api } from "@core/api/api-client.service";
 import type { SharingConnection, StreamKind, StreamMode, StreamSettings } from "@core/api/api.types";
-import { NoiseGate } from "../media/noiseGate";
+import { NoiseGate } from "@core/livekit/noise-gate.adapter";
+import { pickScreen } from "@core/devices/screen-picker.util";
 import { loadCameraDevice, saveCameraDevice } from "@core/preferences/preferences.service";
 import type { VoicePrefs } from "@core/preferences/preferences.types";
+import { SHARE_QUALITIES } from "@core/devices/devices.constants";
 import {
-  SHARE_QUALITIES,
   cameraCaptureOptions,
   cameraPublishOptions,
   capOf,
   contentHintOf,
   degradationOf,
-  newCaptureController,
-  screenCaptureRequest,
   screenPublishOptions,
 } from "../media/shareSettings";
-import type { ActivityEvent, CameraDevice, ConnectionState, MediaTrack, RemoteVideo } from "../types";
-
-/**
- * Opens the browser's picker, and asks it to stay on Xovê once something is picked
- * (spec 0101): by default Chrome switches to the picked window or tab, and the sharer
- * never sees the setup window.
- */
-async function pickScreen(): Promise<MediaStream> {
-  const controller = newCaptureController();
-  const stream = await navigator.mediaDevices.getDisplayMedia({
-    ...screenCaptureRequest(),
-    ...(controller ? { controller } : {}),
-  } as DisplayMediaStreamOptions);
-  // First thing after the answer, before any other await: Chrome only accepts it now.
-  try {
-    controller?.setFocusBehavior?.("no-focus-change");
-  } catch {
-    /* A whole screen has no window to stay on; sharing goes on as before. */
-  }
-  return stream;
-}
+import type { ActivityEvent, ConnectionState, MediaTrack, RemoteVideo } from "../types";
+import { CAMERA_BLOCKED } from "@core/devices/devices.constants";
+import type { CameraDevice, CameraProblem, MicDevice, ScreenSurface, VoiceProblem } from "@core/devices/devices.types";
 
 /**
  * The browser's screen picker, asked directly because livekit-client drops `windowAudio`
@@ -74,16 +55,6 @@ async function captureScreen(room: Room, mode: StreamMode): Promise<(LocalVideoT
 }
 
 export type RoomPerson = { identity: string; name: string };
-
-/** Why the camera can't be used: the browser (or the person) refused it, or there's none. */
-export type CameraProblem = "blocked" | "missing" | null;
-
-/** What a refused camera says: like any app, it asks once, and says how to allow it later. */
-export const CAMERA_BLOCKED =
-  "Your browser didn't allow the camera. Allow it for Xovê in your browser's or phone's settings, then try again.";
-
-/** What a screen share shows, as the browser says (`displaySurface`). */
-export type ScreenSurface = "monitor" | "window" | "browser";
 
 /** A stream that just started: where it comes from, and whether the browser gave its sound. */
 export type StartedStream = SharingConnection & { hasSound: boolean };
@@ -115,11 +86,6 @@ export type RemoteMedia = {
   /** Downloads their voice, or stops downloading it. */
   setVoiceOn: (on: boolean) => void;
 };
-
-/** A microphone this browser has (spec 0123). */
-export type MicDevice = { deviceId: string; label: string };
-/** Why my voice couldn't start: the browser refused the mic, there's none, or it couldn't be sent. */
-export type VoiceProblem = "blocked" | "missing" | "failed" | null;
 
 export type LiveKitRoom = {
   connection: ConnectionState;

@@ -9,7 +9,7 @@ import {
   FakeMediaStreamTrack,
   lastRoom,
 } from "../test/fakeLiveKit";
-import { NoiseGate } from "../media/noiseGate";
+import { NoiseGate } from "@core/livekit/noise-gate.adapter";
 import { DEFAULT_VOICE } from "@core/preferences/preferences.constants";
 import { useLiveKitRoom, type Capture } from "./useLiveKitRoom";
 

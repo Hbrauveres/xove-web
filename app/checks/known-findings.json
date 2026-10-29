@@ -598,14 +598,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/hooks/useLiveKitRoom.ts",
-    "count": 10,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/hooks/useMicLevel.ts",
-    "count": 1,
+    "count": 8,
     "owner": "#181 core: LiveKit adapter, devices"
   },
   {
@@ -667,13 +660,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/media/noiseGate.ts",
-    "count": 1,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/media/shareSettings.test.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -682,7 +668,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/media/shareSettings.ts",
-    "count": 6,
+    "count": 2,
     "owner": "#183 the room's hooks"
   },
   {
@@ -773,7 +759,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/types.ts",
-    "count": 3,
+    "count": 2,
     "owner": "#182 the room's model and store"
   },
   {
@@ -1074,13 +1060,6 @@
     "tool": "code",
     "rule": "livekit",
     "file": "src/hooks/useLiveKitRoom.ts",
-    "count": 1,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "code",
-    "rule": "livekit",
-    "file": "src/media/noiseGate.ts",
     "count": 1,
     "owner": "#181 core: LiveKit adapter, devices"
   },
@@ -1997,13 +1976,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/hooks/useMicLevel.ts",
-    "count": 1,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/hooks/usePinnedRow.test.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -2091,20 +2063,6 @@
     "file": "src/media/hearing.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/noiseGate.test.ts",
-    "count": 1,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/noiseGate.ts",
-    "count": 1,
-    "owner": "#181 core: LiveKit adapter, devices"
   },
   {
     "tool": "code",
@@ -2406,13 +2364,6 @@
     "file": "src/components/ui/PersonAvatar.tsx",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/hooks/useMicLevel.ts",
-    "count": 1,
-    "owner": "#181 core: LiveKit adapter, devices"
   },
   {
     "tool": "code",
@@ -3418,13 +3369,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/hooks/useMicLevel.ts",
-    "count": 1,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/hooks/usePinnedRow.test.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -3512,20 +3456,6 @@
     "file": "src/media/hearing.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/noiseGate.test.ts",
-    "count": 1,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/noiseGate.ts",
-    "count": 1,
-    "owner": "#181 core: LiveKit adapter, devices"
   },
   {
     "tool": "code",
@@ -4160,13 +4090,6 @@
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
-    "file": "src/hooks/useMicLevel.ts",
-    "count": 1,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -4191,13 +4114,6 @@
     "file": "src/media/ambilight.ts",
     "count": 22,
     "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/media/noiseGate.ts",
-    "count": 2,
-    "owner": "#181 core: LiveKit adapter, devices"
   },
   {
     "tool": "lint",
@@ -4468,13 +4384,6 @@
   {
     "tool": "lint",
     "rule": "react(set-state-in-effect)",
-    "file": "src/hooks/useMicLevel.ts",
-    "count": 1,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "lint",
-    "rule": "react(set-state-in-effect)",
     "file": "src/hooks/useRoomSession.ts",
     "count": 2,
     "owner": "#182 the room's model and store"
@@ -4595,7 +4504,7 @@
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
     "file": "src/hooks/useLiveKitRoom.ts",
-    "count": 16,
+    "count": 15,
     "owner": "#181 core: LiveKit adapter, devices"
   },
   {
@@ -4616,7 +4525,7 @@
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
     "file": "src/media/shareSettings.ts",
-    "count": 3,
+    "count": 2,
     "owner": "#183 the room's hooks"
   },
   {
@@ -4679,7 +4588,7 @@
     "tool": "tsc",
     "rule": "TS18048",
     "file": "src/media/shareSettings.ts",
-    "count": 13,
+    "count": 10,
     "owner": "#183 the room's hooks"
   },
   {
@@ -4937,13 +4846,6 @@
   {
     "tool": "tsc",
     "rule": "TS2412",
-    "file": "src/media/noiseGate.ts",
-    "count": 3,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2412",
     "file": "src/test/fakeLiveKit.ts",
     "count": 3,
     "owner": "#195 the sweep"
@@ -5147,13 +5049,6 @@
   {
     "tool": "unused",
     "rule": "exports",
-    "file": "src/media/noiseGate.ts",
-    "count": 2,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
     "file": "src/media/shareSettings.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -5190,7 +5085,7 @@
     "tool": "unused",
     "rule": "types",
     "file": "src/hooks/useLiveKitRoom.ts",
-    "count": 4,
+    "count": 3,
     "owner": "#181 core: LiveKit adapter, devices"
   },
   {

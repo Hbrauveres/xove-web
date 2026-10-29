@@ -1,36 +1,12 @@
 import type { TrackPublishOptions, VideoCaptureOptions, VideoPreset } from "livekit-client";
 import type { StreamMode, StreamQuality } from "@core/api/api.types";
-import { STREAM_QUALITIES } from "@core/preferences/preferences.constants";
+import { CAMERA_QUALITIES, SHARE_QUALITIES } from "@core/devices/devices.constants";
 
 /**
  * How a shared screen is captured and sent (spec 0086). LiveKit's defaults are
  * tuned for slides and voice calls (15 fps, sharpness first, voice filters on the
  * sound); these are tuned for games and videos, within a bandwidth budget.
  */
-
-export type SharePreset = {
-  id: StreamQuality;
-  width: number;
-  height: number;
-  fps: number;
-  /**
-   * The most this quality may use, in bits per second. Set high on purpose: each
-   * connection uses what the sharer's computer and network allow, up to this.
-   */
-  maxBitrate: number;
-};
-
-/**
- * From best to lowest. The ceilings are well above what a screen usually needs, so
- * nobody is held back by them, only by their own connection; the browser and LiveKit
- * lower the bitrate by themselves when a connection can't keep up. The server's monthly
- * traffic is watched outside the app (decided 2026-10-03).
- */
-export const SHARE_QUALITIES: readonly SharePreset[] = [
-  { id: "1080p", width: 1920, height: 1080, fps: 30, maxBitrate: 8_000_000 },
-  { id: "720p", width: 1280, height: 720, fps: 30, maxBitrate: 4_000_000 },
-  { id: "480p", width: 854, height: 480, fps: 30, maxBitrate: 2_000_000 },
-];
 
 const presetOf = (quality: StreamQuality) => SHARE_QUALITIES.find((q) => q.id === quality) ?? SHARE_QUALITIES[0];
 
@@ -46,62 +22,6 @@ export const contentHintOf = (mode: StreamMode) => (mode === "smooth" ? "motion"
 /** How the browser trades quality when the connection is tight, for a mode. */
 export const degradationOf = (mode: StreamMode): RTCDegradationPreference =>
   mode === "smooth" ? "maintain-framerate" : "maintain-resolution";
-
-/**
- * What Xovê asks the browser for when sharing a screen (spec 0095). Xovê opens the
- * picker itself, since livekit-client drops `windowAudio`.
- */
-export type ScreenCaptureRequest = DisplayMediaStreamOptions & {
-  audio: MediaTrackConstraints & { restrictOwnAudio: boolean };
-  video: MediaTrackConstraints;
-  selfBrowserSurface: "include" | "exclude";
-  windowAudio: "exclude" | "window" | "system";
-};
-
-/** Chrome's `CaptureController` (spec 0101); TypeScript's DOM types don't know it yet. */
-export type CaptureControllerLike = {
-  setFocusBehavior?: (behaviour: "focus-captured-surface" | "no-focus-change") => void;
-};
-
-/**
- * A controller for one pick, so the browser can be asked to stay on Xovê afterwards.
- * Undefined where the browser has none (Firefox, Safari): they behave as before.
- */
-export function newCaptureController(): CaptureControllerLike | undefined {
-  const Controller = (globalThis as { CaptureController?: new () => CaptureControllerLike }).CaptureController;
-  return Controller ? new Controller() : undefined;
-}
-
-/** Phones and some browsers can't share a screen at all (spec 0098). */
-export const canShareScreen = () => typeof navigator.mediaDevices?.getDisplayMedia === "function";
-
-const isSafari = () => /^((?!chrome|android|crios|fxios|edg).)*safari/i.test(navigator.userAgent);
-
-/**
- * The browser's screen picker: always the best quality (so the sharer can raise it
- * later without picking again), and the sound as played.
- */
-export function screenCaptureRequest(safari = isSafari()): ScreenCaptureRequest {
-  const preset = SHARE_QUALITIES[0];
-  // As LiveKit does: Safari needs `max`, the others take `ideal`.
-  const size = (px: number) => (safari ? { max: px } : { ideal: px });
-  return {
-    video: { width: size(preset.width), height: size(preset.height), frameRate: preset.fps },
-    // Sharing this very tab would show the room inside the room.
-    selfBrowserSurface: "exclude",
-    // Music and game sound, not a voice: no microphone filters, both channels. Without
-    // Xovê's own sound, so a whole-screen share doesn't send viewers their own streams back.
-    audio: {
-      echoCancellation: false,
-      noiseSuppression: false,
-      autoGainControl: false,
-      channelCount: 2,
-      restrictOwnAudio: true,
-    },
-    // A picked window shares its app's sound, not the whole system's (Discord included).
-    windowAudio: "window",
-  };
-}
 
 /**
  * How the screen is sent: VP9 (VP8 where the browser can't), always with one layer
@@ -133,14 +53,6 @@ export function screenPublishOptions(mode: StreamMode): TrackPublishOptions {
     dtx: false,
   };
 }
-
-/**
- * A camera (spec 0060) goes up to 720p: no need for more, and it spares the upload of
- * someone sending a screen and a camera together.
- */
-export const CAMERA_QUALITIES: readonly SharePreset[] = SHARE_QUALITIES.filter((q) =>
-  STREAM_QUALITIES.camera.includes(q.id),
-);
 
 /**
  * What the browser asks the camera for: 720p at 30 fps (the mode's content hint is set

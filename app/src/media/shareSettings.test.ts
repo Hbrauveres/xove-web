@@ -1,13 +1,10 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
+import { CAMERA_QUALITIES, SHARE_QUALITIES } from "@core/devices/devices.constants";
 import {
-  CAMERA_QUALITIES,
-  SHARE_QUALITIES,
   cameraCaptureOptions,
   cameraPublishOptions,
   capOf,
   contentHintOf,
-  newCaptureController,
-  screenCaptureRequest,
   screenPublishOptions,
   viewerQualities,
 } from "./shareSettings";
@@ -28,14 +25,6 @@ describe("share presets", () => {
       ["720p", 720, 30],
       ["480p", 480, 30],
     ]);
-  });
-
-  it("always captures the best quality at 30 fps, and never this tab", () => {
-    const request = screenCaptureRequest();
-    expect(request.video).toEqual({ width: { ideal: 1920 }, height: { ideal: 1080 }, frameRate: 30 });
-    // Safari needs a ceiling instead, as LiveKit asks it.
-    expect(screenCaptureRequest(true).video).toEqual({ width: { max: 1920 }, height: { max: 1080 }, frameRate: 30 });
-    expect(request.selfBrowserSurface).toBe("exclude");
   });
 
   it.each(modes)("%s: has its content hint", (mode) => {
@@ -71,20 +60,6 @@ describe("share presets", () => {
 });
 
 describe("screen sound", () => {
-  it("is captured as played: no voice filters, stereo, without Xovê's own sound", () => {
-    expect(screenCaptureRequest().audio).toEqual({
-      echoCancellation: false,
-      noiseSuppression: false,
-      autoGainControl: false,
-      channelCount: 2,
-      restrictOwnAudio: true,
-    });
-  });
-
-  it("is the app's sound when a window is picked, not the whole system's", () => {
-    expect(screenCaptureRequest().windowAudio).toBe("window");
-  });
-
   it("is sent in stereo at music quality, without silence skipping", () => {
     const publish = screenPublishOptions("sharp");
     expect(publish.audioPreset).toEqual({ maxBitrate: 128_000 });
@@ -152,19 +127,5 @@ describe("camera presets", () => {
   it("caps a camera at its own layers: 720p is the top one", () => {
     expect(capOf("720p")).toBe(1);
     expect(capOf("480p")).toBe(0);
-  });
-});
-
-describe("staying on Xovê after the picker (spec 0101)", () => {
-  it("has no controller where the browser has none", () => {
-    expect(newCaptureController()).toBeUndefined();
-  });
-
-  it("makes one where the browser has it", () => {
-    class CaptureController {
-      setFocusBehavior() {}
-    }
-    vi.stubGlobal("CaptureController", CaptureController);
-    expect(newCaptureController()).toBeInstanceOf(CaptureController);
   });
 });

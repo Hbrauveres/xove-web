@@ -15,9 +15,6 @@ export type MediaTrack = {
   detach(element: HTMLMediaElement): HTMLMediaElement;
 };
 
-/** One of this browser's cameras, to pick in the camera's menu (spec 0098). */
-export type CameraDevice = { deviceId: string; label: string };
-
 /** A quality a viewer asks for: "auto" lets the server send what fits. */
 export type ViewQuality = "auto" | "1080p" | "720p" | "480p";
 

@@ -6,9 +6,10 @@ import {
   saveVoicePrefs,
 } from "@core/preferences/preferences.service";
 import type { VoicePrefs } from "@core/preferences/preferences.types";
-import type { ActivityEvent, CameraDevice, ConnectionState, Friend, LiveFeed, MediaTrack, Sharer } from "../types";
+import type { ActivityEvent, ConnectionState, Friend, LiveFeed, MediaTrack, Sharer } from "../types";
+import type { CameraDevice, CameraProblem, MicDevice, ScreenSurface } from "@core/devices/devices.types";
 import type { LiveStream, RoomSeatsState, StreamKind, StreamSettings } from "@core/api/api.types";
-import { useLiveKitRoom, type CameraProblem, type Capture, type MicDevice, type ScreenSurface } from "./useLiveKitRoom";
+import { useLiveKitRoom, type Capture } from "./useLiveKitRoom";
 import { showToast } from "../components/ui/toast";
 import { useStreams } from "./useStreams";
 import { api as client } from "@core/api/api-client.service";

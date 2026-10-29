@@ -2,13 +2,8 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
 import { describe, expect, it, vi } from "vitest";
-import {
-  cameraCaptureOptions,
-  cameraPublishOptions,
-  capOf,
-  screenCaptureRequest,
-  screenPublishOptions,
-} from "../media/shareSettings";
+import { screenCaptureRequest } from "@core/devices/screen-picker.util";
+import { cameraCaptureOptions, cameraPublishOptions, capOf, screenPublishOptions } from "../media/shareSettings";
 import { AuthProvider } from "@core/auth/auth.store";
 import { aUser, installFakeApi, MY_USER_ID, myLiveStream, someoneSharing } from "../test/fakeApi";
 import { FakeLocalScreenTrack, lastRoom } from "../test/fakeLiveKit";
