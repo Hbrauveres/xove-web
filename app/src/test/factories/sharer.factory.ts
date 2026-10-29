@@ -1,5 +1,5 @@
 import type { StreamKind } from "@core/api/api.types";
-import type { Sharer } from "../../types";
+import type { Sharer } from "@features/room/types/room-view.types";
 import { aTrack } from "./track.factory";
 
 type SharerOptions = Partial<Sharer> & { id?: string; name?: string; kinds?: StreamKind[] };

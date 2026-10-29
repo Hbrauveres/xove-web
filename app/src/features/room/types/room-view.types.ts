@@ -1,9 +1,10 @@
+import type { PersonId } from "../state/room.types";
 import type { StreamKind, StreamSettings } from "@core/api/api.types";
 import type { MediaTrack, RemoteVideo } from "@core/livekit/livekit.types";
 
-/** A person in the room. `id` is their LiveKit identity ("user-42"), or "me". */
+/** A person in the room. `id` is their id in the room, their identity on the video server ("user-42"), me included. */
 export type Friend = {
-  id: string;
+  id: PersonId;
   name: string;
   /** Hue for the avatar background, 0–360. */
   hue: number;
@@ -36,7 +37,7 @@ export type Sharer = {
   hasSound?: boolean;
   /** Downloads their sound, or not (a muted thumbnail's isn't downloaded). Only for someone else. */
   setSoundOn?: (on: boolean) => void;
-  /** Their voice (spec 0123), when it's someone else's and it's downloaded. */
+  /** Their voice, when it's someone else's and it's downloaded. */
   voice?: MediaTrack;
   /** Their voice is on (and not muted by them). */
   hasVoice?: boolean;
@@ -46,24 +47,14 @@ export type Sharer = {
   setVoiceOn?: (on: boolean) => void;
 };
 
-/** Numbers the real app would read from LiveKit's track stats. */
-export type StreamStats = {
-  width: number;
-  height: number;
-  fps: number;
-  codec: "VP9" | "VP8" | "H.264" | "AV1";
-  bitrateMbps: number;
-  latencyMs: number;
-};
-
-/** "reconnected": my connection came back after dropping (spec 0104). */
-export type ActivityKind = "joined" | "left" | "started" | "stopped" | "reconnected";
+/** "reconnected": my connection came back after dropping. */
+type ActivityKind = "joined" | "left" | "started" | "stopped" | "reconnected";
 
 export type ActivityEvent = {
   id: string;
   at: number;
   kind: ActivityKind;
-  actorId: string;
+  actorId: PersonId;
   /** For "started" and "stopped": which stream. */
   stream?: StreamKind;
 };

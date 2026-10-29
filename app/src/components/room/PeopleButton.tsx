@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import type { RoomSeatsState } from "@core/api/api.types";
 import type { StreamKind } from "@core/api/api.types";
-import type { Friend } from "../../types";
+import type { Friend } from "@features/room/types/room-view.types";
 import { Avatar } from "../ui/Avatar";
 import { Dropdown, DropdownSection } from "../ui/Dropdown";
 import styles from "./PeopleButton.module.css";

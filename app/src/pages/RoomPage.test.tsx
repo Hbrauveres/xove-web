@@ -356,6 +356,22 @@ describe("room: sharing", () => {
     expect(await screen.findByLabelText("0 of 6 live, 6 seats open")).toBeInTheDocument();
   });
 
+  it("starts once again after the browser's own Stop sharing bar ended the stream", async () => {
+    const server = installFakeApi({ me: member() });
+    const user = await readyRoom();
+    await startSharing(user);
+    act(() => {
+      lastRoom().browserStopsMyShare();
+    });
+    await waitFor(() => expect(myLiveStream(server)).toBeUndefined());
+    const before = server.calls.filter((c) => c.method === "POST" && c.path === "/api/streams").length;
+
+    await startSharing(user);
+    await waitFor(() => expect(myLiveStream(server)).toBeDefined());
+
+    expect(server.calls.filter((c) => c.method === "POST" && c.path === "/api/streams").length).toBe(before + 1);
+  });
+
   // AC-1: six streams at once; a seventh can't start, and the buttons say why.
   it("says the room is full of streams, and waits for a free place", async () => {
     const server = installFakeApi({ me: member() });

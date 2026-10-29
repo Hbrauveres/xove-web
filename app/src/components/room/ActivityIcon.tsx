@@ -1,4 +1,4 @@
-import type { ActivityEvent } from "../../types";
+import type { ActivityEvent } from "@features/room/types/room-view.types";
 
 /** The small icon in front of an event: a screen or a camera for streams, a door for people. */
 export function ActivityIcon({ event }: { event: ActivityEvent }) {

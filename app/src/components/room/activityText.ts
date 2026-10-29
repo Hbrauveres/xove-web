@@ -1,4 +1,4 @@
-import type { ActivityEvent } from "../../types";
+import type { ActivityEvent } from "@features/room/types/room-view.types";
 
 /** What happened, in words (spec 0104): "Ana started sharing", "You joined", "Reconnected". */
 export function describeEvent(e: ActivityEvent, nameOf: (id: string) => string, meId: string): string {

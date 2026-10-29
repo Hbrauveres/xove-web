@@ -1,5 +1,5 @@
 import { useElapsed } from "@shared/hooks/use-elapsed.hook";
-import type { Friend, Sharer } from "../../types";
+import type { Friend, Sharer } from "@features/room/types/room-view.types";
 import { Avatar } from "../ui/Avatar";
 import styles from "./NowWatching.module.css";
 import { whoIsHere } from "@features/room/utils/who-is-here.util";
@@ -16,9 +16,6 @@ export const seatsOpen = (free: number) => `${free} ${free === 1 ? "seat" : "sea
 
 /** The most avatars in a row: the count covers the rest. */
 const MAX_AVATARS = 4;
-
-/** Live streams at once (spec 0060). */
-export const STREAM_PLACES = 6;
 
 type Props = {
   sharer: Sharer | null;

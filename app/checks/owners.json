@@ -8,9 +8,7 @@
   ["src/components/stage/StageOverlay", "#191 today's stage pieces"],
   ["src/components/stage/usePreviewTray", "#191 today's stage pieces"],
   ["src/components/ui/FullPageMessage", "#188 shared: Panel, Page shell"],
-  ["src/hooks/useRoomSession", "#182 the room's model and store"],
-  ["src/hooks/useStreams", "#182 the room's model and store"],
-  ["src/hooks/useRoomSeat", "#182 the room's model and store"],
+  ["src/hooks/useRoomSession", "#183 the room's hooks"],
   ["src/hooks/", "#183 the room's hooks"],
   ["src/media/", "#183 the room's hooks"],
   ["src/pages/RoomPage.test", "#184 the room page's tests"],
@@ -38,6 +36,5 @@
   ["src/pages/RoomPage", "#192 room: queue, footer, page"],
   ["src/pages/", "#194 home, request access, admin, the shell"],
   ["src/main", "#194 home, request access, admin, the shell"],
-  ["src/types", "#182 the room's model and store"],
   ["src/test/", "#195 the sweep"]
 ]

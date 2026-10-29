@@ -325,7 +325,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/NowWatching.tsx",
-    "count": 5,
+    "count": 4,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -604,16 +604,9 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/hooks/useRoomSeat.ts",
-    "count": 1,
-    "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/hooks/useRoomSession.ts",
-    "count": 13,
-    "owner": "#182 the room's model and store"
+    "count": 11,
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "code",
@@ -621,13 +614,6 @@
     "file": "src/hooks/useStagePick.ts",
     "count": 2,
     "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/hooks/useStreams.ts",
-    "count": 1,
-    "owner": "#182 the room's model and store"
   },
   {
     "tool": "code",
@@ -740,13 +726,6 @@
     "file": "src/test/setup.ts",
     "count": 1,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/types.ts",
-    "count": 2,
-    "owner": "#182 the room's model and store"
   },
   {
     "tool": "code",
@@ -1948,23 +1927,16 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/hooks/useRoomSeat.ts",
-    "count": 1,
-    "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/hooks/useRoomSession.test.ts",
     "count": 1,
-    "owner": "#182 the room's model and store"
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/hooks/useRoomSession.ts",
     "count": 1,
-    "owner": "#182 the room's model and store"
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "code",
@@ -1972,13 +1944,6 @@
     "file": "src/hooks/useStagePick.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/hooks/useStreams.ts",
-    "count": 1,
-    "owner": "#182 the room's model and store"
   },
   {
     "tool": "code",
@@ -2171,13 +2136,6 @@
   },
   {
     "tool": "code",
-    "rule": "naming",
-    "file": "src/types.ts",
-    "count": 1,
-    "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "code",
     "rule": "noTest",
     "file": "src/brand/iconSvg.ts",
     "count": 1,
@@ -2326,13 +2284,6 @@
   {
     "tool": "code",
     "rule": "noTest",
-    "file": "src/hooks/useRoomSeat.ts",
-    "count": 1,
-    "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
     "file": "src/hooks/useStagePick.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -2340,23 +2291,9 @@
   {
     "tool": "code",
     "rule": "noTest",
-    "file": "src/hooks/useStreams.ts",
-    "count": 1,
-    "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
     "file": "src/main.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/types.ts",
-    "count": 1,
-    "owner": "#182 the room's model and store"
   },
   {
     "tool": "code",
@@ -2405,7 +2342,7 @@
     "rule": "size",
     "file": "src/hooks/useRoomSession.ts",
     "count": 1,
-    "owner": "#182 the room's model and store"
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "code",
@@ -3320,23 +3257,16 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/hooks/useRoomSeat.ts",
-    "count": 1,
-    "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/hooks/useRoomSession.test.ts",
     "count": 1,
-    "owner": "#182 the room's model and store"
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/hooks/useRoomSession.ts",
     "count": 1,
-    "owner": "#182 the room's model and store"
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "code",
@@ -3344,13 +3274,6 @@
     "file": "src/hooks/useStagePick.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/hooks/useStreams.ts",
-    "count": 1,
-    "owner": "#182 the room's model and store"
   },
   {
     "tool": "code",
@@ -3644,7 +3567,7 @@
     "rule": "eslint(complexity)",
     "file": "src/hooks/useRoomSession.ts",
     "count": 1,
-    "owner": "#182 the room's model and store"
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "lint",
@@ -3812,7 +3735,7 @@
     "rule": "eslint(max-lines-per-function)",
     "file": "src/hooks/useRoomSession.ts",
     "count": 1,
-    "owner": "#182 the room's model and store"
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "lint",
@@ -4014,8 +3937,8 @@
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
     "file": "src/hooks/useRoomSession.ts",
-    "count": 12,
-    "owner": "#182 the room's model and store"
+    "count": 2,
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "lint",
@@ -4293,20 +4216,6 @@
   {
     "tool": "lint",
     "rule": "react(set-state-in-effect)",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 2,
-    "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "lint",
-    "rule": "react(set-state-in-effect)",
-    "file": "src/hooks/useStreams.ts",
-    "count": 1,
-    "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "lint",
-    "rule": "react(set-state-in-effect)",
     "file": "src/pages/AdminPage.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
@@ -4420,8 +4329,8 @@
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
     "file": "src/hooks/useRoomSession.ts",
-    "count": 3,
-    "owner": "#182 the room's model and store"
+    "count": 1,
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "lint",
@@ -4457,13 +4366,6 @@
     "file": "src/brand/mark.test.ts",
     "count": 10,
     "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS18048",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 4,
-    "owner": "#182 the room's model and store"
   },
   {
     "tool": "tsc",
@@ -4527,13 +4429,6 @@
     "file": "src/components/ui/DropUp.test.tsx",
     "count": 3,
     "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2345",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 3,
-    "owner": "#182 the room's model and store"
   },
   {
     "tool": "tsc",
@@ -4665,8 +4560,8 @@
     "tool": "tsc",
     "rule": "TS2375",
     "file": "src/hooks/useRoomSession.ts",
-    "count": 2,
-    "owner": "#182 the room's model and store"
+    "count": 1,
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "tsc",
@@ -4679,7 +4574,7 @@
     "tool": "tsc",
     "rule": "TS2375",
     "file": "src/pages/RoomPage.tsx",
-    "count": 3,
+    "count": 2,
     "owner": "#192 room: queue, footer, page"
   },
   {
@@ -4881,20 +4776,6 @@
   {
     "tool": "unused",
     "rule": "exports",
-    "file": "src/hooks/useRoomSession.ts",
-    "count": 1,
-    "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
-    "file": "src/hooks/useStreams.ts",
-    "count": 1,
-    "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
     "file": "src/media/ambilight.ts",
     "count": 2,
     "owner": "#183 the room's hooks"
@@ -4930,13 +4811,6 @@
   {
     "tool": "unused",
     "rule": "types",
-    "file": "src/hooks/useStreams.ts",
-    "count": 1,
-    "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "unused",
-    "rule": "types",
     "file": "src/media/hearing.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -4947,12 +4821,5 @@
     "file": "src/test/fakeApi.ts",
     "count": 2,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "unused",
-    "rule": "types",
-    "file": "src/types.ts",
-    "count": 2,
-    "owner": "#182 the room's model and store"
   }
 ]

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Sharer } from "../../types";
+import type { Sharer } from "@features/room/types/room-view.types";
 
 /** How long a swap plays: the picture behind coming forward. */
 const SWAP_MS = 400;
