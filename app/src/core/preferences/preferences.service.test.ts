@@ -13,6 +13,35 @@ import {
   saveVoicePrefs,
 } from "./preferences.service";
 
+describe("choices saved before", () => {
+  it("are read from the keys this browser already holds", () => {
+    const saved: Record<string, string> = {
+      "xove.share.quality": "480p",
+      "xove.share.mode": "sharp",
+      "xove.camera.quality": "480p",
+      "xove.camera.mode": "sharp",
+      "xove.camera.device": "cam-9",
+      "xove.ambilight.on": "false",
+      "xove.ambilight.brightness": "0.3",
+      "xove.watch.volume": "0.2",
+      "xove.watch.muted": "true",
+      "xove.voice.volume": "0.6",
+      "xove.voice.muted": "true",
+      "xove.mic.device": "mic-9",
+      "xove.mic.processing": JSON.stringify({ echoCancellation: false, sensitivity: 0.5 }),
+    };
+    for (const [key, value] of Object.entries(saved)) localStorage.setItem(key, value);
+
+    expect(loadStreamSettings("screen")).toEqual({ quality: "480p", mode: "sharp" });
+    expect(loadStreamSettings("camera")).toEqual({ quality: "480p", mode: "sharp" });
+    expect(loadCameraDevice()).toBe("cam-9");
+    expect(loadAmbilight()).toEqual({ on: false, brightness: 0.3 });
+    expect(loadHearing("stream")).toEqual({ volume: 0.2, muted: true });
+    expect(loadHearing("voice")).toEqual({ volume: 0.6, muted: true });
+    expect(loadVoicePrefs()).toMatchObject({ micId: "mic-9", echoCancellation: false, sensitivity: 0.5 });
+  });
+});
+
 describe("the sharer's choices", () => {
   it("reads what this browser saved before", () => {
     localStorage.setItem("xove.share.quality", "720p");

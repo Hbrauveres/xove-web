@@ -4203,7 +4203,7 @@
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
     "file": "src/media/shareSettings.ts",
-    "count": 3,
+    "count": 2,
     "owner": "#183 the room's hooks"
   },
   {

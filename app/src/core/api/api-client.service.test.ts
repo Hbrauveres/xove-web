@@ -11,6 +11,12 @@ describe("api client", () => {
     expect(server.calls.at(-1)).toMatchObject({ method: "POST", path: "/api/room/leave", keepalive: true });
   });
 
+  it("reads an empty answer as nothing", async () => {
+    installFakeApi();
+
+    await expect(api.room.cancel()).resolves.toBeNull();
+  });
+
   it("sends the CSRF token from the cookie on POST", async () => {
     const server = installFakeApi();
     document.cookie = "XSRF-TOKEN=abc-123";

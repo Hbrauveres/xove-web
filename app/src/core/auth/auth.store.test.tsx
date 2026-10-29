@@ -40,6 +40,14 @@ describe("who is signed in", () => {
     expect(await screen.findByText("signedOut")).toBeInTheDocument();
   });
 
+  it("is signed out when the first answer fails for any reason, so the home page can offer the sign-in", async () => {
+    const server = installFakeApi({ me: aUser() });
+    server.failures.set("GET /api/me", { status: 500 });
+    renderProvider();
+
+    expect(await screen.findByText("signedOut")).toBeInTheDocument();
+  });
+
   it("asks the API again on refresh, after being approved", async () => {
     const server = installFakeApi({ me: null });
     renderProvider();

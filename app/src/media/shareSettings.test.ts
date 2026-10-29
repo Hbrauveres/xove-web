@@ -12,10 +12,16 @@ import {
   viewerQualities,
 } from "./shareSettings";
 import type { StreamMode } from "@core/api/api.types";
+import { STREAM_QUALITIES } from "@core/preferences/preferences.constants";
 
 const modes: StreamMode[] = ["smooth", "sharp"];
 
 describe("share presets", () => {
+  it("has a preset for exactly the qualities each kind of stream may be sent at", () => {
+    expect(SHARE_QUALITIES.map((q) => q.id)).toEqual(STREAM_QUALITIES.screen);
+    expect(CAMERA_QUALITIES.map((q) => q.id)).toEqual(STREAM_QUALITIES.camera);
+  });
+
   it("offers 1080p, 720p and 480p at 30 fps", () => {
     expect(SHARE_QUALITIES.map((q) => [q.id, q.height, q.fps])).toEqual([
       ["1080p", 1080, 30],

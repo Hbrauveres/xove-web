@@ -1,5 +1,6 @@
 import type { TrackPublishOptions, VideoCaptureOptions, VideoPreset } from "livekit-client";
 import type { StreamMode, StreamQuality } from "@core/api/api.types";
+import { STREAM_QUALITIES } from "@core/preferences/preferences.constants";
 
 /**
  * How a shared screen is captured and sent (spec 0086). LiveKit's defaults are
@@ -137,7 +138,9 @@ export function screenPublishOptions(mode: StreamMode): TrackPublishOptions {
  * A camera (spec 0060) goes up to 720p: no need for more, and it spares the upload of
  * someone sending a screen and a camera together.
  */
-export const CAMERA_QUALITIES: readonly SharePreset[] = SHARE_QUALITIES.filter((q) => q.height <= 720);
+export const CAMERA_QUALITIES: readonly SharePreset[] = SHARE_QUALITIES.filter((q) =>
+  STREAM_QUALITIES.camera.includes(q.id),
+);
 
 /**
  * What the browser asks the camera for: 720p at 30 fps (the mode's content hint is set

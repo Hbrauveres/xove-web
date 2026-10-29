@@ -31,6 +31,7 @@ describe("which page a person may open", () => {
 
   it("keeps the admin page for admins, and sends others where they belong", () => {
     expect(routeAccess("admin", signedIn({ status: "MEMBER", admin: true }))).toEqual({ kind: "show" });
+    expect(routeAccess("admin", signedIn({ status: "NONE", admin: true }))).toEqual({ kind: "show" });
     expect(routeAccess("admin", signedIn({ status: "MEMBER", admin: false }))).toEqual({
       kind: "redirect",
       to: "/room",
@@ -42,7 +43,9 @@ describe("which page a person may open", () => {
   });
 
   it("keeps request access for people who aren't members, and sends members to the room", () => {
-    expect(routeAccess("non-member", signedIn({ status: "PENDING" }))).toEqual({ kind: "show" });
+    for (const status of ["NONE", "PENDING", "DECLINED"] as const) {
+      expect(routeAccess("non-member", signedIn({ status }))).toEqual({ kind: "show" });
+    }
     expect(routeAccess("non-member", signedIn({ status: "MEMBER" }))).toEqual({ kind: "redirect", to: "/room" });
   });
 
