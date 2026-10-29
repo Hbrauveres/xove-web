@@ -8,21 +8,10 @@ import type {
 } from "@core/api/types/api.types";
 import { LiveKitAdapter } from "@core/livekit/livekit.adapter";
 import { CANT_CONNECT } from "@core/livekit/constants/livekit.constants";
-import type { VideoRoomState } from "@core/livekit/types/livekit.types";
-import { POLL_MS } from "./room.constants";
+import { CALL_FAILED, POLL_MS, SEAT_FAILED } from "../constants/room.constants";
 import { initialRoom, withMe, withSeat, withStreams, withStreamsCall, withVideo } from "./room.model";
-import type { RoomModel, SeatState } from "./room.types";
-
-/** What the room's page reads: the room as data, and the video room. */
-export type RoomSnapshot = { model: RoomModel; video: VideoRoomState };
-
-/** How a start, change or stop at the API ended. */
-export type CallOutcome = "ok" | "full" | "failed";
-
-const SEAT_FAILED = "Couldn't reach the room. Trying again…";
-const CALL_FAILED = "Something went wrong. Try again.";
-
-const waitingFor = (seat: SeatState) => seat === null || seat.status === "waiting" || seat.status === "offered";
+import type { CallOutcome, RoomModel, RoomSnapshot, SeatState } from "../types/room.types";
+import { waitingFor } from "../utils/seat.util";
 
 /**
  * The room's one place for news and actions: the seat, the streams and entering again are

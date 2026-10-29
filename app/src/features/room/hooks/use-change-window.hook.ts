@@ -1,16 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
-import type { StreamSettings } from "@core/api/types/api.types";
-
-type Inputs = {
-  /** Picks another window or tab into my screen: viewers keep the same stream. */
-  changeScreen: (settings: StreamSettings) => Promise<{ hasSound: boolean } | null>;
-  screen: StreamSettings;
-  /** The new pick's sound may come or go. */
-  onSound: (hasSound: boolean) => void;
-};
+import type { ChangeWindowInputs } from "../types/change-window.types";
 
 /** "Change window": the same stream, another pick; busy while the picker is open. */
-export function useChangeWindow({ changeScreen, screen, onSound }: Inputs) {
+export function useChangeWindow({ changeScreen, screen, onSound }: ChangeWindowInputs) {
   const [changing, setChanging] = useState(false);
   const change = useCallback(async () => {
     setChanging(true);

@@ -1,4 +1,4 @@
-import type { PersonId } from "../state/room.types";
+import type { PersonId } from "./room.types";
 import type { StreamKind, StreamSettings } from "@core/api/types/api.types";
 import type { MediaTrack, RemoteVideo } from "@core/livekit/types/livekit.types";
 

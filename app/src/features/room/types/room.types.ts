@@ -1,3 +1,4 @@
+import type { VideoRoomState } from "@core/livekit/types/livekit.types";
 import type { RoomSeatsState, SeatStatus, StreamKind, StreamSettings } from "@core/api/types/api.types";
 import type { ConnectionState } from "@core/livekit/types/livekit.types";
 import type { ActivityEvent } from "@features/room/types/room-view.types";
@@ -72,3 +73,9 @@ export type RoomSeat = {
   /** Joins the queue again after leaving it. */
   rejoin: () => void;
 };
+
+/** What the room's page reads: the room as data, and the video room. */
+export type RoomSnapshot = { model: RoomModel; video: VideoRoomState };
+
+/** How a start, change or stop at the API ended. */
+export type CallOutcome = "ok" | "full" | "failed";

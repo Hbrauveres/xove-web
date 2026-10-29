@@ -1,5 +1,5 @@
-import { userIdOf } from "../state/room.model";
-import type { PersonId, Watch } from "../state/room.types";
+import { userIdOf } from "./person-id.util";
+import type { PersonId, Watch } from "../types/room.types";
 import type { WatchingTarget } from "@core/api/types/api.types";
 import type { OnStage } from "../types/watch-report.types";
 

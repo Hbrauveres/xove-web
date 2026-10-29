@@ -4,7 +4,7 @@ import { useCameraPreview } from "./use-camera-preview.hook";
 import { useCameraSwitch } from "./use-camera-switch.hook";
 import { useChangeWindow } from "./use-change-window.hook";
 import { useMyStreams } from "./use-my-streams.hook";
-import type { RoomStoreValue } from "./use-room-store.hook";
+import type { RoomStoreValue } from "../types/room-store.types";
 import { useStreamSettings } from "./use-stream-settings.hook";
 
 /**

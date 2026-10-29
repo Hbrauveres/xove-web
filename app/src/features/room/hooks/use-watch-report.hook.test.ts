@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import type { Watch } from "../state/room.types";
+import type { Watch } from "../types/room.types";
 import type { OnStage } from "../types/watch-report.types";
 import { useWatchReport } from "./use-watch-report.hook";
 

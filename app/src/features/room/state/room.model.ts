@@ -1,27 +1,13 @@
-import type { LiveStream, StreamKind, StreamsState } from "@core/api/types/api.types";
+import type { StreamKind, StreamsState } from "@core/api/types/api.types";
 import type { ConnectionState, RoomPerson } from "@core/livekit/types/livekit.types";
-import type { ActivityEvent } from "@features/room/types/room-view.types";
-import { ACTIVITY_KEPT, NEXT_STEPS, STREAM_PLACES } from "./room.constants";
-import type { MyStreamStep, PersonId, RoomModel, RoomStream, SeatState, Watch } from "./room.types";
-
-/** Someone's id in the room, from their user id at the API. */
-export const personIdOf = (userId: number): PersonId => `user-${userId}`;
-
-/** Someone's user id at the API, from their id in the room. */
-export const userIdOf = (personId: PersonId) => Number(personId.slice("user-".length));
-
-/** The same record when every key holds the same value, else the new one. */
-function keepSame<T extends object>(before: T | null, now: T): T {
-  if (before === null) return now;
-  const keys = Object.keys(now);
-  const same =
-    keys.length === Object.keys(before).length &&
-    keys.every((k) => JSON.stringify(Reflect.get(now, k)) === JSON.stringify(Reflect.get(before, k)));
-  return same ? before : now;
-}
-
-/** The name the room shows: the first word, or "Someone". */
-export const firstName = (name: string | null | undefined) => name?.trim().split(/\s+/)[0] || "Someone";
+import { NEXT_STEPS, STREAM_PLACES } from "../constants/room.constants";
+import type { MyStreamStep, PersonId, RoomModel, SeatState } from "../types/room.types";
+import { personIdOf } from "../utils/person-id.util";
+import { firstName } from "../utils/first-name.util";
+import { keepSame, samePeople } from "../utils/keep-same.util";
+import { sameStreams, streamOf, streamEvents } from "../utils/room-streams.util";
+import { withNames, watchesOf, myIdIn } from "../utils/room-answer.util";
+import { withEvents } from "../utils/activity-events.util";
 
 export const initialRoom = (): RoomModel => ({
   me: null,
@@ -44,22 +30,6 @@ export const initialRoom = (): RoomModel => ({
   connection: "connecting",
 });
 
-/** The room with these names added; the same record when every name is already there. */
-function withNames(names: Record<PersonId, string>, added: [PersonId, string][]) {
-  const fresh = added.filter(([id, name]) => names[id] !== name);
-  return fresh.length ? { ...names, ...Object.fromEntries(fresh) } : names;
-}
-
-function withEvents(model: RoomModel, events: Omit<ActivityEvent, "id">[]): RoomModel {
-  if (!events.length) return model;
-  const numbered = events.map((e, i) => ({ ...e, id: `room${model.eventCount + i + 1}` }));
-  return {
-    ...model,
-    activity: [...model.activity, ...numbered].slice(-ACTIVITY_KEPT),
-    eventCount: model.eventCount + events.length,
-  };
-}
-
 /** I'm named: by the video access, or the API listing something of mine. */
 export function withMe(model: RoomModel, me: PersonId, name: string): RoomModel {
   if (model.me === me && model.names[me] === firstName(name)) return model;
@@ -75,51 +45,6 @@ export const withStreamsCall = (model: RoomModel, streamsBusy: boolean, streamsE
   model.streamsBusy === streamsBusy && model.streamsError === streamsError
     ? model
     : { ...model, streamsBusy, streamsError };
-
-const keyOf = (s: RoomStream) => `${s.personId}|${s.kind}`;
-
-const sameStream = (s: RoomStream, o: RoomStream | undefined) =>
-  o !== undefined &&
-  keyOf(s) === keyOf(o) &&
-  s.since === o.since &&
-  s.settings.quality === o.settings.quality &&
-  s.settings.mode === o.settings.mode;
-
-const sameStreams = (a: RoomStream[] | null, b: RoomStream[]) =>
-  a !== null && a.length === b.length && a.every((s, i) => sameStream(s, b[i]));
-
-const streamOf = (s: LiveStream): RoomStream => ({
-  personId: personIdOf(s.userId),
-  kind: s.kind,
-  since: Date.parse(s.since),
-  settings: s.settings,
-});
-
-/** What started and stopped since the last answer. The first answer is where the room starts: nothing. */
-function streamEvents(before: RoomStream[] | null, now: RoomStream[], at: number): Omit<ActivityEvent, "id">[] {
-  if (before === null) return [];
-  const was = new Set(before.map(keyOf));
-  const is = new Set(now.map(keyOf));
-  const event = (kind: "started" | "stopped") => (s: RoomStream) => ({ at, kind, actorId: s.personId, stream: s.kind });
-  return [
-    ...now.filter((s) => !was.has(keyOf(s))).map(event("started")),
-    ...before.filter((s) => !is.has(keyOf(s))).map(event("stopped")),
-  ];
-}
-
-function watchesOf(before: Record<PersonId, Watch> | null, answer: StreamsState): Record<PersonId, Watch> | null {
-  if (!answer.watching) return null;
-  const now: Record<PersonId, Watch> = Object.fromEntries(
-    answer.watching.map((w) => [personIdOf(w.userId), { sharerId: personIdOf(w.sharerId), kind: w.kind }]),
-  );
-  return keepSame(before, now);
-}
-
-/** Whose user id is mine, when the API lists something of mine. */
-function myIdIn(answer: StreamsState): PersonId | null {
-  const mine = [...answer.streams, ...(answer.here ?? []), ...(answer.watching ?? [])].find((x) => x.mine);
-  return mine ? personIdOf(mine.userId) : null;
-}
 
 /** The API's answer about the streams, who watches what and who's here. */
 export function withStreams(model: RoomModel, answer: StreamsState, at: number, polled = false): RoomModel {
@@ -146,8 +71,6 @@ export function withStreams(model: RoomModel, answer: StreamsState, at: number, 
   };
   return withEvents(next, streamEvents(model.streams, now, at));
 }
-
-const samePeople = (a: PersonId[], b: PersonId[]) => a.length === b.length && a.every((id, i) => id === b[i]);
 
 /** The video room's news: who's connected, and the connection coming back after a drop. */
 export function withVideo(model: RoomModel, others: RoomPerson[], connection: ConnectionState, at: number): RoomModel {

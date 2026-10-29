@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from "react";
 import type { StreamKind } from "@core/api/types/api.types";
-import { BUSY_STEPS } from "../state/room.constants";
+import { BUSY_STEPS } from "../constants/room.constants";
 import { withMyStep } from "../state/room.model";
 import type { RoomStore } from "../state/room.store";
-import type { MyStreamStep } from "../state/room.types";
+import type { MyStreamStep } from "../types/room.types";
 
 /** My streams' steps in the room's model: move one to its next step; is a start under way right now. */
 export function useMySteps(store: RoomStore) {

@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import type { StreamKind } from "@core/api/types/api.types";
-import type { PersonId } from "../state/room.types";
+import type { PersonId } from "../types/room.types";
 import type { Sharer } from "../types/room-view.types";
 import type { Pick } from "../types/stage.types";
 import { holds, isPlaying, mainKindOf, stagePick, streamsOf } from "../utils/stage-pick.util";
@@ -42,5 +42,3 @@ export function useStage(sharers: Sharer[]) {
     [big, mainKind, playing, swappedFor, pick, toggleSwap],
   );
 }
-
-export type StagePick = ReturnType<typeof useStage>;

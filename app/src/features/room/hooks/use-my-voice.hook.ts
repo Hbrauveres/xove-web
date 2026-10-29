@@ -1,26 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { VoiceProblem } from "@core/devices/types/devices.types";
 import { loadVoicePrefs, saveVoicePrefs } from "@core/preferences/preferences.service";
 import type { VoicePrefs } from "@core/preferences/types/preferences.types";
 import { showToast } from "../../../components/ui/toast";
 import { VOICE_PROBLEMS } from "../constants/voice.constants";
-
-type Inputs = {
-  /** My voice is being sent. */
-  voice: boolean;
-  /** My screen or my camera is being sent: a voice never travels alone. */
-  sending: boolean;
-  startVoice: (prefs: VoicePrefs) => Promise<VoiceProblem>;
-  stopVoice: () => Promise<void>;
-  applyVoice: (prefs: VoicePrefs) => Promise<void>;
-  setVoiceLine: (line: number) => void;
-};
+import type { MyVoiceInputs } from "../types/my-voice.types";
 
 /**
  * My voice: only by my choice, only while I send a screen or a camera. One start at a time; the mic
  * and its processing apply live, the line moves live; it stops when I stop sending both streams.
  */
-export function useMyVoice({ voice, sending, startVoice, stopVoice, applyVoice, setVoiceLine }: Inputs) {
+export function useMyVoice({ voice, sending, startVoice, stopVoice, applyVoice, setVoiceLine }: MyVoiceInputs) {
   const [voicePrefs, setPrefs] = useState<VoicePrefs>(loadVoicePrefs);
   // A second click while the mic is being asked for does nothing.
   const starting = useRef(false);

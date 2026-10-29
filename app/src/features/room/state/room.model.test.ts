@@ -1,16 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { aLiveStream, anAnswer } from "../../../test/factories/streams-state.factory";
-import {
-  initialRoom,
-  personIdOf,
-  userIdOf,
-  withMe,
-  withMyStep,
-  withSeat,
-  withStreams,
-  withStreamsCall,
-  withVideo,
-} from "./room.model";
+import { initialRoom, withMe, withMyStep, withSeat, withStreams, withStreamsCall, withVideo } from "./room.model";
+import { personIdOf, userIdOf } from "../utils/person-id.util";
 
 const AT = Date.parse("2026-10-29T10:05:00Z");
 const marinaScreen = () => aLiveStream();

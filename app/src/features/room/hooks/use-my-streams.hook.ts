@@ -1,30 +1,16 @@
 import { useCallback, useMemo, useState } from "react";
-import type { StreamKind, StreamMode, StreamSettings } from "@core/api/types/api.types";
-import type { LiveKitAdapter } from "@core/livekit/livekit.adapter";
+import type { StreamKind, StreamSettings } from "@core/api/types/api.types";
 import type { Capture } from "@core/livekit/types/livekit.types";
-import { BUSY_STEPS, KINDS } from "../state/room.constants";
-import type { RoomStore } from "../state/room.store";
-import type { MyStreamStep } from "../state/room.types";
-import type { SettingsQueue } from "../utils/settings-queue.util";
+import { BUSY_STEPS, KINDS } from "../constants/room.constants";
 import { useMySteps } from "./use-my-steps.hook";
-
-type Inputs = {
-  store: RoomStore;
-  video: Pick<LiveKitAdapter, "publishCapture" | "stop">;
-  capture: (kind: StreamKind, mode: StreamMode) => Promise<Capture | null>;
-  prefs: Record<StreamKind, StreamSettings>;
-  queue: SettingsQueue;
-  /** The camera's preview, to send as is. */
-  takePreview: () => Capture | null;
-  mine: Record<StreamKind, MyStreamStep>;
-};
+import type { MyStreamsInputs } from "../types/my-streams.types";
 
 /**
  * Starting and stopping my screen and camera. One click: the browser's picker, or the camera (the
  * preview, when it's on), sent at once with the remembered settings, then told to the API. Each
  * stream moves along its steps in the room's model. Also whether my screen goes out without sound.
  */
-export function useMyStreams({ store, video, capture, prefs, queue, takePreview, mine }: Inputs) {
+export function useMyStreams({ store, video, capture, prefs, queue, takePreview, mine }: MyStreamsInputs) {
   const [noSound, setNoSound] = useState(false);
   const { step, busy } = useMySteps(store);
 
