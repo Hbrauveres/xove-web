@@ -48,13 +48,10 @@ async function request<T>(method: string, path: string, body?: unknown, keepaliv
     if (token) headers["X-XSRF-TOKEN"] = token;
   }
 
-  const response = await fetch(path, {
-    method,
-    headers,
-    credentials: "same-origin",
-    body: body === undefined ? undefined : JSON.stringify(body),
-    ...(keepalive ? { keepalive: true } : {}),
-  });
+  const init: RequestInit = { method, headers, credentials: "same-origin" };
+  if (body !== undefined) init.body = JSON.stringify(body);
+  if (keepalive) init.keepalive = true;
+  const response = await fetch(path, init);
 
   if (!response.ok) {
     let message = FALLBACK_MESSAGES[response.status] ?? "Something went wrong. Try again.";

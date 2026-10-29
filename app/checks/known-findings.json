@@ -17,7 +17,7 @@
     "tool": "code",
     "rule": "cssText",
     "file": "src/brand/brand.test.ts",
-    "count": 4,
+    "count": 2,
     "owner": "#186 shared: the basic blocks"
   },
   {
@@ -5241,13 +5241,6 @@
     "file": "src/test/setup.ts",
     "count": 2,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2769",
-    "file": "src/api/client.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
   },
   {
     "tool": "tsc",
