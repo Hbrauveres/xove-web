@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import type { Friend, Sharer } from "../../types";
+import type { Friend, Sharer } from "@features/room/types/room-view.types";
 import { NowWatching } from "./NowWatching";
 
 const feed = (kind: "screen" | "camera", minutesAgo: number) => ({

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { Sharer } from "../../types";
+import type { Sharer } from "@features/room/types/room-view.types";
 import { Range } from "../ui/Range";
 import { showToast } from "../ui/toast";
 import { SoundIcon, VoiceIcon, VoiceOffIcon, VolumeOffIcon } from "./icons";

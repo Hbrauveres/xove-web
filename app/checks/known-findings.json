@@ -729,13 +729,6 @@
   },
   {
     "tool": "code",
-    "rule": "history",
-    "file": "src/types.ts",
-    "count": 2,
-    "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "code",
     "rule": "lineLength",
     "file": "src/brand/iconSvg.ts",
     "count": 1,
@@ -2143,13 +2136,6 @@
   },
   {
     "tool": "code",
-    "rule": "naming",
-    "file": "src/types.ts",
-    "count": 1,
-    "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "code",
     "rule": "noTest",
     "file": "src/brand/iconSvg.ts",
     "count": 1,
@@ -2308,13 +2294,6 @@
     "file": "src/main.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/types.ts",
-    "count": 1,
-    "owner": "#182 the room's model and store"
   },
   {
     "tool": "code",
@@ -4842,12 +4821,5 @@
     "file": "src/test/fakeApi.ts",
     "count": 2,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "unused",
-    "rule": "types",
-    "file": "src/types.ts",
-    "count": 2,
-    "owner": "#182 the room's model and store"
   }
 ]

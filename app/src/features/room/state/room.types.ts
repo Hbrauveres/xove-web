@@ -1,6 +1,6 @@
 import type { RoomSeatsState, SeatStatus, StreamKind, StreamSettings } from "@core/api/api.types";
 import type { ConnectionState } from "@core/livekit/livekit.types";
-import type { ActivityEvent } from "../../../types";
+import type { ActivityEvent } from "@features/room/types/room-view.types";
 
 /** Everyone's id in the room, me included: their identity on the video server ("user-42"). */
 export type PersonId = string;

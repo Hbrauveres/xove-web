@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { StreamKind } from "@core/api/api.types";
-import type { ActivityEvent, Friend } from "../../types";
+import type { ActivityEvent, Friend } from "@features/room/types/room-view.types";
 import { ActivityIcon } from "./ActivityIcon";
 import { describeEvent, shortAgo } from "./activityText";
 import styles from "./ActivityList.module.css";

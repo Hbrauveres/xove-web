@@ -5,7 +5,7 @@ import { onFakeClock } from "../../test/factories/clock.factory";
 import { aSharer } from "../../test/factories/sharer.factory";
 import { aTrack } from "../../test/factories/track.factory";
 import type { FakeTrack } from "../../test/fakeLiveKit";
-import type { Sharer } from "../../types";
+import type { Sharer } from "@features/room/types/room-view.types";
 import { AlsoLive } from "./AlsoLive";
 import type { Hearing } from "./HearToggles";
 

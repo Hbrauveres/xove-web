@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { saveAmbilight } from "@core/preferences/preferences.service";
 import type { AmbilightPrefs } from "@core/preferences/preferences.types";
 import type { ConnectionState } from "@core/livekit/livekit.types";
-import type { Friend } from "../../types";
+import type { Friend } from "@features/room/types/room-view.types";
 import { Avatar } from "../ui/Avatar";
 import { Dropdown, DropdownSection } from "../ui/Dropdown";
 import { Range } from "../ui/Range";

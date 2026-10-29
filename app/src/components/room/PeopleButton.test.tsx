@@ -1,7 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import type { Friend } from "../../types";
+import type { Friend } from "@features/room/types/room-view.types";
 import { PeopleButton } from "./PeopleButton";
 
 const people = (): Friend[] => [

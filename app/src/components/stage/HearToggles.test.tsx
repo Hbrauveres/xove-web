@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { aSharer } from "../../test/factories/sharer.factory";
-import type { Sharer } from "../../types";
+import type { Sharer } from "@features/room/types/room-view.types";
 import { currentToast } from "../ui/toast";
 import { HearToggles, type Hearing } from "./HearToggles";
 

@@ -7,7 +7,7 @@ import {
 } from "@core/preferences/preferences.service";
 import type { VoicePrefs } from "@core/preferences/preferences.types";
 import type { ConnectionState, MediaTrack } from "@core/livekit/livekit.types";
-import type { ActivityEvent, Friend, Sharer } from "../types";
+import type { ActivityEvent, Friend, Sharer } from "@features/room/types/room-view.types";
 import type { CameraDevice, CameraProblem, MicDevice, ScreenSurface } from "@core/devices/devices.types";
 import type { RoomSeatsState, StreamKind, StreamSettings } from "@core/api/api.types";
 import type { RoomStoreValue } from "@features/room/hooks/use-room-store.hook";

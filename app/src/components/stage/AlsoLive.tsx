@@ -1,4 +1,4 @@
-import type { LiveFeed, Sharer } from "../../types";
+import type { LiveFeed, Sharer } from "@features/room/types/room-view.types";
 import { Avatar } from "../ui/Avatar";
 import { ScreenVideo } from "./ScreenVideo";
 import { stackOf, useSwapping } from "./stack";

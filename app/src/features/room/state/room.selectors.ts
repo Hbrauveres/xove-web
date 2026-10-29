@@ -1,6 +1,6 @@
 import type { StreamKind } from "@core/api/api.types";
 import type { VideoRoomState } from "@core/livekit/livekit.types";
-import type { ActivityEvent, Friend, LiveFeed, Sharer } from "../../../types";
+import type { ActivityEvent, Friend, LiveFeed, Sharer } from "@features/room/types/room-view.types";
 import { hueOf } from "../utils/person-colour.util";
 import { ACTIVITY_KEPT } from "./room.constants";
 import type { PersonId, RoomModel, RoomStream, Watch } from "./room.types";

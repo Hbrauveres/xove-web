@@ -1,4 +1,4 @@
-import type { Friend } from "../../types";
+import type { Friend } from "@features/room/types/room-view.types";
 import styles from "./Avatar.module.css";
 
 type Props = {

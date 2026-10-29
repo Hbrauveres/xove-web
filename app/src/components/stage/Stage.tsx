@@ -4,7 +4,7 @@ import type { HearingPrefs } from "@core/preferences/preferences.types";
 import { viewerQualities } from "../../media/shareSettings";
 import type { StagePick } from "../../hooks/useStagePick";
 import type { AmbilightPrefs } from "@core/preferences/preferences.types";
-import type { Friend, LiveFeed, Sharer } from "../../types";
+import type { Friend, LiveFeed, Sharer } from "@features/room/types/room-view.types";
 import { EmptyStage } from "./EmptyStage";
 import { Facecam, type FacecamPlace } from "./Facecam";
 import { ScreenVideo } from "./ScreenVideo";
