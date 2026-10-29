@@ -2192,6 +2192,419 @@
   },
   {
     "tool": "code",
+    "rule": "partInCode",
+    "file": "src/brand/iconSvg.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/brand/mark.ts",
+    "count": 25,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/brand/markTimeline.ts",
+    "count": 14,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/brand/parts.tsx",
+    "count": 2,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/brand/useMarkAnimation.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/brand/XoveIcon.tsx",
+    "count": 2,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/brand/XoveMark.tsx",
+    "count": 2,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/room/AccountButton.tsx",
+    "count": 2,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/room/ActivityIcon.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/room/ActivityList.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/room/ActivityPill.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/room/PeopleButton.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/room/RoomHeader.tsx",
+    "count": 1,
+    "owner": "#189 room: header"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/room/SeatOffer.tsx",
+    "count": 1,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/room/WaitingRoom.tsx",
+    "count": 1,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/AlsoLive.tsx",
+    "count": 2,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/Ambilight.tsx",
+    "count": 7,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/CornerGlow.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/EmptyStage.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/Facecam.tsx",
+    "count": 5,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/HearToggles.tsx",
+    "count": 6,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/icons.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/MicTest.tsx",
+    "count": 1,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/NowWatching.tsx",
+    "count": 3,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/PlayerButtons.tsx",
+    "count": 9,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/PreviewTray.tsx",
+    "count": 8,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/ScreenVideo.tsx",
+    "count": 2,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/SettingsPanel.tsx",
+    "count": 14,
+    "owner": "#193 settings"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/stack.ts",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/Stage.tsx",
+    "count": 8,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/StageNotice.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/StageOverlay.tsx",
+    "count": 1,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/staticBands.ts",
+    "count": 5,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/StaticGlow.tsx",
+    "count": 3,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/StaticNoise.tsx",
+    "count": 5,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/usePreviewTray.ts",
+    "count": 2,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/ViewerBar.tsx",
+    "count": 7,
+    "owner": "#191 today's stage pieces"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/stage/VoiceAudio.tsx",
+    "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/ui/Avatar.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/ui/Button.tsx",
+    "count": 2,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/ui/Dropdown.tsx",
+    "count": 3,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/ui/DropUp.tsx",
+    "count": 3,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/ui/floating.ts",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/ui/FullPageMessage.tsx",
+    "count": 1,
+    "owner": "#188 shared: Panel, Page shell"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/ui/PersonAvatar.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/ui/Picker.tsx",
+    "count": 5,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/ui/Range.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/ui/Segmented.tsx",
+    "count": 2,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/ui/toast.ts",
+    "count": 3,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/ui/Toast.tsx",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/components/ui/Tooltip.tsx",
+    "count": 8,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/hooks/useFullscreenElement.ts",
+    "count": 1,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/hooks/usePinnedRow.ts",
+    "count": 2,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/hooks/useVideoShape.ts",
+    "count": 2,
+    "owner": "#186 shared: the basic blocks"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/media/ambilight.ts",
+    "count": 13,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/pages/AdminPage.tsx",
+    "count": 1,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/pages/HomePage.tsx",
+    "count": 2,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/pages/RequestAccessPage.tsx",
+    "count": 4,
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "code",
+    "rule": "partInCode",
+    "file": "src/pages/RoomPage.tsx",
+    "count": 2,
+    "owner": "#192 room: queue, footer, page"
+  },
+  {
+    "tool": "code",
     "rule": "realWait",
     "file": "src/pages/RoomPage.test.tsx",
     "count": 17,

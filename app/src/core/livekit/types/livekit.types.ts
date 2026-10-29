@@ -112,3 +112,6 @@ export type Gate = { gate: NoiseGate; context: AudioContext };
 
 /** Anything that carries the browser's track, as a camera does. */
 export type WithMediaTrack = { mediaStreamTrack: MediaStreamTrack };
+
+/** A new window or screen picked while sharing: whether it came with its sound. */
+export type ScreenChange = { hasSound: boolean };

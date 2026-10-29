@@ -91,4 +91,49 @@ describe("the code check", () => {
       "naming",
     ]);
   });
+
+  it("names a utils, constants, types or enum file outside its kind's folder", () => {
+    const test = (f: string) => [
+      f.replace(/^(core\/\w+|features\/\w+|shared|app)\//, "$1/tests/").replace(/\.ts$/, ".test.ts"),
+    ];
+    expect(rules("core/livekit/capture.util.ts", "x\n", test("core/livekit/capture.util.ts"))).toEqual(["partPlace"]);
+    expect(rules("features/room/state/room.types.ts")).toEqual(["partPlace"]);
+    expect(rules("core/api/api.constants.ts")).toEqual(["partPlace"]);
+    expect(rules("shared/hooks/mode.enum.ts")).toEqual(["partPlace"]);
+    expect(
+      rules("core/livekit/utils/capture.util.ts", "x\n", ["core/livekit/tests/utils/capture.util.test.ts"]),
+    ).toEqual([]);
+    expect(rules("features/room/types/room.types.ts")).toEqual([]);
+  });
+
+  it("names a type, a named constant or a helper inside working code, exported or not", () => {
+    const hook = (text: string) =>
+      rules("features/room/hooks/use-x.hook.ts", text, ["features/room/tests/hooks/use-x.hook.test.ts"]);
+    expect(hook("type Inputs = { a: number };\n")).toEqual(["partInCode"]);
+    expect(hook("export interface Shape { a: number }\n")).toEqual(["partInCode"]);
+    expect(hook("enum Mode { A }\n")).toEqual(["partInCode"]);
+    expect(hook("const LIMIT = 3;\n")).toEqual(["partInCode"]);
+    expect(hook("function twice(n: number) {\n  return n * 2;\n}\n")).toEqual(["partInCode"]);
+    expect(hook("const twice = (n: number) => n * 2;\n")).toEqual(["partInCode"]);
+    expect(hook("export function useX({ a }: { a: number }) {\n  return a;\n}\n")).toEqual(["partInCode"]);
+    expect(hook("export const useY = (p: { a: number }) => p.a;\n")).toEqual(["partInCode"]);
+  });
+
+  it("leaves working code alone: the file's job, class members, values and the parts' own files", () => {
+    const store = (text: string) =>
+      rules("features/room/state/room.store.ts", text, ["features/room/tests/state/room.store.test.ts"]);
+    expect(store("export class RoomStore {\n  private readonly ms = 3;\n  private poll(a: number) {}\n}\n")).toEqual(
+      [],
+    );
+    expect(
+      store("export function withSeat(model: RoomModel, seat: SeatState): RoomModel {\n  return model;\n}\n"),
+    ).toEqual([]);
+    expect(store('export const initialRoom = (): RoomModel => ({\n  mine: { screen: "off" },\n});\n')).toEqual([]);
+    expect(store("export const api = new ApiClient();\n")).toEqual([]);
+    expect(
+      rules("features/room/utils/a.util.ts", "type T = { a: number };\nconst LIMIT = 3;\n", [
+        "features/room/tests/utils/a.util.test.ts",
+      ]),
+    ).toEqual([]);
+  });
 });

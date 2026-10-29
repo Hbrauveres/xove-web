@@ -11,6 +11,9 @@ export const RULES = {
   testName: "test named .spec (rename to .test: a spec is a workspace requirement document)",
   orphanTest: "test file with no file of the same name where it belongs",
   testPlace: "test beside its file: it goes in its module's tests/ folder, at the same path",
+  partPlace: "a utils, constants, types or enum file outside its kind's folder (utils/, constants/, types/, enums/)",
+  partInCode:
+    "a type, named constant or helper inside working code: types to types/, constants to constants/, helpers to utils/",
   literal: "literal colour, duration or easing in CSS (use a token)",
   domQuery:
     "querySelector/closest/getElementById in a component: finding other parts through the page (pass a ref or context)",
@@ -65,6 +68,28 @@ function codeStemOf(r: string): string {
   return m?.rest.startsWith("tests/") ? `${m.root}/${m.rest.slice("tests/".length)}` : stem;
 }
 
+/** Each kind of part, and the folder it lives in. */
+const PART_FOLDERS: Record<string, string> = { util: "utils", constants: "constants", types: "types", enum: "enums" };
+const partOf = (r: string) => /\.(util|constants|types|enum)\.ts$/.exec(r)?.[1];
+
+/** Working code: what makes the app work, as opposed to its parts, its tests and the shared test fakes. */
+const isWorking = (r: string) => isCode(r) && !noLogic(r) && !partOf(r);
+
+/** A type, named constant or helper declared at the top of a working file; a hook's, component's or page's only job is its export. */
+const PART_DECLARATION = [
+  /^(export )?(declare )?(type|interface|enum) \w/,
+  /^(export )?const [A-Z][A-Z0-9_]+\b\s*(:[^=]+)?=/,
+  /^(async )?function\*? \w/,
+  /^const [a-z]\w*\s*(:[^=]+)?=\s*(async\s*)?(function\b|\([^)]*\)\s*(:[^=]+)?=>|\w+\s*=>)/,
+];
+const HELPER_EXPORT = [
+  /^export (async )?function (?!use[A-Z])[a-z]/,
+  /^export const (?!use[A-Z])[a-z]\w*\s*=\s*(async\s*)?\(/,
+];
+/** A function's or method's signature with an object type written in it. */
+const SIGNATURE = /function |=>|^\s+(?:(?:private|public|protected|async|static|readonly)\s+)*#?\w+\s*[(<]/;
+const INLINE_TYPE = /(:\s*|<)\{\s*\w+\??\s*:/;
+
 const isTokenFile = (f: string) => /(^|\/)(tokens|global)\.css$/.test(f);
 const NAME =
   /^[a-z0-9]+(-[a-z0-9]+)*\.(component|page|hook|util|service|adapter|store|model|selectors|constants|enum|types|factory)(\.module)?\.(tsx?|css)$|^[a-z0-9]+(-[a-z0-9]+)*\.(component|page|hook|util|service|adapter|store|model|selectors)\.test\.tsx?$|^(tokens|global)\.css$/;
@@ -91,6 +116,10 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
     if (m && !m.rest.startsWith("tests/")) add("testPlace");
     if (![".ts", ".tsx"].some((e) => exists(codeStemOf(r) + e))) add("orphanTest");
   }
+  const part = partOf(r);
+  if (part && !isTest(r) && r.split("/").at(-2) !== PART_FOLDERS[part]) add("partPlace");
+  const working = isWorking(r) && top !== "test";
+  const jobOnly = /\.(component|page|hook)\.tsx?$/.test(r);
   lines.forEach((l, i) => {
     const n = i + 1,
       comment = /^\s*(\/\/|\*|\/\*)/.test(l) || /\/\/ /.test(l) || /\/\*/.test(l);
@@ -108,6 +137,13 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
     if (comment && /\b[Ss]pecs? 0\d{3}|\bADR-\d{4}|#\d{2,4}\b|[Dd]esign decision \d+|\bround \d+/.test(l))
       add("history", n, l);
     if (isCode(r) && /^export (let|var) /.test(l)) add("mutable", n, l);
+    if (
+      working &&
+      (PART_DECLARATION.some((re) => re.test(l)) ||
+        (jobOnly && HELPER_EXPORT.some((re) => re.test(l))) ||
+        (SIGNATURE.test(l) && INLINE_TYPE.test(l)))
+    )
+      add("partInCode", n, l);
     if (
       isTest(r) &&
       /setTimeout\(\s*r(esolve)?\s*,|\bsleep\(|\bwait\(\s*\d|timeout:\s*(1\d{3,}|[2-9]\d{3,}|\d{5,})|\},\s*\d{4,}\)\s*;?\s*$/.test(

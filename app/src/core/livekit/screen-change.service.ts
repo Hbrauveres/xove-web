@@ -3,7 +3,7 @@ import type { StreamMode, StreamSettings } from "@core/api/types/api.types";
 import { pickScreen } from "@core/devices/utils/screen-picker.util";
 import { isDomError, screenSound } from "./utils/capture.util";
 import { COULDNT } from "./constants/livekit.constants";
-import type { RoomContext } from "./types/livekit.types";
+import type { RoomContext, ScreenChange } from "./types/livekit.types";
 import { contentHintOf, screenPublishOptions } from "./utils/publish-options.util";
 import type { SendService } from "./send.service";
 import { isLocalAudio } from "./utils/track-kind.util";
@@ -18,7 +18,7 @@ export class ScreenChangeService {
     this.sending = sending;
   }
 
-  async changeScreen(prefs: StreamSettings): Promise<{ hasSound: boolean } | null> {
+  async changeScreen(prefs: StreamSettings): Promise<ScreenChange | null> {
     const room = this.ctx.room();
     const video = this.sending.sent("screen");
     if (!room || !video) return null;
