@@ -646,13 +646,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/pages/RoomPage.test.tsx",
-    "count": 19,
-    "owner": "#184 the room page's tests"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/pages/RoomPage.tsx",
     "count": 4,
     "owner": "#192 room: queue, footer, page"
@@ -1985,7 +1978,7 @@
     "rule": "naming",
     "file": "src/pages/RoomPage.test.tsx",
     "count": 1,
-    "owner": "#184 the room page's tests"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "code",
@@ -2602,13 +2595,6 @@
     "file": "src/pages/RoomPage.tsx",
     "count": 3,
     "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "code",
-    "rule": "realWait",
-    "file": "src/pages/RoomPage.test.tsx",
-    "count": 9,
-    "owner": "#184 the room page's tests"
   },
   {
     "tool": "code",
@@ -3651,7 +3637,7 @@
     "rule": "structure",
     "file": "src/pages/RoomPage.test.tsx",
     "count": 1,
-    "owner": "#184 the room page's tests"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "code",
@@ -4853,13 +4839,6 @@
   {
     "tool": "tsc",
     "rule": "TS2532",
-    "file": "src/pages/RoomPage.test.tsx",
-    "count": 5,
-    "owner": "#184 the room page's tests"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
     "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
@@ -4896,13 +4875,6 @@
     "tool": "unused",
     "rule": "exports",
     "file": "src/components/stage/icons.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
-    "file": "src/components/stage/Stage.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
   },

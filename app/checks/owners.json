@@ -10,7 +10,7 @@
   ["src/components/ui/FullPageMessage", "#188 shared: Panel, Page shell"],
   ["src/hooks/", "#186 shared: the basic blocks"],
   ["src/media/", "#190 room: stage, Stage split"],
-  ["src/pages/RoomPage.test", "#184 the room page's tests"],
+  ["src/pages/RoomPage.test", "#192 room: queue, footer, page"],
   ["src/shared/styles/", "#185 shared: tokens"],
   ["src/components/ui/Picker", "#187 shared: one menu, one floating system"],
   ["src/components/ui/DropUp", "#187 shared: one menu, one floating system"],
