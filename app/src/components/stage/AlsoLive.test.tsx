@@ -1,10 +1,10 @@
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { onFakeClock } from "../../test/factories/clock.factory";
-import { aSharer } from "../../test/factories/sharer.factory";
-import { aTrack } from "../../test/factories/track.factory";
-import type { FakeTrack } from "../../test/fakeLiveKit";
+import { onFakeClock } from "../../testing/factories/clock.factory";
+import { aSharer } from "../../testing/factories/sharer.factory";
+import { aTrack } from "../../testing/factories/track.factory";
+import type { FakeTrack } from "../../testing/fakeLiveKit";
 import type { Sharer } from "@features/room/types/room-view.types";
 import { AlsoLive } from "./AlsoLive";
 import type { Hearing } from "./HearToggles";

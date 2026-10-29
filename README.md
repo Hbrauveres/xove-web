@@ -30,22 +30,18 @@ Every screen is in the [design sheet](docs/design.md).
 - **Black, greys and one red.** A soft black ground, neutral greys for panels and text, and red only for the brand and what's live. Pure black only behind the video, as the picture's own frame. Every text colour reaches 4.5:1 contrast on every surface (3:1 for faint labels), and a test checks it.
 - **Quiet controls:** white sliders like a video player's, a grey switch that turns red only when on, round buttons over the stage that fade with the player's labels.
 - **The mark:** [XOVE] in a viewfinder, the O a record button, with a hover animation.
-- **Tokens, not values:** colours, sizes and type are CSS variables in `app/src/styles/global.css`; each component's CSS module uses them. The [design sheet](docs/design.md) is the reference for all of it, with pictures shot from the real app.
+- **Tokens, not values:** colours, sizes and type are CSS variables in `app/src/shared/styles/global.css`; each component's CSS module uses them. The [design sheet](docs/design.md) is the reference for all of it, with pictures shot from the real app.
 
 ## The modules
 
 ```
 app/src/
-  app/          the root (the app, or the phone notice), the routes and who may open them
-  pages/        one per route (home, request access, room, admin)
-  hooks/        the room's state: the seat, the streams, the LiveKit connection
-  media/        sending screens and cameras, the ambilight, who is big
-  components/   stage, room, share, ui, brand: each with its CSS module
-  core/         what the app is built on: the API client, who is signed in, the browser's saved choices, the video server, the devices
-  features/     whole features in their own folders (the phone notice)
-  shared/       small pieces any feature uses
-  styles/       the design tokens and their tests
-  test/         a fake API and a fake LiveKit for the tests
+  routes/       which page opens at which address, and who may open it
+  features/     the product's areas, each with its components, hooks and stores (the room's logic, the phone notice)
+  shared/       what the whole app uses: who is signed in, the design tokens
+  services/     the links to the outside: the API client, the video server, the devices, the browser's saved choices
+  testing/      a fake API and a fake LiveKit for the tests
+  pages/  components/  hooks/  media/  brand/   today's screens, moving into features/ and shared/ step by step
 ```
 
 Pages put the room together, components draw it, hooks hold the state and talk to the API and LiveKit, and `media/` keeps the rules as plain, tested functions. More in [Architecture](docs/architecture.md) and [Media](docs/media.md).

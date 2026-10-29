@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router";
-import { api, ApiError } from "@core/api/api-client.service";
-import type { AccessRequestView, MemberView } from "@core/api/types/api.types";
+import { api, ApiError } from "@services/xove-api-service";
+import type { AccessRequestView, MemberView } from "@services/xove-api-service";
 import { Button } from "../components/ui/Button";
 import { PersonAvatar } from "../components/ui/PersonAvatar";
-import { timeAgo } from "@shared/utils/time-ago.util";
+import { timeAgo } from "@features/admin/utils/time-ago.util";
 import { XoveMark } from "../components/brand/XoveMark";
 import styles from "./AdminPage.module.css";
 

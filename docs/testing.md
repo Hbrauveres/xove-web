@@ -6,9 +6,9 @@ How the web app is tested, with a real example of each kind, and how to run the 
 
 | Kind | What it proves | Example |
 | --- | --- | --- |
-| [Rules as plain functions](#rules-as-plain-functions) | The decisions, with no browser: which device, which quality, how the ambilight is laid out, who is big; the room as data and what it shows (`features/room/state/room.model`, `room.selectors`), in milliseconds | `core/devices/tests/utils/is-handheld.util.test.ts`, `media/*.test.ts`, `brand/*.test.ts`, `features/room/tests/state/*.test.ts`, `*/tests/utils/*.test.ts` |
+| [Rules as plain functions](#rules-as-plain-functions) | The decisions, with no browser: which device, which quality, how the ambilight is laid out, who is big; the room as data and what it shows (`features/room/stores/room-store/room.model`, `room.selectors`), in milliseconds | `services/media-devices-service/utils/is-handheld.util.test.ts`, `media/*.test.ts`, `brand/*.test.ts`, `features/room/stores/room-store/*.test.ts`, `**/utils/*.test.ts` |
 | [Components](#components) | One component's output for given props | `components/**/*.test.tsx` |
-| [Pages, used like a person](#pages-used-like-a-person) | Whole flows: a page at a URL, with a fake API and a fake LiveKit | `pages/*.test.tsx`, `app/tests/app.component.test.tsx`, `features/room/tests/hooks/*.test.ts` |
+| [Pages, used like a person](#pages-used-like-a-person) | Whole flows: a page at a URL, with a fake API and a fake LiveKit | `pages/*.test.tsx`, `routes/app-routes/app-routes.component.test.tsx`, `features/room/hooks/*.test.ts` |
 | [The style check](#the-style-check) | What the stylesheets promise: text readable on every surface, rules no browser drops, motion off when asked | `scripts/check-styles.ts` |
 | [Pictures and sizes](#pictures-and-sizes) | Each screen on every device size | The design sheet's pictures |
 
@@ -16,7 +16,7 @@ All of it runs with Vitest, Testing Library and jsdom (a browser's page model in
 
 ## Rules as plain functions
 
-Anything that decides something is a plain function, so its tests need no rendering and cover every case. From `core/devices/tests/utils/is-handheld.util.test.ts`, with the media queries answered directly:
+Anything that decides something is a plain function, so its tests need no rendering and cover every case. From `services/media-devices-service/utils/is-handheld.util.test.ts`, with the media queries answered directly:
 
 ```ts
 it("isn't, for a computer, a touch-screen laptop or a narrow window: their main pointer is fine", () => {
@@ -25,7 +25,7 @@ it("isn't, for a computer, a touch-screen laptop or a narrow window: their main 
 });
 ```
 
-The same goes for the stream presets (`core/devices/constants/devices.constants.ts`) and how they're sent and capped (`core/livekit/utils/publish-options.util.ts`), the room's state person by person (`core/livekit/utils/room-state.util.ts`), the ambilight's grid and mask (`media/ambilight.ts`), who is big by default and what I hear (`features/room/utils/*.util.ts`), and the mark's geometry and animation (`brand/`): a test fails if the favicon drifts from the geometry.
+The same goes for the stream presets (`services/media-devices-service/constants/devices.constants.ts`) and how they're sent and capped (`services/livekit-service/utils/publish-options.util.ts`), the room's state person by person (`services/livekit-service/utils/room-state.util.ts`), the ambilight's grid and mask (`media/ambilight.ts`), who is big by default and what I hear (`features/room/utils/*.util.ts`), and the mark's geometry and animation (`brand/`): a test fails if the favicon drifts from the geometry.
 
 ## Components
 
@@ -44,12 +44,12 @@ it("names who is on the stage, live, what they share and for how long", () => {
 
 ## Pages, used like a person
 
-Most tests render a real page, or the whole app at a URL (`test/renderApp.tsx`), and use it the way a person does: `userEvent.click`, finding things by role and label. Two fakes stand in for the outside world:
+Most tests render a real page, or the whole app at a URL (`testing/renderApp.tsx`), and use it the way a person does: `userEvent.click`, finding things by role and label. Two fakes stand in for the outside world:
 
-- **`test/fakeApi.ts`** replaces `fetch` with a small in-memory API. A test sets its state (who I am, who's sharing, a forced failure), and checks the requests the app sent (`server.calls`), headers included, so the CSRF token is tested too.
-- **`test/fakeLiveKit.ts`** replaces `livekit-client` (jsdom has no WebRTC). A test plays the other people: someone joins (`lastRoom().join(...)`), starts a screen (`publishScreen(...)`), or the browser's own "Stop sharing" bar is used (`browserStopsMyShare()`). What the next screen pick is (a window, a tab or the whole screen) is `nextSurface`. Voices too: someone's mic (`publishVoice`, `muteVoice`), who's speaking (`setSpeaking`), and my own mic, allowed, blocked or missing (`nextMic`), with the gate set on it (`setProcessor`).
-- **Factories** (`test/factories/`) make each test's own data, fresh on every call: `aSharer()` (someone sharing, with new tracks), `aTrack()`, `aLiveStream()` and `anAnswer()` (the API's streams answer, for the room's model), and `onFakeClock()` (fake timers on a fixed clock, with a `userEvent` that moves them along).
-- **No canvas:** jsdom has none, so `test/setup.ts` makes every canvas give no drawing context; what draws (the ambilight, the standby screen's static) does nothing in tests. A test of the drawing stubs its own context (`vi.spyOn(HTMLCanvasElement.prototype, "getContext")`), and how it looks is checked in a real browser.
+- **`testing/fakeApi.ts`** replaces `fetch` with a small in-memory API. A test sets its state (who I am, who's sharing, a forced failure), and checks the requests the app sent (`server.calls`), headers included, so the CSRF token is tested too.
+- **`testing/fakeLiveKit.ts`** replaces `livekit-client` (jsdom has no WebRTC). A test plays the other people: someone joins (`lastRoom().join(...)`), starts a screen (`publishScreen(...)`), or the browser's own "Stop sharing" bar is used (`browserStopsMyShare()`). What the next screen pick is (a window, a tab or the whole screen) is `nextSurface`. Voices too: someone's mic (`publishVoice`, `muteVoice`), who's speaking (`setSpeaking`), and my own mic, allowed, blocked or missing (`nextMic`), with the gate set on it (`setProcessor`).
+- **Factories** (`testing/factories/`) make each test's own data, fresh on every call: `aSharer()` (someone sharing, with new tracks), `aTrack()`, `aLiveStream()` and `anAnswer()` (the API's streams answer, for the room's model), and `onFakeClock()` (fake timers on a fixed clock, with a `userEvent` that moves them along).
+- **No canvas:** jsdom has none, so `testing/setup.ts` makes every canvas give no drawing context; what draws (the ambilight, the standby screen's static) does nothing in tests. A test of the drawing stubs its own context (`vi.spyOn(HTMLCanvasElement.prototype, "getContext")`), and how it looks is checked in a real browser.
 
 The room page takes a short poll interval in tests, so nothing waits 2 seconds. From `pages/RoomPage.test.tsx`:
 
@@ -88,10 +88,10 @@ jsdom has no real layout, so how each screen looks is checked in a real headless
 Every test earns its place, and runs alone, in any order, fast.
 
 - **Useful:** a test protects a behaviour that matters and could break; a failure means a real bug. No CSS text or literal values (`#ffffff`, `44px`), no props echoed back, no tests of the fakes rather than the app, no "renders without crashing", no two tests for the same behaviour. A test of removed code leaves with it.
-- **One test file per file with logic**, in its module's `tests/` folder at the same path, named the same (the old folders keep theirs beside the file until they move). A test keeps its own code and values, and uses the app's constants, types and enums where a value already has a name. Logic is tested where it lives, as plain functions; a page's tests check only the wiring, split by feature.
+- **One test file per file with logic**, beside it, named the same. A test keeps its own code and values, and uses the app's constants, types and enums where a value already has a name. Logic is tested where it lives, as plain functions; a page's tests check only the wiring, split by feature.
 - **Read the page as a person does:** roles, names, labels, `aria-pressed`, `aria-expanded`, `aria-disabled`, `userEvent`; never markup details or class names. A `data-*` attribute only when it's the only sign of a state.
 - **Its own data and its own setup, the most important rule:** each test builds what it needs (people from factories, its own fakes, its clock, its storage) in the test, or in a `beforeEach` that builds it fresh; never once for a whole file, never in a `beforeAll`. Every test passes alone, first, last, or alongside any other.
-- **Clean after every test, by the setup, not the test:** `test/setup.ts` clears the page, storage and cookies, puts back real timers, the media queries and the fake LiveKit, removes the stand-ins a test defined for what jsdom lacks (fullscreen, touch points), and calls the reset of every piece of the app that keeps state between renders (the toast, the floating piece, the tooltip's warmth, the install prompt, the TV); Vitest itself puts back every spy, stubbed global and variable (`restoreMocks`, `unstubGlobals`, `unstubEnvs`). Nothing is restored inside a test's body, where a failure would skip it. A new piece of shared state gets a reset beside it, called there, and a pair of tests in `test/setup.test.tsx`.
+- **Clean after every test, by the setup, not the test:** `testing/setup.ts` clears the page, storage and cookies, puts back real timers, the media queries and the fake LiveKit, removes the stand-ins a test defined for what jsdom lacks (fullscreen, touch points), and calls the reset of every piece of the app that keeps state between renders (the toast, the floating piece, the tooltip's warmth, the install prompt, the TV); Vitest itself puts back every spy, stubbed global and variable (`restoreMocks`, `unstubGlobals`, `unstubEnvs`). Nothing is restored inside a test's body, where a failure would skip it. A new piece of shared state gets a reset beside it, called there, and a pair of tests in `testing/setup.test.tsx`.
 - **A new order every run:** the tests in each file are shuffled on every run, so a test that leans on another fails at once. The run prints its seed (`Running tests with seed "…"`); `npm test -- --sequence.seed=<seed>` replays that order. Each file runs in its own environment, so files can't lean on each other.
 - **No real waiting:** every delay (debounce, retry, hover, hold, idle, animation) on fake timers, and a fixed clock for anything that shows a time (`onFakeClock()`). `findBy` and `waitFor` give up after 1 s, and move fake timers along by themselves: a test that needs longer is waiting in real time.
 - **Fast:** a test under about 100 ms, a file under about 1.5 s, the whole suite in about 10 s; a file that grows past that splits by feature, so the workers share the load.

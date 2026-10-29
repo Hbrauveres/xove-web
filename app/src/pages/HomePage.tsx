@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router";
-import { GOOGLE_LOGIN_URL } from "@core/api/constants/api.constants";
+import { GOOGLE_LOGIN_URL } from "@services/xove-api-service";
 import { XoveMark } from "../components/brand/XoveMark";
 import styles from "./HomePage.module.css";
 

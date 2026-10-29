@@ -1,6 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { onFakeClock } from "../../test/factories/clock.factory";
+import { onFakeClock } from "../../testing/factories/clock.factory";
 import type { ActivityEvent, Friend } from "@features/room/types/room-view.types";
 import { ActivityList } from "./ActivityList";
 

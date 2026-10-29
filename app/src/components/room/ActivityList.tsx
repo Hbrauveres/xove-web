@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { StreamKind } from "@core/api/types/api.types";
+import type { StreamKind } from "@services/xove-api-service";
 import type { ActivityEvent, Friend } from "@features/room/types/room-view.types";
 import { ActivityIcon } from "./ActivityIcon";
 import { describeEvent, shortAgo } from "./activityText";

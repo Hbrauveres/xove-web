@@ -1,5 +1,5 @@
 import { useEffect, type RefObject } from "react";
-import type { Capture } from "@core/livekit/types/livekit.types";
+import type { Capture } from "@services/livekit-service";
 
 /**
  * Lets a capture that isn't sent go: when the browser ends it (unplugged, or its own control), and

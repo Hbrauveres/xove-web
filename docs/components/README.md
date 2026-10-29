@@ -12,7 +12,7 @@ How the web app's interface is put together, piece by piece, with pictures: what
 **Layers.** The room is a stack, back to front: the ground; the stage's light (the ambilight); the stage; the two side panels; what's on them; the header; and what floats over everything for a moment (menus, cards, toasts). Each component belongs to one layer.
 
 **Kinds.**
-- **Building blocks** are small and reused everywhere (a face, an icon button, a menu, a slider). Each exists **once**, in `shared/ui/`, with variants; a second copy is a variant of the first, never a new component.
+- **Building blocks** are small and reused everywhere (a face, an icon button, a menu, a slider). Each exists **once**, in `shared/components/`, with variants; a second copy is a variant of the first, never a new component.
 - **Room pieces** each do one job and are built from blocks (a person's row, the stage's controls, a chat message). They live in their feature's folder (`features/room/<area>/`).
 - **Screen regions** hold pieces in place (the header, the stage, a column).
 

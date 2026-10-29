@@ -9,7 +9,7 @@ export default defineConfig({
   // The structure's short names, as in tsconfig.app.json's paths.
   resolve: {
     alias: Object.fromEntries(
-      ["app", "core", "shared", "features"].map((dir) => [
+      ["routes", "features", "shared", "services", "testing"].map((dir) => [
         `@${dir}`,
         fileURLToPath(new URL(`./src/${dir}`, import.meta.url)),
       ]),
@@ -24,7 +24,7 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
-    setupFiles: ["./src/test/setup.ts"],
+    setupFiles: ["./src/testing/setup.ts"],
     // Every test starts clean (docs/testing.md): each file in its own environment, and every spy,
     // stubbed global and stubbed variable put back after each test, by the runner, not by the test.
     isolate: true,

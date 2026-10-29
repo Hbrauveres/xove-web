@@ -4,7 +4,7 @@ The room's redesign: three columns (who's here, the stream, the room's chat), th
 
 Desktop only for now. Pictures: the draft at 1600 px wide.
 
-**Kinds:** a *building block* is small and used in many places (`shared/ui/`); a *room piece* is built from blocks and has one job; a *screen region* holds pieces in place.
+**Kinds:** a *building block* is small and used in many places (`shared/components/`); a *room piece* is built from blocks and has one job; a *screen region* holds pieces in place.
 
 ## Layers
 
@@ -26,7 +26,7 @@ Small pieces used in many places. Each is built once and reused everywhere.
 
 ### Face
 
-*Building block* · `shared/ui/face/`
+*Building block* · `shared/components/face/`
 
 <table><tr>
 <td><img src="img/next/face-rest.webp" width="52" alt="At rest"><br><sub>At rest</sub></td>
@@ -41,7 +41,7 @@ Small pieces used in many places. Each is built once and reused everywhere.
 
 ### Icon button
 
-*Building block* · `shared/ui/icon-button/`
+*Building block* · `shared/components/icon-button/`
 
 <table><tr>
 <td><img src="img/next/menu-button.webp" width="54" alt="Menu"><br><sub>Menu</sub></td>
@@ -58,7 +58,7 @@ Small pieces used in many places. Each is built once and reused everywhere.
 
 ### Count badge
 
-*Building block* · `shared/ui/count-badge/`
+*Building block* · `shared/components/count-badge/`
 
 <table><tr>
 <td><img src="img/next/count-badge.webp" width="18" alt="On the bell"><br><sub>On the bell</sub></td>
@@ -71,7 +71,7 @@ Small pieces used in many places. Each is built once and reused everywhere.
 
 ### LIVE badge
 
-*Building block* · `shared/ui/live-badge/`
+*Building block* · `shared/components/live-badge/`
 
 <table><tr>
 <td><img src="img/next/live-badge.webp" width="66" alt="Closed"><br><sub>Closed</sub></td>
@@ -84,7 +84,7 @@ Small pieces used in many places. Each is built once and reused everywhere.
 
 ### Mic state
 
-*Building block* · `shared/ui/mic-state/`
+*Building block* · `shared/components/mic-state/`
 
 <table><tr>
 <td><img src="img/next/mic-muted.webp" width="38" alt="Their mic is off (red, glowing)"><br><sub>Their mic is off (red, glowing)</sub></td>
@@ -97,7 +97,7 @@ Small pieces used in many places. Each is built once and reused everywhere.
 
 ### Slider
 
-*Building block* · `shared/ui/slider/`
+*Building block* · `shared/components/slider/`
 
 <table><tr>
 <td><img src="img/next/slider.webp" width="208" alt="In a person&#x27;s menu"><br><sub>In a person&#x27;s menu</sub></td>
@@ -110,7 +110,7 @@ Small pieces used in many places. Each is built once and reused everywhere.
 
 ### Menu
 
-*Building block* · `shared/ui/menu/`
+*Building block* · `shared/components/menu/`
 
 <table><tr>
 <td><img src="img/next/my-menu.webp" width="324" alt="My menu"><br><sub>My menu</sub></td>
@@ -125,7 +125,7 @@ Small pieces used in many places. Each is built once and reused everywhere.
 
 ### Panel
 
-*Building block* · `shared/ui/panel/`
+*Building block* · `shared/components/panel/`
 
 <table><tr>
 <td><img src="img/next/people-panel.webp" width="240" alt="The people panel"><br><sub>The people panel</sub></td>
@@ -138,7 +138,7 @@ Small pieces used in many places. Each is built once and reused everywhere.
 
 ### Section label
 
-*Building block* · `shared/ui/section-label/`
+*Building block* · `shared/components/section-label/`
 
 <table><tr>
 <td><img src="img/next/section-label.webp" width="252" alt="&quot;In the room · 6&quot;"><br><sub>&quot;In the room · 6&quot;</sub></td>
@@ -150,7 +150,7 @@ Small pieces used in many places. Each is built once and reused everywhere.
 
 ### Wordmark
 
-*Building block* · `shared/ui/wordmark/`
+*Building block* · `shared/components/wordmark/`
 
 <table><tr>
 <td><img src="img/next/wordmark.webp" width="90" alt="In the header"><br><sub>In the header</sub></td>
@@ -166,7 +166,7 @@ The bar along the top.
 
 ### Header
 
-*Screen region* · `features/room/header/header/`
+*Screen region* · `features/room/components/header/`
 
 <table><tr>
 <td><img src="img/next/header.webp" width="720" alt="The whole bar"><br><sub>The whole bar</sub></td>
@@ -178,7 +178,7 @@ The bar along the top.
 
 ### My picture button
 
-*Room piece* · `features/room/header/my-picture-button/`
+*Room piece* · `features/room/components/header-my-picture-button/`
 
 <table><tr>
 <td><img src="img/next/my-picture-button.webp" width="48" alt="My picture"><br><sub>My picture</sub></td>
@@ -191,7 +191,7 @@ The bar along the top.
 
 ### Activity list
 
-*Room piece* · `features/room/header/activity-list/`
+*Room piece* · `features/room/components/header-activity-list/`
 
 <table><tr>
 <td><img src="img/next/activity-list.webp" width="324" alt="Opened from the bell"><br><sub>Opened from the bell</sub></td>
@@ -207,7 +207,7 @@ The left column, open or folded.
 
 ### My card
 
-*Room piece* · `features/room/people/my-card/`
+*Room piece* · `features/room/components/people-my-card/`
 
 <table><tr>
 <td><img src="img/next/my-card.webp" width="236" alt="Open"><br><sub>Open</sub></td>
@@ -220,7 +220,7 @@ The left column, open or folded.
 
 ### Send buttons
 
-*Room piece* · `features/room/people/send-buttons/`
+*Room piece* · `features/room/components/people-send-buttons/`
 
 <table><tr>
 <td><img src="img/next/send-buttons-off.webp" width="104" alt="All off"><br><sub>All off</sub></td>
@@ -233,7 +233,7 @@ The left column, open or folded.
 
 ### Person row
 
-*Room piece* · `features/room/people/person-row/`
+*Room piece* · `features/room/components/people-person-row/`
 
 <table><tr>
 <td><img src="img/next/row-marina.webp" width="228" alt="On the stage, talking"><br><sub>On the stage, talking</sub></td>
@@ -250,7 +250,7 @@ The left column, open or folded.
 
 ### Live preview
 
-*Room piece* · `features/room/people/live-preview/`
+*Room piece* · `features/room/components/people-live-preview/`
 
 <table><tr>
 <td><img src="img/next/live-preview-single.webp" width="220" alt="One stream"><br><sub>One stream</sub></td>
@@ -263,7 +263,7 @@ The left column, open or folded.
 
 ### Settings button
 
-*Room piece* · `features/room/people/settings-button/`
+*Room piece* · `features/room/components/people-settings-button/`
 
 <table><tr>
 <td><img src="img/next/settings-button.webp" width="236" alt="At the column&#x27;s foot"><br><sub>At the column&#x27;s foot</sub></td>
@@ -275,7 +275,7 @@ The left column, open or folded.
 
 ### Person menu
 
-*Room piece* · `features/room/people/person-menu/`
+*Room piece* · `features/room/components/people-person-menu/`
 
 <table><tr>
 <td><img src="img/next/person-menu.webp" width="244" alt="Right-click on a person"><br><sub>Right-click on a person</sub></td>
@@ -287,7 +287,7 @@ The left column, open or folded.
 
 ### Rail
 
-*Room piece* · `features/room/people/rail/`
+*Room piece* · `features/room/components/people-rail/`
 
 <table><tr>
 <td><img src="img/next/rail.webp" width="64" alt="The people folded into faces"><br><sub>The people folded into faces</sub></td>
@@ -299,7 +299,7 @@ The left column, open or folded.
 
 ### Rail hover card
 
-*Room piece* · `features/room/people/rail-hover-card/`
+*Room piece* · `features/room/components/people-rail-hover-card/`
 
 <table><tr>
 <td><img src="img/next/rail-card.webp" width="288" alt="Pointing at a face"><br><sub>Pointing at a face</sub></td>
@@ -316,7 +316,7 @@ The middle: the stream and what sits on it.
 
 ### Stage
 
-*Screen region* · `features/room/stage/stage/`
+*Screen region* · `features/room/components/stage/`
 
 <table><tr>
 <td><img src="img/next/stage.webp" width="720" alt="The stream"><br><sub>The stream</sub></td>
@@ -328,7 +328,7 @@ The middle: the stream and what sits on it.
 
 ### Stage light
 
-*Room piece* · `features/room/stage/stage-light/`
+*Room piece* · `features/room/components/stage-light/`
 
 <table><tr>
 <td><img src="img/next/stage-with-light.webp" width="720" alt="The light around the stage"><br><sub>The light around the stage</sub></td>
@@ -340,7 +340,7 @@ The middle: the stream and what sits on it.
 
 ### Facecam
 
-*Room piece* · `features/room/stage/facecam/`
+*Room piece* · `features/room/components/stage-facecam/`
 
 <table><tr>
 <td><img src="img/next/facecam.webp" width="214" alt="Over the screen, with swap and minimise"><br><sub>Over the screen, with swap and minimise</sub></td>
@@ -352,7 +352,7 @@ The middle: the stream and what sits on it.
 
 ### Stage controls
 
-*Room piece* · `features/room/stage/stage-controls/`
+*Room piece* · `features/room/components/stage-controls/`
 
 <table><tr>
 <td><img src="img/next/stage-volume.webp" width="54" alt="Volume, with its upright slider"><br><sub>Volume, with its upright slider</sub></td>
@@ -370,7 +370,7 @@ The right column, and what shows of it when it's hidden.
 
 ### System line
 
-*Room piece* · `features/room/chat/system-line/`
+*Room piece* · `features/room/components/chat-system-line/`
 
 <table><tr>
 <td><img src="img/next/system-line.webp" width="199" alt="Someone went live"><br><sub>Someone went live</sub></td>
@@ -382,7 +382,7 @@ The right column, and what shows of it when it's hidden.
 
 ### Message group
 
-*Room piece* · `features/room/chat/message-group/`
+*Room piece* · `features/room/components/chat-message-group/`
 
 <table><tr>
 <td><img src="img/next/message-group.webp" width="280" alt="Someone&#x27;s messages"><br><sub>Someone&#x27;s messages</sub></td>
@@ -395,7 +395,7 @@ The right column, and what shows of it when it's hidden.
 
 ### Message tools
 
-*Room piece* · `features/room/chat/message-tools/`
+*Room piece* · `features/room/components/chat-message-tools/`
 
 <table><tr>
 <td><img src="img/next/message-tools.webp" width="250" alt="Pointing at a message"><br><sub>Pointing at a message</sub></td>
@@ -407,7 +407,7 @@ The right column, and what shows of it when it's hidden.
 
 ### Message box
 
-*Room piece* · `features/room/chat/message-box/`
+*Room piece* · `features/room/components/chat-message-box/`
 
 <table><tr>
 <td><img src="img/next/message-box-empty.webp" width="288" alt="Empty"><br><sub>Empty</sub></td>
@@ -420,7 +420,7 @@ The right column, and what shows of it when it's hidden.
 
 ### Chat toast
 
-*Room piece* · `features/room/chat/chat-toast/`
+*Room piece* · `features/room/components/chat-toast/`
 
 <table><tr>
 <td><img src="img/next/chat-toast.webp" width="260" alt="A new message while the chat is hidden"><br><sub>A new message while the chat is hidden</sub></td>

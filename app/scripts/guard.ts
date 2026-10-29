@@ -118,7 +118,7 @@ const isFresh = (f: { tool: string; rule: string; file: string }, fresh: Set<str
   f.tool === "code" && fresh.has(f.rule) && !NEW_STRUCTURE.test(f.file);
 
 /** The folders already in the new structure: a new rule's findings are never recorded there. */
-const NEW_STRUCTURE = /^src\/(app|core|shared|features)\//;
+const NEW_STRUCTURE = /^src\/(routes|features|shared|services|testing)\//;
 
 /** The code rules `rules` names that main's check (its source) doesn't define; none without main's. */
 export function newRulesOf(mainCheck: string | undefined, rules: string[]): Set<string> {
@@ -175,6 +175,19 @@ async function collect(): Promise<Finding[]> {
   return [...fromTsc(tsc), ...fromOxlint(lint), ...fromJscpd(copies), ...fromKnip(unused), ...code];
 }
 
+/**
+ * main's list with each file under its name today: git's renames (`git diff -M --name-status`
+ * lines, paths from the repo's root) applied, so a moved file keeps its entries.
+ */
+export function renamed(main: Known[], nameStatus: string): Known[] {
+  const to = new Map<string, string>();
+  for (const line of nameStatus.split("\n")) {
+    const [status, from, now] = line.split("\t");
+    if (status?.startsWith("R") && from && now) to.set(from.replace(/^app\//, ""), now.replace(/^app\//, ""));
+  }
+  return main.map((k) => ({ ...k, file: to.get(k.file) ?? k.file }));
+}
+
 async function mainRecord(): Promise<Known[] | undefined> {
   try {
     await run("git", ["rev-parse", "--verify", "origin/main"]);
@@ -194,13 +207,16 @@ async function mainRecord(): Promise<Known[] | undefined> {
     }
     throw e;
   }
-  return JSON.parse(text) as Known[];
+  const moves = (await run("git", ["diff", "-M", "--name-status", "origin/main", "--", "src"])).stdout;
+  return renamed(JSON.parse(text) as Known[], moves);
 }
 
 /** main's code check, to tell which of today's rules are new; undefined when it can't be read. */
 async function mainCodeCheck(): Promise<string | undefined> {
   try {
-    return (await run("git", ["show", "origin/main:app/scripts/check-code.ts"])).stdout;
+    // The rules are named in the code check and in the layout check it spreads in.
+    const read = async (file: string) => (await run("git", ["show", `origin/main:app/scripts/${file}`])).stdout;
+    return `${await read("check-code.ts")}\n${await read("check-layout.ts").catch(() => "")}`;
   } catch {
     return undefined;
   }

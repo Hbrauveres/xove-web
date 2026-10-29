@@ -1,8 +1,8 @@
-import type { SharingConnection, StreamKind } from "@core/api/types/api.types";
-import type { ConnectionState } from "@core/livekit/types/livekit.types";
-import type { RoomStore } from "../state/room.store";
+import type { SharingConnection, StreamKind } from "@services/xove-api-service";
+import type { ConnectionState } from "@services/livekit-service";
+import type { RoomStore } from "../stores/room-store";
 import type { RoomModel } from "./room.types";
-import type { SettingsQueue } from "../state/settings-queue.service";
+import type { SettingsQueue } from "../../../services/settings-queue-service";
 
 export type StreamSyncInputs = {
   store: RoomStore;

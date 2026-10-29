@@ -1,6 +1,6 @@
 [
-  ["src/app/", "#194 home, request access, admin, the shell"],
-  ["src/core/", "#180 core: API client, auth, preferences"],
+  ["src/routes/", "#194 home, request access, admin, the shell"],
+  ["src/services/", "#180 services: API client, auth, preferences"],
   ["src/shared/", "#186 shared: the basic blocks"],
   ["src/features/", "#192 room: queue, footer, page"],
   ["src/components/room/WaitingRoom", "#192 room: queue, footer, page"],
@@ -11,7 +11,7 @@
   ["src/hooks/", "#186 shared: the basic blocks"],
   ["src/media/", "#190 room: stage, Stage split"],
   ["src/pages/RoomPage.test", "#184 the room page's tests"],
-  ["src/styles/", "#185 shared: tokens"],
+  ["src/shared/styles/", "#185 shared: tokens"],
   ["src/components/ui/Picker", "#187 shared: one menu, one floating system"],
   ["src/components/ui/DropUp", "#187 shared: one menu, one floating system"],
   ["src/components/ui/Dropdown", "#187 shared: one menu, one floating system"],
@@ -35,5 +35,5 @@
   ["src/pages/RoomPage", "#192 room: queue, footer, page"],
   ["src/pages/", "#194 home, request access, admin, the shell"],
   ["src/main", "#194 home, request access, admin, the shell"],
-  ["src/test/", "#195 the sweep"]
+  ["src/testing/", "#195 the sweep"]
 ]

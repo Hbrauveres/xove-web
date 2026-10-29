@@ -1,1 +1,1 @@
-export { PhoneNoticePage } from "./phone-notice.page";
+export { PhoneNoticePage } from "./components/phone-notice-page";

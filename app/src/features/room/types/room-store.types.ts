@@ -1,3 +1,3 @@
-import type { useRoomStore } from "../hooks/use-room-store.hook";
+import type { useRoomStore } from "../stores/room-store";
 
 export type RoomStoreValue = ReturnType<typeof useRoomStore>;

@@ -1,4 +1,4 @@
-import { useElapsed } from "@shared/hooks/use-elapsed.hook";
+import { useElapsed } from "@features/room/hooks/use-elapsed.hook";
 import type { Friend, Sharer } from "@features/room/types/room-view.types";
 import { Avatar } from "../ui/Avatar";
 import styles from "./NowWatching.module.css";

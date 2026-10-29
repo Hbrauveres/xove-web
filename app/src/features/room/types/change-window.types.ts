@@ -1,4 +1,4 @@
-import type { StreamSettings } from "@core/api/types/api.types";
+import type { StreamSettings } from "@services/xove-api-service";
 
 export type ChangeWindowInputs = {
   /** Picks another window or tab into my screen: viewers keep the same stream. */

@@ -28,7 +28,7 @@ The room's top bar: the wordmark at the left, the activity pill in the middle, t
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/room/RoomHeader.tsx` | `features/room/header/header/` | Kept, then redrawn in the next version |
+| `components/room/RoomHeader.tsx` | `features/room/components/header/` | Kept, then redrawn in the next version |
 
 ### Wordmark
 
@@ -40,7 +40,7 @@ Xovê's name and mark, drawn with its red corner; it animates on hover.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/brand/XoveMark.tsx`, `XoveIcon.tsx`, `parts.tsx`, `useMarkAnimation.ts`; its geometry in `brand/mark.ts`, `markTimeline.ts` | `shared/ui/wordmark/` (its geometry in `shared/utils/`) | Kept |
+| `components/brand/XoveMark.tsx`, `XoveIcon.tsx`, `parts.tsx`, `useMarkAnimation.ts`; its geometry in `brand/mark.ts`, `markTimeline.ts` | `shared/components/wordmark/` (its geometry in `shared/utils/`) | Kept |
 
 ### Activity pill and list
 
@@ -53,7 +53,7 @@ What happened in the room (someone joined, went live), as a pill that opens a li
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/room/ActivityPill.tsx`, `ActivityList.tsx`, `activityText.ts` | `features/room/header/activity-pill/`, `activity-list/` (the text in `utils/`) | Kept; the next version's bell replaces the pill |
+| `components/room/ActivityPill.tsx`, `ActivityList.tsx`, `activityText.ts` | `features/room/components/header-activity-pill/`, `activity-list/` (the text in `utils/`) | Kept; the next version's bell replaces the pill |
 
 ### People button
 
@@ -66,7 +66,7 @@ How many people are here; it opens the seats and the list of people with what ea
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/room/PeopleButton.tsx` | `features/room/header/people-button/` | Kept; the next version's people column replaces it |
+| `components/room/PeopleButton.tsx` | `features/room/components/header-people-button/` | Kept; the next version's people column replaces it |
 
 ### Account button and menu
 
@@ -79,7 +79,7 @@ My picture; it opens my menu.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/room/AccountButton.tsx` (it holds a switch, a slider and the footer's items) | `features/room/header/my-picture-button/`, `my-menu/` (on the shared Menu, Switch and Slider) | Kept |
+| `components/room/AccountButton.tsx` (it holds a switch, a slider and the footer's items) | `features/room/components/header-my-picture-button/`, `my-menu/` (on the shared Menu, Switch and Slider) | Kept |
 
 ## The stage
 
@@ -96,7 +96,7 @@ The stream being watched, as large as the room allows, with its controls in the 
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/Stage.tsx` (one file holds audio, quality, fullscreen, and the controls' idle) | Split into `features/room/stage/stage/`, `stage-light/`, `screen-video/`, `voice-audio/`, `stage-notice/`, with hooks for hearing and the idle | Kept, split into its pieces |
+| `components/stage/Stage.tsx` (one file holds audio, quality, fullscreen, and the controls' idle) | Split into `features/room/components/stage/`, `stage-light/`, `screen-video/`, `voice-audio/`, `stage-notice/`, with hooks for hearing and the idle | Kept, split into its pieces |
 
 ### Stage light (ambilight)
 
@@ -108,7 +108,7 @@ The stream's own colours glowing around the stage, drawn from its edges on a sma
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/Ambilight.tsx`; the maths in `media/ambilight.ts` | `features/room/stage/stage-light/` (the maths in `utils/`) | Kept |
+| `components/stage/Ambilight.tsx`; the maths in `media/ambilight.ts` | `features/room/components/stage-light/` (the maths in `utils/`) | Kept |
 
 ### Viewer bar
 
@@ -121,7 +121,7 @@ Over someone else's stream: each sound I hear from them (screen sound, voice) as
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/ViewerBar.tsx` | `features/room/stage/viewer-bar/` (on the shared Icon button, Slider and a hold-or-rest hook) | Kept; the next version's stage controls replace it |
+| `components/stage/ViewerBar.tsx` | `features/room/components/stage-viewer-bar/` (on the shared Icon button, Slider and a hold-or-rest hook) | Kept; the next version's stage controls replace it |
 
 ### Go live menu
 
@@ -145,7 +145,7 @@ Over my own stream: my screen, camera and mic, on or off, and the settings.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/PlayerButtons.tsx`, its icons in `icons.tsx` | `features/room/stage/player-buttons/` (on the shared Icon button and icons) | Kept; the next version's send buttons replace it |
+| `components/stage/PlayerButtons.tsx`, its icons in `icons.tsx` | `features/room/components/stage-player-buttons/` (on the shared Icon button and icons) | Kept; the next version's send buttons replace it |
 
 ### Stage overlay
 
@@ -157,7 +157,7 @@ The stage's fullscreen button.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/StageOverlay.tsx` | `features/room/stage/stage-overlay/` | Kept; the next version's stage controls replace it |
+| `components/stage/StageOverlay.tsx` | `features/room/components/stage-overlay/` | Kept; the next version's stage controls replace it |
 
 ### Facecam
 
@@ -170,7 +170,7 @@ When someone shares their screen and their camera, the camera sits over the scre
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/Facecam.tsx` | `features/room/stage/facecam/` | Kept |
+| `components/stage/Facecam.tsx` | `features/room/components/stage-facecam/` | Kept |
 
 ### Empty stage
 
@@ -182,7 +182,7 @@ When nobody shares: a TV on standby, with its static and glow, and the ways to s
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/EmptyStage.tsx`, `StaticNoise.tsx`, `StaticGlow.tsx`, `CornerGlow.tsx`, `staticBands.ts` (with a module-level flag) | `features/room/stage/empty-stage/` (the flag becomes state) | Kept |
+| `components/stage/EmptyStage.tsx`, `StaticNoise.tsx`, `StaticGlow.tsx`, `CornerGlow.tsx`, `staticBands.ts` (with a module-level flag) | `features/room/components/stage-empty-stage/` (the flag becomes state) | Kept |
 
 ### Now watching
 
@@ -194,7 +194,7 @@ Under the stage: whose stream it is, what it is, how long it's been live and who
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/NowWatching.tsx` | `features/room/stage/now-watching/` | Kept; the next version shows it in the people column |
+| `components/stage/NowWatching.tsx` | `features/room/components/stage-now-watching/` | Kept; the next version shows it in the people column |
 
 ### Also live, preview tray and hear toggles
 
@@ -207,7 +207,7 @@ The other live streams as small previews, the seats still free, and, over a prev
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/AlsoLive.tsx`, `PreviewTray.tsx`, `usePreviewTray.ts`, `HearToggles.tsx`, `stack.ts` | `features/room/stage/also-live/`, `preview-tray/`, `hear-toggles/`, on one shared live preview | Kept; the next version's people column and live preview replace them |
+| `components/stage/AlsoLive.tsx`, `PreviewTray.tsx`, `usePreviewTray.ts`, `HearToggles.tsx`, `stack.ts` | `features/room/components/stage-also-live/`, `preview-tray/`, `hear-toggles/`, on one shared live preview | Kept; the next version's people column and live preview replace them |
 
 ### My stream
 
@@ -259,7 +259,7 @@ When the room is full: waiting for a seat, and the offer when one frees.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/room/WaitingRoom.tsx`, `SeatOffer.tsx` | `features/room/queue/waiting-room/`, `seat-offer/` | Kept |
+| `components/room/WaitingRoom.tsx`, `SeatOffer.tsx` | `features/room/components/queue-waiting-room/`, `seat-offer/` | Kept |
 
 ### Sign-in
 
@@ -304,17 +304,17 @@ The shared controls today, and the copies that become one component each.
 
 | Block | Today | Goes to | What happens |
 | --- | --- | --- | --- |
-| Button | `components/ui/Button.tsx` | `shared/ui/button/` | Kept |
-| Slider | `components/ui/Range.tsx` | `shared/ui/slider/` | Kept |
-| Segmented control | `components/ui/Segmented.tsx` | `shared/ui/segmented/` | Kept |
-| Picker, drop-up, dropdown | `components/ui/Picker.tsx`, `DropUp.tsx`, `Dropdown.tsx`, `floating.ts` | `shared/ui/menu/`: one floating system for all of them | Merged |
-| Tooltip | `components/ui/Tooltip.tsx` | `shared/ui/tooltip/`, on the Menu's floating layer | Kept |
-| Avatar | `components/ui/Avatar.tsx`, `PersonAvatar.tsx` | `shared/ui/face/`: one face with sizes and states | Merged |
-| Round button | `components/stage/RoundButton.module.css`, and copies in `ViewerBar`, `HearToggles`, `StageOverlay` and the header's buttons | `shared/ui/icon-button/`: one component with variants | Merged |
-| Switch | CSS in `AccountButton.module.css` and `SettingsPanel.module.css` | `shared/ui/switch/` | Merged |
-| Icons | `components/stage/icons.tsx`, `components/room/ActivityIcon.tsx`, and inline drawings in 14 files | `shared/ui/icons/` | Merged |
-| Toast | `components/ui/Toast.tsx`, `toast.ts` | `shared/ui/toast/` | Kept |
-| Full-page message | `components/ui/FullPageMessage.tsx` | `shared/ui/page-shell/`, with the pages' copied shells | Merged |
+| Button | `components/ui/Button.tsx` | `shared/components/button/` | Kept |
+| Slider | `components/ui/Range.tsx` | `shared/components/slider/` | Kept |
+| Segmented control | `components/ui/Segmented.tsx` | `shared/components/segmented/` | Kept |
+| Picker, drop-up, dropdown | `components/ui/Picker.tsx`, `DropUp.tsx`, `Dropdown.tsx`, `floating.ts` | `shared/components/menu/`: one floating system for all of them | Merged |
+| Tooltip | `components/ui/Tooltip.tsx` | `shared/components/tooltip/`, on the Menu's floating layer | Kept |
+| Avatar | `components/ui/Avatar.tsx`, `PersonAvatar.tsx` | `shared/components/face/`: one face with sizes and states | Merged |
+| Round button | `components/stage/RoundButton.module.css`, and copies in `ViewerBar`, `HearToggles`, `StageOverlay` and the header's buttons | `shared/components/icon-button/`: one component with variants | Merged |
+| Switch | CSS in `AccountButton.module.css` and `SettingsPanel.module.css` | `shared/components/switch/` | Merged |
+| Icons | `components/stage/icons.tsx`, `components/room/ActivityIcon.tsx`, and inline drawings in 14 files | `shared/components/icons/` | Merged |
+| Toast | `components/ui/Toast.tsx`, `toast.ts` | `shared/components/toast/` | Kept |
+| Full-page message | `components/ui/FullPageMessage.tsx` | `shared/components/page-shell/`, with the pages' copied shells | Merged |
 
 ## Removed
 
@@ -331,6 +331,6 @@ Phone support is paused, so its code went, with its tests.
 
 <img src="../images/design/phone-notice.png" width="200" alt="The screen phones and tablets see">
 
-What a phone or a tablet sees on every page: the mark, a computer drawn from it, "See you on the big screen." and one line ([how it looks](../design.md#phones-and-tablets-see-you-on-the-big-screen)). Already in the new structure: `features/phone-notice/` (the page, and `big-screen-art/` for the drawing), chosen by `app/root.component.tsx` with `core/devices/utils/is-handheld.util.ts`.
+What a phone or a tablet sees on every page: the mark, a computer drawn from it, "See you on the big screen." and one line ([how it looks](../design.md#phones-and-tablets-see-you-on-the-big-screen)). Already in the new structure: `features/phone-notice/` (the page, and `big-screen-art/` for the drawing), chosen by `routes/root/root.component.tsx` with `services/media-devices-service/utils/is-handheld.util.ts`.
 
 Not pictured here, but listed with their area above: the stage's notices, the voice's audio element, the mic test inside the settings, the toast and the tooltip.

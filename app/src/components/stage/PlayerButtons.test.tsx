@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { onFakeClock } from "../../test/factories/clock.factory";
+import { onFakeClock } from "../../testing/factories/clock.factory";
 import { OPEN_DELAY_MS } from "../ui/DropUp";
 import { FULL_ROOM, NO_SCREEN, NO_SOUND, PlayerButtons } from "./PlayerButtons";
 

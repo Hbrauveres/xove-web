@@ -1,4 +1,4 @@
-import type { StreamKind, StreamSettings } from "@core/api/types/api.types";
+import type { StreamKind, StreamSettings } from "@services/xove-api-service";
 
 export type StreamSettingsInputs = {
   /** My streams the API lists as live, and the ones this browser sends. */

@@ -2,8 +2,8 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
 import { describe, expect, it, vi } from "vitest";
-import { loadAmbilight } from "@core/preferences/preferences.service";
-import type { ConnectionState } from "@core/livekit/types/livekit.types";
+import { loadAmbilight } from "@services/preferences-service";
+import type { ConnectionState } from "@services/livekit-service";
 import type { Friend } from "@features/room/types/room-view.types";
 import { AccountButton } from "./AccountButton";
 

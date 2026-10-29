@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
-import type { RoomSeatsState } from "@core/api/types/api.types";
-import type { StreamKind } from "@core/api/types/api.types";
+import type { RoomSeatsState, StreamKind } from "@services/xove-api-service";
 import type { Friend } from "@features/room/types/room-view.types";
 import { Avatar } from "../ui/Avatar";
 import { Dropdown, DropdownSection } from "../ui/Dropdown";

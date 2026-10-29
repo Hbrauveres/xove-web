@@ -2,7 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNo
 import { viewerQualities } from "@features/room/utils/viewer-qualities.util";
 import { useHearing } from "@features/room/hooks/use-hearing.hook";
 import type { StagePick } from "@features/room/types/stage.types";
-import type { AmbilightPrefs } from "@core/preferences/types/preferences.types";
+import type { AmbilightPrefs } from "@services/preferences-service";
 import type { Friend, LiveFeed, Sharer } from "@features/room/types/room-view.types";
 import { EmptyStage } from "./EmptyStage";
 import { Facecam, type FacecamPlace } from "./Facecam";
@@ -23,7 +23,7 @@ import { STREAM_PLACES } from "@features/room/constants/room.constants";
 import { Toast } from "../ui/Toast";
 import { Tooltip } from "../ui/Tooltip";
 import { useVideoShape } from "../../hooks/useVideoShape";
-import { useKeyboardLast } from "@shared/hooks/use-keyboard-last.hook";
+import { useKeyboardLast } from "@features/room/hooks/use-keyboard-last.hook";
 import { gridFor } from "../../media/ambilight";
 import styles from "./Stage.module.css";
 

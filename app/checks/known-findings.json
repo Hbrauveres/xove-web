@@ -660,28 +660,28 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/styles/global.css",
+    "file": "src/shared/styles/global.css",
     "count": 2,
     "owner": "#185 shared: tokens"
   },
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/test/fakeApi.ts",
+    "file": "src/testing/fakeApi.ts",
     "count": 2,
     "owner": "#195 the sweep"
   },
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/test/fakeLiveKit.ts",
+    "file": "src/testing/fakeLiveKit.ts",
     "count": 7,
     "owner": "#195 the sweep"
   },
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/test/setup.ts",
+    "file": "src/testing/setup.ts",
     "count": 1,
     "owner": "#195 the sweep"
   },
@@ -737,7 +737,7 @@
   {
     "tool": "code",
     "rule": "lineLength",
-    "file": "src/test/fakeLiveKit.ts",
+    "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
   },
@@ -1997,35 +1997,35 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/test/fakeApi.ts",
+    "file": "src/testing/fakeApi.ts",
     "count": 1,
     "owner": "#195 the sweep"
   },
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/test/fakeLiveKit.ts",
+    "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
   },
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/test/renderApp.tsx",
+    "file": "src/testing/renderApp.tsx",
     "count": 1,
     "owner": "#195 the sweep"
   },
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/test/setup.test.tsx",
+    "file": "src/testing/setup.test.tsx",
     "count": 1,
     "owner": "#195 the sweep"
   },
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/test/setup.ts",
+    "file": "src/testing/setup.ts",
     "count": 1,
     "owner": "#195 the sweep"
   },
@@ -2641,7 +2641,7 @@
   {
     "tool": "code",
     "rule": "size",
-    "file": "src/test/fakeLiveKit.ts",
+    "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
   },
@@ -3661,13 +3661,6 @@
     "owner": "#192 room: queue, footer, page"
   },
   {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/styles/global.css",
-    "count": 1,
-    "owner": "#185 shared: tokens"
-  },
-  {
     "tool": "copies",
     "rule": "copied-block",
     "file": "src/components/room/SeatOffer.module.css",
@@ -4622,7 +4615,7 @@
   {
     "tool": "tsc",
     "rule": "TS2345",
-    "file": "src/test/fakeApi.ts",
+    "file": "src/testing/fakeApi.ts",
     "count": 2,
     "owner": "#195 the sweep"
   },
@@ -4755,7 +4748,7 @@
   {
     "tool": "tsc",
     "rule": "TS2375",
-    "file": "src/test/fakeLiveKit.ts",
+    "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
   },
@@ -4776,14 +4769,14 @@
   {
     "tool": "tsc",
     "rule": "TS2379",
-    "file": "src/test/fakeApi.ts",
+    "file": "src/testing/fakeApi.ts",
     "count": 1,
     "owner": "#195 the sweep"
   },
   {
     "tool": "tsc",
     "rule": "TS2412",
-    "file": "src/test/fakeLiveKit.ts",
+    "file": "src/testing/fakeLiveKit.ts",
     "count": 3,
     "owner": "#195 the sweep"
   },
@@ -4874,21 +4867,21 @@
   {
     "tool": "tsc",
     "rule": "TS2532",
-    "file": "src/test/fakeLiveKit.ts",
+    "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
   },
   {
     "tool": "tsc",
     "rule": "TS2532",
-    "file": "src/test/setup.test.tsx",
+    "file": "src/testing/setup.test.tsx",
     "count": 2,
     "owner": "#195 the sweep"
   },
   {
     "tool": "tsc",
     "rule": "TS2532",
-    "file": "src/test/setup.ts",
+    "file": "src/testing/setup.ts",
     "count": 2,
     "owner": "#195 the sweep"
   },
@@ -4986,7 +4979,7 @@
   {
     "tool": "unused",
     "rule": "types",
-    "file": "src/test/fakeApi.ts",
+    "file": "src/testing/fakeApi.ts",
     "count": 2,
     "owner": "#195 the sweep"
   }

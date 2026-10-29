@@ -47,15 +47,15 @@
   },
   "overrides": [
     {
-      "files": ["src/core/**"],
+      "files": ["src/services/**"],
       "rules": {
         "no-restricted-imports": [
           "error",
           {
             "patterns": [
               {
-                "regex": "^@(app|features|shared)/|^(\\.\\./)+(app|features|shared)(/|$)",
-                "message": "core/ uses nothing else in the app"
+                "regex": "^@(routes|features|shared)/|^(\\.\\./)+(routes|features|shared)(/|$)",
+                "message": "services/ uses nothing else in the app"
               }
             ]
           }
@@ -70,13 +70,8 @@
           {
             "patterns": [
               {
-                "regex": "^@(app|features)/|^(\\.\\./)+(app|features)(/|$)",
-                "message": "shared/ may use core/ only"
-              },
-              {
-                "regex": "^@(core)/|^(\\.\\./)+(core)(/|$)",
-                "allowTypeImports": true,
-                "message": "shared/ may use core/ only for its types"
+                "regex": "^@(routes|features)/|^(\\.\\./)+(routes|features)(/|$)",
+                "message": "shared/ may use services/ only"
               }
             ]
           }
@@ -91,8 +86,8 @@
           {
             "patterns": [
               {
-                "regex": "^@(app)/|^(\\.\\./)+(app)(/|$)",
-                "message": "features/ may use shared/ and core/, never app/"
+                "regex": "^@(routes)/|^(\\.\\./)+(routes)(/|$)",
+                "message": "features/ may use shared/ and services/, never routes/"
               }
             ]
           }
@@ -100,7 +95,7 @@
       }
     },
     {
-      "files": ["**/*.test.ts", "**/*.test.tsx", "src/test/**", "scripts/**"],
+      "files": ["**/*.test.ts", "**/*.test.tsx", "src/testing/**", "scripts/**"],
       "rules": {
         "max-lines-per-function": "off",
         "complexity": "off",

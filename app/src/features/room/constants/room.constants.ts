@@ -1,4 +1,4 @@
-import type { StreamKind } from "@core/api/types/api.types";
+import type { StreamKind } from "@services/xove-api-service";
 import type { MyStreamStep } from "../types/room.types";
 
 /**

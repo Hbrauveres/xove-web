@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from "react";
-import type { Capture } from "@core/livekit/types/livekit.types";
+import type { Capture } from "@services/livekit-service";
 import { useCaptureLifecycle } from "./use-capture-lifecycle.hook";
 import type { CameraPreviewInputs } from "../types/camera-preview.types";
 

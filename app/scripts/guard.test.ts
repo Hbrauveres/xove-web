@@ -9,6 +9,7 @@ import {
   fromTsc,
   type Known,
   newRulesOf,
+  renamed,
   ownerOf,
   recordOf,
 } from "./guard.ts";
@@ -118,6 +119,9 @@ describe("the guard: the list that only shrinks", () => {
     const mainCheck = 'export const RULES = {\n  size: "over 300 lines",\n  noTest: "no test",\n} as const;\n';
     expect([...newRulesOf(mainCheck, ["size", "noTest", "partPlace"])]).toEqual(["partPlace"]);
     expect([...newRulesOf(undefined, ["size", "partPlace"])]).toEqual([]);
+    const spread = 'export const RULES = {\n  size: "over 300 lines",\n  ...LAYOUT_RULES,\n} as const;\n';
+    const layout = 'export const LAYOUT_RULES = {\n  nested: "a folder inside a part folder",\n} as const;\n';
+    expect([...newRulesOf(`${spread}\n${layout}`, ["size", "nested"])]).toEqual([]);
   });
 
   it("records the first list from scratch, each entry owned by the step for its folder", () => {
@@ -145,5 +149,13 @@ describe("the guard: the list that only shrinks", () => {
     const knip =
       '{"issues":[{"file":"src/a.ts","files":[],"exports":[],"types":[],"enumMembers":[{}],"namespaceMembers":[{}],"duplicates":[{}]}]}';
     expect(fromKnip(knip).map((f) => f.rule)).toEqual(["enumMembers", "namespaceMembers", "duplicates"]);
+  });
+
+  it("follows a file main's list names under its old path", () => {
+    const moves = "R100\tapp/src/test/fake.ts\tapp/src/testing/fake.ts\nM\tapp/src/a.ts";
+    expect(renamed([known("src/test/fake.ts", 2), known("src/a.ts", 1)], moves).map((k) => k.file)).toEqual([
+      "src/testing/fake.ts",
+      "src/a.ts",
+    ]);
   });
 });
