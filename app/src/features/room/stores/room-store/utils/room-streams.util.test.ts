@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { aLiveStream } from "../../../testing/factories/streams-state.factory";
-import type { RoomStream } from "../types/room.types";
+import { aLiveStream } from "../../../../../testing/factories/streams-state.factory";
+import type { RoomStream } from "../../../types/room.types";
 import { sameStreams, streamEvents, streamOf } from "./room-streams.util";
 
 const aStream = (overrides: Partial<RoomStream> = {}): RoomStream => ({

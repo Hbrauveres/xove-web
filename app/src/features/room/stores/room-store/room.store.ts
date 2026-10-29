@@ -9,10 +9,10 @@ import type {
 import { LiveKitAdapter } from "@services/livekit-service/livekit.adapter";
 import { CANT_CONNECT } from "@services/livekit-service/constants/livekit.constants";
 import { DEFAULT_ERROR_MESSAGE } from "@services/xove-api-service/constants/api.constants";
-import { POLL_MS, SEAT_FAILED } from "../constants/room.constants";
+import { POLL_MS, SEAT_FAILED } from "../../constants/room.constants";
 import { initialRoom, withMe, withSeat, withStreams, withStreamsCall, withVideo } from "./room.model";
-import type { CallOutcome, RoomModel, RoomSnapshot, SeatState } from "../types/room.types";
-import { waitingFor } from "../utils/seat.util";
+import type { CallOutcome, RoomModel, RoomSnapshot, SeatState } from "../../types/room.types";
+import { waitingFor } from "./utils/seat.util";
 
 /**
  * The room's one place for news and actions: the seat, the streams and entering again are

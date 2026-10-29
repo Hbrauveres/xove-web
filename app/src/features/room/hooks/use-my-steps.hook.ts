@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from "react";
 import type { StreamKind } from "@services/xove-api-service/types/api.types";
 import { BUSY_STEPS } from "../constants/room.constants";
-import { withMyStep } from "../state/room.model";
-import type { RoomStore } from "../state/room.store";
+import { withMyStep } from "../stores/room-store/room.model";
+import type { RoomStore } from "../stores/room-store/room.store";
 import type { MyStreamStep } from "../types/room.types";
 
 /** My streams' steps in the room's model: move one to its next step; is a start under way right now. */

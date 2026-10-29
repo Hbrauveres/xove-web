@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { twoDigits } from "../utils/two-digits.util";
-import { MS_PER_SECOND, SECONDS_PER_HOUR, SECONDS_PER_MINUTE } from "../constants/time.constants";
+import { MS_PER_SECOND, SECONDS_PER_HOUR, SECONDS_PER_MINUTE } from "../../../shared/constants/time.constants";
 
 /** "mm:ss" or "h:mm:ss" since a timestamp, ticking every second. */
 export function useElapsed(since: number | null): string {

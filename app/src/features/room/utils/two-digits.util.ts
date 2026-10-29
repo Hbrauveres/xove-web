@@ -1,4 +1,4 @@
-import { CLOCK_DIGITS } from "../constants/time.constants";
+import { CLOCK_DIGITS } from "../../../shared/constants/time.constants";
 
 /** A clock's number on two digits: 7 → "07". */
 export function twoDigits(n: number): string {

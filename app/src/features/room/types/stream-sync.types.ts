@@ -1,6 +1,6 @@
 import type { SharingConnection, StreamKind } from "@services/xove-api-service/types/api.types";
 import type { ConnectionState } from "@services/livekit-service/types/livekit.types";
-import type { RoomStore } from "../state/room.store";
+import type { RoomStore } from "../stores/room-store/room.store";
 import type { RoomModel } from "./room.types";
 import type { SettingsQueue } from "../../../services/settings-queue-service/settings-queue.service";
 

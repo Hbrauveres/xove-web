@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
-import { RoomStore } from "../state/room.store";
+import { RoomStore } from "../stores/room-store/room.store";
 import type { RoomSeat } from "../types/room.types";
 import { useDeviceList } from "./use-device-list.hook";
 import { useRememberedCamera } from "./use-remembered-camera.hook";

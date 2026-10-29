@@ -1,4 +1,4 @@
-import { MINUTES_PER_HOUR, MS_PER_SECOND, SECONDS_PER_MINUTE } from "../constants/time.constants";
+import { MINUTES_PER_HOUR, MS_PER_SECOND, SECONDS_PER_MINUTE } from "../../../shared/constants/time.constants";
 
 /** Under this many seconds, it happened "just now". */
 const JUST_NOW_SECONDS = 45;

@@ -1,6 +1,6 @@
 import type { StreamsState } from "@services/xove-api-service/types/api.types";
-import type { PersonId, Watch } from "../types/room.types";
-import { personIdOf } from "./person-id.util";
+import type { PersonId, Watch } from "../../../types/room.types";
+import { personIdOf } from "../../../utils/person-id.util";
 import { keepSame } from "./keep-same.util";
 
 /** The room with these names added; the same record when every name is already there. */

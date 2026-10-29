@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { START } from "../../../services/livekit-service/constants/livekit.constants";
-import { aTrack, someMedia } from "../../../testing/factories/remote-media.factory";
-import type { RoomStream } from "../types/room.types";
+import { START } from "../../../../../services/livekit-service/constants/livekit.constants";
+import { aTrack, someMedia } from "../../../../../testing/factories/remote-media.factory";
+import type { RoomStream } from "../../../types/room.types";
 import { feedOf } from "./feed.util";
 
 const screen: RoomStream = {

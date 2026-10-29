@@ -23,7 +23,7 @@ import { STREAM_PLACES } from "@features/room/constants/room.constants";
 import { Toast } from "../ui/Toast";
 import { Tooltip } from "../ui/Tooltip";
 import { useVideoShape } from "../../hooks/useVideoShape";
-import { useKeyboardLast } from "@shared/hooks/use-keyboard-last.hook";
+import { useKeyboardLast } from "@features/room/hooks/use-keyboard-last.hook";
 import { gridFor } from "../../media/ambilight";
 import styles from "./Stage.module.css";
 

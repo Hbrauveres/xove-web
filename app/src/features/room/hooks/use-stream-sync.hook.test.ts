@@ -2,8 +2,8 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { aUser, installFakeApi, MY_USER_ID } from "../../../testing/fakeApi";
 import { aLiveStream, anAnswer } from "../../../testing/factories/streams-state.factory";
-import { withMe, withMyStep, withStreams } from "../state/room.model";
-import { RoomStore } from "../state/room.store";
+import { withMe, withMyStep, withStreams } from "../stores/room-store/room.model";
+import { RoomStore } from "../stores/room-store/room.store";
 import { SettingsQueue } from "../../../services/settings-queue-service/settings-queue.service";
 import { useStreamSync } from "./use-stream-sync.hook";
 

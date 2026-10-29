@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { Capture } from "../../../services/livekit-service/types/livekit.types";
 import { aUser, installFakeApi } from "../../../testing/fakeApi";
 import { aTrack } from "../../../testing/factories/track.factory";
-import { RoomStore } from "../state/room.store";
+import { RoomStore } from "../stores/room-store/room.store";
 import { SettingsQueue } from "../../../services/settings-queue-service/settings-queue.service";
 import { useMyStreams } from "./use-my-streams.hook";
 

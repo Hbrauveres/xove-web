@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { ACTIVITY_KEPT } from "../constants/room.constants";
-import { initialRoom } from "../state/room.model";
+import { ACTIVITY_KEPT } from "../../../constants/room.constants";
+import { initialRoom } from "../room.model";
 import { withEvents } from "./activity-events.util";
 
 describe("withEvents", () => {

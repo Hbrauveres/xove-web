@@ -1,5 +1,5 @@
-import { XoveIcon } from "../../components/brand/XoveIcon";
-import { BigScreenArt } from "./big-screen-art";
+import { XoveIcon } from "../../../../components/brand/XoveIcon";
+import { BigScreenArt } from "../big-screen-art/index";
 import { MARK_PX } from "./constants/phone-notice.constants";
 import styles from "./phone-notice.page.module.css";
 

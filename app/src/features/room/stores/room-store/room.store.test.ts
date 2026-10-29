@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { aUser, installFakeApi, MY_USER_ID } from "../../../testing/fakeApi";
-import { lastRoom } from "../../../testing/fakeLiveKit";
+import { aUser, installFakeApi, MY_USER_ID } from "../../../../testing/fakeApi";
+import { lastRoom } from "../../../../testing/fakeLiveKit";
 import { RoomStore } from "./room.store";
-import { POLL_MS } from "../constants/room.constants";
+import { POLL_MS } from "../../constants/room.constants";
 
 /** A fresh store over a fresh fake API, opened; fake timers drive its polls. */
 function openStore(seat: { status: "in" } | { status: "waiting"; place: number } = { status: "in" }) {
