@@ -1,150 +1,39 @@
 [
-  [
-    "src/routes/",
-    "#194 home, request access, admin, the shell"
-  ],
-  [
-    "src/services/",
-    "#180 services: API client, auth, preferences"
-  ],
-  [
-    "src/shared/",
-    "#186 shared: the basic blocks"
-  ],
-  [
-    "src/features/",
-    "#192 room: queue, footer, page"
-  ],
-  [
-    "src/components/room/WaitingRoom",
-    "#192 room: queue, footer, page"
-  ],
-  [
-    "src/components/room/SeatOffer",
-    "#192 room: queue, footer, page"
-  ],
-  [
-    "src/components/stage/StageOverlay",
-    "#191 today's stage pieces"
-  ],
-  [
-    "src/components/stage/usePreviewTray",
-    "#191 today's stage pieces"
-  ],
-  [
-    "src/components/ui/FullPageMessage",
-    "#188 shared: Panel, Page shell"
-  ],
-  [
-    "src/hooks/",
-    "#186 shared: the basic blocks"
-  ],
-  [
-    "src/media/",
-    "#190 room: stage, Stage split"
-  ],
-  [
-    "src/pages/RoomPage.test",
-    "#184 the room page's tests"
-  ],
-  [
-    "src/shared/styles/",
-    "#185 shared: tokens"
-  ],
-  [
-    "src/components/ui/Picker",
-    "#187 shared: one menu, one floating system"
-  ],
-  [
-    "src/components/ui/DropUp",
-    "#187 shared: one menu, one floating system"
-  ],
-  [
-    "src/components/ui/Dropdown",
-    "#187 shared: one menu, one floating system"
-  ],
-  [
-    "src/components/ui/Tooltip",
-    "#187 shared: one menu, one floating system"
-  ],
-  [
-    "src/components/ui/floating",
-    "#187 shared: one menu, one floating system"
-  ],
-  [
-    "src/components/ui/",
-    "#186 shared: the basic blocks"
-  ],
-  [
-    "src/components/brand/",
-    "#186 shared: the basic blocks"
-  ],
-  [
-    "src/brand/",
-    "#186 shared: the basic blocks"
-  ],
-  [
-    "src/components/room/RoomFooter",
-    "#192 room: queue, footer, page"
-  ],
-  [
-    "src/components/room/",
-    "#189 room: header"
-  ],
-  [
-    "src/components/stage/SettingsPanel",
-    "#193 settings"
-  ],
-  [
-    "src/components/stage/MicTest",
-    "#193 settings"
-  ],
-  [
-    "src/components/stage/AlsoLive",
-    "#191 today's stage pieces"
-  ],
-  [
-    "src/components/stage/NowWatching",
-    "#191 today's stage pieces"
-  ],
-  [
-    "src/components/stage/HearToggles",
-    "#191 today's stage pieces"
-  ],
-  [
-    "src/components/stage/ViewerBar",
-    "#191 today's stage pieces"
-  ],
-  [
-    "src/components/stage/PlayerButtons",
-    "#191 today's stage pieces"
-  ],
-  [
-    "src/components/stage/PreviewTray",
-    "#191 today's stage pieces"
-  ],
-  [
-    "src/components/stage/",
-    "#190 room: stage, Stage split"
-  ],
-  [
-    "src/components/",
-    "#192 room: queue, footer, page"
-  ],
-  [
-    "src/pages/RoomPage",
-    "#192 room: queue, footer, page"
-  ],
-  [
-    "src/pages/",
-    "#194 home, request access, admin, the shell"
-  ],
-  [
-    "src/main",
-    "#194 home, request access, admin, the shell"
-  ],
-  [
-    "src/testing/",
-    "#195 the sweep"
-  ]
+  ["src/routes/", "#194 home, request access, admin, the shell"],
+  ["src/services/", "#180 services: API client, auth, preferences"],
+  ["src/shared/", "#186 shared: the basic blocks"],
+  ["src/features/", "#192 room: queue, footer, page"],
+  ["src/components/room/WaitingRoom", "#192 room: queue, footer, page"],
+  ["src/components/room/SeatOffer", "#192 room: queue, footer, page"],
+  ["src/components/stage/StageOverlay", "#191 today's stage pieces"],
+  ["src/components/stage/usePreviewTray", "#191 today's stage pieces"],
+  ["src/components/ui/FullPageMessage", "#188 shared: Panel, Page shell"],
+  ["src/hooks/", "#186 shared: the basic blocks"],
+  ["src/media/", "#190 room: stage, Stage split"],
+  ["src/pages/RoomPage.test", "#184 the room page's tests"],
+  ["src/shared/styles/", "#185 shared: tokens"],
+  ["src/components/ui/Picker", "#187 shared: one menu, one floating system"],
+  ["src/components/ui/DropUp", "#187 shared: one menu, one floating system"],
+  ["src/components/ui/Dropdown", "#187 shared: one menu, one floating system"],
+  ["src/components/ui/Tooltip", "#187 shared: one menu, one floating system"],
+  ["src/components/ui/floating", "#187 shared: one menu, one floating system"],
+  ["src/components/ui/", "#186 shared: the basic blocks"],
+  ["src/components/brand/", "#186 shared: the basic blocks"],
+  ["src/brand/", "#186 shared: the basic blocks"],
+  ["src/components/room/RoomFooter", "#192 room: queue, footer, page"],
+  ["src/components/room/", "#189 room: header"],
+  ["src/components/stage/SettingsPanel", "#193 settings"],
+  ["src/components/stage/MicTest", "#193 settings"],
+  ["src/components/stage/AlsoLive", "#191 today's stage pieces"],
+  ["src/components/stage/NowWatching", "#191 today's stage pieces"],
+  ["src/components/stage/HearToggles", "#191 today's stage pieces"],
+  ["src/components/stage/ViewerBar", "#191 today's stage pieces"],
+  ["src/components/stage/PlayerButtons", "#191 today's stage pieces"],
+  ["src/components/stage/PreviewTray", "#191 today's stage pieces"],
+  ["src/components/stage/", "#190 room: stage, Stage split"],
+  ["src/components/", "#192 room: queue, footer, page"],
+  ["src/pages/RoomPage", "#192 room: queue, footer, page"],
+  ["src/pages/", "#194 home, request access, admin, the shell"],
+  ["src/main", "#194 home, request access, admin, the shell"],
+  ["src/testing/", "#195 the sweep"]
 ]
