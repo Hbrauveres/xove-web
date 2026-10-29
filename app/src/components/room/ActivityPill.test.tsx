@@ -1,7 +1,8 @@
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import type { ActivityEvent, ConnectionState, Friend } from "../../types";
+import type { ConnectionState } from "@core/livekit/livekit.types";
+import type { ActivityEvent, Friend } from "../../types";
 import { ActivityPill } from "./ActivityPill";
 
 const people = (): Friend[] => [

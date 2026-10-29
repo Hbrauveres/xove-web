@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { FakeTrack } from "../../test/fakeLiveKit";
-import type { MediaTrack } from "../../types";
+import type { MediaTrack } from "@core/livekit/livekit.types";
 import { ScreenVideo } from "./ScreenVideo";
 
 /** The video's box and its picture's size, as the browser would report them. */

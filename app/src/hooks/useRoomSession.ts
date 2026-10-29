@@ -6,10 +6,12 @@ import {
   saveVoicePrefs,
 } from "@core/preferences/preferences.service";
 import type { VoicePrefs } from "@core/preferences/preferences.types";
-import type { ActivityEvent, ConnectionState, Friend, LiveFeed, MediaTrack, Sharer } from "../types";
+import type { ConnectionState, MediaTrack } from "@core/livekit/livekit.types";
+import type { ActivityEvent, Friend, LiveFeed, Sharer } from "../types";
 import type { CameraDevice, CameraProblem, MicDevice, ScreenSurface } from "@core/devices/devices.types";
 import type { LiveStream, RoomSeatsState, StreamKind, StreamSettings } from "@core/api/api.types";
-import { useLiveKitRoom, type Capture } from "./useLiveKitRoom";
+import { useVideoRoom } from "@features/room/hooks/use-video-room.hook";
+import type { Capture } from "@core/livekit/livekit.types";
 import { showToast } from "../components/ui/toast";
 import { useStreams } from "./useStreams";
 import { api as client } from "@core/api/api-client.service";
@@ -121,7 +123,7 @@ const loadPrefs = (): Record<StreamKind, StreamSettings> => ({
 
 export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
   const api = useStreams(pollMs);
-  const lk = useLiveKitRoom();
+  const lk = useVideoRoom();
 
   const loaded = api.state !== null;
   const live = api.state?.streams;
@@ -405,14 +407,11 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
 
   // The camera going away during the preview (unplugged, or the browser's own control).
   useEffect(() => {
-    const track = preview?.video.mediaStreamTrack;
-    if (!preview || !track) return;
-    const ended = () => {
+    if (!preview) return;
+    return preview.onEnded(() => {
       lk.discardCapture(preview);
       setPreview(null);
-    };
-    track.addEventListener("ended", ended);
-    return () => track.removeEventListener("ended", ended);
+    });
   }, [preview, lk, setPreview]);
 
   // Leaving the page with the preview on: nothing was sent, so stop the camera.
@@ -545,7 +544,7 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
     setPrefs,
     start: (kind: StreamKind) => void start(kind),
     myCamera: lk.local.camera,
-    cameraPreview: preview?.video,
+    cameraPreview: preview?.preview,
     previewCamera: (on: boolean) => void previewCamera(on),
     stop: (kind: StreamKind) => void stop(kind),
     changeScreen: () => void changeScreen(),

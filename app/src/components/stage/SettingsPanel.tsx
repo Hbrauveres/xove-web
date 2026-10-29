@@ -7,7 +7,7 @@ import sw from "../room/AccountButton.module.css";
 import { CAMERA_QUALITIES, SHARE_QUALITIES } from "@core/devices/devices.constants";
 import { MODE_OPTIONS } from "../../media/shareSettings";
 import type { StreamKind, StreamMode, StreamQuality, StreamSettings } from "@core/api/api.types";
-import type { MediaTrack } from "../../types";
+import type { MediaTrack } from "@core/livekit/livekit.types";
 import { Picker } from "../ui/Picker";
 import { Segmented } from "../ui/Segmented";
 import { showToast } from "../ui/toast";

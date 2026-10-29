@@ -597,13 +597,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/hooks/useLiveKitRoom.ts",
-    "count": 8,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -1048,13 +1041,6 @@
     "file": "src/pages/RequestAccessPage.module.css",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "livekit",
-    "file": "src/hooks/useLiveKitRoom.ts",
-    "count": 1,
-    "owner": "#181 core: LiveKit adapter, devices"
   },
   {
     "tool": "code",
@@ -1944,20 +1930,6 @@
     "file": "src/hooks/useFullscreenElement.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/hooks/useLiveKitRoom.test.ts",
-    "count": 1,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/hooks/useLiveKitRoom.ts",
-    "count": 1,
-    "owner": "#181 core: LiveKit adapter, devices"
   },
   {
     "tool": "code",
@@ -2431,13 +2403,6 @@
   {
     "tool": "code",
     "rule": "size",
-    "file": "src/hooks/useLiveKitRoom.ts",
-    "count": 1,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "code",
-    "rule": "size",
     "file": "src/hooks/useRoomSession.ts",
     "count": 1,
     "owner": "#182 the room's model and store"
@@ -3341,20 +3306,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/hooks/useLiveKitRoom.test.ts",
-    "count": 1,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/hooks/useLiveKitRoom.ts",
-    "count": 1,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/hooks/usePinnedRow.test.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -3691,13 +3642,6 @@
   {
     "tool": "lint",
     "rule": "eslint(complexity)",
-    "file": "src/hooks/useLiveKitRoom.ts",
-    "count": 3,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
     "file": "src/hooks/useRoomSession.ts",
     "count": 1,
     "owner": "#182 the room's model and store"
@@ -3862,13 +3806,6 @@
     "file": "src/components/ui/Tooltip.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/hooks/useLiveKitRoom.ts",
-    "count": 1,
-    "owner": "#181 core: LiveKit adapter, devices"
   },
   {
     "tool": "lint",
@@ -4065,13 +4002,6 @@
     "file": "src/components/ui/Tooltip.tsx",
     "count": 2,
     "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/hooks/useLiveKitRoom.ts",
-    "count": 2,
-    "owner": "#181 core: LiveKit adapter, devices"
   },
   {
     "tool": "lint",
@@ -4482,13 +4412,6 @@
   {
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
-    "file": "src/hooks/useLiveKitRoom.ts",
-    "count": 15,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -4534,13 +4457,6 @@
     "file": "src/brand/mark.test.ts",
     "count": 10,
     "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS18048",
-    "file": "src/hooks/useLiveKitRoom.test.ts",
-    "count": 2,
-    "owner": "#181 core: LiveKit adapter, devices"
   },
   {
     "tool": "tsc",
@@ -4611,13 +4527,6 @@
     "file": "src/components/ui/DropUp.test.tsx",
     "count": 3,
     "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2345",
-    "file": "src/hooks/useLiveKitRoom.ts",
-    "count": 6,
-    "owner": "#181 core: LiveKit adapter, devices"
   },
   {
     "tool": "tsc",
@@ -4755,13 +4664,6 @@
   {
     "tool": "tsc",
     "rule": "TS2375",
-    "file": "src/hooks/useLiveKitRoom.ts",
-    "count": 4,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
     "file": "src/hooks/useRoomSession.ts",
     "count": 2,
     "owner": "#182 the room's model and store"
@@ -4884,13 +4786,6 @@
     "file": "src/components/ui/Segmented.tsx",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
-    "file": "src/hooks/useLiveKitRoom.test.ts",
-    "count": 3,
-    "owner": "#181 core: LiveKit adapter, devices"
   },
   {
     "tool": "tsc",
@@ -5035,13 +4930,6 @@
   {
     "tool": "unused",
     "rule": "types",
-    "file": "src/hooks/useLiveKitRoom.ts",
-    "count": 3,
-    "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "unused",
-    "rule": "types",
     "file": "src/hooks/useStreams.ts",
     "count": 1,
     "owner": "#182 the room's model and store"
@@ -5064,7 +4952,7 @@
     "tool": "unused",
     "rule": "types",
     "file": "src/types.ts",
-    "count": 3,
+    "count": 2,
     "owner": "#182 the room's model and store"
   }
 ]

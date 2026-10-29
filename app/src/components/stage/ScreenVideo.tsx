@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { MediaTrack } from "../../types";
+import type { MediaTrack } from "@core/livekit/livekit.types";
 import styles from "./ScreenVideo.module.css";
 
 type Props = {
