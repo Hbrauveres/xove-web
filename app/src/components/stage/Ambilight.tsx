@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { WIDESCREEN } from "../../hooks/useVideoShape";
 import { CELL_PX, easeFor, edgeDraws, fadeMask, glowLayout, gridFor, type EdgeDraw } from "../../media/ambilight";
-import type { AmbilightPrefs } from "../../media/preferences";
+import type { AmbilightPrefs } from "@core/preferences/preferences.types";
 import styles from "./Ambilight.module.css";
 
 /**

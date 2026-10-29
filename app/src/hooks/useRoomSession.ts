@@ -1,16 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  loadCameraPrefs,
-  loadSharePrefs,
+  loadStreamSettings,
   loadVoicePrefs,
-  saveCameraPrefs,
-  saveSharePrefs,
+  saveStreamSettings,
   saveVoicePrefs,
-  type SharePrefs,
-  type VoicePrefs,
-} from "../media/preferences";
+} from "@core/preferences/preferences.service";
+import type { VoicePrefs } from "@core/preferences/preferences.types";
 import type { ActivityEvent, CameraDevice, ConnectionState, Friend, LiveFeed, MediaTrack, Sharer } from "../types";
-import type { LiveStream, RoomSeatsState, StreamKind } from "@core/api/api.types";
+import type { LiveStream, RoomSeatsState, StreamKind, StreamSettings } from "@core/api/api.types";
 import { useLiveKitRoom, type CameraProblem, type Capture, type MicDevice, type ScreenSurface } from "./useLiveKitRoom";
 import { showToast } from "../components/ui/toast";
 import { useStreams } from "./useStreams";
@@ -34,8 +31,8 @@ export type RoomSession = {
   /** Stream places left of the 6. */
   free: number;
   /** How I send my screen and my camera (remembered); changing them while live applies at once. */
-  prefs: Record<StreamKind, SharePrefs>;
-  setPrefs: (kind: StreamKind, prefs: SharePrefs) => void;
+  prefs: Record<StreamKind, StreamSettings>;
+  setPrefs: (kind: StreamKind, prefs: StreamSettings) => void;
   /**
    * Opens the browser's picker (screen) or asks for the camera, and sends the pick at once
    * with the remembered settings (spec 0107). A closed picker changes nothing.
@@ -116,9 +113,10 @@ const streamEvent = (kind: "started" | "stopped", actorId: string, stream: Strea
   stream,
 });
 
-const loadPrefs = (): Record<StreamKind, SharePrefs> => ({ screen: loadSharePrefs(), camera: loadCameraPrefs() });
-const savePrefs = (kind: StreamKind, prefs: SharePrefs) =>
-  kind === "screen" ? saveSharePrefs(prefs) : saveCameraPrefs(prefs);
+const loadPrefs = (): Record<StreamKind, StreamSettings> => ({
+  screen: loadStreamSettings("screen"),
+  camera: loadStreamSettings("camera"),
+});
 
 export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
   const api = useStreams(pollMs);
@@ -308,7 +306,7 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
     starting.current[kind] = on;
     setStarting(starting.current.screen || starting.current.camera);
   };
-  const [prefs, setPrefsState] = useState<Record<StreamKind, SharePrefs>>(loadPrefs);
+  const [prefs, setPrefsState] = useState<Record<StreamKind, StreamSettings>>(loadPrefs);
   const [noSound, setNoSound] = useState(false);
 
   // The camera captured for the settings panel's preview, not sent (spec 0107). Also kept
@@ -323,7 +321,7 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
   const wantPreview = useRef(false);
 
   // The settings the API last accepted for each of my streams: what a refused change goes back to.
-  const accepted = useRef<Record<StreamKind, SharePrefs>>(prefs);
+  const accepted = useRef<Record<StreamKind, StreamSettings>>(prefs);
   // Changes made while live run one after the other, in the order they were made.
   // Each stream knows its own latest change, so a refused one goes back even when the
   // other stream changed meanwhile.
@@ -332,7 +330,7 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
 
   // Sends a capture with these settings, then tells the API.
   const send = useCallback(
-    async (capture: Capture, chosen: SharePrefs) => {
+    async (capture: Capture, chosen: StreamSettings) => {
       const kind = capture.kind;
       const sending = await lk.publishCapture(capture, chosen);
       if (!sending) return;
@@ -441,9 +439,9 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
   // API, which tells every viewer's app on its next poll. Changes go one after the
   // other; if the API refuses the latest one, the last accepted settings go back.
   const setPrefs = useCallback(
-    (kind: StreamKind, next: SharePrefs) => {
+    (kind: StreamKind, next: StreamSettings) => {
       setPrefsState((prev) => ({ ...prev, [kind]: next }));
-      savePrefs(kind, next);
+      saveStreamSettings(kind, next);
       if (!(myLive[kind] && lk.publishing[kind])) return;
       const change = ++latestChange.current[kind];
       changes.current = changes.current.then(async () => {
@@ -456,7 +454,7 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
         const back = accepted.current[kind];
         await lk.applySettings(kind, back);
         setPrefsState((prev) => ({ ...prev, [kind]: back }));
-        savePrefs(kind, back);
+        saveStreamSettings(kind, back);
       });
     },
     [myLive, lk, api],

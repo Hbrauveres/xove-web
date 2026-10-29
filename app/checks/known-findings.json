@@ -674,13 +674,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/media/preferences.ts",
-    "count": 8,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/media/shareSettings.test.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -2116,20 +2109,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/media/preferences.test.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/preferences.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/media/shareSettings.test.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -3551,20 +3530,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/media/preferences.test.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/preferences.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/media/shareSettings.test.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -4650,13 +4615,6 @@
   {
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
-    "file": "src/media/preferences.ts",
-    "count": 6,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
     "file": "src/media/shareSettings.ts",
     "count": 3,
     "owner": "#183 the room's hooks"
@@ -5192,13 +5150,6 @@
     "file": "src/media/noiseGate.ts",
     "count": 2,
     "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
-    "file": "src/media/preferences.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
   },
   {
     "tool": "unused",

@@ -8,7 +8,7 @@ import { PeopleButton } from "../components/room/PeopleButton";
 import { RoomFooter } from "../components/room/RoomFooter";
 import { RoomHeader } from "../components/room/RoomHeader";
 import { WaitingRoom } from "../components/room/WaitingRoom";
-import { loadAmbilight } from "../media/preferences";
+import { loadAmbilight } from "@core/preferences/preferences.service";
 import { canShareScreen } from "../media/shareSettings";
 import { SettingsPanel } from "../components/stage/SettingsPanel";
 import { Stage } from "../components/stage/Stage";

@@ -1,58 +1,60 @@
 import { describe, expect, it, vi } from "vitest";
+import { DEFAULT_VOICE } from "./preferences.constants";
 import {
-  DEFAULT_VOICE,
   loadAmbilight,
   loadCameraDevice,
-  loadVoiceHearing,
+  loadHearing,
+  loadStreamSettings,
   loadVoicePrefs,
-  saveVoiceHearing,
-  saveVoicePrefs,
-  loadCameraPrefs,
-  loadSharePrefs,
-  loadWatchPrefs,
   saveAmbilight,
   saveCameraDevice,
-  saveCameraPrefs,
-  saveSharePrefs,
-  saveWatchPrefs,
-} from "./preferences";
+  saveHearing,
+  saveStreamSettings,
+  saveVoicePrefs,
+} from "./preferences.service";
 
 describe("the sharer's choices", () => {
+  it("reads what this browser saved before", () => {
+    localStorage.setItem("xove.share.quality", "720p");
+    localStorage.setItem("xove.share.mode", "sharp");
+    expect(loadStreamSettings("screen")).toEqual({ quality: "720p", mode: "sharp" });
+  });
+
   it("default to 1080p Smooth", () => {
-    expect(loadSharePrefs()).toEqual({ quality: "1080p", mode: "smooth" });
+    expect(loadStreamSettings("screen")).toEqual({ quality: "1080p", mode: "smooth" });
   });
 
   it("are remembered", () => {
-    saveSharePrefs({ quality: "720p", mode: "sharp" });
-    expect(loadSharePrefs()).toEqual({ quality: "720p", mode: "sharp" });
+    saveStreamSettings("screen", { quality: "720p", mode: "sharp" });
+    expect(loadStreamSettings("screen")).toEqual({ quality: "720p", mode: "sharp" });
   });
 
   it("ignore a value that isn't one of the choices", () => {
     localStorage.setItem("xove.share.quality", "4k");
     localStorage.setItem("xove.share.mode", "blurry");
-    expect(loadSharePrefs()).toEqual({ quality: "1080p", mode: "smooth" });
+    expect(loadStreamSettings("screen")).toEqual({ quality: "1080p", mode: "smooth" });
   });
 });
 
-describe("the camera's choices (spec 0060)", () => {
+describe("the camera's choices", () => {
   it("default to 720p Smooth", () => {
-    expect(loadCameraPrefs()).toEqual({ quality: "720p", mode: "smooth" });
+    expect(loadStreamSettings("camera")).toEqual({ quality: "720p", mode: "smooth" });
   });
 
   it("are remembered apart from the screen's", () => {
-    saveSharePrefs({ quality: "1080p", mode: "sharp" });
-    saveCameraPrefs({ quality: "480p", mode: "smooth" });
-    expect(loadCameraPrefs()).toEqual({ quality: "480p", mode: "smooth" });
-    expect(loadSharePrefs()).toEqual({ quality: "1080p", mode: "sharp" });
+    saveStreamSettings("screen", { quality: "1080p", mode: "sharp" });
+    saveStreamSettings("camera", { quality: "480p", mode: "smooth" });
+    expect(loadStreamSettings("camera")).toEqual({ quality: "480p", mode: "smooth" });
+    expect(loadStreamSettings("screen")).toEqual({ quality: "1080p", mode: "sharp" });
   });
 
   it("never go above 720p", () => {
     localStorage.setItem("xove.camera.quality", "1080p");
-    expect(loadCameraPrefs().quality).toBe("720p");
+    expect(loadStreamSettings("camera").quality).toBe("720p");
   });
 });
 
-describe("the camera picked (spec 0098)", () => {
+describe("the camera picked", () => {
   it("is none until one is picked, then remembered", () => {
     expect(loadCameraDevice()).toBeNull();
     saveCameraDevice("cam-2");
@@ -61,20 +63,20 @@ describe("the camera picked (spec 0098)", () => {
 });
 
 describe("the viewer's choices", () => {
-  it("default to Auto, full volume, not muted", () => {
-    expect(loadWatchPrefs()).toEqual({ volume: 1, muted: false });
+  it("default to full volume, not muted", () => {
+    expect(loadHearing("stream")).toEqual({ volume: 1, muted: false });
   });
 
   it("are remembered", () => {
-    saveWatchPrefs({ volume: 0.35, muted: true });
-    expect(loadWatchPrefs()).toEqual({ volume: 0.35, muted: true });
+    saveHearing("stream", { volume: 0.35, muted: true });
+    expect(loadHearing("stream")).toEqual({ volume: 0.35, muted: true });
   });
 
   it("keep the volume between 0 and 1", () => {
     localStorage.setItem("xove.watch.volume", "7");
-    expect(loadWatchPrefs().volume).toBe(1);
+    expect(loadHearing("stream").volume).toBe(1);
     localStorage.setItem("xove.watch.volume", "nonsense");
-    expect(loadWatchPrefs().volume).toBe(1);
+    expect(loadHearing("stream").volume).toBe(1);
   });
 });
 
@@ -86,14 +88,14 @@ describe("when the browser's storage fails", () => {
     vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
       throw new DOMException("blocked", "SecurityError");
     });
-    expect(() => saveSharePrefs({ quality: "480p", mode: "sharp" })).not.toThrow();
-    expect(() => saveWatchPrefs({ volume: 0.5, muted: false })).not.toThrow();
-    expect(loadSharePrefs()).toEqual({ quality: "1080p", mode: "smooth" });
-    expect(loadWatchPrefs()).toEqual({ volume: 1, muted: false });
+    expect(() => saveStreamSettings("screen", { quality: "480p", mode: "sharp" })).not.toThrow();
+    expect(() => saveHearing("stream", { volume: 0.5, muted: false })).not.toThrow();
+    expect(loadStreamSettings("screen")).toEqual({ quality: "1080p", mode: "smooth" });
+    expect(loadHearing("stream")).toEqual({ volume: 1, muted: false });
   });
 });
 
-describe("the ambilight (spec 0104)", () => {
+describe("the ambilight", () => {
   it("is on at 90% until changed, then remembered", () => {
     expect(loadAmbilight()).toEqual({ on: true, brightness: 0.9 });
     saveAmbilight({ on: false, brightness: 0.4 });
@@ -106,7 +108,7 @@ describe("the ambilight (spec 0104)", () => {
   });
 });
 
-describe("my voice's choices (spec 0123)", () => {
+describe("my voice's choices", () => {
   it("starts with the browser's cleaning on, isolation off and a low line", () => {
     expect(loadVoicePrefs()).toEqual(DEFAULT_VOICE);
     expect(DEFAULT_VOICE).toMatchObject({
@@ -130,10 +132,10 @@ describe("my voice's choices (spec 0123)", () => {
   });
 
   it("remembers how I hear a voice: its volume and mute, the volume kept between 0 and 1", () => {
-    expect(loadVoiceHearing()).toEqual({ volume: 1, muted: false });
-    saveVoiceHearing({ volume: 0.3, muted: true });
-    expect(loadVoiceHearing()).toEqual({ volume: 0.3, muted: true });
+    expect(loadHearing("voice")).toEqual({ volume: 1, muted: false });
+    saveHearing("voice", { volume: 0.3, muted: true });
+    expect(loadHearing("voice")).toEqual({ volume: 0.3, muted: true });
     localStorage.setItem("xove.voice.volume", "9");
-    expect(loadVoiceHearing().volume).toBe(1);
+    expect(loadHearing("voice").volume).toBe(1);
   });
 });

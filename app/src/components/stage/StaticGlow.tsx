@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { AmbilightPrefs } from "../../media/preferences";
+import type { AmbilightPrefs } from "@core/preferences/preferences.types";
 import { bandLight, onScreen, tv } from "./staticBands";
 import styles from "./StaticGlow.module.css";
 

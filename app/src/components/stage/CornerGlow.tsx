@@ -1,4 +1,4 @@
-import type { AmbilightPrefs } from "../../media/preferences";
+import type { AmbilightPrefs } from "@core/preferences/preferences.types";
 import styles from "./CornerGlow.module.css";
 
 /**

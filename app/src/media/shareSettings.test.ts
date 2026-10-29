@@ -1,8 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   CAMERA_QUALITIES,
-  DEFAULT_CAMERA,
-  DEFAULT_SHARE,
   SHARE_QUALITIES,
   cameraCaptureOptions,
   cameraPublishOptions,
@@ -12,19 +10,18 @@ import {
   screenCaptureRequest,
   screenPublishOptions,
   viewerQualities,
-  type ShareMode,
 } from "./shareSettings";
+import type { StreamMode } from "@core/api/api.types";
 
-const modes: ShareMode[] = ["smooth", "sharp"];
+const modes: StreamMode[] = ["smooth", "sharp"];
 
 describe("share presets", () => {
-  it("offers 1080p, 720p and 480p at 30 fps, 1080p Smooth by default", () => {
+  it("offers 1080p, 720p and 480p at 30 fps", () => {
     expect(SHARE_QUALITIES.map((q) => [q.id, q.height, q.fps])).toEqual([
       ["1080p", 1080, 30],
       ["720p", 720, 30],
       ["480p", 480, 30],
     ]);
-    expect(DEFAULT_SHARE).toEqual({ quality: "1080p", mode: "smooth" });
   });
 
   it("always captures the best quality at 30 fps, and never this tab", () => {
@@ -117,12 +114,11 @@ describe("what a viewer can pick", () => {
 
 // Spec 0060: a camera goes up to 720p.
 describe("camera presets", () => {
-  it("offers 720p and 480p at 30 fps, 720p Smooth by default", () => {
+  it("offers 720p and 480p at 30 fps", () => {
     expect(CAMERA_QUALITIES.map((q) => [q.id, q.height, q.fps])).toEqual([
       ["720p", 720, 30],
       ["480p", 480, 30],
     ]);
-    expect(DEFAULT_CAMERA).toEqual({ quality: "720p", mode: "smooth" });
   });
 
   it("asks the camera for 720p at 30 fps", () => {

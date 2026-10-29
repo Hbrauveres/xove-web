@@ -1,17 +1,11 @@
 import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { CAMERA_BLOCKED, type CameraProblem, type ScreenSurface } from "../../hooks/useLiveKitRoom";
-import type { SharePrefs, VoicePrefs } from "../../media/preferences";
+import type { VoicePrefs } from "@core/preferences/preferences.types";
 import type { MicDevice } from "../../hooks/useLiveKitRoom";
 import { useMicLevel } from "../../hooks/useMicLevel";
 import sw from "../room/AccountButton.module.css";
-import {
-  CAMERA_QUALITIES,
-  MODE_OPTIONS,
-  SHARE_QUALITIES,
-  type ShareMode,
-  type ShareQuality,
-} from "../../media/shareSettings";
-import type { StreamKind } from "@core/api/api.types";
+import { CAMERA_QUALITIES, MODE_OPTIONS, SHARE_QUALITIES } from "../../media/shareSettings";
+import type { StreamKind, StreamMode, StreamQuality, StreamSettings } from "@core/api/api.types";
 import type { CameraDevice, MediaTrack } from "../../types";
 import { Picker } from "../ui/Picker";
 import { Segmented } from "../ui/Segmented";
@@ -41,8 +35,8 @@ type Props = {
   screenTab: boolean;
   /** Which of my streams are live. */
   mine: Record<StreamKind, boolean>;
-  prefs: Record<StreamKind, SharePrefs>;
-  onPrefsChange: (kind: StreamKind, prefs: SharePrefs) => void;
+  prefs: Record<StreamKind, StreamSettings>;
+  onPrefsChange: (kind: StreamKind, prefs: StreamSettings) => void;
   /** What my screen share shows. */
   screenSurface?: ScreenSurface;
   onChangeWindow: () => void;
@@ -270,7 +264,7 @@ function QualityAndMode({
     <>
       <div className={styles.group}>
         <p className={styles.heading}>Quality</p>
-        <Segmented<ShareQuality>
+        <Segmented<StreamQuality>
           label={`${name} quality`}
           options={qualities}
           value={mine.quality}
@@ -280,7 +274,7 @@ function QualityAndMode({
       </div>
       <div className={styles.group}>
         <p className={styles.heading}>Mode</p>
-        <Segmented<ShareMode>
+        <Segmented<StreamMode>
           label={`${name} mode`}
           options={MODE_OPTIONS}
           value={mine.mode}

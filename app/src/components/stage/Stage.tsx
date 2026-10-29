@@ -1,14 +1,9 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import {
-  loadVoiceHearing,
-  loadWatchPrefs,
-  saveVoiceHearing,
-  saveWatchPrefs,
-  type WatchPrefs,
-} from "../../media/preferences";
+import { loadHearing, saveHearing } from "@core/preferences/preferences.service";
+import type { HearingPrefs } from "@core/preferences/preferences.types";
 import { viewerQualities } from "../../media/shareSettings";
 import type { StagePick } from "../../hooks/useStagePick";
-import type { AmbilightPrefs } from "../../media/preferences";
+import type { AmbilightPrefs } from "@core/preferences/preferences.types";
 import type { Friend, LiveFeed, Sharer } from "../../types";
 import { EmptyStage } from "./EmptyStage";
 import { Facecam, type FacecamPlace } from "./Facecam";
@@ -75,12 +70,12 @@ const what = (feed: LiveFeed) => (feed.kind === "camera" ? "camera" : "shared sc
 /** Where the big stream plays: in a 16:9 box, with the picture's own shape (spec 0107). */
 export function Stage({ sharers, controls, stage, ambilight, watchers, others, settingsPanel }: Props) {
   const frameRef = useRef<HTMLDivElement>(null);
-  const [watch, setWatch] = useState<WatchPrefs>(loadWatchPrefs);
+  const [watch, setWatch] = useState<HearingPrefs>(() => loadHearing("stream"));
   // How I hear the voice of the person I watch (spec 0123): its own volume and mute, remembered.
-  const [voiceSound, setVoiceSoundState] = useState<Sound>(loadVoiceHearing);
+  const [voiceSound, setVoiceSoundState] = useState<Sound>(() => loadHearing("voice"));
   const setVoiceSound = (next: Sound) => {
     setVoiceSoundState(next);
-    saveVoiceHearing(next);
+    saveHearing("voice", next);
   };
   const micOn = Boolean(controls.voice);
   const toggleMic = () => controls.onVoice?.();
@@ -254,9 +249,9 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
     .filter((s) => s !== big && s.sound && s.hasSound && !hearOf(s.person.id).sound.muted)
     .map((s) => ({ id: s.person.id, track: s.sound!, ...hearOf(s.person.id).sound }));
 
-  const changeWatch = (next: WatchPrefs) => {
+  const changeWatch = (next: HearingPrefs) => {
     setWatch(next);
-    saveWatchPrefs(next);
+    saveHearing("stream", next);
   };
 
   // Watching is always Auto (spec 0107): the size it's shown at, stepping down when the
