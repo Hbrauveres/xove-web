@@ -19,7 +19,7 @@ RUN echo "refresh: $REFRESH" \
  && go get github.com/caddyserver/caddy/v2@v2.11 \
       golang.org/x/crypto@latest golang.org/x/net@latest golang.org/x/text@latest \
       google.golang.org/grpc@latest github.com/go-chi/chi/v5@latest \
-      github.com/klauspost/compress@latest \
+      github.com/klauspost/compress@latest github.com/go-jose/go-jose/v4@latest \
  && go mod tidy \
  && CGO_ENABLED=0 go build -trimpath -ldflags "-s -w" -o /caddy . \
  && apk add --no-cache libcap \
@@ -28,8 +28,11 @@ RUN echo "refresh: $REFRESH" \
 FROM caddy:2-alpine
 # Pick up Alpine security fixes released after the base image was built, swap in
 # our Caddy (allowed to bind port 80 without root, see setcap above) and run as a
-# non-root user.
-RUN apk upgrade --no-cache \
+# non-root user. REFRESH re-runs the upgrade once a day too, or the build cache
+# would keep the first day's packages.
+ARG REFRESH=local
+RUN echo "refresh: $REFRESH" \
+ && apk upgrade --no-cache \
  && adduser -S -D -H -u 1000 -s /sbin/nologin web \
  && chown -R web /config /data
 COPY --from=caddy /caddy /usr/bin/caddy
