@@ -20,9 +20,11 @@ Everything is in `app/src`:
 | Folder | Owns |
 | --- | --- |
 | `pages/` | One component per route: `HomePage`, `RequestAccessPage`, `RoomPage`, `AdminPage` |
-| `hooks/` | The room's state and the browser's: the seat and the queue (`useRoomSeat`), the streams (`useStreams`), both put together with the video room for the room (`useRoomSession`), who's on the stage (`useStagePick`), the video's shape (`useVideoShape`), the round buttons' row holding the clicked button still (`usePinnedRow`), and a small one (`useFullscreenElement`); the stream's elapsed time is `shared/hooks/use-elapsed.hook.ts`, and whether the keyboard was used last `shared/hooks/use-keyboard-last.hook.ts` |
+| `hooks/` | The room's state and the browser's: what the room shows and its flows, read from the room's store (`useRoomSession`), who's on the stage (`useStagePick`), the video's shape (`useVideoShape`), the round buttons' row holding the clicked button still (`usePinnedRow`), and a small one (`useFullscreenElement`); the stream's elapsed time is `shared/hooks/use-elapsed.hook.ts`, and whether the keyboard was used last `shared/hooks/use-keyboard-last.hook.ts` |
 | `media/` | What the screens show about a stream's quality (`shareSettings.ts`: the modes, what a viewer can pick), the ambilight's drawing (`ambilight.ts`), who is big by default (`stagePick.ts`) |
-| `features/room/hooks/` | The room's own hooks, as they move in: the video room (`use-video-room.hook.ts`: the access from the API, the adapter's state, the sound unlock, the devices, the camera remembered), the mic's level (`use-mic-level.hook.ts`) |
+| `features/room/state/` | The room as data (`room.model.ts`: people by their id, streams, who watches whom, arrivals, the seat, the activity, my streams' steps, changed by pure functions), what the room shows (`room.selectors.ts`), and `RoomStore` (`room.store.ts`): the one place the seat, the streams and entering again are polled, the video room joined, and the room's actions sent |
+| `features/room/hooks/` | The room's own hooks, as they move in: the store for the page (`use-room-store.hook.ts`, with the sound unlock, the devices and the camera remembered), the mic's level (`use-mic-level.hook.ts`) |
+| `features/room/types/`, `features/room/utils/` | The room's shared types (a person, a stream, a sharer, the activity) and helpers: each person's colour (`person-colour.util.ts`), when the room can show (`room-entry.util.ts`) |
 | `components/stage/` | The player and what's on it: the stage, the ambilight, the controls by owner: my own stream's round buttons (`PlayerButtons`; their icons in `icons.tsx`, the drop-ups on live ones) and, over someone else's stream, `ViewerBar` (what I hear at the left, each sound its own button and slider; my mic or Go live at the right); the voice I hear (`VoiceAudio`), each person's switches and volumes held by the stage for the visit (the rule in `media/hearing.ts`), and the previews' buttons (`HearToggles`, in a small preview's row, `PreviewTray`, which floats on its own layer over the page and follows its preview, opened through `usePreviewTray`; a preview's stack and its swap's moment in `stack.ts`); the settings panel (`SettingsPanel`, its Voice tab's mic level in `MicTest`), the facecam, the previews, the empty stage (`EmptyStage`, a TV on standby: the ways to start, alone in their row; with nobody live the settings are `ViewerBar`'s settings-only form, in the corner; its corners' glow in `CornerGlow`; its TV static in `StaticNoise`, a small canvas the page draws 20 times a second, its grain and bands scaled to the stage; the static's light round the stage in `StaticGlow`; both read their bands from `staticBands.ts`, so they roll together, and its `tv` flag lets the TV's turn-on play only the first time the stage stands by in a visit), the info row. The stage is two layers: its box holds every control (the round buttons, the sounds, Go live, the fullscreen button) and takes the pointer; a view inside it holds the picture and its ambilight in the picture's shape |
 | `components/room/` | The room around the stage: header, footer, people, activity (pill, list), account menu, the waiting screen and the seat offer |
 | `components/ui/` | Shared controls: `Button`, `Range`, `Dropdown`, `Segmented`, `Picker` (a list that floats over its panel, masking what's behind it in the nearest `[data-list-host]`; it opens on request too), `DropUp` (its gestures can redirect to an open panel), `Tooltip` (the app's only tooltip, on its own layer, describing its control for screen readers), `floating.ts` (one tooltip or drop-up showing at a time, what floats inside another belonging to it), the cue (`cue.module.css`), `Avatar`, `PersonAvatar`, `FullPageMessage`, `Toast` (a short message any component shows with `showToast`) |
@@ -37,7 +39,7 @@ Everything is in `app/src`:
 | `styles/` | The design tokens (`global.css`) and the tests that check them |
 | `test/` | The test helpers: a fake API, a fake LiveKit, and rendering the app at a URL ([Testing](testing.md)) |
 
-At the top, `main.tsx` starts the app, `app/root.component.tsx` chooses between the app and the phone notice, `app/app.component.tsx` holds the routes, and `types.ts` the room's shared types (a person, a stream, a sharer).
+At the top, `main.tsx` starts the app, `app/root.component.tsx` chooses between the app and the phone notice, and `app/app.component.tsx` holds the routes.
 
 ```mermaid
 flowchart TD
@@ -107,13 +109,16 @@ sequenceDiagram
 
 | State | Owned by | Lives |
 | --- | --- | --- |
-| My seat, or my place in the queue and the seat offer | `useRoomSeat` | The API; the page polls every 2 s while it waits |
-| The live streams, their settings, who watches what | `useStreams` | The API; polled every 2 s by every open room |
-| Who is connected, their tracks, my own captures | `core/livekit/livekit.adapter.ts`, read through `useVideoRoom` | LiveKit |
+| My seat, or my place in the queue and the seat offer | `RoomStore`, in the room's model | The API; polled every 2 s while waiting |
+| The live streams, their settings, who watches what, who's here since when | `RoomStore`, in the room's model | The API; polled every 2 s by every open room |
+| Who is connected, their tracks, my own captures | `core/livekit/livekit.adapter.ts`, held by `RoomStore` | LiveKit |
+| Where each of my streams is (off, picking, starting, live, stopping) | the room's model | This page only |
 | Who's on my stage | `useStagePick` | This page only |
 | How I send (quality, mode, the camera picked, my mic and its processing and line), the volumes I start from (a screen's sound, a voice), the ambilight's settings | `core/preferences/preferences.service.ts` | The browser (`localStorage`, `xove.*`) |
 | Each person's mutes and volumes, for this visit | `Stage` | This page only |
 | Whether the settings are open, the setting a live button asked for, and the camera's preview | `RoomPage`, `useRoomSession` | This page only |
+
+**One id for everyone.** Everyone in the room, me included, is their identity on the video server (`user-42`): the access names me, the API's `userId`s name the others. "Is this me" is a comparison, and each person's colour comes from their id, the same on every screen. The room shows once I have a seat and the access has named me; until then the waiting screen says "Looking for a seat…".
 
 **Waiting for a seat.** The queue's rules (who's next, how long a place and an offer last) are the API's ([how](https://github.com/Hbrauveres/xove-api/blob/main/docs/architecture.md#seats-and-the-queue)). Without a seat, the waiting screen shows the place in the queue and asks again every 2 seconds; that poll is also how the API knows the page is still there. When a seat is offered, a popup counts down the seconds the API gives ("Enter room" accepts, "Cancel" leaves the queue), and the tab's title says "Your turn". Closing the waiting page sends `POST /api/room/leave` with `keepalive`, so the request survives the tab closing.
 
@@ -140,11 +145,11 @@ Every endpoint, who may call it and what it answers, is in [`xove-api`'s API pag
 
 ## LiveKit in the browser
 
-`useVideoRoom` (`features/room/hooks/`) joins the video room for as long as the room page is open, through the adapter in `core/livekit/`:
+`RoomStore` (`features/room/state/`) joins the video room once I have a seat, through the adapter in `core/livekit/`, until the room page closes:
 
-1. The hook asks the API for a token (`POST /api/livekit/token`), which names this person (`user-<id>`), the room and what they may send: a screen with its sound, a camera, and a microphone (sent only alongside my screen or camera, while I turn my voice on: [Media](media.md#the-voice)).
+1. The store asks the API for a token (`POST /api/livekit/token`), which names this person (`user-<id>`), the room and what they may send: a screen with its sound, a camera, and a microphone (sent only alongside my screen or camera, while I turn my voice on: [Media](media.md#the-voice)).
 2. The adapter connects with it, `adaptiveStream` and `dynacast` on ([Media](media.md#what-a-viewer-downloads)).
-3. The adapter keeps the room's state person by person: each LiveKit event updates only the person it's about (someone talking changes only their talking flag; a camera starting, only their camera), and anything unchanged keeps its object, so the rest of the room doesn't redraw. The hook reads it with `useSyncExternalStore`. The connection's state says "reconnecting" while LiveKit retries.
+3. The adapter keeps the room's state person by person: each LiveKit event updates only the person it's about (someone talking changes only their talking flag; a camera starting, only their camera), and anything unchanged keeps its object, so the rest of the room doesn't redraw. The page reads the store with `useSyncExternalStore`. The connection's state says "reconnecting" while LiveKit retries.
 4. Leaving the page disconnects. **One connection per person:** opening the room on a second device disconnects the first.
 
 **Sound.** Browsers block sound that starts without a click on the page, so the first click or key in the room unlocks it (`room.startAudio()`), and LiveKit plays what was silent.

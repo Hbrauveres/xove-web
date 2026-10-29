@@ -6,7 +6,7 @@ How the web app is tested, with a real example of each kind, and how to run the 
 
 | Kind | What it proves | Example |
 | --- | --- | --- |
-| [Rules as plain functions](#rules-as-plain-functions) | The decisions, with no browser: which device, which quality, how the ambilight is laid out, who is big | `core/devices/is-handheld.util.test.ts`, `media/*.test.ts`, `brand/*.test.ts` |
+| [Rules as plain functions](#rules-as-plain-functions) | The decisions, with no browser: which device, which quality, how the ambilight is laid out, who is big; the room as data and what it shows (`features/room/state/room.model`, `room.selectors`), in milliseconds | `core/devices/is-handheld.util.test.ts`, `media/*.test.ts`, `brand/*.test.ts`, `features/room/state/*.test.ts` |
 | [Components](#components) | One component's output for given props | `components/**/*.test.tsx` |
 | [Pages, used like a person](#pages-used-like-a-person) | Whole flows: a page at a URL, with a fake API and a fake LiveKit | `pages/*.test.tsx`, `app/app.component.test.tsx`, `hooks/*.test.ts` |
 | [The style check](#the-style-check) | What the stylesheets promise: text readable on every surface, rules no browser drops, motion off when asked | `scripts/check-styles.ts` |
@@ -48,7 +48,7 @@ Most tests render a real page, or the whole app at a URL (`test/renderApp.tsx`),
 
 - **`test/fakeApi.ts`** replaces `fetch` with a small in-memory API. A test sets its state (who I am, who's sharing, a forced failure), and checks the requests the app sent (`server.calls`), headers included, so the CSRF token is tested too.
 - **`test/fakeLiveKit.ts`** replaces `livekit-client` (jsdom has no WebRTC). A test plays the other people: someone joins (`lastRoom().join(...)`), starts a screen (`publishScreen(...)`), or the browser's own "Stop sharing" bar is used (`browserStopsMyShare()`). What the next screen pick is (a window, a tab or the whole screen) is `nextSurface`. Voices too: someone's mic (`publishVoice`, `muteVoice`), who's speaking (`setSpeaking`), and my own mic, allowed, blocked or missing (`nextMic`), with the gate set on it (`setProcessor`).
-- **Factories** (`test/factories/`) make each test's own data, fresh on every call: `aSharer()` (someone sharing, with new tracks), `aTrack()`, and `onFakeClock()` (fake timers on a fixed clock, with a `userEvent` that moves them along).
+- **Factories** (`test/factories/`) make each test's own data, fresh on every call: `aSharer()` (someone sharing, with new tracks), `aTrack()`, `aLiveStream()` and `anAnswer()` (the API's streams answer, for the room's model), and `onFakeClock()` (fake timers on a fixed clock, with a `userEvent` that moves them along).
 - **No canvas:** jsdom has none, so `test/setup.ts` makes every canvas give no drawing context; what draws (the ambilight, the standby screen's static) does nothing in tests. A test of the drawing stubs its own context (`vi.spyOn(HTMLCanvasElement.prototype, "getContext")`), and how it looks is checked in a real browser.
 
 The room page takes a short poll interval in tests, so nothing waits 2 seconds. From `pages/RoomPage.test.tsx`:

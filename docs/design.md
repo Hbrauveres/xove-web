@@ -94,7 +94,7 @@ Dark only: Xovê is a room for watching screens, so the chrome stays out of the 
 - **Pure black `#000` only behind the video:** the stage, the previews, the facecam and the camera's preview in the settings, as the picture's own frame. Nowhere else. A picture that fills the stage (its shape within 1% of the stage's) has nothing black behind it, so no sliver shows at an edge.
 - **The speaking greens**, only for "this person is speaking": the tube `#2bcd68` at 85%, the icon `#45e087`, the glow `#16a34a`. Nothing else is green but "connected" and a mic level that's sent.
 - **Red is rare on purpose:** it means the brand or something live. Sliders are white and the switch is grey until it's on.
-- **Avatars** without a photo get the person's own hue: `hsl(<hue> 42% 38%)` with a white initial.
+- **Avatars** without a photo get the person's own hue: `hsl(<hue> 42% 38%)` with a white initial. The hue comes from the person's id, so **everyone has one colour on every screen, me included**: I see myself in the colour my friends see me in.
 - **The empty stage** is one flat dark (`#0f0f11`: a gradient this dim shows bands); its corners glow softly, each in its own colour (a slightly blue grey, the top right red).
 - **The ambilight** takes its colour from the picture, never from the palette.
 - **Contrast:** every text colour reaches 4.5:1 on every surface, 3:1 for faint labels. `npm run check:styles` computes it on every push ([Testing](testing.md#the-style-check)).
