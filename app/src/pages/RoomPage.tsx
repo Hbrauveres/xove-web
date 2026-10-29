@@ -13,11 +13,11 @@ import { canShareScreen } from "@core/devices/screen-picker.util";
 import { SettingsPanel } from "../components/stage/SettingsPanel";
 import { Stage } from "../components/stage/Stage";
 import { useFullscreenElement, useFullscreenHost } from "../hooks/useFullscreenElement";
-import { SEAT_POLL_MS, useRoomSeat, type RoomSeat } from "../hooks/useRoomSeat";
+import { useRoomStore, type RoomStoreValue } from "@features/room/hooks/use-room-store.hook";
+import { roomEntry } from "@features/room/utils/room-entry.util";
 import { useRoomSession } from "../hooks/useRoomSession";
 import { useStagePick } from "../hooks/useStagePick";
 import type { StreamKind } from "@core/api/api.types";
-import type { Friend } from "../types";
 import styles from "./RoomPage.module.css";
 
 type Props = {
@@ -30,29 +30,25 @@ type Props = {
  * Up to 20 people at once (spec 0060): whoever comes next waits for a seat.
  */
 export function RoomPage({ pollMs }: Props = {}) {
-  const { signOut } = useAuth();
+  const { signOut, state } = useAuth();
   const navigate = useNavigate();
-  const seat = useRoomSeat(pollMs);
+  const me = state.status === "signedIn" ? state.me : null;
+  const room = useRoomStore(me?.name ?? me?.email ?? "You", pollMs);
 
   const handleSignOut = async () => {
     await signOut();
     navigate("/", { replace: true });
   };
 
-  // The video room only with a seat: the API hands out LiveKit tokens to seated people only.
-  if (seat.status?.status !== "in") return <WaitingRoom seat={seat} onSignOut={handleSignOut} />;
-  return <Room pollMs={pollMs} seat={seat} onSignOut={handleSignOut} />;
+  const entry = roomEntry(room.model, room.video);
+  if (!entry.ready) return <WaitingRoom seat={{ ...room.seat, status: entry.waiting }} onSignOut={handleSignOut} />;
+  return <Room room={room} onSignOut={handleSignOut} />;
 }
 
-function Room({ pollMs, seat, onSignOut }: Props & { seat: RoomSeat; onSignOut: () => void }) {
+function Room({ room, onSignOut }: { room: RoomStoreValue; onSignOut: () => void }) {
   const { state } = useAuth();
-  const me = state.status === "signedIn" ? state.me : null;
-
-  const meAsFriend = useMemo<Friend>(
-    () => ({ id: "me", name: me?.name?.split(" ")[0] ?? me?.email ?? "You", hue: 36, online: true }),
-    [me?.name, me?.email],
-  );
-  const session = useRoomSession(meAsFriend, pollMs);
+  const isAdmin = state.status === "signedIn" && state.me.admin;
+  const session = useRoomSession(room);
   // Who is on the stage (spec 0104): the stage, the previews and the activity list can change it.
   const stage = useStagePick(session.sharers);
   const { watchStage } = session;
@@ -122,17 +118,6 @@ function Room({ pollMs, seat, onSignOut }: Props & { seat: RoomSeat; onSignOut: 
     />
   );
 
-  // The API forgot my seat (it restarted): ask again, with my video connection, which
-  // confirms the seat; keep asking until it answers. With a seat free, nothing changes here.
-  const { reenter } = seat;
-  const { seated, participantSid } = session;
-  useEffect(() => {
-    if (seated !== false) return;
-    reenter(participantSid());
-    const timer = window.setInterval(() => reenter(participantSid()), pollMs ?? SEAT_POLL_MS);
-    return () => window.clearInterval(timer);
-  }, [seated, reenter, participantSid, pollMs]);
-
   // People, then me at the far right.
   const myButtons = (
     <>
@@ -145,7 +130,7 @@ function Room({ pollMs, seat, onSignOut }: Props & { seat: RoomSeat; onSignOut: 
       />
       <AccountButton
         me={session.me}
-        isAdmin={me?.admin ?? false}
+        isAdmin={isAdmin}
         connection={session.connection}
         ambilight={ambilight}
         onAmbilightChange={setAmbilight}

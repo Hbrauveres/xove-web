@@ -1,4 +1,4 @@
-import type { RoomSeat } from "../../hooks/useRoomSeat";
+import type { RoomSeat } from "@features/room/state/room.types";
 import { Button } from "../ui/Button";
 import { SeatOffer } from "./SeatOffer";
 import styles from "./WaitingRoom.module.css";

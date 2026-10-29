@@ -18,7 +18,6 @@ export const seatsOpen = (free: number) => `${free} ${free === 1 ? "seat" : "sea
 const MAX_AVATARS = 4;
 
 /** Live streams at once (spec 0060). */
-export const STREAM_PLACES = 6;
 
 type Props = {
   sharer: Sharer | null;

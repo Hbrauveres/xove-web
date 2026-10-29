@@ -7,19 +7,28 @@ import {
 } from "@core/preferences/preferences.service";
 import type { VoicePrefs } from "@core/preferences/preferences.types";
 import type { ConnectionState, MediaTrack } from "@core/livekit/livekit.types";
-import type { ActivityEvent, Friend, LiveFeed, Sharer } from "../types";
+import type { ActivityEvent, Friend, Sharer } from "../types";
 import type { CameraDevice, CameraProblem, MicDevice, ScreenSurface } from "@core/devices/devices.types";
-import type { LiveStream, RoomSeatsState, StreamKind, StreamSettings } from "@core/api/api.types";
-import { useVideoRoom } from "@features/room/hooks/use-video-room.hook";
+import type { RoomSeatsState, StreamKind, StreamSettings } from "@core/api/api.types";
+import type { RoomStoreValue } from "@features/room/hooks/use-room-store.hook";
+import { KINDS } from "@features/room/state/room.constants";
+import { firstName, withMyStep } from "@features/room/state/room.model";
+import {
+  activityOf,
+  knownPeopleOf,
+  myLiveOf,
+  peopleOf,
+  personOf,
+  sharersOf,
+  watchingOf as watchesOf,
+} from "@features/room/state/room.selectors";
+import type { MyStreamStep } from "@features/room/state/room.types";
 import type { Capture } from "@core/livekit/livekit.types";
 import { showToast } from "../components/ui/toast";
-import { useStreams } from "./useStreams";
-import { api as client } from "@core/api/api-client.service";
 
 /**
- * Everything the room page shows, from two sources:
- * - the API decides which streams are live (useStreams);
- * - LiveKit carries the video and knows who is connected (useVideoRoom).
+ * Everything the room page shows, read from the room's store (the API's news and the video
+ * room's), and the room's flows: starting, the preview, the settings, the voice, the watch report.
  */
 export type RoomSession = {
   me: Friend;
@@ -89,182 +98,73 @@ export type RoomSession = {
   micInput: MediaStreamTrack | undefined;
 };
 
-export const identityOf = (userId: number) => `user-${userId}`;
+/** A person's user id at the API, from their id in the room ("user-42"). */
+const userIdOf = (personId: string) => Number(personId.slice("user-".length));
 
-const KINDS: StreamKind[] = ["screen", "camera"];
-
-/** Same person, same colour, in every browser. */
-// Ids differ only at the end ("user-3", "user-7"): the golden angle spreads them around the wheel.
-const hueOf = (id: string) =>
-  Math.round(([...id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 9973, 7) * 137.508) % 360);
-
-const firstName = (name: string | null | undefined) => name?.trim().split(/\s+/)[0] || "Someone";
-
-const person = (id: string, name: string | null | undefined): Friend => ({
-  id,
-  name: firstName(name),
-  hue: hueOf(id),
-  online: true,
-});
-
-let streamSeq = 0;
-const streamEvent = (kind: "started" | "stopped", actorId: string, stream: StreamKind): ActivityEvent => ({
-  id: `stream${++streamSeq}`,
-  at: Date.now(),
-  kind,
-  actorId,
-  stream,
-});
+const BUSY_STEPS: readonly MyStreamStep[] = ["picking", "starting"];
 
 const loadPrefs = (): Record<StreamKind, StreamSettings> => ({
   screen: loadStreamSettings("screen"),
   camera: loadStreamSettings("camera"),
 });
 
-export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
-  const api = useStreams(pollMs);
-  const lk = useVideoRoom();
-
-  const loaded = api.state !== null;
-  const live = api.state?.streams;
-  const seated = api.state?.seated ?? null;
-
-  const myLive = useMemo<Record<StreamKind, boolean>>(
+export function useRoomSession(room: RoomStoreValue): RoomSession {
+  const { store, model, video } = room;
+  // The video room as the room's flows use it: its state, its commands, the devices and the camera.
+  const lk = useMemo(
     () => ({
-      screen: live?.some((s) => s.mine && s.kind === "screen") ?? false,
-      camera: live?.some((s) => s.mine && s.kind === "camera") ?? false,
+      ...video,
+      cameras: room.devices.cameras,
+      mics: room.devices.mics,
+      cameraId: video.cameraId || room.camera.savedCamera,
+      capture: room.camera.capture,
+      pickCamera: room.camera.pickCamera,
+      publishCapture: store.video.publishCapture,
+      discardCapture: store.video.discardCapture,
+      applySettings: store.video.applySettings,
+      stop: store.video.stop,
+      changeScreen: store.video.changeScreen,
+      connectionOf: store.video.connectionOf,
+      participantSid: store.video.participantSid,
+      startVoice: store.video.startVoice,
+      stopVoice: store.video.stopVoice,
+      applyVoice: store.video.applyVoice,
+      setVoiceLine: store.video.setVoiceLine,
     }),
-    [live],
+    [video, room.devices, room.camera, store],
   );
 
-  // Everyone with a stream, in the order the API lists them (oldest first).
-  const sharers = useMemo<Sharer[]>(() => {
-    const byPerson = new Map<number, LiveStream[]>();
-    for (const s of live ?? []) byPerson.set(s.userId, [...(byPerson.get(s.userId) ?? []), s]);
-    return [...byPerson.values()].map((streams) => {
-      const first = streams[0];
-      const isMe = first.mine;
-      const identity = identityOf(first.userId);
-      const media = isMe ? undefined : lk.remote[identity];
-      const feed = (kind: StreamKind): LiveFeed | undefined => {
-        const s = streams.find((x) => x.kind === kind);
-        if (!s) return undefined;
-        return {
-          kind,
-          startedAt: Date.parse(s.since),
-          settings: s.settings,
-          remote: media?.[kind],
-          local: isMe ? lk.local[kind] : undefined,
-        };
-      };
-      return {
-        person: isMe ? me : person(identity, first.name),
-        isMe,
-        since: Date.parse(first.since),
-        screen: feed("screen"),
-        camera: feed("camera"),
-        sound: media?.sound,
-        hasSound: media?.hasSound,
-        setSoundOn: media?.setSoundOn,
-        voice: media?.voice,
-        hasVoice: media?.hasVoice,
-        speaking: media?.speaking,
-        setVoiceOn: media?.setVoiceOn,
-      };
-    });
-  }, [live, lk.remote, lk.local, me]);
-
-  const people = useMemo(() => [me, ...lk.others.map((o) => person(o.identity, o.name))], [me, lk.others]);
-
-  // People who were here or shared earlier, so the feed can still name them.
-  const [seen, setSeen] = useState<Friend[]>([]);
-  useEffect(() => {
-    const fresh = [...people.slice(1), ...sharers.filter((s) => !s.isMe).map((s) => s.person)];
-    setSeen((prev) => {
-      const missing = fresh.filter((f) => !prev.some((p) => p.id === f.id));
-      return missing.length ? [...prev, ...missing] : prev;
-    });
-  }, [people, sharers]);
-  const knownPeople = useMemo(
-    () => [...people, ...seen.filter((s) => !people.some((p) => p.id === s.id))],
-    [people, seen],
+  const loaded = model.streams !== null;
+  const seated = model.seated;
+  const { streams, me: myId, names, present, watching, activity: events } = model;
+  const myLive = useMemo(() => myLiveOf({ streams, me: myId }), [streams, myId]);
+  const me = useMemo(
+    () => (myId ? personOf({ names }, myId) : { ...personOf({ names }, ""), name: firstName(store.myName) }),
+    [myId, names, store],
   );
-
-  // Turn changes of the live streams into feed events. The first answer is the
-  // starting point, not a change, so it logs nothing.
-  const [streamEvents, setStreamEvents] = useState<ActivityEvent[]>([]);
-  const previous = useRef<Set<string> | undefined>(undefined);
-  const streamKeys = useMemo(
-    () =>
-      live
-        ? [...live]
-            .map((s) => `${s.mine ? me.id : identityOf(s.userId)}|${s.kind}`)
-            .sort()
-            .join(",")
-        : null,
-    [live, me.id],
+  const sharers = useMemo<Sharer[]>(
+    () => sharersOf({ streams, me: myId, names }, video),
+    [streams, myId, names, video],
   );
-  useEffect(() => {
-    if (streamKeys === null) return;
-    const now = new Set(streamKeys ? streamKeys.split(",") : []);
-    const before = previous.current;
-    previous.current = now;
-    if (!before) return;
-    const events: ActivityEvent[] = [];
-    for (const key of now) {
-      if (!before.has(key)) {
-        const [actor, kind] = key.split("|");
-        events.push(streamEvent("started", actor, kind as StreamKind));
-      }
-    }
-    for (const key of before) {
-      if (!now.has(key)) {
-        const [actor, kind] = key.split("|");
-        events.push(streamEvent("stopped", actor, kind as StreamKind));
-      }
-    }
-    if (events.length) setStreamEvents((prev) => [...prev, ...events].slice(-30));
-  }, [streamKeys]);
-
-  // My connection coming back after a drop is an event too (spec 0104).
-  const [connectionEvents, setConnectionEvents] = useState<ActivityEvent[]>([]);
-  const lastConnection = useRef(lk.connection);
-  useEffect(() => {
-    const before = lastConnection.current;
-    lastConnection.current = lk.connection;
-    if (before === "reconnecting" && lk.connection === "connected") {
-      setConnectionEvents((prev) =>
-        [...prev, { id: `conn${++streamSeq}`, at: Date.now(), kind: "reconnected" as const, actorId: me.id }].slice(
-          -30,
-        ),
-      );
-    }
-  }, [lk.connection, me.id]);
-
-  const activity = useMemo(
-    () => [...lk.presence, ...streamEvents, ...connectionEvents].sort((a, b) => a.at - b.at).slice(-30),
-    [lk.presence, streamEvents, connectionEvents],
+  const people = useMemo(() => peopleOf({ me: myId, present, names }), [myId, present, names]);
+  const knownPeople = useMemo(() => knownPeopleOf({ me: myId, present, names }), [myId, present, names]);
+  const presence = useMemo(
+    () => video.presence.map((p): ActivityEvent => ({ id: `lk${p.id}`, at: p.at, kind: p.kind, actorId: p.identity })),
+    [video.presence],
   );
+  const activity = useMemo(() => activityOf({ activity: events }, presence), [events, presence]);
+  const watchingOf = useMemo(() => watchesOf({ watching }), [watching]);
+  const arrivedAt = model.arrivedAt;
 
-  // Who watches what, in the room's ids: "me" for me, "user-42" for everyone else.
-  const watchers = api.state?.watching;
-  const watchingOf = useMemo(() => {
-    const idOf = (userId: number, mine: boolean) => (mine ? me.id : identityOf(userId));
-    const sharerIsMe = (userId: number) => (live ?? []).some((s) => s.mine && s.userId === userId);
-    const byPerson: Record<string, { sharerId: string; kind: StreamKind }> = {};
-    for (const w of watchers ?? []) {
-      byPerson[idOf(w.userId, w.mine)] = { sharerId: idOf(w.sharerId, sharerIsMe(w.sharerId)), kind: w.kind };
-    }
-    return byPerson;
-  }, [watchers, live, me.id]);
-
-  // When each person arrived (spec 0158), in the room's ids.
-  const here = api.state?.here;
-  const arrivedAt = useMemo(() => {
-    const byPerson: Record<string, number> = {};
-    for (const h of here ?? []) byPerson[h.mine ? me.id : identityOf(h.userId)] = Date.parse(h.since);
-    return byPerson;
-  }, [here, me.id]);
+  // Where each of my streams is: one explicit step at a time, in the room's model.
+  const step = useCallback(
+    (kind: StreamKind, next: MyStreamStep) => store.change((m) => withMyStep(m, kind, next)),
+    [store],
+  );
+  const busyStarting = useCallback(
+    (kind: StreamKind) => BUSY_STEPS.includes(store.getState().model.mine[kind]),
+    [store],
+  );
 
   // What's on my stage, reported to the API after 1 s of stillness (quick clicks send one
   // report), and again when the API lost it (a restart). Undefined until the room says.
@@ -273,12 +173,13 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
   const wantedKey = useMemo(() => {
     if (onStage === undefined) return undefined;
     if (onStage === null) return "none";
-    const userId = onStage.personId === me.id ? live?.find((s) => s.mine)?.userId : Number(onStage.personId.slice(5));
-    return userId === undefined || Number.isNaN(userId) ? undefined : `${userId}|${onStage.kind}`;
-  }, [onStage, live, me.id]);
-  const mineWatch = watchers?.find((w) => w.mine);
+    const userId = userIdOf(onStage.personId);
+    return Number.isNaN(userId) ? undefined : `${userId}|${onStage.kind}`;
+  }, [onStage]);
+  const mineWatch = model.me ? model.watching?.[model.me] : undefined;
   // An older API doesn't list watches: nothing to compare with, report on change only.
-  const apiKey = watchers === undefined ? undefined : mineWatch ? `${mineWatch.sharerId}|${mineWatch.kind}` : "none";
+  const apiKey =
+    model.watching === null ? undefined : mineWatch ? `${userIdOf(mineWatch.sharerId)}|${mineWatch.kind}` : "none";
   const sentKey = useRef<string | undefined>(undefined);
   // A failed report is tried again a moment later.
   const [retries, setRetries] = useState(0);
@@ -292,23 +193,17 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
       sentKey.current = wantedKey;
       const [sharerId, kind] = wantedKey.split("|");
       const target = wantedKey === "none" ? null : { sharerId: Number(sharerId), kind: kind as StreamKind };
-      client.streams.watching(target).catch(() => {
+      store.reportWatching(target).catch(() => {
         sentKey.current = undefined;
         window.setTimeout(() => setRetries((n) => n + 1), 2000);
       });
     }, 1000);
     return () => window.clearTimeout(timer);
-  }, [wantedKey, apiKey, reporting, retries]);
+  }, [wantedKey, apiKey, reporting, retries, store]);
 
   // ---- keeping my streams and the API in step ----
 
-  // True between opening the picker and the API confirming the stream.
-  const starting = useRef<Record<StreamKind, boolean>>({ screen: false, camera: false });
-  const [isStarting, setStarting] = useState(false);
-  const markStarting = (kind: StreamKind, on: boolean) => {
-    starting.current[kind] = on;
-    setStarting(starting.current.screen || starting.current.camera);
-  };
+  const isStarting = KINDS.some((kind) => BUSY_STEPS.includes(model.mine[kind]));
   const [prefs, setPrefsState] = useState<Record<StreamKind, StreamSettings>>(loadPrefs);
   const [noSound, setNoSound] = useState(false);
 
@@ -335,25 +230,27 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
   const send = useCallback(
     async (capture: Capture, chosen: StreamSettings) => {
       const kind = capture.kind;
+      step(kind, "starting");
       const sending = await lk.publishCapture(capture, chosen);
       if (!sending) return;
       const { hasSound, ...connection } = sending;
-      const ok = (await api.start(kind, connection, chosen)) === "ok";
+      const ok = (await store.startStream(kind, connection, chosen)) === "ok";
       if (!ok) {
         await lk.stop(kind);
         return;
       }
+      step(kind, "live");
       accepted.current = { ...accepted.current, [kind]: chosen };
       if (kind === "screen") setNoSound(!hasSound);
     },
-    [lk, api],
+    [lk, store, step],
   );
 
   // One click (spec 0107): the browser's picker, or the camera, sent at once with the
   // remembered settings. A camera already on for the preview is sent as is.
   const start = useCallback(
     async (kind: StreamKind) => {
-      markStarting(kind, true);
+      step(kind, "picking");
       // A preview still asking for the camera is dropped when it answers: this click asks itself.
       if (kind === "camera") wantPreview.current = false;
       try {
@@ -366,10 +263,10 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
         capture ??= await lk.capture(kind, prefs[kind].mode);
         if (capture) await send(capture, prefs[kind]);
       } finally {
-        markStarting(kind, false);
+        if (busyStarting(kind)) step(kind, "off");
       }
     },
-    [lk, prefs, send, setPreview],
+    [lk, prefs, send, setPreview, step, busyStarting],
   );
 
   const previewCamera = useCallback(
@@ -446,7 +343,7 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
       const change = ++latestChange.current[kind];
       changes.current = changes.current.then(async () => {
         await lk.applySettings(kind, next);
-        if (await api.changeSettings(kind, next)) {
+        if (await store.changeStreamSettings(kind, next)) {
           accepted.current = { ...accepted.current, [kind]: next };
           return;
         }
@@ -457,15 +354,17 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
         saveStreamSettings(kind, back);
       });
     },
-    [myLive, lk, api],
+    [myLive, lk, store],
   );
 
   const stop = useCallback(
     async (kind: StreamKind) => {
+      step(kind, "stopping");
       await lk.stop(kind);
-      await api.stop(kind);
+      await store.stopStream(kind);
+      step(kind, "off");
     },
-    [lk, api],
+    [lk, store, step],
   );
 
   // ---- my voice (spec 0123): only by my choice, only while I share a screen or a camera ----
@@ -511,27 +410,28 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
   useEffect(() => {
     if (!loaded || !seated) return;
     for (const kind of KINDS) {
-      if (!lk.publishing[kind] || myLive[kind] || starting.current[kind] || registering.current[kind]) continue;
+      if (!lk.publishing[kind] || myLive[kind] || busyStarting(kind) || registering.current[kind]) continue;
       const connection = lk.connectionOf(kind);
       if (!connection) continue;
       registering.current[kind] = true;
-      void api
-        .start(kind, connection, accepted.current[kind])
+      void store
+        .startStream(kind, connection, accepted.current[kind])
         .then((outcome) => (outcome === "full" ? lk.stop(kind) : undefined))
         .finally(() => {
           registering.current[kind] = false;
         });
     }
-  }, [loaded, seated, lk, myLive, api]);
+    // Again after each answer from the API: a failed registration is tried on the next poll.
+  }, [loaded, seated, lk, myLive, store, busyStarting, model.polledAt]);
 
   // The API lists a stream of mine that nothing is sending (the browser's own "Stop
   // sharing" bar, the camera going away, or a page reload): end it.
   useEffect(() => {
-    if (lk.connection !== "connected" || api.busy) return;
+    if (lk.connection !== "connected" || model.streamsBusy) return;
     for (const kind of KINDS) {
-      if (myLive[kind] && !lk.publishing[kind] && !starting.current[kind]) void api.stop(kind);
+      if (myLive[kind] && !lk.publishing[kind] && !busyStarting(kind)) void store.stopStream(kind);
     }
-  }, [myLive, lk.connection, lk.publishing, api]);
+  }, [myLive, lk.connection, lk.publishing, model.streamsBusy, store, busyStarting]);
 
   return {
     me,
@@ -539,7 +439,7 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
     knownPeople,
     sharers,
     mine: myLive,
-    free: api.state?.free ?? 6,
+    free: model.free,
     prefs,
     setPrefs,
     start: (kind: StreamKind) => void start(kind),
@@ -558,13 +458,13 @@ export function useRoomSession(me: Friend, pollMs?: number): RoomSession {
     seated,
     participantSid: lk.participantSid,
     activity,
-    seats: api.state?.seats ?? null,
+    seats: model.seats,
     watchingOf,
     arrivedAt,
     watchStage,
     connection: lk.connection,
-    error: api.error ?? lk.error,
-    busy: api.busy || isStarting || isChanging,
+    error: model.streamsError ?? lk.error,
+    busy: model.streamsBusy || isStarting || isChanging,
     voice: lk.voice,
     toggleVoice: () => void toggleVoice(),
     voicePrefs,

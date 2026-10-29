@@ -2,18 +2,17 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { aUser, installFakeApi, MY_USER_ID, someoneSharing } from "../test/fakeApi";
 import { ConnectionState, lastRoom, RoomEvent } from "../test/fakeLiveKit";
-import type { Friend } from "../types";
+import { useRoomStore } from "@features/room/hooks/use-room-store.hook";
 import { useRoomSession } from "./useRoomSession";
 
-const me = (): Friend => ({ id: "me", name: "Henrique", hue: 36, online: true });
+const ME = `user-${MY_USER_ID}`;
 const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
 
 // The session polls the API every 50 ms here: on fake timers, so waitFor moves the polls along.
 async function session() {
   vi.useFakeTimers();
   const server = installFakeApi({ me: member() });
-  const self = me();
-  const hook = renderHook(() => useRoomSession(self, 50));
+  const hook = renderHook(() => useRoomSession(useRoomStore("Henrique Brauveres", 50)));
   await waitFor(() => expect(hook.result.current.connection).toBe("connected"));
   return { server, hook };
 }
@@ -41,7 +40,7 @@ describe("the room session: seats and who watches what (spec 0104)", () => {
     await waitFor(() => expect(hook.result.current.seats).toEqual({ total: 20, taken: 4, waiting: 1 }));
     expect(hook.result.current.watchingOf).toEqual({
       "user-3": { sharerId: "user-7", kind: "screen" },
-      me: { sharerId: "user-3", kind: "camera" },
+      [ME]: { sharerId: "user-3", kind: "camera" },
     });
   });
 });
@@ -59,7 +58,7 @@ describe("the room session: the connection in the activity (spec 0104)", () => {
     });
 
     await waitFor(() =>
-      expect(hook.result.current.activity.at(-1)).toMatchObject({ kind: "reconnected", actorId: "me" }),
+      expect(hook.result.current.activity.at(-1)).toMatchObject({ kind: "reconnected", actorId: ME }),
     );
   });
 });
@@ -81,7 +80,7 @@ describe("the room session: when each person arrived (spec 0158)", () => {
 
     await waitFor(() =>
       expect(hook.result.current.arrivedAt).toEqual({
-        me: Date.parse("2026-10-09T10:00:00Z"),
+        [ME]: Date.parse("2026-10-09T10:00:00Z"),
         "user-7": Date.parse("2026-10-09T10:05:00Z"),
       }),
     );
