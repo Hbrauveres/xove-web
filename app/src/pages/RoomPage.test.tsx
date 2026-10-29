@@ -820,6 +820,23 @@ describe("room: waiting for a seat", () => {
     expect(await screen.findByText(/you're next/i)).toBeInTheDocument();
   });
 
+  it("lists the devices while I wait, and the page's sound unlocks with a click once I'm in", async () => {
+    const list = vi.spyOn(navigator.mediaDevices, "enumerateDevices");
+    const server = installFakeApi({ me: member() });
+    server.seat = { status: "waiting", place: 1 };
+    renderRoom();
+    await screen.findByText(/you're next/i);
+    expect(list).toHaveBeenCalled();
+
+    act(() => {
+      server.seat = { status: "in" };
+      server.seated = true;
+    });
+    await connected();
+    fireEvent.pointerUp(document.body);
+    expect(lastRoom().startAudio).toHaveBeenCalled();
+  });
+
   it("offers the seat in a popup with a countdown, and Enter room takes it", async () => {
     const server = installFakeApi({ me: member() });
     server.seat = { status: "waiting", place: 1 };
