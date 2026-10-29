@@ -28,7 +28,11 @@ describe("Xovê's icon in the browser, and no home-screen app (specs 0111 and 02
     expect(html).toMatch(/<meta name="theme-color" content="#0c0c0d"/);
     expect(href("manifest")).toBeUndefined();
     expect(href("apple-touch-icon")).toBeUndefined();
-    for (const name of ["mobile-web-app-capable", "apple-mobile-web-app-capable", "apple-mobile-web-app-status-bar-style"]) {
+    for (const name of [
+      "mobile-web-app-capable",
+      "apple-mobile-web-app-capable",
+      "apple-mobile-web-app-status-bar-style",
+    ]) {
       expect(meta(name), name).toBeUndefined();
     }
   });
