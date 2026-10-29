@@ -25,7 +25,7 @@ it("isn't, for a computer, a touch-screen laptop or a narrow window: their main 
 });
 ```
 
-The same goes for the share presets and their cap (`media/shareSettings.ts`), the ambilight's grid and mask (`media/ambilight.ts`), who is big by default (`media/stagePick.ts`), and the mark's geometry and animation (`brand/`): a test fails if the favicon drifts from the geometry.
+The same goes for the stream presets and their cap (`core/livekit/publish-options.util.ts`), the room's state person by person (`core/livekit/room-state.util.ts`), the ambilight's grid and mask (`media/ambilight.ts`), who is big by default (`media/stagePick.ts`), and the mark's geometry and animation (`brand/`): a test fails if the favicon drifts from the geometry.
 
 ## Components
 

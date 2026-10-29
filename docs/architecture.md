@@ -20,8 +20,9 @@ Everything is in `app/src`:
 | Folder | Owns |
 | --- | --- |
 | `pages/` | One component per route: `HomePage`, `RequestAccessPage`, `RoomPage`, `AdminPage` |
-| `hooks/` | The room's state and the browser's: the seat and the queue (`useRoomSeat`), the streams (`useStreams`), the LiveKit connection (`useLiveKitRoom`), both put together for the room (`useRoomSession`), who's on the stage (`useStagePick`), the video's shape (`useVideoShape`), the round buttons' row holding the clicked button still (`usePinnedRow`), and a small one (`useFullscreenElement`); the stream's elapsed time is `shared/hooks/use-elapsed.hook.ts`, and whether the keyboard was used last `shared/hooks/use-keyboard-last.hook.ts` |
-| `media/` | How screens and cameras are sent (`shareSettings.ts`), the ambilight's drawing (`ambilight.ts`), who is big by default (`stagePick.ts`) |
+| `hooks/` | The room's state and the browser's: the seat and the queue (`useRoomSeat`), the streams (`useStreams`), both put together with the video room for the room (`useRoomSession`), who's on the stage (`useStagePick`), the video's shape (`useVideoShape`), the round buttons' row holding the clicked button still (`usePinnedRow`), and a small one (`useFullscreenElement`); the stream's elapsed time is `shared/hooks/use-elapsed.hook.ts`, and whether the keyboard was used last `shared/hooks/use-keyboard-last.hook.ts` |
+| `media/` | What the screens show about a stream's quality (`shareSettings.ts`: the modes, what a viewer can pick), the ambilight's drawing (`ambilight.ts`), who is big by default (`stagePick.ts`) |
+| `features/room/hooks/` | The room's own hooks, as they move in: the video room (`use-video-room.hook.ts`: the access from the API, the adapter's state, the sound unlock, the devices, the camera remembered), the mic's level (`use-mic-level.hook.ts`) |
 | `components/stage/` | The player and what's on it: the stage, the ambilight, the controls by owner: my own stream's round buttons (`PlayerButtons`; their icons in `icons.tsx`, the drop-ups on live ones) and, over someone else's stream, `ViewerBar` (what I hear at the left, each sound its own button and slider; my mic or Go live at the right); the voice I hear (`VoiceAudio`), each person's switches and volumes held by the stage for the visit (the rule in `media/hearing.ts`), and the previews' buttons (`HearToggles`, in a small preview's row, `PreviewTray`, which floats on its own layer over the page and follows its preview, opened through `usePreviewTray`; a preview's stack and its swap's moment in `stack.ts`); the settings panel (`SettingsPanel`, its Voice tab's mic level in `MicTest`), the facecam, the previews, the empty stage (`EmptyStage`, a TV on standby: the ways to start, alone in their row; with nobody live the settings are `ViewerBar`'s settings-only form, in the corner; its corners' glow in `CornerGlow`; its TV static in `StaticNoise`, a small canvas the page draws 20 times a second, its grain and bands scaled to the stage; the static's light round the stage in `StaticGlow`; both read their bands from `staticBands.ts`, so they roll together, and its `tv` flag lets the TV's turn-on play only the first time the stage stands by in a visit), the info row. The stage is two layers: its box holds every control (the round buttons, the sounds, Go live, the fullscreen button) and takes the pointer; a view inside it holds the picture and its ambilight in the picture's shape |
 | `components/room/` | The room around the stage: header, footer, people, activity (pill, list), account menu, the waiting screen and the seat offer |
 | `components/ui/` | Shared controls: `Button`, `Range`, `Dropdown`, `Segmented`, `Picker` (a list that floats over its panel, masking what's behind it in the nearest `[data-list-host]`; it opens on request too), `DropUp` (its gestures can redirect to an open panel), `Tooltip` (the app's only tooltip, on its own layer, describing its control for screen readers), `floating.ts` (one tooltip or drop-up showing at a time, what floats inside another belonging to it), the cue (`cue.module.css`), `Avatar`, `PersonAvatar`, `FullPageMessage`, `Toast` (a short message any component shows with `showToast`) |
@@ -30,7 +31,8 @@ Everything is in `app/src`:
 | `core/api/` | The HTTP client (`api-client.service.ts`), its constants and the API's types (`api.types.ts`): one function per endpoint, the CSRF header, errors as `ApiError` |
 | `core/auth/` | Who is signed in (`AuthProvider` in `auth.store.tsx`, which asks `GET /api/me` once and on demand; `useAuth`) |
 | `core/preferences/` | Choices each browser keeps (`preferences.service.ts`): how I send a screen or a camera, the camera and mic picked, my voice's processing, how I hear a stream or a voice, the stage light; blocked storage gives the defaults (`storage.util.ts`) |
-| `core/devices/` | Which device it is: a phone or a tablet (`is-handheld.util.ts`) |
+| `core/livekit/` | The video server, the only place that uses `livekit-client`: the adapter (`livekit.adapter.ts`: connects with the access it's given, keeps the room's state per person, takes commands), what's captured, sent, changed and heard (`capture`, `send`, `screen-change`, `voice` services), how streams are sent (`publish-options.util.ts`), the noise gate's processor |
+| `core/devices/` | The browser's devices: a phone or a tablet (`is-handheld.util.ts`), the screen picker, the cameras and mics, the mic's meter, the noise gate's maths, the stream presets |
 | `features/phone-notice/` | What phones and tablets see instead of the app ([below](#phones-and-tablets)) |
 | `styles/` | The design tokens (`global.css`) and the tests that check them |
 | `test/` | The test helpers: a fake API, a fake LiveKit, and rendering the app at a URL ([Testing](testing.md)) |
@@ -44,7 +46,7 @@ flowchart TD
   P --> A[core/api]
   C --> H
   H --> A
-  H --> LK[livekit-client]
+  H --> LK[core/livekit]
   H --> M[media]
   C --> M
   H --> PR[core/preferences]
@@ -107,7 +109,7 @@ sequenceDiagram
 | --- | --- | --- |
 | My seat, or my place in the queue and the seat offer | `useRoomSeat` | The API; the page polls every 2 s while it waits |
 | The live streams, their settings, who watches what | `useStreams` | The API; polled every 2 s by every open room |
-| Who is connected, their tracks, my own captures | `useLiveKitRoom` | LiveKit |
+| Who is connected, their tracks, my own captures | `core/livekit/livekit.adapter.ts`, read through `useVideoRoom` | LiveKit |
 | Who's on my stage | `useStagePick` | This page only |
 | How I send (quality, mode, the camera picked, my mic and its processing and line), the volumes I start from (a screen's sound, a voice), the ambilight's settings | `core/preferences/preferences.service.ts` | The browser (`localStorage`, `xove.*`) |
 | Each person's mutes and volumes, for this visit | `Stage` | This page only |
@@ -138,14 +140,14 @@ Every endpoint, who may call it and what it answers, is in [`xove-api`'s API pag
 
 ## LiveKit in the browser
 
-`useLiveKitRoom` joins the video room for as long as the room page is open:
+`useVideoRoom` (`features/room/hooks/`) joins the video room for as long as the room page is open, through the adapter in `core/livekit/`:
 
-1. It asks the API for a token (`POST /api/livekit/token`), which names this person (`user-<id>`), the room and what they may send: a screen with its sound, a camera, and a microphone (sent only alongside my screen or camera, while I turn my voice on: [Media](media.md#the-voice)).
-2. It connects with `adaptiveStream` and `dynacast` on ([Media](media.md#what-a-viewer-downloads)).
-3. It keeps React state in step with LiveKit's events: who joins and leaves, which tracks arrive, the connection's state ("reconnecting" while LiveKit retries).
+1. The hook asks the API for a token (`POST /api/livekit/token`), which names this person (`user-<id>`), the room and what they may send: a screen with its sound, a camera, and a microphone (sent only alongside my screen or camera, while I turn my voice on: [Media](media.md#the-voice)).
+2. The adapter connects with it, `adaptiveStream` and `dynacast` on ([Media](media.md#what-a-viewer-downloads)).
+3. The adapter keeps the room's state person by person: each LiveKit event updates only the person it's about (someone talking changes only their talking flag; a camera starting, only their camera), and anything unchanged keeps its object, so the rest of the room doesn't redraw. The hook reads it with `useSyncExternalStore`. The connection's state says "reconnecting" while LiveKit retries.
 4. Leaving the page disconnects. **One connection per person:** opening the room on a second device disconnects the first.
 
-**Sound.** Browsers block sound that starts without a tap on the page, so the first tap or key in the room unlocks it (`room.startAudio()`), and LiveKit plays what was silent.
+**Sound.** Browsers block sound that starts without a click on the page, so the first click or key in the room unlocks it (`room.startAudio()`), and LiveKit plays what was silent.
 
 Sharing a screen or a camera is in [Media](media.md).
 
