@@ -1,7 +1,8 @@
+import { StrictMode } from "react";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { aUser, installFakeApi } from "../../../test/fakeApi";
-import { lastRoom } from "../../../test/fakeLiveKit";
+import { lastRoom, rooms } from "../../../test/fakeLiveKit";
 import { useVideoRoom } from "./use-video-room.hook";
 
 const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
@@ -72,5 +73,18 @@ describe("the camera picked", () => {
       ]),
     );
     expect(hook.result.current.cameraId).toBe("cam-1");
+  });
+});
+
+describe("in React's strict mode", () => {
+  it("ends with one live room, after React mounts the page twice", async () => {
+    const server = installFakeApi({ me: member() });
+    const hook = renderHook(() => useVideoRoom(), { wrapper: StrictMode });
+
+    await waitFor(() => expect(hook.result.current.connection).toBe("connected"));
+
+    const tokens = server.calls.filter((c) => c.path === "/api/livekit/token");
+    expect(rooms.filter((r) => !r.disconnected)).toHaveLength(1);
+    expect(tokens.length).toBeLessThanOrEqual(2);
   });
 });

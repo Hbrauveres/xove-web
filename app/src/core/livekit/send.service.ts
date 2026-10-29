@@ -1,7 +1,7 @@
 import { Track, type Room } from "livekit-client";
 import type { SharingConnection, StreamKind, StreamSettings } from "@core/api/api.types";
-import { startFailed } from "./capture.service";
-import { COULDNT, NOT_CONNECTED } from "./livekit.constants";
+import { startFailed } from "./capture.util";
+import { COULDNT, NOT_CONNECTED, SOURCE } from "./livekit.constants";
 import type { Capture, CapturedTracks, RoomContext, StartedStream } from "./livekit.types";
 import {
   cameraCaptureOptions,
@@ -12,8 +12,6 @@ import {
   screenPublishOptions,
 } from "./publish-options.util";
 import { isLocalVideo } from "./track-kind.util";
-
-const SOURCE: Record<StreamKind, Track.Source> = { screen: Track.Source.ScreenShare, camera: Track.Source.Camera };
 
 /** Sends, adjusts and stops my screen and camera. */
 export class SendService {

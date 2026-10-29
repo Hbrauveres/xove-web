@@ -1,6 +1,6 @@
 # Media
 
-How the web app sends a screen or a camera, how it plays what others send, and how the ambilight is drawn. How streams are sent lives in `app/src/core/livekit/` (`publish-options.util.ts`, and the services that capture, send and change them) and the browser's side in `app/src/core/devices/`, as plain functions and small classes with their own tests. The room's state and the LiveKit connection are in [Architecture](architecture.md); how the controls look is in the [design sheet](design.md).
+How the web app sends a screen or a camera, how it plays what others send, and how the ambilight is drawn. How streams are sent lives in `app/src/core/livekit/` (`publish-options.util.ts`, and the services that capture, send and change them) and the browser's side in `app/src/core/devices/` (the presets' sizes and bitrates in `devices.constants.ts`), as plain functions and small classes with their own tests. The room's state and the LiveKit connection are in [Architecture](architecture.md); how the controls look is in the [design sheet](design.md).
 
 LiveKit's defaults suit slides and voice calls: 15 fps, sharpness first, voice filters on the sound. Xovê is for games and videos, so it changes most of them.
 

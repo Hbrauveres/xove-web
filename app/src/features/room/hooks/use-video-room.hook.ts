@@ -39,7 +39,7 @@ export function useVideoRoom() {
   const presence = useMemo(
     () =>
       state.presence.map((p): ActivityEvent => ({
-        id: `lk-${p.identity}-${p.at}-${p.kind}`,
+        id: `lk${p.id}`,
         at: p.at,
         kind: p.kind,
         actorId: p.identity,

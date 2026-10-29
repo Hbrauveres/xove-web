@@ -1,12 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { lastRoom } from "../../test/fakeLiveKit";
+import { connectedAdapter, shareScreen } from "../../test/factories/video-room.factory";
 import { LiveKitAdapter } from "./livekit.adapter";
 
-async function connected() {
-  const adapter = new LiveKitAdapter();
-  await adapter.connect("wss://video.test", "token");
-  return adapter;
-}
+const connected = connectedAdapter;
 
 /** A room where Marina and Rafa talk, Marina also sharing her screen. */
 async function roomWithTwo() {
@@ -33,11 +30,29 @@ describe("the connection", () => {
     expect(adapter.getState()).toMatchObject({ connection: "disconnected", error: "You need a seat first." });
   });
 
+  it("says when the connection drops and LiveKit tries again", async () => {
+    const adapter = await connected();
+    lastRoom().emit("connectionStateChanged", "reconnecting");
+    expect(adapter.getState().connection).toBe("reconnecting");
+  });
+
+  it("starts each room afresh, and ignores one that finishes joining after it was left", async () => {
+    const adapter = await connected();
+    lastRoom().join("user-2", "Marina");
+    const first = adapter.connect("wss://video.test", "late");
+    adapter.disconnect();
+    await first;
+
+    expect(adapter.getState().others).toEqual([]);
+    expect(adapter.getState().connection).not.toBe("connected");
+  });
+
   it("stops hearing a room it left", async () => {
     const adapter = await connected();
     const room = lastRoom();
     adapter.disconnect();
     const before = adapter.getState();
+    expect(before.connection).toBe("disconnected");
 
     room.join("user-9", "Late");
 
@@ -116,6 +131,47 @@ describe("each event changes only what it's about", () => {
     room.muteVoice("user-2", true);
 
     expect(adapter.getState().remote["user-2"]).toMatchObject({ hasVoice: false, speaking: false });
+  });
+});
+
+describe("events about what people send", () => {
+  it("someone stopping their screen takes it out of their entry only", async () => {
+    const { adapter, room } = await roomWithTwo();
+    const rafa = adapter.getState().remote["user-3"];
+
+    room.unpublish("user-2", "screen_share");
+
+    expect(adapter.getState().remote["user-2"]?.screen).toBeUndefined();
+    expect(adapter.getState().remote["user-3"]).toBe(rafa);
+  });
+
+  it("a voice unmuted by its person can show them talking again", async () => {
+    const { adapter, room } = await roomWithTwo();
+    room.muteVoice("user-2", true);
+
+    room.muteVoice("user-2", false);
+    room.setSpeaking("user-2", true);
+
+    expect(adapter.getState().remote["user-2"]).toMatchObject({ hasVoice: true, speaking: true });
+  });
+
+  it("reads a sharer's picture size when asked, as it changes", async () => {
+    const { adapter, room } = await roomWithTwo();
+    const screen = adapter.getState().remote["user-2"]!.screen!;
+
+    room.screenPublication("user-2")!.dimensions = { width: 1280, height: 720 };
+
+    expect(screen.height).toBe(720);
+  });
+
+  it("my share ended from the browser's own bar shows I'm no longer sharing", async () => {
+    const adapter = await connected();
+    await shareScreen(adapter, false);
+    expect(adapter.getState().publishing.screen).toBe(true);
+
+    lastRoom().browserStopsMyShare();
+
+    expect(adapter.getState().publishing.screen).toBe(false);
   });
 });
 

@@ -66,6 +66,8 @@ describe("the room's state, person by person", () => {
       micInput: undefined,
     };
     expect(withLocal(mine, { ...mine, publishing: { ...mine.publishing } })).toBe(mine);
-    expect(withLocal(mine, { ...mine, voice: true }).voice).toBe(true);
+    const voiced = withLocal(mine, { ...mine, publishing: { ...mine.publishing }, voice: true });
+    expect(voiced.voice).toBe(true);
+    expect(voiced.publishing).toBe(mine.publishing);
   });
 });

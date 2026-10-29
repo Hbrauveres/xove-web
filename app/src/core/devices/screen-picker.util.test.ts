@@ -47,4 +47,20 @@ describe("staying on Xovê after the picker", () => {
     expect(setFocusBehavior).toHaveBeenCalledWith("no-focus-change");
     expect(canShareScreen()).toBe(true);
   });
+
+  it("still gives the screen when the browser can't stay on Xovê (a whole screen has no window)", async () => {
+    vi.stubGlobal(
+      "CaptureController",
+      class {
+        setFocusBehavior() {
+          throw new DOMException("Not a tab or window", "InvalidStateError");
+        }
+      },
+    );
+    vi.stubGlobal("MediaStream", class {});
+    const stream = new MediaStream();
+    vi.stubGlobal("navigator", { ...navigator, mediaDevices: { getDisplayMedia: vi.fn(async () => stream) } });
+
+    await expect(pickScreen()).resolves.toBe(stream);
+  });
 });

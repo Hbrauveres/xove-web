@@ -14,10 +14,10 @@ export type ViewQuality = "auto" | "1080p" | "720p" | "480p";
 /** Someone's screen or camera, as received. */
 export type RemoteVideo = {
   video: MediaTrack;
-  /** Height of the best quality the sharer sends, when known. */
-  height?: number;
-  /** How many qualities the sharer sends (1 from Firefox and Safari). */
-  layers?: number;
+  /** Height of the best quality the sharer sends, when known; read as it is now. */
+  readonly height?: number | undefined;
+  /** How many qualities the sharer sends (1 from Firefox and Safari); read as it is now. */
+  readonly layers?: number | undefined;
   /** Asks the server for this quality ("auto": whatever fits the player). */
   setQuality: (quality: ViewQuality) => void;
 };
@@ -65,7 +65,7 @@ export type LocalMedia = {
 };
 
 /** Someone joined or left, as this page saw it. */
-type PresenceEvent = { kind: "joined" | "left"; identity: string; at: number };
+type PresenceEvent = { id: number; kind: "joined" | "left"; identity: string; at: number };
 
 /** Everything the room shows about the video server, kept per person. */
 export type VideoRoomState = LocalMedia & {
@@ -101,7 +101,7 @@ export type RoomContext = {
   room: () => Room | null;
   state: () => VideoRoomState;
   update: (patch: Partial<VideoRoomState>) => void;
-  /** Reads again what this browser sends. */
-  refreshLocal: () => void;
+  /** Reads again what this browser sends, with what LiveKit can't know (`micInput`), in one change. */
+  refreshLocal: (known?: Pick<LocalMedia, "micInput">) => void;
   captures: WeakMap<Capture, CapturedTracks>;
 };

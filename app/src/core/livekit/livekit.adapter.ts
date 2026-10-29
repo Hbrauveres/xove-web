@@ -1,47 +1,19 @@
-import { ConnectionState as LkState, Room, RoomEvent, type Participant, type RemoteParticipant } from "livekit-client";
+import {
+  type ConnectionState as LkState,
+  Room,
+  RoomEvent,
+  type Participant,
+  type RemoteParticipant,
+} from "livekit-client";
 import { CaptureService } from "./capture.service";
-import { CANT_CONNECT } from "./livekit.constants";
-import type {
-  Capture,
-  CapturedTracks,
-  ConnectionState,
-  LocalMedia,
-  RoomContext,
-  VideoRoomState,
-} from "./livekit.types";
+import { CANT_CONNECT, CONNECTION, PRESENCE_KEPT, START } from "./livekit.constants";
+import type { Capture, CapturedTracks, LocalMedia, RoomContext, VideoRoomState } from "./livekit.types";
 import { readLocalMedia } from "./local-media.util";
 import { RemoteMediaReader } from "./remote-media.util";
 import { withLocal, withOthers, withPerson, withSpeakers } from "./room-state.util";
 import { ScreenChangeService } from "./screen-change.service";
 import { SendService } from "./send.service";
 import { VoiceService } from "./voice.service";
-
-const CONNECTION: Record<LkState, ConnectionState> = {
-  [LkState.Connecting]: "connecting",
-  [LkState.Connected]: "connected",
-  [LkState.Reconnecting]: "reconnecting",
-  [LkState.SignalReconnecting]: "reconnecting",
-  [LkState.Disconnected]: "disconnected",
-};
-
-/** How many joins and leaves the room keeps. */
-const PRESENCE_KEPT = 30;
-
-const START: VideoRoomState = {
-  publishing: { screen: false, camera: false },
-  local: {},
-  screenSurface: undefined,
-  cameraId: undefined,
-  voice: false,
-  localVoice: undefined,
-  micInput: undefined,
-  connection: "connecting",
-  others: [],
-  remote: {},
-  cameraProblem: null,
-  presence: [],
-  error: null,
-};
 
 /**
  * The video server, without React: connects with the access it's given, keeps the room's state
@@ -51,13 +23,14 @@ const START: VideoRoomState = {
 export class LiveKitAdapter {
   private room: Room | null = null;
   private state = START;
+  private presenceCount = 0;
   private readonly listeners = new Set<() => void>();
   private readonly reader = new RemoteMediaReader();
   private readonly ctx: RoomContext = {
     room: () => this.room,
     state: () => this.state,
     update: (patch) => this.update(patch),
-    refreshLocal: () => this.refreshLocal(),
+    refreshLocal: (known) => this.refreshLocal(known),
     captures: new WeakMap<Capture, CapturedTracks>(),
   };
   private readonly captures = new CaptureService(this.ctx);
@@ -90,6 +63,7 @@ export class LiveKitAdapter {
     const next = new Room({ adaptiveStream: true, dynacast: true });
     this.listen(next);
     this.room = next;
+    this.state = { ...START, cameraProblem: this.state.cameraProblem };
     try {
       await next.connect(url, token);
     } catch {
@@ -108,6 +82,7 @@ export class LiveKitAdapter {
     this.room = null;
     this.voice.closeVoice();
     void left?.disconnect();
+    if (left) this.update({ connection: "disconnected" });
   };
 
   /** The room can't be joined: says why. */
@@ -137,16 +112,23 @@ export class LiveKitAdapter {
     if (remote !== this.state.remote || others !== this.state.others) this.update({ remote, others });
   }
 
-  private refreshLocal() {
+  private refreshLocal(known?: Pick<LocalMedia, "micInput">) {
     const me = this.room?.localParticipant;
-    if (!me) return;
+    if (!me) {
+      if (known) this.update(known);
+      return;
+    }
     const before: LocalMedia = this.state;
-    const now = withLocal(before, readLocalMedia(me, this.state.micInput));
+    const micInput = known ? known.micInput : this.state.micInput;
+    const now = withLocal(before, readLocalMedia(me, micInput));
     if (now !== before) this.update(now);
   }
 
   private presence(kind: "joined" | "left", p: Participant) {
-    return [...this.state.presence.slice(1 - PRESENCE_KEPT), { kind, identity: p.identity, at: Date.now() }];
+    return [
+      ...this.state.presence.slice(1 - PRESENCE_KEPT),
+      { id: ++this.presenceCount, kind, identity: p.identity, at: Date.now() },
+    ];
   }
 
   private left(r: Room, p: RemoteParticipant) {

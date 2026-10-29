@@ -2,6 +2,7 @@ import { VideoPreset, type TrackPublishOptions, type VideoCaptureOptions, type V
 import type { StreamMode, StreamQuality } from "@core/api/api.types";
 import { BEST_SCREEN, CAMERA_QUALITIES, SHARE_QUALITIES } from "@core/devices/devices.constants";
 import type { StreamPreset } from "@core/devices/devices.types";
+import type { VoicePrefs } from "@core/preferences/preferences.types";
 import { TOP_LAYER } from "./livekit.constants";
 
 /**
@@ -56,6 +57,18 @@ export function cameraCaptureOptions(deviceId?: string | null): VideoCaptureOpti
   return {
     resolution: { width: best.width, height: best.height, frameRate: best.fps },
     ...(deviceId ? { deviceId: { ideal: deviceId } } : {}),
+  };
+}
+
+/** How my voice is captured: the mic picked and the browser's processing. */
+export function micCaptureOptions(prefs: VoicePrefs) {
+  return {
+    ...(prefs.micId ? { deviceId: { ideal: prefs.micId } } : {}),
+    echoCancellation: prefs.echoCancellation,
+    noiseSuppression: prefs.noiseSuppression,
+    autoGainControl: prefs.autoGainControl,
+    // Only Chrome knows it yet; the others ignore it.
+    voiceIsolation: prefs.voiceIsolation,
   };
 }
 

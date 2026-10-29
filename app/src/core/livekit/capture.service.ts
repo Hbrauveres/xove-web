@@ -1,25 +1,12 @@
-import { LocalAudioTrack, LocalVideoTrack, Track, type Room } from "livekit-client";
+import { LocalVideoTrack, Track, type Room } from "livekit-client";
 import type { StreamKind, StreamMode } from "@core/api/api.types";
 import { CAMERA_BLOCKED } from "@core/devices/devices.constants";
 import { pickScreen } from "@core/devices/screen-picker.util";
-import { COULDNT, NOT_CONNECTED } from "./livekit.constants";
+import { isDomError, screenSound, startFailed } from "./capture.util";
+import { NOT_CONNECTED } from "./livekit.constants";
 import type { Capture, CapturedTracks, RoomContext } from "./livekit.types";
 import { cameraCaptureOptions, contentHintOf } from "./publish-options.util";
-import { isLocalAudio, isLocalVideo } from "./track-kind.util";
-
-export const isDomError = (e: unknown, name: string) => e instanceof DOMException && e.name === name;
-
-/** What a failed start says, for a screen or a camera. */
-export const startFailed = (kind: StreamKind) => (kind === "screen" ? COULDNT.share : COULDNT.camera);
-
-/** A screen's sound, wrapped the way LiveKit's own capture does. */
-export function screenSound(sound: MediaStreamTrack) {
-  // No audio context: LiveKit only needs it for track processors, which a screen's sound doesn't use.
-  const audio = new LocalAudioTrack(sound, undefined, false);
-  audio.source = Track.Source.ScreenShareAudio;
-  if (!isLocalAudio(audio)) throw new Error("not a sound track");
-  return audio;
-}
+import { isLocalVideo } from "./track-kind.util";
 
 /** The browser's screen picker, asked directly because livekit-client drops `windowAudio`. */
 async function captureScreen(room: Room, mode: StreamMode): Promise<CapturedTracks | null> {

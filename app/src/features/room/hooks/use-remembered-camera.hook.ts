@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { StreamKind, StreamMode, StreamSettings } from "@core/api/api.types";
 import type { LiveKitAdapter } from "@core/livekit/livekit.adapter";
 import type { Capture } from "@core/livekit/livekit.types";
@@ -28,5 +28,5 @@ export function useRememberedCamera(adapter: LiveKitAdapter) {
     [adapter, remember],
   );
 
-  return { savedCamera, capture, pickCamera };
+  return useMemo(() => ({ savedCamera, capture, pickCamera }), [savedCamera, capture, pickCamera]);
 }

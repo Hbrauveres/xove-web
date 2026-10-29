@@ -19,7 +19,7 @@ import { api as client } from "@core/api/api-client.service";
 /**
  * Everything the room page shows, from two sources:
  * - the API decides which streams are live (useStreams);
- * - LiveKit carries the video and knows who is connected (useLiveKitRoom).
+ * - LiveKit carries the video and knows who is connected (useVideoRoom).
  */
 export type RoomSession = {
   me: Friend;

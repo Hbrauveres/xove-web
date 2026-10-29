@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { FakeLocalScreenTrack, FakeMediaStreamTrack, lastRoom } from "../../test/fakeLiveKit";
 import { connectedAdapter, shareScreen } from "../../test/factories/video-room.factory";
 import type { LiveKitAdapter } from "./livekit.adapter";
@@ -104,5 +104,25 @@ describe("change window", () => {
     expect(video.replaceTrack).not.toHaveBeenCalled();
     expect(video.stopped).toBe(false);
     expect(adapter.getState().error).toBeNull();
+  });
+});
+
+describe("staying on Xovê after the picker", () => {
+  it("asks the browser to stay on Xovê when the screen is changed too", async () => {
+    const behaviours: string[] = [];
+    vi.stubGlobal(
+      "CaptureController",
+      class {
+        setFocusBehavior(behaviour: string) {
+          behaviours.push(behaviour);
+        }
+      },
+    );
+    const adapter = await connectedAdapter();
+    await shareScreen(adapter, true);
+
+    await change(adapter);
+
+    expect(behaviours).toEqual(["no-focus-change", "no-focus-change"]);
   });
 });

@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { CAMERA_QUALITIES, SHARE_QUALITIES } from "@core/devices/devices.constants";
+import { DEFAULT_VOICE } from "@core/preferences/preferences.constants";
 import {
   cameraCaptureOptions,
   cameraPublishOptions,
   capOf,
+  micCaptureOptions,
   contentHintOf,
   screenPublishOptions,
 } from "./publish-options.util";
@@ -100,5 +102,18 @@ describe("camera presets", () => {
   it("caps a camera at its own layers: 720p is the top one", () => {
     expect(capOf("720p")).toBe(1);
     expect(capOf("480p")).toBe(0);
+  });
+});
+
+describe("the mic", () => {
+  it("asks for the mic picked, with the browser's processing as chosen", () => {
+    expect(micCaptureOptions({ ...DEFAULT_VOICE, micId: "mic-2", echoCancellation: false })).toEqual({
+      deviceId: { ideal: "mic-2" },
+      echoCancellation: false,
+      noiseSuppression: true,
+      autoGainControl: true,
+      voiceIsolation: false,
+    });
+    expect(micCaptureOptions(DEFAULT_VOICE).deviceId).toBeUndefined();
   });
 });

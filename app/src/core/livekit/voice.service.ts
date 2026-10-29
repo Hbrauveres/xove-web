@@ -4,20 +4,9 @@ import type { VoiceProblem } from "@core/devices/devices.types";
 import type { VoicePrefs } from "@core/preferences/preferences.types";
 import type { RoomContext } from "./livekit.types";
 import { NoiseGate } from "./noise-gate.adapter";
+import { micCaptureOptions } from "./publish-options.util";
 
 type Gate = { gate: NoiseGate; context: AudioContext };
-
-/** How my voice is captured: the mic picked and the browser's processing. */
-function micCaptureOptions(prefs: VoicePrefs) {
-  return {
-    ...(prefs.micId ? { deviceId: { ideal: prefs.micId } } : {}),
-    echoCancellation: prefs.echoCancellation,
-    noiseSuppression: prefs.noiseSuppression,
-    autoGainControl: prefs.autoGainControl,
-    // Only Chrome knows it yet; the others ignore it.
-    voiceIsolation: prefs.voiceIsolation,
-  };
-}
 
 /**
  * My voice through the noise gate, with its own Web Audio context. Where the browser can't run
@@ -69,8 +58,7 @@ export class VoiceService {
       this.closeVoice();
       this.gate = await gateVoice(track, prefs.sensitivity);
       await room.localParticipant.publishTrack(track, { source: Track.Source.Microphone });
-      this.ctx.update({ micInput: this.gate?.gate.input ?? raw });
-      this.ctx.refreshLocal();
+      this.ctx.refreshLocal({ micInput: this.gate?.gate.input ?? raw });
       return null;
     } catch {
       // Captured but not sent (the connection, or a token that doesn't allow it): the mic stops
@@ -86,8 +74,7 @@ export class VoiceService {
     const track = this.sentMic();
     if (me && track) await me.unpublishTrack(track, true);
     this.closeVoice();
-    this.ctx.update({ micInput: undefined });
-    this.ctx.refreshLocal();
+    this.ctx.refreshLocal({ micInput: undefined });
   }
 
   /** Another mic or other processing, on the same track, live. */

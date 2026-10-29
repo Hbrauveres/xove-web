@@ -65,17 +65,16 @@ export function withOthers(before: RoomPerson[], now: RoomPerson[]): RoomPerson[
   return same ? before : now;
 }
 
-/** What I send; the same object when nothing changed. */
+/** What I send: each part keeps its object until something in it changes, and so does the whole. */
 export function withLocal(before: LocalMedia, now: LocalMedia): LocalMedia {
-  const same =
-    before.publishing.screen === now.publishing.screen &&
-    before.publishing.camera === now.publishing.camera &&
-    before.local.screen === now.local.screen &&
-    before.local.camera === now.local.camera &&
-    before.screenSurface === now.screenSurface &&
-    before.cameraId === now.cameraId &&
-    before.voice === now.voice &&
-    before.localVoice === now.localVoice &&
-    before.micInput === now.micInput;
-  return same ? before : now;
+  const samePublishing =
+    before.publishing.screen === now.publishing.screen && before.publishing.camera === now.publishing.camera;
+  const sameLocal = before.local.screen === now.local.screen && before.local.camera === now.local.camera;
+  const next: LocalMedia = {
+    ...now,
+    publishing: samePublishing ? before.publishing : now.publishing,
+    local: sameLocal ? before.local : now.local,
+  };
+  const same = Object.keys(next).every((key) => Reflect.get(next, key) === Reflect.get(before, key));
+  return same ? before : next;
 }

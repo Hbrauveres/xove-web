@@ -2,14 +2,11 @@ import { act, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { DEFAULT_VOICE } from "@core/preferences/preferences.constants";
 import { FakeLocalMicTrack, lastRoom } from "../../test/fakeLiveKit";
-import { LiveKitAdapter } from "./livekit.adapter";
+import { connectedAdapter } from "../../test/factories/video-room.factory";
+import type { LiveKitAdapter } from "./livekit.adapter";
 import { NoiseGate } from "./noise-gate.adapter";
 
-async function connected() {
-  const adapter = new LiveKitAdapter();
-  await adapter.connect("wss://video.test", "token");
-  return adapter;
-}
+const connected = connectedAdapter;
 
 describe("my voice", () => {
   const VOICE = { ...DEFAULT_VOICE, micId: "mic-2", sensitivity: 0.2 };

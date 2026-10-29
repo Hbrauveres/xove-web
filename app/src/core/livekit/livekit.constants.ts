@@ -1,5 +1,6 @@
-import { VideoQuality } from "livekit-client";
-import type { StreamQuality } from "@core/api/api.types";
+import { ConnectionState as LkState, Track, VideoQuality } from "livekit-client";
+import type { StreamKind, StreamQuality } from "@core/api/api.types";
+import type { ConnectionState, VideoRoomState } from "./livekit.types";
 
 /**
  * The highest layer to send for each quality. A screen has three layers (480p, 720p, 1080p),
@@ -21,3 +22,38 @@ export const COULDNT = {
   change: "Couldn't change what you share.",
   switchCamera: "Couldn't switch to that camera.",
 } as const;
+
+/** Where each kind of my streams is published. */
+export const SOURCE: Record<StreamKind, Track.Source> = {
+  screen: Track.Source.ScreenShare,
+  camera: Track.Source.Camera,
+};
+
+/** LiveKit's connection states, as the room shows them. */
+export const CONNECTION: Record<LkState, ConnectionState> = {
+  [LkState.Connecting]: "connecting",
+  [LkState.Connected]: "connected",
+  [LkState.Reconnecting]: "reconnecting",
+  [LkState.SignalReconnecting]: "reconnecting",
+  [LkState.Disconnected]: "disconnected",
+};
+
+/** How many joins and leaves the room keeps. */
+export const PRESENCE_KEPT = 30;
+
+/** The room before it's joined. */
+export const START: VideoRoomState = {
+  publishing: { screen: false, camera: false },
+  local: {},
+  screenSurface: undefined,
+  cameraId: undefined,
+  voice: false,
+  localVoice: undefined,
+  micInput: undefined,
+  connection: "connecting",
+  others: [],
+  remote: {},
+  cameraProblem: null,
+  presence: [],
+  error: null,
+};
