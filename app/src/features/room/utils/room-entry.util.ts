@@ -1,5 +1,5 @@
-import type { VideoRoomState } from "@core/livekit/livekit.types";
-import type { RoomModel, SeatState } from "../state/room.types";
+import type { VideoRoomState } from "@core/livekit/types/livekit.types";
+import type { RoomModel, SeatState } from "../types/room.types";
 
 /**
  * Whether the room can show: with a seat (the API hands out the video access to seated people

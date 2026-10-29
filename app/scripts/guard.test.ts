@@ -8,6 +8,7 @@ import {
   fromOxlint,
   fromTsc,
   type Known,
+  newRulesOf,
   ownerOf,
   recordOf,
 } from "./guard.ts";
@@ -81,6 +82,42 @@ describe("the guard: the list that only shrinks", () => {
     expect(recordOf(countAll([finding("src/b.ts")]), [known("src/a.ts", 2)], owners).refused).toEqual([
       "src/b.ts: lint complexity",
     ]);
+  });
+
+  it("lets a code rule main's check doesn't have record its findings, once, and nothing else grow", () => {
+    const owners: [string, string][] = [["src/components/", "#192 room"]];
+    const fresh = new Set(["partPlace"]);
+    const now = countAll([finding("src/components/a.ts", "partPlace", "code"), finding("src/b.ts")]);
+    const listed = recordOf(now, [known("src/b.ts", 1)], owners, fresh);
+    expect(listed.list?.map((k) => `${k.file} ${k.rule} ${k.owner}`)).toEqual([
+      "src/components/a.ts partPlace #192 room",
+      "src/b.ts complexity #190",
+    ]);
+    expect(compare(now, listed.list ?? [], [known("src/b.ts", 1)], fresh).errors).toEqual([]);
+    expect(compare(now, listed.list ?? [], [known("src/b.ts", 1)]).errors).toEqual([
+      expect.stringMatching(/^grown: src\/components\/a\.ts/),
+    ]);
+    expect(recordOf(countAll([finding("src/c.ts")]), [known("src/b.ts", 1)], owners, fresh).refused).toEqual([
+      "src/c.ts: lint complexity",
+    ]);
+  });
+
+  it("never lets a new rule's findings into the new structure", () => {
+    const fresh = new Set(["partPlace"]);
+    const now = countAll([finding("src/features/room/a.ts", "partPlace", "code"), finding("src/b.ts")]);
+    expect(recordOf(now, [known("src/b.ts", 1)], [], fresh).refused).toEqual([
+      "src/features/room/a.ts: code partPlace",
+    ]);
+    const listed = [known("src/features/room/a.ts", 1, "partPlace", "code")];
+    expect(
+      compare(countAll([finding("src/features/room/a.ts", "partPlace", "code")]), listed, [], fresh).errors,
+    ).toEqual([expect.stringMatching(/^grown: src\/features\/room\/a\.ts/)]);
+  });
+
+  it("knows a rule is new when main's code check doesn't define it, and treats none as new without main's", () => {
+    const mainCheck = 'export const RULES = {\n  size: "over 300 lines",\n  noTest: "no test",\n} as const;\n';
+    expect([...newRulesOf(mainCheck, ["size", "noTest", "partPlace"])]).toEqual(["partPlace"]);
+    expect([...newRulesOf(undefined, ["size", "partPlace"])]).toEqual([]);
   });
 
   it("records the first list from scratch, each entry owned by the step for its folder", () => {

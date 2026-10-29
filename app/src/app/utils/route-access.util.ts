@@ -1,5 +1,5 @@
-import type { Me } from "@core/api/api.types";
-import type { AuthState } from "@core/auth/auth.types";
+import type { Me } from "@core/api/types/api.types";
+import type { AuthState } from "@core/auth/types/auth.types";
 import type { RouteAccess, RouteRule } from "../types/route-access.types";
 
 const SHOW: RouteAccess = { kind: "show" };

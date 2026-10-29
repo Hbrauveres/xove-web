@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { RoomStore } from "../state/room.store";
-import type { RoomSeat } from "../state/room.types";
+import type { RoomSeat } from "../types/room.types";
 import { useDeviceList } from "./use-device-list.hook";
 import { useRememberedCamera } from "./use-remembered-camera.hook";
 import { useSoundUnlock } from "./use-sound-unlock.hook";
@@ -36,5 +36,3 @@ export function useRoomStore(myName: string, pollMs?: number) {
 
   return useMemo(() => ({ store, model, video, devices, camera, seat }), [store, model, video, devices, camera, seat]);
 }
-
-export type RoomStoreValue = ReturnType<typeof useRoomStore>;

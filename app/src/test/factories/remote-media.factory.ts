@@ -1,4 +1,4 @@
-import type { MediaTrack, RemoteMedia } from "@core/livekit/livekit.types";
+import type { MediaTrack, RemoteMedia } from "@core/livekit/types/livekit.types";
 
 /** A track a test can tell apart from any other. */
 export const aTrack = (): MediaTrack => ({ attach: (e) => e, detach: (e) => e });

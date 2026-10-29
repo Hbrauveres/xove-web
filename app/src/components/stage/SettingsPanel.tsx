@@ -1,13 +1,13 @@
 import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
-import { CAMERA_BLOCKED } from "@core/devices/devices.constants";
-import type { CameraDevice, CameraProblem, MicDevice, ScreenSurface } from "@core/devices/devices.types";
-import type { VoicePrefs } from "@core/preferences/preferences.types";
+import { CAMERA_BLOCKED, CAMERA_MISSING } from "@core/devices/constants/devices.constants";
+import type { CameraDevice, CameraProblem, MicDevice, ScreenSurface } from "@core/devices/types/devices.types";
+import type { VoicePrefs } from "@core/preferences/types/preferences.types";
 import { useMicLevel } from "@features/room/hooks/use-mic-level.hook";
 import sw from "../room/AccountButton.module.css";
-import { CAMERA_QUALITIES, SHARE_QUALITIES } from "@core/devices/devices.constants";
+import { CAMERA_QUALITIES, SHARE_QUALITIES } from "@core/devices/constants/devices.constants";
 import { MODE_OPTIONS } from "@features/room/constants/stream-modes.constants";
-import type { StreamKind, StreamMode, StreamQuality, StreamSettings } from "@core/api/api.types";
-import type { MediaTrack } from "@core/livekit/livekit.types";
+import type { StreamKind, StreamMode, StreamQuality, StreamSettings } from "@core/api/types/api.types";
+import type { MediaTrack } from "@core/livekit/types/livekit.types";
 import { Picker } from "../ui/Picker";
 import { Segmented } from "../ui/Segmented";
 import { showToast } from "../ui/toast";
@@ -331,7 +331,7 @@ function ScreenTab(props: Props & { cue?: number }) {
 function CameraTab(props: Props & { cue?: number }) {
   const { mine, cameras, cameraId, onPickCamera, cameraVideo, busy, cameraProblem } = props;
   const problem =
-    !cameraVideo && cameraProblem ? (cameraProblem === "blocked" ? CAMERA_BLOCKED : "No camera found.") : null;
+    !cameraVideo && cameraProblem ? (cameraProblem === "blocked" ? CAMERA_BLOCKED : CAMERA_MISSING) : null;
   return (
     <>
       {/* What you see (spec 0111, design decisions 3 and 4). */}

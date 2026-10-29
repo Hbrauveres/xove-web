@@ -1,9 +1,10 @@
-import type { StreamKind } from "@core/api/api.types";
-import type { VideoRoomState } from "@core/livekit/livekit.types";
-import type { ActivityEvent, Friend, LiveFeed, Sharer } from "@features/room/types/room-view.types";
+import type { StreamKind } from "@core/api/types/api.types";
+import type { VideoRoomState } from "@core/livekit/types/livekit.types";
+import type { ActivityEvent, Friend, Sharer } from "@features/room/types/room-view.types";
 import { hueOf } from "../utils/person-colour.util";
-import { ACTIVITY_KEPT } from "./room.constants";
-import type { PersonId, RoomModel, RoomStream, Watch } from "./room.types";
+import { ACTIVITY_KEPT } from "../constants/room.constants";
+import type { PersonId, RoomModel, RoomStream, Watch } from "../types/room.types";
+import { feedOf } from "../utils/feed.util";
 
 /** Someone as the room shows them: their first name and their colour, the same on every screen. */
 export const personOf = (model: Pick<RoomModel, "names">, id: PersonId): Friend => ({
@@ -30,14 +31,6 @@ export function knownPeopleOf(model: Pick<RoomModel, "me" | "present" | "names">
 export function myLiveOf(model: Pick<RoomModel, "streams" | "me">): Record<StreamKind, boolean> {
   const live = (kind: StreamKind) => (model.streams ?? []).some((s) => s.personId === model.me && s.kind === kind);
   return { screen: live("screen"), camera: live("camera") };
-}
-
-function feedOf(streams: RoomStream[], kind: StreamKind, video: VideoRoomState, isMe: boolean): LiveFeed | undefined {
-  const s = streams.find((x) => x.kind === kind);
-  if (!s) return undefined;
-  const remote = isMe ? undefined : video.remote[s.personId]?.[kind];
-  const local = isMe ? video.local[kind] : undefined;
-  return { kind, startedAt: s.since, settings: s.settings, ...(remote ? { remote } : {}), ...(local ? { local } : {}) };
 }
 
 /** Everyone with a live stream, the longest sharing first, with what the video room has of them. */

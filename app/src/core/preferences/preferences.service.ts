@@ -1,4 +1,4 @@
-import type { StreamKind, StreamMode, StreamSettings } from "@core/api/api.types";
+import type { StreamKind, StreamSettings } from "@core/api/types/api.types";
 import {
   AMBILIGHT_KEYS,
   CAMERA_DEVICE_KEY,
@@ -11,16 +11,17 @@ import {
   MIC_PROCESSING_KEY,
   STREAM_KEYS,
   STREAM_QUALITIES,
-} from "./preferences.constants";
-import type { AmbilightPrefs, HearingOf, HearingPrefs, VoicePrefs } from "./preferences.types";
-import { readStored, writeStored } from "./storage.util";
+} from "./constants/preferences.constants";
+import type { AmbilightPrefs, HearingOf, HearingPrefs, VoiceFlag, VoicePrefs } from "./types/preferences.types";
+import { between0and1, isMode, processingFrom } from "./utils/preference-values.util";
+import { readStored, writeStored } from "./storage.service";
 
 /** Choices each browser remembers for next time. Anything odd in the storage gives the default. */
 
-const between0and1 = (value: number, fallback: number) =>
-  Number.isFinite(value) ? Math.min(1, Math.max(0, value)) : fallback;
-
-const isMode = (value: string | null): value is StreamMode => value === "smooth" || value === "sharp";
+/** How I send my screen and my camera, as remembered. */
+export function loadAllStreamSettings(): Record<StreamKind, StreamSettings> {
+  return { screen: loadStreamSettings("screen"), camera: loadStreamSettings("camera") };
+}
 
 /** The quality and mode I send a screen or a camera with. */
 export function loadStreamSettings(kind: StreamKind): StreamSettings {
@@ -75,20 +76,8 @@ export function saveAmbilight(prefs: AmbilightPrefs): void {
   writeStored(AMBILIGHT_KEYS.brightness, String(prefs.brightness));
 }
 
-/** The processing saved as JSON, or nothing when it can't be read. */
-function storedProcessing(): Partial<Record<keyof VoicePrefs, unknown>> {
-  try {
-    const parsed: unknown = JSON.parse(readStored(MIC_PROCESSING_KEY) ?? "{}");
-    return typeof parsed === "object" && parsed !== null ? parsed : {};
-  } catch {
-    return {};
-  }
-}
-
-type VoiceFlag = Exclude<keyof VoicePrefs, "micId" | "sensitivity">;
-
 export function loadVoicePrefs(): VoicePrefs {
-  const processing = storedProcessing();
+  const processing = processingFrom(readStored(MIC_PROCESSING_KEY));
   const flag = (k: VoiceFlag) => {
     const value = processing[k];
     return typeof value === "boolean" ? value : DEFAULT_VOICE[k];

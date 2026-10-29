@@ -1,22 +1,14 @@
 import { useCallback, useMemo, useRef, useState } from "react";
-import type { StreamMode, StreamSettings } from "@core/api/api.types";
-import type { Capture } from "@core/livekit/livekit.types";
+import type { Capture } from "@core/livekit/types/livekit.types";
 import { useCaptureLifecycle } from "./use-capture-lifecycle.hook";
-
-type Inputs = {
-  capture: (kind: "camera", mode: StreamMode) => Promise<Capture | null>;
-  discard: (capture: Capture) => void;
-  camera: StreamSettings;
-  /** My camera is being sent: no preview needed. */
-  cameraSent: boolean;
-};
+import type { CameraPreviewInputs } from "../types/camera-preview.types";
 
 /**
  * My camera, captured for the settings panel's preview and not sent. It stops when the panel no
  * longer wants it (also when the camera answers after the panel closed), when the camera goes away,
  * and when the page closes; the camera button can take it and send it as is.
  */
-export function useCameraPreview({ capture, discard, camera, cameraSent }: Inputs) {
+export function useCameraPreview({ capture, discard, camera, cameraSent }: CameraPreviewInputs) {
   const [preview, setPreviewState] = useState<Capture | null>(null);
   const previewRef = useRef<Capture | null>(null);
   const wanted = useRef(false);

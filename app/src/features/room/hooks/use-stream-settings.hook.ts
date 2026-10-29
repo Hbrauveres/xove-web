@@ -1,29 +1,16 @@
 import { useCallback, useMemo, useState } from "react";
-import type { StreamKind, StreamSettings } from "@core/api/api.types";
-import { loadStreamSettings, saveStreamSettings } from "@core/preferences/preferences.service";
-import { SettingsQueue } from "../utils/settings-queue.util";
-
-type Inputs = {
-  /** My streams the API lists as live, and the ones this browser sends. */
-  live: Record<StreamKind, boolean>;
-  publishing: Record<StreamKind, boolean>;
-  applySettings: (kind: StreamKind, settings: StreamSettings) => Promise<void>;
-  /** Tells the API; true when it accepted. */
-  changeAtApi: (kind: StreamKind, settings: StreamSettings) => Promise<boolean>;
-};
-
-const remembered = (): Record<StreamKind, StreamSettings> => ({
-  screen: loadStreamSettings("screen"),
-  camera: loadStreamSettings("camera"),
-});
+import type { StreamKind, StreamSettings } from "@core/api/types/api.types";
+import { loadAllStreamSettings, saveStreamSettings } from "@core/preferences/preferences.service";
+import { SettingsQueue } from "../state/settings-queue.service";
+import type { StreamSettingsInputs } from "../types/stream-settings.types";
 
 /**
  * How I send my screen and my camera, remembered. While live, a new quality or mode applies at
  * once: to the video right away, and to the API, which tells every viewer's app. Changes go one
  * after another; a refused one puts the last accepted settings back.
  */
-export function useStreamSettings({ live, publishing, applySettings, changeAtApi }: Inputs) {
-  const [prefs, setPrefsState] = useState(remembered);
+export function useStreamSettings({ live, publishing, applySettings, changeAtApi }: StreamSettingsInputs) {
+  const [prefs, setPrefsState] = useState(loadAllStreamSettings);
   const [queue] = useState(() => new SettingsQueue(prefs));
 
   const remember = useCallback((kind: StreamKind, settings: StreamSettings) => {

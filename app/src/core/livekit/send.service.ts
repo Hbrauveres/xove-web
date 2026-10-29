@@ -1,8 +1,8 @@
 import { Track, type Room } from "livekit-client";
-import type { SharingConnection, StreamKind, StreamSettings } from "@core/api/api.types";
-import { startFailed } from "./capture.util";
-import { COULDNT, NOT_CONNECTED, SOURCE } from "./livekit.constants";
-import type { Capture, CapturedTracks, RoomContext, StartedStream } from "./livekit.types";
+import type { SharingConnection, StreamKind, StreamSettings } from "@core/api/types/api.types";
+import { startFailed } from "./utils/capture.util";
+import { COULDNT, NOT_CONNECTED, SOURCE } from "./constants/livekit.constants";
+import type { Capture, CapturedTracks, RoomContext, StartedStream, WithMediaTrack } from "./types/livekit.types";
 import {
   cameraCaptureOptions,
   cameraPublishOptions,
@@ -10,8 +10,8 @@ import {
   contentHintOf,
   degradationOf,
   screenPublishOptions,
-} from "./publish-options.util";
-import { isLocalVideo } from "./track-kind.util";
+} from "./utils/publish-options.util";
+import { isLocalVideo } from "./utils/track-kind.util";
 
 /** Sends, adjusts and stops my screen and camera. */
 export class SendService {
@@ -135,7 +135,7 @@ export class SendService {
 
   // The camera unplugged or taken by another app: stop sending it. Again after each switch,
   // since a switch gives the camera a new browser track.
-  private watchCameraEnd(track: { mediaStreamTrack: MediaStreamTrack }) {
+  private watchCameraEnd(track: WithMediaTrack) {
     track.mediaStreamTrack.addEventListener("ended", () => void this.stop("camera"));
   }
 }

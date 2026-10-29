@@ -6,7 +6,7 @@
 import { execFile } from "node:child_process";
 import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { promisify } from "node:util";
-import { checkCode } from "./check-code.ts";
+import { checkCode, RULES } from "./check-code.ts";
 
 const run = promisify(execFile);
 const KNOWN = "checks/known-findings.json";
@@ -78,7 +78,7 @@ export function countAll(findings: Finding[]) {
  * What the guard says about today's counts against the record (and against main's record):
  * `errors` fail the run, `known` are the recorded findings still there, shown as warnings.
  */
-export function compare(now: Map<string, Known>, known: Known[], main?: Known[]) {
+export function compare(now: Map<string, Known>, known: Known[], main?: Known[], fresh = new Set<string>()) {
   const errors: string[] = [];
   const record = new Map(known.map((k) => [keyOf(k), k]));
   for (const [k, n] of now) {
@@ -104,7 +104,7 @@ export function compare(now: Map<string, Known>, known: Known[], main?: Known[])
   if (main) {
     const before = new Map(main.map((k) => [keyOf(k), k.count]));
     for (const [k, r] of record)
-      if (r.count > (before.get(k) ?? 0))
+      if (r.count > (before.get(k) ?? 0) && !isFresh(r, fresh))
         errors.push(
           `grown: ${r.file}: ${r.tool} ${r.rule}, ${r.count} on the list (main's allows ${before.get(k) ?? 0}); the list only shrinks`,
         );
@@ -113,12 +113,36 @@ export function compare(now: Map<string, Known>, known: Known[], main?: Known[])
   return { errors, known: knownStill };
 }
 
-/** The list to write after a fix: today's counts, never above what was recorded, sorted. */
-export function recordOf(now: Map<string, Known>, known: Known[], owners: [string, string][]) {
+/** A finding of a code rule that main's code check doesn't define yet: the PR adding it records it once. */
+const isFresh = (f: { tool: string; rule: string; file: string }, fresh: Set<string>) =>
+  f.tool === "code" && fresh.has(f.rule) && !NEW_STRUCTURE.test(f.file);
+
+/** The folders already in the new structure: a new rule's findings are never recorded there. */
+const NEW_STRUCTURE = /^src\/(app|core|shared|features)\//;
+
+/** The code rules `rules` names that main's check (its source) doesn't define; none without main's. */
+export function newRulesOf(mainCheck: string | undefined, rules: string[]): Set<string> {
+  if (mainCheck === undefined) return new Set();
+  const defined = new Set([...mainCheck.matchAll(/^\s+(\w+):/gm)].map((m) => m[1]));
+  return new Set(rules.filter((r) => !defined.has(r)));
+}
+
+/**
+ * The list to write after a fix: today's counts, never above what was recorded, sorted. A new
+ * rule's findings (`fresh`) are recorded once, each owned by the step for its folder.
+ */
+export function recordOf(
+  now: Map<string, Known>,
+  known: Known[],
+  owners: [string, string][],
+  fresh = new Set<string>(),
+) {
   const silent = compare(now, known).errors.filter((e) => e.startsWith("silent:"));
   if (silent.length) return { refused: silent };
   const record = new Map(known.map((k) => [keyOf(k), k]));
-  const over = [...now.values()].filter((n) => record.size > 0 && n.count > (record.get(keyOf(n))?.count ?? 0));
+  const over = [...now.values()].filter(
+    (n) => record.size > 0 && !isFresh(n, fresh) && n.count > (record.get(keyOf(n))?.count ?? 0),
+  );
   if (over.length) return { refused: over.map((n) => `${n.file}: ${n.tool} ${n.rule}`) };
   const list = [...now.values()]
     .map((n) => ({ ...n, owner: record.get(keyOf(n))?.owner ?? ownerOf(n.file, owners) }))
@@ -173,13 +197,23 @@ async function mainRecord(): Promise<Known[] | undefined> {
   return JSON.parse(text) as Known[];
 }
 
+/** main's code check, to tell which of today's rules are new; undefined when it can't be read. */
+async function mainCodeCheck(): Promise<string | undefined> {
+  try {
+    return (await run("git", ["show", "origin/main:app/scripts/check-code.ts"])).stdout;
+  } catch {
+    return undefined;
+  }
+}
+
 async function main(args: string[]) {
   const owners = JSON.parse(readFileSync(OWNERS, "utf8")) as [string, string][];
   const known = existsSync(KNOWN) ? (JSON.parse(readFileSync(KNOWN, "utf8")) as Known[]) : [];
   const now = countAll(await collect());
+  const fresh = newRulesOf(await mainCodeCheck(), Object.keys(RULES));
 
   if (args.includes("--record")) {
-    const result = recordOf(now, known, owners);
+    const result = recordOf(now, known, owners, fresh);
     if (result.refused) {
       console.error(
         `Not recorded: these are new, and the list only shrinks. Fix them first:\n  ${result.refused.join("\n  ")}`,
@@ -191,7 +225,7 @@ async function main(args: string[]) {
     return;
   }
 
-  const { errors, known: still } = compare(now, known, await mainRecord());
+  const { errors, known: still } = compare(now, known, await mainRecord(), fresh);
   const byOwner = new Map<string, number>();
   for (const k of still)
     byOwner.set(k.owner || ownerOf(k.file, owners), (byOwner.get(k.owner || ownerOf(k.file, owners)) ?? 0) + k.count);

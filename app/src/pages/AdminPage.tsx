@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router";
 import { api, ApiError } from "@core/api/api-client.service";
-import type { AccessRequestView, MemberView } from "@core/api/api.types";
+import type { AccessRequestView, MemberView } from "@core/api/types/api.types";
 import { Button } from "../components/ui/Button";
 import { PersonAvatar } from "../components/ui/PersonAvatar";
 import { timeAgo } from "@shared/utils/time-ago.util";

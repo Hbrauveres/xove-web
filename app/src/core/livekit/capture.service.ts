@@ -1,38 +1,13 @@
 import { LocalVideoTrack, Track, type Room } from "livekit-client";
-import type { StreamKind, StreamMode } from "@core/api/api.types";
-import { CAMERA_BLOCKED } from "@core/devices/devices.constants";
-import { pickScreen } from "@core/devices/screen-picker.util";
-import { isDomError, screenSound, startFailed } from "./capture.util";
-import { NOT_CONNECTED } from "./livekit.constants";
-import type { Capture, CapturedTracks, RoomContext } from "./livekit.types";
-import { cameraCaptureOptions, contentHintOf } from "./publish-options.util";
-import { isLocalVideo } from "./track-kind.util";
-
-/** The browser's screen picker, asked directly because livekit-client drops `windowAudio`. */
-async function captureScreen(room: Room, mode: StreamMode): Promise<CapturedTracks | null> {
-  const stream = await pickScreen();
-  const [screen] = stream.getVideoTracks();
-  const [sound] = stream.getAudioTracks();
-  if (!screen) {
-    stream.getTracks().forEach((t) => t.stop());
-    return null;
-  }
-  screen.contentHint = contentHintOf(mode);
-  const video = new LocalVideoTrack(screen, undefined, false);
-  video.source = Track.Source.ScreenShare;
-  if (!isLocalVideo(video)) return null;
-  if (!sound) return { video };
-  // LiveKit unlocks the page's sound here too, while the sharer's click still counts.
-  void room.startAudio();
-  return { video, audio: screenSound(sound) };
-}
-
-async function captureCamera(room: Room, deviceId: string | null): Promise<CapturedTracks | null> {
-  const tracks = await room.localParticipant.createTracks({ video: cameraCaptureOptions(deviceId), audio: false });
-  const video = tracks.find(isLocalVideo);
-  if (!video) tracks.forEach((t) => t.stop());
-  return video ? { video } : null;
-}
+import type { StreamKind, StreamMode } from "@core/api/types/api.types";
+import { CAMERA_BLOCKED, CAMERA_MISSING } from "@core/devices/constants/devices.constants";
+import { pickScreen } from "@core/devices/screen-picker.service";
+import { isDomError, startFailed } from "./utils/capture.util";
+import { screenSound } from "./screen-sound.service";
+import { NOT_CONNECTED } from "./constants/livekit.constants";
+import type { Capture, CapturedTracks, RoomContext } from "./types/livekit.types";
+import { cameraCaptureOptions, contentHintOf } from "./utils/publish-options.util";
+import { isLocalVideo } from "./utils/track-kind.util";
 
 /** Captures a screen or a camera without sending it: the person is still choosing how. */
 export class CaptureService {
@@ -55,7 +30,8 @@ export class CaptureService {
     try {
       this.ctx.update({ error: null });
       // Always the best quality: the sharer can lower it, or raise it back, while sharing.
-      const tracks = kind === "screen" ? await captureScreen(room, mode) : await captureCamera(room, cameraId);
+      const tracks =
+        kind === "screen" ? await this.captureScreen(room, mode) : await this.captureCamera(room, cameraId);
       if (!tracks) {
         this.ctx.update({ error: startFailed(kind) });
         return null;
@@ -95,9 +71,35 @@ export class CaptureService {
     if (isDomError(e, "NotAllowedError")) {
       if (kind === "camera") this.ctx.update({ error: CAMERA_BLOCKED, cameraProblem: "blocked" });
     } else if (kind === "camera" && isDomError(e, "NotFoundError")) {
-      this.ctx.update({ error: "No camera found.", cameraProblem: "missing" });
+      this.ctx.update({ error: CAMERA_MISSING, cameraProblem: "missing" });
     } else {
       this.ctx.update({ error: startFailed(kind) });
     }
+  }
+
+  /** The browser's screen picker, asked directly because livekit-client drops `windowAudio`. */
+  private async captureScreen(room: Room, mode: StreamMode): Promise<CapturedTracks | null> {
+    const stream = await pickScreen();
+    const [screen] = stream.getVideoTracks();
+    const [sound] = stream.getAudioTracks();
+    if (!screen) {
+      stream.getTracks().forEach((t) => t.stop());
+      return null;
+    }
+    screen.contentHint = contentHintOf(mode);
+    const video = new LocalVideoTrack(screen, undefined, false);
+    video.source = Track.Source.ScreenShare;
+    if (!isLocalVideo(video)) return null;
+    if (!sound) return { video };
+    // LiveKit unlocks the page's sound here too, while the sharer's click still counts.
+    void room.startAudio();
+    return { video, audio: screenSound(sound) };
+  }
+
+  private async captureCamera(room: Room, deviceId: string | null): Promise<CapturedTracks | null> {
+    const tracks = await room.localParticipant.createTracks({ video: cameraCaptureOptions(deviceId), audio: false });
+    const video = tracks.find(isLocalVideo);
+    if (!video) tracks.forEach((t) => t.stop());
+    return video ? { video } : null;
   }
 }

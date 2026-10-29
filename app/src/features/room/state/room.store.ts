@@ -1,22 +1,18 @@
 import { ApiError, api } from "@core/api/api-client.service";
-import type { SharingConnection, StreamKind, StreamSettings, StreamsState } from "@core/api/api.types";
+import type {
+  SharingConnection,
+  StreamKind,
+  StreamSettings,
+  StreamsState,
+  WatchingTarget,
+} from "@core/api/types/api.types";
 import { LiveKitAdapter } from "@core/livekit/livekit.adapter";
-import { CANT_CONNECT } from "@core/livekit/livekit.constants";
-import type { VideoRoomState } from "@core/livekit/livekit.types";
-import { POLL_MS } from "./room.constants";
+import { CANT_CONNECT } from "@core/livekit/constants/livekit.constants";
+import { DEFAULT_ERROR_MESSAGE } from "@core/api/constants/api.constants";
+import { POLL_MS, SEAT_FAILED } from "../constants/room.constants";
 import { initialRoom, withMe, withSeat, withStreams, withStreamsCall, withVideo } from "./room.model";
-import type { RoomModel, SeatState } from "./room.types";
-
-/** What the room's page reads: the room as data, and the video room. */
-export type RoomSnapshot = { model: RoomModel; video: VideoRoomState };
-
-/** How a start, change or stop at the API ended. */
-export type CallOutcome = "ok" | "full" | "failed";
-
-const SEAT_FAILED = "Couldn't reach the room. Trying again…";
-const CALL_FAILED = "Something went wrong. Try again.";
-
-const waitingFor = (seat: SeatState) => seat === null || seat.status === "waiting" || seat.status === "offered";
+import type { CallOutcome, RoomModel, RoomSnapshot, SeatState } from "../types/room.types";
+import { waitingFor } from "../utils/seat.util";
 
 /**
  * The room's one place for news and actions: the seat, the streams and entering again are
@@ -79,7 +75,7 @@ export class RoomStore {
     try {
       this.setSeat(await api.room.accept());
     } catch (e) {
-      this.setSeat(this.model.seat, e instanceof ApiError ? e.message : CALL_FAILED);
+      this.setSeat(this.model.seat, e instanceof ApiError ? e.message : DEFAULT_ERROR_MESSAGE);
       void this.askSeat();
     }
   };
@@ -105,7 +101,7 @@ export class RoomStore {
   stopStream = async (kind: StreamKind) => (await this.call(() => api.streams.stop(kind))) === "ok";
 
   /** Tells the API what's on my stage: someone's stream, or nothing. */
-  reportWatching = (target: { sharerId: number; kind: StreamKind } | null) => api.streams.watching(target);
+  reportWatching = (target: WatchingTarget) => api.streams.watching(target);
 
   /** Changes the room's model with one of its functions. */
   change = (next: (model: RoomModel) => RoomModel) => this.setModel(next(this.model));
@@ -216,7 +212,7 @@ export class RoomStore {
       this.setModel(withStreamsCall(this.model, false, null));
       return "ok";
     } catch (e) {
-      this.setModel(withStreamsCall(this.model, false, e instanceof ApiError ? e.message : CALL_FAILED));
+      this.setModel(withStreamsCall(this.model, false, e instanceof ApiError ? e.message : DEFAULT_ERROR_MESSAGE));
       void this.refreshStreams();
       return e instanceof ApiError && e.reason === "full" ? "full" : "failed";
     }

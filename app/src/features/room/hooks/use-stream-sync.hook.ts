@@ -1,23 +1,8 @@
 import { useEffect, useRef } from "react";
-import type { SharingConnection, StreamKind } from "@core/api/api.types";
-import type { ConnectionState } from "@core/livekit/livekit.types";
-import { KINDS } from "../state/room.constants";
-import type { RoomStore } from "../state/room.store";
-import type { RoomModel } from "../state/room.types";
-import type { SettingsQueue } from "../utils/settings-queue.util";
+import type { StreamKind } from "@core/api/types/api.types";
+import { KINDS } from "../constants/room.constants";
 import { useMySteps } from "./use-my-steps.hook";
-
-type Inputs = {
-  store: RoomStore;
-  model: RoomModel;
-  /** My streams the API lists as live, and the ones this browser sends. */
-  live: Record<StreamKind, boolean>;
-  publishing: Record<StreamKind, boolean>;
-  connection: ConnectionState;
-  connectionOf: (kind: StreamKind) => SharingConnection | null;
-  stopSending: (kind: StreamKind) => Promise<void>;
-  queue: SettingsQueue;
-};
+import type { StreamSyncInputs } from "../types/stream-sync.types";
 
 /**
  * Keeps my streams and the API in step: a stream the API lost (it restarted) is registered again,
@@ -33,7 +18,7 @@ export function useStreamSync({
   connectionOf,
   stopSending,
   queue,
-}: Inputs) {
+}: StreamSyncInputs) {
   const { polledAt, seated, streamsBusy, mine } = model;
   const loaded = model.streams !== null;
   const registering = useRef<Record<StreamKind, boolean>>({ screen: false, camera: false });
