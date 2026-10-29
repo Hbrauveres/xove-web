@@ -647,7 +647,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/pages/RoomPage.test.tsx",
-    "count": 25,
+    "count": 19,
     "owner": "#184 the room page's tests"
   },
   {
@@ -2607,7 +2607,7 @@
     "tool": "code",
     "rule": "realWait",
     "file": "src/pages/RoomPage.test.tsx",
-    "count": 17,
+    "count": 9,
     "owner": "#184 the room page's tests"
   },
   {
@@ -4558,13 +4558,6 @@
   },
   {
     "tool": "tsc",
-    "rule": "TS18048",
-    "file": "src/pages/RoomPage.test.tsx",
-    "count": 3,
-    "owner": "#184 the room page's tests"
-  },
-  {
-    "tool": "tsc",
     "rule": "TS2322",
     "file": "src/components/stage/Ambilight.tsx",
     "count": 1,
@@ -4861,7 +4854,7 @@
     "tool": "tsc",
     "rule": "TS2532",
     "file": "src/pages/RoomPage.test.tsx",
-    "count": 11,
+    "count": 5,
     "owner": "#184 the room page's tests"
   },
   {
