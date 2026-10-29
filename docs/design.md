@@ -51,17 +51,15 @@ The pictures are shot from the real app (`design-sheet.mjs`, see [Keeping this p
 
 ## Icons and favicon
 
-![The favicon at 16, 32 and 64 px, and the phone icons](images/design/icons.png)
+![The favicon at 16, 32 and 64 px](images/design/icons.png)
 
 | File | What | Notes |
 | --- | --- | --- |
 | `app/public/favicon.svg` | The tiny symbol, for the tab and bookmarks | Its white parts turn soft black when the browser is in light mode (a `prefers-color-scheme` rule inside the file); the red stays |
-| `apple-touch-icon.png` | iPhone home screen | The large symbol on the soft black ground |
-| `icon-192.png`, `icon-512.png` | Android home screen, install prompt | Same |
-| `icon-maskable-512.png` | Android's shaped icons (circle, squircle) | The mark sits inside the 80% safe circle (its farthest pixel 191 px from the centre, the safe radius 205) |
-| `site.webmanifest` | Name, icons, `theme_color` and `background_color` `#0c0c0d`, `display: fullscreen` | Opened from the home screen, no browser bar |
 
-`node scripts/brand-icons.mjs` (from `app/`) rewrites the favicon from `mark.ts`; `--maskable` renders the maskable icon, and `--phone` prints the SVG the phone icons are rendered from. A test fails if the favicon drifts from the geometry.
+**No home-screen app** while Xovê is desktop only: the page links no manifest and has no home-screen icons or app tags, so no browser offers to install it; Safari's "Add to Home Screen" only adds a bookmark. It comes back with the phones.
+
+`node scripts/brand-icons.mjs` (from `app/`) rewrites the favicon from `mark.ts`. A test fails if the favicon drifts from the geometry.
 
 **Interface icons** are drawn inline as SVG in the components, on a 20 × 20 grid (12 × 12 for the small arrows), with round 1.5–2 px strokes in `currentColor`, so they take the colour of their button. There's no icon library: a new icon follows the same grid and stroke.
 

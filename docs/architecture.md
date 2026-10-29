@@ -257,7 +257,7 @@ The model is the room as data: people keyed by one `PersonId` (me included, as a
 ```
 app/                  the web app: everything its image is built from
   src/                the modules above
-  public/             the favicon, the home-screen icons, site.webmanifest
+  public/             the favicon (no home-screen app while desktop only)
   Dockerfile, Caddyfile, caddy/   the image: the Vite build served by Caddy, built from source
   compose.yaml        runs the image (locally and in the checks)
   scripts/            the checks (guard, check-code, check-styles, check-size), test-alone, brand-icons.mjs (the favicon from the mark's geometry)
