@@ -13,7 +13,10 @@ export const moveFakeTimers = (ms: number) => {
   if (vi.isFakeTimers()) vi.advanceTimersByTime(ms);
 };
 
+/** A person at the keyboard and mouse whose waits move the fake clock along. */
+export const clockUser = () => userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+
 export function onFakeClock(now: number = TEST_NOW) {
   vi.useFakeTimers({ now });
-  return userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+  return clockUser();
 }

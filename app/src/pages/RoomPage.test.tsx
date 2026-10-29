@@ -1,12 +1,11 @@
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { cameraCaptureOptions, capOf } from "@services/livekit-service";
 import { AuthProvider } from "@shared/stores/auth-store";
 import { aUser, installFakeApi, MY_USER_ID, myLiveStream, someoneSharing } from "../testing/fakeApi";
-import { lastRoom } from "../testing/fakeLiveKit";
-import { TEST_NOW } from "../testing/factories/clock.factory";
+import { FakeLocalScreenTrack, lastRoom } from "../testing/fakeLiveKit";
+import { clockUser, onFakeClock } from "../testing/factories/clock.factory";
 import { CHROME_IDLE_MS } from "../components/stage/Stage";
 import { REPORT_RETRY_MS, REPORT_STILL_MS } from "@features/room/constants/watch-report.constants";
 import { RoomPage } from "./RoomPage";
@@ -17,14 +16,11 @@ const FAST_POLL = 50;
 // Every test runs on a fake, fixed clock: nothing waits in real time, and Testing Library's
 // findBy and waitFor move the clock on themselves (src/testing/setup.ts).
 beforeEach(() => {
-  vi.useFakeTimers({ now: TEST_NOW });
+  onFakeClock();
 });
 
 /** Moves the fake clock on, and lets what was waiting on it happen. */
 const pass = (ms: number) => act(() => vi.advanceTimersByTimeAsync(ms));
-
-/** A person at the keyboard and mouse, on the fake clock. */
-const aUserEvent = () => userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
 /** The room on its own, polling fast so tests don't wait 2 seconds. */
 function renderRoom() {
@@ -37,11 +33,12 @@ function renderRoom() {
   );
 }
 
-// My screen and camera buttons sit on the stage.
-const controls = () => screen.getByRole("region", { name: /shared screen/i });
 // The account button's dot says the connection.
 const connected = () => screen.findByRole("button", { name: /: account, connected$/ });
+// The stage: the picture, and my screen and camera buttons on it.
 const stage = () => screen.getByRole("region", { name: /shared screen/i });
+/** A time some minutes before now, on the fake clock. */
+const minutesAgo = (m: number) => new Date(Date.now() - m * 60_000);
 
 describe("room: joining the video room", () => {
   it("says so when video isn't available, and the rest of the room still works", async () => {
@@ -67,7 +64,7 @@ describe("room: joining the video room", () => {
       lastRoom().join("user-7", "Bruno Lima");
     });
     // The people button counts them; its panel names them.
-    const user = aUserEvent();
+    const user = clockUser();
     await user.click(screen.getByRole("button", { name: "2 people here" }));
     expect(within(screen.getByRole("dialog", { name: "Here now" })).getByText("Bruno")).toBeInTheDocument();
     // The activity pill shows the latest event.
@@ -135,13 +132,13 @@ async function readyRoom() {
   renderRoom();
   await connected();
   await screen.findByLabelText("0 of 6 live, 6 seats open");
-  return aUserEvent();
+  return clockUser();
 }
 
-type User = ReturnType<typeof userEvent.setup>;
+type User = ReturnType<typeof clockUser>;
 /** Clicks "Share your screen": the browser's picker, and the pick is sent at once. */
 async function pickScreen(user: User, button: RegExp = /share your screen/i) {
-  await user.click(within(controls()).getByRole("button", { name: button }));
+  await user.click(within(stage()).getByRole("button", { name: button }));
 }
 
 /** Picks a screen and starts sharing it, with the remembered settings. */
@@ -155,7 +152,7 @@ type MenuKind = "Screen" | "Camera" | "Voice";
 /** The settings panel on a tab: opened from the cog when it isn't. */
 async function openMenu(user: User, kind: MenuKind = "Screen") {
   if (!screen.queryByRole("dialog", { name: "Settings" })) {
-    await user.click(within(controls()).getByRole("button", { name: "Settings" }));
+    await user.click(within(stage()).getByRole("button", { name: "Settings" }));
   }
   const panel = within(await screen.findByRole("dialog", { name: "Settings" }));
   const tab = panel.getByRole("tab", { name: (name) => name.startsWith(kind) });
@@ -175,7 +172,29 @@ const tickedQuality = (kind: MenuKind = "Screen") =>
     .find((r) => r.getAttribute("aria-checked") === "true")?.textContent;
 
 describe("room: sharing", () => {
-  // no setup window.
+  it("names what's shared by what the browser says was picked: a tab, a window, the whole screen", async () => {
+    installFakeApi({ me: member() });
+    const user = await readyRoom();
+    lastRoom().localParticipant.nextSurface = "browser";
+    await startSharing(user);
+
+    const tab = await openMenu(user);
+    expect(tab.getByText("A tab")).toBeInTheDocument();
+  });
+  it("starts with the settings remembered from last time", async () => {
+    localStorage.setItem("xove.share.quality", "720p");
+    localStorage.setItem("xove.share.mode", "sharp");
+    const server = installFakeApi({ me: member() });
+    const user = await readyRoom();
+
+    await startSharing(user);
+
+    const take = server.calls.find((c) => c.method === "POST" && c.path === "/api/streams");
+    expect(take?.body).toMatchObject({ kind: "screen", quality: "720p", mode: "sharp" });
+    expect(
+      (lastRoom().localParticipant.lastCapture[0] as FakeLocalScreenTrack).setPublishingQuality,
+    ).toHaveBeenLastCalledWith(capOf("720p"));
+  });
   it("starts at once with the defaults the first time, sending the CSRF token, the kind, the connection and the settings", async () => {
     document.cookie = "XSRF-TOKEN=abc123";
     const server = installFakeApi({ me: member() });
@@ -206,11 +225,11 @@ describe("room: sharing", () => {
     renderRoom();
     await connected();
     await screen.findByRole("heading", { name: "Bruno" });
-    const user = aUserEvent();
+    const user = clockUser();
 
     // Watching someone, not live: Go live opens the ways to start.
-    await user.click(within(controls()).getByRole("button", { name: "Go live" }));
-    await user.click(within(controls()).getByRole("menuitem", { name: /share your screen/i }));
+    await user.click(within(stage()).getByRole("button", { name: "Go live" }));
+    await user.click(within(stage()).getByRole("menuitem", { name: /share your screen/i }));
 
     await waitFor(() => expect(myLiveStream(server)).toBeDefined());
     expect(server.streams.map((st) => st.userId)).toEqual([7, MY_USER_ID]);
@@ -221,7 +240,7 @@ describe("room: sharing", () => {
     const user = await readyRoom();
     await startSharing(user);
 
-    await user.click(within(controls()).getByRole("button", { name: /stop sharing/i }));
+    await user.click(within(stage()).getByRole("button", { name: /stop sharing/i }));
 
     expect(await screen.findByLabelText("0 of 6 live, 6 seats open")).toBeInTheDocument();
     expect(lastRoom().localParticipant.isScreenShareEnabled).toBe(false);
@@ -241,7 +260,7 @@ describe("room: sharing", () => {
     expect(await screen.findByLabelText("0 of 6 live, 6 seats open")).toBeInTheDocument();
   });
 
-  // AC-1: six streams at once; a seventh can't start, and the buttons say why.
+  // Six streams at once; a seventh can't start, and the buttons say why.
   it("says the room is full of streams, and waits for a free place", async () => {
     const server = installFakeApi({ me: member() });
     server.streams = [1, 2, 3].flatMap((id) => [
@@ -252,12 +271,12 @@ describe("room: sharing", () => {
     await connected();
 
     // Go live's ways to start are greyed out, still focusable, with the reason in their tooltip.
-    const user = aUserEvent();
-    await user.click(await within(controls()).findByRole("button", { name: "Go live" }));
-    const share = () => within(controls()).getByRole("menuitem", { name: /share your screen/i });
+    const user = clockUser();
+    await user.click(await within(stage()).findByRole("button", { name: "Go live" }));
+    const share = () => within(stage()).getByRole("menuitem", { name: /share your screen/i });
     await waitFor(() => expect(share()).toHaveAttribute("aria-disabled", "true"));
     expect(share()).toHaveAccessibleDescription(expect.stringMatching(/6 streams are live/i));
-    expect(within(controls()).getByRole("menuitem", { name: /turn on your camera/i })).toHaveAttribute(
+    expect(within(stage()).getByRole("menuitem", { name: /turn on your camera/i })).toHaveAttribute(
       "aria-disabled",
       "true",
     );
@@ -337,9 +356,9 @@ describe("room: the viewer's quality and volume", () => {
     return view;
   };
 
-  it("a tap mutes the screen's sound; resting on it opens its own slider; the volume is remembered (spec 0123)", async () => {
+  it("a tap mutes the screen's sound; resting on it opens its own slider; the volume is remembered", async () => {
     const view = await watchBruno({ withSound: true });
-    const user = aUserEvent();
+    const user = clockUser();
     const sound = lastRoom().remoteParticipants.get("user-7")!.tracks.get("screen_share_audio")!;
     const audio = () => sound.attached[0] as HTMLAudioElement;
 
@@ -361,9 +380,9 @@ describe("room: the viewer's quality and volume", () => {
     expect(screen.getByRole("slider", { name: "Screen sound volume" })).toHaveValue("0.3");
   });
 
-  it("plays the voice of the person I watch, at its own mute, and lights it while they speak (spec 0123)", async () => {
+  it("plays the voice of the person I watch, at its own mute, and lights it while they speak", async () => {
     await watchBruno({ withSound: true });
-    const user = aUserEvent();
+    const user = clockUser();
     expect(within(stage()).getByRole("button", { name: "Bruno's mic is off" })).toHaveAttribute(
       "aria-disabled",
       "true",
@@ -386,13 +405,13 @@ describe("room: the viewer's quality and volume", () => {
     expect(within(stage()).getByRole("button", { name: "Unmute Bruno's voice" })).not.toHaveAttribute("data-talking");
   });
 
-  it("closes the settings when another stream takes the stage (spec 0123)", async () => {
+  it("closes the settings when another stream takes the stage", async () => {
     const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7), someoneSharing("Ana Souza", 3)];
     renderRoom();
     await connected();
     await screen.findByRole("heading", { name: "Bruno" });
-    const user = aUserEvent();
+    const user = clockUser();
     await user.click(within(stage()).getByRole("button", { name: "Go live" }));
     await user.click(within(stage()).getByRole("menuitem", { name: "Settings" }));
     expect(screen.getByRole("dialog", { name: "Settings" })).toBeInTheDocument();
@@ -515,8 +534,8 @@ describe("room: the controls don't vanish under a still mouse", () => {
   });
 });
 
-describe("room: my screen and camera buttons on the player (spec 0098)", () => {
-  it("puts each control by its owner in the four states (spec 0123, AC-1)", async () => {
+describe("room: my screen and camera buttons on the player", () => {
+  it("puts each control by its owner in the four states", async () => {
     const server = installFakeApi({ me: member() });
     renderRoom();
     await connected();
@@ -541,7 +560,7 @@ describe("room: my screen and camera buttons on the player (spec 0098)", () => {
     expect(row()).toEqual(["Mute the screen's sound", "Bruno's mic is off", "Go live"]);
 
     // Going live opens my own stream: my controls in the middle, my mic with them, nothing to hear.
-    const user = aUserEvent();
+    const user = clockUser();
     await user.click(within(stage()).getByRole("button", { name: "Go live" }));
     await user.click(within(stage()).getByRole("menuitem", { name: /share your screen/i }));
     await screen.findByLabelText("Your shared screen");
@@ -596,7 +615,7 @@ describe("room: my screen and camera buttons on the player (spec 0098)", () => {
   });
 });
 
-describe("room: fullscreen (spec 0098)", () => {
+describe("room: fullscreen", () => {
   it("enters fullscreen, and leaves it with the same button", async () => {
     const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
@@ -619,7 +638,7 @@ describe("room: fullscreen (spec 0098)", () => {
     });
     frame.requestFullscreen = enter;
     document.exitFullscreen = exit;
-    const user = aUserEvent();
+    const user = clockUser();
 
     await user.click(within(stage()).getByRole("button", { name: "Fullscreen" }));
     expect(enter).toHaveBeenCalled();
@@ -631,7 +650,7 @@ describe("room: fullscreen (spec 0098)", () => {
   });
 });
 
-describe("room: fullscreen from the empty stage (spec 0111)", () => {
+describe("room: fullscreen from the empty stage", () => {
   it("has the fullscreen button with nobody live", async () => {
     installFakeApi({ me: member() });
     renderRoom();
@@ -659,7 +678,7 @@ describe("room: fullscreen from the empty stage (spec 0111)", () => {
       document.dispatchEvent(new Event("fullscreenchange"));
     });
     document.exitFullscreen = exit;
-    const user = aUserEvent();
+    const user = clockUser();
     await user.click(within(stage()).getByRole("button", { name: "Fullscreen" }));
     act(() => {
       server.streams = [];
@@ -671,7 +690,7 @@ describe("room: fullscreen from the empty stage (spec 0111)", () => {
   });
 });
 
-describe("room: starting from fullscreen (spec 0101)", () => {
+describe("room: starting from fullscreen", () => {
   /** Plays the browser putting the stage's player in fullscreen (jsdom has none). */
   function enterFullscreen() {
     const frame = stage().querySelector("[class*='frame']") as HTMLElement;
@@ -687,14 +706,14 @@ describe("room: starting from fullscreen (spec 0101)", () => {
     const frame = enterFullscreen();
     lastRoom().localParticipant.nextPicker = "no-video";
 
-    await user.click(within(controls()).getByRole("button", { name: /share your screen/i }));
+    await user.click(within(stage()).getByRole("button", { name: /share your screen/i }));
 
     expect(frame).toContainElement(await screen.findByRole("alert"));
   });
 });
 
-describe("room: change window and pick a camera (spec 0098)", () => {
-  it("with the settings open, resting on the live screen button goes to Screen and cues Change (spec 0115)", async () => {
+describe("room: change window and pick a camera", () => {
+  it("with the settings open, resting on the live screen button goes to Screen and cues Change", async () => {
     installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
@@ -732,7 +751,7 @@ describe("room: change window and pick a camera (spec 0098)", () => {
       expect(video.replaceTrack).toHaveBeenCalled();
       expect(local.getDisplayMedia).toHaveBeenCalledTimes(2);
     });
-    // No setup window, no new stream: the API's stream is the same one.
+    // Straight away, no new stream: the API's stream is the same one.
     expect(screen.getAllByRole("dialog").map((d) => d.getAttribute("aria-label"))).toEqual(["Settings"]);
     expect(myLiveStream(server)).toEqual(started);
     expect(server.calls.filter((c) => c.path === "/api/streams" && c.method === "POST")).toHaveLength(1);
@@ -749,9 +768,9 @@ describe("room: change window and pick a camera (spec 0098)", () => {
   it("switches my camera from the settings without stopping it", async () => {
     const server = installFakeApi({ me: member() });
     const user = await readyRoom();
-    await user.click(within(controls()).getByRole("button", { name: /turn on your camera/i }));
+    await user.click(within(stage()).getByRole("button", { name: /turn on your camera/i }));
     await waitFor(() => expect(myLiveStream(server, "camera")).toBeDefined());
-    await within(controls()).findByRole("button", { name: /turn off your camera/i });
+    await within(stage()).findByRole("button", { name: /turn off your camera/i });
     const camera = lastRoom().localParticipant.lastCamera!;
 
     const menu = await openMenu(user, "Camera");
@@ -852,7 +871,7 @@ describe("room: waiting for a seat", () => {
     await waitFor(() => expect(document.title).toBe("Your turn — Xovê"));
     expect(within(offer).getByRole("button", { name: /enter room/i })).toHaveFocus();
 
-    await aUserEvent().click(within(offer).getByRole("button", { name: /enter room/i }));
+    await clockUser().click(within(offer).getByRole("button", { name: /enter room/i }));
 
     await connected();
     expect(server.calls.some((c) => c.method === "POST" && c.path === "/api/room/accept")).toBe(true);
@@ -864,7 +883,7 @@ describe("room: waiting for a seat", () => {
     server.seat = offered(60);
     renderRoom();
     const offer = await screen.findByRole("dialog", { name: /it's your turn/i });
-    const user = aUserEvent();
+    const user = clockUser();
 
     await user.click(within(offer).getByRole("button", { name: /cancel/i }));
 
@@ -897,15 +916,26 @@ describe("room: waiting for a seat", () => {
 // ---- cameras ----
 
 describe("room: my camera", () => {
+  it("asks for the camera when the tab opens, and says how to allow it when it's refused", async () => {
+    installFakeApi({ me: member() });
+    const user = await readyRoom();
+    lastRoom().localParticipant.nextCamera = "NotAllowedError";
+
+    const tab = await openMenu(user, "Camera");
+
+    expect(await tab.findByRole("status")).toHaveTextContent(
+      /allow it for Xovê in your browser's or phone's settings/i,
+    );
+    expect(lastRoom().localParticipant.publishTrack).not.toHaveBeenCalled();
+  });
   /** Clicks "Turn on your camera": it's sent at once. */
   async function turnOnCamera(user: User) {
-    await user.click(within(controls()).getByRole("button", { name: /turn on your camera/i }));
+    await user.click(within(stage()).getByRole("button", { name: /turn on your camera/i }));
     await waitFor(() =>
-      expect(within(controls()).getByRole("button", { name: /turn off your camera/i })).toBeInTheDocument(),
+      expect(within(stage()).getByRole("button", { name: /turn off your camera/i })).toBeInTheDocument(),
     );
   }
 
-  // AC-3
   it("asks for the camera only after the click, never for a microphone, and sends it at once", async () => {
     const server = installFakeApi({ me: member() });
     const user = await readyRoom();
@@ -946,7 +976,7 @@ describe("room: my camera", () => {
     const local = lastRoom().localParticipant;
     const camera = local.lastCamera!;
 
-    await user.click(within(controls()).getByRole("button", { name: /turn off your camera/i }));
+    await user.click(within(stage()).getByRole("button", { name: /turn off your camera/i }));
 
     await waitFor(() => {
       expect(myLiveStream(server, "camera")).toBeUndefined();
@@ -960,7 +990,6 @@ describe("room: my camera", () => {
 // ---- who is big, and the thumbnails ----
 
 describe("room: several people sharing", () => {
-  const minutesAgo = (m: number) => new Date(Date.now() - m * 60_000);
   const thumbnails = () => screen.getByRole("list", { name: /other streams/i });
 
   async function threeSharing() {
@@ -983,7 +1012,7 @@ describe("room: several people sharing", () => {
 
   it("makes a thumbnail big on click, and the big one goes back to the thumbnails", async () => {
     await threeSharing();
-    const user = aUserEvent();
+    const user = clockUser();
 
     await user.click(within(thumbnails()).getByRole("button", { name: /^Watch Bruno/ }));
 
@@ -995,12 +1024,12 @@ describe("room: several people sharing", () => {
     expect(names).toEqual(["Watch Ana's screen", "Watch Caio's camera"]);
   });
 
-  it("asks for Auto for the big player, and keeps a stream on Auto when it leaves it (spec 0107)", async () => {
+  it("asks for Auto for the big player, and keeps a stream on Auto when it leaves it", async () => {
     await threeSharing();
     const ana = lastRoom().screenPublication("user-3")!;
     expect(ana.setVideoQuality).toHaveBeenLastCalledWith(2);
 
-    await aUserEvent().click(within(thumbnails()).getByRole("button", { name: /^Watch Bruno/ }));
+    await clockUser().click(within(thumbnails()).getByRole("button", { name: /^Watch Bruno/ }));
 
     expect(ana.setVideoQuality).toHaveBeenLastCalledWith(2);
     expect(lastRoom().screenPublication("user-7")!.setVideoQuality).toHaveBeenLastCalledWith(2);
@@ -1035,13 +1064,13 @@ describe("room: the facecam", () => {
     expect(facecam()!.contains(within(stage()).getByLabelText("Bruno's shared screen"))).toBe(false);
   });
 
-  it("keeps the facecam on the picture, inside its view, not on the box's dark sides (spec 0133, design decision 4)", async () => {
+  it("keeps the facecam on the picture, inside its view, not on the box's dark sides", async () => {
     await brunoWithBoth();
     const view = within(stage()).getByLabelText("Bruno's shared screen").closest("[class*=view]")!;
     expect(view.contains(facecam())).toBe(true);
   });
 
-  it("starts at the top right, clear of the round buttons and the fullscreen button (spec 0111)", async () => {
+  it("starts at the top right, clear of the round buttons and the fullscreen button", async () => {
     await brunoWithBoth();
     expect(facecam()!.style.left).toBe("73%");
     expect(facecam()!.style.top).toBe("4%");
@@ -1049,7 +1078,7 @@ describe("room: the facecam", () => {
 
   it("collapses to a tab and expands again", async () => {
     await brunoWithBoth();
-    const user = aUserEvent();
+    const user = clockUser();
 
     await user.click(within(facecam()!).getByRole("button", { name: "Hide facecam" }));
     expect(facecam()).toBeNull();
@@ -1075,7 +1104,7 @@ describe("room: the facecam", () => {
     installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
-    await user.click(within(controls()).getByRole("button", { name: /turn on your camera/i }));
+    await user.click(within(stage()).getByRole("button", { name: /turn on your camera/i }));
 
     await waitFor(() => expect(facecam()).not.toBeNull());
     expect(within(facecam()!).getByLabelText("Your camera")).toBeInTheDocument();
@@ -1086,14 +1115,14 @@ describe("room: the facecam", () => {
 
 // ---- sound and settings for each stream ----
 
-describe("room: theater mode (spec 0104)", () => {
+describe("room: theater mode", () => {
   it("has no sidebar or old header: a logo, the activity pill, people and account up top, and the footer", async () => {
     installFakeApi({ me: member() });
     renderRoom();
     await connected();
 
     const header = screen.getByRole("banner");
-    // The drawn mark, not the old typed "xovê.".
+    // The drawn mark, not the name typed as text.
     expect(within(header).getByRole("img", { name: "Xovê" })).toBeInTheDocument();
     expect(within(header).queryByText(/xovê/)).not.toBeInTheDocument();
     expect(within(header).getByRole("button", { name: /^Activity/ })).toBeInTheDocument();
@@ -1123,7 +1152,7 @@ describe("room: theater mode (spec 0104)", () => {
       lastRoom().publishScreen("user-7");
       lastRoom().publishCamera("user-7");
     });
-    const user = aUserEvent();
+    const user = clockUser();
 
     await user.click(screen.getByRole("button", { name: /^Activity/ }));
     await user.click(screen.getByRole("button", { name: "Bruno turned on their camera: watch" }));
@@ -1147,7 +1176,7 @@ describe("room: theater mode (spec 0104)", () => {
       lastRoom().join("user-7", "Bruno Lima");
       lastRoom().publishScreen("user-7");
     });
-    const user = aUserEvent();
+    const user = clockUser();
 
     await user.click(screen.getByRole("button", { name: /people here/ }));
 
@@ -1156,8 +1185,7 @@ describe("room: theater mode (spec 0104)", () => {
   });
 });
 
-describe("room: what's on my stage is reported (spec 0104)", () => {
-  const minutesAgo = (m: number) => new Date(Date.now() - m * 60_000);
+describe("room: what's on my stage is reported", () => {
   async function anaAndBruno() {
     const server = installFakeApi({ me: member() });
     server.streams = [
@@ -1191,6 +1219,7 @@ describe("room: what's on my stage is reported (spec 0104)", () => {
     await connected();
     await screen.findByRole("heading", { name: "Ana" });
 
+    // Longer than a report waits for stillness, and than a retry: had anything been sent, it would be by now.
     await pass(REPORT_STILL_MS + REPORT_RETRY_MS);
     expect(watchCalls(server)).toHaveLength(0);
 
@@ -1203,7 +1232,6 @@ describe("room: what's on my stage is reported (spec 0104)", () => {
 });
 
 describe("room: whose sound plays", () => {
-  const minutesAgo = (m: number) => new Date(Date.now() - m * 60_000);
   const thumbnails = () => screen.getByRole("list", { name: /other streams/i });
 
   async function anaAndBrunoWithSound() {
@@ -1225,14 +1253,14 @@ describe("room: whose sound plays", () => {
   }
 
   // A preview's buttons, in the row that pointing at it opens.
-  async function rowOf(name: string, user = aUserEvent()) {
+  async function rowOf(name: string, user = clockUser()) {
     await user.hover(within(thumbnails()).getByRole("button", { name: (n) => n.startsWith(`Watch ${name}`) }));
     return screen.findByRole("group", { name: `${name}'s sounds` });
   }
 
-  it("plays only the big person's sound until I turn a preview on; a preview's is downloaded only while I hear it (spec 0131)", async () => {
+  it("plays only the big person's sound until I turn a preview on; a preview's is downloaded only while I hear it", async () => {
     const { room, sound } = await anaAndBrunoWithSound();
-    const user = aUserEvent();
+    const user = clockUser();
 
     expect(sound("user-3").attached).toHaveLength(1);
     await waitFor(() => expect(room.soundPublication("user-7")!.setSubscribed).toHaveBeenLastCalledWith(false));
@@ -1251,9 +1279,9 @@ describe("room: whose sound plays", () => {
     expect(sound("user-7").attached).toHaveLength(0);
   });
 
-  it("plays a preview's voice I turn on, at its own volume, while it stays small (spec 0131, AC-1)", async () => {
+  it("plays a preview's voice I turn on, at its own volume, while it stays small", async () => {
     const { room, sound } = await anaAndBrunoWithSound();
-    const user = aUserEvent();
+    const user = clockUser();
     let voice!: ReturnType<typeof room.publishVoice>;
     act(() => {
       voice = room.publishVoice("user-7");
@@ -1282,7 +1310,7 @@ describe("room: whose sound plays", () => {
     expect(ana.volume).toBeCloseTo(before);
   });
 
-  it("locks a screen without sound on mute, for the big player and a thumbnail, until it gets sound (spec 0098)", async () => {
+  it("locks a screen without sound on mute, for the big player and a thumbnail, until it gets sound", async () => {
     localStorage.setItem("xove.watch.volume", "0.6");
     const server = installFakeApi({ me: member() });
     server.streams = [
@@ -1314,13 +1342,13 @@ describe("room: whose sound plays", () => {
     });
     const button = await within(stage()).findByRole("button", { name: "Mute the screen's sound" });
     expect(button).not.toHaveAttribute("aria-disabled");
-    await aUserEvent().hover(button);
+    await clockUser().hover(button);
     const slider = within(stage()).getByRole("slider", { name: "Screen sound volume" });
     await waitFor(() => expect(slider.closest("[inert]")).toBeNull());
     expect(slider).toHaveValue("0.6");
   });
 
-  it("greys a camera's screen sound, and its voice while the mic is off (spec 0123)", async () => {
+  it("greys a camera's screen sound, and its voice while the mic is off", async () => {
     const server = installFakeApi({ me: member() });
     server.streams = [
       someoneSharing("Ana Souza", 3, "camera", undefined, minutesAgo(10)),
@@ -1349,7 +1377,7 @@ describe("room: whose sound plays", () => {
 
   it("plays the new big person's sound after a swap, and mutes the one that left", async () => {
     const { room, sound } = await anaAndBrunoWithSound();
-    const user = aUserEvent();
+    const user = clockUser();
 
     await user.click(within(thumbnails()).getByRole("button", { name: /^Watch Bruno/ }));
 
@@ -1365,7 +1393,7 @@ describe("room: my settings for each of my streams", () => {
     const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
-    await user.click(within(controls()).getByRole("button", { name: /turn on your camera/i }));
+    await user.click(within(stage()).getByRole("button", { name: /turn on your camera/i }));
     await waitFor(() => expect(myLiveStream(server, "camera")).toBeDefined());
     const camera = lastRoom().localParticipant.lastCamera!;
 
@@ -1384,7 +1412,7 @@ describe("room: my settings for each of my streams", () => {
   });
 });
 
-describe("room: the stage hugs the picture (spec 0107)", () => {
+describe("room: the stage hugs the picture", () => {
   const shapeOfStage = () =>
     Number(
       screen.getByRole("region", { name: "Shared screen" }).querySelector("[data-shape]")?.getAttribute("data-shape"),
@@ -1422,7 +1450,7 @@ describe("room: the stage hugs the picture (spec 0107)", () => {
   });
 });
 
-describe("room: under the stage (spec 0107)", () => {
+describe("room: under the stage", () => {
   it("shows who's watching the stage: me included, never the sharer", async () => {
     const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
@@ -1461,7 +1489,7 @@ describe("room: under the stage (spec 0107)", () => {
   });
 });
 
-describe("room: the empty stage glows (spec 0123)", () => {
+describe("room: the empty stage glows", () => {
   it("lights its corners at the ambilight's brightness, with no ambilight canvas", async () => {
     installFakeApi({ me: member() });
     const { container } = renderRoom();
@@ -1473,7 +1501,7 @@ describe("room: the empty stage glows (spec 0123)", () => {
   });
 });
 
-describe("room: my voice (spec 0123)", () => {
+describe("room: my voice", () => {
   const mic = () => lastRoom().localParticipant.mic;
 
   it("shows my mic only while I'm live, off at first, and turns my voice on and off; it takes no place", async () => {
@@ -1499,7 +1527,7 @@ describe("room: my voice (spec 0123)", () => {
     await startSharing(user);
     await user.click(within(stage()).getByRole("button", { name: "Share your voice" }));
     await waitFor(() => expect(mic()).not.toBeNull());
-    await user.click(within(controls()).getByRole("button", { name: /stop sharing/i }));
+    await user.click(within(stage()).getByRole("button", { name: /stop sharing/i }));
     await waitFor(() => expect(mic()).toBeNull());
   });
 

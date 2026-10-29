@@ -51,19 +51,15 @@ Most tests render a real page, or the whole app at a URL (`testing/renderApp.tsx
 - **Factories** (`testing/factories/`) make each test's own data, fresh on every call: `aSharer()` (someone sharing, with new tracks), `aTrack()`, `aLiveStream()` and `anAnswer()` (the API's streams answer, for the room's model), and `onFakeClock()` (fake timers on a fixed clock, with a `userEvent` that moves them along).
 - **No canvas:** jsdom has none, so `testing/setup.ts` makes every canvas give no drawing context; what draws (the ambilight, the standby screen's static) does nothing in tests. A test of the drawing stubs its own context (`vi.spyOn(HTMLCanvasElement.prototype, "getContext")`), and how it looks is checked in a real browser.
 
-The room page's tests check only the wiring: that a click on the page reaches the store, LiveKit and the API, and the screen shows the result. What decides (the model, the hooks, the services) is tested in its own unit. They run on a fixed fake clock (`vi.useFakeTimers` in a `beforeEach`, and a `userEvent` that moves it); a delay is passed with `pass(<the app's constant>)`, never waited out. From `pages/RoomPage.test.tsx`:
+The room page's tests check only the wiring: that a click on the page reaches the store, LiveKit and the API, and the screen shows the result. What decides (the model, the hooks, the services) is tested in its own unit. They run on a fixed fake clock (`onFakeClock()` in a `beforeEach`, and `clockUser()`, a `userEvent` that moves it); a delay is passed with `pass(<the app's constant>)`, never waited out. From `pages/RoomPage.test.tsx`: Ana and Bruno share, and once my stage has been still for a second, the page tells the API whom I watch.
 
 ```tsx
-it("stops the video and ends the stream", async () => {
-  const server = installFakeApi({ me: member });
-  const user = await readyRoom();
-  await startSharing(user);
+it("reports whose stream is on my stage, once it settles", async () => {
+  const server = await anaAndBruno();
 
-  await user.click(within(controls()).getByRole("button", { name: /stop sharing/i }));
-
-  expect(await screen.findByText("0 of 6 live")).toBeInTheDocument();
-  expect(lastRoom().localParticipant.isScreenShareEnabled).toBe(false);
-  expect(myLiveStream(server)).toBeUndefined();
+  await pass(REPORT_STILL_MS);
+  await waitFor(() => expect(server.myWatch).toEqual({ sharerId: 3, kind: "screen" }));
+  expect(watchCalls(server)).toHaveLength(1);
 });
 ```
 
@@ -97,7 +93,7 @@ Every test earns its place, and runs alone, in any order, fast.
 - **Fast:** a test under about 100 ms, a file under about 1.5 s, the whole suite in about 10 s; a file that grows past that splits by feature, so the workers share the load.
 - **A flaky test is a bug:** fix its cause (usually time or shared state); never re-run it to pass.
 
-These rules are being applied as the app is reorganised ([Architecture](architecture.md#where-the-code-is-going)). Every test passes alone and shuffled, builds its own data and setup, and never waits in real time. The room page's tests are one file of about 6 s; they move beside the room's parts when the page is split into them.
+These rules are being applied as the app is reorganised ([Architecture](architecture.md#where-the-code-is-going)). Every test passes alone and shuffled, builds its own data and setup, and never waits in real time. The room page's tests are one file; they move beside the room's parts when the page is split into them.
 
 ## Running them
 
