@@ -1,107 +1,15 @@
-import type { TrackPublishOptions, VideoCaptureOptions, VideoPreset } from "livekit-client";
 import type { StreamMode, StreamQuality } from "@core/api/api.types";
-import { CAMERA_QUALITIES, SHARE_QUALITIES } from "@core/devices/devices.constants";
+import { BEST_SCREEN, SHARE_QUALITIES } from "@core/devices/devices.constants";
 
-/**
- * How a shared screen is captured and sent (spec 0086). LiveKit's defaults are
- * tuned for slides and voice calls (15 fps, sharpness first, voice filters on the
- * sound); these are tuned for games and videos, within a bandwidth budget.
- */
+/** What the room's screens show about a stream's quality and mode. How they're sent is in core/livekit. */
 
-const presetOf = (quality: StreamQuality) => SHARE_QUALITIES.find((q) => q.id === quality) ?? SHARE_QUALITIES[0];
+const presetOf = (quality: StreamQuality) => SHARE_QUALITIES.find((q) => q.id === quality) ?? BEST_SCREEN;
 
 /** The modes, plain, as the settings show them, with what each keeps in their tooltips (spec 0107). */
 export const MODE_OPTIONS: { value: StreamMode; label: string; title: string }[] = [
   { value: "smooth", label: "Smooth", title: "Keeps motion fluid when the connection is tight: games, videos" },
   { value: "sharp", label: "Sharp", title: "Keeps detail sharp when the connection is tight: text, code" },
 ];
-
-/** The content hint for a mode: how the browser encodes the screen. */
-export const contentHintOf = (mode: StreamMode) => (mode === "smooth" ? "motion" : "detail");
-
-/** How the browser trades quality when the connection is tight, for a mode. */
-export const degradationOf = (mode: StreamMode): RTCDegradationPreference =>
-  mode === "smooth" ? "maintain-framerate" : "maintain-resolution";
-
-/**
- * How the screen is sent: VP9 (VP8 where the browser can't), always with one layer
- * per quality (1080p, 720p, 480p). The sharer's chosen quality is a cap on top of
- * that (`capOf`), so it can go up or down while sharing, with no reload.
- */
-export function screenPublishOptions(mode: StreamMode): TrackPublishOptions {
-  const [preset, ...lower] = SHARE_QUALITIES;
-  return {
-    videoCodec: "vp9",
-    backupCodec: { codec: "vp8" },
-    // VP9 as real layers ("L1T3" per layer), so a viewer gets exactly 1080p, 720p or 480p.
-    simulcast: true,
-    scalabilityMode: "L1T3",
-    screenShareEncoding: { maxBitrate: preset.maxBitrate, maxFramerate: preset.fps },
-    screenShareSimulcastLayers: lower.map(
-      (l) =>
-        ({
-          width: l.width,
-          height: l.height,
-          encoding: { maxBitrate: l.maxBitrate, maxFramerate: l.fps },
-        }) as VideoPreset,
-    ),
-    // Smooth: lower the resolution before the frame rate. Sharp: the other way round.
-    degradationPreference: degradationOf(mode),
-    // Stereo at music quality, and no silence skipping (it chops quiet moments).
-    audioPreset: { maxBitrate: 128_000 },
-    forceStereo: true,
-    dtx: false,
-  };
-}
-
-/**
- * What the browser asks the camera for: 720p at 30 fps (the mode's content hint is set
- * on the track when it's sent). The microphone is never asked for.
- */
-export function cameraCaptureOptions(deviceId?: string | null): VideoCaptureOptions {
-  const preset = CAMERA_QUALITIES[0];
-  return {
-    resolution: { width: preset.width, height: preset.height, frameRate: preset.fps },
-    // `ideal`: when the camera picked is gone, the browser uses another instead of failing.
-    ...(deviceId ? { deviceId: { ideal: deviceId } } : {}),
-  };
-}
-
-/** How a camera is sent: like a screen (VP9, VP8 fallback), with a 720p and a 480p layer. */
-export function cameraPublishOptions(mode: StreamMode): TrackPublishOptions {
-  const [preset, ...lower] = CAMERA_QUALITIES;
-  return {
-    videoCodec: "vp9",
-    backupCodec: { codec: "vp8" },
-    simulcast: true,
-    scalabilityMode: "L1T3",
-    videoEncoding: { maxBitrate: preset.maxBitrate, maxFramerate: preset.fps },
-    videoSimulcastLayers: lower.map(
-      (l) =>
-        ({
-          width: l.width,
-          height: l.height,
-          encoding: { maxBitrate: l.maxBitrate, maxFramerate: l.fps },
-        }) as VideoPreset,
-    ),
-    degradationPreference: degradationOf(mode),
-  };
-}
-
-/**
- * The highest layer to send for a chosen quality, as LiveKit counts them (0 = lowest).
- * A screen has three layers (480p, 720p, 1080p), a camera two (480p, 720p): the
- * numbers line up for both.
- */
-export function capOf(quality: StreamQuality): 0 | 1 | 2 {
-  return quality === "1080p" ? 2 : quality === "720p" ? 1 : 0;
-}
-
-/** The size a quality asks the server for. */
-export const sizeOf = (quality: StreamQuality) => {
-  const preset = presetOf(quality);
-  return { width: preset.width, height: preset.height };
-};
 
 /**
  * The qualities a viewer can receive for a screen whose top layer is `height` pixels
@@ -111,7 +19,7 @@ export const sizeOf = (quality: StreamQuality) => {
  */
 export function viewerQualities(height: number, layers?: number, cap?: StreamQuality): StreamQuality[] {
   const ascending = [...SHARE_QUALITIES].reverse();
-  const top = ascending.find((q) => height <= q.height) ?? SHARE_QUALITIES[0];
+  const top = ascending.find((q) => height <= q.height) ?? BEST_SCREEN;
   // The sharer's chosen quality caps what anyone can pick (it can change while sharing).
   const capHeight = presetOf(cap ?? "1080p").height;
   const offered = SHARE_QUALITIES.filter((q) => q.height <= Math.min(top.height, capHeight)).map((q) => q.id);

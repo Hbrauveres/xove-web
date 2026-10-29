@@ -660,15 +660,8 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/media/shareSettings.test.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/media/shareSettings.ts",
-    "count": 2,
+    "count": 1,
     "owner": "#183 the room's hooks"
   },
   {
@@ -1062,13 +1055,6 @@
     "file": "src/hooks/useLiveKitRoom.ts",
     "count": 1,
     "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "code",
-    "rule": "livekit",
-    "file": "src/media/shareSettings.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
   },
   {
     "tool": "code",
@@ -4117,13 +4103,6 @@
   },
   {
     "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/media/shareSettings.ts",
-    "count": 2,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "lint",
     "rule": "jsx-a11y(click-events-have-key-events)",
     "file": "src/components/stage/HearToggles.tsx",
     "count": 1,
@@ -4523,13 +4502,6 @@
   },
   {
     "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/media/shareSettings.ts",
-    "count": 2,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "lint",
     "rule": "typescript(no-non-null-assertion)",
     "file": "src/components/stage/AlsoLive.tsx",
     "count": 2,
@@ -4582,13 +4554,6 @@
     "rule": "TS18048",
     "file": "src/media/ambilight.test.ts",
     "count": 3,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS18048",
-    "file": "src/media/shareSettings.ts",
-    "count": 10,
     "owner": "#183 the room's hooks"
   },
   {
@@ -4937,13 +4902,6 @@
   {
     "tool": "tsc",
     "rule": "TS2532",
-    "file": "src/media/shareSettings.ts",
-    "count": 1,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
     "file": "src/pages/RoomPage.test.tsx",
     "count": 11,
     "owner": "#184 the room page's tests"
@@ -5044,13 +5002,6 @@
     "rule": "exports",
     "file": "src/media/ambilight.ts",
     "count": 2,
-    "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
-    "file": "src/media/shareSettings.ts",
-    "count": 1,
     "owner": "#183 the room's hooks"
   },
   {

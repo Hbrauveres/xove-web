@@ -22,6 +22,18 @@ export const RoomEvent = {
 
 export const VideoQuality = { LOW: 0, MEDIUM: 1, HIGH: 2 } as const;
 
+/** A simulcast layer, as LiveKit's own class keeps it. */
+export class VideoPreset {
+  width: number;
+  height: number;
+  encoding: { maxBitrate: number; maxFramerate?: number };
+  constructor(width: number, height: number, maxBitrate: number, maxFramerate?: number) {
+    this.width = width;
+    this.height = height;
+    this.encoding = { maxBitrate, ...(maxFramerate === undefined ? {} : { maxFramerate }) };
+  }
+}
+
 export const ConnectionState = {
   Disconnected: "disconnected",
   Connecting: "connecting",

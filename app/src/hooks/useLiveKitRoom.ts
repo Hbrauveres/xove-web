@@ -25,7 +25,7 @@ import {
   contentHintOf,
   degradationOf,
   screenPublishOptions,
-} from "../media/shareSettings";
+} from "@core/livekit/publish-options.util";
 import type { ActivityEvent, ConnectionState, MediaTrack, RemoteVideo } from "../types";
 import { CAMERA_BLOCKED } from "@core/devices/devices.constants";
 import type { CameraDevice, CameraProblem, MicDevice, ScreenSurface, VoiceProblem } from "@core/devices/devices.types";

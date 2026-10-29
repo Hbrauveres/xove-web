@@ -3,7 +3,12 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 import { screenCaptureRequest } from "@core/devices/screen-picker.util";
-import { cameraCaptureOptions, cameraPublishOptions, capOf, screenPublishOptions } from "../media/shareSettings";
+import {
+  cameraCaptureOptions,
+  cameraPublishOptions,
+  capOf,
+  screenPublishOptions,
+} from "@core/livekit/publish-options.util";
 import { AuthProvider } from "@core/auth/auth.store";
 import { aUser, installFakeApi, MY_USER_ID, myLiveStream, someoneSharing } from "../test/fakeApi";
 import { FakeLocalScreenTrack, lastRoom } from "../test/fakeLiveKit";

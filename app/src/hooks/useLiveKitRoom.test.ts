@@ -1,6 +1,6 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { capOf } from "../media/shareSettings";
+import { capOf } from "@core/livekit/publish-options.util";
 import { aUser, installFakeApi } from "../test/fakeApi";
 import {
   FakeLocalCameraTrack,
