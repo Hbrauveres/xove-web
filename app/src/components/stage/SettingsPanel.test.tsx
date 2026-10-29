@@ -4,7 +4,7 @@ import { StrictMode } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { moveFakeTimers } from "../../test/factories/clock.factory";
 import type { SharePrefs } from "../../media/preferences";
-import type { StreamKind } from "../../types";
+import type { StreamKind } from "@core/api/api.types";
 import { CAMERA_BLOCKED } from "../../hooks/useLiveKitRoom";
 import { NO_SOUND } from "./PlayerButtons";
 import { CUE_MS, SettingsPanel } from "./SettingsPanel";

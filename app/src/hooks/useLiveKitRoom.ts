@@ -11,7 +11,7 @@ import {
   type RemoteParticipant,
   type RemoteTrackPublication,
 } from "livekit-client";
-import { ApiError, api } from "../api/client";
+import { ApiError, api } from "@core/api/api-client.service";
 import type { SharingConnection } from "@core/api/api.types";
 import { NoiseGate } from "../media/noiseGate";
 import { loadCameraDevice, saveCameraDevice, type SharePrefs, type VoicePrefs } from "../media/preferences";
@@ -27,7 +27,8 @@ import {
   screenPublishOptions,
   type ShareMode,
 } from "../media/shareSettings";
-import type { ActivityEvent, CameraDevice, ConnectionState, MediaTrack, RemoteVideo, StreamKind } from "../types";
+import type { StreamKind } from "@core/api/api.types";
+import type { ActivityEvent, CameraDevice, ConnectionState, MediaTrack, RemoteVideo } from "../types";
 
 /**
  * Opens the browser's picker, and asks it to stay on Xovê once something is picked

@@ -8,13 +8,14 @@ import type {
   StreamKind,
   StreamSettings,
   StreamsState,
-} from "@core/api/api.types";
+} from "./api.types";
+import { FALLBACK_MESSAGES } from "./api.constants";
 
 /** An error the API answered with. `message` is safe to show to the user. */
 export class ApiError extends Error {
   readonly status: number;
   /** Why, when the API says (e.g. "full" when the 6 stream places are taken). */
-  readonly reason?: string;
+  readonly reason: string | undefined;
 
   constructor(status: number, message: string, reason?: string) {
     super(message);
@@ -23,52 +24,42 @@ export class ApiError extends Error {
   }
 }
 
-/** Where the browser goes to start Google login. A full page navigation, not a fetch. */
-export const GOOGLE_LOGIN_URL = "/api/oauth2/authorization/google";
-
 /** Spring puts the CSRF token in a readable cookie; every non-GET request must echo it back. */
-export function readCsrfToken(): string | undefined {
-  const match = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]+)/);
-  return match ? decodeURIComponent(match[1]) : undefined;
+function readCsrfToken(): string | undefined {
+  const value = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]+)/)?.[1];
+  return value === undefined ? undefined : decodeURIComponent(value);
 }
 
-const FALLBACK_MESSAGES: Record<number, string> = {
-  401: "Your session ended. Sign in again.",
-  403: "You don't have permission to do that.",
-  404: "That no longer exists.",
-  409: "That was already done.",
-};
-
-/** `keepalive`: the request still goes out while the page is closing. */
-async function request<T>(method: string, path: string, body?: unknown, keepalive = false): Promise<T> {
+function headersFor(method: string, hasBody: boolean): Record<string, string> {
   const headers: Record<string, string> = { Accept: "application/json" };
-  if (body !== undefined) headers["Content-Type"] = "application/json";
-  if (method !== "GET") {
-    const token = readCsrfToken();
-    if (token) headers["X-XSRF-TOKEN"] = token;
-  }
+  if (hasBody) headers["Content-Type"] = "application/json";
+  const token = method === "GET" ? undefined : readCsrfToken();
+  if (token) headers["X-XSRF-TOKEN"] = token;
+  return headers;
+}
 
-  const init: RequestInit = { method, headers, credentials: "same-origin" };
+/** The API answers errors as RFC 9457 problem details: { status, title, detail, reason }. */
+async function errorFrom(response: Response): Promise<ApiError> {
+  let message = FALLBACK_MESSAGES[response.status] ?? "Something went wrong. Try again.";
+  let reason: string | undefined;
+  try {
+    const data = await response.json();
+    if (typeof data?.detail === "string" && data.detail.length > 0) message = data.detail;
+    if (typeof data?.reason === "string") reason = data.reason;
+  } catch {
+    // empty or non-JSON body: keep the fallback message
+  }
+  return new ApiError(response.status, message, reason);
+}
+
+/** `keepalive`: the request still goes out while the page is closing. An empty answer reads as null. */
+async function request<T>(method: string, path: string, body?: unknown, keepalive = false): Promise<T> {
+  const init: RequestInit = { method, headers: headersFor(method, body !== undefined), credentials: "same-origin" };
   if (body !== undefined) init.body = JSON.stringify(body);
   if (keepalive) init.keepalive = true;
   const response = await fetch(path, init);
-
-  if (!response.ok) {
-    let message = FALLBACK_MESSAGES[response.status] ?? "Something went wrong. Try again.";
-    let reason: string | undefined;
-    try {
-      // The API answers errors as RFC 9457 problem details: { status, title, detail, ... }
-      const data = await response.json();
-      if (typeof data?.detail === "string" && data.detail.length > 0) message = data.detail;
-      if (typeof data?.reason === "string") reason = data.reason;
-    } catch {
-      // empty or non-JSON body: keep the fallback message
-    }
-    throw new ApiError(response.status, message, reason);
-  }
-
-  const text = await response.text();
-  return (text ? JSON.parse(text) : undefined) as T;
+  if (!response.ok) throw await errorFrom(response);
+  return JSON.parse((await response.text()) || "null");
 }
 
 export const api = {
@@ -84,7 +75,7 @@ export const api = {
     settings: (kind: StreamKind, settings: StreamSettings) =>
       request<StreamsState>("POST", `/api/streams/${kind}/settings`, settings),
     stop: (kind: StreamKind) => request<StreamsState>("POST", `/api/streams/${kind}/stop`),
-    /** What's on my stage (spec 0104): someone's screen or camera, or null for an empty stage. */
+    /** What's on my stage: someone's screen or camera, or null for an empty stage. */
     watching: (target: { sharerId: number; kind: StreamKind } | null) =>
       request<void>("PUT", "/api/streams/watching", target ?? {}),
   },

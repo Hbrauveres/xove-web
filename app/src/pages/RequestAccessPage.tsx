@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
-import { api, ApiError } from "../api/client";
+import { api, ApiError } from "@core/api/api-client.service";
 import type { Me } from "@core/api/api.types";
 import { useAuth } from "../auth/AuthProvider";
 import { Button } from "../components/ui/Button";

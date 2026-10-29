@@ -1,8 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { installFakeApi } from "../test/fakeApi";
-import { api, ApiError } from "./client";
+import { installFakeApi } from "../../test/fakeApi";
+import { api, ApiError } from "./api-client.service";
 
 describe("api client", () => {
+  it("sends the request to leave the queue even while the page closes", async () => {
+    const server = installFakeApi();
+
+    await api.room.leave();
+
+    expect(server.calls.at(-1)).toMatchObject({ method: "POST", path: "/api/room/leave", keepalive: true });
+  });
+
   it("sends the CSRF token from the cookie on POST", async () => {
     const server = installFakeApi();
     document.cookie = "XSRF-TOKEN=abc-123";
@@ -42,7 +50,7 @@ describe("api client", () => {
     });
   });
 
-  it("reports what's on my stage, or an empty stage as {} (spec 0104)", async () => {
+  it("reports what's on my stage, or an empty stage as {}", async () => {
     const server = installFakeApi();
     document.cookie = "XSRF-TOKEN=abc-123";
 

@@ -9,21 +9,12 @@ import {
   type SharePrefs,
   type VoicePrefs,
 } from "../media/preferences";
-import type {
-  ActivityEvent,
-  CameraDevice,
-  ConnectionState,
-  Friend,
-  LiveFeed,
-  MediaTrack,
-  Sharer,
-  StreamKind,
-} from "../types";
-import type { LiveStream, RoomSeatsState } from "@core/api/api.types";
+import type { ActivityEvent, CameraDevice, ConnectionState, Friend, LiveFeed, MediaTrack, Sharer } from "../types";
+import type { LiveStream, RoomSeatsState, StreamKind } from "@core/api/api.types";
 import { useLiveKitRoom, type CameraProblem, type Capture, type MicDevice, type ScreenSurface } from "./useLiveKitRoom";
 import { showToast } from "../components/ui/toast";
 import { useStreams } from "./useStreams";
-import { api as client } from "../api/client";
+import { api as client } from "@core/api/api-client.service";
 
 /**
  * Everything the room page shows, from two sources:

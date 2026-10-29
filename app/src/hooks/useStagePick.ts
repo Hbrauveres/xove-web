@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { stagePick } from "../media/stagePick";
-import type { Sharer, StreamKind } from "../types";
+import type { StreamKind } from "@core/api/api.types";
+import type { Sharer } from "../types";
 
 export type StagePick = {
   /** Who is big, or null on an empty stage. */

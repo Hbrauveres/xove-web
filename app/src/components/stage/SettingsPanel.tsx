@@ -11,7 +11,8 @@ import {
   type ShareMode,
   type ShareQuality,
 } from "../../media/shareSettings";
-import type { CameraDevice, MediaTrack, StreamKind } from "../../types";
+import type { StreamKind } from "@core/api/api.types";
+import type { CameraDevice, MediaTrack } from "../../types";
 import { Picker } from "../ui/Picker";
 import { Segmented } from "../ui/Segmented";
 import { showToast } from "../ui/toast";

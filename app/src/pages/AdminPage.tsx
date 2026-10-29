@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router";
-import { api, ApiError } from "../api/client";
+import { api, ApiError } from "@core/api/api-client.service";
 import type { AccessRequestView, MemberView } from "@core/api/api.types";
 import { Button } from "../components/ui/Button";
 import { PersonAvatar } from "../components/ui/PersonAvatar";
