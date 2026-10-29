@@ -2,7 +2,7 @@
 
 Everything Xovê looks like, in one place: the name, the mark, the icons, the colours, the type, the shapes and motion, every control, and each screen on a desktop, and the one screen phones and tablets see. It's the reference for new work: **use what's here before adding anything new**, and update this page in the same PR when the look changes.
 
-The pictures are shot from the real app (`design-sheet.mjs`, see [Keeping this page current](#keeping-this-page-current)). The values come from the code: `app/src/styles/global.css` (the tokens), `app/src/brand/` (the mark) and each component's CSS module.
+The pictures are shot from the real app (`design-sheet.mjs`, see [Keeping this page current](#keeping-this-page-current)). The values come from the code: `app/src/shared/styles/global.css` (the tokens), `app/src/brand/` (the mark) and each component's CSS module.
 
 ![The room on a desktop](images/design/room-desktop.png)
 

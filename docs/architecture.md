@@ -20,46 +20,47 @@ Everything is in `app/src`:
 | Folder | Owns |
 | --- | --- |
 | `pages/` | One component per route: `HomePage`, `RequestAccessPage`, `RoomPage`, `AdminPage` |
-| `hooks/` | Generic hooks waiting for `shared/hooks/`: the video's shape (`useVideoShape`), the round buttons' row holding the clicked button still (`usePinnedRow`), and a small one (`useFullscreenElement`); the stream's elapsed time is `shared/hooks/use-elapsed.hook.ts`, and whether the keyboard was used last `shared/hooks/use-keyboard-last.hook.ts` |
+| `hooks/` | Generic hooks waiting for their step: the video's shape (`useVideoShape`), the round buttons' row holding the clicked button still (`usePinnedRow`), and a small one (`useFullscreenElement`) |
 | `media/` | The ambilight's drawing (`ambilight.ts`), until the stage moves into the room feature |
-| `features/room/state/` | Working code only. The settings queue (`settings-queue.service.ts`: changes one after another, a refused one put back). The room as data (`room.model.ts`: people by their id, streams, who watches whom, arrivals, the seat, the activity, my streams' steps, changed by pure functions), what the room shows (`room.selectors.ts`), and `RoomStore` (`room.store.ts`): the one place the seat, the streams and entering again are polled, the video room joined, and the room's actions sent |
-| `features/room/hooks/` | The room's hooks, each one job over the store: the store for the page (`use-room-store`, with the sound unlock, the devices and the camera remembered); what the room shows (`use-room-view`); what I send (`use-my-sending`: my streams, their settings through a queue, the camera's preview and switch, changing the window), keeping my streams and the API in step (`use-stream-sync`), my voice (`use-my-voice`); the activity (`use-activity-feed`), the watch report (`use-watch-report`); who's big (`use-stage`), what I hear and what's downloaded (`use-hearing`); the mic's level |
-| `features/room/utils/` | The room's helpers, each with its test: the watch report, the stage pick, hearing, what a viewer can pick, each person's colour, when the room can show; and the model's own: a person's id, the first name, keeping the same record, the same people, the streams (`room-streams`), the API's answer (`room-answer`), the activity's events, a sharer's feed, waiting for a seat |
+| `features/room/stores/room-store/` | The room's store, a unit: the room as data (`room.model.ts`: people by their id, streams, who watches whom, arrivals, the seat, the activity, my streams' steps, changed by pure functions), what the room shows (`room.selectors.ts`), and `RoomStore` (`room.store.ts`): the one place the seat, the streams and entering again are polled, the video room joined, and the room's actions sent; its hooks `use-room-store` (the store, the room, the video) and `use-room-seat` (the seat and its actions), and the helpers only it uses in `utils/` (the streams, the API's answer, the activity's events, a sharer's feed, keeping the same record, waiting for a seat) |
+| `features/room/hooks/` | The room's hooks, each one job over the store: the sound unlock, the devices, the camera remembered; what the room shows (`use-room-view`); what I send (`use-my-sending`: my streams, their settings through a queue, the camera's preview and switch, changing the window), keeping my streams and the API in step (`use-stream-sync`), my voice (`use-my-voice`); the activity (`use-activity-feed`), the watch report (`use-watch-report`); who's big (`use-stage`), what I hear and what's downloaded (`use-hearing`); the mic's level; the stream's elapsed time (`use-elapsed`) and whether the keyboard was used last (`use-keyboard-last`) |
+| `features/room/utils/` | The helpers several of the room's pieces share, each with its test beside it: the watch report, the stage pick, hearing, what a viewer can pick, when the room can show, a person's id, the first name, a clock's two digits |
 | `features/room/types/`, `features/room/constants/` | The room's types (the room as data, a person, a stream, a sharer, the activity, each hook's inputs) and its constants (the poll, the activity kept, the room's messages, the watch report's delays) |
-| `features/room/tests/` | The room's tests, at the same path as their file (`tests/hooks/use-stage.hook.test.ts` for `hooks/use-stage.hook.ts`) |
 | `components/stage/` | The player and what's on it: the stage, the ambilight, the controls by owner: my own stream's round buttons (`PlayerButtons`; their icons in `icons.tsx`, the drop-ups on live ones) and, over someone else's stream, `ViewerBar` (what I hear at the left, each sound its own button and slider; my mic or Go live at the right); the voice I hear (`VoiceAudio`), each person's switches and volumes held by the stage for the visit (the hook `features/room/hooks/use-hearing.hook.ts`, its rules in `features/room/utils/hearing.util.ts`), and the previews' buttons (`HearToggles`, in a small preview's row, `PreviewTray`, which floats on its own layer over the page and follows its preview, opened through `usePreviewTray`; a preview's stack and its swap's moment in `stack.ts`); the settings panel (`SettingsPanel`, its Voice tab's mic level in `MicTest`), the facecam, the previews, the empty stage (`EmptyStage`, a TV on standby: the ways to start, alone in their row; with nobody live the settings are `ViewerBar`'s settings-only form, in the corner; its corners' glow in `CornerGlow`; its TV static in `StaticNoise`, a small canvas the page draws 20 times a second, its grain and bands scaled to the stage; the static's light round the stage in `StaticGlow`; both read their bands from `staticBands.ts`, so they roll together, and its `tv` flag lets the TV's turn-on play only the first time the stage stands by in a visit), the info row. The stage is two layers: its box holds every control (the round buttons, the sounds, Go live, the fullscreen button) and takes the pointer; a view inside it holds the picture and its ambilight in the picture's shape |
 | `components/room/` | The room around the stage: header, footer, people, activity (pill, list), account menu, the waiting screen and the seat offer |
 | `components/ui/` | Shared controls: `Button`, `Range`, `Dropdown`, `Segmented`, `Picker` (a list that floats over its panel, masking what's behind it in the nearest `[data-list-host]`; it opens on request too), `DropUp` (its gestures can redirect to an open panel), `Tooltip` (the app's only tooltip, on its own layer, describing its control for screen readers), `floating.ts` (one tooltip or drop-up showing at a time, what floats inside another belonging to it), the cue (`cue.module.css`), `Avatar`, `PersonAvatar`, `FullPageMessage`, `Toast` (a short message any component shows with `showToast`) |
 | `components/brand/`, `brand/` | The mark: its geometry and animation timeline (`brand/`), and the components that draw it (`XoveMark`, `XoveIcon`) |
-| `app/` | The shell: the root (`root.component.tsx`), the routes (`app.component.tsx`) and who may open each (`route-guard/`, its rule in `utils/route-access.util.ts`) |
-| `core/api/` | The HTTP client (`api-client.service.ts`): one function per endpoint, the call itself and its errors as `ApiError`; the CSRF token and the headers in `utils/`, the API's types in `types/`, its messages in `constants/` |
-| `core/auth/` | Who is signed in (`AuthProvider` in `auth.store.tsx`, which asks `GET /api/me` once and on demand; `useAuth`) |
-| `core/preferences/` | Choices each browser keeps (`preferences.service.ts`): how I send a screen or a camera, the camera and mic picked, my voice's processing, how I hear a stream or a voice, the stage light; blocked storage gives the defaults (`storage.service.ts`, with the stored values' checks in `utils/preference-values.util.ts`) |
-| `core/livekit/` | The video server, the only place that uses `livekit-client`: the adapter (`livekit.adapter.ts`: connects with the access it's given, keeps the room's state per person, takes commands), what's captured, sent, changed and heard (`capture`, `send`, `screen-change`, `screen-sound`, `voice` services), what someone sends read into plain data (`remote-media.adapter.ts`), the noise gate's processor; its helpers in `utils/` (how streams are sent, the room's state per person, the mic's problems), its types and constants beside them |
-| `core/devices/` | The browser's devices: the screen picker, the cameras and mics and the mic's meter as services (they ask the browser); a phone or a tablet (`utils/is-handheld.util.ts`), the picker's request and the noise gate's maths as helpers; the stream presets in `constants/` |
-| `features/phone-notice/` | What phones and tablets see instead of the app ([below](#phones-and-tablets)) |
-| `styles/` | The design tokens (`global.css`) and the tests that check them |
-| `test/` | The test helpers: a fake API, a fake LiveKit, and rendering the app at a URL ([Testing](testing.md)) |
+| `routes/` | Which page opens at which address, and who may open it: the root (`root/`), the route table (`app-routes/`), the guard (`route-guard/`, its rule in its `utils/route-access.util.ts`) |
+| `services/xove-api-service/` | The HTTP client (`xove-api.service.ts`): one function per endpoint, the call itself and its errors as `ApiError`; the CSRF token and the headers in `utils/`, the API's types in `types/`, its messages in `constants/` |
+| `shared/stores/auth-store/` | Who is signed in (`AuthProvider` in `auth.store.tsx`, which asks `GET /api/me` once and on demand; `useAuth` in its `hooks/`) |
+| `services/settings-queue-service/` | My stream's settings on their way to the API: changes one after another, a refused one put back |
+| `services/preferences-service/` | Choices each browser keeps (`preferences.service.ts`): how I send a screen or a camera, the camera and mic picked, my voice's processing, how I hear a stream or a voice, the stage light; blocked storage gives the defaults (`storage.service.ts`, with the stored values' checks in `utils/preference-values.util.ts`) |
+| `services/livekit-service/` | The video server, the only place that uses `livekit-client`: the adapter (`livekit.adapter.ts`: connects with the access it's given, keeps the room's state per person, takes commands), what's captured, sent, changed and heard (`capture`, `send`, `screen-change`, `screen-sound`, `voice` services), what someone sends read into plain data (`remote-media.adapter.ts`), the noise gate's processor; its helpers in `utils/` (how streams are sent, the room's state per person, the mic's problems), its types and constants beside them |
+| `services/media-devices-service/` | The browser's devices: the screen picker, the cameras and mics and the mic's meter as services (they ask the browser); a phone or a tablet (`utils/is-handheld.util.ts`), the picker's request and the noise gate's maths as helpers; the stream presets in `constants/` |
+| `features/phone-notice/` | What phones and tablets see instead of the app ([below](#phones-and-tablets)): its page and art in `components/` |
+| `features/admin/utils/` | The admin page's helper ("3 min ago"), until the page moves in |
+| `shared/` | What the whole app uses: the auth store, the time constants, the design tokens (`styles/global.css`) |
+| `testing/` | The test helpers: a fake API, a fake LiveKit, and rendering the app at a URL ([Testing](testing.md)); only tests import it |
 
-At the top, `main.tsx` starts the app, `app/root.component.tsx` chooses between the app and the phone notice, and `app/app.component.tsx` holds the routes.
+At the top, `main.tsx` starts the app, `routes/root/root.component.tsx` chooses between the app and the phone notice, and `routes/app-routes/app-routes.component.tsx` holds the routes.
 
 ```mermaid
 flowchart TD
   P[pages] --> C[components]
   P --> H[hooks]
-  P --> A[core/api]
+  P --> A[services/xove-api-service]
   C --> H
   H --> A
-  H --> LK[core/livekit]
+  H --> LK[services/livekit-service]
   H --> M[media]
   C --> M
-  H --> PR[core/preferences]
+  H --> PR[services/preferences-service]
   C --> PR
-  P --> AU[core/auth]
+  P --> AU[shared/stores/auth-store]
   AU --> A
-  R[app/root.component.tsx] --> D[core/devices]
+  R[routes/root/root.component.tsx] --> D[services/media-devices-service]
   R --> N[features/phone-notice]
-  R --> APP[app/app.component.tsx]
+  R --> APP[routes/app-routes/app-routes.component.tsx]
   APP --> G[app/route-guard]
   G --> AU
   APP --> P
@@ -69,7 +70,7 @@ Pages put the room together; components draw it; hooks own the state and talk to
 
 ## Routes
 
-`app/app.component.tsx` maps each route to a page behind `RouteGuard` and its rule:
+`routes/app-routes/app-routes.component.tsx` maps each route to a page behind `RouteGuard` and its rule:
 
 | Route | Guard | Shows |
 | --- | --- | --- |
@@ -83,7 +84,7 @@ Sign-in is the API's: "Continue with Google" goes to `/api/oauth2/authorization/
 
 ### Phones and tablets
 
-Xovê is for computers for now. `Root` (`app/root.component.tsx`) decides once, before the router and `AuthProvider`: on a phone or a tablet it shows only the phone notice (`features/phone-notice/`, [how it looks](design.md#phones-and-tablets-see-you-on-the-big-screen)) on every URL, and since `AuthProvider` never mounts, the page makes no call to the API. A device is a phone or a tablet when its main pointer is a finger (`isHandheld`, the media query `pointer: coarse`); a laptop with a touch screen has a fine main pointer, so it gets the app.
+Xovê is for computers for now. `Root` (`routes/root/root.component.tsx`) decides once, before the router and `AuthProvider`: on a phone or a tablet it shows only the phone notice (`features/phone-notice/`, [how it looks](design.md#phones-and-tablets-see-you-on-the-big-screen)) on every URL, and since `AuthProvider` never mounts, the page makes no call to the API. A device is a phone or a tablet when its main pointer is a finger (`isHandheld`, the media query `pointer: coarse`); a laptop with a touch screen has a fine main pointer, so it gets the app.
 
 ## The room's state
 
@@ -113,11 +114,11 @@ sequenceDiagram
 | --- | --- | --- |
 | My seat, or my place in the queue and the seat offer | `RoomStore`, in the room's model | The API; polled every 2 s while waiting |
 | The live streams, their settings, who watches what, who's here since when | `RoomStore`, in the room's model | The API; polled every 2 s by every open room |
-| Who is connected, their tracks, my own captures | `core/livekit/livekit.adapter.ts`, held by `RoomStore` | LiveKit |
+| Who is connected, their tracks, my own captures | `services/livekit-service/livekit.adapter.ts`, held by `RoomStore` | LiveKit |
 | Where each of my streams is (off, picking, starting, live, stopping) | the room's model | This page only |
 | Who's on my stage | `use-stage` | This page only |
 | What I hear from each person, and what's downloaded | `use-hearing` | This page only (the volumes I start from: the browser) |
-| How I send (quality, mode, the camera picked, my mic and its processing and line), the volumes I start from (a screen's sound, a voice), the ambilight's settings | `core/preferences/preferences.service.ts` | The browser (`localStorage`, `xove.*`) |
+| How I send (quality, mode, the camera picked, my mic and its processing and line), the volumes I start from (a screen's sound, a voice), the ambilight's settings | `services/preferences-service/preferences.service.ts` | The browser (`localStorage`, `xove.*`) |
 | Each person's mutes and volumes, for this visit | `Stage` | This page only |
 | Whether the settings are open, the setting a live button asked for, and the camera's preview | `RoomPage`, `use-camera-preview` | This page only |
 
@@ -135,7 +136,7 @@ sequenceDiagram
 
 ## Talking to the API
 
-`core/api/api-client.service.ts` is the only place that calls `fetch`:
+`services/xove-api-service/xove-api.service.ts` is the only place that calls `fetch`:
 
 - **Same origin, under `/api`.** In development, Vite forwards `/api` to a local API ([Getting started](getting-started.md)); on the servers, a reverse proxy does.
 - **The session cookie** goes with every request (`credentials: "same-origin"`); the app never sees it.
@@ -148,7 +149,7 @@ Every endpoint, who may call it and what it answers, is in [`xove-api`'s API pag
 
 ## LiveKit in the browser
 
-`RoomStore` (`features/room/state/`) joins the video room once I have a seat, through the adapter in `core/livekit/`, until the room page closes:
+`RoomStore` (`features/room/stores/room-store/`) joins the video room once I have a seat, through the adapter in `services/livekit-service/`, until the room page closes:
 
 1. The store asks the API for a token (`POST /api/livekit/token`), which names this person (`user-<id>`), the room and what they may send: a screen with its sound, a camera, and a microphone (sent only alongside my screen or camera, while I turn my voice on: [Media](media.md#the-voice)).
 2. The adapter connects with it, `adaptiveStream` and `dynacast` on ([Media](media.md#what-a-viewer-downloads)).
@@ -171,38 +172,35 @@ The room has one layout, theater mode, that follows the window's size ([how it l
 
 ## Where the code is going
 
-The modules above are the app as it is today. It's being reorganised, with no change of behaviour, into the structure below. Each step moves whole areas, and this page's tables follow as they move. The four folders exist already, each with its first file: `app/app.component.tsx`, `core/api/types/api.types.ts`, `shared/hooks/use-elapsed.hook.ts` (with `shared/utils/time-ago.util.ts`), and `features/room/utils/who-is-here.util.ts`. Every component, today's and the next version's, with its pictures and its future folder: [Components](components/README.md).
+The modules above are the app as it is today. It's being reorganised, with no change of behaviour, into the structure below. The new folders are in place (`routes/`, `features/`, `shared/`, `services/`, `testing/`); the old ones (`pages/`, `components/`, `hooks/`, `media/`, `brand/`) move in step by step, and this page's tables follow. Every component, today's and the next version's, with its pictures and its future folder: [Components](components/README.md).
 
 ### The structure
 
-By feature, with everything that belongs together side by side:
-
 ```
 app/src/
-├── app/            the shell: routes, providers, the app component
-├── core/           one per app, no UI: the API client, auth, the LiveKit adapter, devices, preferences
-│   └── <module>/   its service or adapter; utils/  constants/  types/  tests/
-├── shared/         reused by two or more features
-│   ├── ui/<name>/  the building blocks: face, icon button, menu, slider, switch, panel, icons…
-│   ├── hooks/  utils/  constants/  enums/  types/  tests/
-│   └── styles/     tokens.css (every colour, size, spacing, duration, easing and layer), global.css
-└── features/
-    ├── room/       header/  people/  stage/  chat/  queue/   (areas, each a folder of components)
-    │               state/   hooks/  utils/  constants/  enums/  types/   tests/   room.page.tsx
-    ├── settings/   home/   request-access/   admin/
+├── main.tsx
+├── routes/       which page opens at which address, and who may open it: root/, app-routes/, route-guard/
+├── features/     the product's areas: room/, settings/, home/, request-access/, admin/, phone-notice/
+│   └── room/     components/ (flat, the area in the name: stage-facecam/, people-person-row/…), stores/ (room-store/),
+│                 hooks/  utils/  constants/  types/  enums/   (what several of the room's pieces share)
+├── shared/       what the whole app uses: components/ (the building blocks), stores/ (auth-store/), hooks/ utils/ constants/ types/ enums/,
+│                 styles/ (tokens.css, global.css)
+├── services/     the links to the outside world: xove-api-service/, livekit-service/, preferences-service/, media-devices-service/,
+│                 settings-queue-service/
+└── testing/      the fakes, the sample data and the setup tests share; only tests import it
 ```
 
-- **Every module has one shape:** a feature, a `core/` module, `shared/` and `app/` show their working code first (pages, components, `hooks/`, `state/`, a service or an adapter), and their parts beside it in a folder per kind: `utils/` (helpers that format, build or map, each with its test; a part may name a hook's type, `ReturnType<typeof useX>`, but never runs working code), `constants/`, `types/`, `enums/`. A working file holds no type (its props and inputs too), named constant or helper; a function that makes calls (the network, storage, LiveKit) belongs to its service. Each module's tests are in its own `tests/` folder, at the same path as their file. `features/room/` is the example.
-- **A component is a folder:** `person-row/person-row.component.tsx`, `person-row.component.module.css` and `index.ts` (its only export); its test is in the feature's `tests/`. Nothing else: its helpers go to the feature's `utils/`, its constants to `constants/`, its enums to `enums/`, its types to `types/`.
+- **A unit is a folder:** a component, a store, a service or an adapter, with its code, its test beside it (`facecam.component.test.tsx`), its CSS module if it's a component, and `index.ts`: the only door other code goes through.
+- **Its parts sit inside it,** as files in folders by kind: `hooks/`, `utils/` (helpers that format, build or map, each with its test beside it), `constants/`, `types/`, `enums/`, only when it has some. A part used by several units of a feature sits in the feature's own part folders; one used by several features in `shared/`'s; a service's parts in the service. A working file holds no type (its props and inputs too), named constant or helper; a function that makes calls (the network, storage, LiveKit) belongs to a service.
+- **Nothing nested:** no unit inside a unit, no folder inside a part folder, a flat `components/` with the area in the name. A path is at most 6 levels under `src/`. A feature past about 25 components is split into features.
 - **Names:** kebab-case with the type as a suffix: `.component.tsx`, `.page.tsx`, `.hook.ts`, `.util.ts`, `.service.ts`, `.adapter.ts`, `.store.ts`, `.model.ts`, `.selectors.ts`, `.constants.ts`, `.enum.ts`, `.types.ts`; tests `.test.ts(x)`.
-- **Where a thing lives:** used by one feature, in that feature; by two or more, in `shared/`; one per app with no UI, in `core/`.
-- **Short names:** `@app/…`, `@core/…`, `@shared/…` and `@features/…` (in `tsconfig.app.json`'s `paths` and Vite's `resolve.alias`), never long relative paths into another folder.
-- **Imports go one way:** `features` → `shared`, `core`; `shared` → `core` only for types (`import type`); `core` → nothing in the app. The lint rule enforces it, by short name and by relative path. A feature uses another only through its `index.ts`, and no file imports another component's CSS.
+- **Short names:** `@routes/…`, `@features/…`, `@shared/…`, `@services/…` and `@testing/…` (in `tsconfig.app.json`'s `paths` and Vite's `resolve.alias`), never long relative paths into another folder.
+- **Imports go down:** `routes` → `features` → `shared` → `services`. No feature uses another; only tests use `testing/`. The lint rule enforces the direction, and the code check the rest (below), and no file imports another component's CSS.
 
 ### The rules
 
 - **One job per file.** If describing it needs "and", it's two files. Components about 150 lines at most, hooks and services about 200, any file 300.
-- **One test file for every file with logic**, in its module's `tests/` folder at the same path, testing that file's behaviour ([Testing](testing.md#test-rules)).
+- **One test file for every file with logic**, beside it, testing that file's behaviour ([Testing](testing.md#test-rules)).
 - **Each building block exists once**, with variants: one icon button, one menu (one floating system: anchor, outside press, Escape, focus return, one open at a time), one face, one switch, one set of icons.
 - **Tokens only:** no literal colour, duration or easing in a component's CSS.
 - **Components never find each other through the page** (`querySelector`, labels, `data-*` used as hooks): a ref, a context, or CSS.
@@ -234,7 +232,7 @@ Every rule a tool can measure runs in the commit checks as `3 · Code checks`, o
 | oxlint | Hooks' dependencies, accessibility, unused code, the import direction, the size and shape limits above, escape hatches, unexplained numbers, default exports | through the guard |
 | jscpd | A block of code copied into another place (8 lines or 60 tokens, CSS included) | `npm run check:copies` |
 | knip | Files nothing imports, exports nothing uses | `npm run check:unused` |
-| The code check | The structure's rules: folders and names, every part in its kind's folder and none inside working code, a test for every file with logic in its module's `tests/` folder (beside it in the old folders, until they move), tokens in CSS, no DOM queries between components, LiveKit only in `core/`, no history in comments, lines over 120 characters (Prettier doesn't wrap strings and comments), comments that switch a check off, and the tests' own rules | `npm run check:code -- <folder> --all` |
+| The code check | The structure's rules: folders and names, every part in its kind's folder and none inside working code, a test beside every file with logic, units in their own folders with their parts inside them, nothing nested past 6 levels, imports through a unit's `index.ts` and never up, across features or into `testing/`, tokens in CSS, no DOM queries between components, LiveKit only in `core/`, no history in comments, lines over 120 characters (Prettier doesn't wrap strings and comments), comments that switch a check off, and the tests' own rules | `npm run check:code -- <folder> --all` |
 | Prettier | Layout | `npm run format` fixes, `npm run format:check` checks |
 | The size budget | The built JavaScript and styles, compressed, against `checks/size-budget.json` | `npm run build && npm run check:size` |
 
@@ -247,6 +245,7 @@ Every rule a tool can measure runs in the commit checks as `3 · Code checks`, o
   - a recorded finding that's gone: lower the list with `npm run guard -- --record` in the same change
   - a list that allows more than `main`'s
 - **The list only shrinks.** Each step of the reorganisation clears its own areas. The one exception is the change that adds a rule to the code check: that rule's findings in the old folders are recorded once, each owned by the step that moves its folder. The guard knows a rule is new because `main`'s code check doesn't define it. When it's empty, the two stricter TypeScript settings move into the main config.
+- **A moved file keeps its entries.** The guard compares with `main`'s list through git's renames, so moving a file isn't a new finding.
 - **A tool that goes quiet fails.** If a tool reports nothing where the list expects findings (a setting lost, its output changed), that's an error, not a clean-up, and it can't be recorded.
 - **The tools are pinned** (oxlint, TypeScript, Prettier, knip, jscpd at exact versions). Dependabot proposes their upgrades in a PR of their own (the `checks` group). An upgrade that brings new findings fixes them in that PR, since the list can't grow.
 
@@ -261,7 +260,7 @@ From the edge in, each layer talking only to its neighbours:
 
 ```mermaid
 flowchart LR
-  AD[Adapters in core/<br/>API, LiveKit, devices, preferences] --> M[Room model<br/>pure functions]
+  AD[Services in services/<br/>API, LiveKit, devices, preferences] --> M[Room model<br/>pure functions]
   M --> ST[Room store<br/>one provider]
   ST --> SE[Selectors and hooks<br/>usePeople, useStage, useHearing]
   SE --> UI[Components]
