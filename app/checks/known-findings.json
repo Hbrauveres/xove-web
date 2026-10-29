@@ -1101,20 +1101,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/auth/AuthProvider.tsx",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/auth/guards.tsx",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/brand/brand.test.ts",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
@@ -2298,20 +2284,6 @@
   {
     "tool": "code",
     "rule": "noTest",
-    "file": "src/auth/AuthProvider.tsx",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/auth/guards.tsx",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
     "file": "src/brand/iconSvg.ts",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
@@ -2560,20 +2532,6 @@
     "file": "src/test/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/auth/AuthProvider.tsx",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/auth/guards.tsx",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
   },
   {
     "tool": "code",
@@ -4062,13 +4020,6 @@
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
-    "file": "src/auth/AuthProvider.tsx",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
     "file": "src/brand/iconSvg.ts",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
@@ -4524,13 +4475,6 @@
   {
     "tool": "lint",
     "rule": "react(only-export-components)",
-    "file": "src/auth/AuthProvider.tsx",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "lint",
-    "rule": "react(only-export-components)",
     "file": "src/components/stage/NowWatching.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
@@ -4548,13 +4492,6 @@
     "file": "src/components/ui/Tooltip.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "react(set-state-in-effect)",
-    "file": "src/auth/AuthProvider.tsx",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
   },
   {
     "tool": "lint",

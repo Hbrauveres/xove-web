@@ -1,7 +1,7 @@
 import { isHandheld } from "@core/devices/is-handheld.util";
 import { PhoneNoticePage } from "@features/phone-notice";
 import { BrowserRouter } from "react-router";
-import { AuthProvider } from "../auth/AuthProvider";
+import { AuthProvider } from "@core/auth/auth.store";
 import { App } from "./app.component";
 
 /**

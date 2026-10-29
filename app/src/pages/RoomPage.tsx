@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router";
-import { useAuth } from "../auth/AuthProvider";
+import { useAuth } from "@core/auth/use-auth.hook";
 import { AccountButton } from "../components/room/AccountButton";
 import { ActivityPill } from "../components/room/ActivityPill";
 import { PeopleButton } from "../components/room/PeopleButton";

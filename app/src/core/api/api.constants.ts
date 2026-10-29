@@ -8,3 +8,6 @@ export const FALLBACK_MESSAGES: Record<number, string> = {
   404: "That no longer exists.",
   409: "That was already done.",
 };
+
+/** The status the API answers when there's no session: the person is signed out. */
+export const SIGNED_OUT_STATUS = 401;
