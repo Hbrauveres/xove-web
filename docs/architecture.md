@@ -22,20 +22,21 @@ Everything is in `app/src`:
 | `pages/` | One component per route: `HomePage`, `RequestAccessPage`, `RoomPage`, `AdminPage` |
 | `hooks/` | Generic hooks waiting for `shared/hooks/`: the video's shape (`useVideoShape`), the round buttons' row holding the clicked button still (`usePinnedRow`), and a small one (`useFullscreenElement`); the stream's elapsed time is `shared/hooks/use-elapsed.hook.ts`, and whether the keyboard was used last `shared/hooks/use-keyboard-last.hook.ts` |
 | `media/` | The ambilight's drawing (`ambilight.ts`), until the stage moves into the room feature |
-| `features/room/state/` | The room as data (`room.model.ts`: people by their id, streams, who watches whom, arrivals, the seat, the activity, my streams' steps, changed by pure functions), what the room shows (`room.selectors.ts`), and `RoomStore` (`room.store.ts`): the one place the seat, the streams and entering again are polled, the video room joined, and the room's actions sent |
+| `features/room/state/` | Working code only. The room as data (`room.model.ts`: people by their id, streams, who watches whom, arrivals, the seat, the activity, my streams' steps, changed by pure functions), what the room shows (`room.selectors.ts`), and `RoomStore` (`room.store.ts`): the one place the seat, the streams and entering again are polled, the video room joined, and the room's actions sent |
 | `features/room/hooks/` | The room's hooks, each one job over the store: the store for the page (`use-room-store`, with the sound unlock, the devices and the camera remembered); what the room shows (`use-room-view`); what I send (`use-my-sending`: my streams, their settings through a queue, the camera's preview and switch, changing the window), keeping my streams and the API in step (`use-stream-sync`), my voice (`use-my-voice`); the activity (`use-activity-feed`), the watch report (`use-watch-report`); who's big (`use-stage`), what I hear and what's downloaded (`use-hearing`); the mic's level |
-| `features/room/utils/` | The room's rules as plain functions: the watch report, the settings queue, the stage pick, hearing, what a viewer can pick, each person's colour, when the room can show |
-| `features/room/types/`, `features/room/utils/` | The room's shared types (a person, a stream, a sharer, the activity) and helpers: each person's colour (`person-colour.util.ts`), when the room can show (`room-entry.util.ts`) |
+| `features/room/utils/` | The room's helpers, each with its test: the watch report, the settings queue, the stage pick, hearing, what a viewer can pick, each person's colour, when the room can show; and the model's own: a person's id, the first name, keeping the same record, the streams (`room-streams`), the API's answer (`room-answer`), the activity's events, a sharer's feed, waiting for a seat |
+| `features/room/types/`, `features/room/constants/` | The room's types (the room as data, a person, a stream, a sharer, the activity, each hook's inputs) and its constants (the poll, the activity kept, the room's messages, the watch report's delays) |
+| `features/room/tests/` | The room's tests, at the same path as their file (`tests/hooks/use-stage.hook.test.ts` for `hooks/use-stage.hook.ts`) |
 | `components/stage/` | The player and what's on it: the stage, the ambilight, the controls by owner: my own stream's round buttons (`PlayerButtons`; their icons in `icons.tsx`, the drop-ups on live ones) and, over someone else's stream, `ViewerBar` (what I hear at the left, each sound its own button and slider; my mic or Go live at the right); the voice I hear (`VoiceAudio`), each person's switches and volumes held by the stage for the visit (the hook `features/room/hooks/use-hearing.hook.ts`, its rules in `features/room/utils/hearing.util.ts`), and the previews' buttons (`HearToggles`, in a small preview's row, `PreviewTray`, which floats on its own layer over the page and follows its preview, opened through `usePreviewTray`; a preview's stack and its swap's moment in `stack.ts`); the settings panel (`SettingsPanel`, its Voice tab's mic level in `MicTest`), the facecam, the previews, the empty stage (`EmptyStage`, a TV on standby: the ways to start, alone in their row; with nobody live the settings are `ViewerBar`'s settings-only form, in the corner; its corners' glow in `CornerGlow`; its TV static in `StaticNoise`, a small canvas the page draws 20 times a second, its grain and bands scaled to the stage; the static's light round the stage in `StaticGlow`; both read their bands from `staticBands.ts`, so they roll together, and its `tv` flag lets the TV's turn-on play only the first time the stage stands by in a visit), the info row. The stage is two layers: its box holds every control (the round buttons, the sounds, Go live, the fullscreen button) and takes the pointer; a view inside it holds the picture and its ambilight in the picture's shape |
 | `components/room/` | The room around the stage: header, footer, people, activity (pill, list), account menu, the waiting screen and the seat offer |
 | `components/ui/` | Shared controls: `Button`, `Range`, `Dropdown`, `Segmented`, `Picker` (a list that floats over its panel, masking what's behind it in the nearest `[data-list-host]`; it opens on request too), `DropUp` (its gestures can redirect to an open panel), `Tooltip` (the app's only tooltip, on its own layer, describing its control for screen readers), `floating.ts` (one tooltip or drop-up showing at a time, what floats inside another belonging to it), the cue (`cue.module.css`), `Avatar`, `PersonAvatar`, `FullPageMessage`, `Toast` (a short message any component shows with `showToast`) |
 | `components/brand/`, `brand/` | The mark: its geometry and animation timeline (`brand/`), and the components that draw it (`XoveMark`, `XoveIcon`) |
 | `app/` | The shell: the root (`root.component.tsx`), the routes (`app.component.tsx`) and who may open each (`route-guard/`, its rule in `utils/route-access.util.ts`) |
-| `core/api/` | The HTTP client (`api-client.service.ts`), its constants and the API's types (`api.types.ts`): one function per endpoint, the CSRF header, errors as `ApiError` |
+| `core/api/` | The HTTP client (`api-client.service.ts`): one function per endpoint, the call itself and its errors as `ApiError`; the CSRF token and the headers in `utils/`, the API's types in `types/`, its messages in `constants/` |
 | `core/auth/` | Who is signed in (`AuthProvider` in `auth.store.tsx`, which asks `GET /api/me` once and on demand; `useAuth`) |
-| `core/preferences/` | Choices each browser keeps (`preferences.service.ts`): how I send a screen or a camera, the camera and mic picked, my voice's processing, how I hear a stream or a voice, the stage light; blocked storage gives the defaults (`storage.util.ts`) |
-| `core/livekit/` | The video server, the only place that uses `livekit-client`: the adapter (`livekit.adapter.ts`: connects with the access it's given, keeps the room's state per person, takes commands), what's captured, sent, changed and heard (`capture`, `send`, `screen-change`, `voice` services), how streams are sent (`publish-options.util.ts`), the noise gate's processor |
-| `core/devices/` | The browser's devices: a phone or a tablet (`is-handheld.util.ts`), the screen picker, the cameras and mics, the mic's meter, the noise gate's maths, the stream presets |
+| `core/preferences/` | Choices each browser keeps (`preferences.service.ts`): how I send a screen or a camera, the camera and mic picked, my voice's processing, how I hear a stream or a voice, the stage light; blocked storage gives the defaults (`utils/storage.util.ts`, with the stored values' checks in `utils/preference-values.util.ts`) |
+| `core/livekit/` | The video server, the only place that uses `livekit-client`: the adapter (`livekit.adapter.ts`: connects with the access it's given, keeps the room's state per person, takes commands), what's captured, sent, changed and heard (`capture`, `send`, `screen-change`, `voice` services), the noise gate's processor; its helpers in `utils/` (how streams are sent, the room's state per person, the mic's problems), its types and constants beside them |
+| `core/devices/` | The browser's devices, all helpers: a phone or a tablet (`utils/is-handheld.util.ts`), the screen picker, the cameras and mics, the mic's meter, the noise gate's maths; the stream presets in `constants/` |
 | `features/phone-notice/` | What phones and tablets see instead of the app ([below](#phones-and-tablets)) |
 | `styles/` | The design tokens (`global.css`) and the tests that check them |
 | `test/` | The test helpers: a fake API, a fake LiveKit, and rendering the app at a URL ([Testing](testing.md)) |
@@ -170,7 +171,7 @@ The room has one layout, theater mode, that follows the window's size ([how it l
 
 ## Where the code is going
 
-The modules above are the app as it is today. It's being reorganised, with no change of behaviour, into the structure below. Each step moves whole areas, and this page's tables follow as they move. The four folders exist already, each with its first file: `app/app.component.tsx`, `core/api/api.types.ts`, `shared/hooks/use-elapsed.hook.ts` (with `shared/utils/time-ago.util.ts`), and `features/room/utils/who-is-here.util.ts`. Every component, today's and the next version's, with its pictures and its future folder: [Components](components/README.md).
+The modules above are the app as it is today. It's being reorganised, with no change of behaviour, into the structure below. Each step moves whole areas, and this page's tables follow as they move. The four folders exist already, each with its first file: `app/app.component.tsx`, `core/api/types/api.types.ts`, `shared/hooks/use-elapsed.hook.ts` (with `shared/utils/time-ago.util.ts`), and `features/room/utils/who-is-here.util.ts`. Every component, today's and the next version's, with its pictures and its future folder: [Components](components/README.md).
 
 ### The structure
 
@@ -180,17 +181,19 @@ By feature, with everything that belongs together side by side:
 app/src/
 ├── app/            the shell: routes, providers, the app component
 ├── core/           one per app, no UI: the API client, auth, the LiveKit adapter, devices, preferences
+│   └── <module>/   its service or adapter; utils/  constants/  types/  tests/
 ├── shared/         reused by two or more features
 │   ├── ui/<name>/  the building blocks: face, icon button, menu, slider, switch, panel, icons…
-│   ├── hooks/  utils/  constants/  enums/  types/
+│   ├── hooks/  utils/  constants/  enums/  types/  tests/
 │   └── styles/     tokens.css (every colour, size, spacing, duration, easing and layer), global.css
 └── features/
     ├── room/       header/  people/  stage/  chat/  queue/   (areas, each a folder of components)
-    │               state/   hooks/  utils/  constants/  enums/  types/   room.page.tsx
+    │               state/   hooks/  utils/  constants/  enums/  types/   tests/   room.page.tsx
     ├── settings/   home/   request-access/   admin/
 ```
 
-- **A component is a folder:** `person-row/person-row.component.tsx`, `person-row.component.module.css`, `person-row.component.test.tsx` and `index.ts` (its only export). Nothing else: its helpers go to the feature's `utils/`, its constants to `constants/`, its enums to `enums/`, its types to `types/`.
+- **Every module has one shape:** a feature, a `core/` module, `shared/` and `app/` show their working code first (pages, components, `hooks/`, `state/`, a service or an adapter), and their parts beside it in a folder per kind: `utils/` (helpers that format, build or map, each with its test), `constants/`, `types/`, `enums/`. A working file holds no type (its props and inputs too), named constant or helper; a function that makes calls (the network, storage, LiveKit) belongs to its service. Each module's tests are in its own `tests/` folder, at the same path as their file. `features/room/` is the example.
+- **A component is a folder:** `person-row/person-row.component.tsx`, `person-row.component.module.css` and `index.ts` (its only export); its test is in the feature's `tests/`. Nothing else: its helpers go to the feature's `utils/`, its constants to `constants/`, its enums to `enums/`, its types to `types/`.
 - **Names:** kebab-case with the type as a suffix: `.component.tsx`, `.page.tsx`, `.hook.ts`, `.util.ts`, `.service.ts`, `.adapter.ts`, `.store.ts`, `.model.ts`, `.selectors.ts`, `.constants.ts`, `.enum.ts`, `.types.ts`; tests `.test.ts(x)`.
 - **Where a thing lives:** used by one feature, in that feature; by two or more, in `shared/`; one per app with no UI, in `core/`.
 - **Short names:** `@app/…`, `@core/…`, `@shared/…` and `@features/…` (in `tsconfig.app.json`'s `paths` and Vite's `resolve.alias`), never long relative paths into another folder.
@@ -199,7 +202,7 @@ app/src/
 ### The rules
 
 - **One job per file.** If describing it needs "and", it's two files. Components about 150 lines at most, hooks and services about 200, any file 300.
-- **One test file beside every file with logic**, testing that file's behaviour ([Testing](testing.md#test-rules)).
+- **One test file for every file with logic**, in its module's `tests/` folder at the same path, testing that file's behaviour ([Testing](testing.md#test-rules)).
 - **Each building block exists once**, with variants: one icon button, one menu (one floating system: anchor, outside press, Escape, focus return, one open at a time), one face, one switch, one set of icons.
 - **Tokens only:** no literal colour, duration or easing in a component's CSS.
 - **Components never find each other through the page** (`querySelector`, labels, `data-*` used as hooks): a ref, a context, or CSS.
@@ -231,7 +234,7 @@ Every rule a tool can measure runs in the commit checks as `3 · Code checks`, o
 | oxlint | Hooks' dependencies, accessibility, unused code, the import direction, the size and shape limits above, escape hatches, unexplained numbers, default exports | through the guard |
 | jscpd | A block of code copied into another place (8 lines or 60 tokens, CSS included) | `npm run check:copies` |
 | knip | Files nothing imports, exports nothing uses | `npm run check:unused` |
-| The code check | The structure's rules: folders and names, a test beside every file with logic, tokens in CSS, no DOM queries between components, LiveKit only in `core/`, no history in comments, lines over 120 characters (Prettier doesn't wrap strings and comments), comments that switch a check off, and the tests' own rules | `npm run check:code -- <folder> --all` |
+| The code check | The structure's rules: folders and names, every part in its kind's folder and none inside working code, a test for every file with logic in its module's `tests/` folder (beside it in the old folders, until they move), tokens in CSS, no DOM queries between components, LiveKit only in `core/`, no history in comments, lines over 120 characters (Prettier doesn't wrap strings and comments), comments that switch a check off, and the tests' own rules | `npm run check:code -- <folder> --all` |
 | Prettier | Layout | `npm run format` fixes, `npm run format:check` checks |
 | The size budget | The built JavaScript and styles, compressed, against `checks/size-budget.json` | `npm run build && npm run check:size` |
 
@@ -243,7 +246,7 @@ Every rule a tool can measure runs in the commit checks as `3 · Code checks`, o
   - a finding the list doesn't allow, in an old file as much as a new one
   - a recorded finding that's gone: lower the list with `npm run guard -- --record` in the same change
   - a list that allows more than `main`'s
-- **The list only shrinks.** Each step of the reorganisation clears its own areas. When it's empty, the two stricter TypeScript settings move into the main config.
+- **The list only shrinks.** Each step of the reorganisation clears its own areas. The one exception is the change that adds a rule to the code check: that rule's findings in the old folders are recorded once, each owned by the step that moves its folder. The guard knows a rule is new because `main`'s code check doesn't define it. When it's empty, the two stricter TypeScript settings move into the main config.
 - **A tool that goes quiet fails.** If a tool reports nothing where the list expects findings (a setting lost, its output changed), that's an error, not a clean-up, and it can't be recorded.
 - **The tools are pinned** (oxlint, TypeScript, Prettier, knip, jscpd at exact versions). Dependabot proposes their upgrades in a PR of their own (the `checks` group). An upgrade that brings new findings fixes them in that PR, since the list can't grow.
 

@@ -331,6 +331,6 @@ Phone support is paused, so its code went, with its tests.
 
 <img src="../images/design/phone-notice.png" width="200" alt="The screen phones and tablets see">
 
-What a phone or a tablet sees on every page: the mark, a computer drawn from it, "See you on the big screen." and one line ([how it looks](../design.md#phones-and-tablets-see-you-on-the-big-screen)). Already in the new structure: `features/phone-notice/` (the page, and `big-screen-art/` for the drawing), chosen by `app/root.component.tsx` with `core/devices/is-handheld.util.ts`.
+What a phone or a tablet sees on every page: the mark, a computer drawn from it, "See you on the big screen." and one line ([how it looks](../design.md#phones-and-tablets-see-you-on-the-big-screen)). Already in the new structure: `features/phone-notice/` (the page, and `big-screen-art/` for the drawing), chosen by `app/root.component.tsx` with `core/devices/utils/is-handheld.util.ts`.
 
 Not pictured here, but listed with their area above: the stage's notices, the voice's audio element, the mic test inside the settings, the toast and the tooltip.
