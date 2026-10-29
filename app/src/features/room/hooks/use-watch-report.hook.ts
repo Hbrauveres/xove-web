@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { REPORT_RETRY_MS, REPORT_STILL_MS } from "../constants/watch-report.constants";
 import type { PersonId, Watch } from "../state/room.types";
-import type { OnStage, WatchTarget } from "../types/watch-report.types";
+import type { WatchingTarget } from "@core/api/types/api.types";
+import type { OnStage } from "../types/watch-report.types";
 import { knownKeyOf, shouldReport, targetOf, wantedKeyOf } from "../utils/watch-report.util";
 
 type Inputs = {
@@ -10,7 +11,7 @@ type Inputs = {
   me: PersonId | null;
   /** This page is in the video room (and the API knows my seat). */
   inRoom: boolean;
-  report: (target: WatchTarget) => Promise<void>;
+  report: (target: WatchingTarget) => Promise<void>;
   /** What's on my stage now. */
   onStage: OnStage;
 };

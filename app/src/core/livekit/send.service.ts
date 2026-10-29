@@ -2,7 +2,7 @@ import { Track, type Room } from "livekit-client";
 import type { SharingConnection, StreamKind, StreamSettings } from "@core/api/types/api.types";
 import { startFailed } from "./utils/capture.util";
 import { COULDNT, NOT_CONNECTED, SOURCE } from "./constants/livekit.constants";
-import type { Capture, CapturedTracks, RoomContext, StartedStream } from "./types/livekit.types";
+import type { Capture, CapturedTracks, RoomContext, StartedStream, WithMediaTrack } from "./types/livekit.types";
 import {
   cameraCaptureOptions,
   cameraPublishOptions,
@@ -135,7 +135,7 @@ export class SendService {
 
   // The camera unplugged or taken by another app: stop sending it. Again after each switch,
   // since a switch gives the camera a new browser track.
-  private watchCameraEnd(track: { mediaStreamTrack: MediaStreamTrack }) {
+  private watchCameraEnd(track: WithMediaTrack) {
     track.mediaStreamTrack.addEventListener("ended", () => void this.stop("camera"));
   }
 }

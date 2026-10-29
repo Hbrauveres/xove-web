@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { api, ApiError } from "@core/api/api-client.service";
 import { SIGNED_OUT_STATUS } from "@core/api/constants/api.constants";
-import type { AuthState } from "./types/auth.types";
+import type { AuthProviderProps, AuthState } from "./types/auth.types";
 import { AuthContext } from "./use-auth.hook";
 
 /** Asks the API who is signed in, once at the start and whenever `refresh` is called. */
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({ children }: AuthProviderProps) {
   const [state, setState] = useState<AuthState>({ status: "loading" });
 
   const refresh = useCallback(async () => {

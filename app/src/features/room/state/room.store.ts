@@ -1,5 +1,11 @@
 import { ApiError, api } from "@core/api/api-client.service";
-import type { SharingConnection, StreamKind, StreamSettings, StreamsState } from "@core/api/types/api.types";
+import type {
+  SharingConnection,
+  StreamKind,
+  StreamSettings,
+  StreamsState,
+  WatchingTarget,
+} from "@core/api/types/api.types";
 import { LiveKitAdapter } from "@core/livekit/livekit.adapter";
 import { CANT_CONNECT } from "@core/livekit/constants/livekit.constants";
 import type { VideoRoomState } from "@core/livekit/types/livekit.types";
@@ -105,7 +111,7 @@ export class RoomStore {
   stopStream = async (kind: StreamKind) => (await this.call(() => api.streams.stop(kind))) === "ok";
 
   /** Tells the API what's on my stage: someone's stream, or nothing. */
-  reportWatching = (target: { sharerId: number; kind: StreamKind } | null) => api.streams.watching(target);
+  reportWatching = (target: WatchingTarget) => api.streams.watching(target);
 
   /** Changes the room's model with one of its functions. */
   change = (next: (model: RoomModel) => RoomModel) => this.setModel(next(this.model));

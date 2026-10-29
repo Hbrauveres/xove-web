@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import type { StreamKind, StreamSettings } from "@core/api/types/api.types";
-import { loadStreamSettings, saveStreamSettings } from "@core/preferences/preferences.service";
+import { loadAllStreamSettings, saveStreamSettings } from "@core/preferences/preferences.service";
 import { SettingsQueue } from "../utils/settings-queue.util";
 
 type Inputs = {
@@ -12,18 +12,13 @@ type Inputs = {
   changeAtApi: (kind: StreamKind, settings: StreamSettings) => Promise<boolean>;
 };
 
-const remembered = (): Record<StreamKind, StreamSettings> => ({
-  screen: loadStreamSettings("screen"),
-  camera: loadStreamSettings("camera"),
-});
-
 /**
  * How I send my screen and my camera, remembered. While live, a new quality or mode applies at
  * once: to the video right away, and to the API, which tells every viewer's app. Changes go one
  * after another; a refused one puts the last accepted settings back.
  */
 export function useStreamSettings({ live, publishing, applySettings, changeAtApi }: Inputs) {
-  const [prefs, setPrefsState] = useState(remembered);
+  const [prefs, setPrefsState] = useState(loadAllStreamSettings);
   const [queue] = useState(() => new SettingsQueue(prefs));
 
   const remember = useCallback((kind: StreamKind, settings: StreamSettings) => {

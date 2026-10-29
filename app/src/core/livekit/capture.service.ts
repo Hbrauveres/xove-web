@@ -8,32 +8,6 @@ import type { Capture, CapturedTracks, RoomContext } from "./types/livekit.types
 import { cameraCaptureOptions, contentHintOf } from "./utils/publish-options.util";
 import { isLocalVideo } from "./utils/track-kind.util";
 
-/** The browser's screen picker, asked directly because livekit-client drops `windowAudio`. */
-async function captureScreen(room: Room, mode: StreamMode): Promise<CapturedTracks | null> {
-  const stream = await pickScreen();
-  const [screen] = stream.getVideoTracks();
-  const [sound] = stream.getAudioTracks();
-  if (!screen) {
-    stream.getTracks().forEach((t) => t.stop());
-    return null;
-  }
-  screen.contentHint = contentHintOf(mode);
-  const video = new LocalVideoTrack(screen, undefined, false);
-  video.source = Track.Source.ScreenShare;
-  if (!isLocalVideo(video)) return null;
-  if (!sound) return { video };
-  // LiveKit unlocks the page's sound here too, while the sharer's click still counts.
-  void room.startAudio();
-  return { video, audio: screenSound(sound) };
-}
-
-async function captureCamera(room: Room, deviceId: string | null): Promise<CapturedTracks | null> {
-  const tracks = await room.localParticipant.createTracks({ video: cameraCaptureOptions(deviceId), audio: false });
-  const video = tracks.find(isLocalVideo);
-  if (!video) tracks.forEach((t) => t.stop());
-  return video ? { video } : null;
-}
-
 /** Captures a screen or a camera without sending it: the person is still choosing how. */
 export class CaptureService {
   private readonly ctx: RoomContext;
@@ -55,7 +29,8 @@ export class CaptureService {
     try {
       this.ctx.update({ error: null });
       // Always the best quality: the sharer can lower it, or raise it back, while sharing.
-      const tracks = kind === "screen" ? await captureScreen(room, mode) : await captureCamera(room, cameraId);
+      const tracks =
+        kind === "screen" ? await this.captureScreen(room, mode) : await this.captureCamera(room, cameraId);
       if (!tracks) {
         this.ctx.update({ error: startFailed(kind) });
         return null;
@@ -99,5 +74,31 @@ export class CaptureService {
     } else {
       this.ctx.update({ error: startFailed(kind) });
     }
+  }
+
+  /** The browser's screen picker, asked directly because livekit-client drops `windowAudio`. */
+  private async captureScreen(room: Room, mode: StreamMode): Promise<CapturedTracks | null> {
+    const stream = await pickScreen();
+    const [screen] = stream.getVideoTracks();
+    const [sound] = stream.getAudioTracks();
+    if (!screen) {
+      stream.getTracks().forEach((t) => t.stop());
+      return null;
+    }
+    screen.contentHint = contentHintOf(mode);
+    const video = new LocalVideoTrack(screen, undefined, false);
+    video.source = Track.Source.ScreenShare;
+    if (!isLocalVideo(video)) return null;
+    if (!sound) return { video };
+    // LiveKit unlocks the page's sound here too, while the sharer's click still counts.
+    void room.startAudio();
+    return { video, audio: screenSound(sound) };
+  }
+
+  private async captureCamera(room: Room, deviceId: string | null): Promise<CapturedTracks | null> {
+    const tracks = await room.localParticipant.createTracks({ video: cameraCaptureOptions(deviceId), audio: false });
+    const video = tracks.find(isLocalVideo);
+    if (!video) tracks.forEach((t) => t.stop());
+    return video ? { video } : null;
   }
 }

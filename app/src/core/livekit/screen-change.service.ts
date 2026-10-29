@@ -41,7 +41,7 @@ export class ScreenChangeService {
       await video.replaceTrack(screen, { userProvidedTrack: false });
       swapped = true;
       await this.sending.applySettings("screen", prefs);
-      await followSound(room, sound, prefs.mode);
+      await this.followSound(room, sound, prefs.mode);
       this.ctx.refreshLocal();
       return { hasSound: sound !== undefined };
     } catch {
@@ -65,15 +65,18 @@ export class ScreenChangeService {
       return null;
     }
   }
-}
 
-/** The new pick's sound follows it: swapped in, added, or dropped. Sound isn't a stream: the API sees no change. */
-async function followSound(room: Room, sound: MediaStreamTrack | undefined, mode: StreamMode) {
-  const me = room.localParticipant;
-  const before = me.getTrackPublication(Track.Source.ScreenShareAudio)?.track;
-  const current = isLocalAudio(before) ? before : undefined;
-  if (sound && current) await current.replaceTrack(sound, { userProvidedTrack: false });
-  else if (sound) {
-    await me.publishTrack(screenSound(sound), { ...screenPublishOptions(mode), source: Track.Source.ScreenShareAudio });
-  } else if (current) await me.unpublishTrack(current, true);
+  /** The new pick's sound follows it: swapped in, added, or dropped. Sound isn't a stream: the API sees no change. */
+  private async followSound(room: Room, sound: MediaStreamTrack | undefined, mode: StreamMode) {
+    const me = room.localParticipant;
+    const before = me.getTrackPublication(Track.Source.ScreenShareAudio)?.track;
+    const current = isLocalAudio(before) ? before : undefined;
+    if (sound && current) await current.replaceTrack(sound, { userProvidedTrack: false });
+    else if (sound) {
+      await me.publishTrack(screenSound(sound), {
+        ...screenPublishOptions(mode),
+        source: Track.Source.ScreenShareAudio,
+      });
+    } else if (current) await me.unpublishTrack(current, true);
+  }
 }

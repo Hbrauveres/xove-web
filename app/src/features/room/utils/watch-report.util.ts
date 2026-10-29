@@ -1,6 +1,7 @@
 import { userIdOf } from "../state/room.model";
 import type { PersonId, Watch } from "../state/room.types";
-import type { OnStage, WatchTarget } from "../types/watch-report.types";
+import type { WatchingTarget } from "@core/api/types/api.types";
+import type { OnStage } from "../types/watch-report.types";
 
 /** A report as a key, to compare: "42|screen", or "none"; undefined while there's nothing to say. */
 export function wantedKeyOf(onStage: OnStage | undefined): string | undefined {
@@ -33,7 +34,7 @@ export function shouldReport(
 }
 
 /** The report itself, from its key. */
-export function targetOf(key: string): WatchTarget {
+export function targetOf(key: string): WatchingTarget {
   if (key === "none") return null;
   const [sharerId, kind] = key.split("|");
   return { sharerId: Number(sharerId), kind: kind === "camera" ? "camera" : "screen" };

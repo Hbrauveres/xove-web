@@ -17,3 +17,6 @@ export type VoicePrefs = {
   /** The mic level's line, 0 to 1: sound under it isn't sent (the noise gate). */
   sensitivity: number;
 };
+
+/** The voice settings that are on or off. */
+export type VoiceFlag = Exclude<keyof VoicePrefs, "micId" | "sensitivity">;

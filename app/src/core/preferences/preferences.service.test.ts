@@ -4,6 +4,7 @@ import {
   loadAmbilight,
   loadCameraDevice,
   loadHearing,
+  loadAllStreamSettings,
   loadStreamSettings,
   loadVoicePrefs,
   saveAmbilight,
@@ -47,6 +48,14 @@ describe("the sharer's choices", () => {
     localStorage.setItem("xove.share.quality", "720p");
     localStorage.setItem("xove.share.mode", "sharp");
     expect(loadStreamSettings("screen")).toEqual({ quality: "720p", mode: "sharp" });
+  });
+
+  it("are read for the screen and the camera together", () => {
+    saveStreamSettings("camera", { quality: "720p", mode: "sharp" });
+    expect(loadAllStreamSettings()).toEqual({
+      screen: loadStreamSettings("screen"),
+      camera: { quality: "720p", mode: "sharp" },
+    });
   });
 
   it("default to 1080p Smooth", () => {

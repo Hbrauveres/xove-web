@@ -2,37 +2,10 @@ import { Track, type LocalAudioTrack, type LocalTrack } from "livekit-client";
 import { isLocalAudio } from "./utils/track-kind.util";
 import type { VoiceProblem } from "@core/devices/types/devices.types";
 import type { VoicePrefs } from "@core/preferences/types/preferences.types";
-import type { RoomContext } from "./types/livekit.types";
+import type { Gate, RoomContext } from "./types/livekit.types";
+import { problemOf } from "./utils/voice-problem.util";
 import { NoiseGate } from "./noise-gate.adapter";
 import { micCaptureOptions } from "./utils/publish-options.util";
-
-type Gate = { gate: NoiseGate; context: AudioContext };
-
-/**
- * My voice through the noise gate, with its own Web Audio context. Where the browser can't run
- * it, the voice is sent as the browser's processing leaves it: null.
- */
-async function gateVoice(track: LocalAudioTrack, line: number): Promise<Gate | null> {
-  if (typeof AudioContext === "undefined" || typeof track.setProcessor !== "function") return null;
-  const context = new AudioContext();
-  try {
-    // Made after the permission prompt, the click may no longer count: a suspended context
-    // would send silence.
-    if (context.state === "suspended") await context.resume();
-    track.setAudioContext(context);
-    const gate = new NoiseGate(line);
-    await track.setProcessor(gate);
-    return { gate, context };
-  } catch {
-    void context.close().catch(() => {});
-    return null;
-  }
-}
-
-const problemOf = (e: unknown): VoiceProblem => {
-  const name = e instanceof DOMException ? e.name : "";
-  return name === "NotFoundError" || name === "OverconstrainedError" ? "missing" : "blocked";
-};
 
 /** My voice: asked for only when I turn it on, sent alongside my stream, through the noise gate. */
 export class VoiceService {
@@ -56,7 +29,7 @@ export class VoiceService {
     try {
       const raw = track.mediaStreamTrack;
       this.closeVoice();
-      this.gate = await gateVoice(track, prefs.sensitivity);
+      this.gate = await this.gateVoice(track, prefs.sensitivity);
       await room.localParticipant.publishTrack(track, { source: Track.Source.Microphone });
       this.ctx.refreshLocal({ micInput: this.gate?.gate.input ?? raw });
       return null;
@@ -100,5 +73,26 @@ export class VoiceService {
   private sentMic() {
     const track = this.ctx.room()?.localParticipant.getTrackPublication(Track.Source.Microphone)?.track;
     return isLocalAudio(track) ? track : undefined;
+  }
+
+  /**
+   * My voice through the noise gate, with its own Web Audio context. Where the browser can't run
+   * it, the voice is sent as the browser's processing leaves it: null.
+   */
+  private async gateVoice(track: LocalAudioTrack, line: number): Promise<Gate | null> {
+    if (typeof AudioContext === "undefined" || typeof track.setProcessor !== "function") return null;
+    const context = new AudioContext();
+    try {
+      // Made after the permission prompt, the click may no longer count: a suspended context
+      // would send silence.
+      if (context.state === "suspended") await context.resume();
+      track.setAudioContext(context);
+      const gate = new NoiseGate(line);
+      await track.setProcessor(gate);
+      return { gate, context };
+    } catch {
+      void context.close().catch(() => {});
+      return null;
+    }
   }
 }

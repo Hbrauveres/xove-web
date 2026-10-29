@@ -100,3 +100,6 @@ export type LiveKitAccess = {
  */
 export type SeatStatus =
   { status: "in" } | { status: "waiting"; place: number } | { status: "offered"; until: string; seconds: number };
+
+/** What's on my stage, as the API takes it: someone's screen or camera, or null for an empty stage. */
+export type WatchingTarget = { sharerId: number; kind: StreamKind } | null;

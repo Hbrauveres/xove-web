@@ -1,3 +1,4 @@
+import type { NoiseGate } from "../noise-gate.adapter";
 import type { LocalAudioTrack, LocalTrack, LocalVideoTrack, Room } from "livekit-client";
 import type { SharingConnection, StreamKind } from "@core/api/types/api.types";
 import type { CameraProblem, ScreenSurface } from "@core/devices/types/devices.types";
@@ -105,3 +106,9 @@ export type RoomContext = {
   refreshLocal: (known?: Pick<LocalMedia, "micInput">) => void;
   captures: WeakMap<Capture, CapturedTracks>;
 };
+
+/** My voice's noise gate, with the Web Audio context it runs in. */
+export type Gate = { gate: NoiseGate; context: AudioContext };
+
+/** Anything that carries the browser's track, as a camera does. */
+export type WithMediaTrack = { mediaStreamTrack: MediaStreamTrack };

@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { Me } from "@core/api/types/api.types";
 
 /** Who is signed in, as far as this page knows. */
@@ -9,3 +10,5 @@ export type AuthContextValue = {
   refresh: () => Promise<void>;
   signOut: () => Promise<void>;
 };
+
+export type AuthProviderProps = { children: ReactNode };
