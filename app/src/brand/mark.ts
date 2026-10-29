@@ -146,7 +146,7 @@ export const OPTICAL = {
   small: { stroke: 12, arm: 28, dot: DOT_R, fill: 0.84 },
   tiny: { stroke: 16, arm: 32, dot: 31, fill: 1 },
 } as const;
-export type Optical = keyof typeof OPTICAL;
+type Optical = keyof typeof OPTICAL;
 
 export function iconMark(optical: Optical = "large") {
   const o = OPTICAL[optical];

@@ -1,10 +1,6 @@
-/// <reference types="node" />
-import { readFileSync } from "node:fs";
-import { inflateSync } from "node:zlib";
 import { describe, expect, it } from "vitest";
 import html from "../../index.html?raw";
 import favicon from "../../public/favicon.svg?raw";
-import manifestText from "../../public/site.webmanifest?raw";
 import { iconSvg } from "./iconSvg";
 
 /** Everything in public/, by name. */
@@ -26,53 +22,27 @@ const metas = new Map(
 );
 const meta = (name: string) => metas.get(name);
 
-describe("Xovê's icon in the browser and on phones (spec 0111, FR-4)", () => {
-  it("links the favicon, the home-screen icon and the manifest from the page", () => {
+describe("Xovê's icon in the browser, and no home-screen app (specs 0111 and 0223)", () => {
+  it("links the favicon and nothing to install: no manifest, no home-screen icon or app tags", () => {
     expect(href("icon")).toBe("/favicon.svg");
-    expect(href("apple-touch-icon")).toBe("/apple-touch-icon.png");
-    expect(href("manifest")).toBe("/site.webmanifest");
     expect(html).toMatch(/<meta name="theme-color" content="#0c0c0d"/);
-  });
-
-  it("ships every file it links", () => {
-    for (const f of [
-      "favicon.svg",
-      "apple-touch-icon.png",
-      "icon-192.png",
-      "icon-512.png",
-      "icon-maskable-512.png",
-      "site.webmanifest",
+    expect(href("manifest")).toBeUndefined();
+    expect(href("apple-touch-icon")).toBeUndefined();
+    for (const name of [
+      "mobile-web-app-capable",
+      "apple-mobile-web-app-capable",
+      "apple-mobile-web-app-status-bar-style",
     ]) {
-      expect(shipped, f).toContain(f);
+      expect(meta(name), name).toBeUndefined();
     }
   });
 
-  it("lists the phone icons in the manifest, under Xovê's name", () => {
-    const manifest = JSON.parse(manifestText);
-    expect(manifest.name).toBe("Xovê");
-    expect([manifest.background_color, manifest.theme_color]).toEqual(["#0c0c0d", "#0c0c0d"]);
-    expect(manifest.icons.map((i: { src: string; sizes: string }) => `${i.src} ${i.sizes}`)).toEqual([
-      "/icon-192.png 192x192",
-      "/icon-512.png 512x512",
-      "/icon-maskable-512.png 512x512",
-    ]);
-  });
-
-  it("has what Chrome checks before it offers to install it (spec 0171)", () => {
-    const manifest = JSON.parse(manifestText);
-    expect([manifest.start_url, manifest.scope, manifest.id]).toEqual(["/", "/", "/"]);
-    const maskable = manifest.icons.find((i: { purpose?: string }) => i.purpose === "maskable");
-    expect(maskable?.src).toBe("/icon-maskable-512.png");
-  });
-
-  it("opens from the home screen with no browser bar, on Android and iPhone (spec 0160)", () => {
-    expect(JSON.parse(manifestText).display).toBe("fullscreen");
-    expect(meta("apple-mobile-web-app-capable")).toBe("yes");
-    expect(meta("mobile-web-app-capable")).toBe("yes");
+  it("ships only the favicon", () => {
+    expect(shipped).toEqual(["favicon.svg"]);
   });
 
   it("keeps the favicon in step with the mark's geometry", () => {
-    expect(favicon).toBe(iconSvg("favicon"));
+    expect(favicon).toBe(iconSvg());
   });
 
   it("makes the favicon only the symbol, at its 16 px weight, edge to edge (spec 0113)", () => {
@@ -89,44 +59,5 @@ describe("Xovê's icon in the browser and on phones (spec 0111, FR-4)", () => {
     expect(favicon).toMatch(/@media \(prefers-color-scheme: light\)\s*\{\s*\.ink\s*\{\s*stroke:\s*#0c0c0d/);
     expect(favicon).toMatch(/stroke="#ef4b4b"/);
     expect(favicon).toMatch(/fill="#ef4b4b"/);
-  });
-
-  it("puts the phone icon's larger, slim symbol on the soft black ground (specs 0113 and 0121)", () => {
-    const phone = iconSvg("phone");
-    expect(phone).toMatch(/<rect[^>]*fill="#0c0c0d"/);
-    expect(phone).toMatch(/stroke-width="10"/);
-  });
-});
-
-describe("the phone icon files (spec 0113, FR-6b)", () => {
-  /** A PNG's size and its top-left pixel (8-bit RGB, as rendered), read without image tools. */
-  const pngAt = (name: string) => {
-    const buf = readFileSync(`${__dirname}/../../public/${name}`);
-    const width = buf.readUInt32BE(16),
-      height = buf.readUInt32BE(20);
-    const chunks: Buffer[] = [];
-    for (let at = 8; at < buf.length;) {
-      const len = buf.readUInt32BE(at),
-        type = buf.toString("ascii", at + 4, at + 8);
-      if (type === "IDAT") chunks.push(buf.subarray(at + 8, at + 8 + len));
-      at += 12 + len;
-    }
-    // The first pixel of the first row is stored as is, whatever the row's filter.
-    const raw = inflateSync(Buffer.concat(chunks));
-    return { width, height, colorType: buf[25], first: [raw[1], raw[2], raw[3]] };
-  };
-
-  it("ships the three sizes, on the soft black ground (spec 0121)", () => {
-    for (const [name, size] of [
-      ["apple-touch-icon.png", 180],
-      ["icon-192.png", 192],
-      ["icon-512.png", 512],
-      ["icon-maskable-512.png", 512],
-    ] as const) {
-      const png = pngAt(name);
-      expect([png.width, png.height], name).toEqual([size, size]);
-      expect(png.colorType, name).toBe(2);
-      expect(png.first, name).toEqual([0x0c, 0x0c, 0x0d]);
-    }
   });
 });

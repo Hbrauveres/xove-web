@@ -9,7 +9,7 @@ function onPage() {
   return { page };
 }
 
-describe("the fullscreen element (specs 0101 and 0160)", () => {
+describe("the fullscreen element (spec 0101)", () => {
   it("is the player when the player is fullscreen", () => {
     const { page } = onPage();
     const hook = renderHook(() => useFullscreenElement());
@@ -21,10 +21,14 @@ describe("the fullscreen element (specs 0101 and 0160)", () => {
     expect(hook.result.current).toBe(player);
   });
 
-  it("is none when the whole page is fullscreen: windows stay in the page", () => {
+  it("is none again once the player leaves fullscreen", () => {
     const { page } = onPage();
     const hook = renderHook(() => useFullscreenElement());
-    page.fullscreen = document.documentElement;
+    page.fullscreen = document.createElement("div");
+    act(() => {
+      document.dispatchEvent(new Event("fullscreenchange"));
+    });
+    page.fullscreen = null;
     act(() => {
       document.dispatchEvent(new Event("fullscreenchange"));
     });
