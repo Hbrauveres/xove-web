@@ -1,8 +1,8 @@
-import { isHandheld } from "@services/media-devices-service/utils/is-handheld.util";
+import { isHandheld } from "@services/media-devices-service";
 import { PhoneNoticePage } from "@features/phone-notice/index";
 import { BrowserRouter } from "react-router";
-import { AuthProvider } from "@shared/stores/auth-store/auth.store";
-import { AppRoutes } from "../app-routes/app-routes.component";
+import { AuthProvider } from "@shared/stores/auth-store";
+import { AppRoutes } from "../app-routes";
 
 /**
  * What the page shows, decided once as it loads: a phone or a tablet gets only the screen that

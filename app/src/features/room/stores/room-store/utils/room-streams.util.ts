@@ -1,4 +1,4 @@
-import type { LiveStream } from "@services/xove-api-service/types/api.types";
+import type { LiveStream } from "@services/xove-api-service";
 import type { ActivityEvent } from "@features/room/types/room-view.types";
 import type { RoomStream } from "../../../types/room.types";
 import { personIdOf } from "../../../utils/person-id.util";

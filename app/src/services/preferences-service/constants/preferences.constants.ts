@@ -1,4 +1,4 @@
-import type { StreamKind, StreamQuality, StreamSettings } from "@services/xove-api-service/types/api.types";
+import type { StreamKind, StreamQuality, StreamSettings } from "@services/xove-api-service";
 import type { AmbilightPrefs, HearingOf, HearingPrefs, VoicePrefs } from "../types/preferences.types";
 
 /** Where each choice is kept in the browser. Renaming one forgets everyone's choice. */

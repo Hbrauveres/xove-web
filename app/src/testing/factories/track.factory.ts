@@ -1,4 +1,4 @@
-import type { MediaTrack } from "@services/livekit-service/types/livekit.types";
+import type { MediaTrack } from "@services/livekit-service";
 import { FakeTrack } from "../fakeLiveKit";
 
 /** A fake video or audio track, new on every call: what one test attaches never shows in another. */

@@ -1,12 +1,12 @@
 import type { AudioProcessorOptions, Track, TrackProcessor } from "livekit-client";
-import { gateStep, levelOf } from "@services/media-devices-service/utils/audio-level.util";
+import { gateStep, levelOf } from "@services/media-devices-service";
 import {
   ANALYSER_SIZE,
   ATTACK_TIME_CONSTANT,
   GATE_CLOSED,
   RELEASE_TIME_CONSTANT,
   TICK_MS,
-} from "@services/media-devices-service/constants/devices.constants";
+} from "@services/media-devices-service";
 
 /**
  * The voice's noise gate as LiveKit's audio processor: sound under the sharer's sensitivity line

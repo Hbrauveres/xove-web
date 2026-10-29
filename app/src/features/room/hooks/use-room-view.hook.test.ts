@@ -1,8 +1,8 @@
 import { renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { START } from "../../../services/livekit-service/constants/livekit.constants";
+import { START } from "../../../services/livekit-service";
 import { aLiveStream, anAnswer } from "../../../testing/factories/streams-state.factory";
-import { initialRoom, withMe, withStreams, withVideo } from "../stores/room-store/room.model";
+import { initialRoom, withMe, withStreams, withVideo } from "../stores/room-store";
 import { useRoomView } from "./use-room-view.hook";
 
 const AT = Date.parse("2026-10-29T10:05:00Z");

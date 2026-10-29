@@ -1,4 +1,4 @@
-import type { LiveStream, StreamsState } from "@services/xove-api-service/types/api.types";
+import type { LiveStream, StreamsState } from "@services/xove-api-service";
 
 /** A live stream as the API lists it: someone's 1080p screen since 10:00, unless said otherwise. */
 export const aLiveStream = (overrides: Partial<LiveStream> = {}): LiveStream => ({

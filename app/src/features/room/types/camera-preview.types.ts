@@ -1,5 +1,5 @@
-import type { StreamMode, StreamSettings } from "@services/xove-api-service/types/api.types";
-import type { Capture } from "@services/livekit-service/types/livekit.types";
+import type { StreamMode, StreamSettings } from "@services/xove-api-service";
+import type { Capture } from "@services/livekit-service";
 
 export type CameraPreviewInputs = {
   capture: (kind: "camera", mode: StreamMode) => Promise<Capture | null>;

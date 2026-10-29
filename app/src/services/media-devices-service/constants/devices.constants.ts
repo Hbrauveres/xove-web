@@ -1,4 +1,4 @@
-import { STREAM_QUALITIES } from "@services/preferences-service/constants/preferences.constants";
+import { STREAM_QUALITIES } from "@services/preferences-service";
 import type { DeviceList, GateState, StreamPreset } from "../types/devices.types";
 
 /** What a refused camera says: like any app, it asks once, and says how to allow it later. */

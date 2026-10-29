@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type Dispatch, type ReactNode, type SetStateAction } from "react";
-import type { StreamKind } from "@services/xove-api-service/types/api.types";
+import type { StreamKind } from "@services/xove-api-service";
 import { Range } from "../ui/Range";
 import { showToast } from "../ui/toast";
 import { FULL_ROOM } from "./PlayerButtons";

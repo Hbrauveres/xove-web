@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { RoomStore } from "../stores/room-store/room.store";
+import { RoomStore } from "../stores/room-store";
 import { useMySteps } from "./use-my-steps.hook";
 
 describe("my streams' steps", () => {

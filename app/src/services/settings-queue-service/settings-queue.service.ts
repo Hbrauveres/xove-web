@@ -1,4 +1,4 @@
-import type { StreamKind, StreamSettings } from "@services/xove-api-service/types/api.types";
+import type { StreamKind, StreamSettings } from "@services/xove-api-service";
 
 /**
  * Changes to my streams' settings while live, one after another, in the order they were made.

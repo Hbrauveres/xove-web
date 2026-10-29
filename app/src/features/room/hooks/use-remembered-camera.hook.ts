@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
-import type { StreamKind, StreamMode, StreamSettings } from "@services/xove-api-service/types/api.types";
-import type { LiveKitAdapter } from "@services/livekit-service/livekit.adapter";
-import type { Capture } from "@services/livekit-service/types/livekit.types";
-import { loadCameraDevice, saveCameraDevice } from "@services/preferences-service/preferences.service";
+import type { StreamKind, StreamMode, StreamSettings } from "@services/xove-api-service";
+import type { LiveKitAdapter } from "@services/livekit-service";
+import type { Capture } from "@services/livekit-service";
+import { loadCameraDevice, saveCameraDevice } from "@services/preferences-service";
 
 /**
  * The camera this browser remembers: asked for when the camera starts, switched to live while

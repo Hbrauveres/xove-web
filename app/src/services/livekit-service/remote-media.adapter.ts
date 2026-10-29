@@ -1,6 +1,6 @@
 import { Track, VideoQuality, type RemoteParticipant, type RemoteTrackPublication } from "livekit-client";
-import type { StreamKind } from "@services/xove-api-service/types/api.types";
-import { SHARE_QUALITIES } from "@services/media-devices-service/constants/devices.constants";
+import type { StreamKind } from "@services/xove-api-service";
+import { SHARE_QUALITIES } from "@services/media-devices-service";
 import { SOURCE } from "./constants/livekit.constants";
 import type { ReadVideo, RemoteMedia, RemoteVideo, ViewQuality } from "./types/livekit.types";
 

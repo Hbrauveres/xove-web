@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import type { StreamKind } from "@services/xove-api-service/types/api.types";
-import type { ConnectionState } from "@services/livekit-service/types/livekit.types";
+import type { StreamKind } from "@services/xove-api-service";
+import type { ConnectionState } from "@services/livekit-service";
 import type { ActivityEvent, Friend } from "@features/room/types/room-view.types";
 import { Avatar } from "../ui/Avatar";
 import { Dropdown, DropdownSection } from "../ui/Dropdown";

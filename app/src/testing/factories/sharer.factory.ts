@@ -1,4 +1,4 @@
-import type { StreamKind } from "@services/xove-api-service/types/api.types";
+import type { StreamKind } from "@services/xove-api-service";
 import type { Sharer } from "@features/room/types/room-view.types";
 import { aTrack } from "./track.factory";
 

@@ -1,4 +1,4 @@
-import type { StreamMode } from "@services/xove-api-service/types/api.types";
+import type { StreamMode } from "@services/xove-api-service";
 import type { VoicePrefs } from "../types/preferences.types";
 
 /** A stored number kept between 0 and 1, or the fallback when it isn't a number. */

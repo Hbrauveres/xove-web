@@ -1,5 +1,5 @@
 import { Track, type LocalParticipant, type LocalVideoTrack } from "livekit-client";
-import type { ScreenSurface } from "@services/media-devices-service/types/devices.types";
+import type { ScreenSurface } from "@services/media-devices-service";
 import type { LocalMedia } from "../types/livekit.types";
 import { isLocalVideo } from "./track-kind.util";
 

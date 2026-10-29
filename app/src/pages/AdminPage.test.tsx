@@ -1,7 +1,7 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import type { AccessRequestView, MemberView } from "@services/xove-api-service/types/api.types";
+import type { AccessRequestView, MemberView } from "@services/xove-api-service";
 import { aUser, installFakeApi } from "../testing/fakeApi";
 import { renderApp } from "../testing/renderApp";
 

@@ -1,4 +1,4 @@
-import { LiveKitAdapter } from "@services/livekit-service/livekit.adapter";
+import { LiveKitAdapter } from "@services/livekit-service";
 import { lastRoom } from "../fakeLiveKit";
 
 /** A fresh adapter, joined to a fresh fake room. */

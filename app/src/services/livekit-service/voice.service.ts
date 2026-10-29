@@ -1,7 +1,7 @@
 import { Track, type LocalAudioTrack, type LocalTrack } from "livekit-client";
 import { isLocalAudio } from "./utils/track-kind.util";
-import type { VoiceProblem } from "@services/media-devices-service/types/devices.types";
-import type { VoicePrefs } from "@services/preferences-service/types/preferences.types";
+import type { VoiceProblem } from "@services/media-devices-service";
+import type { VoicePrefs } from "@services/preferences-service";
 import type { Gate, RoomContext } from "./types/livekit.types";
 import { problemOf } from "./utils/voice-problem.util";
 import { NoiseGate } from "./noise-gate.adapter";

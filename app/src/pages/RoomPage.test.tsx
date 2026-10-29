@@ -2,14 +2,9 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
 import { describe, expect, it, vi } from "vitest";
-import { screenCaptureRequest } from "@services/media-devices-service/utils/screen-picker.util";
-import {
-  cameraCaptureOptions,
-  cameraPublishOptions,
-  capOf,
-  screenPublishOptions,
-} from "@services/livekit-service/utils/publish-options.util";
-import { AuthProvider } from "@shared/stores/auth-store/auth.store";
+import { screenCaptureRequest } from "@services/media-devices-service";
+import { cameraCaptureOptions, cameraPublishOptions, capOf, screenPublishOptions } from "@services/livekit-service";
+import { AuthProvider } from "@shared/stores/auth-store";
 import { aUser, installFakeApi, MY_USER_ID, myLiveStream, someoneSharing } from "../testing/fakeApi";
 import { FakeLocalScreenTrack, lastRoom } from "../testing/fakeLiveKit";
 import { RoomPage } from "./RoomPage";

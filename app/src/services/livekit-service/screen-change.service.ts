@@ -1,6 +1,6 @@
 import { Track, type Room } from "livekit-client";
-import type { StreamMode, StreamSettings } from "@services/xove-api-service/types/api.types";
-import { pickScreen } from "@services/media-devices-service/screen-picker.service";
+import type { StreamMode, StreamSettings } from "@services/xove-api-service";
+import { pickScreen } from "@services/media-devices-service";
 import { isDomError } from "./utils/capture.util";
 import { screenSound } from "./screen-sound.service";
 import { COULDNT } from "./constants/livekit.constants";

@@ -1,5 +1,5 @@
 import { Navigate } from "react-router";
-import { useAuth } from "@shared/stores/auth-store/hooks/use-auth.hook";
+import { useAuth } from "@shared/stores/auth-store";
 import { FullPageMessage } from "../../components/ui/FullPageMessage";
 import type { RouteGuardProps } from "./types/route-guard.types";
 import { routeAccess } from "./utils/route-access.util";

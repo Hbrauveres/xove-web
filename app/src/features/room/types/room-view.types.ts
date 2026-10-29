@@ -1,6 +1,6 @@
 import type { PersonId } from "./room.types";
-import type { StreamKind, StreamSettings } from "@services/xove-api-service/types/api.types";
-import type { MediaTrack, RemoteVideo } from "@services/livekit-service/types/livekit.types";
+import type { StreamKind, StreamSettings } from "@services/xove-api-service";
+import type { MediaTrack, RemoteVideo } from "@services/livekit-service";
 
 /** A person in the room. `id` is their id in the room, their identity on the video server ("user-42"), me included. */
 export type Friend = {

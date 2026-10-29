@@ -1,12 +1,8 @@
 import { VideoPreset, type TrackPublishOptions, type VideoCaptureOptions, type VideoQuality } from "livekit-client";
-import type { StreamMode, StreamQuality } from "@services/xove-api-service/types/api.types";
-import {
-  BEST_SCREEN,
-  CAMERA_QUALITIES,
-  SHARE_QUALITIES,
-} from "@services/media-devices-service/constants/devices.constants";
-import type { StreamPreset } from "@services/media-devices-service/types/devices.types";
-import type { VoicePrefs } from "@services/preferences-service/types/preferences.types";
+import type { StreamMode, StreamQuality } from "@services/xove-api-service";
+import { BEST_SCREEN, CAMERA_QUALITIES, SHARE_QUALITIES } from "@services/media-devices-service";
+import type { StreamPreset } from "@services/media-devices-service";
+import type { VoicePrefs } from "@services/preferences-service";
 import { TOP_LAYER } from "../constants/livekit.constants";
 
 /**

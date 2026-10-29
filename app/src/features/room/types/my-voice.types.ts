@@ -1,5 +1,5 @@
-import type { VoiceProblem } from "@services/media-devices-service/types/devices.types";
-import type { VoicePrefs } from "@services/preferences-service/types/preferences.types";
+import type { VoiceProblem } from "@services/media-devices-service";
+import type { VoicePrefs } from "@services/preferences-service";
 
 export type MyVoiceInputs = {
   /** My voice is being sent. */

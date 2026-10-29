@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { aUser } from "../../../testing/fakeApi";
-import type { AuthState } from "../../../shared/stores/auth-store/types/auth.types";
+import type { AuthState } from "../../../shared/stores/auth-store";
 import { routeAccess } from "./route-access.util";
 
 const signedIn = (overrides: Parameters<typeof aUser>[0] = {}): AuthState => ({

@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router";
-import { saveAmbilight } from "@services/preferences-service/preferences.service";
-import type { AmbilightPrefs } from "@services/preferences-service/types/preferences.types";
-import type { ConnectionState } from "@services/livekit-service/types/livekit.types";
+import { saveAmbilight } from "@services/preferences-service";
+import type { AmbilightPrefs } from "@services/preferences-service";
+import type { ConnectionState } from "@services/livekit-service";
 import type { Friend } from "@features/room/types/room-view.types";
 import { Avatar } from "../ui/Avatar";
 import { Dropdown, DropdownSection } from "../ui/Dropdown";

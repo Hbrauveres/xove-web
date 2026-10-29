@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { HANDHELD_QUERY } from "../../services/media-devices-service/utils/is-handheld.util";
+import { HANDHELD_QUERY } from "../../services/media-devices-service";
 import { aUser, installFakeApi } from "../../testing/fakeApi";
 import { Root } from "./root.component";
 

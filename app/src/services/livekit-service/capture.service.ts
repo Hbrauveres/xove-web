@@ -1,7 +1,7 @@
 import { LocalVideoTrack, Track, type Room } from "livekit-client";
-import type { StreamKind, StreamMode } from "@services/xove-api-service/types/api.types";
-import { CAMERA_BLOCKED, CAMERA_MISSING } from "@services/media-devices-service/constants/devices.constants";
-import { pickScreen } from "@services/media-devices-service/screen-picker.service";
+import type { StreamKind, StreamMode } from "@services/xove-api-service";
+import { CAMERA_BLOCKED, CAMERA_MISSING } from "@services/media-devices-service";
+import { pickScreen } from "@services/media-devices-service";
 import { isDomError, startFailed } from "./utils/capture.util";
 import { screenSound } from "./screen-sound.service";
 import { NOT_CONNECTED } from "./constants/livekit.constants";

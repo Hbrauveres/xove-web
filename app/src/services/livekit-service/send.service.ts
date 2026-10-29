@@ -1,5 +1,5 @@
 import { Track, type Room } from "livekit-client";
-import type { SharingConnection, StreamKind, StreamSettings } from "@services/xove-api-service/types/api.types";
+import type { SharingConnection, StreamKind, StreamSettings } from "@services/xove-api-service";
 import { startFailed } from "./utils/capture.util";
 import { COULDNT, NOT_CONNECTED, SOURCE } from "./constants/livekit.constants";
 import type { Capture, CapturedTracks, RoomContext, StartedStream, WithMediaTrack } from "./types/livekit.types";

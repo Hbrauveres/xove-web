@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { aUser, installFakeApi } from "../../../testing/fakeApi";
 import { lastRoom } from "../../../testing/fakeLiveKit";
 import { useMySending } from "./use-my-sending.hook";
-import { useRoomStore } from "../stores/room-store/hooks/use-room-store.hook";
+import { useRoomStore } from "../stores/room-store";
 import { useRememberedCamera } from "./use-remembered-camera.hook";
 
 const NOT_LIVE = { screen: false, camera: false };

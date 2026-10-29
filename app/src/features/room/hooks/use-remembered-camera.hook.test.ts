@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { cameraOn, connectedAdapter } from "../../../testing/factories/video-room.factory";
 import { lastRoom } from "../../../testing/fakeLiveKit";
 import { useRememberedCamera } from "./use-remembered-camera.hook";
-import { CAMERA_DEVICE_KEY } from "../../../services/preferences-service/constants/preferences.constants";
+import { CAMERA_DEVICE_KEY } from "../../../services/preferences-service";
 
 async function withAdapter() {
   const adapter = await connectedAdapter();

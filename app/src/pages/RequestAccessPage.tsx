@@ -1,8 +1,8 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
-import { api, ApiError } from "@services/xove-api-service/xove-api.service";
-import type { Me } from "@services/xove-api-service/types/api.types";
-import { useAuth } from "@shared/stores/auth-store/hooks/use-auth.hook";
+import { api, ApiError } from "@services/xove-api-service";
+import type { Me } from "@services/xove-api-service";
+import { useAuth } from "@shared/stores/auth-store";
 import { Button } from "../components/ui/Button";
 import { PersonAvatar } from "../components/ui/PersonAvatar";
 import { XoveMark } from "../components/brand/XoveMark";

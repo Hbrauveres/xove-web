@@ -1,5 +1,5 @@
-import type { StreamKind } from "@services/xove-api-service/types/api.types";
-import type { VideoRoomState } from "@services/livekit-service/types/livekit.types";
+import type { StreamKind } from "@services/xove-api-service";
+import type { VideoRoomState } from "@services/livekit-service";
 import type { ActivityEvent, Friend, Sharer } from "@features/room/types/room-view.types";
 import { hueOf } from "./utils/person-colour.util";
 import { ACTIVITY_KEPT } from "../../constants/room.constants";

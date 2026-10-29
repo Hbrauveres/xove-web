@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { CAMERA_QUALITIES, SHARE_QUALITIES } from "../../media-devices-service/constants/devices.constants";
-import { DEFAULT_VOICE } from "../../preferences-service/constants/preferences.constants";
+import { CAMERA_QUALITIES, SHARE_QUALITIES } from "../../media-devices-service";
+import { DEFAULT_VOICE } from "../../preferences-service";
 import {
   cameraCaptureOptions,
   cameraPublishOptions,
@@ -9,8 +9,8 @@ import {
   contentHintOf,
   screenPublishOptions,
 } from "./publish-options.util";
-import type { StreamMode } from "../../xove-api-service/types/api.types";
-import { STREAM_QUALITIES } from "../../preferences-service/constants/preferences.constants";
+import type { StreamMode } from "../../xove-api-service";
+import { STREAM_QUALITIES } from "../../preferences-service";
 
 const modes: StreamMode[] = ["smooth", "sharp"];
 

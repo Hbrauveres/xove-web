@@ -1,6 +1,6 @@
 import { act, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { DEFAULT_VOICE } from "../preferences-service/constants/preferences.constants";
+import { DEFAULT_VOICE } from "../preferences-service";
 import { FakeLocalMicTrack, lastRoom } from "../../testing/fakeLiveKit";
 import { connectedAdapter } from "../../testing/factories/video-room.factory";
 import type { LiveKitAdapter } from "./livekit.adapter";

@@ -1,4 +1,4 @@
-import type { StreamKind, StreamSettings } from "@services/xove-api-service/types/api.types";
+import type { StreamKind, StreamSettings } from "@services/xove-api-service";
 import {
   AMBILIGHT_KEYS,
   CAMERA_DEVICE_KEY,

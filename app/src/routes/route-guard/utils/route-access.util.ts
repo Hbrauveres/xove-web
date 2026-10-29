@@ -1,5 +1,5 @@
-import type { Me } from "@services/xove-api-service/types/api.types";
-import type { AuthState } from "@shared/stores/auth-store/types/auth.types";
+import type { Me } from "@services/xove-api-service";
+import type { AuthState } from "@shared/stores/auth-store";
 import type { RouteAccess, RouteRule } from "../types/route-access.types";
 
 const SHOW: RouteAccess = { kind: "show" };

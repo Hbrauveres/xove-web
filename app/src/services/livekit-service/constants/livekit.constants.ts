@@ -1,5 +1,5 @@
 import { ConnectionState as LkState, Track, VideoQuality } from "livekit-client";
-import type { StreamKind, StreamQuality } from "@services/xove-api-service/types/api.types";
+import type { StreamKind, StreamQuality } from "@services/xove-api-service";
 import type { ConnectionState, VideoRoomState } from "../types/livekit.types";
 
 /**

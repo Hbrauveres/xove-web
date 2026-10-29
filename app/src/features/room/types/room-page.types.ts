@@ -1,4 +1,4 @@
-import type { DeviceList } from "@services/media-devices-service/types/devices.types";
+import type { DeviceList } from "@services/media-devices-service";
 import type { RememberedCamera } from "./remembered-camera.types";
 import type { RoomStoreValue } from "./room-store.types";
 

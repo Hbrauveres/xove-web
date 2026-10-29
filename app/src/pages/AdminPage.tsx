@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router";
-import { api, ApiError } from "@services/xove-api-service/xove-api.service";
-import type { AccessRequestView, MemberView } from "@services/xove-api-service/types/api.types";
+import { api, ApiError } from "@services/xove-api-service";
+import type { AccessRequestView, MemberView } from "@services/xove-api-service";
 import { Button } from "../components/ui/Button";
 import { PersonAvatar } from "../components/ui/PersonAvatar";
 import { timeAgo } from "@features/admin/utils/time-ago.util";

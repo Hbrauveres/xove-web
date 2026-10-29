@@ -1,7 +1,7 @@
 import type { NoiseGate } from "../noise-gate.adapter";
 import type { LocalAudioTrack, LocalTrack, LocalVideoTrack, Room } from "livekit-client";
-import type { SharingConnection, StreamKind } from "@services/xove-api-service/types/api.types";
-import type { CameraProblem, ScreenSurface } from "@services/media-devices-service/types/devices.types";
+import type { SharingConnection, StreamKind } from "@services/xove-api-service";
+import type { CameraProblem, ScreenSurface } from "@services/media-devices-service";
 
 /** A track, reduced to what the screen needs: put it in a <video>/<audio> and take it out. */
 export type MediaTrack = {

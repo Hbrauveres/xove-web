@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import type { RoomModel } from "../types/room.types";
-import type { VideoRoomState } from "@services/livekit-service/types/livekit.types";
-import { activityOf } from "../stores/room-store/room.selectors";
+import type { VideoRoomState } from "@services/livekit-service";
+import { activityOf } from "../stores/room-store";
 import type { ActivityEvent } from "../types/room-view.types";
 
 /** What happened in the room, in order: the video room's joins and leaves with the room's own events. */

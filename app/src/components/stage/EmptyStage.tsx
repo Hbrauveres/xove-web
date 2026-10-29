@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { StreamKind } from "@services/xove-api-service/types/api.types";
+import type { StreamKind } from "@services/xove-api-service";
 import { CameraOnIcon, ScreenOffIcon, ScreenOnIcon } from "./icons";
 import { showToast } from "../ui/toast";
 import styles from "./EmptyStage.module.css";

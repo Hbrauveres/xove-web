@@ -6,7 +6,7 @@ import type {
   MemberView,
   StreamKind,
   StreamSettings,
-} from "@services/xove-api-service/types/api.types";
+} from "@services/xove-api-service";
 
 type Reply = { status: number; body?: unknown };
 export type Call = {

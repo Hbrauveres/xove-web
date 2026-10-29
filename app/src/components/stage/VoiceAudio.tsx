@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import type { MediaTrack } from "@services/livekit-service/types/livekit.types";
+import type { MediaTrack } from "@services/livekit-service";
 
 /** Plays someone's voice (spec 0123), at this browser's own volume; nothing to see. */
 export function VoiceAudio({ track, volume, muted }: { track: MediaTrack; volume: number; muted: boolean }) {

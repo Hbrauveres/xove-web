@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { StreamSettings } from "../xove-api-service/types/api.types";
+import type { StreamSettings } from "../xove-api-service";
 import { SettingsQueue } from "./settings-queue.service";
 
 const s = (quality: StreamSettings["quality"], mode: StreamSettings["mode"] = "smooth"): StreamSettings => ({
