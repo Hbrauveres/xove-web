@@ -20,4 +20,18 @@ describe("the fullscreen element (spec 0101)", () => {
     });
     expect(hook.result.current).toBe(player);
   });
+
+  it("is none again once the player leaves fullscreen", () => {
+    const { page } = onPage();
+    const hook = renderHook(() => useFullscreenElement());
+    page.fullscreen = document.createElement("div");
+    act(() => {
+      document.dispatchEvent(new Event("fullscreenchange"));
+    });
+    page.fullscreen = null;
+    act(() => {
+      document.dispatchEvent(new Event("fullscreenchange"));
+    });
+    expect(hook.result.current).toBeNull();
+  });
 });

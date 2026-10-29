@@ -72,13 +72,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/brand/iconSvg.ts",
-    "count": 2,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/brand/mark.ts",
     "count": 3,
     "owner": "#186 shared: the basic blocks"
@@ -801,7 +794,7 @@
     "tool": "code",
     "rule": "lineLength",
     "file": "src/brand/iconSvg.ts",
-    "count": 2,
+    "count": 1,
     "owner": "#186 shared: the basic blocks"
   },
   {
