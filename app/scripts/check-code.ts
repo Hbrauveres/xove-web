@@ -6,9 +6,11 @@ import { basename, join, relative, resolve } from "node:path";
 
 export const RULES = {
   size: "over 300 lines (one job per file)",
-  noTest: "code with logic but no .test file beside it",
+  noTest:
+    "code with logic but no .test file where it belongs (its module's tests/ folder, or beside it in the old folders)",
   testName: "test named .spec (rename to .test: a spec is a workspace requirement document)",
-  orphanTest: "test file with no file of the same name beside it",
+  orphanTest: "test file with no file of the same name where it belongs",
+  testPlace: "test beside its file: it goes in its module's tests/ folder, at the same path",
   literal: "literal colour, duration or easing in CSS (use a token)",
   domQuery:
     "querySelector/closest/getElementById in a component: finding other parts through the page (pass a ref or context)",
@@ -37,6 +39,32 @@ const noLogic = (f: string) =>
   /(^|\/)index\.ts$/.test(f) ||
   /(^|\/)test\//.test(f) ||
   /(^|\/)(vite-env|setup)\.ts$/.test(f);
+/**
+ * The module a file of the new structure belongs to (`app`, `shared`, `core/<name>`,
+ * `features/<name>`), and its path inside it; null for the old folders and `test/`.
+ */
+function moduleOf(r: string): { root: string; rest: string } | null {
+  const parts = r.split("/");
+  const depth =
+    parts[0] === "core" || parts[0] === "features" ? 2 : parts[0] === "app" || parts[0] === "shared" ? 1 : 0;
+  if (!depth || parts.length <= depth) return null;
+  return { root: parts.slice(0, depth).join("/"), rest: parts.slice(depth).join("/") };
+}
+
+/** Where a file's test lives: its module's tests/ folder at the same path, or beside it in the old folders. */
+function testStemOf(r: string): string {
+  const stem = r.replace(/\.tsx?$/, "");
+  const m = moduleOf(stem);
+  return m ? `${m.root}/tests/${m.rest}` : stem;
+}
+
+/** Where a test's file lives: the same path outside tests/, or beside it in the old folders. */
+function codeStemOf(r: string): string {
+  const stem = r.replace(/\.(spec|test)\.tsx?$/, "");
+  const m = moduleOf(stem);
+  return m?.rest.startsWith("tests/") ? `${m.root}/${m.rest.slice("tests/".length)}` : stem;
+}
+
 const isTokenFile = (f: string) => /(^|\/)(tokens|global)\.css$/.test(f);
 const NAME =
   /^[a-z0-9]+(-[a-z0-9]+)*\.(component|page|hook|util|service|adapter|store|model|selectors|constants|enum|types|factory)(\.module)?\.(tsx?|css)$|^[a-z0-9]+(-[a-z0-9]+)*\.(component|page|hook|util|service|adapter|store|model|selectors)\.test\.tsx?$|^(tokens|global)\.css$/;
@@ -52,15 +80,16 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
   const lines = text.split("\n");
   if (isCode(r) && lines.length > 300) add("size", 0, `${lines.length} lines`);
   if (isCode(r) && !noLogic(r)) {
-    const stem = r.replace(/\.tsx?$/, "");
+    const stem = testStemOf(r);
     const test = [".test.ts", ".test.tsx"].some((e) => exists(stem + e));
     const spec = [".spec.ts", ".spec.tsx"].some((e) => exists(stem + e));
     if (!test && !spec) add("noTest");
     else if (!test) add("testName");
   }
   if (isTest(r) && !/(^|\/)test\//.test(r)) {
-    const stem = r.replace(/\.(spec|test)\.tsx?$/, "");
-    if (![".ts", ".tsx"].some((e) => exists(stem + e))) add("orphanTest");
+    const m = moduleOf(r);
+    if (m && !m.rest.startsWith("tests/")) add("testPlace");
+    if (![".ts", ".tsx"].some((e) => exists(codeStemOf(r) + e))) add("orphanTest");
   }
   lines.forEach((l, i) => {
     const n = i + 1,

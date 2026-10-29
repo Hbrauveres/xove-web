@@ -9,7 +9,7 @@ describe("the code check", () => {
   it("finds nothing in a file that follows the rules", () => {
     expect(
       rules("shared/utils/clamp.util.ts", "export const clamp = (x: number) => x;\n", [
-        "shared/utils/clamp.util.test.ts",
+        "shared/tests/utils/clamp.util.test.ts",
       ]),
     ).toEqual([]);
   });
@@ -23,16 +23,20 @@ describe("the code check", () => {
   });
 
   it("names a file over 300 lines", () => {
-    expect(rules("shared/utils/long.util.ts", "x\n".repeat(301), ["shared/utils/long.util.test.ts"])).toContain("size");
+    expect(rules("shared/utils/long.util.ts", "x\n".repeat(301), ["shared/tests/utils/long.util.test.ts"])).toContain(
+      "size",
+    );
   });
 
   it("names history in a comment, LiveKit outside core, and a literal colour in CSS", () => {
     expect(
-      rules("features/room/utils/a.util.ts", "// as decided in spec 0123\n", ["features/room/utils/a.util.test.ts"]),
+      rules("features/room/utils/a.util.ts", "// as decided in spec 0123\n", [
+        "features/room/tests/utils/a.util.test.ts",
+      ]),
     ).toContain("history");
     expect(
       rules("features/room/utils/b.util.ts", 'import { Room } from "livekit-client";\n', [
-        "features/room/utils/b.util.test.ts",
+        "features/room/tests/utils/b.util.test.ts",
       ]),
     ).toContain("livekit");
     expect(rules("shared/ui/face/face.component.module.css", ".face { color: #ffffff; }\n")).toContain("literal");
@@ -40,22 +44,51 @@ describe("the code check", () => {
 
   it("names a test that waits in real time, or shares data at file level", () => {
     expect(
-      rules("shared/utils/c.util.test.ts", "await new Promise((r) => setTimeout(r, 500));\n", [
+      rules("shared/tests/utils/c.util.test.ts", "await new Promise((r) => setTimeout(r, 500));\n", [
         "shared/utils/c.util.ts",
       ]),
     ).toContain("realWait");
     expect(
-      rules("shared/utils/d.util.test.ts", 'const BRUNO = aSharer({ name: "Bruno" });\n', ["shared/utils/d.util.ts"]),
+      rules("shared/tests/utils/d.util.test.ts", 'const BRUNO = aSharer({ name: "Bruno" });\n', [
+        "shared/utils/d.util.ts",
+      ]),
     ).toContain("sharedData");
   });
 
   it("names a comment that switches a check off, and a line past Prettier's width, outside tests", () => {
-    const code = (text: string) => rules("shared/utils/e.util.ts", text, ["shared/utils/e.util.test.ts"]);
+    const code = (text: string) => rules("shared/utils/e.util.ts", text, ["shared/tests/utils/e.util.test.ts"]);
     for (const off of ["// oxlint-disable-next-line", "// @ts-ignore", "// @ts-expect-error", "/* eslint-disable */"])
       expect(code(off + "\n")).toContain("disable");
     expect(code(`const s = "${"x".repeat(120)}";\n`)).toContain("lineLength");
-    expect(rules("shared/utils/e.util.test.ts", "// @ts-ignore\n", ["shared/utils/e.util.ts"])).not.toContain(
+    expect(rules("shared/tests/utils/e.util.test.ts", "// @ts-ignore\n", ["shared/utils/e.util.ts"])).not.toContain(
       "disable",
     );
+  });
+
+  it("finds each module's tests in its own tests/ folder, at the same path as the file", () => {
+    expect(rules("core/livekit/send.service.ts", "x\n", ["core/livekit/tests/send.service.test.ts"])).toEqual([]);
+    expect(rules("features/room/hooks/use-x.hook.ts", "x\n", ["features/room/tests/hooks/use-x.hook.test.ts"])).toEqual(
+      [],
+    );
+    expect(rules("app/app.component.tsx", "x\n", ["app/tests/app.component.test.tsx"])).toEqual([]);
+    expect(rules("features/room/tests/hooks/use-x.hook.test.ts", "", ["features/room/hooks/use-x.hook.ts"])).toEqual(
+      [],
+    );
+  });
+
+  it("names a test beside its file in the new structure, and the file then has no test where it belongs", () => {
+    expect(rules("core/api/api-client.service.test.ts", "", ["core/api/api-client.service.ts"])).toEqual(["testPlace"]);
+    expect(rules("core/api/api-client.service.ts", "x\n", ["core/api/api-client.service.test.ts"])).toEqual(["noTest"]);
+  });
+
+  it("names a test in tests/ whose file isn't at the same path", () => {
+    expect(rules("shared/tests/utils/gone.util.test.ts", "", ["shared/utils/other.util.ts"])).toEqual(["orphanTest"]);
+  });
+
+  it("keeps the old folders' tests beside their file until their step moves them", () => {
+    expect(rules("components/stage/Stage.test.tsx", "", ["components/stage/Stage.tsx"])).toEqual([
+      "structure",
+      "naming",
+    ]);
   });
 });
