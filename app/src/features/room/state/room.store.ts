@@ -36,6 +36,8 @@ export class RoomStore {
   private seatGeneration = 0;
   private streamsVersion = 0;
   private inRoom = false;
+  /** Closed with its page: an answer still on its way changes nothing and starts nothing. */
+  private closed = false;
   private stopVideo: (() => void) | null = null;
 
   constructor(myName: string, pollMs: number = POLL_MS, video = new LiveKitAdapter()) {
@@ -53,6 +55,7 @@ export class RoomStore {
 
   /** Starts asking for a seat, and listens to the video room. */
   open = () => {
+    this.closed = false;
     this.stopVideo = this.video.subscribe(() => this.onVideo());
     window.addEventListener("pagehide", this.leaving);
     this.afterSeat();
@@ -60,10 +63,9 @@ export class RoomStore {
 
   /** Stops every timer and leaves the video room. */
   close = () => {
+    this.closed = true;
     for (const timer of this.timers.values()) window.clearInterval(timer);
     this.timers.clear();
-    this.seatGeneration += 1;
-    this.streamsVersion += 1;
     this.stopVideo?.();
     this.stopVideo = null;
     window.removeEventListener("pagehide", this.leaving);
@@ -109,7 +111,7 @@ export class RoomStore {
   change = (next: (model: RoomModel) => RoomModel) => this.setModel(next(this.model));
 
   private setModel(model: RoomModel) {
-    if (model === this.model) return;
+    if (this.closed || model === this.model) return;
     this.model = model;
     this.publish();
   }
@@ -134,6 +136,7 @@ export class RoomStore {
 
   /** Polls while waiting; in the room once seated; out of the video room when back in the queue. */
   private afterSeat() {
+    if (this.closed) return;
     const seat = this.model.seat;
     this.every("seat", waitingFor(seat), () => void this.askSeat());
     if (seat?.status === "in") this.enterRoom();
@@ -164,8 +167,10 @@ export class RoomStore {
     void this.joinVideo();
   }
 
+  /** Back to the queue: the room starts afresh when I'm in again, as a new page would. */
   private leaveRoom() {
     this.inRoom = false;
+    this.setModel({ ...initialRoom(), seat: this.model.seat, seatError: this.model.seatError });
     this.every("streams", false, () => {});
     this.every("reenter", false, () => {});
     this.video.disconnect();
@@ -175,7 +180,7 @@ export class RoomStore {
   private async joinVideo() {
     try {
       const access = await api.liveKitToken();
-      if (!this.inRoom) return;
+      if (!this.inRoom || this.closed) return;
       this.setModel(withMe(this.model, access.identity, this.myName));
       await this.video.connect(access.url, access.token);
     } catch (e) {
@@ -196,7 +201,9 @@ export class RoomStore {
 
   /** The API forgot my seat (it restarted): enter again with my video connection until it knows. */
   private onStreams(answer: StreamsState, polled: boolean) {
-    this.setModel(withStreams(this.model, answer, Date.now(), polled));
+    const next = withStreams(this.model, answer, Date.now(), polled);
+    // The API may name me before the video access does: I keep my account's name.
+    this.setModel(next.me && !(next.me in next.names) ? withMe(next, next.me, this.myName) : next);
     this.every("reenter", answer.seated === false, () => void this.askSeat(this.video.participantSid()));
   }
 
@@ -205,7 +212,8 @@ export class RoomStore {
     this.setModel(withStreamsCall(this.model, true, null));
     try {
       const answer = await request();
-      this.setModel(withStreamsCall(withStreams(this.model, answer, Date.now()), false, null));
+      this.onStreams(answer, false);
+      this.setModel(withStreamsCall(this.model, false, null));
       return "ok";
     } catch (e) {
       this.setModel(withStreamsCall(this.model, false, e instanceof ApiError ? e.message : CALL_FAILED));

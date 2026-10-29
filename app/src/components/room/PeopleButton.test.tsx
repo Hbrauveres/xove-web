@@ -5,7 +5,7 @@ import type { Friend } from "@features/room/types/room-view.types";
 import { PeopleButton } from "./PeopleButton";
 
 const people = (): Friend[] => [
-  { id: "me", name: "Henrique", hue: 36, online: true },
+  { id: "user-99", name: "Henrique", hue: 210, online: true },
   { id: "user-7", name: "Bruno", hue: 210, online: true },
   { id: "user-3", name: "Ana", hue: 300, online: true },
   { id: "user-9", name: "Diego", hue: 90, online: true },
@@ -15,9 +15,12 @@ function setup(props: Partial<Parameters<typeof PeopleButton>[0]> = {}) {
   render(
     <PeopleButton
       people={people()}
-      meId="me"
+      meId="user-99"
       sharing={{ "user-7": { screen: true, camera: true }, "user-3": { screen: true, camera: false } }}
-      watchingOf={{ me: { sharerId: "user-7", kind: "screen" }, "user-9": { sharerId: "user-3", kind: "screen" } }}
+      watchingOf={{
+        "user-99": { sharerId: "user-7", kind: "screen" },
+        "user-9": { sharerId: "user-3", kind: "screen" },
+      }}
       seats={{ total: 20, taken: 4, waiting: 0 }}
       {...props}
     />,

@@ -20,6 +20,26 @@ const calls = (server: ReturnType<typeof installFakeApi>, key: string) =>
 
 const settle = () => vi.advanceTimersByTimeAsync(0);
 
+/**
+ * Holds the next request to `path`: the API answers at once (as things were then), but the
+ * answer only arrives when the test lets it go.
+ */
+function holdNext(path: string) {
+  const real = window.fetch;
+  let release = () => {};
+  const gate = new Promise<void>((resolve) => (release = resolve));
+  let held = false;
+  vi.stubGlobal("fetch", async (input: RequestInfo | URL, init?: RequestInit) => {
+    const answer = real(input, init);
+    if (!held && String(input) === path) {
+      held = true;
+      await gate;
+    }
+    return answer;
+  });
+  return release;
+}
+
 afterEach(() => {
   vi.useRealTimers();
 });
@@ -55,6 +75,37 @@ describe("the room's store: my seat", () => {
     store.close();
   });
 
+  it("keeps Cancel when a poll that left before it answers after", async () => {
+    const { store } = openStore({ status: "waiting", place: 2 });
+    await settle();
+    const release = holdNext("/api/room/enter");
+    await vi.advanceTimersByTimeAsync(POLL);
+
+    const cancelled = store.cancel();
+    release();
+    await cancelled;
+    await settle();
+
+    expect(store.getState().model.seat).toEqual({ status: "left" });
+    store.close();
+  });
+
+  it("starts nothing once closed, even when a poll on its way answers after", async () => {
+    const { server, store } = openStore({ status: "waiting", place: 2 });
+    const release = holdNext("/api/room/enter");
+    await settle();
+    store.close();
+    server.seat = { status: "in" };
+    release();
+    await settle();
+    const asked = server.calls.length;
+
+    await vi.advanceTimersByTimeAsync(POLL * 5);
+
+    expect(server.calls.length).toBe(asked);
+    expect(calls(server, "POST /api/livekit/token")).toBe(0);
+  });
+
   it("tells the API when the waiting page closes, so the place is kept", async () => {
     const { server, store } = openStore({ status: "waiting", place: 1 });
     await settle();
@@ -76,6 +127,18 @@ describe("the room's store: in the room", () => {
 
     await vi.advanceTimersByTimeAsync(POLL * 2);
     expect(calls(server, "GET /api/streams")).toBe(3);
+    store.close();
+  });
+
+  it("keeps my account's name when the API names me before the video access", async () => {
+    const { server, store } = openStore();
+    server.here = [{ userId: MY_USER_ID, since: "2026-10-29T10:00:00Z", mine: true }];
+    server.failures.set("POST /api/livekit/token", { status: 503, body: { detail: "Video isn't set up." } });
+    await settle();
+    await vi.advanceTimersByTimeAsync(POLL);
+
+    expect(store.getState().model.me).toBe(`user-${MY_USER_ID}`);
+    expect(store.getState().model.names[`user-${MY_USER_ID}`]).toBe("Henrique");
     store.close();
   });
 
@@ -108,7 +171,26 @@ describe("the room's store: in the room", () => {
 });
 
 describe("the room's store: my streams at the API", () => {
-  it("starts, changes and stops a stream, and drops a poll answer that was already on its way", async () => {
+  it("drops a poll answer that was on its way when I started a stream", async () => {
+    const { store } = openStore();
+    await settle();
+    const release = holdNext("/api/streams");
+    await vi.advanceTimersByTimeAsync(POLL);
+
+    await store.startStream(
+      "screen",
+      { participantSid: "PA_me", trackSid: "TR" },
+      { quality: "1080p", mode: "smooth" },
+    );
+    release();
+    await settle();
+
+    expect(store.getState().model.streams?.map((s) => s.kind)).toEqual(["screen"]);
+    expect(store.getState().model.activity.filter((e) => e.kind === "stopped")).toEqual([]);
+    store.close();
+  });
+
+  it("starts, changes and stops a stream", async () => {
     const { server, store } = openStore();
     await settle();
     const connection = { participantSid: "PA_me", trackSid: "TR_my_screen" };

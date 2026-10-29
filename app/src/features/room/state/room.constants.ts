@@ -15,9 +15,12 @@ export const STREAM_PLACES = 6;
 
 export const KINDS: readonly StreamKind[] = ["screen", "camera"];
 
+/** The steps that mean a start is under way: the picker open, or the API not answered yet. */
+export const BUSY_STEPS: readonly MyStreamStep[] = ["picking", "starting"];
+
 /** The steps each of my streams may move to from each step. */
 export const NEXT_STEPS: Record<MyStreamStep, readonly MyStreamStep[]> = {
-  off: ["picking", "live"],
+  off: ["picking"],
   picking: ["starting", "off"],
   starting: ["live", "off"],
   live: ["stopping", "off"],

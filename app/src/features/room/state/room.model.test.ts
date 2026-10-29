@@ -3,6 +3,7 @@ import { aLiveStream, anAnswer } from "../../../test/factories/streams-state.fac
 import {
   initialRoom,
   personIdOf,
+  userIdOf,
   withMe,
   withMyStep,
   withSeat,
@@ -126,11 +127,25 @@ describe("the room's model", () => {
     // From off, a stream can't be stopping or starting; the camera is its own.
     expect(withMyStep(room, "screen", "stopping")).toBe(room);
     expect(withMyStep(room, "camera", "starting")).toBe(room);
-    // A stream the API already lists (after a reload) goes live from off.
-    expect(withMyStep(room, "camera", "live").mine.camera).toBe("live");
   });
 
-  it("makes everyone's id from their user id", () => {
+  it("makes everyone's id from their user id, and back", () => {
     expect(personIdOf(42)).toBe("user-42");
+    expect(userIdOf("user-42")).toBe(42);
+  });
+
+  it("keeps who watches whom, the arrivals and the seats while the API says the same", () => {
+    const answer = () =>
+      anAnswer({
+        watching: [{ userId: 3, sharerId: 2, kind: "screen", mine: false }],
+        here: [{ userId: 3, since: "2026-10-29T10:01:00Z", mine: false }],
+        seats: { total: 20, taken: 3, waiting: 0 },
+      });
+    const first = withStreams(initialRoom(), answer(), AT);
+    const again = withStreams(first, answer(), AT + 2000);
+    expect([again.watching, again.arrivedAt, again.seats]).toEqual([first.watching, first.arrivedAt, first.seats]);
+    expect(again.watching).toBe(first.watching);
+    expect(again.arrivedAt).toBe(first.arrivedAt);
+    expect(again.seats).toBe(first.seats);
   });
 });

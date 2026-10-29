@@ -64,7 +64,7 @@ describe("also live (specs 0104 and 0123)", () => {
   it("shows my own stream from my browser, as You, with no toggles", async () => {
     const local = aTrack();
     const me: Sharer = {
-      person: { id: "me", name: "Henrique", hue: 36, online: true },
+      person: { id: "user-99", name: "Henrique", hue: 210, online: true },
       isMe: true,
       since: Date.now(),
       screen: { kind: "screen", startedAt: Date.now(), settings: { quality: "1080p", mode: "smooth" }, local },
@@ -87,7 +87,7 @@ describe("also live (specs 0104 and 0123)", () => {
     const local = aTrack();
     const feed = { startedAt: Date.now(), settings: { quality: "1080p" as const, mode: "smooth" as const }, local };
     const me: Sharer = {
-      person: { id: "me", name: "Henrique", hue: 36, online: true },
+      person: { id: "user-99", name: "Henrique", hue: 210, online: true },
       isMe: true,
       since: Date.now(),
       screen: { kind: "screen", ...feed },

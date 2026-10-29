@@ -5,7 +5,7 @@ import type { ActivityEvent, Friend } from "@features/room/types/room-view.types
 import { ActivityList } from "./ActivityList";
 
 const people = (): Friend[] => [
-  { id: "me", name: "Henrique", hue: 36, online: true },
+  { id: "user-99", name: "Henrique", hue: 210, online: true },
   { id: "user-3", name: "Ana", hue: 300, online: true },
   { id: "user-7", name: "Bruno", hue: 210, online: true },
   { id: "user-9", name: "Diego", hue: 90, online: true },
@@ -24,14 +24,14 @@ const ev = (
   stream,
 });
 const events = (): ActivityEvent[] => [
-  ev("1", "joined", "me", 15),
+  ev("1", "joined", "user-99", 15),
   ev("2", "started", "user-7", 13, "screen"),
   ev("3", "joined", "user-9", 9),
   ev("4", "started", "user-7", 6, "camera"),
   ev("5", "started", "user-3", 2, "screen"),
   ev("6", "stopped", "user-9", 1, "screen"),
   ev("7", "left", "user-9", 1),
-  ev("8", "reconnected", "me", 0),
+  ev("8", "reconnected", "user-99", 0),
 ];
 
 function setup(watching: { personId: string; kind: "screen" | "camera" } | null = null) {
@@ -42,7 +42,7 @@ function setup(watching: { personId: string; kind: "screen" | "camera" } | null 
     <ActivityList
       events={events()}
       people={people()}
-      meId="me"
+      meId="user-99"
       unseen={new Set(["8", "7"])}
       // Bruno's screen and camera and Ana's screen are live; Diego's ended.
       isLive={(personId, kind) => ["user-7|screen", "user-7|camera", "user-3|screen"].includes(`${personId}|${kind}`)}

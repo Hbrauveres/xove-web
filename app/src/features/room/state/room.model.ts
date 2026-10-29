@@ -7,6 +7,19 @@ import type { MyStreamStep, PersonId, RoomModel, RoomStream, SeatState, Watch } 
 /** Someone's id in the room, from their user id at the API. */
 export const personIdOf = (userId: number): PersonId => `user-${userId}`;
 
+/** Someone's user id at the API, from their id in the room. */
+export const userIdOf = (personId: PersonId) => Number(personId.slice("user-".length));
+
+/** The same record when every key holds the same value, else the new one. */
+function keepSame<T extends object>(before: T | null, now: T): T {
+  if (before === null) return now;
+  const keys = Object.keys(now);
+  const same =
+    keys.length === Object.keys(before).length &&
+    keys.every((k) => JSON.stringify(Reflect.get(now, k)) === JSON.stringify(Reflect.get(before, k)));
+  return same ? before : now;
+}
+
 /** The name the room shows: the first word, or "Someone". */
 export const firstName = (name: string | null | undefined) => name?.trim().split(/\s+/)[0] || "Someone";
 
@@ -94,11 +107,12 @@ function streamEvents(before: RoomStream[] | null, now: RoomStream[], at: number
   ];
 }
 
-function watchesOf(answer: StreamsState): Record<PersonId, Watch> | null {
+function watchesOf(before: Record<PersonId, Watch> | null, answer: StreamsState): Record<PersonId, Watch> | null {
   if (!answer.watching) return null;
-  return Object.fromEntries(
+  const now: Record<PersonId, Watch> = Object.fromEntries(
     answer.watching.map((w) => [personIdOf(w.userId), { sharerId: personIdOf(w.sharerId), kind: w.kind }]),
   );
+  return keepSame(before, now);
 }
 
 /** Whose user id is mine, when the API lists something of mine. */
@@ -122,10 +136,13 @@ export function withStreams(model: RoomModel, answer: StreamsState, at: number, 
     polledAt: polled ? at : model.polledAt,
     streams,
     free: answer.free,
-    seats: answer.seats ?? null,
+    seats: answer.seats ? keepSame(model.seats, answer.seats) : null,
     seated: answer.seated,
-    watching: watchesOf(answer),
-    arrivedAt: Object.fromEntries((answer.here ?? []).map((h) => [personIdOf(h.userId), Date.parse(h.since)])),
+    watching: watchesOf(model.watching, answer),
+    arrivedAt: keepSame(
+      model.arrivedAt,
+      Object.fromEntries((answer.here ?? []).map((h) => [personIdOf(h.userId), Date.parse(h.since)])),
+    ),
   };
   return withEvents(next, streamEvents(model.streams, now, at));
 }
@@ -147,7 +164,7 @@ export function withVideo(model: RoomModel, others: RoomPerson[], connection: Co
   };
   const me = model.me;
   const back = model.connection === "reconnecting" && connection === "connected" && me !== null;
-  const events = back && me !== null ? [{ at, kind: "reconnected" as const, actorId: me }] : [];
+  const events = me !== null && back ? [{ at, kind: "reconnected" as const, actorId: me }] : [];
   const changed =
     next.present !== model.present || next.names !== model.names || connection !== model.connection || back;
   return changed ? withEvents(next, events) : model;

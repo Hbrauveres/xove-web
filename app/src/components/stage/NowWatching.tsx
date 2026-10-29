@@ -17,8 +17,6 @@ export const seatsOpen = (free: number) => `${free} ${free === 1 ? "seat" : "sea
 /** The most avatars in a row: the count covers the rest. */
 const MAX_AVATARS = 4;
 
-/** Live streams at once (spec 0060). */
-
 type Props = {
   sharer: Sharer | null;
   /** Everyone with this stream on their stage, me included, never the sharer (spec 0107). */

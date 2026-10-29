@@ -1,9 +1,10 @@
+import type { PersonId } from "../state/room.types";
 import type { StreamKind, StreamSettings } from "@core/api/api.types";
 import type { MediaTrack, RemoteVideo } from "@core/livekit/livekit.types";
 
 /** A person in the room. `id` is their id in the room, their identity on the video server ("user-42"), me included. */
 export type Friend = {
-  id: string;
+  id: PersonId;
   name: string;
   /** Hue for the avatar background, 0–360. */
   hue: number;
@@ -53,7 +54,7 @@ export type ActivityEvent = {
   id: string;
   at: number;
   kind: ActivityKind;
-  actorId: string;
+  actorId: PersonId;
   /** For "started" and "stopped": which stream. */
   stream?: StreamKind;
 };

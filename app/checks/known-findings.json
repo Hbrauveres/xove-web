@@ -325,7 +325,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/NowWatching.tsx",
-    "count": 5,
+    "count": 4,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -606,7 +606,7 @@
     "rule": "history",
     "file": "src/hooks/useRoomSession.ts",
     "count": 11,
-    "owner": "#182 the room's model and store"
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "code",
@@ -1929,14 +1929,14 @@
     "rule": "naming",
     "file": "src/hooks/useRoomSession.test.ts",
     "count": 1,
-    "owner": "#182 the room's model and store"
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/hooks/useRoomSession.ts",
     "count": 1,
-    "owner": "#182 the room's model and store"
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "code",
@@ -2342,7 +2342,7 @@
     "rule": "size",
     "file": "src/hooks/useRoomSession.ts",
     "count": 1,
-    "owner": "#182 the room's model and store"
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "code",
@@ -3259,14 +3259,14 @@
     "rule": "structure",
     "file": "src/hooks/useRoomSession.test.ts",
     "count": 1,
-    "owner": "#182 the room's model and store"
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/hooks/useRoomSession.ts",
     "count": 1,
-    "owner": "#182 the room's model and store"
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "code",
@@ -3567,7 +3567,7 @@
     "rule": "eslint(complexity)",
     "file": "src/hooks/useRoomSession.ts",
     "count": 1,
-    "owner": "#182 the room's model and store"
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "lint",
@@ -3735,7 +3735,7 @@
     "rule": "eslint(max-lines-per-function)",
     "file": "src/hooks/useRoomSession.ts",
     "count": 1,
-    "owner": "#182 the room's model and store"
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "lint",
@@ -3938,7 +3938,7 @@
     "rule": "eslint(no-magic-numbers)",
     "file": "src/hooks/useRoomSession.ts",
     "count": 2,
-    "owner": "#182 the room's model and store"
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "lint",
@@ -4330,7 +4330,7 @@
     "rule": "typescript(consistent-type-assertions)",
     "file": "src/hooks/useRoomSession.ts",
     "count": 1,
-    "owner": "#182 the room's model and store"
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "lint",
@@ -4561,7 +4561,7 @@
     "rule": "TS2375",
     "file": "src/hooks/useRoomSession.ts",
     "count": 1,
-    "owner": "#182 the room's model and store"
+    "owner": "#183 the room's hooks"
   },
   {
     "tool": "tsc",

@@ -6,7 +6,7 @@ import type { ActivityEvent, Friend } from "@features/room/types/room-view.types
 import { ActivityPill } from "./ActivityPill";
 
 const people = (): Friend[] => [
-  { id: "me", name: "Henrique", hue: 36, online: true },
+  { id: "user-99", name: "Henrique", hue: 210, online: true },
   { id: "user-3", name: "Ana", hue: 300, online: true },
   { id: "user-9", name: "Diego", hue: 90, online: true },
 ];
@@ -24,7 +24,7 @@ function Pill({ events, connection = "connected" }: { events: ActivityEvent[]; c
     <ActivityPill
       events={events}
       people={people()}
-      meId="me"
+      meId="user-99"
       connection={connection}
       isLive={() => true}
       watching={null}
@@ -79,7 +79,7 @@ describe("activity pill (spec 0104)", () => {
     expect(pill()).toHaveTextContent("Connection dropped. Reconnecting…");
 
     act(() => {
-      rerender(<Pill events={[...events, ev("reconnected", "me")]} connection="connected" />);
+      rerender(<Pill events={[...events, ev("reconnected", "user-99")]} connection="connected" />);
     });
     expect(pill()).toHaveTextContent("Reconnected");
   });

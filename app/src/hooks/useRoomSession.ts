@@ -11,8 +11,8 @@ import type { ActivityEvent, Friend, Sharer } from "@features/room/types/room-vi
 import type { CameraDevice, CameraProblem, MicDevice, ScreenSurface } from "@core/devices/devices.types";
 import type { RoomSeatsState, StreamKind, StreamSettings } from "@core/api/api.types";
 import type { RoomStoreValue } from "@features/room/hooks/use-room-store.hook";
-import { KINDS } from "@features/room/state/room.constants";
-import { firstName, withMyStep } from "@features/room/state/room.model";
+import { BUSY_STEPS, KINDS } from "@features/room/state/room.constants";
+import { firstName, userIdOf, withMyStep } from "@features/room/state/room.model";
 import {
   activityOf,
   knownPeopleOf,
@@ -98,11 +98,6 @@ export type RoomSession = {
   micInput: MediaStreamTrack | undefined;
 };
 
-/** A person's user id at the API, from their id in the room ("user-42"). */
-const userIdOf = (personId: string) => Number(personId.slice("user-".length));
-
-const BUSY_STEPS: readonly MyStreamStep[] = ["picking", "starting"];
-
 const loadPrefs = (): Record<StreamKind, StreamSettings> => ({
   screen: loadStreamSettings("screen"),
   camera: loadStreamSettings("camera"),
@@ -146,7 +141,11 @@ export function useRoomSession(room: RoomStoreValue): RoomSession {
     () => sharersOf({ streams, me: myId, names }, video),
     [streams, myId, names, video],
   );
-  const people = useMemo(() => peopleOf({ me: myId, present, names }), [myId, present, names]);
+  // Until the room names me (only when the video access failed), I'm still listed first.
+  const people = useMemo(
+    () => (myId ? peopleOf({ me: myId, present, names }) : [me, ...peopleOf({ me: null, present, names })]),
+    [myId, present, names, me],
+  );
   const knownPeople = useMemo(() => knownPeopleOf({ me: myId, present, names }), [myId, present, names]);
   const presence = useMemo(
     () => video.presence.map((p): ActivityEvent => ({ id: `lk${p.id}`, at: p.at, kind: p.kind, actorId: p.identity })),
@@ -360,9 +359,12 @@ export function useRoomSession(room: RoomStoreValue): RoomSession {
   const stop = useCallback(
     async (kind: StreamKind) => {
       step(kind, "stopping");
-      await lk.stop(kind);
-      await store.stopStream(kind);
-      step(kind, "off");
+      try {
+        await lk.stop(kind);
+        await store.stopStream(kind);
+      } finally {
+        step(kind, "off");
+      }
     },
     [lk, store, step],
   );
@@ -397,6 +399,13 @@ export function useRoomSession(room: RoomStoreValue): RoomSession {
     },
     [lk, voicePrefs],
   );
+  // A stream of mine that ended outside Stop (the browser's own bar, the camera going away): off.
+  useEffect(() => {
+    for (const kind of KINDS) {
+      if (model.mine[kind] === "live" && !lk.publishing[kind]) step(kind, "off");
+    }
+  }, [model.mine, lk.publishing, step]);
+
   // Stopping both my screen and my camera turns my voice off: a voice never travels alone.
   const sending = lk.publishing.screen || lk.publishing.camera;
   useEffect(() => {
