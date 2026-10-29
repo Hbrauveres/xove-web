@@ -41,7 +41,7 @@ app/src/
   hooks/        the room's state: the seat, the streams, the LiveKit connection
   media/        sending screens and cameras, the ambilight, who is big
   components/   stage, room, share, ui, brand: each with its CSS module
-  core/         what the app is built on: the API client, who is signed in, the browser's saved choices, the device
+  core/         what the app is built on: the API client, who is signed in, the browser's saved choices, the video server, the devices
   features/     whole features in their own folders (the phone notice)
   shared/       small pieces any feature uses
   styles/       the design tokens and their tests

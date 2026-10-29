@@ -3,7 +3,8 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 import { loadAmbilight } from "@core/preferences/preferences.service";
-import type { ConnectionState, Friend } from "../../types";
+import type { ConnectionState } from "@core/livekit/livekit.types";
+import type { Friend } from "../../types";
 import { AccountButton } from "./AccountButton";
 
 const me = (): Friend => ({ id: "me", name: "Henrique", hue: 36, online: true });

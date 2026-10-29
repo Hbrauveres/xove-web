@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { FakeTrack } from "../../test/fakeLiveKit";
-import type { MediaTrack } from "../../types";
+import type { MediaTrack } from "@core/livekit/livekit.types";
 import { MicTest } from "./MicTest";
 
 const meter = () => screen.getByRole("slider", { name: "Mic sensitivity" }).parentElement!;

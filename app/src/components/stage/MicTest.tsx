@@ -1,5 +1,5 @@
 import { useEffect, useState, type CSSProperties } from "react";
-import type { MediaTrack } from "../../types";
+import type { MediaTrack } from "@core/livekit/livekit.types";
 import { VoiceAudio } from "./VoiceAudio";
 import styles from "./MicTest.module.css";
 import { Tooltip } from "../ui/Tooltip";

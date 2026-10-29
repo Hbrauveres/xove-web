@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { StreamKind } from "@core/api/api.types";
-import type { ActivityEvent, ConnectionState, Friend } from "../../types";
+import type { ConnectionState } from "@core/livekit/livekit.types";
+import type { ActivityEvent, Friend } from "../../types";
 import { Avatar } from "../ui/Avatar";
 import { Dropdown, DropdownSection } from "../ui/Dropdown";
 import { ActivityList } from "./ActivityList";

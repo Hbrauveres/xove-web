@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import type { MediaTrack } from "../../types";
+import type { MediaTrack } from "@core/livekit/livekit.types";
 import { ScreenVideo } from "./ScreenVideo";
 import styles from "./Facecam.module.css";
 import { Tooltip } from "../ui/Tooltip";

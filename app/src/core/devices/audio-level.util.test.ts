@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { CLOSED, gateStep, HOLD_MS, levelOf, TICK_MS, type GateState } from "./noiseGate";
+import { gateStep, levelOf } from "./audio-level.util";
+import { GATE_CLOSED as CLOSED, HOLD_MS, TICK_MS } from "./devices.constants";
+import type { GateState } from "./devices.types";
 
 /** Runs the gate over a list of levels, one tick each, and says when it was open. */
 const run = (levels: number[], line: number) => {
@@ -7,7 +9,7 @@ const run = (levels: number[], line: number) => {
   return levels.map((level) => (state = gateStep(state, level, line, TICK_MS)).open);
 };
 
-describe("the voice's noise gate (spec 0123, ADR-0071)", () => {
+describe("the voice's noise gate", () => {
   it("stays closed while the sound is under the line", () => {
     expect(run([0.05, 0.1, 0.11], 0.12)).toEqual([false, false, false]);
   });
