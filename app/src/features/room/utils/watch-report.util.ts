@@ -1,15 +1,9 @@
-import type { StreamKind } from "@core/api/api.types";
 import { userIdOf } from "../state/room.model";
 import type { PersonId, Watch } from "../state/room.types";
-
-/** What's on my stage: someone's stream, nothing (null), or not known yet (undefined). */
-export type OnStage = { personId: PersonId; kind: StreamKind } | null | undefined;
-
-/** What the API is told: someone's stream by their user id, or nothing. */
-export type WatchTarget = { sharerId: number; kind: StreamKind } | null;
+import type { OnStage, WatchTarget } from "../types/watch-report.types";
 
 /** A report as a key, to compare: "42|screen", or "none"; undefined while there's nothing to say. */
-export function wantedKeyOf(onStage: OnStage): string | undefined {
+export function wantedKeyOf(onStage: OnStage | undefined): string | undefined {
   if (onStage === undefined) return undefined;
   if (onStage === null) return "none";
   const userId = userIdOf(onStage.personId);

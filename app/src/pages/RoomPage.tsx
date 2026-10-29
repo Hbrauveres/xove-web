@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router";
 import { useAuth } from "@core/auth/use-auth.hook";
@@ -55,7 +55,7 @@ function Room({ room, onSignOut }: { room: RoomStoreValue; onSignOut: () => void
   const isAdmin = state.status === "signedIn" && state.me.admin;
   const { store, model, video } = room;
   const view = useRoomView(model, video, store.myName);
-  const sending = useMySending(room, view.myLive);
+  const { queue, ...sending } = useMySending(room, view.myLive);
   useStreamSync({
     store,
     model,
@@ -64,7 +64,7 @@ function Room({ room, onSignOut }: { room: RoomStoreValue; onSignOut: () => void
     connection: video.connection,
     connectionOf: store.video.connectionOf,
     stopSending: store.video.stop,
-    queue: sending.queue,
+    queue,
   });
   const voice = useMyVoice({
     voice: video.voice,
@@ -75,12 +75,6 @@ function Room({ room, onSignOut }: { room: RoomStoreValue; onSignOut: () => void
     setVoiceLine: store.video.setVoiceLine,
   });
   const activity = useActivityFeed(model.activity, video.presence);
-  const watchStage = useWatchReport({
-    watching: model.watching,
-    me: model.me,
-    inRoom: model.seated === true && video.connection === "connected",
-    report: store.reportWatching,
-  });
   // What the room's parts are given, until each reads the room's hooks itself.
   const session = {
     ...view,
@@ -106,9 +100,17 @@ function Room({ room, onSignOut }: { room: RoomStoreValue; onSignOut: () => void
   const stage = useStage(session.sharers);
   // A stream still loading counts as nothing watched yet ("In the room").
   const stagePersonId = stage.playing ? (stage.big?.person.id ?? null) : null;
-  useEffect(() => {
-    watchStage(stagePersonId && stage.mainKind ? { personId: stagePersonId, kind: stage.mainKind } : null);
-  }, [watchStage, stagePersonId, stage.mainKind]);
+  const onStage = useMemo(
+    () => (stagePersonId && stage.mainKind ? { personId: stagePersonId, kind: stage.mainKind } : null),
+    [stagePersonId, stage.mainKind],
+  );
+  useWatchReport({
+    watching: model.watching,
+    me: model.me,
+    inRoom: model.seated === true && video.connection === "connected",
+    report: store.reportWatching,
+    onStage,
+  });
   // In fullscreen only the player can be seen: the setup window and errors go inside it (spec 0101).
   const fullscreen = useFullscreenElement();
   const overPage = useFullscreenHost();

@@ -1,4 +1,5 @@
 import type { StreamKind } from "@core/api/api.types";
+import type { Pick } from "../types/stage.types";
 import type { Sharer } from "../types/room-view.types";
 
 /**
@@ -25,4 +26,15 @@ export function mainKindOf(big: Sharer | null, swapped: boolean): StreamKind | n
 export function isPlaying(big: Sharer | null, kind: StreamKind | null): boolean {
   const feed = big && kind ? big[kind] : undefined;
   return Boolean(big && feed && (big.isMe ? feed.local : feed.remote));
+}
+
+/** When someone's live streams started: what a pick remembers of them. */
+export function streamsOf(sharer: Sharer | undefined): number[] {
+  return [sharer?.screen?.startedAt, sharer?.camera?.startedAt].filter((t): t is number => t !== undefined);
+}
+
+/** A pick holds while one of the streams live when it was made still is. */
+export function holds(pick: Pick, sharers: readonly Sharer[]): boolean {
+  const now = streamsOf(sharers.find((s) => s.person.id === pick.personId));
+  return now.some((t) => pick.streams.includes(t));
 }

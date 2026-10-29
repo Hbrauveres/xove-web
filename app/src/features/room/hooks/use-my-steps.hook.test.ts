@@ -12,4 +12,12 @@ describe("my streams' steps", () => {
     expect(hook.result.current.busy("screen")).toBe(true);
     expect(hook.result.current.busy("camera")).toBe(false);
   });
+
+  it("gives the same value while nothing changes", () => {
+    const store = new RoomStore("Henrique", 60_000);
+    const hook = renderHook(() => useMySteps(store));
+    const before = hook.result.current;
+    hook.rerender();
+    expect(hook.result.current).toBe(before);
+  });
 });

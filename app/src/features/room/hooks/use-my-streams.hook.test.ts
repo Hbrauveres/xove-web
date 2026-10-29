@@ -78,4 +78,23 @@ describe("my screen and camera", () => {
     hook.rerender();
     expect(hook.result.current).toBe(before);
   });
+
+  it("stops the video when the API refuses the stream", async () => {
+    const { hook, server, video, store } = myStreams();
+    server.failures.set("POST /api/streams", {
+      status: 409,
+      body: { detail: "The 6 places are taken.", reason: "full" },
+    });
+    await act(async () => hook.result.current.start("screen"));
+    expect(video.stop).toHaveBeenCalledWith("screen");
+    expect(store.getState().model.mine.screen).toBe("off");
+  });
+
+  it("goes back to off when the video couldn't be sent", async () => {
+    const { hook, video, store, server } = myStreams();
+    video.publishCapture.mockResolvedValueOnce(null as never);
+    await act(async () => hook.result.current.start("camera"));
+    expect(store.getState().model.mine.camera).toBe("off");
+    expect(server.calls.some((c) => c.method === "POST" && c.path === "/api/streams")).toBe(false);
+  });
 });

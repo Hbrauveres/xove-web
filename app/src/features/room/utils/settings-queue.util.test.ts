@@ -47,4 +47,12 @@ describe("the settings queue", () => {
     expect(putBack).toHaveBeenCalledWith(s("1080p"));
     expect(queue.acceptedFor("camera")).toEqual(s("480p"));
   });
+
+  it("goes on with the next change when one fails on its way", async () => {
+    const queue = start();
+    const failed = queue.change("screen", s("480p"), async () => Promise.reject(new Error("offline")), vi.fn());
+    await expect(failed).rejects.toThrow("offline");
+    await queue.change("screen", s("720p"), async () => true, vi.fn());
+    expect(queue.acceptedFor("screen")).toEqual(s("720p"));
+  });
 });

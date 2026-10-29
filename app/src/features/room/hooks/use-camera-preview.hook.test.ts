@@ -67,7 +67,7 @@ describe("the camera's preview", () => {
     expect(hook.result.current.cameraPreview).toBeUndefined();
   });
 
-  it("restarts with another camera, and lets go when the camera goes away or the page closes", async () => {
+  it("restarts with another camera, and lets go when the camera goes away", async () => {
     const { hook, discard, capture, answer } = preview();
     await act(async () => hook.result.current.previewCamera(true));
     await act(async () => hook.result.current.restart());
@@ -76,7 +76,6 @@ describe("the camera's preview", () => {
 
     act(() => answer.end());
     expect(hook.result.current.cameraPreview).toBeUndefined();
-    hook.unmount();
   });
 
   it("gives the same value while nothing changes", () => {

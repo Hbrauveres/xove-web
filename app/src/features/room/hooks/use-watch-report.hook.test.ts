@@ -1,23 +1,30 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { Watch } from "../state/room.types";
+import type { OnStage } from "../types/watch-report.types";
 import { useWatchReport } from "./use-watch-report.hook";
+
+type Props = { watching: Record<string, Watch> | null; inRoom: boolean; onStage: OnStage };
 
 /** The hook in a page that's in the room, reporting to `report`; `watching` is what the API last said. */
 function reportingPage(report = vi.fn(async () => {}), watching: Record<string, Watch> | null = {}) {
   vi.useFakeTimers();
-  const hook = renderHook(({ watching: w, inRoom }) => useWatchReport({ watching: w, me: "user-7", inRoom, report }), {
-    initialProps: { watching, inRoom: true },
-  });
-  return { hook, report };
+  const hook = renderHook(
+    ({ watching: w, inRoom, onStage }: Props) => useWatchReport({ watching: w, me: "user-7", inRoom, report, onStage }),
+    { initialProps: { watching, inRoom: true, onStage: null } as Props },
+  );
+  /** What's on my stage changes, as the page would say. */
+  const show = (onStage: OnStage, w: Record<string, Watch> | null = watching, inRoom = true) =>
+    hook.rerender({ watching: w, inRoom, onStage });
+  return { report, show };
 }
 
 describe("the watch report", () => {
   it("reports once after a second of stillness, whatever I clicked before", () => {
-    const { hook, report } = reportingPage();
-    act(() => hook.result.current({ personId: "user-2", kind: "screen" }));
+    const { show, report } = reportingPage();
+    show({ personId: "user-2", kind: "screen" });
     act(() => vi.advanceTimersByTime(500));
-    act(() => hook.result.current({ personId: "user-3", kind: "camera" }));
+    show({ personId: "user-3", kind: "camera" });
     act(() => vi.advanceTimersByTime(999));
     expect(report).not.toHaveBeenCalled();
 
@@ -28,8 +35,8 @@ describe("the watch report", () => {
 
   it("tries again a moment after a failure", async () => {
     const report = vi.fn().mockRejectedValueOnce(new Error("down")).mockResolvedValue(undefined);
-    const { hook } = reportingPage(report);
-    act(() => hook.result.current({ personId: "user-2", kind: "screen" }));
+    const { show } = reportingPage(report);
+    show({ personId: "user-2", kind: "screen" });
     await act(() => vi.advanceTimersByTimeAsync(1000));
     expect(report).toHaveBeenCalledTimes(1);
 
@@ -39,30 +46,29 @@ describe("the watch report", () => {
   });
 
   it("reports again when the API lost it, and not while it knows", () => {
-    const { hook, report } = reportingPage();
-    act(() => hook.result.current({ personId: "user-2", kind: "screen" }));
+    const { show, report } = reportingPage();
+    const marina = { personId: "user-2", kind: "screen" } as const;
+    show(marina);
     act(() => vi.advanceTimersByTime(1000));
-    hook.rerender({ watching: { "user-7": { sharerId: "user-2", kind: "screen" } }, inRoom: true });
+    show(marina, { "user-7": { sharerId: "user-2", kind: "screen" } });
     act(() => vi.advanceTimersByTime(3000));
     expect(report).toHaveBeenCalledTimes(1);
 
-    hook.rerender({ watching: {}, inRoom: true });
+    show(marina, {});
     act(() => vi.advanceTimersByTime(1000));
     expect(report).toHaveBeenCalledTimes(2);
   });
 
   it("says nothing from a page that isn't in the video room", () => {
-    const { hook, report } = reportingPage();
-    hook.rerender({ watching: {}, inRoom: false });
-    act(() => hook.result.current({ personId: "user-2", kind: "screen" }));
+    const { show, report } = reportingPage();
+    show({ personId: "user-2", kind: "screen" }, {}, false);
     act(() => vi.advanceTimersByTime(5000));
     expect(report).not.toHaveBeenCalled();
   });
 
-  it("gives the same setter while nothing changes", () => {
-    const { hook } = reportingPage();
-    const before = hook.result.current;
-    hook.rerender({ watching: {}, inRoom: true });
-    expect(hook.result.current).toBe(before);
+  it("says nothing while the API already knows my stage is empty", () => {
+    const { report } = reportingPage();
+    act(() => vi.advanceTimersByTime(5000));
+    expect(report).not.toHaveBeenCalled();
   });
 });

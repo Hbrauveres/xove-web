@@ -3,7 +3,7 @@ import type { StreamKind, StreamSettings } from "@core/api/api.types";
 /**
  * Changes to my streams' settings while live, one after another, in the order they were made.
  * Each change is applied; when one is refused, the last accepted settings go back, unless a newer
- * change of the same stream follows (that one decides).
+ * change of the same stream follows (that one decides). One that fails on its way doesn't block the next.
  */
 export class SettingsQueue {
   private accepted: Record<StreamKind, StreamSettings>;
@@ -35,13 +35,15 @@ export class SettingsQueue {
     putBack: (settings: StreamSettings) => Promise<void>,
   ): Promise<void> {
     const id = ++this.latest[kind];
-    this.chain = this.chain.then(async () => {
+    const step = this.chain.then(async () => {
       if (await apply(next)) {
         this.accept(kind, next);
         return;
       }
       if (id === this.latest[kind]) await putBack(this.accepted[kind]);
     });
-    return this.chain;
+    // A change that failed on its way (the connection) doesn't stop the ones after it.
+    this.chain = step.catch(() => {});
+    return step;
   }
 }

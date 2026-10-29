@@ -26,4 +26,12 @@ describe("changing the window", () => {
     await act(async () => hook.result.current.changeScreen());
     expect(onSound).not.toHaveBeenCalled();
   });
+
+  it("gives the same value while nothing changes", () => {
+    const inputs = { changeScreen: async () => null, screen, onSound: vi.fn() };
+    const hook = renderHook(() => useChangeWindow(inputs));
+    const before = hook.result.current;
+    hook.rerender();
+    expect(hook.result.current).toBe(before);
+  });
 });

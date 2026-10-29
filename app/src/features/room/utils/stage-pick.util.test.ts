@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { aSharer } from "../../../test/factories/sharer.factory";
-import { isPlaying, mainKindOf, stagePick } from "./stage-pick.util";
+import { holds, isPlaying, mainKindOf, stagePick, streamsOf } from "./stage-pick.util";
 
 describe("who is big", () => {
   it("nobody when nobody shares", () => {
@@ -40,5 +40,22 @@ describe("what of theirs is big", () => {
     const { remote: _arrived, ...stillLoading } = sharer.screen!;
     const loading = { ...sharer, screen: stillLoading };
     expect(isPlaying(loading, "screen")).toBe(false);
+  });
+});
+
+describe("a pick", () => {
+  it("holds while one of the streams live when it was made still is", () => {
+    const both = aSharer({ id: "user-7", kinds: ["screen", "camera"] });
+    const pick = { personId: "user-7", streams: streamsOf(both) };
+    const { screen: _gone, ...cameraOnly } = both;
+    expect(holds(pick, [cameraOnly])).toBe(true);
+  });
+
+  it("lapses once that person stops, even if they share again later", () => {
+    const pick = { personId: "user-7", streams: [1000] };
+    const again = aSharer({ id: "user-7" });
+    again.screen!.startedAt = 5000;
+    expect(holds(pick, [])).toBe(false);
+    expect(holds(pick, [again])).toBe(false);
   });
 });

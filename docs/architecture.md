@@ -64,7 +64,7 @@ flowchart TD
   APP --> P
 ```
 
-Pages put the room together; components draw it; hooks own the state and talk to the API and LiveKit (the simpler pages call the API directly); `media/` holds the rules for sending and drawing video, as plain functions that hooks and components share. Each component has its own CSS module, using the tokens in `styles/global.css`.
+Pages put the room together; components draw it; hooks own the state and talk to the API and LiveKit (the simpler pages call the API directly); the room's rules (hearing, the stage pick, the settings queue, the watch report) are plain functions in `features/room/utils/`, and `media/` keeps only the ambilight's drawing until the stage moves. Each component has its own CSS module, using the tokens in `styles/global.css`.
 
 ## Routes
 

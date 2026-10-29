@@ -58,4 +58,31 @@ describe("my voice", () => {
     hook.rerender({ v: false, s: true });
     expect(hook.result.current).toBe(before);
   });
+
+  it("asks for the mic once, even when clicked again while it's being asked", async () => {
+    let answer: () => void = () => {};
+    const startVoice = vi.fn(() => new Promise<null>((resolve) => (answer = () => resolve(null))));
+    const inputs = {
+      voice: false,
+      sending: true,
+      startVoice,
+      stopVoice: vi.fn(),
+      applyVoice: vi.fn(),
+      setVoiceLine: vi.fn(),
+    };
+    const hook = renderHook(() => useMyVoice(inputs));
+    act(() => hook.result.current.toggleVoice());
+    act(() => hook.result.current.toggleVoice());
+    await act(async () => answer());
+    expect(startVoice).toHaveBeenCalledTimes(1);
+  });
+
+  it("says when there's no mic, or the voice couldn't be sent", async () => {
+    const missing = myVoice(false, true, "missing");
+    await act(async () => missing.hook.result.current.toggleVoice());
+    expect(currentToast()?.text).toBe("No microphone found.");
+    const failed = myVoice(false, true, "failed");
+    await act(async () => failed.hook.result.current.toggleVoice());
+    expect(currentToast()?.text).toBe("Your voice couldn't be sent. Try again in a moment.");
+  });
 });

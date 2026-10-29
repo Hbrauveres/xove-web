@@ -66,4 +66,28 @@ describe("my streams and the API in step", () => {
     expect(store.getState().model.mine.screen).toBe("off");
     expect(server.calls).toEqual([]);
   });
+
+  it("stops sending a stream the API can't take back because the places filled up", async () => {
+    const server = installFakeApi({ me: aUser({ status: "MEMBER" }) });
+    server.failures.set("POST /api/streams", {
+      status: 409,
+      body: { detail: "The 6 places are taken.", reason: "full" },
+    });
+    const store = new RoomStore("Henrique", 60_000);
+    store.change((m) => withStreams(withMe(m, ME, "Henrique"), anAnswer({ streams: [] }), Date.now(), true));
+    const stopSending = vi.fn(async () => {});
+    renderHook(() =>
+      useStreamSync({
+        store,
+        model: store.getState().model,
+        live: { screen: false, camera: false },
+        publishing: { screen: true, camera: false },
+        connection: "connected",
+        connectionOf: () => ({ participantSid: "PA_me", trackSid: "TR_1" }),
+        stopSending,
+        queue: new SettingsQueue(PREFS),
+      }),
+    );
+    await waitFor(() => expect(stopSending).toHaveBeenCalledWith("screen"));
+  });
 });

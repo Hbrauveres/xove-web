@@ -35,18 +35,22 @@ export function useStreamSettings({ live, publishing, applySettings, changeAtApi
     (kind: StreamKind, next: StreamSettings) => {
       remember(kind, next);
       if (!(live[kind] && publishing[kind])) return;
-      void queue.change(
-        kind,
-        next,
-        async (settings) => {
-          await applySettings(kind, settings);
-          return changeAtApi(kind, settings);
-        },
-        async (back) => {
-          await applySettings(kind, back);
-          remember(kind, back);
-        },
-      );
+      void queue
+        .change(
+          kind,
+          next,
+          async (settings) => {
+            await applySettings(kind, settings);
+            return changeAtApi(kind, settings);
+          },
+          async (back) => {
+            await applySettings(kind, back);
+            remember(kind, back);
+          },
+        )
+        .catch(() => {
+          /* A change that failed on its way: the next one goes on; the settings shown stay mine. */
+        });
     },
     [live, publishing, applySettings, changeAtApi, queue, remember],
   );

@@ -17,7 +17,9 @@ describe("who is on my stage", () => {
     expect(hook.result.current.big?.person.id).toBe("user-3");
 
     hook.rerender({ sharers: [bruno] });
-    hook.rerender({ sharers: [bruno, ana] });
+    const anaAgain = aSharer({ id: "user-3", name: "Ana" });
+    anaAgain.screen!.startedAt += 60_000;
+    hook.rerender({ sharers: [bruno, anaAgain] });
     expect(hook.result.current.big?.person.id).toBe("user-7");
   });
 
