@@ -3,6 +3,7 @@
 // (npm run guard) runs it with --json and compares its counts with checks/known-findings.json.
 import { readdirSync, readFileSync, statSync, existsSync } from "node:fs";
 import { basename, join, relative, resolve } from "node:path";
+import { checkLayout, LAYOUT_RULES } from "./check-layout.ts";
 
 export const RULES = {
   size: "over 300 lines (one job per file)",
@@ -26,6 +27,7 @@ export const RULES = {
   cssText: "test reads CSS as text (check that tokens are used, or check in the browser)",
   disable: "a comment that switches a check off (oxlint-disable, @ts-ignore, @ts-expect-error…): fix the code instead",
   lineLength: "a line over 120 characters (Prettier doesn't wrap strings and comments: break them yourself)",
+  ...LAYOUT_RULES,
 } as const;
 
 export type Rule = keyof typeof RULES;
@@ -162,9 +164,17 @@ const walk = (p: string): string[] =>
 
 /** Every finding under `src` (paths relative to it), or under one folder or file of it. */
 export function checkCode(src: string, target = src): Finding[] {
-  return walk(target).flatMap((f) =>
-    analyse(relative(src, f), readFileSync(f, "utf8"), (y) => existsSync(join(src, y))),
+  const scope = relative(src, target);
+  const code = new Map(
+    walk(src)
+      .filter((f) => /\.tsx?$/.test(f))
+      .map((f) => [relative(src, f), readFileSync(f, "utf8")] as const),
   );
+  const layout = checkLayout(code).filter((f) => !scope || f.file === scope || f.file.startsWith(`${scope}/`));
+  return [
+    ...walk(target).flatMap((f) => analyse(relative(src, f), readFileSync(f, "utf8"), (y) => existsSync(join(src, y)))),
+    ...layout,
+  ];
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
