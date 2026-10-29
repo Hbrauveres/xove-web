@@ -1,6 +1,7 @@
 import type { AudioProcessorOptions, Track, TrackProcessor } from "livekit-client";
-import { gateStep, levelOf } from "@services/media-devices-service";
 import {
+  gateStep,
+  levelOf,
   ANALYSER_SIZE,
   ATTACK_TIME_CONSTANT,
   GATE_CLOSED,

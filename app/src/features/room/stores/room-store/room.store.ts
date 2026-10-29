@@ -1,4 +1,4 @@
-import { ApiError, api } from "@services/xove-api-service";
+import { ApiError, api, DEFAULT_ERROR_MESSAGE } from "@services/xove-api-service";
 import type {
   SharingConnection,
   StreamKind,
@@ -6,9 +6,7 @@ import type {
   StreamsState,
   WatchingTarget,
 } from "@services/xove-api-service";
-import { LiveKitAdapter } from "@services/livekit-service";
-import { CANT_CONNECT } from "@services/livekit-service";
-import { DEFAULT_ERROR_MESSAGE } from "@services/xove-api-service";
+import { LiveKitAdapter, CANT_CONNECT } from "@services/livekit-service";
 import { POLL_MS, SEAT_FAILED } from "../../constants/room.constants";
 import { initialRoom, withMe, withSeat, withStreams, withStreamsCall, withVideo } from "./room.model";
 import type { CallOutcome, RoomModel, RoomSnapshot, SeatState } from "../../types/room.types";

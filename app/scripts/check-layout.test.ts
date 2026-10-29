@@ -39,7 +39,10 @@ describe("the layout (ADR-0086)", () => {
         "features/room/components/a/utils/x.util.ts": "",
         ...unit("features/room/components/b", "b.component.tsx", 'import { x } from "../a/utils/x.util";\n'),
       }),
-    ).toEqual(["indexBypass features/room/components/b/b.component.tsx"]);
+    ).toEqual([
+      "partOwner features/room/components/a/utils/x.util.ts",
+      "indexBypass features/room/components/b/b.component.tsx",
+    ]);
     expect(
       layout({
         "features/room/utils/x.util.ts": "",
@@ -97,7 +100,7 @@ describe("the layout (ADR-0086)", () => {
   it("names an import going up, across features, around a unit's index, or from the app into testing", () => {
     expect(
       layout({
-        "services/a-service/a.service.ts": 'import { b } from "@features/room/utils/b.util";\n',
+        ...unit("services/a-service", "a.service.ts", 'import { b } from "@features/room/utils/b.util";\n'),
         "features/room/utils/b.util.ts": "",
         "shared/utils/c.util.ts": 'import { r } from "@routes/root";\n',
         ...unit("routes/root", "root.component.tsx"),
@@ -116,5 +119,69 @@ describe("the layout (ADR-0086)", () => {
       "importUp services/a-service/a.service.ts",
       "importUp shared/utils/c.util.ts",
     ]);
+  });
+
+  it("reads imports and re-exports written over several lines", () => {
+    expect(
+      layout({
+        ...unit("services/e-service", "e.service.ts"),
+        "services/e-service/utils/e.util.ts": "",
+        "features/admin/hooks/use-g.hook.ts": 'import {\n  e,\n  f,\n} from "@services/e-service/utils/e.util";\n',
+        "features/admin/index.ts": 'export {\n  e,\n} from "@services/e-service/utils/e.util";\n',
+      }),
+    ).toEqual(["indexBypass features/admin/hooks/use-g.hook.ts", "indexBypass features/admin/index.ts"]);
+  });
+
+  it("names a unit without its index", () => {
+    expect(layout({ "features/room/components/stage-x/stage-x.component.tsx": "" })).toEqual([
+      "noIndex features/room/components/stage-x/stage-x.component.tsx",
+    ]);
+  });
+
+  it("moves a component's part up when another component uses it, but not a service's or a store's", () => {
+    expect(
+      layout({
+        ...unit("features/room/components/a", "a.component.tsx", 'import { x } from "./utils/x.util";\n'),
+        "features/room/components/a/index.ts": 'export { x } from "./utils/x.util";\n',
+        "features/room/components/a/utils/x.util.ts": "",
+        ...unit("features/room/components/b", "b.component.tsx", 'import { x } from "../a";\n'),
+      }),
+    ).toEqual(["partOwner features/room/components/a/utils/x.util.ts"]);
+    expect(
+      layout({
+        ...unit("shared/stores/auth-store", "auth.store.tsx"),
+        "shared/stores/auth-store/index.ts": 'export type { AuthState } from "./types/auth.types";\n',
+        "shared/stores/auth-store/types/auth.types.ts": "",
+        ...unit("routes/root", "root.component.tsx", 'import type { AuthState } from "@shared/stores/auth-store";\n'),
+      }),
+    ).toEqual([]);
+  });
+
+  it("names a loose folder inside a unit or a feature", () => {
+    expect(
+      layout({
+        ...unit("features/room/stores/room-store", "room.store.ts"),
+        "features/room/stores/room-store/helpers/x.ts": "",
+        "features/room/state/y.ts": "",
+      }),
+    ).toEqual(["nested features/room/state/y.ts", "nested features/room/stores/room-store/helpers/x.ts"]);
+  });
+
+  it("names a path too deep on its own", () => {
+    expect(
+      layout({ "features/room/components/stage-x/hooks/a/b.hook.ts": "" }).filter((l) => l.startsWith("tooDeep")),
+    ).toEqual(["tooDeep features/room/components/stage-x/hooks/a/b.hook.ts"]);
+  });
+
+  it("names the old folders importing testing, or reaching around an index", () => {
+    expect(
+      layout({
+        "testing/fakeApi.ts": "",
+        ...unit("services/e-service", "e.service.ts"),
+        "services/e-service/utils/e.util.ts": "",
+        "pages/Home.tsx":
+          'import { f } from "../testing/fakeApi";\nimport { e } from "@services/e-service/utils/e.util";\n',
+      }),
+    ).toEqual(["indexBypass pages/Home.tsx", "importTesting pages/Home.tsx"]);
   });
 });

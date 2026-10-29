@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { DEFAULT_VOICE } from "./constants/preferences.constants";
+import { DEFAULT_VOICE, MIC_PROCESSING_KEY } from "./constants/preferences.constants";
 import {
   loadAmbilight,
   loadCameraDevice,
@@ -13,7 +13,6 @@ import {
   saveStreamSettings,
   saveVoicePrefs,
 } from "./preferences.service";
-import { MIC_PROCESSING_KEY } from "./constants/preferences.constants";
 
 describe("choices saved before", () => {
   it("are read from the keys this browser already holds", () => {

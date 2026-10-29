@@ -1,6 +1,5 @@
-import type { VideoRoomState } from "@services/livekit-service";
+import type { VideoRoomState, ConnectionState } from "@services/livekit-service";
 import type { RoomSeatsState, SeatStatus, StreamKind, StreamSettings } from "@services/xove-api-service";
-import type { ConnectionState } from "@services/livekit-service";
 import type { ActivityEvent } from "@features/room/types/room-view.types";
 
 /** Everyone's id in the room, me included: their identity on the video server ("user-42"). */

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { api, ApiError } from "@services/xove-api-service";
-import { SIGNED_OUT_STATUS } from "@services/xove-api-service";
+import { api, ApiError, SIGNED_OUT_STATUS } from "@services/xove-api-service";
 import type { AuthProviderProps, AuthState } from "./types/auth.types";
 import { AuthContext } from "./hooks/use-auth.hook";
 

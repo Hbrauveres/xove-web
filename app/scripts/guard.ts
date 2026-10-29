@@ -118,7 +118,7 @@ const isFresh = (f: { tool: string; rule: string; file: string }, fresh: Set<str
   f.tool === "code" && fresh.has(f.rule) && !NEW_STRUCTURE.test(f.file);
 
 /** The folders already in the new structure: a new rule's findings are never recorded there. */
-const NEW_STRUCTURE = /^src\/(app|core|shared|features)\//;
+const NEW_STRUCTURE = /^src\/(routes|features|shared|services|testing)\//;
 
 /** The code rules `rules` names that main's check (its source) doesn't define; none without main's. */
 export function newRulesOf(mainCheck: string | undefined, rules: string[]): Set<string> {
@@ -214,7 +214,9 @@ async function mainRecord(): Promise<Known[] | undefined> {
 /** main's code check, to tell which of today's rules are new; undefined when it can't be read. */
 async function mainCodeCheck(): Promise<string | undefined> {
   try {
-    return (await run("git", ["show", "origin/main:app/scripts/check-code.ts"])).stdout;
+    // The rules are named in the code check and in the layout check it spreads in.
+    const read = async (file: string) => (await run("git", ["show", `origin/main:app/scripts/${file}`])).stdout;
+    return `${await read("check-code.ts")}\n${await read("check-layout.ts").catch(() => "")}`;
   } catch {
     return undefined;
   }

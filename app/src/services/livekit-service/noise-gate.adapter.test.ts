@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { HOLD_MS, TICK_MS } from "../media-devices-service";
+import { HOLD_MS, TICK_MS, ANALYSER_SIZE } from "../media-devices-service";
 import { NoiseGate } from "./noise-gate.adapter";
-import { ANALYSER_SIZE } from "../media-devices-service";
 
 /** A Web Audio graph whose analyser hears `level.sample`, and whose gain records where it's sent. */
 function audioGraph() {

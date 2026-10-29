@@ -3,7 +3,7 @@ import { AdminPage } from "../../pages/AdminPage";
 import { HomePage } from "../../pages/HomePage";
 import { RequestAccessPage } from "../../pages/RequestAccessPage";
 import { RoomPage } from "../../pages/RoomPage";
-import { RouteGuard } from "../route-guard/index";
+import { RouteGuard } from "../route-guard";
 
 /**
  *  /                 home + Google sign-in (signed-in people are sent on)

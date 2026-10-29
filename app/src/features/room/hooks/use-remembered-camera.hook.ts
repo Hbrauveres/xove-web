@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import type { StreamKind, StreamMode, StreamSettings } from "@services/xove-api-service";
-import type { LiveKitAdapter } from "@services/livekit-service";
-import type { Capture } from "@services/livekit-service";
+import type { LiveKitAdapter, Capture } from "@services/livekit-service";
 import { loadCameraDevice, saveCameraDevice } from "@services/preferences-service";
 
 /**

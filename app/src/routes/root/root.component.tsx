@@ -1,5 +1,5 @@
 import { isHandheld } from "@services/media-devices-service";
-import { PhoneNoticePage } from "@features/phone-notice/index";
+import { PhoneNoticePage } from "@features/phone-notice";
 import { BrowserRouter } from "react-router";
 import { AuthProvider } from "@shared/stores/auth-store";
 import { AppRoutes } from "../app-routes";

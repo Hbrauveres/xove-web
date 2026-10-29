@@ -39,7 +39,7 @@ Everything is in `app/src`:
 | `services/media-devices-service/` | The browser's devices: the screen picker, the cameras and mics and the mic's meter as services (they ask the browser); a phone or a tablet (`utils/is-handheld.util.ts`), the picker's request and the noise gate's maths as helpers; the stream presets in `constants/` |
 | `features/phone-notice/` | What phones and tablets see instead of the app ([below](#phones-and-tablets)): its page and art in `components/` |
 | `features/admin/utils/` | The admin page's helper ("3 min ago"), until the page moves in |
-| `shared/` | What the whole app uses: the auth store, the time constants, the design tokens (`styles/global.css`) |
+| `shared/` | What the whole app uses: the auth store, the time constants, the design tokens (`shared/styles/global.css`) |
 | `testing/` | The test helpers: a fake API, a fake LiveKit, and rendering the app at a URL ([Testing](testing.md)); only tests import it |
 
 At the top, `main.tsx` starts the app, `routes/root/root.component.tsx` chooses between the app and the phone notice, and `routes/app-routes/app-routes.component.tsx` holds the routes.
@@ -61,12 +61,12 @@ flowchart TD
   R[routes/root/root.component.tsx] --> D[services/media-devices-service]
   R --> N[features/phone-notice]
   R --> APP[routes/app-routes/app-routes.component.tsx]
-  APP --> G[app/route-guard]
+  APP --> G[routes/route-guard]
   G --> AU
   APP --> P
 ```
 
-Pages put the room together; components draw it; hooks own the state and talk to the API and LiveKit (the simpler pages call the API directly); the room's rules (hearing, the stage pick, the settings queue, the watch report) are plain functions in `features/room/utils/`, and `media/` keeps only the ambilight's drawing until the stage moves. Each component has its own CSS module, using the tokens in `styles/global.css`.
+Pages put the room together; components draw it; hooks own the state and talk to the API and LiveKit (the simpler pages call the API directly); the room's rules (hearing, the stage pick, the watch report) are plain functions in `features/room/utils/`, the settings queue is a service (`services/settings-queue-service/`), and `media/` keeps only the ambilight's drawing until the stage moves. Each component has its own CSS module, using the tokens in `shared/styles/global.css`.
 
 ## Routes
 
@@ -221,7 +221,7 @@ app/src/
 Every rule a tool can measure runs in the commit checks as `3 · Code checks`, on the whole app's code.
 
 **What's exempt, and why:**
-- **Tests** (`*.test.ts(x)`, `src/test/`, its fakes and factories) are exempt from the size, number and escape-hatch limits. A `describe` block is long by nature, and expected values belong in the test. They keep their own rules ([Testing](testing.md#test-rules)).
+- **Tests** (`*.test.ts(x)`, `src/testing/`, its fakes and factories) are exempt from the size, number and escape-hatch limits. A `describe` block is long by nature, and expected values belong in the test. They keep their own rules ([Testing](testing.md#test-rules)).
 - **`scripts/`** (the checks themselves) is exempt from the same limits. It's tooling run with Node, not part of the app.
 - **The copy check skips tests.** Tests repeat their arrange steps on purpose, so each one reads on its own.
 - **No exemption from the escape hatches' own back door.** A comment that switches a check off (`oxlint-disable`, `@ts-ignore`, `@ts-expect-error`, `@ts-nocheck`, `jscpd:ignore`, `prettier-ignore`) is a finding in app code. Fix the code instead.
@@ -232,7 +232,7 @@ Every rule a tool can measure runs in the commit checks as `3 · Code checks`, o
 | oxlint | Hooks' dependencies, accessibility, unused code, the import direction, the size and shape limits above, escape hatches, unexplained numbers, default exports | through the guard |
 | jscpd | A block of code copied into another place (8 lines or 60 tokens, CSS included) | `npm run check:copies` |
 | knip | Files nothing imports, exports nothing uses | `npm run check:unused` |
-| The code check | The structure's rules: folders and names, every part in its kind's folder and none inside working code, a test beside every file with logic, units in their own folders with their parts inside them, nothing nested past 6 levels, imports through a unit's `index.ts` and never up, across features or into `testing/`, tokens in CSS, no DOM queries between components, LiveKit only in `core/`, no history in comments, lines over 120 characters (Prettier doesn't wrap strings and comments), comments that switch a check off, and the tests' own rules | `npm run check:code -- <folder> --all` |
+| The code check | The structure's rules: folders and names, every part in its kind's folder and none inside working code, a test beside every file with logic, units in their own folders with their parts inside them, nothing nested past 6 levels, imports through a unit's `index.ts` and never up, across features or into `testing/`, tokens in CSS, no DOM queries between components, LiveKit only in `services/`, no history in comments, lines over 120 characters (Prettier doesn't wrap strings and comments), comments that switch a check off, and the tests' own rules | `npm run check:code -- <folder> --all` |
 | Prettier | Layout | `npm run format` fixes, `npm run format:check` checks |
 | The size budget | The built JavaScript and styles, compressed, against `checks/size-budget.json` | `npm run build && npm run check:size` |
 

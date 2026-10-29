@@ -1,10 +1,9 @@
 import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
-import { CAMERA_BLOCKED, CAMERA_MISSING } from "@services/media-devices-service";
+import { CAMERA_BLOCKED, CAMERA_MISSING, CAMERA_QUALITIES, SHARE_QUALITIES } from "@services/media-devices-service";
 import type { CameraDevice, CameraProblem, MicDevice, ScreenSurface } from "@services/media-devices-service";
 import type { VoicePrefs } from "@services/preferences-service";
 import { useMicLevel } from "@features/room/hooks/use-mic-level.hook";
 import sw from "../room/AccountButton.module.css";
-import { CAMERA_QUALITIES, SHARE_QUALITIES } from "@services/media-devices-service";
 import { MODE_OPTIONS } from "@features/room/constants/stream-modes.constants";
 import type { StreamKind, StreamMode, StreamQuality, StreamSettings } from "@services/xove-api-service";
 import type { MediaTrack } from "@services/livekit-service";

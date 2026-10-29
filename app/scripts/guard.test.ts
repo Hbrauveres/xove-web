@@ -119,6 +119,9 @@ describe("the guard: the list that only shrinks", () => {
     const mainCheck = 'export const RULES = {\n  size: "over 300 lines",\n  noTest: "no test",\n} as const;\n';
     expect([...newRulesOf(mainCheck, ["size", "noTest", "partPlace"])]).toEqual(["partPlace"]);
     expect([...newRulesOf(undefined, ["size", "partPlace"])]).toEqual([]);
+    const spread = 'export const RULES = {\n  size: "over 300 lines",\n  ...LAYOUT_RULES,\n} as const;\n';
+    const layout = 'export const LAYOUT_RULES = {\n  nested: "a folder inside a part folder",\n} as const;\n';
+    expect([...newRulesOf(`${spread}\n${layout}`, ["size", "nested"])]).toEqual([]);
   });
 
   it("records the first list from scratch, each entry owned by the step for its folder", () => {
