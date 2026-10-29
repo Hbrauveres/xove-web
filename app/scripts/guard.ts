@@ -119,7 +119,8 @@ const isFresh = (f: { tool: string; rule: string }, fresh: Set<string>) => f.too
 /** The code rules `rules` names that main's check (its source) doesn't define; none without main's. */
 export function newRulesOf(mainCheck: string | undefined, rules: string[]): Set<string> {
   if (mainCheck === undefined) return new Set();
-  return new Set(rules.filter((r) => !new RegExp(`^\\s+${r}:`, "m").test(mainCheck)));
+  const defined = new Set([...mainCheck.matchAll(/^\s+(\w+):/gm)].map((m) => m[1]));
+  return new Set(rules.filter((r) => !defined.has(r)));
 }
 
 /**
