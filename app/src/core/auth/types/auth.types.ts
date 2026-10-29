@@ -1,4 +1,4 @@
-import type { Me } from "@core/api/api.types";
+import type { Me } from "@core/api/types/api.types";
 
 /** Who is signed in, as far as this page knows. */
 export type AuthState = { status: "loading" } | { status: "signedOut" } | { status: "signedIn"; me: Me };

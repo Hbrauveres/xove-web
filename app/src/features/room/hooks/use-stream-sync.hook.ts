@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import type { SharingConnection, StreamKind } from "@core/api/api.types";
-import type { ConnectionState } from "@core/livekit/livekit.types";
+import type { SharingConnection, StreamKind } from "@core/api/types/api.types";
+import type { ConnectionState } from "@core/livekit/types/livekit.types";
 import { KINDS } from "../state/room.constants";
 import type { RoomStore } from "../state/room.store";
 import type { RoomModel } from "../state/room.types";

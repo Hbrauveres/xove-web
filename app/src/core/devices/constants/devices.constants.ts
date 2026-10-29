@@ -1,5 +1,5 @@
-import { STREAM_QUALITIES } from "@core/preferences/preferences.constants";
-import type { GateState, StreamPreset } from "./devices.types";
+import { STREAM_QUALITIES } from "@core/preferences/constants/preferences.constants";
+import type { GateState, StreamPreset } from "../types/devices.types";
 
 /** What a refused camera says: like any app, it asks once, and says how to allow it later. */
 export const CAMERA_BLOCKED =

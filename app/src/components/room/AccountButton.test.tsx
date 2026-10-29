@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 import { loadAmbilight } from "@core/preferences/preferences.service";
-import type { ConnectionState } from "@core/livekit/livekit.types";
+import type { ConnectionState } from "@core/livekit/types/livekit.types";
 import type { Friend } from "@features/room/types/room-view.types";
 import { AccountButton } from "./AccountButton";
 

@@ -1,4 +1,4 @@
-import type { StreamQuality } from "@core/api/api.types";
+import type { StreamQuality } from "@core/api/types/api.types";
 
 /** One of this browser's cameras, to pick in the camera's menu. */
 export type CameraDevice = { deviceId: string; label: string };

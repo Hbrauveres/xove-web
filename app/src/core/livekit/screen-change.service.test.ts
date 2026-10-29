@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { FakeLocalScreenTrack, FakeMediaStreamTrack, lastRoom } from "../../test/fakeLiveKit";
 import { connectedAdapter, shareScreen } from "../../test/factories/video-room.factory";
 import type { LiveKitAdapter } from "./livekit.adapter";
-import { capOf } from "./publish-options.util";
+import { capOf } from "./utils/publish-options.util";
 
 const change = (adapter: LiveKitAdapter) => adapter.changeScreen({ quality: "720p", mode: "sharp" });
 

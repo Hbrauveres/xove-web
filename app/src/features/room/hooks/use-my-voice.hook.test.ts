@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { DEFAULT_VOICE } from "@core/preferences/preferences.constants";
+import { DEFAULT_VOICE } from "@core/preferences/constants/preferences.constants";
 import { currentToast } from "../../../components/ui/toast";
 import { useMyVoice } from "./use-my-voice.hook";
 

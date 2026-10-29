@@ -1,5 +1,5 @@
-import type { LiveStream, StreamKind, StreamsState } from "@core/api/api.types";
-import type { ConnectionState, RoomPerson } from "@core/livekit/livekit.types";
+import type { LiveStream, StreamKind, StreamsState } from "@core/api/types/api.types";
+import type { ConnectionState, RoomPerson } from "@core/livekit/types/livekit.types";
 import type { ActivityEvent } from "@features/room/types/room-view.types";
 import { ACTIVITY_KEPT, NEXT_STEPS, STREAM_PLACES } from "./room.constants";
 import type { MyStreamStep, PersonId, RoomModel, RoomStream, SeatState, Watch } from "./room.types";

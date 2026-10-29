@@ -1,5 +1,5 @@
-import type { StreamKind, StreamQuality, StreamSettings } from "@core/api/api.types";
-import type { AmbilightPrefs, HearingOf, HearingPrefs, VoicePrefs } from "./preferences.types";
+import type { StreamKind, StreamQuality, StreamSettings } from "@core/api/types/api.types";
+import type { AmbilightPrefs, HearingOf, HearingPrefs, VoicePrefs } from "../types/preferences.types";
 
 /** Where each choice is kept in the browser. Renaming one forgets everyone's choice. */
 export const STREAM_KEYS: Record<StreamKind, { quality: string; mode: string }> = {

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { DEFAULT_VOICE } from "./preferences.constants";
+import { DEFAULT_VOICE } from "./constants/preferences.constants";
 import {
   loadAmbilight,
   loadCameraDevice,

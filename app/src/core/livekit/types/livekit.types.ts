@@ -1,6 +1,6 @@
 import type { LocalAudioTrack, LocalTrack, LocalVideoTrack, Room } from "livekit-client";
-import type { SharingConnection, StreamKind } from "@core/api/api.types";
-import type { CameraProblem, ScreenSurface } from "@core/devices/devices.types";
+import type { SharingConnection, StreamKind } from "@core/api/types/api.types";
+import type { CameraProblem, ScreenSurface } from "@core/devices/types/devices.types";
 
 /** A track, reduced to what the screen needs: put it in a <video>/<audio> and take it out. */
 export type MediaTrack = {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { CAMERA_QUALITIES, SHARE_QUALITIES } from "@core/devices/devices.constants";
-import { DEFAULT_VOICE } from "@core/preferences/preferences.constants";
+import { CAMERA_QUALITIES, SHARE_QUALITIES } from "@core/devices/constants/devices.constants";
+import { DEFAULT_VOICE } from "@core/preferences/constants/preferences.constants";
 import {
   cameraCaptureOptions,
   cameraPublishOptions,
@@ -9,8 +9,8 @@ import {
   contentHintOf,
   screenPublishOptions,
 } from "./publish-options.util";
-import type { StreamMode } from "@core/api/api.types";
-import { STREAM_QUALITIES } from "@core/preferences/preferences.constants";
+import type { StreamMode } from "@core/api/types/api.types";
+import { STREAM_QUALITIES } from "@core/preferences/constants/preferences.constants";
 
 const modes: StreamMode[] = ["smooth", "sharp"];
 

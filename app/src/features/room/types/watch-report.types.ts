@@ -1,4 +1,4 @@
-import type { StreamKind } from "@core/api/api.types";
+import type { StreamKind } from "@core/api/types/api.types";
 import type { PersonId } from "../state/room.types";
 
 /** What's on my stage: someone's stream, or nothing (null). */

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { stubAudio } from "../../test/factories/audio.factory";
+import { stubAudio } from "../../../test/factories/audio.factory";
 import { startMicMeter } from "./mic-meter.util";
 
 describe("the mic's meter", () => {

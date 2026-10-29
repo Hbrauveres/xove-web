@@ -1,4 +1,4 @@
-import type { VideoRoomState } from "@core/livekit/livekit.types";
+import type { VideoRoomState } from "@core/livekit/types/livekit.types";
 import type { RoomModel, SeatState } from "../state/room.types";
 
 /**

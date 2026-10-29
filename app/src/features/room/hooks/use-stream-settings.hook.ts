@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import type { StreamKind, StreamSettings } from "@core/api/api.types";
+import type { StreamKind, StreamSettings } from "@core/api/types/api.types";
 import { loadStreamSettings, saveStreamSettings } from "@core/preferences/preferences.service";
 import { SettingsQueue } from "../utils/settings-queue.util";
 

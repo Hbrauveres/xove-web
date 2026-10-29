@@ -8,8 +8,8 @@ import type {
   StreamKind,
   StreamSettings,
   StreamsState,
-} from "./api.types";
-import { FALLBACK_MESSAGES } from "./api.constants";
+} from "./types/api.types";
+import { FALLBACK_MESSAGES } from "./constants/api.constants";
 
 /** An error the API answered with. `message` is safe to show to the user. */
 export class ApiError extends Error {

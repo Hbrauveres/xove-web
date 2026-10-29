@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import type { Capture } from "@core/livekit/livekit.types";
+import type { Capture } from "@core/livekit/types/livekit.types";
 import { aTrack } from "../../../test/factories/track.factory";
 import { useCameraPreview } from "./use-camera-preview.hook";
 

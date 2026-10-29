@@ -1,6 +1,6 @@
 import { ConnectionState as LkState, Track, VideoQuality } from "livekit-client";
-import type { StreamKind, StreamQuality } from "@core/api/api.types";
-import type { ConnectionState, VideoRoomState } from "./livekit.types";
+import type { StreamKind, StreamQuality } from "@core/api/types/api.types";
+import type { ConnectionState, VideoRoomState } from "../types/livekit.types";
 
 /**
  * The highest layer to send for each quality. A screen has three layers (480p, 720p, 1080p),

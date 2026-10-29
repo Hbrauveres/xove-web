@@ -1,10 +1,10 @@
 import { Track, type LocalAudioTrack, type LocalTrack } from "livekit-client";
-import { isLocalAudio } from "./track-kind.util";
-import type { VoiceProblem } from "@core/devices/devices.types";
-import type { VoicePrefs } from "@core/preferences/preferences.types";
-import type { RoomContext } from "./livekit.types";
+import { isLocalAudio } from "./utils/track-kind.util";
+import type { VoiceProblem } from "@core/devices/types/devices.types";
+import type { VoicePrefs } from "@core/preferences/types/preferences.types";
+import type { RoomContext } from "./types/livekit.types";
 import { NoiseGate } from "./noise-gate.adapter";
-import { micCaptureOptions } from "./publish-options.util";
+import { micCaptureOptions } from "./utils/publish-options.util";
 
 type Gate = { gate: NoiseGate; context: AudioContext };
 

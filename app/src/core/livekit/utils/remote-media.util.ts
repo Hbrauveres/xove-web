@@ -1,8 +1,8 @@
 import { Track, VideoQuality, type RemoteParticipant, type RemoteTrackPublication } from "livekit-client";
-import type { StreamKind } from "@core/api/api.types";
-import { SHARE_QUALITIES } from "@core/devices/devices.constants";
-import { SOURCE } from "./livekit.constants";
-import type { MediaTrack, RemoteMedia, RemoteVideo, ViewQuality } from "./livekit.types";
+import type { StreamKind } from "@core/api/types/api.types";
+import { SHARE_QUALITIES } from "@core/devices/constants/devices.constants";
+import { SOURCE } from "../constants/livekit.constants";
+import type { MediaTrack, RemoteMedia, RemoteVideo, ViewQuality } from "../types/livekit.types";
 
 const publicationOf = (p: RemoteParticipant, source: Track.Source): RemoteTrackPublication | undefined =>
   p.getTrackPublication(source);

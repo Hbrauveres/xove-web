@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { lastRoom } from "../../test/fakeLiveKit";
 import { connectedAdapter } from "../../test/factories/video-room.factory";
-import type { Capture } from "./livekit.types";
+import type { Capture } from "./types/livekit.types";
 
 describe("a capture before it's sent", () => {
   it("shows its preview and says when the browser ends it, without handing out its tracks", async () => {

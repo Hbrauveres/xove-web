@@ -1,5 +1,5 @@
-import { HOLD_MS, LEVEL_STRETCH } from "./devices.constants";
-import type { GateState } from "./devices.types";
+import { HOLD_MS, LEVEL_STRETCH } from "../constants/devices.constants";
+import type { GateState } from "../types/devices.types";
 
 /** The level of a stretch of samples, 0 to 1: the meter's own scale, so the gate's line means the same. */
 export function levelOf(samples: Float32Array): number {

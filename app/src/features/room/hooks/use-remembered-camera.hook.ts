@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
-import type { StreamKind, StreamMode, StreamSettings } from "@core/api/api.types";
+import type { StreamKind, StreamMode, StreamSettings } from "@core/api/types/api.types";
 import type { LiveKitAdapter } from "@core/livekit/livekit.adapter";
-import type { Capture } from "@core/livekit/livekit.types";
+import type { Capture } from "@core/livekit/types/livekit.types";
 import { loadCameraDevice, saveCameraDevice } from "@core/preferences/preferences.service";
 
 /**

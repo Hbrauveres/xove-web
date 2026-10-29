@@ -1,5 +1,12 @@
 import { vi } from "vitest";
-import type { AccessRequestView, LiveStream, Me, MemberView, StreamKind, StreamSettings } from "@core/api/api.types";
+import type {
+  AccessRequestView,
+  LiveStream,
+  Me,
+  MemberView,
+  StreamKind,
+  StreamSettings,
+} from "@core/api/types/api.types";
 
 type Reply = { status: number; body?: unknown };
 export type Call = {

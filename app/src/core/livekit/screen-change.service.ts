@@ -1,12 +1,12 @@
 import { Track, type Room } from "livekit-client";
-import type { StreamMode, StreamSettings } from "@core/api/api.types";
-import { pickScreen } from "@core/devices/screen-picker.util";
-import { isDomError, screenSound } from "./capture.util";
-import { COULDNT } from "./livekit.constants";
-import type { RoomContext } from "./livekit.types";
-import { contentHintOf, screenPublishOptions } from "./publish-options.util";
+import type { StreamMode, StreamSettings } from "@core/api/types/api.types";
+import { pickScreen } from "@core/devices/utils/screen-picker.util";
+import { isDomError, screenSound } from "./utils/capture.util";
+import { COULDNT } from "./constants/livekit.constants";
+import type { RoomContext } from "./types/livekit.types";
+import { contentHintOf, screenPublishOptions } from "./utils/publish-options.util";
 import type { SendService } from "./send.service";
-import { isLocalAudio } from "./track-kind.util";
+import { isLocalAudio } from "./utils/track-kind.util";
 
 /** Picks another window or tab into the screen I'm sending: viewers keep watching the same stream. */
 export class ScreenChangeService {

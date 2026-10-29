@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
-import type { StreamKind, StreamMode, StreamSettings } from "@core/api/api.types";
+import type { StreamKind, StreamMode, StreamSettings } from "@core/api/types/api.types";
 import type { LiveKitAdapter } from "@core/livekit/livekit.adapter";
-import type { Capture } from "@core/livekit/livekit.types";
+import type { Capture } from "@core/livekit/types/livekit.types";
 import { BUSY_STEPS, KINDS } from "../state/room.constants";
 import type { RoomStore } from "../state/room.store";
 import type { MyStreamStep } from "../state/room.types";

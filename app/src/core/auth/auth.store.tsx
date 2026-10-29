@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { api, ApiError } from "@core/api/api-client.service";
-import { SIGNED_OUT_STATUS } from "@core/api/api.constants";
-import type { AuthState } from "./auth.types";
+import { SIGNED_OUT_STATUS } from "@core/api/constants/api.constants";
+import type { AuthState } from "./types/auth.types";
 import { AuthContext } from "./use-auth.hook";
 
 /** Asks the API who is signed in, once at the start and whenever `refresh` is called. */

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { START } from "@core/livekit/livekit.constants";
-import type { VideoRoomState } from "@core/livekit/livekit.types";
+import { START } from "@core/livekit/constants/livekit.constants";
+import type { VideoRoomState } from "@core/livekit/types/livekit.types";
 import { aLiveStream, anAnswer } from "../../../test/factories/streams-state.factory";
 import { aTrack, someMedia } from "../../../test/factories/remote-media.factory";
 import { hueOf } from "../utils/person-colour.util";

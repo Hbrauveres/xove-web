@@ -1,5 +1,5 @@
-import { BEST_SCREEN } from "./devices.constants";
-import type { CaptureControllerLike, ScreenCaptureRequest } from "./devices.types";
+import { BEST_SCREEN } from "../constants/devices.constants";
+import type { CaptureControllerLike, ScreenCaptureRequest } from "../types/devices.types";
 
 /** Some browsers can't share a screen at all. */
 export const canShareScreen = () => typeof navigator.mediaDevices?.getDisplayMedia === "function";

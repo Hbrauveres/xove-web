@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { gateStep, levelOf } from "./audio-level.util";
-import { GATE_CLOSED as CLOSED, HOLD_MS, TICK_MS } from "./devices.constants";
-import type { GateState } from "./devices.types";
+import { GATE_CLOSED as CLOSED, HOLD_MS, TICK_MS } from "../constants/devices.constants";
+import type { GateState } from "../types/devices.types";
 
 /** Runs the gate over a list of levels, one tick each, and says when it was open. */
 const run = (levels: number[], line: number) => {

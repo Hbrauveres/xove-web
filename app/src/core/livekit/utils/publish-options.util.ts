@@ -1,9 +1,9 @@
 import { VideoPreset, type TrackPublishOptions, type VideoCaptureOptions, type VideoQuality } from "livekit-client";
-import type { StreamMode, StreamQuality } from "@core/api/api.types";
-import { BEST_SCREEN, CAMERA_QUALITIES, SHARE_QUALITIES } from "@core/devices/devices.constants";
-import type { StreamPreset } from "@core/devices/devices.types";
-import type { VoicePrefs } from "@core/preferences/preferences.types";
-import { TOP_LAYER } from "./livekit.constants";
+import type { StreamMode, StreamQuality } from "@core/api/types/api.types";
+import { BEST_SCREEN, CAMERA_QUALITIES, SHARE_QUALITIES } from "@core/devices/constants/devices.constants";
+import type { StreamPreset } from "@core/devices/types/devices.types";
+import type { VoicePrefs } from "@core/preferences/types/preferences.types";
+import { TOP_LAYER } from "../constants/livekit.constants";
 
 /**
  * How screens and cameras are sent. LiveKit's defaults are tuned for slides and voice calls

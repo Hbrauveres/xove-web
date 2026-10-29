@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { listDevices, watchDevices } from "@core/devices/device-list.util";
-import type { DeviceList } from "@core/devices/devices.types";
+import { listDevices, watchDevices } from "@core/devices/utils/device-list.util";
+import type { DeviceList } from "@core/devices/types/devices.types";
 
 const NO_DEVICES: DeviceList = { cameras: [], mics: [] };
 

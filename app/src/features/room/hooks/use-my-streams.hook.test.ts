@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import type { Capture } from "@core/livekit/livekit.types";
+import type { Capture } from "@core/livekit/types/livekit.types";
 import { aUser, installFakeApi } from "../../../test/fakeApi";
 import { aTrack } from "../../../test/factories/track.factory";
 import { RoomStore } from "../state/room.store";

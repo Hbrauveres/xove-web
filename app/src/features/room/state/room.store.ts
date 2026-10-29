@@ -1,8 +1,8 @@
 import { ApiError, api } from "@core/api/api-client.service";
-import type { SharingConnection, StreamKind, StreamSettings, StreamsState } from "@core/api/api.types";
+import type { SharingConnection, StreamKind, StreamSettings, StreamsState } from "@core/api/types/api.types";
 import { LiveKitAdapter } from "@core/livekit/livekit.adapter";
-import { CANT_CONNECT } from "@core/livekit/livekit.constants";
-import type { VideoRoomState } from "@core/livekit/livekit.types";
+import { CANT_CONNECT } from "@core/livekit/constants/livekit.constants";
+import type { VideoRoomState } from "@core/livekit/types/livekit.types";
 import { POLL_MS } from "./room.constants";
 import { initialRoom, withMe, withSeat, withStreams, withStreamsCall, withVideo } from "./room.model";
 import type { RoomModel, SeatState } from "./room.types";

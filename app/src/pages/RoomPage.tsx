@@ -9,7 +9,7 @@ import { RoomFooter } from "../components/room/RoomFooter";
 import { RoomHeader } from "../components/room/RoomHeader";
 import { WaitingRoom } from "../components/room/WaitingRoom";
 import { loadAmbilight } from "@core/preferences/preferences.service";
-import { canShareScreen } from "@core/devices/screen-picker.util";
+import { canShareScreen } from "@core/devices/utils/screen-picker.util";
 import { SettingsPanel } from "../components/stage/SettingsPanel";
 import { Stage } from "../components/stage/Stage";
 import { useFullscreenElement, useFullscreenHost } from "../hooks/useFullscreenElement";
@@ -22,7 +22,7 @@ import { useMyVoice } from "@features/room/hooks/use-my-voice.hook";
 import { useStreamSync } from "@features/room/hooks/use-stream-sync.hook";
 import { useRoomView } from "@features/room/hooks/use-room-view.hook";
 import { useWatchReport } from "@features/room/hooks/use-watch-report.hook";
-import type { StreamKind } from "@core/api/api.types";
+import type { StreamKind } from "@core/api/types/api.types";
 import styles from "./RoomPage.module.css";
 
 type Props = {

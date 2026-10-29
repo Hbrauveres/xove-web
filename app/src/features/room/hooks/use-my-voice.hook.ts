@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { VoiceProblem } from "@core/devices/devices.types";
+import type { VoiceProblem } from "@core/devices/types/devices.types";
 import { loadVoicePrefs, saveVoicePrefs } from "@core/preferences/preferences.service";
-import type { VoicePrefs } from "@core/preferences/preferences.types";
+import type { VoicePrefs } from "@core/preferences/types/preferences.types";
 import { showToast } from "../../../components/ui/toast";
 import { VOICE_PROBLEMS } from "../constants/voice.constants";
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { FakeLocalCameraTrack, FakeLocalMicTrack } from "../../test/fakeLiveKit";
+import { FakeLocalCameraTrack, FakeLocalMicTrack } from "../../../test/fakeLiveKit";
 import { isLocalAudio, isLocalVideo } from "./track-kind.util";
 
 describe("a track's kind", () => {

@@ -3,12 +3,12 @@ import userEvent from "@testing-library/user-event";
 import { StrictMode } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { moveFakeTimers } from "../../test/factories/clock.factory";
-import type { StreamKind, StreamSettings } from "@core/api/api.types";
-import { CAMERA_BLOCKED } from "@core/devices/devices.constants";
+import type { StreamKind, StreamSettings } from "@core/api/types/api.types";
+import { CAMERA_BLOCKED } from "@core/devices/constants/devices.constants";
 import { NO_SOUND } from "./PlayerButtons";
 import { CUE_MS, SettingsPanel } from "./SettingsPanel";
 import { NO_SCREEN } from "./PlayerButtons";
-import { DEFAULT_VOICE } from "@core/preferences/preferences.constants";
+import { DEFAULT_VOICE } from "@core/preferences/constants/preferences.constants";
 import { currentToast } from "../ui/toast";
 
 const PREFS: Record<StreamKind, StreamSettings> = {

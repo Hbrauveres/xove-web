@@ -1,4 +1,4 @@
-import type { StreamKind, StreamSettings } from "@core/api/api.types";
+import type { StreamKind, StreamSettings } from "@core/api/types/api.types";
 
 /**
  * Changes to my streams' settings while live, one after another, in the order they were made.

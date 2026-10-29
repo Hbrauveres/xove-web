@@ -1,4 +1,4 @@
-import type { StreamKind } from "@core/api/api.types";
+import type { StreamKind } from "@core/api/types/api.types";
 import type { Pick } from "../types/stage.types";
 import type { Sharer } from "../types/room-view.types";
 

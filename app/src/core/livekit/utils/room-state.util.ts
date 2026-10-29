@@ -1,4 +1,4 @@
-import type { LocalMedia, RemoteMedia, RemoteVideo, RoomPerson } from "./livekit.types";
+import type { LocalMedia, RemoteMedia, RemoteVideo, RoomPerson } from "../types/livekit.types";
 
 /**
  * The room's state changes person by person: each event rebuilds only what it's about, and

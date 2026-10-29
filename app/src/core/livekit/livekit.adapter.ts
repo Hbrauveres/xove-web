@@ -6,11 +6,11 @@ import {
   type RemoteParticipant,
 } from "livekit-client";
 import { CaptureService } from "./capture.service";
-import { CANT_CONNECT, CONNECTION, PRESENCE_KEPT, START } from "./livekit.constants";
-import type { Capture, CapturedTracks, LocalMedia, RoomContext, VideoRoomState } from "./livekit.types";
-import { readLocalMedia } from "./local-media.util";
-import { RemoteMediaReader } from "./remote-media.util";
-import { withLocal, withOthers, withPerson, withSpeakers } from "./room-state.util";
+import { CANT_CONNECT, CONNECTION, PRESENCE_KEPT, START } from "./constants/livekit.constants";
+import type { Capture, CapturedTracks, LocalMedia, RoomContext, VideoRoomState } from "./types/livekit.types";
+import { readLocalMedia } from "./utils/local-media.util";
+import { RemoteMediaReader } from "./utils/remote-media.util";
+import { withLocal, withOthers, withPerson, withSpeakers } from "./utils/room-state.util";
 import { ScreenChangeService } from "./screen-change.service";
 import { SendService } from "./send.service";
 import { VoiceService } from "./voice.service";

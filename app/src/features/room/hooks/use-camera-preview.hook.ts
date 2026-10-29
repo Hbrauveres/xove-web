@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from "react";
-import type { StreamMode, StreamSettings } from "@core/api/api.types";
-import type { Capture } from "@core/livekit/livekit.types";
+import type { StreamMode, StreamSettings } from "@core/api/types/api.types";
+import type { Capture } from "@core/livekit/types/livekit.types";
 import { useCaptureLifecycle } from "./use-capture-lifecycle.hook";
 
 type Inputs = {

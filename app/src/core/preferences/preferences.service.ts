@@ -1,4 +1,4 @@
-import type { StreamKind, StreamMode, StreamSettings } from "@core/api/api.types";
+import type { StreamKind, StreamMode, StreamSettings } from "@core/api/types/api.types";
 import {
   AMBILIGHT_KEYS,
   CAMERA_DEVICE_KEY,
@@ -11,9 +11,9 @@ import {
   MIC_PROCESSING_KEY,
   STREAM_KEYS,
   STREAM_QUALITIES,
-} from "./preferences.constants";
-import type { AmbilightPrefs, HearingOf, HearingPrefs, VoicePrefs } from "./preferences.types";
-import { readStored, writeStored } from "./storage.util";
+} from "./constants/preferences.constants";
+import type { AmbilightPrefs, HearingOf, HearingPrefs, VoicePrefs } from "./types/preferences.types";
+import { readStored, writeStored } from "./utils/storage.util";
 
 /** Choices each browser remembers for next time. Anything odd in the storage gives the default. */
 

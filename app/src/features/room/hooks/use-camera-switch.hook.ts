@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import type { StreamSettings } from "@core/api/api.types";
+import type { StreamSettings } from "@core/api/types/api.types";
 
 type Inputs = {
   /** Switches the camera: live while it's sent, remembered for next time either way. */

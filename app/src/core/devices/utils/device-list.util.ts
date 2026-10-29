@@ -1,4 +1,4 @@
-import type { DeviceList } from "./devices.types";
+import type { DeviceList } from "../types/devices.types";
 
 /** This browser's cameras and microphones, named (a device without a name gets a number). */
 export async function listDevices(): Promise<DeviceList> {

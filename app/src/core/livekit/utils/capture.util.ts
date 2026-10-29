@@ -1,6 +1,6 @@
 import { LocalAudioTrack, Track } from "livekit-client";
-import type { StreamKind } from "@core/api/api.types";
-import { COULDNT } from "./livekit.constants";
+import type { StreamKind } from "@core/api/types/api.types";
+import { COULDNT } from "../constants/livekit.constants";
 import { isLocalAudio } from "./track-kind.util";
 
 export const isDomError = (e: unknown, name: string) => e instanceof DOMException && e.name === name;

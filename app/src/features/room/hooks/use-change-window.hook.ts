@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import type { StreamSettings } from "@core/api/api.types";
+import type { StreamSettings } from "@core/api/types/api.types";
 
 type Inputs = {
   /** Picks another window or tab into my screen: viewers keep the same stream. */

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { HOLD_MS, TICK_MS } from "@core/devices/devices.constants";
+import { HOLD_MS, TICK_MS } from "@core/devices/constants/devices.constants";
 import { NoiseGate } from "./noise-gate.adapter";
 
 /** A Web Audio graph whose analyser hears `level.sample`, and whose gain records where it's sent. */

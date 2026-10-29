@@ -1,6 +1,6 @@
 import { Track, type LocalParticipant, type LocalVideoTrack } from "livekit-client";
-import type { ScreenSurface } from "@core/devices/devices.types";
-import type { LocalMedia } from "./livekit.types";
+import type { ScreenSurface } from "@core/devices/types/devices.types";
+import type { LocalMedia } from "../types/livekit.types";
 import { isLocalVideo } from "./track-kind.util";
 
 const SURFACES: readonly ScreenSurface[] = ["monitor", "window", "browser"];

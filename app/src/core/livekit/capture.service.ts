@@ -1,12 +1,12 @@
 import { LocalVideoTrack, Track, type Room } from "livekit-client";
-import type { StreamKind, StreamMode } from "@core/api/api.types";
-import { CAMERA_BLOCKED } from "@core/devices/devices.constants";
-import { pickScreen } from "@core/devices/screen-picker.util";
-import { isDomError, screenSound, startFailed } from "./capture.util";
-import { NOT_CONNECTED } from "./livekit.constants";
-import type { Capture, CapturedTracks, RoomContext } from "./livekit.types";
-import { cameraCaptureOptions, contentHintOf } from "./publish-options.util";
-import { isLocalVideo } from "./track-kind.util";
+import type { StreamKind, StreamMode } from "@core/api/types/api.types";
+import { CAMERA_BLOCKED } from "@core/devices/constants/devices.constants";
+import { pickScreen } from "@core/devices/utils/screen-picker.util";
+import { isDomError, screenSound, startFailed } from "./utils/capture.util";
+import { NOT_CONNECTED } from "./constants/livekit.constants";
+import type { Capture, CapturedTracks, RoomContext } from "./types/livekit.types";
+import { cameraCaptureOptions, contentHintOf } from "./utils/publish-options.util";
+import { isLocalVideo } from "./utils/track-kind.util";
 
 /** The browser's screen picker, asked directly because livekit-client drops `windowAudio`. */
 async function captureScreen(room: Room, mode: StreamMode): Promise<CapturedTracks | null> {

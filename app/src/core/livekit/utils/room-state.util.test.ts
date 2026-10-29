@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { aTrack, someMedia } from "../../test/factories/remote-media.factory";
-import type { LocalMedia } from "./livekit.types";
+import { aTrack, someMedia } from "../../../test/factories/remote-media.factory";
+import type { LocalMedia } from "../types/livekit.types";
 import { withLocal, withOthers, withPerson, withSpeakers } from "./room-state.util";
 
 const room = () => {

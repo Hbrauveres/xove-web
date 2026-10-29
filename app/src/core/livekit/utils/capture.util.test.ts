@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { FakeMediaStreamTrack } from "../../test/fakeLiveKit";
+import { FakeMediaStreamTrack } from "../../../test/fakeLiveKit";
 import { isDomError, screenSound, startFailed } from "./capture.util";
 
 describe("capturing helpers", () => {
