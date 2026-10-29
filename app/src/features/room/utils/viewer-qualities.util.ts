@@ -1,5 +1,5 @@
-import type { StreamQuality } from "@core/api/types/api.types";
-import { BEST_SCREEN, SHARE_QUALITIES } from "@core/devices/constants/devices.constants";
+import type { StreamQuality } from "@services/xove-api-service/types/api.types";
+import { BEST_SCREEN, SHARE_QUALITIES } from "@services/media-devices-service/constants/devices.constants";
 
 const presetOf = (quality: StreamQuality) => SHARE_QUALITIES.find((q) => q.id === quality) ?? BEST_SCREEN;
 

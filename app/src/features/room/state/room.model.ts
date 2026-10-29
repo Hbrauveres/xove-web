@@ -1,5 +1,5 @@
-import type { StreamKind, StreamsState } from "@core/api/types/api.types";
-import type { ConnectionState, RoomPerson } from "@core/livekit/types/livekit.types";
+import type { StreamKind, StreamsState } from "@services/xove-api-service/types/api.types";
+import type { ConnectionState, RoomPerson } from "@services/livekit-service/types/livekit.types";
 import { NEXT_STEPS, STREAM_PLACES } from "../constants/room.constants";
 import type { MyStreamStep, PersonId, RoomModel, SeatState } from "../types/room.types";
 import { personIdOf } from "../utils/person-id.util";

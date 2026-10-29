@@ -1,13 +1,18 @@
 import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
-import { CAMERA_BLOCKED, CAMERA_MISSING } from "@core/devices/constants/devices.constants";
-import type { CameraDevice, CameraProblem, MicDevice, ScreenSurface } from "@core/devices/types/devices.types";
-import type { VoicePrefs } from "@core/preferences/types/preferences.types";
+import { CAMERA_BLOCKED, CAMERA_MISSING } from "@services/media-devices-service/constants/devices.constants";
+import type {
+  CameraDevice,
+  CameraProblem,
+  MicDevice,
+  ScreenSurface,
+} from "@services/media-devices-service/types/devices.types";
+import type { VoicePrefs } from "@services/preferences-service/types/preferences.types";
 import { useMicLevel } from "@features/room/hooks/use-mic-level.hook";
 import sw from "../room/AccountButton.module.css";
-import { CAMERA_QUALITIES, SHARE_QUALITIES } from "@core/devices/constants/devices.constants";
+import { CAMERA_QUALITIES, SHARE_QUALITIES } from "@services/media-devices-service/constants/devices.constants";
 import { MODE_OPTIONS } from "@features/room/constants/stream-modes.constants";
-import type { StreamKind, StreamMode, StreamQuality, StreamSettings } from "@core/api/types/api.types";
-import type { MediaTrack } from "@core/livekit/types/livekit.types";
+import type { StreamKind, StreamMode, StreamQuality, StreamSettings } from "@services/xove-api-service/types/api.types";
+import type { MediaTrack } from "@services/livekit-service/types/livekit.types";
 import { Picker } from "../ui/Picker";
 import { Segmented } from "../ui/Segmented";
 import { showToast } from "../ui/toast";

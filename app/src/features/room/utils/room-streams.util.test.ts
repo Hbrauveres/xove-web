@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { aLiveStream } from "../../../test/factories/streams-state.factory";
+import { aLiveStream } from "../../../testing/factories/streams-state.factory";
 import type { RoomStream } from "../types/room.types";
 import { sameStreams, streamEvents, streamOf } from "./room-streams.util";
 

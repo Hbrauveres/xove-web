@@ -1,9 +1,9 @@
-import type { StreamKind, StreamMode, StreamSettings } from "@core/api/types/api.types";
-import type { LiveKitAdapter } from "@core/livekit/livekit.adapter";
-import type { Capture } from "@core/livekit/types/livekit.types";
+import type { StreamKind, StreamMode, StreamSettings } from "@services/xove-api-service/types/api.types";
+import type { LiveKitAdapter } from "@services/livekit-service/livekit.adapter";
+import type { Capture } from "@services/livekit-service/types/livekit.types";
 import type { RoomStore } from "../state/room.store";
 import type { MyStreamStep } from "./room.types";
-import type { SettingsQueue } from "../state/settings-queue.service";
+import type { SettingsQueue } from "../../../services/settings-queue-service/settings-queue.service";
 
 export type MyStreamsInputs = {
   store: RoomStore;

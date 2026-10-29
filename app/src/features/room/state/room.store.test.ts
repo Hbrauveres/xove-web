@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { aUser, installFakeApi, MY_USER_ID } from "../../../test/fakeApi";
-import { lastRoom } from "../../../test/fakeLiveKit";
+import { aUser, installFakeApi, MY_USER_ID } from "../../../testing/fakeApi";
+import { lastRoom } from "../../../testing/fakeLiveKit";
 import { RoomStore } from "./room.store";
 import { POLL_MS } from "../constants/room.constants";
 

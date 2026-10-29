@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { installFakeApi } from "../test/fakeApi";
-import { renderApp } from "../test/renderApp";
+import { installFakeApi } from "../testing/fakeApi";
+import { renderApp } from "../testing/renderApp";
 
 describe("home page", () => {
   it("shows the drawn mark, not the typed name (spec 0111)", async () => {

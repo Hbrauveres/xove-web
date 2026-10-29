@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { FakeTrack } from "../../test/fakeLiveKit";
+import { FakeTrack } from "../../testing/fakeLiveKit";
 import { Facecam, type FacecamPlace } from "./Facecam";
 
 // Spec 0060, FR-9 and AC-6: the small window over the big player.

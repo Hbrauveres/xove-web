@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { stubAudio } from "../../../test/factories/audio.factory";
+import { stubAudio } from "../../../testing/factories/audio.factory";
 import { useMicLevel } from "./use-mic-level.hook";
 
 describe("my mic's level", () => {

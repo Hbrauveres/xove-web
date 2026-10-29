@@ -1,7 +1,7 @@
 import { renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import type { Capture } from "../../../core/livekit/types/livekit.types";
-import { aTrack } from "../../../test/factories/track.factory";
+import type { Capture } from "../../../services/livekit-service/types/livekit.types";
+import { aTrack } from "../../../testing/factories/track.factory";
 import { useCaptureLifecycle } from "./use-capture-lifecycle.hook";
 
 function aCapture() {

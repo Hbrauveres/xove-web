@@ -1,7 +1,7 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { aSharer } from "../../../test/factories/sharer.factory";
-import { aTrack } from "../../../test/factories/track.factory";
+import { aSharer } from "../../../testing/factories/sharer.factory";
+import { aTrack } from "../../../testing/factories/track.factory";
 import { useHearing } from "./use-hearing.hook";
 
 /** Bruno on the stage and Ana in a preview, each sharing a screen with sound and talking. */

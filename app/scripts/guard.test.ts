@@ -9,6 +9,7 @@ import {
   fromTsc,
   type Known,
   newRulesOf,
+  renamed,
   ownerOf,
   recordOf,
 } from "./guard.ts";
@@ -145,5 +146,13 @@ describe("the guard: the list that only shrinks", () => {
     const knip =
       '{"issues":[{"file":"src/a.ts","files":[],"exports":[],"types":[],"enumMembers":[{}],"namespaceMembers":[{}],"duplicates":[{}]}]}';
     expect(fromKnip(knip).map((f) => f.rule)).toEqual(["enumMembers", "namespaceMembers", "duplicates"]);
+  });
+
+  it("follows a file main's list names under its old path", () => {
+    const moves = "R100\tapp/src/test/fake.ts\tapp/src/testing/fake.ts\nM\tapp/src/a.ts";
+    expect(renamed([known("src/test/fake.ts", 2), known("src/a.ts", 1)], moves).map((k) => k.file)).toEqual([
+      "src/testing/fake.ts",
+      "src/a.ts",
+    ]);
   });
 });

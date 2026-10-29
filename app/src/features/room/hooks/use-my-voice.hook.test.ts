@@ -1,9 +1,9 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { DEFAULT_VOICE } from "../../../core/preferences/constants/preferences.constants";
+import { DEFAULT_VOICE } from "../../../services/preferences-service/constants/preferences.constants";
 import { currentToast } from "../../../components/ui/toast";
 import { useMyVoice } from "./use-my-voice.hook";
-import { MIC_DEVICE_KEY } from "../../../core/preferences/constants/preferences.constants";
+import { MIC_DEVICE_KEY } from "../../../services/preferences-service/constants/preferences.constants";
 
 /** The hook with its own video commands: the mic answers `problem` (nothing by default). */
 function myVoice(voice = false, sending = true, problem: "blocked" | "missing" | "failed" | null = null) {

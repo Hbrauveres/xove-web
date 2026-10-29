@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { aSharer } from "../../../test/factories/sharer.factory";
+import { aSharer } from "../../../testing/factories/sharer.factory";
 import { holds, isPlaying, mainKindOf, stagePick, streamsOf } from "./stage-pick.util";
 
 describe("who is big", () => {

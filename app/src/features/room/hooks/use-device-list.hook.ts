@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { listDevices, watchDevices } from "@core/devices/device-list.service";
-import type { DeviceList } from "@core/devices/types/devices.types";
-import { NO_DEVICES } from "@core/devices/constants/devices.constants";
+import { listDevices, watchDevices } from "@services/media-devices-service/device-list.service";
+import type { DeviceList } from "@services/media-devices-service/types/devices.types";
+import { NO_DEVICES } from "@services/media-devices-service/constants/devices.constants";
 
 /**
  * The browser's cameras and mics, kept up to date as devices come and go. Read again when

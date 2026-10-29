@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { onFakeClock, TEST_NOW } from "../../test/factories/clock.factory";
+import { onFakeClock, TEST_NOW } from "../../testing/factories/clock.factory";
 import { useElapsed } from "./use-elapsed.hook";
 
 describe("the time since a stream started", () => {

@@ -1,4 +1,4 @@
-import type { StreamKind, WatchingTarget } from "@core/api/types/api.types";
+import type { StreamKind, WatchingTarget } from "@services/xove-api-service/types/api.types";
 import type { PersonId, Watch } from "./room.types";
 
 /** What's on my stage: someone's stream, or nothing (null). */

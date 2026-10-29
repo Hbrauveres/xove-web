@@ -1,10 +1,10 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import type { Capture } from "../../../core/livekit/types/livekit.types";
-import { aUser, installFakeApi } from "../../../test/fakeApi";
-import { aTrack } from "../../../test/factories/track.factory";
+import type { Capture } from "../../../services/livekit-service/types/livekit.types";
+import { aUser, installFakeApi } from "../../../testing/fakeApi";
+import { aTrack } from "../../../testing/factories/track.factory";
 import { RoomStore } from "../state/room.store";
-import { SettingsQueue } from "../state/settings-queue.service";
+import { SettingsQueue } from "../../../services/settings-queue-service/settings-queue.service";
 import { useMyStreams } from "./use-my-streams.hook";
 
 const PREFS = { screen: { quality: "1080p", mode: "smooth" }, camera: { quality: "720p", mode: "smooth" } } as const;

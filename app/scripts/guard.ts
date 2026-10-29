@@ -175,6 +175,19 @@ async function collect(): Promise<Finding[]> {
   return [...fromTsc(tsc), ...fromOxlint(lint), ...fromJscpd(copies), ...fromKnip(unused), ...code];
 }
 
+/**
+ * main's list with each file under its name today: git's renames (`git diff -M --name-status`
+ * lines, paths from the repo's root) applied, so a moved file keeps its entries.
+ */
+export function renamed(main: Known[], nameStatus: string): Known[] {
+  const to = new Map<string, string>();
+  for (const line of nameStatus.split("\n")) {
+    const [status, from, now] = line.split("\t");
+    if (status?.startsWith("R") && from && now) to.set(from.replace(/^app\//, ""), now.replace(/^app\//, ""));
+  }
+  return main.map((k) => ({ ...k, file: to.get(k.file) ?? k.file }));
+}
+
 async function mainRecord(): Promise<Known[] | undefined> {
   try {
     await run("git", ["rev-parse", "--verify", "origin/main"]);
@@ -194,7 +207,8 @@ async function mainRecord(): Promise<Known[] | undefined> {
     }
     throw e;
   }
-  return JSON.parse(text) as Known[];
+  const moves = (await run("git", ["diff", "-M", "--name-status", "origin/main", "--", "src"])).stdout;
+  return renamed(JSON.parse(text) as Known[], moves);
 }
 
 /** main's code check, to tell which of today's rules are new; undefined when it can't be read. */

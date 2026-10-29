@@ -88,8 +88,8 @@ export function checkStyles(src: string) {
     file,
     root: postcss.parse(readFileSync(join(src, file), "utf8"), { from: file }),
   }));
-  const global = parsed.find((p) => p.file.endsWith("styles/global.css"));
-  if (!global) return ["src/styles/global.css not found"];
+  const global = parsed.find((p) => p.file.endsWith("shared/styles/global.css"));
+  if (!global) return ["src/shared/styles/global.css not found"];
   return [
     ...contrastProblems(tokensOf(global.root)),
     ...parsed.flatMap(({ root, file }) => mixedVendorRules(root, file)),

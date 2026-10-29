@@ -1,4 +1,4 @@
-import type { StreamMode } from "@core/api/types/api.types";
+import type { StreamMode } from "@services/xove-api-service/types/api.types";
 
 /** The modes, plain, as the settings show them, with what each keeps in their tooltips. */
 export const MODE_OPTIONS: { value: StreamMode; label: string; title: string }[] = [

@@ -1,8 +1,8 @@
 import { act, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { aUser, installFakeApi } from "../test/fakeApi";
-import { renderApp } from "../test/renderApp";
+import { aUser, installFakeApi } from "../testing/fakeApi";
+import { renderApp } from "../testing/renderApp";
 
 describe("request access page", () => {
   it("sends the request with the message and shows the waiting state", async () => {

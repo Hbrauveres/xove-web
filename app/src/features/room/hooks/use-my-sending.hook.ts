@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { StreamKind } from "@core/api/types/api.types";
+import type { StreamKind } from "@services/xove-api-service/types/api.types";
 import { useCameraPreview } from "./use-camera-preview.hook";
 import { useCameraSwitch } from "./use-camera-switch.hook";
 import { useChangeWindow } from "./use-change-window.hook";

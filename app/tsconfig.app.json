@@ -27,10 +27,11 @@
 
     /* The structure's short names (docs/architecture.md) */
     "paths": {
-      "@app/*": ["./src/app/*"],
-      "@core/*": ["./src/core/*"],
+      "@routes/*": ["./src/routes/*"],
+      "@features/*": ["./src/features/*"],
       "@shared/*": ["./src/shared/*"],
-      "@features/*": ["./src/features/*"]
+      "@services/*": ["./src/services/*"],
+      "@testing/*": ["./src/testing/*"]
     }
   },
   "include": ["src"]

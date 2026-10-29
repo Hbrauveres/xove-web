@@ -16,10 +16,10 @@ export const RULES = {
   domQuery:
     "querySelector/closest/getElementById in a component: finding other parts through the page (pass a ref or context)",
   crossCss: "CSS module imported from another folder",
-  livekit: "livekit-client imported outside core/",
+  livekit: "livekit-client imported outside services/",
   history: "spec, issue or decision number in a comment (history belongs in commits and docs)",
   mutable: "module-level mutable export (export let/var)",
-  structure: "outside the folder structure (app/ core/ shared/ features/ test/)",
+  structure: "outside the folder structure (routes/ features/ shared/ services/ testing/)",
   naming: "file name not kebab-case with a type suffix",
   realWait: "test waits in real time: a sleep or a waitFor/findBy timeout over 1 s (use fake timers and a fixed clock)",
   sharedData: "test data or let shared at file level (build it per test with a factory)",
@@ -38,20 +38,8 @@ const isCode = (f: string) => /\.tsx?$/.test(f) && !isTest(f) && !f.endsWith(".d
 const noLogic = (f: string) =>
   /(\.types|\.enum|\.constants)\.ts$/.test(f) ||
   /(^|\/)index\.ts$/.test(f) ||
-  /(^|\/)test\//.test(f) ||
+  /(^|\/)testing\//.test(f) ||
   /(^|\/)(vite-env|setup)\.ts$/.test(f);
-/**
- * The module a file of the new structure belongs to (`app`, `shared`, `core/<name>`,
- * `features/<name>`), and its path inside it; null for the old folders and `test/`.
- */
-function moduleOf(r: string): { root: string; rest: string } | null {
-  const parts = r.split("/");
-  const depth =
-    parts[0] === "core" || parts[0] === "features" ? 2 : parts[0] === "app" || parts[0] === "shared" ? 1 : 0;
-  if (!depth || parts.length <= depth) return null;
-  return { root: parts.slice(0, depth).join("/"), rest: parts.slice(depth).join("/") };
-}
-
 /** A file's test sits beside it, named the same. */
 const testStemOf = (r: string) => r.replace(/\.tsx?$/, "");
 const codeStemOf = (r: string) => r.replace(/\.(spec|test)\.tsx?$/, "");
@@ -85,16 +73,13 @@ const INLINE_TYPE = /:\s*\{\s*\w+\??\s*:|:\s*\{\s*$/;
 const INLINE_TYPE_ANYWHERE = /(<|\bas\s+)\{\s*\w+\??\s*:|^\s*\}\s*:\s*\{/;
 
 /**
- * A part outside its kind's folder (or in one that isn't right under its module), or working code
- * inside a parts folder.
+ * A part outside its kind's folder, or working code inside a parts folder.
  */
 function misplacedPart(r: string): boolean {
   const part = partOf(r);
   const folder = r.split("/").at(-2) ?? "";
   if (!part) return /\.tsx?$/.test(r) && Object.values(PART_FOLDERS).includes(folder);
-  if (folder !== PART_FOLDERS[part]) return true;
-  const m = moduleOf(r);
-  return m !== null && !m.rest.startsWith(`${folder}/`);
+  return folder !== PART_FOLDERS[part];
 }
 
 const isTokenFile = (f: string) => /(^|\/)(tokens|global)\.css$/.test(f);
@@ -107,7 +92,7 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
   const add = (rule: Rule, line = 0, t = "") => out.push({ rule, file: r, line, text: t.trim().slice(0, 90) });
   const top = r.split("/")[0];
   if (!/\.(tsx?|css)$/.test(r)) return out;
-  if (r.includes("/") && !["app", "core", "shared", "features", "test"].includes(top)) add("structure");
+  if (r.includes("/") && !["routes", "features", "shared", "services", "testing"].includes(top)) add("structure");
   if (!/(^|\/)index\.ts$/.test(r) && !/^(main|vite-env\.d)\.tsx?$/.test(r) && !NAME.test(basename(r))) add("naming");
   const lines = text.split("\n");
   if (isCode(r) && lines.length > 300) add("size", 0, `${lines.length} lines`);
@@ -118,11 +103,11 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
     if (!test && !spec) add("noTest");
     else if (!test) add("testName");
   }
-  if (isTest(r) && !/(^|\/)test\//.test(r)) {
+  if (isTest(r) && !/(^|\/)testing\//.test(r)) {
     if (![".ts", ".tsx"].some((e) => exists(codeStemOf(r) + e))) add("orphanTest");
   }
   if (!isTest(r) && misplacedPart(r)) add("partPlace");
-  const working = isWorking(r) && top !== "test";
+  const working = isWorking(r) && top !== "testing";
   const jobOnly = /\.(component|page|hook)\.tsx?$/.test(r);
   lines.forEach((l, i) => {
     const n = i + 1,
@@ -137,7 +122,7 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
     if (isCode(r) && r.endsWith(".tsx") && /\.(querySelector|querySelectorAll|getElementById|closest)\(/.test(l))
       add("domQuery", n, l);
     if (isCode(r) && /from\s+["']\.\.\/[^"']*\.module\.css["']/.test(l)) add("crossCss", n, l);
-    if (isCode(r) && /from\s+["']livekit-client["']/.test(l) && top !== "core") add("livekit", n, l);
+    if (isCode(r) && /from\s+["']livekit-client["']/.test(l) && top !== "services") add("livekit", n, l);
     if (comment && /\b[Ss]pecs? 0\d{3}|\bADR-\d{4}|#\d{2,4}\b|[Dd]esign decision \d+|\bround \d+/.test(l))
       add("history", n, l);
     if (isCode(r) && /^export (let|var) /.test(l)) add("mutable", n, l);

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { RoomModel } from "../types/room.types";
-import type { VideoRoomState } from "@core/livekit/types/livekit.types";
+import type { VideoRoomState } from "@services/livekit-service/types/livekit.types";
 import { activityOf } from "../state/room.selectors";
 import type { ActivityEvent } from "../types/room-view.types";
 

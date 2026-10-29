@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
-import type { StreamKind, StreamSettings } from "@core/api/types/api.types";
-import { loadAllStreamSettings, saveStreamSettings } from "@core/preferences/preferences.service";
-import { SettingsQueue } from "../state/settings-queue.service";
+import type { StreamKind, StreamSettings } from "@services/xove-api-service/types/api.types";
+import { loadAllStreamSettings, saveStreamSettings } from "@services/preferences-service/preferences.service";
+import { SettingsQueue } from "../../../services/settings-queue-service/settings-queue.service";
 import type { StreamSettingsInputs } from "../types/stream-settings.types";
 
 /**

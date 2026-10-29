@@ -1,7 +1,7 @@
 import { renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { START } from "../../../core/livekit/constants/livekit.constants";
-import { aLiveStream, anAnswer } from "../../../test/factories/streams-state.factory";
+import { START } from "../../../services/livekit-service/constants/livekit.constants";
+import { aLiveStream, anAnswer } from "../../../testing/factories/streams-state.factory";
 import { initialRoom, withMe, withStreams, withVideo } from "../state/room.model";
 import { useRoomView } from "./use-room-view.hook";
 

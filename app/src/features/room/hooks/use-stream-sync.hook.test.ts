@@ -1,10 +1,10 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { aUser, installFakeApi, MY_USER_ID } from "../../../test/fakeApi";
-import { aLiveStream, anAnswer } from "../../../test/factories/streams-state.factory";
+import { aUser, installFakeApi, MY_USER_ID } from "../../../testing/fakeApi";
+import { aLiveStream, anAnswer } from "../../../testing/factories/streams-state.factory";
 import { withMe, withMyStep, withStreams } from "../state/room.model";
 import { RoomStore } from "../state/room.store";
-import { SettingsQueue } from "../state/settings-queue.service";
+import { SettingsQueue } from "../../../services/settings-queue-service/settings-queue.service";
 import { useStreamSync } from "./use-stream-sync.hook";
 
 const PREFS = { screen: { quality: "1080p", mode: "smooth" }, camera: { quality: "720p", mode: "smooth" } } as const;

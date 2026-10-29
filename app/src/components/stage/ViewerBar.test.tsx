@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { onFakeClock } from "../../test/factories/clock.factory";
+import { onFakeClock } from "../../testing/factories/clock.factory";
 import { TIP_REST_MS } from "../ui/Tooltip";
 import { ViewerBar, type Sound } from "./ViewerBar";
 

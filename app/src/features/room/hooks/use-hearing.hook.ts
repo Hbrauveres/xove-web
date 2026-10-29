@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { loadHearing, saveHearing } from "@core/preferences/preferences.service";
-import type { HearingPrefs } from "@core/preferences/types/preferences.types";
+import { loadHearing, saveHearing } from "@services/preferences-service/preferences.service";
+import type { HearingPrefs } from "@services/preferences-service/types/preferences.types";
 import type { PersonId } from "../types/room.types";
 import type { Choices, Heard } from "../types/hearing.types";
 import type { Sharer } from "../types/room-view.types";

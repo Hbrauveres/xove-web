@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
-import type { StreamKind, StreamSettings } from "@core/api/types/api.types";
-import type { Capture } from "@core/livekit/types/livekit.types";
+import type { StreamKind, StreamSettings } from "@services/xove-api-service/types/api.types";
+import type { Capture } from "@services/livekit-service/types/livekit.types";
 import { BUSY_STEPS, KINDS } from "../constants/room.constants";
 import { useMySteps } from "./use-my-steps.hook";
 import type { MyStreamsInputs } from "../types/my-streams.types";

@@ -61,11 +61,17 @@ describe("the code check", () => {
 
   it("names a utils, constants, types or enum file outside its kind's folder", () => {
     const test = (f: string) => [f.replace(/\.ts$/, ".test.ts")];
-    expect(rules("core/livekit/capture.util.ts", "x\n", test("core/livekit/capture.util.ts"))).toEqual(["partPlace"]);
+    expect(
+      rules("services/livekit-service/capture.util.ts", "x\n", test("services/livekit-service/capture.util.ts")),
+    ).toEqual(["partPlace"]);
     expect(rules("features/room/state/room.types.ts")).toEqual(["partPlace"]);
-    expect(rules("core/api/api.constants.ts")).toEqual(["partPlace"]);
+    expect(rules("services/xove-api-service/api.constants.ts")).toEqual(["partPlace"]);
     expect(rules("shared/hooks/mode.enum.ts")).toEqual(["partPlace"]);
-    expect(rules("core/livekit/utils/capture.util.ts", "x\n", ["core/livekit/utils/capture.util.test.ts"])).toEqual([]);
+    expect(
+      rules("services/livekit-service/utils/capture.util.ts", "x\n", [
+        "services/livekit-service/utils/capture.util.test.ts",
+      ]),
+    ).toEqual([]);
     expect(rules("features/room/types/room.types.ts")).toEqual([]);
   });
 
@@ -114,18 +120,19 @@ describe("the code check", () => {
     expect(hook("export function useX(v: unknown) {\n  return v as { a: number };\n}\n")).toEqual(["partInCode"]);
     expect(hook("class Helper {}\n")).toEqual(["partInCode"]);
     expect(
-      rules("core/api/api.service.ts", "class Api {}\nexport const api = new Api();\n", [
-        "core/api/api.service.test.ts",
+      rules("services/xove-api-service/api.service.ts", "class Api {}\nexport const api = new Api();\n", [
+        "services/xove-api-service/api.service.test.ts",
       ]),
     ).toEqual([]);
     expect(hook("let count = 0;\n")).toEqual(["partInCode"]);
     expect(hook("const AuthContext = createContext(null);\n")).toEqual([]);
   });
 
-  it("names a working file in a parts folder, and a parts folder that isn't right under its module", () => {
-    expect(rules("core/api/utils/x.service.ts", "x\n", ["core/api/utils/x.service.test.ts"])).toEqual(["partPlace"]);
-    expect(rules("features/room/hooks/utils/a.util.ts", "x\n", ["features/room/hooks/utils/a.util.test.ts"])).toEqual([
-      "partPlace",
-    ]);
+  it("names a working file in a parts folder", () => {
+    expect(
+      rules("services/xove-api-service/utils/x.service.ts", "x\n", [
+        "services/xove-api-service/utils/x.service.test.ts",
+      ]),
+    ).toEqual(["partPlace"]);
   });
 });

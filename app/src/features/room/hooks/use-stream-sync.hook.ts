@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import type { StreamKind } from "@core/api/types/api.types";
+import type { StreamKind } from "@services/xove-api-service/types/api.types";
 import { KINDS } from "../constants/room.constants";
 import { useMySteps } from "./use-my-steps.hook";
 import type { StreamSyncInputs } from "../types/stream-sync.types";

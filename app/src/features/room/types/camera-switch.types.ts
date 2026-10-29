@@ -1,4 +1,4 @@
-import type { StreamSettings } from "@core/api/types/api.types";
+import type { StreamSettings } from "@services/xove-api-service/types/api.types";
 
 export type CameraSwitchInputs = {
   /** Switches the camera: live while it's sent, remembered for next time either way. */

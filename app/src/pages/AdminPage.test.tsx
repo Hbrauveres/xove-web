@@ -1,9 +1,9 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import type { AccessRequestView, MemberView } from "@core/api/types/api.types";
-import { aUser, installFakeApi } from "../test/fakeApi";
-import { renderApp } from "../test/renderApp";
+import type { AccessRequestView, MemberView } from "@services/xove-api-service/types/api.types";
+import { aUser, installFakeApi } from "../testing/fakeApi";
+import { renderApp } from "../testing/renderApp";
 
 const admin = () => aUser({ email: "admin@example.com", name: "Admin", status: "MEMBER", admin: true });
 

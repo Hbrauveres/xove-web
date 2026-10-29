@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { aSharer } from "../../../test/factories/sharer.factory";
+import { aSharer } from "../../../testing/factories/sharer.factory";
 import type { Sharer } from "../types/room-view.types";
 import { useStage } from "./use-stage.hook";
 

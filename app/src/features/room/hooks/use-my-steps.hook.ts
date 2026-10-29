@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react";
-import type { StreamKind } from "@core/api/types/api.types";
+import type { StreamKind } from "@services/xove-api-service/types/api.types";
 import { BUSY_STEPS } from "../constants/room.constants";
 import { withMyStep } from "../state/room.model";
 import type { RoomStore } from "../state/room.store";

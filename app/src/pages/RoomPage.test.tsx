@@ -2,16 +2,16 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
 import { describe, expect, it, vi } from "vitest";
-import { screenCaptureRequest } from "@core/devices/utils/screen-picker.util";
+import { screenCaptureRequest } from "@services/media-devices-service/utils/screen-picker.util";
 import {
   cameraCaptureOptions,
   cameraPublishOptions,
   capOf,
   screenPublishOptions,
-} from "@core/livekit/utils/publish-options.util";
-import { AuthProvider } from "@core/auth/auth.store";
-import { aUser, installFakeApi, MY_USER_ID, myLiveStream, someoneSharing } from "../test/fakeApi";
-import { FakeLocalScreenTrack, lastRoom } from "../test/fakeLiveKit";
+} from "@services/livekit-service/utils/publish-options.util";
+import { AuthProvider } from "@shared/stores/auth-store/auth.store";
+import { aUser, installFakeApi, MY_USER_ID, myLiveStream, someoneSharing } from "../testing/fakeApi";
+import { FakeLocalScreenTrack, lastRoom } from "../testing/fakeLiveKit";
 import { RoomPage } from "./RoomPage";
 
 const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });

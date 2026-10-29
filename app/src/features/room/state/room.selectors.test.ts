@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { START } from "../../../core/livekit/constants/livekit.constants";
-import type { VideoRoomState } from "../../../core/livekit/types/livekit.types";
-import { aLiveStream, anAnswer } from "../../../test/factories/streams-state.factory";
-import { aTrack, someMedia } from "../../../test/factories/remote-media.factory";
+import { START } from "../../../services/livekit-service/constants/livekit.constants";
+import type { VideoRoomState } from "../../../services/livekit-service/types/livekit.types";
+import { aLiveStream, anAnswer } from "../../../testing/factories/streams-state.factory";
+import { aTrack, someMedia } from "../../../testing/factories/remote-media.factory";
 import { hueOf } from "../utils/person-colour.util";
 import { initialRoom, withMe, withStreams, withVideo } from "./room.model";
 import { activityOf, knownPeopleOf, myLiveOf, peopleOf, sharersOf, watchingOf } from "./room.selectors";

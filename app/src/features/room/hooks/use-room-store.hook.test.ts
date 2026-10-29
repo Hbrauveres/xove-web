@@ -1,8 +1,8 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { StrictMode } from "react";
 import { describe, expect, it } from "vitest";
-import { aUser, installFakeApi, MY_USER_ID } from "../../../test/fakeApi";
-import { lastRoom, rooms } from "../../../test/fakeLiveKit";
+import { aUser, installFakeApi, MY_USER_ID } from "../../../testing/fakeApi";
+import { lastRoom, rooms } from "../../../testing/fakeLiveKit";
 import { useRoomStore } from "./use-room-store.hook";
 
 const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });

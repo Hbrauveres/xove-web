@@ -1,6 +1,6 @@
 import { userIdOf } from "./person-id.util";
 import type { PersonId, Watch } from "../types/room.types";
-import type { WatchingTarget } from "@core/api/types/api.types";
+import type { WatchingTarget } from "@services/xove-api-service/types/api.types";
 import type { OnStage } from "../types/watch-report.types";
 
 /** A report as a key, to compare: "42|screen", or "none"; undefined while there's nothing to say. */

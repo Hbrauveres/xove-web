@@ -1,4 +1,4 @@
-import type { StreamsState } from "@core/api/types/api.types";
+import type { StreamsState } from "@services/xove-api-service/types/api.types";
 import type { PersonId, Watch } from "../types/room.types";
 import { personIdOf } from "./person-id.util";
 import { keepSame } from "./keep-same.util";

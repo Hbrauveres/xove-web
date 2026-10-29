@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { aUser, installFakeApi } from "../../../test/fakeApi";
-import { lastRoom } from "../../../test/fakeLiveKit";
+import { aUser, installFakeApi } from "../../../testing/fakeApi";
+import { lastRoom } from "../../../testing/fakeLiveKit";
 import { useMySending } from "./use-my-sending.hook";
 import { useRoomStore } from "./use-room-store.hook";
 
