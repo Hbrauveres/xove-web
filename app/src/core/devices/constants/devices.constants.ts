@@ -1,9 +1,12 @@
 import { STREAM_QUALITIES } from "@core/preferences/constants/preferences.constants";
-import type { GateState, StreamPreset } from "../types/devices.types";
+import type { DeviceList, GateState, StreamPreset } from "../types/devices.types";
 
 /** What a refused camera says: like any app, it asks once, and says how to allow it later. */
 export const CAMERA_BLOCKED =
   "Your browser didn't allow the camera. Allow it for Xovê in your browser's or phone's settings, then try again.";
+
+/** What the room says when no camera is there. */
+export const CAMERA_MISSING = "No camera found.";
 
 /**
  * From best to lowest. The ceilings are well above what a screen usually needs, so
@@ -42,3 +45,6 @@ export const LEVEL_STRETCH = 6;
 export const ANALYSER_SIZE = 512;
 
 export const GATE_CLOSED: GateState = { open: false, heldFor: 0 };
+
+/** The device lists before the browser has listed any. */
+export const NO_DEVICES: DeviceList = { cameras: [], mics: [] };

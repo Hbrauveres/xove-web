@@ -3,7 +3,6 @@ import { screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { aUser, installFakeApi } from "../../test/fakeApi";
 import { renderApp } from "../../test/renderApp";
-import { GOOGLE_LOGIN_URL } from "@core/api/constants/api.constants";
 
 describe("who sees which screen", () => {
   it("shows the Google sign-in to signed-out visitors", async () => {
@@ -11,7 +10,7 @@ describe("who sees which screen", () => {
     renderApp("/");
 
     const link = await screen.findByRole("link", { name: /continue with google/i });
-    expect(link).toHaveAttribute("href", GOOGLE_LOGIN_URL);
+    expect(link).toHaveAttribute("href", "/api/oauth2/authorization/google");
   });
 
   it("explains a failed sign-in", async () => {

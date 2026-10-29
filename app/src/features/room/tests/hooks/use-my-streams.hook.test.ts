@@ -4,7 +4,7 @@ import type { Capture } from "@core/livekit/types/livekit.types";
 import { aUser, installFakeApi } from "../../../../test/fakeApi";
 import { aTrack } from "../../../../test/factories/track.factory";
 import { RoomStore } from "../../state/room.store";
-import { SettingsQueue } from "../../utils/settings-queue.util";
+import { SettingsQueue } from "../../state/settings-queue.service";
 import { useMyStreams } from "../../hooks/use-my-streams.hook";
 
 const PREFS = { screen: { quality: "1080p", mode: "smooth" }, camera: { quality: "720p", mode: "smooth" } } as const;

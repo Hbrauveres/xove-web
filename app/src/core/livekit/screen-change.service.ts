@@ -1,7 +1,8 @@
 import { Track, type Room } from "livekit-client";
 import type { StreamMode, StreamSettings } from "@core/api/types/api.types";
-import { pickScreen } from "@core/devices/utils/screen-picker.util";
-import { isDomError, screenSound } from "./utils/capture.util";
+import { pickScreen } from "@core/devices/screen-picker.service";
+import { isDomError } from "./utils/capture.util";
+import { screenSound } from "./screen-sound.service";
 import { COULDNT } from "./constants/livekit.constants";
 import type { RoomContext, ScreenChange } from "./types/livekit.types";
 import { contentHintOf, screenPublishOptions } from "./utils/publish-options.util";

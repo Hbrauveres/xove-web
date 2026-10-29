@@ -1,8 +1,9 @@
 import { LocalVideoTrack, Track, type Room } from "livekit-client";
 import type { StreamKind, StreamMode } from "@core/api/types/api.types";
-import { CAMERA_BLOCKED } from "@core/devices/constants/devices.constants";
-import { pickScreen } from "@core/devices/utils/screen-picker.util";
-import { isDomError, screenSound, startFailed } from "./utils/capture.util";
+import { CAMERA_BLOCKED, CAMERA_MISSING } from "@core/devices/constants/devices.constants";
+import { pickScreen } from "@core/devices/screen-picker.service";
+import { isDomError, startFailed } from "./utils/capture.util";
+import { screenSound } from "./screen-sound.service";
 import { NOT_CONNECTED } from "./constants/livekit.constants";
 import type { Capture, CapturedTracks, RoomContext } from "./types/livekit.types";
 import { cameraCaptureOptions, contentHintOf } from "./utils/publish-options.util";
@@ -70,7 +71,7 @@ export class CaptureService {
     if (isDomError(e, "NotAllowedError")) {
       if (kind === "camera") this.ctx.update({ error: CAMERA_BLOCKED, cameraProblem: "blocked" });
     } else if (kind === "camera" && isDomError(e, "NotFoundError")) {
-      this.ctx.update({ error: "No camera found.", cameraProblem: "missing" });
+      this.ctx.update({ error: CAMERA_MISSING, cameraProblem: "missing" });
     } else {
       this.ctx.update({ error: startFailed(kind) });
     }

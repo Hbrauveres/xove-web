@@ -114,7 +114,11 @@ export function compare(now: Map<string, Known>, known: Known[], main?: Known[],
 }
 
 /** A finding of a code rule that main's code check doesn't define yet: the PR adding it records it once. */
-const isFresh = (f: { tool: string; rule: string }, fresh: Set<string>) => f.tool === "code" && fresh.has(f.rule);
+const isFresh = (f: { tool: string; rule: string; file: string }, fresh: Set<string>) =>
+  f.tool === "code" && fresh.has(f.rule) && !NEW_STRUCTURE.test(f.file);
+
+/** The folders already in the new structure: a new rule's findings are never recorded there. */
+const NEW_STRUCTURE = /^src\/(app|core|shared|features)\//;
 
 /** The code rules `rules` names that main's check (its source) doesn't define; none without main's. */
 export function newRulesOf(mainCheck: string | undefined, rules: string[]): Set<string> {

@@ -9,7 +9,7 @@ import { CaptureService } from "./capture.service";
 import { CANT_CONNECT, CONNECTION, PRESENCE_KEPT, START } from "./constants/livekit.constants";
 import type { Capture, CapturedTracks, LocalMedia, RoomContext, VideoRoomState } from "./types/livekit.types";
 import { readLocalMedia } from "./utils/local-media.util";
-import { RemoteMediaReader } from "./utils/remote-media.util";
+import { RemoteMediaReader } from "./remote-media.adapter";
 import { withLocal, withOthers, withPerson, withSpeakers } from "./utils/room-state.util";
 import { ScreenChangeService } from "./screen-change.service";
 import { SendService } from "./send.service";

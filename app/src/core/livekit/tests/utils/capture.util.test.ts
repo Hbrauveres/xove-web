@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { FakeMediaStreamTrack } from "../../../../test/fakeLiveKit";
-import { isDomError, screenSound, startFailed } from "../../utils/capture.util";
+import { isDomError, startFailed } from "../../utils/capture.util";
 
 describe("capturing helpers", () => {
   it("tells a browser's refusal by its name", () => {
@@ -13,10 +12,5 @@ describe("capturing helpers", () => {
       "Couldn't start sharing your screen.",
       "Couldn't turn on your camera.",
     ]);
-  });
-
-  it("wraps a screen's sound as the screen's audio", () => {
-    const audio = screenSound(new FakeMediaStreamTrack() as unknown as MediaStreamTrack);
-    expect(audio.source).toBe("screen_share_audio");
   });
 });

@@ -77,18 +77,37 @@ const isWorking = (r: string) => isCode(r) && !noLogic(r) && !partOf(r);
 
 /** A type, named constant or helper declared at the top of a working file; a hook's, component's or page's only job is its export. */
 const PART_DECLARATION = [
-  /^(export )?(declare )?(type|interface|enum) \w/,
-  /^(export )?const [A-Z][A-Z0-9_]+\b\s*(:[^=]+)?=/,
+  /^\s*(export )?(declare )?(type|interface|enum) \w+\b(<[^>]*>)?\s*(=|\{|extends)/,
+  /^(export )?const [A-Z][A-Z0-9_]*\b(?![a-z])\s*(:[^=]+)?=/,
   /^(async )?function\*? \w/,
-  /^const [a-z]\w*\s*(:[^=]+)?=\s*(async\s*)?(function\b|\([^)]*\)\s*(:[^=]+)?=>|\w+\s*=>)/,
+  /^(let|var) \w/,
+  /^const [a-z]\w*\s*(:[^=]+)?=\s*(async\s*)?(function\b|\(|<|\w+\s*=>)/,
+  /^const \w+\s*(:[^=]+)?=\s*(["'`[{\d-]|true\b|false\b|null\b)/,
 ];
+/** A class kept to itself: a helper, except in a service, an adapter or a store, where the class is the job. */
+const HELPER_CLASS = /^class \w/;
 const HELPER_EXPORT = [
   /^export (async )?function (?!use[A-Z])[a-z]/,
   /^export const (?!use[A-Z])[a-z]\w*\s*=\s*(async\s*)?\(/,
 ];
 /** A function's or method's signature with an object type written in it. */
 const SIGNATURE = /function |=>|^\s+(?:(?:private|public|protected|async|static|readonly)\s+)*#?\w+\s*[(<]/;
-const INLINE_TYPE = /(:\s*|<)\{\s*\w+\??\s*:/;
+const INLINE_TYPE = /:\s*\{\s*\w+\??\s*:|:\s*\{\s*$/;
+/** An object type written anywhere: a type argument, a cast, or props typed after a destructured parameter. */
+const INLINE_TYPE_ANYWHERE = /(<|\bas\s+)\{\s*\w+\??\s*:|^\s*\}\s*:\s*\{/;
+
+/**
+ * A part outside its kind's folder (or in one that isn't right under its module), or working code
+ * inside a parts folder.
+ */
+function misplacedPart(r: string): boolean {
+  const part = partOf(r);
+  const folder = r.split("/").at(-2) ?? "";
+  if (!part) return /\.tsx?$/.test(r) && Object.values(PART_FOLDERS).includes(folder);
+  if (folder !== PART_FOLDERS[part]) return true;
+  const m = moduleOf(r);
+  return m !== null && !m.rest.startsWith(`${folder}/`);
+}
 
 const isTokenFile = (f: string) => /(^|\/)(tokens|global)\.css$/.test(f);
 const NAME =
@@ -113,11 +132,11 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
   }
   if (isTest(r) && !/(^|\/)test\//.test(r)) {
     const m = moduleOf(r);
-    if (m && !m.rest.startsWith("tests/")) add("testPlace");
+    if (m && !(m.rest.startsWith("tests/") && !m.rest.slice("tests/".length).split("/").includes("tests")))
+      add("testPlace");
     if (![".ts", ".tsx"].some((e) => exists(codeStemOf(r) + e))) add("orphanTest");
   }
-  const part = partOf(r);
-  if (part && !isTest(r) && r.split("/").at(-2) !== PART_FOLDERS[part]) add("partPlace");
+  if (!isTest(r) && misplacedPart(r)) add("partPlace");
   const working = isWorking(r) && top !== "test";
   const jobOnly = /\.(component|page|hook)\.tsx?$/.test(r);
   lines.forEach((l, i) => {
@@ -141,7 +160,9 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
       working &&
       (PART_DECLARATION.some((re) => re.test(l)) ||
         (jobOnly && HELPER_EXPORT.some((re) => re.test(l))) ||
-        (SIGNATURE.test(l) && INLINE_TYPE.test(l)))
+        (!/\.(service|adapter|store)\.ts$/.test(r) && HELPER_CLASS.test(l)) ||
+        (SIGNATURE.test(l) && INLINE_TYPE.test(l)) ||
+        INLINE_TYPE_ANYWHERE.test(l))
     )
       add("partInCode", n, l);
     if (

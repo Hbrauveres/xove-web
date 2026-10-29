@@ -1,7 +1,7 @@
 import type { RemoteParticipant } from "livekit-client";
 import { describe, expect, it } from "vitest";
-import { Room } from "../../../../test/fakeLiveKit";
-import { RemoteMediaReader } from "../../utils/remote-media.util";
+import { Room } from "../../../test/fakeLiveKit";
+import { RemoteMediaReader } from "../remote-media.adapter";
 
 /** Someone in a fresh fake room, as LiveKit hands them over. */
 function someone() {

@@ -1,5 +1,5 @@
-import { levelOf } from "./audio-level.util";
-import { ANALYSER_SIZE, METER_MS } from "../constants/devices.constants";
+import { levelOf } from "./utils/audio-level.util";
+import { ANALYSER_SIZE, METER_MS } from "./constants/devices.constants";
 
 /**
  * Reads a mic's level, 0 to 1, on the noise gate's own scale (so the sensitivity line means

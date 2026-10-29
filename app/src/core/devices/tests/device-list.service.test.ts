@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { listDevices, watchDevices } from "../../utils/device-list.util";
+import { listDevices, watchDevices } from "../device-list.service";
 
 const device = (kind: MediaDeviceKind, deviceId: string, label = "") => ({ kind, deviceId, label }) as MediaDeviceInfo;
 

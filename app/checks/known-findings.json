@@ -2215,7 +2215,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/brand/parts.tsx",
-    "count": 2,
+    "count": 3,
     "owner": "#186 shared: the basic blocks"
   },
   {
@@ -2271,7 +2271,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/room/PeopleButton.tsx",
-    "count": 1,
+    "count": 2,
     "owner": "#189 room: header"
   },
   {
@@ -2327,28 +2327,28 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/stage/Facecam.tsx",
-    "count": 5,
+    "count": 6,
     "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/stage/HearToggles.tsx",
-    "count": 6,
+    "count": 7,
     "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/stage/icons.tsx",
-    "count": 1,
+    "count": 2,
     "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/stage/MicTest.tsx",
-    "count": 1,
+    "count": 2,
     "owner": "#193 settings"
   },
   {
@@ -2369,7 +2369,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/stage/PreviewTray.tsx",
-    "count": 8,
+    "count": 10,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -2383,7 +2383,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 14,
+    "count": 15,
     "owner": "#193 settings"
   },
   {
@@ -2446,7 +2446,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/stage/ViewerBar.tsx",
-    "count": 7,
+    "count": 9,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -2474,7 +2474,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/ui/Dropdown.tsx",
-    "count": 3,
+    "count": 4,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
@@ -2530,7 +2530,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/ui/toast.ts",
-    "count": 3,
+    "count": 6,
     "owner": "#186 shared: the basic blocks"
   },
   {
@@ -2544,7 +2544,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/ui/Tooltip.tsx",
-    "count": 8,
+    "count": 10,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
@@ -2565,7 +2565,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/hooks/useVideoShape.ts",
-    "count": 2,
+    "count": 3,
     "owner": "#186 shared: the basic blocks"
   },
   {
@@ -2600,7 +2600,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/pages/RoomPage.tsx",
-    "count": 2,
+    "count": 3,
     "owner": "#192 room: queue, footer, page"
   },
   {

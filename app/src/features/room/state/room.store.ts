@@ -8,7 +8,8 @@ import type {
 } from "@core/api/types/api.types";
 import { LiveKitAdapter } from "@core/livekit/livekit.adapter";
 import { CANT_CONNECT } from "@core/livekit/constants/livekit.constants";
-import { CALL_FAILED, POLL_MS, SEAT_FAILED } from "../constants/room.constants";
+import { DEFAULT_ERROR_MESSAGE } from "@core/api/constants/api.constants";
+import { POLL_MS, SEAT_FAILED } from "../constants/room.constants";
 import { initialRoom, withMe, withSeat, withStreams, withStreamsCall, withVideo } from "./room.model";
 import type { CallOutcome, RoomModel, RoomSnapshot, SeatState } from "../types/room.types";
 import { waitingFor } from "../utils/seat.util";
@@ -74,7 +75,7 @@ export class RoomStore {
     try {
       this.setSeat(await api.room.accept());
     } catch (e) {
-      this.setSeat(this.model.seat, e instanceof ApiError ? e.message : CALL_FAILED);
+      this.setSeat(this.model.seat, e instanceof ApiError ? e.message : DEFAULT_ERROR_MESSAGE);
       void this.askSeat();
     }
   };
@@ -211,7 +212,7 @@ export class RoomStore {
       this.setModel(withStreamsCall(this.model, false, null));
       return "ok";
     } catch (e) {
-      this.setModel(withStreamsCall(this.model, false, e instanceof ApiError ? e.message : CALL_FAILED));
+      this.setModel(withStreamsCall(this.model, false, e instanceof ApiError ? e.message : DEFAULT_ERROR_MESSAGE));
       void this.refreshStreams();
       return e instanceof ApiError && e.reason === "full" ? "full" : "failed";
     }

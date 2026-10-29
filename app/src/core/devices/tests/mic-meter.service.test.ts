@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { stubAudio } from "../../../../test/factories/audio.factory";
-import { startMicMeter } from "../../utils/mic-meter.util";
+import { stubAudio } from "../../../test/factories/audio.factory";
+import { startMicMeter } from "../mic-meter.service";
 
 describe("the mic's meter", () => {
   it("reads the level about 20 times a second, on the gate's scale, until stopped", () => {

@@ -4,7 +4,7 @@ import { aUser, installFakeApi, MY_USER_ID } from "../../../../test/fakeApi";
 import { aLiveStream, anAnswer } from "../../../../test/factories/streams-state.factory";
 import { withMe, withMyStep, withStreams } from "../../state/room.model";
 import { RoomStore } from "../../state/room.store";
-import { SettingsQueue } from "../../utils/settings-queue.util";
+import { SettingsQueue } from "../../state/settings-queue.service";
 import { useStreamSync } from "../../hooks/use-stream-sync.hook";
 
 const PREFS = { screen: { quality: "1080p", mode: "smooth" }, camera: { quality: "720p", mode: "smooth" } } as const;

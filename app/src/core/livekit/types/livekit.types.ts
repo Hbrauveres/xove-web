@@ -115,3 +115,6 @@ export type WithMediaTrack = { mediaStreamTrack: MediaStreamTrack };
 
 /** A new window or screen picked while sharing: whether it came with its sound. */
 export type ScreenChange = { hasSound: boolean };
+
+/** A video read from someone's publication: the track, and what the stage is given for it. */
+export type ReadVideo = { track: MediaTrack; video: RemoteVideo };

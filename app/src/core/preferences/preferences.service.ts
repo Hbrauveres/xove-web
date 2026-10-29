@@ -14,7 +14,7 @@ import {
 } from "./constants/preferences.constants";
 import type { AmbilightPrefs, HearingOf, HearingPrefs, VoiceFlag, VoicePrefs } from "./types/preferences.types";
 import { between0and1, isMode, processingFrom } from "./utils/preference-values.util";
-import { readStored, writeStored } from "./utils/storage.util";
+import { readStored, writeStored } from "./storage.service";
 
 /** Choices each browser remembers for next time. Anything odd in the storage gives the default. */
 

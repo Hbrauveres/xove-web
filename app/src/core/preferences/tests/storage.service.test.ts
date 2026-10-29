@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { readStored, writeStored } from "../../utils/storage.util";
+import { readStored, writeStored } from "../storage.service";
 
 describe("the browser's storage", () => {
   it("keeps a value and gives it back", () => {

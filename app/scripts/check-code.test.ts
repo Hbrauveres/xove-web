@@ -136,4 +136,38 @@ describe("the code check", () => {
       ]),
     ).toEqual([]);
   });
+
+  it("names the longer ways to write a part inside working code", () => {
+    const hook = (text: string) =>
+      rules("features/room/hooks/use-x.hook.ts", text, ["features/room/tests/hooks/use-x.hook.test.ts"]);
+    expect(hook("export function useX({\n  a,\n}: {\n  a: number;\n}) {\n  return a;\n}\n")).toEqual(["partInCode"]);
+    expect(hook("export function useX(p: {\n  a: number;\n}) {\n  return p.a;\n}\n")).toEqual(["partInCode"]);
+    expect(hook("const helper = (\n  a: number,\n) => a;\n")).toEqual(["partInCode"]);
+    expect(hook("const pick = <T,>(a: T) => a;\n")).toEqual(["partInCode"]);
+    expect(hook("const defaults = { a: 1 };\n")).toEqual(["partInCode"]);
+    expect(hook("const A = 1;\n")).toEqual(["partInCode"]);
+    expect(hook("export function useX() {\n  type Local = number;\n  return 1;\n}\n")).toEqual(["partInCode"]);
+    expect(hook("export function useX() {\n  return useState<{ a: number }>({ a: 1 });\n}\n")).toEqual(["partInCode"]);
+    expect(hook("export function useX(v: unknown) {\n  return v as { a: number };\n}\n")).toEqual(["partInCode"]);
+    expect(hook("class Helper {}\n")).toEqual(["partInCode"]);
+    expect(
+      rules("core/api/api.service.ts", "class Api {}\nexport const api = new Api();\n", [
+        "core/api/tests/api.service.test.ts",
+      ]),
+    ).toEqual([]);
+    expect(hook("let count = 0;\n")).toEqual(["partInCode"]);
+    expect(hook("const AuthContext = createContext(null);\n")).toEqual([]);
+  });
+
+  it("names a working file in a parts folder, and a parts folder that isn't right under its module", () => {
+    expect(rules("core/api/utils/x.service.ts", "x\n", ["core/api/tests/utils/x.service.test.ts"])).toEqual([
+      "partPlace",
+    ]);
+    expect(
+      rules("features/room/hooks/utils/a.util.ts", "x\n", ["features/room/tests/hooks/utils/a.util.test.ts"]),
+    ).toEqual(["partPlace"]);
+    expect(rules("shared/tests/tests/utils/a.util.test.ts", "", ["shared/tests/utils/a.util.ts"])).toContain(
+      "testPlace",
+    );
+  });
 });

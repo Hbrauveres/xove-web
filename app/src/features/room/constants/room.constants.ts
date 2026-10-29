@@ -29,6 +29,3 @@ export const NEXT_STEPS: Record<MyStreamStep, readonly MyStreamStep[]> = {
 
 /** What the room says when it can't reach the API for a seat; it keeps trying. */
 export const SEAT_FAILED = "Couldn't reach the room. Trying again…";
-
-/** What the room says when a start, change or stop failed for no reason it knows. */
-export const CALL_FAILED = "Something went wrong. Try again.";

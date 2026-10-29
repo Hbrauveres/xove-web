@@ -3,7 +3,7 @@ import type { LiveKitAdapter } from "@core/livekit/livekit.adapter";
 import type { Capture } from "@core/livekit/types/livekit.types";
 import type { RoomStore } from "../state/room.store";
 import type { MyStreamStep } from "./room.types";
-import type { SettingsQueue } from "../utils/settings-queue.util";
+import type { SettingsQueue } from "../state/settings-queue.service";
 
 export type MyStreamsInputs = {
   store: RoomStore;

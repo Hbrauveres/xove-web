@@ -102,6 +102,18 @@ describe("the guard: the list that only shrinks", () => {
     ]);
   });
 
+  it("never lets a new rule's findings into the new structure", () => {
+    const fresh = new Set(["partPlace"]);
+    const now = countAll([finding("src/features/room/a.ts", "partPlace", "code"), finding("src/b.ts")]);
+    expect(recordOf(now, [known("src/b.ts", 1)], [], fresh).refused).toEqual([
+      "src/features/room/a.ts: code partPlace",
+    ]);
+    const listed = [known("src/features/room/a.ts", 1, "partPlace", "code")];
+    expect(
+      compare(countAll([finding("src/features/room/a.ts", "partPlace", "code")]), listed, [], fresh).errors,
+    ).toEqual([expect.stringMatching(/^grown: src\/features\/room\/a\.ts/)]);
+  });
+
   it("knows a rule is new when main's code check doesn't define it, and treats none as new without main's", () => {
     const mainCheck = 'export const RULES = {\n  size: "over 300 lines",\n  noTest: "no test",\n} as const;\n';
     expect([...newRulesOf(mainCheck, ["size", "noTest", "partPlace"])]).toEqual(["partPlace"]);
