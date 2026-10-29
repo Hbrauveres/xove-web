@@ -19,15 +19,17 @@ Everything is in `app/src`:
 
 | Folder | Owns |
 | --- | --- |
-| `api/` | The HTTP client (`client.ts`) and the API's types (`types.ts`): one function per endpoint, the CSRF header, errors as `ApiError` |
-| `auth/` | Who is signed in (`AuthProvider`, which asks `GET /api/me` once and on demand) and the route guards (`guards.tsx`) |
 | `pages/` | One component per route: `HomePage`, `RequestAccessPage`, `RoomPage`, `AdminPage` |
 | `hooks/` | The room's state and the browser's: the seat and the queue (`useRoomSeat`), the streams (`useStreams`), the LiveKit connection (`useLiveKitRoom`), both put together for the room (`useRoomSession`), who's on the stage (`useStagePick`), the video's shape (`useVideoShape`), the round buttons' row holding the clicked button still (`usePinnedRow`), and a small one (`useFullscreenElement`); the stream's elapsed time is `shared/hooks/use-elapsed.hook.ts`, and whether the keyboard was used last `shared/hooks/use-keyboard-last.hook.ts` |
-| `media/` | How screens and cameras are sent (`shareSettings.ts`), the ambilight's drawing (`ambilight.ts`), who is big by default (`stagePick.ts`), choices kept in the browser (`preferences.ts`) |
+| `media/` | How screens and cameras are sent (`shareSettings.ts`), the ambilight's drawing (`ambilight.ts`), who is big by default (`stagePick.ts`) |
 | `components/stage/` | The player and what's on it: the stage, the ambilight, the controls by owner: my own stream's round buttons (`PlayerButtons`; their icons in `icons.tsx`, the drop-ups on live ones) and, over someone else's stream, `ViewerBar` (what I hear at the left, each sound its own button and slider; my mic or Go live at the right); the voice I hear (`VoiceAudio`), each person's switches and volumes held by the stage for the visit (the rule in `media/hearing.ts`), and the previews' buttons (`HearToggles`, in a small preview's row, `PreviewTray`, which floats on its own layer over the page and follows its preview, opened through `usePreviewTray`; a preview's stack and its swap's moment in `stack.ts`); the settings panel (`SettingsPanel`, its Voice tab's mic level in `MicTest`), the facecam, the previews, the empty stage (`EmptyStage`, a TV on standby: the ways to start, alone in their row; with nobody live the settings are `ViewerBar`'s settings-only form, in the corner; its corners' glow in `CornerGlow`; its TV static in `StaticNoise`, a small canvas the page draws 20 times a second, its grain and bands scaled to the stage; the static's light round the stage in `StaticGlow`; both read their bands from `staticBands.ts`, so they roll together, and its `tv` flag lets the TV's turn-on play only the first time the stage stands by in a visit), the info row. The stage is two layers: its box holds every control (the round buttons, the sounds, Go live, the fullscreen button) and takes the pointer; a view inside it holds the picture and its ambilight in the picture's shape |
 | `components/room/` | The room around the stage: header, footer, people, activity (pill, list), account menu, the waiting screen and the seat offer |
 | `components/ui/` | Shared controls: `Button`, `Range`, `Dropdown`, `Segmented`, `Picker` (a list that floats over its panel, masking what's behind it in the nearest `[data-list-host]`; it opens on request too), `DropUp` (its gestures can redirect to an open panel), `Tooltip` (the app's only tooltip, on its own layer, describing its control for screen readers), `floating.ts` (one tooltip or drop-up showing at a time, what floats inside another belonging to it), the cue (`cue.module.css`), `Avatar`, `PersonAvatar`, `FullPageMessage`, `Toast` (a short message any component shows with `showToast`) |
 | `components/brand/`, `brand/` | The mark: its geometry and animation timeline (`brand/`), and the components that draw it (`XoveMark`, `XoveIcon`) |
+| `app/` | The shell: the root (`root.component.tsx`), the routes (`app.component.tsx`) and who may open each (`route-guard/`, its rule in `utils/route-access.util.ts`) |
+| `core/api/` | The HTTP client (`api-client.service.ts`), its constants and the API's types (`api.types.ts`): one function per endpoint, the CSRF header, errors as `ApiError` |
+| `core/auth/` | Who is signed in (`AuthProvider` in `auth.store.tsx`, which asks `GET /api/me` once and on demand; `useAuth`) |
+| `core/preferences/` | Choices each browser keeps (`preferences.service.ts`): how I send a screen or a camera, the camera and mic picked, my voice's processing, how I hear a stream or a voice, the stage light; blocked storage gives the defaults (`storage.util.ts`) |
 | `core/devices/` | Which device it is: a phone or a tablet (`is-handheld.util.ts`) |
 | `features/phone-notice/` | What phones and tablets see instead of the app ([below](#phones-and-tablets)) |
 | `styles/` | The design tokens (`global.css`) and the tests that check them |
@@ -39,17 +41,21 @@ At the top, `main.tsx` starts the app, `app/root.component.tsx` chooses between 
 flowchart TD
   P[pages] --> C[components]
   P --> H[hooks]
-  P --> A[api]
+  P --> A[core/api]
   C --> H
   H --> A
   H --> LK[livekit-client]
   H --> M[media]
   C --> M
-  P --> AU[auth]
+  H --> PR[core/preferences]
+  C --> PR
+  P --> AU[core/auth]
   AU --> A
   R[app/root.component.tsx] --> D[core/devices]
   R --> N[features/phone-notice]
   R --> APP[app/app.component.tsx]
+  APP --> G[app/route-guard]
+  G --> AU
   APP --> P
 ```
 
@@ -57,7 +63,7 @@ Pages put the room together; components draw it; hooks own the state and talk to
 
 ## Routes
 
-`app/app.component.tsx` maps each route to a page behind a guard:
+`app/app.component.tsx` maps each route to a page behind `RouteGuard` and its rule:
 
 | Route | Guard | Shows |
 | --- | --- | --- |
@@ -67,7 +73,7 @@ Pages put the room together; components draw it; hooks own the state and talk to
 | `/admin` | admins | Pending requests (approve, decline) and members (remove) |
 | anything else | | Back to `/` |
 
-Sign-in is the API's: "Continue with Google" goes to `/api/oauth2/authorization/google`, and the API sends you back to `/room` or `/request-access`. The guards only read `AuthProvider`'s answer, so a member page never renders for someone who isn't one.
+Sign-in is the API's: "Continue with Google" goes to `/api/oauth2/authorization/google`, and the API sends you back to `/room` or `/request-access`. The guard only reads `AuthProvider`'s answer (`routeAccess` decides: show, wait, or send elsewhere), so a member page never renders for someone who isn't one.
 
 ### Phones and tablets
 
@@ -103,7 +109,7 @@ sequenceDiagram
 | The live streams, their settings, who watches what | `useStreams` | The API; polled every 2 s by every open room |
 | Who is connected, their tracks, my own captures | `useLiveKitRoom` | LiveKit |
 | Who's on my stage | `useStagePick` | This page only |
-| How I send (quality, mode, the camera picked, my mic and its processing and line), the volumes I start from (a screen's sound, a voice), the ambilight's settings | `media/preferences.ts` | The browser (`localStorage`, `xove.*`) |
+| How I send (quality, mode, the camera picked, my mic and its processing and line), the volumes I start from (a screen's sound, a voice), the ambilight's settings | `core/preferences/preferences.service.ts` | The browser (`localStorage`, `xove.*`) |
 | Each person's mutes and volumes, for this visit | `Stage` | This page only |
 | Whether the settings are open, the setting a live button asked for, and the camera's preview | `RoomPage`, `useRoomSession` | This page only |
 
@@ -119,12 +125,13 @@ sequenceDiagram
 
 ## Talking to the API
 
-`api/client.ts` is the only place that calls `fetch`:
+`core/api/api-client.service.ts` is the only place that calls `fetch`:
 
 - **Same origin, under `/api`.** In development, Vite forwards `/api` to a local API ([Getting started](getting-started.md)); on the servers, a reverse proxy does.
 - **The session cookie** goes with every request (`credentials: "same-origin"`); the app never sees it.
 - **CSRF:** every `POST`, `PUT` and `DELETE` copies the readable `XSRF-TOKEN` cookie into an `X-XSRF-TOKEN` header. Another site can't read the cookie, so it can't forge the header.
 - **Errors** come as RFC 9457 problem details; the client throws an `ApiError` with the status and the API's `detail` as its message (or a plain fallback per status), and the pages show that message.
+- **An empty answer** (an endpoint that returns nothing) reads as `null`.
 - **A 401 from `GET /api/me`** means signed out: `AuthProvider` shows the home page.
 
 Every endpoint, who may call it and what it answers, is in [`xove-api`'s API page](https://github.com/Hbrauveres/xove-api/blob/main/docs/api.md). A web release that needs a new API field ships only once that API version is live, and the app still works without the field.
