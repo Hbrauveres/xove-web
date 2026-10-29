@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ApiError, api } from "../api/client";
+import { ApiError, api } from "@core/api/api-client.service";
 import type { SharingConnection, StreamKind, StreamSettings, StreamsState } from "@core/api/api.types";
 
 /** How often every open room asks the API which streams are live. */

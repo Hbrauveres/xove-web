@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router";
-import { useAuth } from "../auth/AuthProvider";
+import { useAuth } from "@core/auth/use-auth.hook";
 import { AccountButton } from "../components/room/AccountButton";
 import { ActivityPill } from "../components/room/ActivityPill";
 import { PeopleButton } from "../components/room/PeopleButton";
 import { RoomFooter } from "../components/room/RoomFooter";
 import { RoomHeader } from "../components/room/RoomHeader";
 import { WaitingRoom } from "../components/room/WaitingRoom";
-import { loadAmbilight } from "../media/preferences";
+import { loadAmbilight } from "@core/preferences/preferences.service";
 import { canShareScreen } from "../media/shareSettings";
 import { SettingsPanel } from "../components/stage/SettingsPanel";
 import { Stage } from "../components/stage/Stage";
@@ -16,7 +16,8 @@ import { useFullscreenElement, useFullscreenHost } from "../hooks/useFullscreenE
 import { SEAT_POLL_MS, useRoomSeat, type RoomSeat } from "../hooks/useRoomSeat";
 import { useRoomSession } from "../hooks/useRoomSession";
 import { useStagePick } from "../hooks/useStagePick";
-import type { Friend, StreamKind } from "../types";
+import type { StreamKind } from "@core/api/api.types";
+import type { Friend } from "../types";
 import styles from "./RoomPage.module.css";
 
 type Props = {

@@ -1,4 +1,6 @@
 import type { TrackPublishOptions, VideoCaptureOptions, VideoPreset } from "livekit-client";
+import type { StreamMode, StreamQuality } from "@core/api/api.types";
+import { STREAM_QUALITIES } from "@core/preferences/preferences.constants";
 
 /**
  * How a shared screen is captured and sent (spec 0086). LiveKit's defaults are
@@ -6,13 +8,8 @@ import type { TrackPublishOptions, VideoCaptureOptions, VideoPreset } from "live
  * sound); these are tuned for games and videos, within a bandwidth budget.
  */
 
-export type ShareQuality = "1080p" | "720p" | "480p";
-
-/** Smooth keeps motion fluid when the connection is tight; Sharp keeps text readable. */
-export type ShareMode = "smooth" | "sharp";
-
 export type SharePreset = {
-  id: ShareQuality;
+  id: StreamQuality;
   width: number;
   height: number;
   fps: number;
@@ -35,21 +32,19 @@ export const SHARE_QUALITIES: readonly SharePreset[] = [
   { id: "480p", width: 854, height: 480, fps: 30, maxBitrate: 2_000_000 },
 ];
 
-export const DEFAULT_SHARE: { quality: ShareQuality; mode: ShareMode } = { quality: "1080p", mode: "smooth" };
-
-const presetOf = (quality: ShareQuality) => SHARE_QUALITIES.find((q) => q.id === quality) ?? SHARE_QUALITIES[0];
+const presetOf = (quality: StreamQuality) => SHARE_QUALITIES.find((q) => q.id === quality) ?? SHARE_QUALITIES[0];
 
 /** The modes, plain, as the settings show them, with what each keeps in their tooltips (spec 0107). */
-export const MODE_OPTIONS: { value: ShareMode; label: string; title: string }[] = [
+export const MODE_OPTIONS: { value: StreamMode; label: string; title: string }[] = [
   { value: "smooth", label: "Smooth", title: "Keeps motion fluid when the connection is tight: games, videos" },
   { value: "sharp", label: "Sharp", title: "Keeps detail sharp when the connection is tight: text, code" },
 ];
 
 /** The content hint for a mode: how the browser encodes the screen. */
-export const contentHintOf = (mode: ShareMode) => (mode === "smooth" ? "motion" : "detail");
+export const contentHintOf = (mode: StreamMode) => (mode === "smooth" ? "motion" : "detail");
 
 /** How the browser trades quality when the connection is tight, for a mode. */
-export const degradationOf = (mode: ShareMode): RTCDegradationPreference =>
+export const degradationOf = (mode: StreamMode): RTCDegradationPreference =>
   mode === "smooth" ? "maintain-framerate" : "maintain-resolution";
 
 /**
@@ -113,7 +108,7 @@ export function screenCaptureRequest(safari = isSafari()): ScreenCaptureRequest 
  * per quality (1080p, 720p, 480p). The sharer's chosen quality is a cap on top of
  * that (`capOf`), so it can go up or down while sharing, with no reload.
  */
-export function screenPublishOptions(mode: ShareMode): TrackPublishOptions {
+export function screenPublishOptions(mode: StreamMode): TrackPublishOptions {
   const [preset, ...lower] = SHARE_QUALITIES;
   return {
     videoCodec: "vp9",
@@ -143,9 +138,9 @@ export function screenPublishOptions(mode: ShareMode): TrackPublishOptions {
  * A camera (spec 0060) goes up to 720p: no need for more, and it spares the upload of
  * someone sending a screen and a camera together.
  */
-export const CAMERA_QUALITIES: readonly SharePreset[] = SHARE_QUALITIES.filter((q) => q.height <= 720);
-
-export const DEFAULT_CAMERA: { quality: ShareQuality; mode: ShareMode } = { quality: "720p", mode: "smooth" };
+export const CAMERA_QUALITIES: readonly SharePreset[] = SHARE_QUALITIES.filter((q) =>
+  STREAM_QUALITIES.camera.includes(q.id),
+);
 
 /**
  * What the browser asks the camera for: 720p at 30 fps (the mode's content hint is set
@@ -161,7 +156,7 @@ export function cameraCaptureOptions(deviceId?: string | null): VideoCaptureOpti
 }
 
 /** How a camera is sent: like a screen (VP9, VP8 fallback), with a 720p and a 480p layer. */
-export function cameraPublishOptions(mode: ShareMode): TrackPublishOptions {
+export function cameraPublishOptions(mode: StreamMode): TrackPublishOptions {
   const [preset, ...lower] = CAMERA_QUALITIES;
   return {
     videoCodec: "vp9",
@@ -186,12 +181,12 @@ export function cameraPublishOptions(mode: ShareMode): TrackPublishOptions {
  * A screen has three layers (480p, 720p, 1080p), a camera two (480p, 720p): the
  * numbers line up for both.
  */
-export function capOf(quality: ShareQuality): 0 | 1 | 2 {
+export function capOf(quality: StreamQuality): 0 | 1 | 2 {
   return quality === "1080p" ? 2 : quality === "720p" ? 1 : 0;
 }
 
 /** The size a quality asks the server for. */
-export const sizeOf = (quality: ShareQuality) => {
+export const sizeOf = (quality: StreamQuality) => {
   const preset = presetOf(quality);
   return { width: preset.width, height: preset.height };
 };
@@ -202,7 +197,7 @@ export const sizeOf = (quality: ShareQuality) => {
  * isn't 16:9 comes out a bit shorter than its preset, so it counts as the preset
  * just above.
  */
-export function viewerQualities(height: number, layers?: number, cap?: ShareQuality): ShareQuality[] {
+export function viewerQualities(height: number, layers?: number, cap?: StreamQuality): StreamQuality[] {
   const ascending = [...SHARE_QUALITIES].reverse();
   const top = ascending.find((q) => height <= q.height) ?? SHARE_QUALITIES[0];
   // The sharer's chosen quality caps what anyone can pick (it can change while sharing).

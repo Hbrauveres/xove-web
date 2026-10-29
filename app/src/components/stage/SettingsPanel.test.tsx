@@ -3,16 +3,15 @@ import userEvent from "@testing-library/user-event";
 import { StrictMode } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { moveFakeTimers } from "../../test/factories/clock.factory";
-import type { SharePrefs } from "../../media/preferences";
-import type { StreamKind } from "../../types";
+import type { StreamKind, StreamSettings } from "@core/api/api.types";
 import { CAMERA_BLOCKED } from "../../hooks/useLiveKitRoom";
 import { NO_SOUND } from "./PlayerButtons";
 import { CUE_MS, SettingsPanel } from "./SettingsPanel";
 import { NO_SCREEN } from "./PlayerButtons";
-import { DEFAULT_VOICE } from "../../media/preferences";
+import { DEFAULT_VOICE } from "@core/preferences/preferences.constants";
 import { currentToast } from "../ui/toast";
 
-const PREFS: Record<StreamKind, SharePrefs> = {
+const PREFS: Record<StreamKind, StreamSettings> = {
   screen: { quality: "1080p", mode: "smooth" },
   camera: { quality: "720p", mode: "smooth" },
 };

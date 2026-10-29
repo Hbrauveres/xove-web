@@ -65,13 +65,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/api/client.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/brand/mark.ts",
     "count": 3,
     "owner": "#186 shared: the basic blocks"
@@ -681,13 +674,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/media/preferences.ts",
-    "count": 8,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/media/shareSettings.test.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -787,7 +773,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/types.ts",
-    "count": 4,
+    "count": 3,
     "owner": "#182 the room's model and store"
   },
   {
@@ -1108,34 +1094,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/api/client.test.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/api/client.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/auth/AuthProvider.tsx",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/auth/guards.tsx",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/brand/brand.test.ts",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
@@ -2151,20 +2109,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/media/preferences.test.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/preferences.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/media/shareSettings.test.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -2315,20 +2259,6 @@
     "file": "src/types.ts",
     "count": 1,
     "owner": "#182 the room's model and store"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/auth/AuthProvider.tsx",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/auth/guards.tsx",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
   },
   {
     "tool": "code",
@@ -2585,34 +2515,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/api/client.test.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/api/client.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/auth/AuthProvider.tsx",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/auth/guards.tsx",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/brand/brand.test.ts",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
@@ -3628,20 +3530,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/media/preferences.test.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/preferences.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/media/shareSettings.test.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
@@ -3799,13 +3687,6 @@
     "file": "src/components/stage/StaticNoise.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
-    "file": "src/api/client.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
   },
   {
     "tool": "lint",
@@ -4104,13 +3985,6 @@
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
-    "file": "src/auth/AuthProvider.tsx",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
     "file": "src/brand/iconSvg.ts",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
@@ -4329,7 +4203,7 @@
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
     "file": "src/media/shareSettings.ts",
-    "count": 3,
+    "count": 2,
     "owner": "#183 the room's hooks"
   },
   {
@@ -4566,13 +4440,6 @@
   {
     "tool": "lint",
     "rule": "react(only-export-components)",
-    "file": "src/auth/AuthProvider.tsx",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "lint",
-    "rule": "react(only-export-components)",
     "file": "src/components/stage/NowWatching.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
@@ -4590,13 +4457,6 @@
     "file": "src/components/ui/Tooltip.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "react(set-state-in-effect)",
-    "file": "src/auth/AuthProvider.tsx",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
   },
   {
     "tool": "lint",
@@ -4632,13 +4492,6 @@
     "file": "src/pages/AdminPage.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/api/client.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
   },
   {
     "tool": "lint",
@@ -4762,13 +4615,6 @@
   {
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
-    "file": "src/media/preferences.ts",
-    "count": 6,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
     "file": "src/media/shareSettings.ts",
     "count": 3,
     "owner": "#183 the room's hooks"
@@ -4856,13 +4702,6 @@
     "file": "src/media/ambilight.test.ts",
     "count": 1,
     "owner": "#183 the room's hooks"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2345",
-    "file": "src/api/client.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
   },
   {
     "tool": "tsc",
@@ -5098,13 +4937,6 @@
   {
     "tool": "tsc",
     "rule": "TS2412",
-    "file": "src/api/client.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2412",
     "file": "src/media/noiseGate.ts",
     "count": 3,
     "owner": "#181 core: LiveKit adapter, devices"
@@ -5245,13 +5077,6 @@
   {
     "tool": "unused",
     "rule": "exports",
-    "file": "src/api/client.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
     "file": "src/components/stage/Ambilight.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
@@ -5325,13 +5150,6 @@
     "file": "src/media/noiseGate.ts",
     "count": 2,
     "owner": "#181 core: LiveKit adapter, devices"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
-    "file": "src/media/preferences.ts",
-    "count": 1,
-    "owner": "#180 core: API client, auth, preferences"
   },
   {
     "tool": "unused",

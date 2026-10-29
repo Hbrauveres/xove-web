@@ -9,7 +9,7 @@ import {
   screenCaptureRequest,
   screenPublishOptions,
 } from "../media/shareSettings";
-import { AuthProvider } from "../auth/AuthProvider";
+import { AuthProvider } from "@core/auth/auth.store";
 import { aUser, installFakeApi, MY_USER_ID, myLiveStream, someoneSharing } from "../test/fakeApi";
 import { FakeLocalScreenTrack, lastRoom } from "../test/fakeLiveKit";
 import { RoomPage } from "./RoomPage";

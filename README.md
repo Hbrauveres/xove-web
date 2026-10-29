@@ -36,14 +36,12 @@ Every screen is in the [design sheet](docs/design.md).
 
 ```
 app/src/
-  api/          the HTTP client and the API's types
-  auth/         who is signed in, and the route guards
-  app/          the root (the app, or the phone notice) and the routes
+  app/          the root (the app, or the phone notice), the routes and who may open them
   pages/        one per route (home, request access, room, admin)
   hooks/        the room's state: the seat, the streams, the LiveKit connection
   media/        sending screens and cameras, the ambilight, who is big
   components/   stage, room, share, ui, brand: each with its CSS module
-  core/         what the app is built on: the API's types, the device
+  core/         what the app is built on: the API client, who is signed in, the browser's saved choices, the device
   features/     whole features in their own folders (the phone notice)
   shared/       small pieces any feature uses
   styles/       the design tokens and their tests

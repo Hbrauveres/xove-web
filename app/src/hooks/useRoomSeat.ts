@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ApiError, api } from "../api/client";
+import { ApiError, api } from "@core/api/api-client.service";
 import type { SeatStatus } from "@core/api/api.types";
 
 /** How often the waiting screen asks for its place. The poll also tells the API it's still there. */

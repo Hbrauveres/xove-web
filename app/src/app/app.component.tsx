@@ -1,9 +1,9 @@
 import { Navigate, Route, Routes } from "react-router";
-import { RedirectIfSignedIn, RequireAdmin, RequireMember, RequireNonMember } from "../auth/guards";
 import { AdminPage } from "../pages/AdminPage";
 import { HomePage } from "../pages/HomePage";
 import { RequestAccessPage } from "../pages/RequestAccessPage";
 import { RoomPage } from "../pages/RoomPage";
+import { RouteGuard } from "./route-guard";
 
 /**
  *  /                 home + Google sign-in (signed-in people are sent on)
@@ -17,33 +17,33 @@ export function App() {
       <Route
         path="/"
         element={
-          <RedirectIfSignedIn>
+          <RouteGuard rule="signed-out">
             <HomePage />
-          </RedirectIfSignedIn>
+          </RouteGuard>
         }
       />
       <Route
         path="/request-access"
         element={
-          <RequireNonMember>
+          <RouteGuard rule="non-member">
             <RequestAccessPage />
-          </RequireNonMember>
+          </RouteGuard>
         }
       />
       <Route
         path="/room"
         element={
-          <RequireMember>
+          <RouteGuard rule="member">
             <RoomPage />
-          </RequireMember>
+          </RouteGuard>
         }
       />
       <Route
         path="/admin"
         element={
-          <RequireAdmin>
+          <RouteGuard rule="admin">
             <AdminPage />
-          </RequireAdmin>
+          </RouteGuard>
         }
       />
       <Route path="*" element={<Navigate to="/" replace />} />

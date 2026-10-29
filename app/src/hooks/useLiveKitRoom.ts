@@ -11,10 +11,11 @@ import {
   type RemoteParticipant,
   type RemoteTrackPublication,
 } from "livekit-client";
-import { ApiError, api } from "../api/client";
-import type { SharingConnection } from "@core/api/api.types";
+import { ApiError, api } from "@core/api/api-client.service";
+import type { SharingConnection, StreamKind, StreamMode, StreamSettings } from "@core/api/api.types";
 import { NoiseGate } from "../media/noiseGate";
-import { loadCameraDevice, saveCameraDevice, type SharePrefs, type VoicePrefs } from "../media/preferences";
+import { loadCameraDevice, saveCameraDevice } from "@core/preferences/preferences.service";
+import type { VoicePrefs } from "@core/preferences/preferences.types";
 import {
   SHARE_QUALITIES,
   cameraCaptureOptions,
@@ -25,9 +26,8 @@ import {
   newCaptureController,
   screenCaptureRequest,
   screenPublishOptions,
-  type ShareMode,
 } from "../media/shareSettings";
-import type { ActivityEvent, CameraDevice, ConnectionState, MediaTrack, RemoteVideo, StreamKind } from "../types";
+import type { ActivityEvent, CameraDevice, ConnectionState, MediaTrack, RemoteVideo } from "../types";
 
 /**
  * Opens the browser's picker, and asks it to stay on Xovê once something is picked
@@ -53,7 +53,7 @@ async function pickScreen(): Promise<MediaStream> {
  * The browser's screen picker, asked directly because livekit-client drops `windowAudio`
  * (spec 0095). Wraps the capture as LiveKit's own `createScreenTracks` does.
  */
-async function captureScreen(room: Room, mode: ShareMode): Promise<(LocalVideoTrack | LocalAudioTrack)[]> {
+async function captureScreen(room: Room, mode: StreamMode): Promise<(LocalVideoTrack | LocalAudioTrack)[]> {
   const stream = await pickScreen();
   const [screen] = stream.getVideoTracks();
   const [sound] = stream.getAudioTracks();
@@ -142,16 +142,16 @@ export type LiveKitRoom = {
    * Opens the browser's screen picker, or asks for the camera, and captures it without
    * sending it. Resolves null if the person closed the picker or refused.
    */
-  capture: (kind: StreamKind, mode: ShareMode) => Promise<Capture | null>;
+  capture: (kind: StreamKind, mode: StreamMode) => Promise<Capture | null>;
   /**
    * Sends a capture with these settings. Resolves with the connection and track that
    * are now sending, or null if it couldn't (and then nothing is sent).
    */
-  publishCapture: (capture: Capture, prefs: SharePrefs) => Promise<StartedStream | null>;
+  publishCapture: (capture: Capture, prefs: StreamSettings) => Promise<StartedStream | null>;
   /** Stops a capture that was never sent. */
   discardCapture: (capture: Capture) => void;
   /** Changes the quality cap and the mode of a stream being sent, live: no reload for viewers. */
-  applySettings: (kind: StreamKind, prefs: SharePrefs) => Promise<void>;
+  applySettings: (kind: StreamKind, prefs: StreamSettings) => Promise<void>;
   stop: (kind: StreamKind) => Promise<void>;
   /** Where a stream I'm sending comes from, to register it again with the API. */
   connectionOf: (kind: StreamKind) => SharingConnection | null;
@@ -162,12 +162,12 @@ export type LiveKitRoom = {
    * same stream for the API and viewers (spec 0098). Resolves whether it has sound, or
    * null when nothing changed (the picker closed, or it failed).
    */
-  changeScreen: (prefs: SharePrefs) => Promise<{ hasSound: boolean } | null>;
+  changeScreen: (prefs: StreamSettings) => Promise<{ hasSound: boolean } | null>;
   /** This browser's cameras, and the one being sent (or picked for next time). */
   cameras: CameraDevice[];
   cameraId: string | null;
   /** Switches the camera being sent to another one, without stopping it; remembered for next time. */
-  pickCamera: (deviceId: string, prefs: SharePrefs) => Promise<void>;
+  pickCamera: (deviceId: string, prefs: StreamSettings) => Promise<void>;
   /** My voice is being sent (spec 0123). */
   voice: boolean;
   /** My voice as it's sent (through the gate), for Test in the settings. */
@@ -392,7 +392,7 @@ export function useLiveKitRoom(): LiveKitRoom {
     };
   }, []);
 
-  const capture = useCallback(async (kind: StreamKind, mode: ShareMode): Promise<Capture | null> => {
+  const capture = useCallback(async (kind: StreamKind, mode: StreamMode): Promise<Capture | null> => {
     const room = roomRef.current;
     if (!room) {
       setError("Not connected to the video server yet.");
@@ -465,7 +465,7 @@ export function useLiveKitRoom(): LiveKitRoom {
   );
 
   const publishCapture = useCallback(
-    async (capture: Capture, prefs: SharePrefs): Promise<StartedStream | null> => {
+    async (capture: Capture, prefs: StreamSettings): Promise<StartedStream | null> => {
       const room = roomRef.current;
       const failed =
         capture.kind === "screen" ? "Couldn't start sharing your screen." : "Couldn't turn on your camera.";
@@ -500,7 +500,7 @@ export function useLiveKitRoom(): LiveKitRoom {
     [sync, stop, discardCapture, watchCameraEnd],
   );
 
-  const applySettings = useCallback(async (kind: StreamKind, prefs: SharePrefs) => {
+  const applySettings = useCallback(async (kind: StreamKind, prefs: StreamSettings) => {
     const track = roomRef.current?.localParticipant.getTrackPublication(SOURCE[kind])?.track as
       LocalVideoTrack | undefined;
     if (!track) return;
@@ -514,7 +514,7 @@ export function useLiveKitRoom(): LiveKitRoom {
   }, []);
 
   const changeScreen = useCallback(
-    async (prefs: SharePrefs): Promise<{ hasSound: boolean } | null> => {
+    async (prefs: StreamSettings): Promise<{ hasSound: boolean } | null> => {
       const room = roomRef.current;
       const me = room?.localParticipant;
       const video = me?.getTrackPublication(Track.Source.ScreenShare)?.track as LocalVideoTrack | undefined;
@@ -664,7 +664,7 @@ export function useLiveKitRoom(): LiveKitRoom {
   const sentCamera = (local.camera as LocalVideoTrack | undefined)?.mediaStreamTrack?.getSettings?.().deviceId;
 
   const pickCamera = useCallback(
-    async (deviceId: string, prefs: SharePrefs) => {
+    async (deviceId: string, prefs: StreamSettings) => {
       const track = roomRef.current?.localParticipant.getTrackPublication(Track.Source.Camera)?.track as
         LocalVideoTrack | undefined;
       if (!track) {

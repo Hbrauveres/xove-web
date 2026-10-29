@@ -30,10 +30,16 @@ export type MemberView = {
 /** What a stream shows. Never a microphone. */
 export type StreamKind = "screen" | "camera";
 
-/** What a stream is sent with; its person can change it while sharing. A camera goes up to 720p. */
+/** The resolution a stream is sent at. A camera goes up to 720p. */
+export type StreamQuality = "1080p" | "720p" | "480p";
+
+/** Smooth keeps motion fluid when the connection is tight; Sharp keeps detail readable. */
+export type StreamMode = "smooth" | "sharp";
+
+/** What a stream is sent with; its person can change it while sharing. */
 export type StreamSettings = {
-  quality: "1080p" | "720p" | "480p";
-  mode: "smooth" | "sharp";
+  quality: StreamQuality;
+  mode: StreamMode;
 };
 
 /** One live stream, as GET /api/streams lists it. `since` is an ISO timestamp. */

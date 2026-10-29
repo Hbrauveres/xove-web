@@ -1,3 +1,5 @@
+import type { StreamKind, StreamSettings } from "@core/api/api.types";
+
 /** A person in the room. `id` is their LiveKit identity ("user-42"), or "me". */
 export type Friend = {
   id: string;
@@ -12,9 +14,6 @@ export type MediaTrack = {
   attach(element: HTMLMediaElement): HTMLMediaElement;
   detach(element: HTMLMediaElement): HTMLMediaElement;
 };
-
-/** What a stream shows: a shared screen or a camera (spec 0060). */
-export type StreamKind = "screen" | "camera";
 
 /** One of this browser's cameras, to pick in the camera's menu (spec 0098). */
 export type CameraDevice = { deviceId: string; label: string };
@@ -38,7 +37,7 @@ export type LiveFeed = {
   kind: StreamKind;
   startedAt: number;
   /** The quality and mode it's sent with: caps what viewers can pick. */
-  settings: { quality: "1080p" | "720p" | "480p"; mode: "smooth" | "sharp" };
+  settings: StreamSettings;
   /** Someone else's video, once it arrives. */
   remote?: RemoteVideo;
   /** My own video, for my preview. */

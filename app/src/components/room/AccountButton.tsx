@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router";
-import { saveAmbilight, type AmbilightPrefs } from "../../media/preferences";
+import { saveAmbilight } from "@core/preferences/preferences.service";
+import type { AmbilightPrefs } from "@core/preferences/preferences.types";
 import type { ConnectionState, Friend } from "../../types";
 import { Avatar } from "../ui/Avatar";
 import { Dropdown, DropdownSection } from "../ui/Dropdown";

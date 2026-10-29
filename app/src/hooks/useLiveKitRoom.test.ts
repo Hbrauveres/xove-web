@@ -10,7 +10,7 @@ import {
   lastRoom,
 } from "../test/fakeLiveKit";
 import { NoiseGate } from "../media/noiseGate";
-import { DEFAULT_VOICE } from "../media/preferences";
+import { DEFAULT_VOICE } from "@core/preferences/preferences.constants";
 import { useLiveKitRoom, type Capture } from "./useLiveKitRoom";
 
 const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });

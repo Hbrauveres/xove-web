@@ -1,4 +1,5 @@
-import type { Sharer, StreamKind } from "../../types";
+import type { StreamKind } from "@core/api/api.types";
+import type { Sharer } from "../../types";
 import { aTrack } from "./track.factory";
 
 type SharerOptions = Partial<Sharer> & { id?: string; name?: string; kinds?: StreamKind[] };

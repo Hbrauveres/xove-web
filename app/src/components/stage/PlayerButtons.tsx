@@ -1,7 +1,8 @@
 import { useState, type ReactNode } from "react";
 import type { ScreenSurface } from "../../hooks/useLiveKitRoom";
 import { usePinnedRow } from "../../hooks/usePinnedRow";
-import type { CameraDevice, StreamKind } from "../../types";
+import type { StreamKind } from "@core/api/api.types";
+import type { CameraDevice } from "../../types";
 import { DropUp } from "../ui/DropUp";
 import drop from "../ui/DropUp.module.css";
 import { Picker } from "../ui/Picker";
