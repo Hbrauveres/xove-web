@@ -1,8 +1,8 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { StrictMode } from "react";
 import { describe, expect, it } from "vitest";
-import { aUser, installFakeApi, MY_USER_ID } from "../../../testing/fakeApi";
-import { lastRoom, rooms } from "../../../testing/fakeLiveKit";
+import { aUser, installFakeApi, MY_USER_ID } from "../../../../../testing/fakeApi";
+import { lastRoom, rooms } from "../../../../../testing/fakeLiveKit";
 import { useRoomStore } from "./use-room-store.hook";
 
 const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
@@ -15,7 +15,7 @@ describe("the room's store on the page", () => {
     await waitFor(() => expect(hook.result.current.video.connection).toBe("connected"));
 
     expect(hook.result.current.model.me).toBe(`user-${MY_USER_ID}`);
-    expect(hook.result.current.seat.status).toEqual({ status: "in" });
+    expect(hook.result.current.model.seat).toEqual({ status: "in" });
     expect(rooms.filter((r) => !r.disconnected)).toHaveLength(1);
     hook.unmount();
   });

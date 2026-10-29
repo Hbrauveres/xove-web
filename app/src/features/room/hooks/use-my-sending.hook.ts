@@ -4,6 +4,7 @@ import { useCameraPreview } from "./use-camera-preview.hook";
 import { useCameraSwitch } from "./use-camera-switch.hook";
 import { useChangeWindow } from "./use-change-window.hook";
 import { useMyStreams } from "./use-my-streams.hook";
+import type { RememberedCamera } from "../types/remembered-camera.types";
 import type { RoomStoreValue } from "../types/room-store.types";
 import { useStreamSettings } from "./use-stream-settings.hook";
 
@@ -11,7 +12,7 @@ import { useStreamSettings } from "./use-stream-settings.hook";
  * Everything about what I send, put together: my streams and their settings, the camera's preview
  * and switch, and changing the window. Its `queue` is what keeping in step with the API needs.
  */
-export function useMySending(room: RoomStoreValue, myLive: Record<StreamKind, boolean>) {
+export function useMySending(room: RoomStoreValue, camera: RememberedCamera, myLive: Record<StreamKind, boolean>) {
   const { store, model, video } = room;
   const settings = useStreamSettings({
     live: myLive,
@@ -20,20 +21,20 @@ export function useMySending(room: RoomStoreValue, myLive: Record<StreamKind, bo
     changeAtApi: store.changeStreamSettings,
   });
   const preview = useCameraPreview({
-    capture: room.camera.capture,
+    capture: camera.capture,
     discard: store.video.discardCapture,
     camera: settings.prefs.camera,
     cameraSent: video.publishing.camera,
   });
   const pickCamera = useCameraSwitch({
-    pickOnVideo: room.camera.pickCamera,
+    pickOnVideo: camera.pickCamera,
     camera: settings.prefs.camera,
     restartPreview: preview.restart,
   });
   const streams = useMyStreams({
     store,
     video: store.video,
-    capture: room.camera.capture,
+    capture: camera.capture,
     prefs: settings.prefs,
     queue: settings.queue,
     takePreview: preview.takePreview,

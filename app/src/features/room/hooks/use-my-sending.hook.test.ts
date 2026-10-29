@@ -3,7 +3,8 @@ import { describe, expect, it } from "vitest";
 import { aUser, installFakeApi } from "../../../testing/fakeApi";
 import { lastRoom } from "../../../testing/fakeLiveKit";
 import { useMySending } from "./use-my-sending.hook";
-import { useRoomStore } from "./use-room-store.hook";
+import { useRoomStore } from "../stores/room-store/hooks/use-room-store.hook";
+import { useRememberedCamera } from "./use-remembered-camera.hook";
 
 const NOT_LIVE = { screen: false, camera: false };
 
@@ -12,7 +13,8 @@ async function sending() {
   const server = installFakeApi({ me: aUser({ name: "Henrique Brauveres", status: "MEMBER" }) });
   const hook = renderHook(() => {
     const room = useRoomStore("Henrique Brauveres", 60_000);
-    return { room, sending: useMySending(room, NOT_LIVE) };
+    const camera = useRememberedCamera(room.store.video);
+    return { room, sending: useMySending(room, camera, NOT_LIVE) };
   });
   await waitFor(() => expect(hook.result.current.room.video.connection).toBe("connected"));
   return { server, hook };

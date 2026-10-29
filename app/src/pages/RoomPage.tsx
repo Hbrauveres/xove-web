@@ -13,8 +13,12 @@ import { canShareScreen } from "@services/media-devices-service/utils/screen-pic
 import { SettingsPanel } from "../components/stage/SettingsPanel";
 import { Stage } from "../components/stage/Stage";
 import { useFullscreenElement, useFullscreenHost } from "../hooks/useFullscreenElement";
-import { useRoomStore } from "@features/room/hooks/use-room-store.hook";
-import { type RoomStoreValue } from "@features/room/types/room-store.types";
+import { useRoomStore } from "@features/room/stores/room-store/hooks/use-room-store.hook";
+import { useRoomSeat } from "@features/room/stores/room-store/hooks/use-room-seat.hook";
+import { useDeviceList } from "@features/room/hooks/use-device-list.hook";
+import { useRememberedCamera } from "@features/room/hooks/use-remembered-camera.hook";
+import { useSoundUnlock } from "@features/room/hooks/use-sound-unlock.hook";
+import type { RoomPageProps } from "@features/room/types/room-page.types";
 import { roomEntry } from "@features/room/utils/room-entry.util";
 import { useStage } from "@features/room/hooks/use-stage.hook";
 import { useActivityFeed } from "@features/room/hooks/use-activity-feed.hook";
@@ -40,6 +44,12 @@ export function RoomPage({ pollMs }: Props = {}) {
   const navigate = useNavigate();
   const me = state.status === "signedIn" ? state.me : null;
   const room = useRoomStore(me?.name ?? me?.email ?? "You", pollMs);
+  const seat = useRoomSeat(room.store, room.model);
+  // From the waiting room on, as before: a click while waiting already unlocks the sound.
+  useSoundUnlock(room.store.video.unlockAudio);
+  // The names show once a camera or mic is allowed: list them again then.
+  const devices = useDeviceList(`${room.video.publishing.camera}-${room.video.voice}`);
+  const camera = useRememberedCamera(room.store.video);
 
   const handleSignOut = async () => {
     await signOut();
@@ -47,16 +57,16 @@ export function RoomPage({ pollMs }: Props = {}) {
   };
 
   const entry = roomEntry(room.model, room.video);
-  if (!entry.ready) return <WaitingRoom seat={{ ...room.seat, status: entry.waiting }} onSignOut={handleSignOut} />;
-  return <Room room={room} onSignOut={handleSignOut} />;
+  if (!entry.ready) return <WaitingRoom seat={{ ...seat, status: entry.waiting }} onSignOut={handleSignOut} />;
+  return <Room room={room} devices={devices} camera={camera} onSignOut={handleSignOut} />;
 }
 
-function Room({ room, onSignOut }: { room: RoomStoreValue; onSignOut: () => void }) {
+function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
   const { state } = useAuth();
   const isAdmin = state.status === "signedIn" && state.me.admin;
   const { store, model, video } = room;
   const view = useRoomView(model, video, store.myName);
-  const { queue, ...sending } = useMySending(room, view.myLive);
+  const { queue, ...sending } = useMySending(room, camera, view.myLive);
   useStreamSync({
     store,
     model,
@@ -87,9 +97,9 @@ function Room({ room, onSignOut }: { room: RoomStoreValue; onSignOut: () => void
     free: model.free,
     seats: model.seats,
     myCamera: video.local.camera,
-    cameras: room.devices.cameras,
-    mics: room.devices.mics,
-    cameraId: video.cameraId || room.camera.savedCamera,
+    cameras: devices.cameras,
+    mics: devices.mics,
+    cameraId: video.cameraId || camera.savedCamera,
     screenSurface: video.screenSurface,
     cameraProblem: video.cameraProblem,
     connection: video.connection,
