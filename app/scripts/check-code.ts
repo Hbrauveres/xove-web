@@ -6,11 +6,9 @@ import { basename, join, relative, resolve } from "node:path";
 
 export const RULES = {
   size: "over 300 lines (one job per file)",
-  noTest:
-    "code with logic but no .test file where it belongs (its module's tests/ folder, or beside it in the old folders)",
+  noTest: "code with logic but no .test file beside it",
   testName: "test named .spec (rename to .test: a spec is a workspace requirement document)",
-  orphanTest: "test file with no file of the same name where it belongs",
-  testPlace: "test beside its file: it goes in its module's tests/ folder, at the same path",
+  orphanTest: "test file with no file of the same name beside it",
   partPlace: "a utils, constants, types or enum file outside its kind's folder (utils/, constants/, types/, enums/)",
   partInCode:
     "a type, named constant or helper inside working code: types to types/, constants to constants/, helpers to utils/",
@@ -54,19 +52,9 @@ function moduleOf(r: string): { root: string; rest: string } | null {
   return { root: parts.slice(0, depth).join("/"), rest: parts.slice(depth).join("/") };
 }
 
-/** Where a file's test lives: its module's tests/ folder at the same path, or beside it in the old folders. */
-function testStemOf(r: string): string {
-  const stem = r.replace(/\.tsx?$/, "");
-  const m = moduleOf(stem);
-  return m ? `${m.root}/tests/${m.rest}` : stem;
-}
-
-/** Where a test's file lives: the same path outside tests/, or beside it in the old folders. */
-function codeStemOf(r: string): string {
-  const stem = r.replace(/\.(spec|test)\.tsx?$/, "");
-  const m = moduleOf(stem);
-  return m?.rest.startsWith("tests/") ? `${m.root}/${m.rest.slice("tests/".length)}` : stem;
-}
+/** A file's test sits beside it, named the same. */
+const testStemOf = (r: string) => r.replace(/\.tsx?$/, "");
+const codeStemOf = (r: string) => r.replace(/\.(spec|test)\.tsx?$/, "");
 
 /** Each kind of part, and the folder it lives in. */
 const PART_FOLDERS: Record<string, string> = { util: "utils", constants: "constants", types: "types", enum: "enums" };
@@ -131,9 +119,6 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
     else if (!test) add("testName");
   }
   if (isTest(r) && !/(^|\/)test\//.test(r)) {
-    const m = moduleOf(r);
-    if (m && !(m.rest.startsWith("tests/") && !m.rest.slice("tests/".length).split("/").includes("tests")))
-      add("testPlace");
     if (![".ts", ".tsx"].some((e) => exists(codeStemOf(r) + e))) add("orphanTest");
   }
   if (!isTest(r) && misplacedPart(r)) add("partPlace");
