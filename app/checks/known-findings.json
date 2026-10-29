@@ -605,7 +605,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/hooks/useFullscreenElement.ts",
-    "count": 4,
+    "count": 2,
     "owner": "#183 the room's hooks"
   },
   {
