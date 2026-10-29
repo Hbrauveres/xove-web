@@ -30,4 +30,11 @@ describe("reading what I send", () => {
     expect(media.cameraId).toBe("cam-1");
     expect(media.micInput).toBe(mic);
   });
+
+  it("reads what the browser says was picked: a tab, a window or the whole screen", async () => {
+    const adapter = await connectedAdapter();
+    lastRoom().localParticipant.nextSurface = "browser";
+    await shareScreen(adapter, false);
+    expect(readLocalMedia(me(), undefined).screenSurface).toBe("browser");
+  });
 });

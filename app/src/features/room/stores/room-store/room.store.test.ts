@@ -151,6 +151,19 @@ describe("the room's store: in the room", () => {
     expect(lastRoom().disconnected).toBe(true);
   });
 
+  it("goes back to the queue and leaves the video room when the API forgot my seat and the room filled up", async () => {
+    const { server, store } = openStore();
+    await settle();
+    const room = lastRoom();
+    server.seated = false;
+    server.seat = { status: "waiting", place: 1 };
+    await vi.advanceTimersByTimeAsync(POLL_MS);
+    await settle();
+    expect(store.getState().model.seat).toEqual({ status: "waiting", place: 1 });
+    expect(room.disconnected).toBe(true);
+    store.close();
+  });
+
   it("enters again with my video connection when the API forgot my seat, until it knows again", async () => {
     const { server, store } = openStore();
     await settle();
