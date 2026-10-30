@@ -1,3 +1,4 @@
+import { Icon } from "@shared/components/icon";
 import {
   useEffect,
   useId,
@@ -279,16 +280,7 @@ export function Picker<T extends string>({
         >
           <span className={styles.chosen}>{chosen?.label}</span>
           {adornment}
-          <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" className={styles.chevron}>
-            <path
-              d="M3 4.5L6 7.5L9 4.5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <Icon name="chevron" size={12} className={styles.chevron} />
         </button>
       </Tooltip>
       {cue ? (

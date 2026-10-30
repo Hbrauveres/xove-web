@@ -1,3 +1,4 @@
+import { Icon } from "@shared/components/icon";
 import { useState, type ReactNode } from "react";
 import type { CameraDevice, ScreenSurface } from "@services/media-devices-service";
 import { usePinnedRow } from "../../hooks/usePinnedRow";
@@ -5,15 +6,6 @@ import type { StreamKind } from "@services/xove-api-service";
 import { DropUp } from "../ui/DropUp";
 import drop from "../ui/DropUp.module.css";
 import { Picker } from "../ui/Picker";
-import {
-  CameraOffIcon,
-  CameraOnIcon,
-  CogIcon,
-  ScreenOffIcon,
-  ScreenOnIcon,
-  ScreenShareIcon,
-  WindowIcon,
-} from "./icons";
 import round from "./RoundButton.module.css";
 import styles from "./PlayerButtons.module.css";
 import { Tooltip } from "../ui/Tooltip";
@@ -98,7 +90,7 @@ export function PlayerButtons(props: Props) {
                 aria-haspopup="dialog"
                 onClick={onSettings}
               >
-                <CogIcon />
+                <Icon name="cog" size={20} />
               </button>
             </Tooltip>
           </div>
@@ -156,7 +148,7 @@ function StreamButton({
               else onStart(kind);
             }}
           >
-            <Icon kind={kind} off={!live} />
+            <StreamIcon kind={kind} off={!live} />
           </button>
         </Tooltip>
       </div>
@@ -167,7 +159,7 @@ function StreamButton({
     kind === "screen" ? (
       <div className={drop.row}>
         <span className={styles.source}>
-          <WindowIcon />
+          <Icon name="window" size={20} />
           <span>{screenSurface ? SURFACE[screenSurface] : "Your screen"}</span>
         </span>
         <Tooltip text={"Pick another window or tab; viewers keep watching the same stream"}>
@@ -221,16 +213,16 @@ function StreamButton({
 }
 
 /** The design's icons: plain while live; crossed while off, the screen showing "share" on hover and focus. */
-function Icon({ kind, off }: { kind: StreamKind; off: boolean }) {
-  if (kind === "camera") return off ? <CameraOffIcon /> : <CameraOnIcon />;
-  if (!off) return <ScreenOnIcon />;
+function StreamIcon({ kind, off }: { kind: StreamKind; off: boolean }) {
+  if (kind === "camera") return off ? <Icon name="camera-off" size={20} /> : <Icon name="camera-on" size={20} />;
+  if (!off) return <Icon name="screen-on" size={20} />;
   return (
     <>
       <span className={round.iconRest}>
-        <ScreenOffIcon />
+        <Icon name="screen-off" size={20} />
       </span>
       <span className={round.iconHover}>
-        <ScreenShareIcon />
+        <Icon name="screen-share" size={20} />
       </span>
     </>
   );

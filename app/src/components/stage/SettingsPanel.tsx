@@ -1,3 +1,4 @@
+import { Icon } from "@shared/components/icon";
 import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { CAMERA_BLOCKED, CAMERA_MISSING, CAMERA_QUALITIES, SHARE_QUALITIES } from "@services/media-devices-service";
 import type { CameraDevice, CameraProblem, MicDevice, ScreenSurface } from "@services/media-devices-service";
@@ -10,7 +11,6 @@ import type { MediaTrack } from "@services/livekit-service";
 import { Picker } from "../ui/Picker";
 import { Segmented } from "../ui/Segmented";
 import { showToast } from "../ui/toast";
-import { CameraOnIcon, CloseIcon, MicIcon, ScreenOffIcon, ScreenShareIcon, WindowIcon } from "./icons";
 import { NO_SCREEN, NO_SOUND } from "./PlayerButtons";
 import styles from "./SettingsPanel.module.css";
 import cueStyles from "../ui/cue.module.css";
@@ -177,7 +177,7 @@ export function SettingsPanel(props: Props) {
       <div className={styles.head}>
         <h2>Settings</h2>
         <button type="button" className={styles.close} aria-label="Close settings" onClick={onClose}>
-          <CloseIcon />
+          <Icon name="close" size={20} />
         </button>
       </div>
       <div
@@ -211,10 +211,16 @@ export function SettingsPanel(props: Props) {
               onClick={() => {
                 if (usable.includes(t)) setTab(t);
                 else if (pointer.current === "touch" || pointer.current === "pen")
-                  showToast(NO_SCREEN, <ScreenOffIcon />);
+                  showToast(NO_SCREEN, <Icon name="screen-off" size={20} />);
               }}
             >
-              {t === "screen" ? <ScreenShareIcon /> : t === "camera" ? <CameraOnIcon /> : <MicIcon />}
+              {t === "screen" ? (
+                <Icon name="screen-share" size={20} />
+              ) : t === "camera" ? (
+                <Icon name="camera-on" size={20} />
+              ) : (
+                <Icon name="mic" size={20} />
+              )}
               {t === "screen" ? "Screen" : t === "camera" ? "Camera" : "Voice"}
               {(t === "voice" ? props.voice : mine[t]) && <span className={styles.dot} data-live aria-hidden="true" />}
             </button>
@@ -303,7 +309,7 @@ function ScreenTab(props: Props & { cue?: number }) {
             <p className={styles.heading}>Window</p>
             <div className={styles.fieldRow}>
               <span className={styles.source}>
-                <WindowIcon />
+                <Icon name="window" size={20} />
                 <span>{screenSurface ? SURFACE[screenSurface] : "Your screen"}</span>
               </span>
               <Tooltip text={"Pick another window or tab; viewers keep watching the same stream"}>
@@ -495,7 +501,9 @@ function VoiceTab(props: Props & { shown: boolean }) {
                 aria-checked={voicePrefs[s.key]}
                 aria-disabled={s.unavailable ? true : undefined}
                 onClick={() =>
-                  s.unavailable ? showToast(s.unavailable, <MicIcon />) : set({ [s.key]: !voicePrefs[s.key] })
+                  s.unavailable
+                    ? showToast(s.unavailable, <Icon name="mic" size={20} />)
+                    : set({ [s.key]: !voicePrefs[s.key] })
                 }
               >
                 <i />

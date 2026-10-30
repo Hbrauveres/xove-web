@@ -1,3 +1,4 @@
+import { Icon } from "@shared/components/icon";
 import { useEffect, useRef, useState } from "react";
 import type { StreamKind } from "@services/xove-api-service";
 import type { ConnectionState } from "@services/livekit-service";
@@ -102,22 +103,10 @@ export function ActivityPill({ events, people, meId, connection, isLive, watchin
         aria-expanded={open}
         onClick={toggle}
       >
-        {!reconnecting && (
-          <svg className={styles.bell} viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
-            <path
-              d="M5 13V9a5 5 0 0 1 10 0v4l1.5 2h-13zM8 17a2 2 0 0 0 4 0"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.6"
-              strokeLinejoin="round"
-            />
-          </svg>
-        )}
+        {!reconnecting && <Icon name="bell" size={16} className={styles.bell} />}
         {content}
         {fresh > 0 && !reconnecting && <span className={styles.new}>{fresh}</span>}
-        <svg className={styles.chev} viewBox="0 0 12 12" width="12" height="12" aria-hidden="true">
-          <path d="M3 4.5 6 7.5l3-3" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-        </svg>
+        <Icon name="chevron-bold" size={12} className={styles.chev} />
       </button>
 
       <Dropdown open={open} label="Activity" align="center" anchor={anchor} onClose={close}>

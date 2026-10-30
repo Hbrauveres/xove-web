@@ -296,13 +296,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/stage/icons.tsx",
-    "count": 5,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/stage/MicTest.module.css",
     "count": 1,
     "owner": "#193 settings"
@@ -695,13 +688,6 @@
   {
     "tool": "code",
     "rule": "lineLength",
-    "file": "src/components/stage/icons.tsx",
-    "count": 4,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "lineLength",
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 1,
     "owner": "#193 settings"
@@ -829,13 +815,6 @@
     "tool": "code",
     "rule": "naming",
     "file": "src/components/room/AccountButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/ActivityIcon.tsx",
     "count": 1,
     "owner": "#189 room: header"
   },
@@ -1090,13 +1069,6 @@
     "file": "src/components/stage/HearToggles.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/icons.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -1801,13 +1773,6 @@
   {
     "tool": "code",
     "rule": "noTest",
-    "file": "src/components/room/ActivityIcon.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
     "file": "src/components/room/activityText.ts",
     "count": 1,
     "owner": "#189 room: header"
@@ -1839,13 +1804,6 @@
     "file": "src/components/room/WaitingRoom.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/components/stage/icons.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -1997,13 +1955,6 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/components/room/ActivityIcon.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
     "file": "src/components/room/ActivityList.tsx",
     "count": 1,
     "owner": "#189 room: header"
@@ -2019,7 +1970,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/room/PeopleButton.tsx",
-    "count": 2,
+    "count": 1,
     "owner": "#189 room: header"
   },
   {
@@ -2084,13 +2035,6 @@
     "file": "src/components/stage/HearToggles.tsx",
     "count": 7,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/icons.tsx",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -2494,13 +2438,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/room/ActivityIcon.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/components/room/ActivityList.module.css",
     "count": 1,
     "owner": "#189 room: header"
@@ -2749,13 +2686,6 @@
     "file": "src/components/stage/HearToggles.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/icons.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -4623,13 +4553,6 @@
     "tool": "unused",
     "rule": "exports",
     "file": "src/components/stage/Ambilight.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
-    "file": "src/components/stage/icons.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
   },

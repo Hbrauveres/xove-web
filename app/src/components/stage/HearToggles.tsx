@@ -1,8 +1,8 @@
+import { Icon } from "@shared/components/icon";
 import { useEffect, useRef, useState } from "react";
 import type { Sharer } from "@features/room/types/room-view.types";
 import { Range } from "../ui/Range";
 import { showToast } from "../ui/toast";
-import { SoundIcon, VoiceIcon, VoiceOffIcon, VolumeOffIcon } from "./icons";
 import type { Sound } from "./ViewerBar";
 import { useKeyboardLast } from "@features/room/hooks/use-keyboard-last.hook";
 import styles from "./HearToggles.module.css";
@@ -88,7 +88,17 @@ export function HearToggles({
     setShown(open);
   }
   const iconOf = (kind: Kind, off: boolean) =>
-    kind === "sound" ? off ? <VolumeOffIcon /> : <SoundIcon /> : off ? <VoiceOffIcon /> : <VoiceIcon />;
+    kind === "sound" ? (
+      off ? (
+        <Icon name="volume-off" size={20} />
+      ) : (
+        <Icon name="sound" size={20} />
+      )
+    ) : off ? (
+      <Icon name="voice-off" size={20} />
+    ) : (
+      <Icon name="voice" size={20} />
+    );
   const show = (kind: Kind) => {
     setOpen(kind);
     restart();
@@ -122,7 +132,11 @@ export function HearToggles({
           onClick={(e) => {
             // The preview's own click opens the stream: a toggle doesn't.
             e.stopPropagation();
-            if (unavailable) return showToast(unavailable, kind === "sound" ? <VolumeOffIcon /> : <VoiceOffIcon />);
+            if (unavailable)
+              return showToast(
+                unavailable,
+                kind === "sound" ? <Icon name="volume-off" size={20} /> : <Icon name="voice-off" size={20} />,
+              );
             onChange({ ...hearing, [kind]: { ...hearing[kind], muted: !muted } });
             if (open) restart();
           }}
@@ -160,16 +174,7 @@ export function HearToggles({
                 swap.onSwap();
               }}
             >
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M4 7h11M12 4l3 3-3 3M16 13H5M8 10l-3 3 3 3"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <Icon name="swap" />
             </button>
           </Tooltip>
         )}
