@@ -1,3 +1,4 @@
+import { Headline } from "@shared/components/headline";
 import { Icon } from "@shared/components/icon";
 import { useEffect, useState } from "react";
 import type { StreamKind } from "@services/xove-api-service";
@@ -80,9 +81,9 @@ export function EmptyStage({ canShareScreen = true, onStart }: Props) {
         </span>
       )}
       <div className={styles.focus}>
-        <h2 className={styles.title}>
+        <Headline level={2} className={styles.title}>
           Go <em>live</em>
-        </h2>
+        </Headline>
         {/* An invitation, not an order (spec 0138): a TV asking what's on. */}
         <p className={styles.copy}>What's on today?</p>
         <div className={styles.go}>

@@ -90,17 +90,6 @@
 .title {
   margin: 0;
   font: 800 var(--text-28)/1.1 var(--font-display);
-  letter-spacing: calc(var(--tracking-1) * -1);
-}
-
-/*
- * LIVE in the accent, as on the sign-in page and the room's live marks (spec 0141). Written
- * "live" and shown in capitals, so a screen reader says the word, not its letters.
- */
-.title em {
-  font-style: normal;
-  text-transform: uppercase;
-  color: var(--accent);
 }
 
 .copy {
