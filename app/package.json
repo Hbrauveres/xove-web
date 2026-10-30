@@ -23,7 +23,8 @@
     "build-storybook": "storybook build -o storybook-static --quiet",
     "test:storybook": "vitest run --config .storybook/vitest.config.ts",
     "harness": "vite --config harness/vite.config.ts",
-    "build-harness": "vite build --config harness/vite.config.ts --logLevel error"
+    "build-harness": "vite build --config harness/vite.config.ts --logLevel error",
+    "look": "node scripts/look.ts"
   },
   "dependencies": {
     "livekit-client": "^2.23.0",
