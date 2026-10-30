@@ -34,5 +34,5 @@
       "@testing/*": ["./src/testing/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "harness"]
 }

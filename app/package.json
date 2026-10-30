@@ -21,7 +21,9 @@
     "check:size": "node scripts/check-size.ts",
     "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build -o storybook-static --quiet",
-    "test:storybook": "vitest run --config .storybook/vitest.config.ts"
+    "test:storybook": "vitest run --config .storybook/vitest.config.ts",
+    "harness": "vite --config harness/vite.config.ts",
+    "build-harness": "vite build --config harness/vite.config.ts --logLevel error"
   },
   "dependencies": {
     "livekit-client": "^2.23.0",

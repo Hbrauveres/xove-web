@@ -25,3 +25,6 @@ dist-ssr
 
 # Storybook, built (npm run build-storybook)
 storybook-static
+
+# The harness, built (npm run build-harness)
+harness-dist
