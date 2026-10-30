@@ -1,3 +1,4 @@
+import { IconButton } from "@shared/components/icon-button";
 import { useEffect, useState, type CSSProperties } from "react";
 import type { MediaTrack } from "@services/livekit-service";
 import { VoiceAudio } from "./VoiceAudio";
@@ -57,8 +58,8 @@ export function MicTest({
       {/* Disabled, the button gets no pointer: its wrapper takes it, for the tooltip. */}
       <Tooltip text={track ? "Hear yourself for 5 s (use headphones)" : "Turn your voice on to hear yourself"}>
         <span className={styles.hearWrap}>
-          <button
-            type="button"
+          <IconButton
+            variant="words"
             className={styles.hear}
             data-on={hearing || undefined}
             disabled={!track}
@@ -67,7 +68,7 @@ export function MicTest({
             onClick={() => setLeft(hearing ? 0 : HEAR_S)}
           >
             {hearing ? <span className={styles.count}>Stop · {left}</span> : "Test"}
-          </button>
+          </IconButton>
         </span>
       </Tooltip>
       {hearing && track && <VoiceAudio track={track} volume={1} muted={false} />}

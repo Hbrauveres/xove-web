@@ -1,3 +1,4 @@
+import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
 import { useEffect, useRef, useState, type Dispatch, type ReactNode, type SetStateAction } from "react";
 import type { StreamKind } from "@services/xove-api-service";
@@ -82,14 +83,14 @@ export function ViewerBar(props: Props) {
       <div className={styles.right}>
         {settingsOnly ? (
           <Tooltip text={"Settings"}>
-            <button type="button" className={styles.round} aria-label="Settings" onClick={onSettings}>
+            <IconButton variant="stage" className={styles.round} aria-label="Settings" onClick={onSettings}>
               <Icon name="cog" size={20} />
-            </button>
+            </IconButton>
           </Tooltip>
         ) : live ? (
           <Tooltip text={micOn ? "Mute your voice" : "Share your voice"}>
-            <button
-              type="button"
+            <IconButton
+              variant="stage"
               className={styles.round}
               data-on={micOn || undefined}
               aria-pressed={Boolean(micOn)}
@@ -97,7 +98,7 @@ export function ViewerBar(props: Props) {
               onClick={onMic}
             >
               {micOn ? <Icon name="mic" size={20} /> : <Icon name="mic-off" size={20} />}
-            </button>
+            </IconButton>
           </Tooltip>
         ) : (
           <span className={styles.anchor}>
@@ -249,8 +250,8 @@ function Hear({
         text={kind === "sound" ? (s.unavailable ?? "Screen sound") : (s.unavailable ?? `${name}'s voice`)}
         hidden={quiet}
       >
-        <button
-          type="button"
+        <IconButton
+          variant="stage"
           className={styles.round}
           data-voice={kind === "voice" || undefined}
           data-talking={(kind === "voice" && talking && !silent) || undefined}
@@ -273,7 +274,7 @@ function Hear({
           }}
         >
           {icon}
-        </button>
+        </IconButton>
       </Tooltip>
       {!s.unavailable && (
         <span className={styles.slider} data-open={open || undefined} data-muted={s.muted || undefined} inert={!open}>

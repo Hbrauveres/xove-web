@@ -1,3 +1,4 @@
+import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
 import styles from "./StageOverlay.module.css";
 import { Tooltip } from "../ui/Tooltip";
@@ -18,9 +19,9 @@ export function StageOverlay({ fullscreen, onFullscreen }: Props) {
     <div className={styles.overlay} data-overlay>
       <div className={styles.top}>
         <Tooltip text={label}>
-          <button type="button" className={styles.iconButton} onClick={onFullscreen} aria-label={label}>
+          <IconButton variant="overlay" onClick={onFullscreen} aria-label={label}>
             <Icon name={fullscreen ? "fullscreen-exit" : "fullscreen-enter"} size={16} />
-          </button>
+          </IconButton>
         </Tooltip>
       </div>
     </div>

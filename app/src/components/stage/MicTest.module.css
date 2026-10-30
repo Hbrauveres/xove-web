@@ -91,20 +91,10 @@
 }
 
 /* Test: hear yourself, a small pill in the settings' own style, counting down while it plays. */
-.hear {
-  flex: none;
+.hearWrap .hear {
   min-width: var(--mic-hear-width);
   height: var(--size-7);
-  padding: 0 var(--space-3);
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: var(--sel-bg);
-  box-shadow: var(--sel-shadow);
-  color: var(--text);
-  font: inherit;
-  font-size: var(--text-xs);
   font-weight: 600;
-  cursor: pointer;
 }
 
 .hear:hover:not(:disabled) {

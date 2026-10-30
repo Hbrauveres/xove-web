@@ -1,3 +1,4 @@
+import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { viewerQualities } from "@features/room/utils/viewer-qualities.util";
@@ -13,7 +14,6 @@ import { StageOverlay } from "./StageOverlay";
 import { PlayerButtons, type StreamControls } from "./PlayerButtons";
 import { VoiceAudio } from "./VoiceAudio";
 import { ViewerBar } from "./ViewerBar";
-import round from "./RoundButton.module.css";
 import { AlsoLive } from "./AlsoLive";
 import { Ambilight } from "./Ambilight";
 import { CornerGlow } from "./CornerGlow";
@@ -346,19 +346,16 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
             onSettings={toggleSettings}
             onMenuChange={onMenuChange}
             extra={
-              <div className={`${round.pill} ${micOn ? round.live : ""}`}>
-                <Tooltip text={micOn ? "Mute your voice" : "Share your voice"}>
-                  <button
-                    type="button"
-                    className={round.main}
-                    aria-pressed={micOn}
-                    aria-label={micOn ? "Mute your voice" : "Share your voice"}
-                    onClick={toggleMic}
-                  >
-                    {micOn ? <Icon name="mic" size={20} /> : <Icon name="mic-off" size={20} />}
-                  </button>
-                </Tooltip>
-              </div>
+              <IconButton
+                variant="player"
+                live={micOn}
+                around={(button) => <Tooltip text={micOn ? "Mute your voice" : "Share your voice"}>{button}</Tooltip>}
+                aria-pressed={micOn}
+                aria-label={micOn ? "Mute your voice" : "Share your voice"}
+                onClick={toggleMic}
+              >
+                {micOn ? <Icon name="mic" size={20} /> : <Icon name="mic-off" size={20} />}
+              </IconButton>
             }
           />
         )}

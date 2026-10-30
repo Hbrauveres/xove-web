@@ -58,19 +58,35 @@
 }
 
 .change {
-  flex: none;
   height: var(--size-7-5);
-  padding: 0 var(--space-3);
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: var(--sel-bg);
-  box-shadow: var(--sel-shadow);
-  color: var(--text);
-  font: inherit;
-  font-size: var(--text-xs);
-  cursor: pointer;
 }
 
 .change:hover {
   background: var(--sel-hover);
+}
+
+/* Screen off: the crossed monitor at rest; "share" (a screen with an arrow up) while the button is
+   pointed at or focused, so it says what a click does. Unavailable (a full room), it keeps the crossed
+   monitor: a click wouldn't share. */
+.iconRest,
+.iconHover {
+  display: grid;
+  place-items: center;
+  width: var(--size-5);
+  height: var(--size-5);
+  line-height: 0;
+}
+
+.iconHover {
+  display: none;
+}
+
+.control button:not([aria-disabled="true"]):hover .iconRest,
+.control button:not([aria-disabled="true"]):focus-visible .iconRest {
+  display: none;
+}
+
+.control button:not([aria-disabled="true"]):hover .iconHover,
+.control button:not([aria-disabled="true"]):focus-visible .iconHover {
+  display: grid;
 }

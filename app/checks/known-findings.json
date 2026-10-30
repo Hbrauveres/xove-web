@@ -339,7 +339,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/PlayerButtons.tsx",
-    "count": 8,
+    "count": 7,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -355,13 +355,6 @@
     "file": "src/components/stage/PreviewTray.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/RoundButton.module.css",
-    "count": 3,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -1146,13 +1139,6 @@
     "file": "src/components/stage/PreviewTray.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/RoundButton.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -2763,13 +2749,6 @@
     "file": "src/components/stage/PreviewTray.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/RoundButton.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",

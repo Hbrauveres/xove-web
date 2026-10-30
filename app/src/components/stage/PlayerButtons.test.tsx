@@ -211,7 +211,7 @@ describe("stream buttons: when they can't be used", () => {
     const share = screen.getByRole("button", { name: "Share your screen" });
     expect(share).toHaveAttribute("aria-disabled", "true");
     expect(share).toHaveAccessibleDescription(NO_SCREEN);
-    expect(share.parentElement?.className).toMatch(/disabled/);
+    expect(share.parentElement?.className).toMatch(/unavailable/);
     await user.click(share);
     expect(onStart).not.toHaveBeenCalled();
     expect(screen.getByRole("button", { name: "Turn on your camera" })).not.toHaveAttribute("aria-disabled");

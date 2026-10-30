@@ -48,47 +48,6 @@
   margin-right: calc(calc(var(--space-8-5) * -1) - var(--space-2));
 }
 
-.round {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: var(--control-sm);
-  height: var(--control-sm);
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: var(--glass);
-  backdrop-filter: blur(var(--blur-2));
-  box-shadow: 0 var(--space-1) var(--space-4) var(--black-35);
-  color: var(--text);
-  cursor: pointer;
-  transition:
-    background-color var(--duration-120) ease,
-    color var(--duration-120) ease;
-  user-select: none;
-}
-
-.round svg {
-  width: var(--size-4);
-  height: var(--size-4);
-}
-
-@media (hover: hover) {
-  .round:hover {
-    background: var(--grey-40-85);
-  }
-}
-
-.round:focus-visible {
-  outline: var(--border-0-5) solid var(--accent);
-  outline-offset: var(--border-0-5);
-}
-
-.round[aria-disabled="true"] {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
 /* Your mic, red while your voice is on: the one state system (red means live). */
 .round[data-on] {
   background: var(--accent);
@@ -261,7 +220,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .slider,
-  .round,
   .round[data-voice]::before {
     transition: none;
   }

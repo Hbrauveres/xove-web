@@ -1,3 +1,4 @@
+import { IconButton } from "@shared/components/icon-button";
 import { useRef, useState } from "react";
 import { Link } from "react-router";
 import { saveAmbilight } from "@services/preferences-service";
@@ -40,9 +41,9 @@ export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightC
 
   return (
     <div ref={anchor} className={styles.wrap}>
-      <button
+      <IconButton
+        variant="header"
         ref={button}
-        type="button"
         className={styles.button}
         aria-label={`${me.name}: account, ${connection}`}
         aria-haspopup="dialog"
@@ -51,7 +52,7 @@ export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightC
       >
         <Avatar person={me} size={32} />
         <i className={styles.dot} data-state={connection} aria-hidden="true" />
-      </button>
+      </IconButton>
 
       <Dropdown
         open={open}

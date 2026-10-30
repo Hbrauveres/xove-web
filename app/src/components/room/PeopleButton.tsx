@@ -1,3 +1,4 @@
+import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
 import { useRef, useState } from "react";
 import type { RoomSeatsState, StreamKind } from "@services/xove-api-service";
@@ -55,9 +56,9 @@ export function PeopleButton({ people, meId, sharing, watchingOf, seats }: Props
 
   return (
     <div ref={anchor} className={styles.wrap}>
-      <button
+      <IconButton
+        variant="header"
         ref={button}
-        type="button"
         className={styles.button}
         aria-label={`${count} ${count === 1 ? "person" : "people"} here`}
         aria-haspopup="dialog"
@@ -66,7 +67,7 @@ export function PeopleButton({ people, meId, sharing, watchingOf, seats }: Props
       >
         <Icon name="people" size={18} />
         <span className={styles.count}>{count}</span>
-      </button>
+      </IconButton>
 
       <Dropdown
         open={open}

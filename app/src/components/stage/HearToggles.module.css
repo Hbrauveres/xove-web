@@ -10,44 +10,6 @@
   gap: inherit;
 }
 
-.toggle {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: var(--size-6);
-  height: var(--size-6);
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: var(--glass);
-  color: var(--text);
-  cursor: pointer;
-  transition:
-    background var(--duration-120) ease,
-    box-shadow var(--duration-160) ease;
-}
-
-.toggle svg {
-  width: var(--size-3-25);
-  height: var(--size-3-25);
-}
-
-.toggle[aria-pressed="true"],
-.toggle[aria-disabled="true"] {
-  color: var(--white-55);
-}
-
-.toggle[aria-disabled="true"] {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-@media (hover: hover) {
-  .toggle:not([aria-disabled="true"]):hover {
-    background: var(--grey-40-90);
-  }
-}
-
 /* The button whose slider is open: a soft ring, so a change of sound is seen. */
 .toggle[data-active] {
   background: var(--white-10);
@@ -220,7 +182,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .toggle,
   .toggle::before,
   .drawer {
     transition: none;

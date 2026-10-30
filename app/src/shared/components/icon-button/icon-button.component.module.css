@@ -1,0 +1,209 @@
+/* The app's icon buttons: one place for every look they have, each a variant. A button's own states
+   (speaking, active) stay with the piece that has them. */
+
+/* The player's round buttons (screen, camera, mic, settings): one family, each button in a pill. */
+.pill {
+  position: relative;
+  display: flex;
+  height: var(--control-3xl);
+  border-radius: var(--radius-pill);
+  background: var(--glass);
+  backdrop-filter: blur(var(--blur-2));
+  box-shadow: 0 var(--space-1) var(--space-4) var(--black-35);
+  color: var(--text);
+  transition: background var(--duration-120) ease;
+}
+
+/* One ring around the whole pill when its button has the keyboard's focus. */
+.pill:has(:focus-visible) {
+  outline: var(--border-0-5) solid var(--accent);
+  outline-offset: var(--border-0-75);
+}
+
+/* Pointed at, a glass pill lightens; a live one stays as it is. */
+@media (hover: hover) {
+  .pill:not(.live):not(.unavailable):hover {
+    background: var(--grey-40-85);
+  }
+}
+
+/* Live: the pill lights up. */
+.live {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* Can't be used right now (a full room, no sound): faded, and says why in its tooltip. */
+.unavailable {
+  opacity: 0.45;
+}
+
+.player {
+  display: grid;
+  place-items: center;
+  width: var(--control-3xl);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  outline: none;
+}
+
+.player[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+/* A narrow stage: compact, so a row of four and the fullscreen button still fit, down to 280 px.
+   Measured on the controls' layer itself, not the window. */
+@container (--tiny) {
+  .pill {
+    height: var(--control-md);
+  }
+
+  .player {
+    width: var(--control-md);
+  }
+}
+
+/* Over a stream: round glass, lighter when pointed at. */
+.stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--control-sm);
+  height: var(--control-sm);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--glass);
+  backdrop-filter: blur(var(--blur-2));
+  box-shadow: 0 var(--space-1) var(--space-4) var(--black-35);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-120) ease,
+    color var(--duration-120) ease;
+  user-select: none;
+}
+
+.stage svg {
+  width: var(--size-4);
+  height: var(--size-4);
+}
+
+@media (hover: hover) {
+  .stage:hover {
+    background: var(--grey-40-85);
+  }
+}
+
+.stage:focus-visible {
+  outline: var(--border-0-5) solid var(--accent);
+  outline-offset: var(--border-0-5);
+}
+
+.stage[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* The fullscreen corner, over the empty stage: round glass with no shadow. */
+.overlay {
+  pointer-events: auto;
+  display: grid;
+  place-items: center;
+  width: var(--control-sm);
+  height: var(--control-sm);
+  border: none;
+  border-radius: 50%;
+  background: var(--glass);
+  color: var(--text);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.overlay:hover {
+  background: var(--grey-10-90);
+}
+
+/* A sound's toggle: small round glass; pressed (muted) or unavailable, its icon dims. */
+.toggle {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--size-6);
+  height: var(--size-6);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--glass);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    background var(--duration-120) ease,
+    box-shadow var(--duration-160) ease;
+}
+
+.toggle svg {
+  width: var(--size-3-25);
+  height: var(--size-3-25);
+}
+
+.toggle[aria-pressed="true"],
+.toggle[aria-disabled="true"] {
+  color: var(--white-55);
+}
+
+.toggle[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (hover: hover) {
+  .toggle:not([aria-disabled="true"]):hover {
+    background: var(--grey-40-90);
+  }
+}
+
+/* The header's buttons: a clear pill that lights when pointed at or open. */
+.header {
+  height: var(--control-lg);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  cursor: pointer;
+}
+
+.header:hover,
+.header[aria-expanded="true"] {
+  background: var(--panel-line);
+}
+
+.header:focus-visible {
+  outline: var(--border-0-5) solid var(--accent);
+  outline-offset: var(--border-0-5);
+}
+
+/* A small pill with words, in the settings' own style: Change, Test. */
+.words {
+  flex: none;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--sel-bg);
+  box-shadow: var(--sel-shadow);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill,
+  .stage,
+  .toggle {
+    transition: none;
+  }
+}

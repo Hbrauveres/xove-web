@@ -1,3 +1,4 @@
+import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
 import { useEffect, useRef, useState } from "react";
 import type { Sharer } from "@features/room/types/room-view.types";
@@ -111,8 +112,8 @@ export function HearToggles({
     const what = kind === "sound" ? `${name}'s screen sound` : `${name}'s voice`;
     return (
       <Tooltip text={unavailable ?? what} hidden={open !== null}>
-        <button
-          type="button"
+        <IconButton
+          variant="toggle"
           className={styles.toggle}
           data-talking={(kind === "voice" && !off && sharer.speaking) || undefined}
           aria-disabled={unavailable ? true : undefined}
@@ -142,7 +143,7 @@ export function HearToggles({
           }}
         >
           {iconOf(kind, off)}
-        </button>
+        </IconButton>
       </Tooltip>
     );
   };
@@ -164,8 +165,8 @@ export function HearToggles({
         {!sharer.isMe && button("sound")}
         {swap && (
           <Tooltip text={"Swap screen and camera"}>
-            <button
-              type="button"
+            <IconButton
+              variant="toggle"
               className={styles.toggle}
               aria-pressed={swap.on}
               aria-label={`Swap ${sharer.isMe ? "your" : `${name}'s`} screen and camera`}
@@ -175,7 +176,7 @@ export function HearToggles({
               }}
             >
               <Icon name="swap" />
-            </button>
+            </IconButton>
           </Tooltip>
         )}
       </span>

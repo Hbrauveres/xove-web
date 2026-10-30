@@ -7,22 +7,7 @@
   position: relative;
   display: grid;
   place-items: center;
-  height: var(--control-lg);
   padding: 0 var(--space-0-75);
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: transparent;
-  cursor: pointer;
-}
-
-.button:hover,
-.button[aria-expanded="true"] {
-  background: var(--panel-line);
-}
-
-.button:focus-visible {
-  outline: var(--border-0-5) solid var(--accent);
-  outline-offset: var(--border-0-5);
 }
 
 /* The connection, on the avatar: green connected, yellow otherwise. */
