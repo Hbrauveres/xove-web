@@ -39,6 +39,15 @@
     color var(--duration-120) ease;
 }
 
+/* The round buttons keep their own colour transition and don't fade with the parts: as the app has
+   always drawn them. */
+.left > .round,
+.right > .round {
+  transition:
+    background-color var(--duration-120) ease,
+    color var(--duration-120) ease;
+}
+
 :global([data-chrome="hidden"]:not(:has(:focus-visible))) :is(.left, .right) > :not([data-stays]) {
   opacity: 0;
 }
