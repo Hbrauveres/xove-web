@@ -1,0 +1,15 @@
+/* A problem told in a red-tinted box. Where it sits is up to the page: it places the box's wrapper. */
+.notice {
+  margin: 0;
+  padding: var(--space-2-5) var(--space-3);
+  border-radius: var(--radius-1-5);
+  border: var(--hairline) solid var(--live-45);
+  background: var(--live-10);
+  color: var(--text);
+  font-size: var(--text-sm);
+}
+
+/* Over the stage or the page: an opaque tint, so what's behind doesn't show through. */
+.notice[data-floating] {
+  background: var(--live-on-surface-18);
+}

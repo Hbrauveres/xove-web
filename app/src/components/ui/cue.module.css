@@ -9,14 +9,14 @@
   0%,
   100% {
     box-shadow:
-      0 0 0 1.5px rgba(239, 75, 75, 0),
-      0 0 14px rgba(239, 75, 75, 0);
+      0 0 0 var(--space-0-375) var(--accent-00),
+      0 0 var(--space-3-5) var(--accent-00);
   }
 
   50% {
     box-shadow:
-      0 0 0 1.5px rgba(239, 75, 75, 0.95),
-      0 0 14px rgba(239, 75, 75, 0.35);
+      0 0 0 var(--space-0-375) var(--accent-95),
+      0 0 var(--space-3-5) var(--accent-35);
   }
 }
 
@@ -24,8 +24,8 @@
 @keyframes settle {
   to {
     box-shadow:
-      0 0 0 1.5px rgba(239, 75, 75, 0.95),
-      0 0 14px rgba(239, 75, 75, 0.35);
+      0 0 0 var(--space-0-375) var(--accent-95),
+      0 0 var(--space-3-5) var(--accent-35);
   }
 }
 
@@ -35,15 +35,15 @@
   border-radius: inherit;
   pointer-events: none;
   animation:
-    pulse 1s ease-in-out 2,
-    settle 0.5s ease-in-out 2s forwards;
+    pulse var(--duration-1000) ease-in-out 2,
+    settle var(--duration-500) ease-in-out var(--duration-2000) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .cue {
     animation: none;
     box-shadow:
-      0 0 0 1.5px rgba(239, 75, 75, 0.95),
-      0 0 14px rgba(239, 75, 75, 0.35);
+      0 0 0 var(--space-0-375) var(--accent-95),
+      0 0 var(--space-3-5) var(--accent-35);
   }
 }

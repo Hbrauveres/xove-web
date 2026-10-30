@@ -1,14 +1,14 @@
 /* The app's one tooltip (spec 0133): the round buttons' look, floating on its own layer. */
 .tip {
   position: fixed;
-  left: -9999px;
+  left: calc(var(--space-offscreen) * -1);
   top: 0;
-  z-index: 60;
+  z-index: var(--layer-tooltip);
   width: max-content;
-  max-width: 260px;
-  padding: 6px 9px;
-  border-radius: var(--radius-sm);
-  background: #070708;
+  max-width: var(--tooltip-width);
+  padding: var(--space-1-5) var(--space-2-25);
+  border-radius: var(--radius-1-5);
+  background: var(--grey-7);
   color: var(--text);
   font-size: var(--text-xs);
   line-height: 1.35;
@@ -16,7 +16,7 @@
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  transition: opacity 120ms ease;
+  transition: opacity var(--duration-120) ease;
 }
 
 .tip[data-shown] {

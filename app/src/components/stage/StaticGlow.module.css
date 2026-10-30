@@ -7,7 +7,7 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  transition: opacity 0.5s ease;
+  transition: opacity var(--duration-500) ease;
 }
 
 .canvas {
@@ -15,7 +15,7 @@
   inset: -4% -6%;
   width: 112%;
   height: 108%;
-  filter: blur(clamp(36px, 4vmin, 64px));
+  filter: blur(clamp(var(--blur-9), var(--vmin-4), var(--blur-16)));
 }
 
 /* The turn-on's light on the wall (spec 0136): a white glow round the stage that swells with
@@ -24,10 +24,10 @@
   position: absolute;
   inset: -1%;
   border-radius: 6%;
-  background: rgba(255, 255, 255, 0.8);
-  filter: blur(clamp(36px, 4.5vmin, 72px));
+  background: var(--white-80);
+  filter: blur(clamp(var(--blur-9), var(--vmin-4-5), var(--blur-18)));
   opacity: 0;
-  animation: wall-flash 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: wall-flash var(--duration-900) var(--ease-out-quint) forwards;
 }
 
 @keyframes wall-flash {

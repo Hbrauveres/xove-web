@@ -2,20 +2,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
+  gap: var(--space-2);
+  border: var(--hairline) solid transparent;
+  border-radius: var(--radius-1-5);
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
   transition:
-    background-color 120ms ease,
-    border-color 120ms ease,
-    transform 80ms ease;
+    background-color var(--duration-120) ease,
+    border-color var(--duration-120) ease,
+    transform var(--duration-80) ease;
 }
 
 .button:active {
-  transform: translateY(1px);
+  transform: translateY(var(--space-0-25));
 }
 
 .button:disabled {
@@ -24,12 +24,12 @@
 }
 
 .md {
-  padding: 10px 18px;
+  padding: var(--space-2-5) var(--space-4-5);
   font-size: var(--text-md);
 }
 
 .sm {
-  padding: 6px 12px;
+  padding: var(--space-1-5) var(--space-3);
   font-size: var(--text-sm);
 }
 
@@ -39,17 +39,17 @@
 }
 
 .primary:hover:not(:disabled) {
-  background: #f36a6a;
+  background: var(--accent-light);
 }
 
 .danger {
   background: transparent;
   color: var(--live);
-  border-color: color-mix(in srgb, var(--live) 55%, transparent);
+  border-color: var(--live-55);
 }
 
 .danger:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--live) 12%, transparent);
+  background: var(--live-12);
 }
 
 .ghost {

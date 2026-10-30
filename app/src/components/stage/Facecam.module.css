@@ -1,14 +1,14 @@
 /* The small window over the big player (spec 0060). */
 .facecam {
   position: absolute;
-  z-index: 2;
+  z-index: var(--layer-over);
   width: 24%;
   aspect-ratio: 16 / 9;
-  background: #000;
-  border-radius: var(--radius-sm);
+  background: var(--black);
+  border-radius: var(--radius-1-5);
   overflow: hidden;
-  outline: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  outline: var(--hairline) solid var(--white-18);
+  box-shadow: 0 var(--space-1-5) var(--space-5) var(--black-45);
   cursor: grab;
   touch-action: none;
 }
@@ -18,7 +18,7 @@
 }
 
 .facecam:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: var(--border-0-5) solid var(--accent);
 }
 
 .facecam video {
@@ -28,28 +28,28 @@
 /* Its buttons look like the player's: semi-transparent, and they fade with them. */
 .controls {
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: var(--space-1-5);
+  right: var(--space-1-5);
   display: flex;
-  gap: 4px;
-  transition: opacity 0.25s ease;
+  gap: var(--space-1);
+  transition: opacity var(--duration-250) ease;
 }
 
 .button {
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: var(--size-7);
+  height: var(--size-7);
   border: none;
   border-radius: 50%;
-  background: rgba(10, 10, 11, 0.72);
+  background: var(--glass);
   color: var(--text);
   cursor: pointer;
 }
 
 .button:hover,
 .button:focus-visible {
-  background: rgba(10, 10, 11, 0.9);
+  background: var(--grey-10-90);
 }
 
 :global([data-chrome="hidden"]) .controls {
@@ -65,16 +65,16 @@
 /* Collapsed: a small tab at the player's right edge. */
 .tab {
   position: absolute;
-  z-index: 2;
+  z-index: var(--layer-over);
   right: 0;
   top: 50%;
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 44px;
+  width: var(--size-7);
+  height: var(--control-2xl);
   border: none;
-  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
-  background: rgba(10, 10, 11, 0.72);
+  border-radius: var(--radius-1-5) 0 0 var(--radius-1-5);
+  background: var(--glass);
   color: var(--text);
   cursor: pointer;
 }

@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router";
+import { ErrorNotice } from "@shared/components/error-notice";
 import { useAuth } from "@shared/stores/auth-store";
 import { AccountButton } from "../components/room/AccountButton";
 import { ActivityPill } from "../components/room/ActivityPill";
@@ -253,9 +254,9 @@ function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
         </div>
         {/* Over the bottom of the middle: the column is sized exactly, nothing may push it. */}
         {session.error && !fullscreen && (
-          <p className={`${styles.error} ${styles.errorBelow}`} role="alert">
-            {session.error}
-          </p>
+          <div className={styles.errorBelow}>
+            <ErrorNotice floating>{session.error}</ErrorNotice>
+          </div>
         )}
       </main>
 
@@ -264,9 +265,9 @@ function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
       {fullscreen &&
         session.error &&
         createPortal(
-          <p className={`${styles.error} ${styles.errorOver}`} role="alert">
-            {session.error}
-          </p>,
+          <div className={styles.errorOver}>
+            <ErrorNotice floating>{session.error}</ErrorNotice>
+          </div>,
           overPage,
         )}
     </div>

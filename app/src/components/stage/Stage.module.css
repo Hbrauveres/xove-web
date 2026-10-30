@@ -17,14 +17,17 @@
  */
 .box {
   --shape: 1.7778;
-  --free-h: max(100cqw * 9 / 16, 100cqh - var(--info-h, 104px) - var(--info-gap, 14px));
+  --free-h: max(
+    var(--box-width) * 9 / 16,
+    var(--box-height) - var(--info-h, var(--info-row)) - var(--info-gap, var(--size-3-5))
+  );
   position: relative;
-  width: 100cqw;
-  height: min(100cqw / var(--shape), var(--free-h));
+  width: var(--box-width);
+  height: min(var(--box-width) / var(--shape), var(--free-h));
   margin-inline: auto;
   transition:
-    width 0.35s ease,
-    height 0.35s ease,
+    width var(--duration-350) ease,
+    height var(--duration-350) ease,
     translate var(--unroll);
 }
 
@@ -35,11 +38,11 @@
   container-type: size;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: var(--layer-raised);
 }
 
 .frame:fullscreen {
-  background: #000;
+  background: var(--black);
 }
 
 /* The view (spec 0133): the picture in its own shape, as big as the controls' layer allows,
@@ -48,13 +51,13 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: min(100cqw, 100cqh * var(--shape));
-  height: min(100cqh, 100cqw / var(--shape));
+  width: min(var(--box-width), var(--box-height) * var(--shape));
+  height: min(var(--box-height), var(--box-width) / var(--shape));
   translate: -50% -50%;
   /* A new picture's shape: the view glides to it, as the stage did (the design sheet's motion). */
   transition:
-    width 0.35s ease,
-    height 0.35s ease,
+    width var(--duration-350) ease,
+    height var(--duration-350) ease,
     translate var(--unroll);
 }
 
@@ -62,11 +65,11 @@
   position: relative;
   width: 100%;
   height: 100%;
-  background: #000;
+  background: var(--black);
   /* Rounded, no border: the light around it is the frame (spec 0104). */
-  border-radius: 12px;
+  border-radius: var(--radius-3);
   overflow: hidden;
-  z-index: 1;
+  z-index: var(--layer-raised);
 }
 
 /* A picture filling the stage: no black behind it to show as a sliver at an edge (spec 0123,
@@ -89,14 +92,14 @@
   inset: 0;
   pointer-events: none;
   transition:
-    opacity 0.25s ease,
+    opacity var(--duration-250) ease,
     translate var(--unroll),
-    bottom 0.28s ease;
+    bottom var(--duration-280) ease;
 }
 
 /* Fading, part by part: a heard voice stays, for its speaking cue (spec 0131). */
 .controls > * {
-  transition: opacity 0.25s ease;
+  transition: opacity var(--duration-250) ease;
 }
 
 .frame[data-chrome="hidden"] .controls > :not(:has([data-stays])) {
@@ -129,22 +132,22 @@
  */
 .info {
   position: relative;
-  z-index: 2;
+  z-index: var(--layer-over);
   container-type: inline-size;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  height: var(--info-h, 104px);
-  margin-top: var(--info-gap, 14px);
+  gap: var(--space-6);
+  height: var(--info-h, var(--info-row));
+  margin-top: var(--info-gap, var(--space-3-5));
 }
 
-@media (max-width: 760px) {
+@media (--narrow) {
   .info {
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
-    gap: 12px;
+    gap: var(--space-3);
   }
 }
 
@@ -155,9 +158,9 @@
 }
 
 /* A narrow stage's compact buttons (spec 0133): the fullscreen button stays level with them. */
-@container (max-width: 359px) {
+@container (--tiny) {
   .stage [data-overlay],
   .stage .controls {
-    --btn: 36px;
+    --btn: var(--control-md);
   }
 }

@@ -39,7 +39,7 @@ Everything is in `app/src`:
 | `services/media-devices-service/` | The browser's devices: the screen picker, the cameras and mics and the mic's meter as services (they ask the browser); a phone or a tablet (`utils/is-handheld.util.ts`), the picker's request and the noise gate's maths as helpers; the stream presets in `constants/` |
 | `features/phone-notice/` | What phones and tablets see instead of the app ([below](#phones-and-tablets)): its page and art in `components/` |
 | `features/admin/utils/` | The admin page's helper ("3 min ago"), until the page moves in |
-| `shared/` | What the whole app uses: the auth store, the time constants, the design tokens (`shared/styles/global.css`) |
+| `shared/` | What the whole app uses: the auth store, the time constants, the error notice (`components/error-notice/`), the design tokens (`styles/tokens.css`, every value the CSS uses) and the page's base rules (`styles/global.css`) |
 | `testing/` | The test helpers: a fake API, a fake LiveKit, and rendering the app at a URL ([Testing](testing.md)); only tests import it |
 
 At the top, `main.tsx` starts the app, `routes/root/root.component.tsx` chooses between the app and the phone notice, and `routes/app-routes/app-routes.component.tsx` holds the routes.
@@ -66,7 +66,7 @@ flowchart TD
   APP --> P
 ```
 
-Pages put the room together; components draw it; hooks own the state and talk to the API and LiveKit (the simpler pages call the API directly); the room's rules (hearing, the stage pick, the watch report) are plain functions in `features/room/utils/`, the settings queue is a service (`services/settings-queue-service/`), and `media/` keeps only the ambilight's drawing until the stage moves. Each component has its own CSS module, using the tokens in `shared/styles/global.css`.
+Pages put the room together; components draw it; hooks own the state and talk to the API and LiveKit (the simpler pages call the API directly); the room's rules (hearing, the stage pick, the watch report) are plain functions in `features/room/utils/`, the settings queue is a service (`services/settings-queue-service/`), and `media/` keeps only the ambilight's drawing until the stage moves. Each component has its own CSS module, using the tokens in `shared/styles/tokens.css`.
 
 ## Routes
 
@@ -202,7 +202,7 @@ app/src/
 - **One job per file.** If describing it needs "and", it's two files. Components about 150 lines at most, hooks and services about 200, any file 300.
 - **One test file for every file with logic**, beside it, testing that file's behaviour ([Testing](testing.md#test-rules)).
 - **Each building block exists once**, with variants: one icon button, one menu (one floating system: anchor, outside press, Escape, focus return, one open at a time), one face, one switch, one set of icons.
-- **Tokens only:** no literal colour, duration or easing in a component's CSS.
+- **Tokens only:** every colour, size, duration, easing, layer and window size comes from `shared/styles/tokens.css`, sizes in rem ([Design sheet](design.md#tokens)); no other CSS file writes a value, `global.css` included. Window and box sizes are `@custom-media` names (`@media (--narrow)`, `@container (--tiny)`): browsers don't read those yet, so PostCSS turns them into plain CSS when Vite builds (`postcss.config.js`; `scripts/container-media.ts` does it for `@container`, which `postcss-custom-media` leaves alone).
 - **Components never find each other through the page** (`querySelector`, labels, `data-*` used as hooks): a ref, a context, or CSS.
 - **No module-level mutable state.** Hooks return stable values; effects only sync with something outside React.
 - **Comments say why**, never history: no issue or spec numbers in the code.
@@ -232,7 +232,7 @@ Every rule a tool can measure runs in the commit checks as `3 · Code checks`, o
 | oxlint | Hooks' dependencies, accessibility, unused code, the import direction, the size and shape limits above, escape hatches, unexplained numbers, default exports | through the guard |
 | jscpd | A block of code copied into another place (8 lines or 60 tokens, CSS included) | `npm run check:copies` |
 | knip | Files nothing imports, exports nothing uses | `npm run check:unused` |
-| The code check | The structure's rules: folders and names, every part in its kind's folder and none inside working code, a test beside every file with logic, units in their own folders with their parts inside them, nothing nested past 6 levels, imports through a unit's `index.ts` and never up, across features or into `testing/`, tokens in CSS, no DOM queries between components, LiveKit only in `services/`, no history in comments, lines over 120 characters (Prettier doesn't wrap strings and comments), comments that switch a check off, and the tests' own rules | `npm run check:code -- <folder> --all` |
+| The code check | The structure's rules: folders and names, every part in its kind's folder and none inside working code, a test beside every file with logic, units in their own folders with their parts inside them, nothing nested past 6 levels, imports through a unit's `index.ts` and never up, across features or into `testing/`, any colour, size, duration, easing, layer or window size written in CSS outside `tokens.css` (zero isn't a value), no DOM queries between components, LiveKit only in `services/`, no history in comments, lines over 120 characters (Prettier doesn't wrap strings and comments), comments that switch a check off, and the tests' own rules | `npm run check:code -- <folder> --all` |
 | Prettier | Layout | `npm run format` fixes, `npm run format:check` checks |
 | The size budget | The built JavaScript and styles, compressed, against `checks/size-budget.json` | `npm run build && npm run check:size` |
 
@@ -250,7 +250,7 @@ Every rule a tool can measure runs in the commit checks as `3 · Code checks`, o
 - **The tools are pinned** (oxlint, TypeScript, Prettier, knip, jscpd at exact versions). Dependabot proposes their upgrades in a PR of their own (the `checks` group). An upgrade that brings new findings fixes them in that PR, since the list can't grow.
 
 **The size budget.**
-- **Today:** JavaScript 286 kB and styles 16 kB, compressed (kB as Vite prints them), about 10% above what the app weighs today.
+- **Today:** JavaScript 286 kB and styles 18 kB, compressed (kB as Vite prints them), about 10% above what the app weighs today. The styles grew when every value became a token: a `var(--name)` is longer than the value it names.
 - **Over budget fails.** So does falling more than 10% under it: a lighter app lowers its budget, so the room it freed isn't quietly used up.
 - **Raising a budget** is a deliberate change in `checks/size-budget.json`, in the PR that needs it, saying why.
 

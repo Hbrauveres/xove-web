@@ -4,7 +4,7 @@
   flex: 1 1 auto;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: var(--space-3-5);
   min-width: 0;
 }
 
@@ -19,9 +19,9 @@
   text-overflow: ellipsis;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.45rem;
+  font-size: var(--text-23-2);
   line-height: 1.1;
-  letter-spacing: -0.01em;
+  letter-spacing: calc(var(--tracking-1) * -1);
 }
 
 .yours {
@@ -34,8 +34,8 @@
   overflow: hidden;
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 6px 0 0;
+  gap: var(--space-2-5);
+  margin: var(--space-1-5) 0 0;
   white-space: nowrap;
   color: var(--text-muted);
   font-size: var(--text-sm);
@@ -49,24 +49,24 @@
 .live {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 2px 7px 2px 6px;
-  border-radius: 5px;
+  gap: var(--space-1-25);
+  padding: var(--space-0-5) var(--space-1-75) var(--space-0-5) var(--space-1-5);
+  border-radius: var(--radius-1-25);
   background: var(--live);
   /* Deep red on red (spec 0111): reads at 4.7:1. */
   color: var(--accent-ink);
   font-family: var(--font-mono);
-  font-size: 0.625rem;
-  letter-spacing: 0.1em;
+  font-size: var(--text-10);
+  letter-spacing: var(--tracking-10);
 }
 
 .live::before {
   content: "";
-  width: 6px;
-  height: 6px;
+  width: var(--size-1-5);
+  height: var(--size-1-5);
   border-radius: 50%;
   background: var(--accent-ink);
-  animation: pulse 1.6s ease-in-out infinite;
+  animation: pulse var(--duration-1600) ease-in-out infinite;
 }
 
 @keyframes pulse {
@@ -86,21 +86,21 @@
 .watchers {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .watchers::before {
   content: "";
-  width: 3px;
-  height: 3px;
-  margin-right: 2px;
+  width: var(--size-0-75);
+  height: var(--size-0-75);
+  margin-right: var(--space-0-5);
   border-radius: 50%;
   background: var(--text-faint);
 }
 
 .row {
   display: inline-flex;
-  gap: 4px;
+  gap: var(--space-1);
 }
 
 .face {
@@ -118,19 +118,19 @@
 }
 
 /* Short of room, the left gives way first: the words go, then the avatars (spec 0107). */
-@container (max-width: 900px) {
+@container (--medium) {
   /* Hidden to the eye only: screen readers still hear "N watching". */
   .count {
     position: absolute;
-    width: 1px;
-    height: 1px;
+    width: var(--hairline);
+    height: var(--hairline);
     overflow: hidden;
     clip-path: inset(50%);
     white-space: nowrap;
   }
 }
 
-@container (max-width: 760px) {
+@container (--narrow) {
   .row,
   .watchers::before {
     display: none;
@@ -138,8 +138,8 @@
 
   .watchers .count {
     position: absolute;
-    width: 1px;
-    height: 1px;
+    width: var(--hairline);
+    height: var(--hairline);
     overflow: hidden;
     clip-path: inset(50%);
   }
@@ -148,16 +148,16 @@
 /* Nobody live: a quiet circle where the avatar goes. */
 .nobody {
   flex: none;
-  width: 30px;
-  height: 30px;
+  width: var(--size-7-5);
+  height: var(--size-7-5);
   border-radius: 50%;
   background: var(--surface-raised);
 }
 
 /* On a wide screen, the size of the live person's photo (spec 0123). */
 .nobodyBig {
-  width: 52px;
-  height: 52px;
+  width: var(--avatar-big);
+  height: var(--avatar-big);
 }
 
 @media (prefers-reduced-motion: reduce) {

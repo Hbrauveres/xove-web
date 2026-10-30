@@ -4,9 +4,9 @@
  */
 .panel {
   position: absolute;
-  top: calc(100% + 8px);
-  z-index: 30;
-  width: 340px;
+  top: calc(100% + var(--space-2));
+  z-index: var(--layer-dropdown);
+  width: var(--dropdown-width);
   color: var(--text);
   line-height: 1.25; /* the design's rows, tighter than the page's text */
   /*
@@ -14,7 +14,7 @@
    * clip, a fade or a filter here or on an ancestor: those stop the sections' blur.
    */
   display: grid; /* grid-template-rows: 0fr → 1fr, set by the component */
-  transition: grid-template-rows 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: grid-template-rows var(--duration-260) var(--ease-out);
 }
 
 .end {
@@ -23,7 +23,7 @@
 
 .center {
   left: 50%;
-  width: min(440px, 92vw);
+  width: min(var(--card-width), var(--vw-92));
   transform: translateX(-50%);
 }
 
@@ -33,50 +33,50 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  border-radius: 16px;
+  gap: var(--space-0-5);
+  border-radius: var(--radius-4);
 }
 
 .section {
   /* Full size while the panel unrolls: only its edge reveals them, so no scrollbar flashes. */
   flex: none;
-  background: rgba(12, 12, 13, 0.74);
-  backdrop-filter: blur(22px) saturate(1.4);
-  -webkit-backdrop-filter: blur(22px) saturate(1.4);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--grey-12-74);
+  backdrop-filter: blur(var(--blur-5-5)) saturate(1.4);
+  -webkit-backdrop-filter: blur(var(--blur-5-5)) saturate(1.4);
+  border: var(--hairline) solid var(--panel-line);
   border-block-width: 0;
 }
 
 .section:first-child {
-  border-top-width: 1px;
-  border-radius: 16px 16px 0 0;
+  border-top-width: var(--hairline);
+  border-radius: var(--radius-4) var(--radius-4) 0 0;
 }
 
 .section:last-child {
-  border-bottom-width: 1px;
-  border-radius: 0 0 16px 16px;
+  border-bottom-width: var(--hairline);
+  border-radius: 0 0 var(--radius-4) var(--radius-4);
 }
 
 .section:only-child {
-  border-radius: 16px;
+  border-radius: var(--radius-4);
 }
 
 /* A long list scrolls inside its section, with a thin scrollbar that matches. */
 .scroll {
-  max-height: min(56vh, 440px);
+  max-height: min(var(--vh-56), var(--card-width));
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+  scrollbar-color: var(--white-22) transparent;
 }
 
 .scroll::-webkit-scrollbar {
-  width: 8px;
+  width: var(--size-2);
 }
 
 .scroll::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.22);
-  border-radius: 99px;
-  border: 2px solid transparent;
+  background: var(--white-22);
+  border-radius: var(--radius-pill);
+  border: var(--border-0-5) solid transparent;
   background-clip: padding-box;
 }
 
@@ -84,13 +84,13 @@
   background: transparent;
 }
 
-@media (max-width: 760px) {
+@media (--narrow) {
   .panel,
   .center {
     position: fixed;
-    top: 72px;
-    left: 8px;
-    right: 8px;
+    top: var(--space-18);
+    left: var(--space-2);
+    right: var(--space-2);
     width: auto !important; /* full width in a narrow window, whatever the panel's own width */
     transform: none;
   }

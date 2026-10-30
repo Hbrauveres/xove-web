@@ -6,29 +6,29 @@
  * 30 px). Only opacity and transforms move.
  */
 .panel {
-  --ctl: 30px;
-  --w: clamp(280px, 20cqw, 320px);
-  --room: var(--above-row, 72px);
+  --ctl: var(--size-7-5);
+  --w: clamp(var(--settings-width), var(--cqw-20), var(--settings-width-wide));
+  --room: var(--above-row, var(--space-18));
   position: absolute;
-  left: clamp(10px, calc(var(--cog-x, 50%) - var(--w) / 2), calc(100% - var(--w) - 10px));
+  left: clamp(var(--space-2-5), calc(var(--cog-x, 50%) - var(--w) / 2), calc(100% - var(--w) - var(--space-2-5)));
   bottom: var(--room);
-  z-index: 6;
+  z-index: var(--layer-panel);
   display: flex;
   flex-direction: column;
   width: var(--w);
-  max-width: calc(100% - 20px);
-  max-height: calc(100% - var(--room) - 10px);
-  min-height: min(240px, calc(100% - var(--room) - 10px));
-  border: 1px solid var(--panel-line);
-  border-radius: 16px;
+  max-width: calc(100% - var(--size-5));
+  max-height: calc(100% - var(--room) - var(--size-2-5));
+  min-height: min(var(--settings-min-height), calc(100% - var(--room) - var(--size-2-5)));
+  border: var(--hairline) solid var(--panel-line);
+  border-radius: var(--radius-4);
   background: var(--panel);
-  backdrop-filter: blur(22px);
+  backdrop-filter: blur(var(--blur-5-5));
   color: var(--text);
   opacity: 0;
-  transform: translateY(6px);
+  transform: translateY(var(--space-1-5));
   transition:
-    opacity 140ms ease,
-    transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    opacity var(--duration-140) ease,
+    transform var(--duration-180) var(--ease-out);
 }
 
 .panel[data-open] {
@@ -40,7 +40,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 10px 6px 14px;
+  padding: var(--space-2-5) var(--space-2-5) var(--space-1-5) var(--space-3-5);
 }
 
 .head h2 {
@@ -53,23 +53,23 @@
 .close {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: var(--size-8);
+  height: var(--size-8);
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--text-muted);
   cursor: pointer;
 }
 
 .close:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--panel-line);
   color: var(--text);
 }
 
 .close svg {
-  width: 16px;
-  height: 16px;
+  width: var(--size-4);
+  height: var(--size-4);
 }
 
 /* The tabs, a red marker sliding under the chosen one. */
@@ -78,43 +78,43 @@
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: minmax(0, 1fr);
-  margin: 0 10px;
-  border-bottom: 1px solid var(--panel-line);
+  margin: 0 var(--space-2-5);
+  border-bottom: var(--hairline) solid var(--panel-line);
 }
 
 .marker {
   position: absolute;
-  bottom: -1px;
-  z-index: 1;
+  bottom: calc(var(--hairline) * -1);
+  z-index: var(--layer-raised);
   width: calc(100% / var(--n));
-  height: 2px;
+  height: var(--size-0-5);
   left: calc(100% / var(--n) * var(--i));
   background: var(--accent);
-  transition: left 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: left var(--duration-200) var(--ease-out);
 }
 
 .tab {
   position: relative;
   display: grid;
   justify-items: center;
-  gap: 3px;
+  gap: var(--space-0-75);
   min-width: 0;
-  margin-bottom: -1px;
-  padding: 6px 2px 5px;
+  margin-bottom: calc(var(--hairline) * -1);
+  padding: var(--space-1-5) var(--space-0-5) var(--space-1-25);
   border: 0;
-  border-bottom: 2px solid transparent;
+  border-bottom: var(--border-0-5) solid transparent;
   background: transparent;
   color: var(--text-muted);
   font: inherit;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
 }
 
 .tab svg {
-  width: 16px;
-  height: 16px;
+  width: var(--size-4);
+  height: var(--size-4);
 }
 
 .tab:hover,
@@ -132,18 +132,18 @@
 
 /* The keyboard's ring sits inside the tab, rounded, clear of the marker. */
 .tab:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: -4px;
-  border-radius: 8px;
+  outline: var(--border-0-5) solid var(--accent);
+  outline-offset: calc(var(--border-1) * -1);
+  border-radius: var(--radius-2);
 }
 
 /* What's live: a red dot by its tab's icon. */
 .dot {
   position: absolute;
-  top: 6px;
-  left: calc(50% + 9px);
-  width: 6px;
-  height: 6px;
+  top: var(--space-1-5);
+  left: calc(50% + var(--space-2-25));
+  width: var(--size-1-5);
+  height: var(--size-1-5);
   border-radius: 50%;
   background: var(--accent);
 }
@@ -164,10 +164,10 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 12px 14px 14px;
-  --seg-font: 12px;
-  --pick-font: 12px;
+  gap: var(--space-3-5);
+  padding: var(--space-3) var(--space-3-5) var(--space-3-5);
+  --seg-font: var(--text-xs);
+  --pick-font: var(--text-xs);
 }
 
 .body[data-off] {
@@ -184,7 +184,7 @@
 }
 
 .panes::-webkit-scrollbar {
-  width: 4px;
+  width: var(--size-1);
 }
 
 .panes::-webkit-scrollbar-button {
@@ -198,39 +198,39 @@
 }
 
 .panes::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-pill);
+  background: var(--white-10);
 }
 
 .panes:hover::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.28);
+  background: var(--white-28);
 }
 
 @supports not selector(::-webkit-scrollbar) {
   .panes {
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+    scrollbar-color: var(--white-10) transparent;
   }
 }
 
 .group {
   display: grid;
-  gap: 6px;
+  gap: var(--space-1-5);
 }
 
 .heading {
   margin: 0;
   color: var(--text-faint);
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.06em;
+  font-size: var(--text-10);
+  letter-spacing: var(--tracking-6);
   text-transform: uppercase;
 }
 
 .hint {
   margin: 0;
   color: var(--text-muted);
-  font-size: 11px;
+  font-size: var(--text-11);
 }
 
 /* What's shared, and Change: one row as tall as the other controls. */
@@ -238,20 +238,20 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-2);
   min-width: 0;
   height: var(--ctl);
-  padding: 2px 2px 2px 10px;
-  border-radius: 999px;
-  background: var(--seg-track, rgba(255, 255, 255, 0.05));
+  padding: var(--space-0-5) var(--space-0-5) var(--space-0-5) var(--space-2-5);
+  border-radius: var(--radius-pill);
+  background: var(--seg-track, var(--white-05));
 }
 
 .source {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-1-5);
   min-width: 0;
-  font-size: 12px;
+  font-size: var(--text-xs);
 }
 
 .source span {
@@ -262,8 +262,8 @@
 
 .source svg {
   flex: none;
-  width: 14px;
-  height: 14px;
+  width: var(--size-3-5);
+  height: var(--size-3-5);
   color: var(--text-muted);
 }
 
@@ -273,15 +273,15 @@
   display: inline-flex;
   align-items: center;
   flex: none;
-  height: calc(var(--ctl) - 4px);
-  padding: 0 12px;
+  height: calc(var(--ctl) - var(--size-1));
+  padding: 0 var(--space-3);
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--seg-pill, var(--sel-bg));
   box-shadow: var(--sel-shadow);
   color: var(--text);
   font: inherit;
-  font-size: 12px;
+  font-size: var(--text-xs);
   cursor: pointer;
 }
 
@@ -300,20 +300,20 @@
   justify-self: center;
   align-self: center;
   width: 100%;
-  max-width: 200px;
+  max-width: var(--preview-width);
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  border-radius: var(--radius-sm);
-  background: #000;
+  border-radius: var(--radius-1-5);
+  background: var(--black);
 }
 
 /* The camera refused or missing: said in the preview's place, so it's clear how to allow it. */
 .preview[data-problem] {
   display: grid;
   place-items: center;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px dashed var(--line);
+  padding: var(--space-3);
+  background: var(--white-04);
+  border: var(--hairline) dashed var(--line);
 }
 
 .problem {
@@ -333,37 +333,37 @@
 
 .live {
   position: absolute;
-  left: 6px;
-  top: 6px;
+  left: var(--space-1-5);
+  top: var(--space-1-5);
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 1px 6px;
-  border-radius: 999px;
+  gap: var(--space-1-5);
+  padding: var(--space-0-25) var(--space-1-5);
+  border-radius: var(--radius-pill);
   background: var(--accent);
   color: var(--accent-ink);
   font-family: var(--font-mono);
   font-weight: 500;
-  font-size: 10px;
+  font-size: var(--text-10);
 }
 
 .live::before {
   content: "";
-  width: 6px;
-  height: 6px;
+  width: var(--size-1-5);
+  height: var(--size-1-5);
   border-radius: 50%;
   background: var(--accent-ink);
 }
 
 .badge {
   position: absolute;
-  left: 6px;
-  bottom: 6px;
-  padding: 2px 6px;
-  border-radius: 999px;
+  left: var(--space-1-5);
+  bottom: var(--space-1-5);
+  padding: var(--space-0-5) var(--space-1-5);
+  border-radius: var(--radius-pill);
   background: var(--glass);
-  backdrop-filter: blur(8px);
-  font-size: 11px;
+  backdrop-filter: blur(var(--blur-2));
+  font-size: var(--text-11);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -377,25 +377,25 @@
 .cueBox {
   position: relative;
   display: grid;
-  border-radius: 10px;
+  border-radius: var(--radius-2-5);
 }
 
 /* The Voice tab (spec 0123): the mic's live level, and the processing switches. */
 /* The labels just inside their heading (3 px), so they read as its own; the switches end where
    the picker's arrow does, clear of the column's edge (spec 0123). */
 .voiceRow {
-  min-height: var(--ctl, 38px);
-  padding: 0 12px 0 3px;
+  min-height: var(--ctl, var(--control-lg));
+  padding: 0 var(--space-3) 0 var(--space-0-75);
   /* The panel's scale: options read like the picker's own text, never above the title, and a
      touch softer than pure white. */
-  color: rgba(235, 235, 236, 0.82);
-  font-size: var(--pick-font, 12px);
+  color: var(--text-shade-82);
+  font-size: var(--pick-font, var(--text-xs));
   font-weight: 400;
 }
 
 .voiceRow > span {
   display: grid;
-  gap: 2px;
+  gap: var(--space-0-5);
 }
 
 /* The switches stay one size when a hint wraps, so they line up. */

@@ -6,6 +6,7 @@ import { Button } from "../components/ui/Button";
 import { PersonAvatar } from "../components/ui/PersonAvatar";
 import { timeAgo } from "@features/admin/utils/time-ago.util";
 import { XoveMark } from "../components/brand/XoveMark";
+import { ErrorNotice } from "@shared/components/error-notice";
 import styles from "./AdminPage.module.css";
 
 type Data = { requests: AccessRequestView[]; members: MemberView[] };
@@ -57,9 +58,9 @@ export function AdminPage() {
       </header>
 
       {error && (
-        <p className={styles.error} role="alert">
-          {error}
-        </p>
+        <div className={styles.error}>
+          <ErrorNotice>{error}</ErrorNotice>
+        </div>
       )}
 
       {!data ? (

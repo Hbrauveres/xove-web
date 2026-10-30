@@ -2,22 +2,22 @@
 .list {
   list-style: none;
   margin: 0;
-  padding: 8px;
+  padding: var(--space-2);
   display: grid;
-  gap: 2px;
+  gap: var(--space-0-5);
 }
 
 .row {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-2-5);
   width: 100%;
-  padding: 7px 8px;
+  padding: var(--space-1-75) var(--space-2);
   border: 0;
-  border-radius: 10px;
+  border-radius: var(--radius-2-5);
   background: transparent;
-  color: #d0d0d3;
+  color: var(--grey-208);
   font: inherit;
   font-size: var(--text-sm);
   font-weight: 500;
@@ -25,22 +25,22 @@
 }
 
 .row[data-unseen] {
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-  color: #fff;
+  background: var(--accent-12);
+  color: var(--white);
 }
 
 .icon {
   display: grid;
   place-items: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #cacacd;
+  width: var(--size-5-5);
+  height: var(--size-5-5);
+  border-radius: var(--radius-1-5);
+  background: var(--panel-line);
+  color: var(--grey-202);
 }
 
 .icon[data-stream] {
-  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  background: var(--accent-18);
   color: var(--accent);
 }
 
@@ -50,8 +50,8 @@
 
 .time {
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  color: #a4a4a9;
+  font-size: var(--text-11);
+  color: var(--grey-164);
   white-space: nowrap;
 }
 
@@ -62,22 +62,22 @@
 
 .link:hover,
 .link:focus-visible {
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: var(--panel-line);
+  color: var(--white);
   outline: none;
 }
 
 .link:focus-visible {
-  box-shadow: inset 0 0 0 2px var(--accent);
+  box-shadow: inset 0 0 0 var(--space-0-5) var(--accent);
 }
 
 .act {
   display: none;
   font-family: var(--font-mono);
-  font-size: 0.625rem;
-  letter-spacing: 0.08em;
-  padding: 3px 7px;
-  border-radius: 999px;
+  font-size: var(--text-10);
+  letter-spacing: var(--tracking-8);
+  padding: var(--space-0-75) var(--space-1-75);
+  border-radius: var(--radius-pill);
   background: var(--accent);
   color: var(--accent-ink);
 }

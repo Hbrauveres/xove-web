@@ -1,9 +1,9 @@
 .overlay {
   /* The translate: it rises with the round buttons above the settings sheet, together (spec 0118). */
   transition:
-    opacity 0.25s ease,
+    opacity var(--duration-250) ease,
     translate var(--unroll),
-    bottom 0.28s ease;
+    bottom var(--duration-280) ease;
   position: absolute;
   inset: 0;
   display: flex;
@@ -14,8 +14,8 @@
    */
   justify-content: flex-end;
   pointer-events: none;
-  padding: 12px;
-  padding-bottom: calc(12px + (var(--btn, 48px) - 34px) / 2);
+  padding: var(--space-3);
+  padding-bottom: calc(var(--space-3) + (var(--btn, var(--space-12)) - var(--space-8-5)) / 2);
 }
 
 /* Above the open streams row, 6 px clear of its pictures, and the full view's settings sheet,
@@ -31,18 +31,18 @@
   pointer-events: auto;
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: var(--control-sm);
+  height: var(--control-sm);
   border: none;
   border-radius: 50%;
-  background: rgba(10, 10, 11, 0.72);
+  background: var(--glass);
   color: var(--text);
   cursor: pointer;
   flex-shrink: 0;
 }
 
 .iconButton:hover {
-  background: rgba(10, 10, 11, 0.9);
+  background: var(--grey-10-90);
 }
 
 /* Hidden with the player's bars when the mouse stops (see Stage). */

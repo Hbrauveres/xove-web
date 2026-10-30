@@ -1,14 +1,14 @@
 /* The footer (spec 0104): see-through, no line, the same edges as the header. */
 .footer {
   position: relative;
-  z-index: 20;
+  z-index: var(--layer-bars);
   flex: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  height: 40px;
-  padding: 0 var(--room-edge, 24px);
+  gap: var(--space-4);
+  height: var(--control-xl);
+  padding: 0 var(--room-edge, var(--space-6));
   color: var(--text-faint);
   font-size: var(--text-xs);
   white-space: nowrap;
@@ -25,7 +25,7 @@
   flex: none;
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: var(--space-4-5);
   color: var(--text-muted);
 }
 
@@ -35,13 +35,13 @@
 }
 
 /* A narrow window: one line still, a little smaller and closer. */
-@media (max-width: 760px) {
+@media (--narrow) {
   .footer {
-    gap: 10px;
-    font-size: 0.6875rem;
+    gap: var(--space-2-5);
+    font-size: var(--text-11);
   }
 
   .links {
-    gap: 10px;
+    gap: var(--space-2-5);
   }
 }

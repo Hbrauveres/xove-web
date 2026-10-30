@@ -1,0 +1,372 @@
+/*
+ * The design tokens: every value the app's CSS uses, named once. No other CSS file writes a colour,
+ * size, duration, easing, layer or window size of its own. Sizes are in rem (16 px at the browser's
+ * default text size), so the whole interface follows the reader's text-size setting; only hairlines
+ * stay in px. The design sheet (docs/design.md) lists them with their use.
+ */
+:root {
+  /* Soft black and neutral greys: the record light reads best on black, and the stream keeps the
+     colour; pure black stays only behind the video, as its frame. Panels sit just above the ground
+     so they still stand apart, and red and faint text still pass on the raised surface. */
+  --ground: #0c0c0d;
+  --surface: #161617;
+  --surface-raised: #1b1b1d;
+  --line: #2c2c2f;
+  --text: #ebebec;
+  --text-muted: #9a9a9f;
+  --text-faint: #66666b;
+
+  /* The one accent is red, the record light: the same red as LIVE. Text on a red fill is a deep
+     red, which reads at 4.7:1. */
+  --accent: #ef4b4b;
+  --accent-ink: #3a0808;
+  --accent-soft: rgba(239, 75, 75, 0.14);
+
+  /* Status colours keep their meaning, whatever the palette. */
+  --live: #ef4b4b;
+  --ok: #3fbf7f;
+  --warn: #e0b341;
+
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-md: 0.9375rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2.25rem;
+
+  --gutter: 1rem;
+  /* The player's controls: the frosted glass of the round buttons and drop-ups, the settings
+     panel, and the dark pill of a chosen option. */
+  --glass: rgba(10, 10, 11, 0.72);
+  --panel: rgba(18, 18, 20, 0.74);
+  --panel-line: rgba(255, 255, 255, 0.08);
+  --sel-bg: var(--surface-raised);
+  --sel-shadow: 0 var(--space-0-25) var(--space-0-5) var(--black-40);
+  --sel-hover: #26262a;
+  --unroll: var(--duration-260) var(--ease-out);
+
+  /* Shades: each colour family at the strengths the app uses (white-10 is white at 10%). */
+  --accent-00: rgba(239, 75, 75, 0);
+  --accent-10: rgba(239, 75, 75, 0.1);
+  --accent-35: rgba(239, 75, 75, 0.35);
+  --accent-40: rgba(239, 75, 75, 0.4);
+  --accent-45: rgba(239, 75, 75, 0.45);
+  --accent-70: rgba(239, 75, 75, 0.7);
+  --accent-95: rgba(239, 75, 75, 0.95);
+  --accent-light: #f36a6a;
+  --black: #000000;
+  --black-35: rgba(0, 0, 0, 0.35);
+  --black-40: rgba(0, 0, 0, 0.4);
+  --black-45: rgba(0, 0, 0, 0.45);
+  --black-50: rgba(0, 0, 0, 0.5);
+  --black-55: rgba(0, 0, 0, 0.55);
+  --blue-grey-50: rgba(138, 150, 172, 0.5);
+  --green-18: rgba(22, 163, 74, 0.18);
+  --green-25: rgba(22, 163, 74, 0.25);
+  --green-30: rgba(22, 163, 74, 0.3);
+  --green-35: rgba(22, 163, 74, 0.35);
+  --green-45: rgba(22, 163, 74, 0.45);
+  --green-60: rgba(22, 163, 74, 0.6);
+  --green-light-85: rgba(43, 205, 104, 0.85);
+  --green-lighter: #45e087;
+  --grey-5: #050506;
+  --grey-7: #070708;
+  --grey-7-70: rgba(7, 7, 8, 0.7);
+  --grey-10-90: rgba(10, 10, 11, 0.9);
+  --grey-12-74: rgba(12, 12, 13, 0.74);
+  --grey-15: #0f0f11;
+  --grey-15-75: rgba(15, 15, 17, 0.75);
+  --grey-15-92: rgba(15, 15, 17, 0.92);
+  --grey-20-72: rgba(20, 20, 21, 0.72);
+  --grey-20-85: rgba(20, 20, 21, 0.85);
+  --grey-22-90: rgba(22, 22, 23, 0.9);
+  --grey-31: #1f1f1f;
+  --grey-40-85: rgba(40, 40, 44, 0.85);
+  --grey-40-90: rgba(40, 40, 44, 0.9);
+  --grey-58: #3a3a3d;
+  --grey-60-30: rgba(60, 60, 64, 0.3);
+  --grey-90-10: rgba(90, 90, 96, 0.1);
+  --grey-90-14: rgba(90, 90, 96, 0.14);
+  --grey-164: #a4a4a9;
+  --grey-176: #b0b0b4;
+  --grey-179: #b3b3b8;
+  --grey-185: #b9b9bc;
+  --grey-189: #bdbdc0;
+  --grey-202: #cacacd;
+  --grey-207: #cfcfd2;
+  --grey-208: #d0d0d3;
+  --pink-30: rgba(255, 228, 228, 0.3);
+  --text-shade-05: rgba(235, 235, 236, 0.05);
+  --text-shade-06: rgba(235, 235, 236, 0.06);
+  --text-shade-08: rgba(235, 235, 236, 0.08);
+  --text-shade-14: rgba(235, 235, 236, 0.14);
+  --text-shade-16: rgba(235, 235, 236, 0.16);
+  --text-shade-18: rgba(235, 235, 236, 0.18);
+  --text-shade-22: rgba(235, 235, 236, 0.22);
+  --text-shade-28: rgba(235, 235, 236, 0.28);
+  --text-shade-32: rgba(235, 235, 236, 0.32);
+  --text-shade-35: rgba(235, 235, 236, 0.35);
+  --text-shade-40: rgba(235, 235, 236, 0.4);
+  --text-shade-45: rgba(235, 235, 236, 0.45);
+  --text-shade-82: rgba(235, 235, 236, 0.82);
+  --white: #ffffff;
+  --white-00: rgba(255, 255, 255, 0);
+  --white-04: rgba(255, 255, 255, 0.04);
+  --white-05: rgba(255, 255, 255, 0.05);
+  --white-06: rgba(255, 255, 255, 0.06);
+  --white-10: rgba(255, 255, 255, 0.1);
+  --white-18: rgba(255, 255, 255, 0.18);
+  --white-22: rgba(255, 255, 255, 0.22);
+  --white-28: rgba(255, 255, 255, 0.28);
+  --white-30: rgba(255, 255, 255, 0.3);
+  --white-35: rgba(255, 255, 255, 0.35);
+  --white-40: rgba(255, 255, 255, 0.4);
+  --white-45: rgba(255, 255, 255, 0.45);
+  --white-55: rgba(255, 255, 255, 0.55);
+  --white-80: rgba(255, 255, 255, 0.8);
+  --white-90: rgba(255, 255, 255, 0.9);
+
+  /* Mixed shades: a colour token mixed with clear or with another token (live-45 is LIVE's red at 45%). */
+  --accent-12: color-mix(in srgb, var(--accent) 12%, transparent);
+  --accent-18: color-mix(in srgb, var(--accent) 18%, transparent);
+  --accent-on-line-55: color-mix(in srgb, var(--accent) 55%, var(--line));
+  --live-10: color-mix(in srgb, var(--live) 10%, transparent);
+  --live-12: color-mix(in srgb, var(--live) 12%, transparent);
+  --live-45: color-mix(in srgb, var(--live) 45%, transparent);
+  --live-55: color-mix(in srgb, var(--live) 55%, transparent);
+  --live-on-surface-18: color-mix(in srgb, var(--live) 18%, var(--surface));
+  --warn-55: color-mix(in srgb, var(--warn) 55%, transparent);
+  --warn-on-grey-20-14: color-mix(in srgb, var(--warn) 14%, var(--grey-20-85));
+
+  /* Proportions: a share of the window (vw, vh, vmin), of the box a rule sits in (cqw, cqh), or a line's
+     length in characters (measure-36 is 36 characters). They follow what they measure, not the text size. */
+  --box-height: 100cqh;
+  --box-width: 100cqw;
+  --cqw-20: 20cqw;
+  --measure-34: 34ch;
+  --measure-36: 36ch;
+  --measure-38: 38ch;
+  --measure-42: 42ch;
+  --vh-56: 56vh;
+  --vmin-1-8: 1.8vmin;
+  --vmin-4: 4vmin;
+  --vmin-4-5: 4.5vmin;
+  --vmin-11: 11vmin;
+  --vmin-13: 13vmin;
+  --vmin-22: 22vmin;
+  --vw-6: 6vw;
+  --vw-8: 8vw;
+  --vw-40: 40vw;
+  --vw-92: 92vw;
+  --window-height: 100dvh;
+
+  /* Spacing: padding, gaps, offsets and shadow distances, numbered as px ÷ 4 (--space-3 is 12 px). */
+  --space-0-25: 0.0625rem;
+  --space-0-375: 0.09375rem;
+  --space-0-5: 0.125rem;
+  --space-0-625: 0.15625rem;
+  --space-0-75: 0.1875rem;
+  --space-1: 0.25rem;
+  --space-1-125: 0.28125rem;
+  --space-1-25: 0.3125rem;
+  --space-1-375: 0.34375rem;
+  --space-1-5: 0.375rem;
+  --space-1-625: 0.40625rem;
+  --space-1-75: 0.4375rem;
+  --space-2: 0.5rem;
+  --space-2-25: 0.5625rem;
+  --space-2-5: 0.625rem;
+  --space-2-75: 0.6875rem;
+  --space-3: 0.75rem;
+  --space-3-25: 0.8125rem;
+  --space-3-5: 0.875rem;
+  --space-4: 1rem;
+  --space-4-25: 1.0625rem;
+  --space-4-5: 1.125rem;
+  --space-5: 1.25rem;
+  --space-5-5: 1.375rem;
+  --space-6: 1.5rem;
+  --space-7: 1.75rem;
+  --space-7-5: 1.875rem;
+  --space-8: 2rem;
+  --space-8-5: 2.125rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-14: 3.5rem;
+  --space-16: 4rem;
+  --space-18: 4.5rem;
+  --space-offscreen: 624.9375rem;
+
+  /* Small sizes (icons, dots, bars), numbered as px ÷ 4. */
+  --size-0-5: 0.125rem;
+  --size-0-75: 0.1875rem;
+  --size-1: 0.25rem;
+  --size-1-5: 0.375rem;
+  --size-2: 0.5rem;
+  --size-2-5: 0.625rem;
+  --size-2-75: 0.6875rem;
+  --size-3: 0.75rem;
+  --size-3-25: 0.8125rem;
+  --size-3-5: 0.875rem;
+  --size-3-75: 0.9375rem;
+  --size-4: 1rem;
+  --size-4-25: 1.0625rem;
+  --size-4-5: 1.125rem;
+  --size-5: 1.25rem;
+  --size-5-5: 1.375rem;
+  --size-6: 1.5rem;
+  --size-7: 1.75rem;
+  --size-7-5: 1.875rem;
+  --size-8: 2rem;
+
+  /* Things with a role. */
+  --admin-width: 62.5rem;
+  --also-live-width: 17.5rem;
+  --art-width: 9.375rem;
+  --avatar-big: 3.25rem;
+  --card-width: 27.5rem;
+  --control-2xl: 2.75rem;
+  --control-3xl: 3rem;
+  --control-lg: 2.375rem;
+  --control-md: 2.25rem;
+  --control-sm: 2.125rem;
+  --control-xl: 2.5rem;
+  --dropdown-width: 21.25rem;
+  --dropup-width: 14.25rem;
+  --error-width: 32.5rem;
+  --glow-length: 7.5rem;
+  --glow-length-long: 13.75rem;
+  --header-height: 3.75rem;
+  --home-card-width: 26.25rem;
+  --info-row: 6.5rem;
+  --info-row-tall: 10.5rem;
+  --mic-hear-width: 4rem;
+  --preview-width: 12.5rem;
+  --seat-offer-width: 25rem;
+  --settings-min-height: 15rem;
+  --settings-width: 17.5rem;
+  --settings-width-wide: 20rem;
+  --strip-item: 8rem;
+  --textarea-height: 5.25rem;
+  --toast-width: 22.5rem;
+  --tooltip-width: 16.25rem;
+  --viewer-menu-width: 13.75rem;
+  --volume-height: 7.5rem;
+  --volume-width: 5.75rem;
+
+  /* Corners, numbered as px ÷ 4, and the pill. */
+  --radius-0-5: 0.125rem;
+  --radius-1: 0.25rem;
+  --radius-1-25: 0.3125rem;
+  --radius-1-5: 0.375rem;
+  --radius-2: 0.5rem;
+  --radius-2-25: 0.5625rem;
+  --radius-2-5: 0.625rem;
+  --radius-3: 0.75rem;
+  --radius-3-5: 0.875rem;
+  --radius-4: 1rem;
+  --radius-4-5: 1.125rem;
+  --radius-pill: 62.4375rem;
+
+  /* Lines: the hairline stays one pixel; thicker lines and outline gaps are numbered as px ÷ 4. */
+  --border-0-375: 0.09375rem;
+  --border-0-5: 0.125rem;
+  --border-0-75: 0.1875rem;
+  --border-1: 0.25rem;
+  --hairline: 1px;
+
+  /* Blurs, numbered as px ÷ 4. */
+  --blur-0-375: 0.09375rem;
+  --blur-0-5: 0.125rem;
+  --blur-0-75: 0.1875rem;
+  --blur-1: 0.25rem;
+  --blur-2: 0.5rem;
+  --blur-2-5: 0.625rem;
+  --blur-3: 0.75rem;
+  --blur-5-5: 1.375rem;
+  --blur-6: 1.5rem;
+  --blur-9: 2.25rem;
+  --blur-10: 2.5rem;
+  --blur-16: 4rem;
+  --blur-18: 4.5rem;
+
+  /* Text sizes beyond the scale above, named by their px; letter spacing in hundredths of an em. */
+  --text-10: 0.625rem;
+  --text-11: 0.6875rem;
+  --text-13-5: 0.84375rem;
+  --text-14: 0.875rem;
+  --text-14-5: 0.90625rem;
+  --text-17: 1.0625rem;
+  --text-19: 1.1875rem;
+  --text-22: 1.375rem;
+  --text-23-2: 1.45rem;
+  --text-28: 1.75rem;
+  --text-32: 2rem;
+  --text-44: 2.75rem;
+  --text-inherit: 1em;
+  --tracking-1: 0.01em;
+  --tracking-2: 0.02em;
+  --tracking-6: 0.06em;
+  --tracking-8: 0.08em;
+  --tracking-10: 0.1em;
+
+  /* Durations, in milliseconds (--duration-120 is 120 ms). */
+  --duration-0-01: 0.01ms;
+  --duration-30: 30ms;
+  --duration-40: 40ms;
+  --duration-80: 80ms;
+  --duration-90: 90ms;
+  --duration-100: 100ms;
+  --duration-120: 120ms;
+  --duration-140: 140ms;
+  --duration-150: 150ms;
+  --duration-160: 160ms;
+  --duration-180: 180ms;
+  --duration-200: 200ms;
+  --duration-220: 220ms;
+  --duration-240: 240ms;
+  --duration-250: 250ms;
+  --duration-260: 260ms;
+  --duration-280: 280ms;
+  --duration-300: 300ms;
+  --duration-350: 350ms;
+  --duration-360: 360ms;
+  --duration-500: 500ms;
+  --duration-800: 800ms;
+  --duration-900: 900ms;
+  --duration-1000: 1000ms;
+  --duration-1600: 1600ms;
+  --duration-2000: 2000ms;
+
+  /* Easings. */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Layers, back to front: what sits over what. */
+  --layer-behind: -1;
+  --layer-raised: 1;
+  --layer-over: 2;
+  --layer-popup: 5;
+  --layer-panel: 6;
+  --layer-menu: 8;
+  --layer-overlay: 10;
+  --layer-bars: 20;
+  --layer-error: 25;
+  --layer-dropdown: 30;
+  --layer-tray: 40;
+  --layer-tooltip: 60;
+}
+
+/* The window and box sizes the layouts change at, used as `@media (--narrow)` or `@container (--tiny)`
+   (postcss.config.js). */
+@custom-media --short (max-height: 20rem);
+@custom-media --tiny (max-width: 22.4375rem);
+@custom-media --compact (max-width: 40rem);
+@custom-media --narrow (max-width: 47.5rem);
+@custom-media --medium (max-width: 56.25rem);

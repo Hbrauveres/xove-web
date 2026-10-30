@@ -3,17 +3,17 @@
 .row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  height: var(--ctl, 38px);
+  gap: var(--space-3);
+  height: var(--ctl, var(--control-lg));
 }
 
 /* The track: the live level drawn in it, green when it's over the knob (sent), faint under. */
 .meter {
-  --fill-colour: rgba(235, 235, 236, 0.4);
+  --fill-colour: var(--text-shade-40);
   position: relative;
   flex: 1;
   min-width: 0;
-  height: 16px;
+  height: var(--size-4);
 }
 
 .meter[data-sent] {
@@ -23,17 +23,17 @@
 .meter::before {
   content: "";
   position: absolute;
-  inset: 6.5px 0;
-  border-radius: 999px;
-  background: linear-gradient(to right, var(--fill-colour) 0 var(--level), rgba(235, 235, 236, 0.16) var(--level));
-  transition: background 90ms linear;
+  inset: var(--space-1-625) 0;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(to right, var(--fill-colour) 0 var(--level), var(--text-shade-16) var(--level));
+  transition: background var(--duration-90) linear;
 }
 
 .meter input {
   position: absolute;
   inset: 0;
   width: 100%;
-  height: 16px;
+  height: var(--size-4);
   margin: 0;
   background: transparent;
   cursor: pointer;
@@ -42,67 +42,67 @@
 }
 
 .meter input::-webkit-slider-runnable-track {
-  height: 3px;
+  height: var(--size-0-75);
   background: transparent;
 }
 
 /* The sensitivity: a slim upright line across the track, the common mark for a threshold. */
 .meter input::-webkit-slider-thumb {
-  width: 3px;
-  height: 14px;
-  margin-top: -5.5px;
+  width: var(--size-0-75);
+  height: var(--size-3-5);
+  margin-top: calc(var(--space-1-375) * -1);
   border: 0;
-  border-radius: 2px;
-  background: #ffffff;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35);
+  border-radius: var(--radius-0-5);
+  background: var(--white);
+  box-shadow: 0 0 0 var(--space-0-5) var(--black-35);
   appearance: none;
   -webkit-appearance: none;
   cursor: ew-resize;
   transition:
-    height 0.12s,
-    margin-top 0.12s;
+    height var(--duration-120),
+    margin-top var(--duration-120);
 }
 
 .meter input:hover::-webkit-slider-thumb,
 .meter input:focus-visible::-webkit-slider-thumb {
-  height: 16px;
-  margin-top: -6.5px;
+  height: var(--size-4);
+  margin-top: calc(var(--space-1-625) * -1);
 }
 
 .meter input::-moz-range-track {
-  height: 3px;
+  height: var(--size-0-75);
   background: transparent;
 }
 
 .meter input::-moz-range-thumb {
-  width: 3px;
-  height: 14px;
+  width: var(--size-0-75);
+  height: var(--size-3-5);
   border: 0;
-  border-radius: 2px;
-  background: #ffffff;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35);
+  border-radius: var(--radius-0-5);
+  background: var(--white);
+  box-shadow: 0 0 0 var(--space-0-5) var(--black-35);
   cursor: ew-resize;
 }
 
 .meter input:focus-visible {
-  outline: 2px solid var(--text);
-  outline-offset: 4px;
-  border-radius: 4px;
+  outline: var(--border-0-5) solid var(--text);
+  outline-offset: var(--border-1);
+  border-radius: var(--radius-1);
 }
 
 /* Test: hear yourself, a small pill in the settings' own style, counting down while it plays. */
 .hear {
   flex: none;
-  min-width: 64px;
-  height: 28px;
-  padding: 0 12px;
+  min-width: var(--mic-hear-width);
+  height: var(--size-7);
+  padding: 0 var(--space-3);
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--sel-bg);
   box-shadow: var(--sel-shadow);
   color: var(--text);
   font: inherit;
-  font-size: 12px;
+  font-size: var(--text-xs);
   font-weight: 600;
   cursor: pointer;
 }
@@ -113,7 +113,7 @@
 
 .hear[data-on] {
   background: var(--text);
-  color: #0c0c0d;
+  color: var(--ground);
 }
 
 .hear:disabled {

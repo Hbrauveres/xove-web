@@ -5,18 +5,18 @@
 .pill {
   position: relative;
   display: flex;
-  height: 48px;
-  border-radius: 999px;
-  background: rgba(10, 10, 11, 0.72);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  height: var(--control-3xl);
+  border-radius: var(--radius-pill);
+  background: var(--glass);
+  backdrop-filter: blur(var(--blur-2));
+  box-shadow: 0 var(--space-1) var(--space-4) var(--black-35);
   color: var(--text);
 }
 
 /* One ring around the whole pill when its button has the keyboard's focus. */
 .pill:has(:focus-visible) {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  outline: var(--border-0-5) solid var(--accent);
+  outline-offset: var(--border-0-75);
 }
 
 .main {
@@ -32,18 +32,18 @@
 
 /* Pointed at, a glass pill lightens (as in the design); a live one stays as it is. */
 .pill {
-  transition: background 120ms ease;
+  transition: background var(--duration-120) ease;
 }
 
 @media (hover: hover) {
   .pill:not(.live):not(.disabled):hover {
-    background: rgba(40, 40, 44, 0.85);
+    background: var(--grey-40-85);
   }
 }
 
 .main {
-  width: 48px;
-  border-radius: 999px;
+  width: var(--control-3xl);
+  border-radius: var(--radius-pill);
 }
 
 /* Live: the pill lights up. */
@@ -63,13 +63,13 @@
 
 /* A narrow stage (spec 0133): compact, so a row of four and the fullscreen button still fit, down
    to 280 px. Measured on the controls' layer itself, not the window. */
-@container (max-width: 359px) {
+@container (--tiny) {
   .pill {
-    height: 36px;
+    height: var(--control-md);
   }
 
   .main {
-    width: 36px;
+    width: var(--control-md);
   }
 }
 
@@ -85,8 +85,8 @@
 .iconHover {
   display: grid;
   place-items: center;
-  width: 20px;
-  height: 20px;
+  width: var(--size-5);
+  height: var(--size-5);
   line-height: 0;
 }
 

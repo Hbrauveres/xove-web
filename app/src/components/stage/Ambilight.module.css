@@ -3,7 +3,7 @@
   position: absolute;
   z-index: 0;
   pointer-events: none;
-  transition: opacity 0.5s ease;
+  transition: opacity var(--duration-500) ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
