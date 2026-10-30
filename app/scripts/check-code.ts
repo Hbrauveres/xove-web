@@ -13,7 +13,7 @@ export const RULES = {
   partPlace: "a utils, constants, types or enum file outside its kind's folder (utils/, constants/, types/, enums/)",
   partInCode:
     "a type, named constant or helper inside working code: types to types/, constants to constants/, helpers to utils/",
-  literal: "literal colour, duration or easing in CSS (use a token)",
+  literal: "a colour, size, duration, easing, layer or breakpoint written in CSS (use its token in tokens.css)",
   domQuery:
     "querySelector/closest/getElementById in a component: finding other parts through the page (pass a ref or context)",
   crossCss: "CSS module imported from another folder",
@@ -84,7 +84,15 @@ function misplacedPart(r: string): boolean {
   return folder !== PART_FOLDERS[part];
 }
 
-const isTokenFile = (f: string) => /(^|\/)(tokens|global)\.css$/.test(f);
+const isTokenFile = (f: string) => /(^|\/)tokens\.css$/.test(f);
+// A value written in CSS rather than named in tokens.css. Zero isn't a value (`0`, `0s`), and a
+// token's own name (`var(--space-2)`) isn't one either.
+const CSS_VALUE = [
+  /#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(|cubic-bezier\(/,
+  /(?<![\w.#])(?<!\w-)(?!0+(?:\.0+)?(?:px|rem|em|ms|s)\b)\d*\.?\d+(?:px|rem|em|ms|s)\b/,
+  /z-index:\s*-?[1-9]/,
+];
+const writesAValue = (line: string) => CSS_VALUE.some((re) => re.test(line));
 const NAME =
   /^[a-z0-9]+(-[a-z0-9]+)*\.(component|page|hook|util|service|adapter|store|model|selectors|constants|enum|types|factory)(\.module)?\.(tsx?|css)$|^[a-z0-9]+(-[a-z0-9]+)*\.(component|page|hook|util|service|adapter|store|model|selectors)\.test\.tsx?$|^(tokens|global)\.css$/;
 
@@ -114,13 +122,7 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
   lines.forEach((l, i) => {
     const n = i + 1,
       comment = /^\s*(\/\/|\*|\/\*)/.test(l) || /\/\/ /.test(l) || /\/\*/.test(l);
-    if (
-      r.endsWith(".css") &&
-      !isTokenFile(r) &&
-      !/^\s*(\/\*|\*)/.test(l) &&
-      /#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(|\b\d+(\.\d+)?m?s\b|cubic-bezier\(/.test(l)
-    )
-      add("literal", n, l);
+    if (r.endsWith(".css") && !isTokenFile(r) && !/^\s*(\/\*|\*)/.test(l) && writesAValue(l)) add("literal", n, l);
     if (isCode(r) && r.endsWith(".tsx") && /\.(querySelector|querySelectorAll|getElementById|closest)\(/.test(l))
       add("domQuery", n, l);
     if (isCode(r) && /from\s+["']\.\.\/[^"']*\.module\.css["']/.test(l)) add("crossCss", n, l);

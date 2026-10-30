@@ -38,6 +38,44 @@ describe("the code check", () => {
     expect(rules("shared/ui/face/face.component.module.css", ".face { color: #ffffff; }\n")).toContain("literal");
   });
 
+  it("names every value a CSS file writes instead of a token: colour, size, timing, easing, layer, breakpoint", () => {
+    const css = "shared/ui/face/face.component.module.css";
+    for (const line of [
+      ".a { background: rgba(0, 0, 0, 0.4); }",
+      ".a { padding: 12px; }",
+      ".a { width: 2.25rem; }",
+      ".a { letter-spacing: 0.08em; }",
+      ".a { margin: calc(var(--space-2) * -1) -4px; }",
+      ".a { transition: opacity 120ms; }",
+      ".a { animation: spin 1.6s infinite; }",
+      ".a { transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }",
+      ".a { z-index: 20; }",
+      ".a { z-index: -1; }",
+      "@media (max-width: 760px) {",
+      "@container (max-height: 320px) {",
+    ])
+      expect(rules(css, `${line}\n`), line).toContain("literal");
+  });
+
+  it("lets CSS write tokens, zero and plain numbers, and lets tokens.css write every value", () => {
+    const css = "shared/ui/face/face.component.module.css";
+    for (const line of [
+      ".a { padding: var(--space-2-5) var(--space-3); border: var(--hairline) solid var(--white-08); }",
+      ".a { margin: 0; transition: visibility 0s linear var(--duration-180); z-index: 0; }",
+      ".a { opacity: 0.5; line-height: 1.5; flex: 1; font-weight: 500; transform: scale(1.04); }",
+      "@media (--narrow) {",
+      "@container (--tiny) {",
+      "/* was 12px before the tokens */",
+    ])
+      expect(rules(css, `${line}\n`), line).not.toContain("literal");
+    expect(
+      rules("shared/styles/tokens.css", ":root { --space-3: 0.75rem; --black-40: rgba(0, 0, 0, 0.4); }\n"),
+    ).not.toContain("literal");
+    expect(rules("shared/styles/global.css", ":focus-visible { outline: 2px solid var(--accent); }\n")).toContain(
+      "literal",
+    );
+  });
+
   it("names a test that waits in real time, or shares data at file level", () => {
     expect(
       rules("shared/utils/c.util.test.ts", "await new Promise((r) => setTimeout(r, 500));\n", [

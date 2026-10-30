@@ -729,13 +729,6 @@
   },
   {
     "tool": "code",
-    "rule": "literal",
-    "file": "src/components/ui/DropUp.module.css",
-    "count": 2,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
     "rule": "naming",
     "file": "src/brand/brand.test.ts",
     "count": 1,
