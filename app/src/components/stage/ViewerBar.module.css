@@ -229,6 +229,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .slider,
+  .left > .round,
+  .right > .round,
   .round[data-voice]::before {
     transition: none;
   }

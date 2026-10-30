@@ -45,8 +45,6 @@
   flex: none;
 }
 
-/* A filled LIVE badge, its dot pulsing (spec 0107). */
-
 .elapsed {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
