@@ -108,7 +108,7 @@
       }
     },
     {
-      "files": ["*.config.ts", "*.config.js", "vite.config.ts"],
+      "files": ["*.config.ts", "*.config.js", "vite.config.ts", ".storybook/*.ts", "**/*.stories.tsx"],
       "rules": {
         "import/no-default-export": "off"
       }
