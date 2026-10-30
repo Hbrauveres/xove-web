@@ -11,9 +11,20 @@ export type Difference = { screen: string; element: string; property: string; be
  * the same, so the hash isn't part of the look. */
 export const unhashed = (value: string) => value.replace(/_([\w-]+?)_[a-z0-9]{5}_\d+/g, "$1");
 
+/** An element with no width or height draws nothing (a line break): where it sits isn't part of the look,
+ * and it can move a pixel between two runs of the same page. */
+const drawsNothing = (box = "") => {
+  const [, , width, height] = box.split(",").map(Number);
+  return width === 0 || height === 0;
+};
+
 /** What an element looks like, written so that only a change to the look changes it. */
 export const asRecorded = (styles: Styles): Styles =>
-  Object.fromEntries(Object.entries(styles).map(([property, value]) => [property, unhashed(value)]));
+  Object.fromEntries(
+    Object.entries(styles)
+      .filter(([property]) => property !== "@box" || !drawsNothing(styles["@box"]))
+      .map(([property, value]) => [property, unhashed(value)]),
+  );
 
 /** Every difference between `main`'s recording and the branch's: an element gone or new, or a property changed. */
 export function compare(main: Recording, branch: Recording): Difference[] {

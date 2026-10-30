@@ -82,7 +82,11 @@ async function screenOf(page: Page, url: string, clicks: RegExp[], [width, heigh
   await cdp.send("Animation.setPlaybackRate", { playbackRate: 0 });
   await page.clock.install({ time: NOW });
   await page.goto(url);
-  await page.evaluate(() => document.fonts.ready);
+  // Every face the page declares, loaded before anything is measured, not only those already asked for.
+  await page.evaluate(async () => {
+    await Promise.all([...document.fonts].map((face) => face.load().catch(() => undefined)));
+    await document.fonts.ready;
+  });
   await settle(page, SETTLE_MS);
   await page.mouse.move((width ?? 0) / 2, (height ?? 0) / 2);
   await settle(page, POINTER_MS);

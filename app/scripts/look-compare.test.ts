@@ -31,6 +31,11 @@ describe("the looks-the-same comparison", () => {
     expect(compare({ s: { e: before } }, { s: { e: after } })).toEqual([]);
   });
 
+  it("leaves out where an element that draws nothing sits, a line break's box, but not its styles", () => {
+    expect(asRecorded({ "@box": "1321.75,577.06,0,53", display: "inline" })).toEqual({ display: "inline" });
+    expect(asRecorded({ "@box": "10,20,30,40" })).toEqual({ "@box": "10,20,30,40" });
+  });
+
   it("reports what it compared with, and tells a look change from an accident", () => {
     const one = compare(screen({ padding: "12px" }), screen({ padding: "14px" }));
     expect(report([], "`main` at abc1234", false)).toContain("Looks the same");
