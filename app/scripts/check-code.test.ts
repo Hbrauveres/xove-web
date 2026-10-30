@@ -91,6 +91,17 @@ describe("the code check", () => {
     );
   });
 
+  it("takes a component's stories as its states, like a test: named after it, beside it, no test of their own", () => {
+    const stories = "shared/components/face/face.component.stories.tsx";
+    const text =
+      'import type { Meta } from "@storybook/react-vite";\nconst meta = { title: "Face" } satisfies Meta;\nexport default meta;\n';
+    expect(rules(stories, text, ["shared/components/face/face.component.tsx"])).toEqual([]);
+    expect(rules(stories, text)).toContain("orphanTest");
+    expect(rules("shared/components/face/Face.stories.tsx", text, ["shared/components/face/Face.tsx"])).toContain(
+      "naming",
+    );
+  });
+
   it("names a test that waits in real time, or shares data at file level", () => {
     expect(
       rules("shared/utils/c.util.test.ts", "await new Promise((r) => setTimeout(r, 500));\n", [

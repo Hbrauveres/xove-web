@@ -9,7 +9,7 @@ export const RULES = {
   size: "over 300 lines (one job per file)",
   noTest: "code with logic but no .test file beside it",
   testName: "test named .spec (rename to .test: a spec is a workspace requirement document)",
-  orphanTest: "test file with no file of the same name beside it",
+  orphanTest: "test or stories file with no file of the same name beside it",
   partPlace: "a utils, constants, types or enum file outside its kind's folder (utils/, constants/, types/, enums/)",
   partInCode:
     "a type, named constant or helper inside working code: types to types/, constants to constants/, helpers to utils/",
@@ -36,7 +36,9 @@ export type Finding = { rule: Rule; file: string; line: number; text: string };
 /** Prettier's width (.prettierrc.json): what it can't wrap must stay inside it too. */
 const MAX_LINE = 120;
 const isTest = (f: string) => /\.(spec|test)\.tsx?$/.test(f);
-const isCode = (f: string) => /\.tsx?$/.test(f) && !isTest(f) && !f.endsWith(".d.ts");
+/** A component's states for the workbench (ADR-0089): like a test, it's never part of the app. */
+const isStories = (f: string) => /\.stories\.tsx$/.test(f);
+const isCode = (f: string) => /\.tsx?$/.test(f) && !isTest(f) && !isStories(f) && !f.endsWith(".d.ts");
 const noLogic = (f: string) =>
   /(\.types|\.enum|\.constants)\.ts$/.test(f) ||
   /(^|\/)index\.ts$/.test(f) ||
@@ -125,7 +127,7 @@ const writesAValue = (line: string) => CSS_VALUE.some((re) => re.test(line)) || 
 /** The CSS's lines with their comments blanked out, so a comment's words never count and lines keep their numbers. */
 const withoutComments = (css: string) => css.replace(/\/\*[\s\S]*?\*\//g, (c) => c.replace(/[^\n]/g, " "));
 const NAME =
-  /^[a-z0-9]+(-[a-z0-9]+)*\.(component|page|hook|util|service|adapter|store|model|selectors|constants|enum|types|factory)(\.module)?\.(tsx?|css)$|^[a-z0-9]+(-[a-z0-9]+)*\.(component|page|hook|util|service|adapter|store|model|selectors)\.test\.tsx?$|^(tokens|global)\.css$/;
+  /^[a-z0-9]+(-[a-z0-9]+)*\.(component|page|hook|util|service|adapter|store|model|selectors|constants|enum|types|factory)(\.module)?\.(tsx?|css)$|^[a-z0-9]+(-[a-z0-9]+)*\.(component|page|hook|util|service|adapter|store|model|selectors)\.test\.tsx?$|^[a-z0-9]+(-[a-z0-9]+)*\.(component|page)\.stories\.tsx$|^(tokens|global)\.css$/;
 
 // Findings of one file, from its path (relative to src) and its text: [{ rule, line, text }].
 export function analyse(r: string, text: string, exists: (path: string) => boolean): Finding[] {
@@ -147,6 +149,7 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
   if (isTest(r) && !/(^|\/)testing\//.test(r)) {
     if (![".ts", ".tsx"].some((e) => exists(codeStemOf(r) + e))) add("orphanTest");
   }
+  if (isStories(r) && !exists(r.replace(/\.stories\.tsx$/, ".tsx"))) add("orphanTest");
   if (!isTest(r) && misplacedPart(r)) add("partPlace");
   const working = isWorking(r) && top !== "testing";
   const jobOnly = /\.(component|page|hook)\.tsx?$/.test(r);
