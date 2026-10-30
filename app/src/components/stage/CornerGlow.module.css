@@ -4,9 +4,9 @@
  * its three colours step at different shades and the dark end shows no bands.
  */
 .glow {
-  --len: clamp(120px, 13vmin, 220px);
-  --thick: clamp(16px, 1.8vmin, 28px);
-  --blur: clamp(40px, 4.5vmin, 72px);
+  --len: clamp(var(--glow-length), 13vmin, var(--glow-length-long));
+  --thick: clamp(var(--size-4), 1.8vmin, var(--size-7));
+  --blur: clamp(var(--blur-10), 4.5vmin, var(--blur-18));
   /* The L's lie just outside the stage's edges, where the light shows. */
   --out: calc(-1 * var(--thick));
   position: absolute;

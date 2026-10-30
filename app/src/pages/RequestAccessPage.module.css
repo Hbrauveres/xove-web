@@ -2,27 +2,27 @@
   min-height: 100%;
   display: grid;
   place-items: center;
-  padding: 48px var(--gutter) 48px var(--gutter);
+  padding: var(--space-12) var(--gutter) var(--space-12) var(--gutter);
   background: var(--ground);
 }
 
 .card {
   width: 100%;
-  max-width: 440px;
+  max-width: var(--card-width);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--space-3-5);
 }
 
 /* The mark (spec 0111). */
 .brand {
   display: flex;
-  margin: 0 0 8px;
+  margin: 0 0 var(--space-2);
   color: var(--text);
 }
 
 .title {
-  font-size: clamp(1.75rem, 6vw, 2.25rem);
+  font-size: clamp(var(--text-28), 6vw, var(--text-2xl));
   line-height: 1.1;
 }
 
@@ -34,8 +34,8 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 4px;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
 }
 
 .label {
@@ -51,10 +51,10 @@
 .textarea {
   width: 100%;
   resize: vertical;
-  min-height: 84px;
-  padding: 10px 12px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--line);
+  min-height: var(--textarea-height);
+  padding: var(--space-2-5) var(--space-3);
+  border-radius: var(--radius-1-5);
+  border: var(--hairline) solid var(--line);
   background: var(--surface);
   color: var(--text);
   font: inherit;
@@ -62,15 +62,15 @@
 }
 
 .textarea:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline: var(--border-0-5) solid var(--accent);
+  outline-offset: var(--hairline);
 }
 
 .formFooter {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .counter {
@@ -89,11 +89,11 @@
 .waiting {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  margin: 4px 0 0;
-  padding: 10px 14px;
+  gap: var(--space-2-5);
+  margin: var(--space-1) 0 0;
+  padding: var(--space-2-5) var(--space-3-5);
   align-self: flex-start;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--accent-soft);
   color: var(--accent);
   font-weight: 600;
@@ -101,8 +101,8 @@
 }
 
 .pulse {
-  width: 8px;
-  height: 8px;
+  width: var(--size-2);
+  height: var(--size-2);
   border-radius: 50%;
   background: currentColor;
   animation: pulse 1.6s ease-in-out infinite;
@@ -117,10 +117,10 @@
 .account {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid var(--line);
+  gap: var(--space-2-5);
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: var(--hairline) solid var(--line);
 }
 
 .accountText {

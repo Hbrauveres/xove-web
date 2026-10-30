@@ -5,13 +5,13 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding: 12px;
+  padding: var(--space-3);
   pointer-events: none;
   z-index: 2;
 }
 
 .buttons {
-  --gap: 10px;
+  --gap: var(--space-2-5);
   display: flex;
   gap: var(--gap);
   pointer-events: auto;
@@ -27,11 +27,11 @@
    corner (34 px, 12 px in, and an 8 px gap) on both sides. */
 @container (max-width: 359px) {
   .row {
-    padding-inline: calc(12px + 34px + 8px);
+    padding-inline: calc(var(--space-3) + var(--space-8-5) + var(--space-2));
   }
 
   .buttons {
-    --gap: 6px;
+    --gap: var(--space-1-5);
   }
 }
 
@@ -39,9 +39,9 @@
 .source {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-1-5);
   min-width: 0;
-  font-size: 12px;
+  font-size: var(--text-xs);
 }
 
 .source span {
@@ -52,22 +52,22 @@
 
 .source svg {
   flex: none;
-  width: 14px;
-  height: 14px;
+  width: var(--size-3-5);
+  height: var(--size-3-5);
   color: var(--text-muted);
 }
 
 .change {
   flex: none;
-  height: 30px;
-  padding: 0 12px;
+  height: var(--size-7-5);
+  padding: 0 var(--space-3);
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--sel-bg);
   box-shadow: var(--sel-shadow);
   color: var(--text);
   font: inherit;
-  font-size: 12px;
+  font-size: var(--text-xs);
   cursor: pointer;
 }
 

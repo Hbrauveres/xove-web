@@ -5,14 +5,14 @@
  */
 .empty {
   /* Close to the edge, so the stage's own buttons sit inside the bottom-right corner. */
-  --inset: 6px;
-  --arm: 28px;
-  --stroke: 2px;
+  --inset: var(--space-1-5);
+  --arm: var(--size-7);
+  --stroke: var(--border-0-5);
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  padding: 20px;
+  padding: var(--space-5);
   text-align: center;
   container-type: size;
   /* One flat dark: a gradient this dim has too few shades and shows them as bands. */
@@ -27,7 +27,7 @@
   border: 0 solid var(--text-shade-32);
   pointer-events: none;
   /* Lit, as a camera's display: each corner glows softly in its own colour. */
-  filter: drop-shadow(0 0 3px var(--text-shade-35)) drop-shadow(0 0 10px var(--text-shade-18));
+  filter: drop-shadow(0 0 var(--blur-0-75) var(--text-shade-35)) drop-shadow(0 0 var(--blur-2-5) var(--text-shade-18));
 }
 
 .corner[data-at="tl"] {
@@ -41,7 +41,7 @@
   right: var(--inset);
   border-width: var(--stroke) var(--stroke) 0 0;
   border-color: var(--accent);
-  filter: drop-shadow(0 0 3px var(--accent-70)) drop-shadow(0 0 12px var(--accent-40));
+  filter: drop-shadow(0 0 var(--blur-0-75) var(--accent-70)) drop-shadow(0 0 var(--blur-3) var(--accent-40));
 }
 
 .corner[data-at="bl"] {
@@ -60,21 +60,21 @@
    recording). */
 .readout {
   position: absolute;
-  top: calc(var(--inset) + 18px);
-  left: calc(var(--inset) + 18px);
+  top: calc(var(--inset) + var(--space-4-5));
+  left: calc(var(--inset) + var(--space-4-5));
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   color: var(--text-shade-45);
-  font: 500 11px/1 var(--font-mono);
-  letter-spacing: 0.08em;
+  font: 500 var(--text-11)/1 var(--font-mono);
+  letter-spacing: var(--tracking-8);
   text-transform: uppercase;
   white-space: nowrap;
 }
 
 .dot {
-  width: 6px;
-  height: 6px;
+  width: var(--size-1-5);
+  height: var(--size-1-5);
   border-radius: 50%;
   background: var(--text-shade-40);
 }
@@ -84,13 +84,13 @@
   position: relative;
   display: grid;
   justify-items: center;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .title {
   margin: 0;
-  font: 800 28px/1.1 var(--font-display);
-  letter-spacing: -0.01em;
+  font: 800 var(--text-28)/1.1 var(--font-display);
+  letter-spacing: calc(var(--tracking-1) * -1);
 }
 
 /*
@@ -107,38 +107,38 @@
   margin: 0;
   max-width: 38ch;
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   text-wrap: balance;
 }
 
 /* Two pills of one width, side by side, alone in the row, centred (specs 0138, 0147). */
 .go {
-  --h: 44px;
+  --h: var(--control-2xl);
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 12px;
+  gap: var(--space-2-5);
+  margin-top: var(--space-3);
 }
 
 .go button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--space-2);
   height: var(--h);
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   font: inherit;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   cursor: pointer;
 }
 
 .go svg {
-  width: 18px;
-  height: 18px;
+  width: var(--size-4-5);
+  height: var(--size-4-5);
 }
 
 .primary {
@@ -173,8 +173,8 @@
 /* A small stage (a narrow window): finer corners, no "Standby", a smaller heading, compact buttons. */
 @container (max-width: 640px) {
   .empty {
-    --arm: 18px;
-    --stroke: 1.5px;
+    --arm: var(--size-4-5);
+    --stroke: var(--border-0-375);
   }
 
   .readout {
@@ -182,16 +182,16 @@
   }
 
   .title {
-    font-size: 22px;
+    font-size: var(--text-22);
   }
 
   .go {
-    --h: 40px;
+    --h: var(--control-xl);
   }
 
   .go button {
-    padding: 0 16px;
-    font-size: 14px;
+    padding: 0 var(--space-4);
+    font-size: var(--text-14);
   }
 }
 
@@ -199,9 +199,9 @@
    in its middle both ways, the stage's own buttons in their corner (spec 0138). */
 @container (max-height: 320px) {
   .empty {
-    --arm: 16px;
+    --arm: var(--size-4);
     /* In the stage's middle both ways (spec 0138); the stage's own buttons sit in its corner. */
-    padding: 12px 20px;
+    padding: var(--space-3) var(--space-5);
   }
 
   .focus {
@@ -209,7 +209,7 @@
   }
 
   .title {
-    font-size: 19px;
+    font-size: var(--text-19);
   }
 
   .copy {
@@ -217,49 +217,49 @@
   }
 
   .go {
-    gap: 8px;
-    margin-top: 16px;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
   }
 
   .go {
-    --h: 38px;
+    --h: var(--control-lg);
   }
 
   .go button {
-    padding: 0 16px;
-    font-size: 13.5px;
+    padding: 0 var(--space-4);
+    font-size: var(--text-13-5);
   }
 
   .go svg {
-    width: 17px;
-    height: 17px;
+    width: var(--size-4-25);
+    height: var(--size-4-25);
   }
 }
 
 /* The narrowest stages (under 360 px): smaller still, so the stage's own buttons stay clear. */
 @container (max-width: 359px) {
   .title {
-    font-size: 17px;
+    font-size: var(--text-17);
   }
 
   .go {
-    gap: 6px;
-    margin-top: 10px;
+    gap: var(--space-1-5);
+    margin-top: var(--space-2-5);
   }
 
   .go {
-    --h: 34px;
+    --h: var(--control-sm);
   }
 
   .go button {
-    gap: 6px;
-    padding: 0 13px;
-    font-size: 13px;
+    gap: var(--space-1-5);
+    padding: 0 var(--space-3-25);
+    font-size: var(--text-sm);
   }
 
   .go svg {
-    width: 16px;
-    height: 16px;
+    width: var(--size-4);
+    height: var(--size-4);
   }
 }
 
@@ -306,20 +306,20 @@
     var(--accent-10) 42%,
     transparent 62%
   );
-  filter: blur(3px);
+  filter: blur(var(--blur-0-75));
   animation: intro-dot var(--intro) cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 /* The line: drawn across from the point, white, fading at its ends, glowing. */
 .intro i[data-part="line"] {
-  height: 3px;
-  margin-top: -1.5px;
+  height: var(--size-0-75);
+  margin-top: calc(var(--space-0-375) * -1);
   background: linear-gradient(90deg, var(--white-35), var(--white) 30%, var(--white) 70%, var(--white-35));
   box-shadow:
-    0 0 8px 2px var(--white-90),
-    0 0 32px 8px var(--white-45),
-    0 0 56px 14px var(--accent-soft);
-  filter: blur(1.5px);
+    0 0 var(--space-2) var(--space-0-5) var(--white-90),
+    0 0 var(--space-8) var(--space-2) var(--white-45),
+    0 0 var(--space-14) var(--space-3-5) var(--accent-soft);
+  filter: blur(var(--blur-0-375));
   transform: scaleX(0.01);
   animation: intro-line var(--intro) cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -337,7 +337,7 @@
     var(--accent-10) 90%,
     transparent 100%
   );
-  filter: blur(24px);
+  filter: blur(var(--blur-6));
   transform: scale(0.2, 0.03);
   animation: intro-flare var(--intro) cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
@@ -348,17 +348,17 @@
   top: 27%;
   height: 46%;
   background:
-    repeating-linear-gradient(0deg, var(--grey-60-30) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(0deg, var(--grey-60-30) 0 var(--hairline), transparent var(--hairline) var(--space-0-75)),
     repeating-linear-gradient(
       90deg,
-      var(--grey-90-14) 0 2px,
-      transparent 2px 7px,
-      var(--grey-90-10) 7px 8px,
-      transparent 8px 13px
+      var(--grey-90-14) 0 var(--space-0-5),
+      transparent var(--space-0-5) var(--space-1-75),
+      var(--grey-90-10) var(--space-1-75) var(--space-2),
+      transparent var(--space-2) var(--space-3-25)
     ),
     linear-gradient(180deg, transparent, var(--grey-185) 18%, var(--grey-207) 50%, var(--grey-176) 82%, transparent);
-  box-shadow: 0 0 48px 12px var(--white-18);
-  filter: blur(4px);
+  box-shadow: 0 0 var(--space-12) var(--space-3) var(--white-18);
+  filter: blur(var(--blur-1));
   animation: intro-band var(--intro) cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 

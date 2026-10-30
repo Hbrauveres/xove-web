@@ -14,8 +14,8 @@
    */
   justify-content: flex-end;
   pointer-events: none;
-  padding: 12px;
-  padding-bottom: calc(12px + (var(--btn, 48px) - 34px) / 2);
+  padding: var(--space-3);
+  padding-bottom: calc(var(--space-3) + (var(--btn, var(--space-12)) - var(--space-8-5)) / 2);
 }
 
 /* Above the open streams row, 6 px clear of its pictures, and the full view's settings sheet,
@@ -31,8 +31,8 @@
   pointer-events: auto;
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: var(--control-sm);
+  height: var(--control-sm);
   border: none;
   border-radius: 50%;
   background: var(--glass);

@@ -1,5 +1,5 @@
 .art {
-  width: 150px;
+  width: var(--art-width);
   height: auto;
 }
 

@@ -38,8 +38,6 @@
   --text-xl: 1.5rem;
   --text-2xl: 2.25rem;
 
-  --radius-sm: 0.375rem;
-  --radius-md: 0.625rem;
   --gutter: 1rem;
   /* The player's controls: the frosted glass of the round buttons and drop-ups, the settings
      panel, and the dark pill of a chosen option. */
@@ -47,7 +45,7 @@
   --panel: rgba(18, 18, 20, 0.74);
   --panel-line: rgba(255, 255, 255, 0.08);
   --sel-bg: var(--surface-raised);
-  --sel-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --sel-shadow: 0 var(--hairline) var(--space-0-5) var(--black-40);
   --sel-hover: #26262a;
   --unroll: 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
 
@@ -131,6 +129,155 @@
   --white-55: rgba(255, 255, 255, 0.55);
   --white-80: rgba(255, 255, 255, 0.8);
   --white-90: rgba(255, 255, 255, 0.9);
+
+  /* Spacing: padding, gaps, offsets and shadow distances, numbered as px ÷ 4 (--space-3 is 12 px). */
+  --space-0-5: 0.125rem;
+  --space-0-75: 0.1875rem;
+  --space-0-375: 0.09375rem;
+  --space-0-625: 0.15625rem;
+  --space-1: 0.25rem;
+  --space-1-5: 0.375rem;
+  --space-1-25: 0.3125rem;
+  --space-1-75: 0.4375rem;
+  --space-1-125: 0.28125rem;
+  --space-1-375: 0.34375rem;
+  --space-1-625: 0.40625rem;
+  --space-2: 0.5rem;
+  --space-2-5: 0.625rem;
+  --space-2-25: 0.5625rem;
+  --space-2-75: 0.6875rem;
+  --space-3: 0.75rem;
+  --space-3-5: 0.875rem;
+  --space-3-25: 0.8125rem;
+  --space-4: 1rem;
+  --space-4-5: 1.125rem;
+  --space-4-25: 1.0625rem;
+  --space-5: 1.25rem;
+  --space-5-5: 1.375rem;
+  --space-6: 1.5rem;
+  --space-7: 1.75rem;
+  --space-7-5: 1.875rem;
+  --space-8: 2rem;
+  --space-8-5: 2.125rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-14: 3.5rem;
+  --space-16: 4rem;
+  --space-18: 4.5rem;
+  --space-offscreen: 624.9375rem;
+
+  /* Small sizes (icons, dots, bars), numbered as px ÷ 4. */
+  --size-0-5: 0.125rem;
+  --size-0-75: 0.1875rem;
+  --size-1: 0.25rem;
+  --size-1-5: 0.375rem;
+  --size-2: 0.5rem;
+  --size-2-5: 0.625rem;
+  --size-2-75: 0.6875rem;
+  --size-3: 0.75rem;
+  --size-3-5: 0.875rem;
+  --size-3-25: 0.8125rem;
+  --size-3-75: 0.9375rem;
+  --size-4: 1rem;
+  --size-4-5: 1.125rem;
+  --size-4-25: 1.0625rem;
+  --size-5: 1.25rem;
+  --size-5-5: 1.375rem;
+  --size-6: 1.5rem;
+  --size-7: 1.75rem;
+  --size-7-5: 1.875rem;
+  --size-8: 2rem;
+
+  /* Things with a role. */
+  --admin-width: 62.5rem;
+  --also-live-width: 17.5rem;
+  --art-width: 9.375rem;
+  --avatar-big: 3.25rem;
+  --card-width: 27.5rem;
+  --control-2xl: 2.75rem;
+  --control-3xl: 3rem;
+  --control-lg: 2.375rem;
+  --control-md: 2.25rem;
+  --control-sm: 2.125rem;
+  --control-xl: 2.5rem;
+  --dropdown-width: 21.25rem;
+  --dropup-width: 14.25rem;
+  --error-width: 32.5rem;
+  --glow-length: 7.5rem;
+  --glow-length-long: 13.75rem;
+  --header-height: 3.75rem;
+  --home-card-width: 26.25rem;
+  --info-row: 6.5rem;
+  --info-row-tall: 10.5rem;
+  --mic-hear-width: 4rem;
+  --preview-width: 12.5rem;
+  --seat-offer-width: 25rem;
+  --settings-min-height: 15rem;
+  --settings-width: 17.5rem;
+  --settings-width-wide: 20rem;
+  --strip-item: 8rem;
+  --textarea-height: 5.25rem;
+  --toast-width: 22.5rem;
+  --tooltip-width: 16.25rem;
+  --viewer-menu-width: 13.75rem;
+  --volume-height: 7.5rem;
+  --volume-width: 5.75rem;
+
+  /* Corners, numbered as px ÷ 4, and the pill. */
+  --radius-0-5: 0.125rem;
+  --radius-1: 0.25rem;
+  --radius-1-5: 0.375rem;
+  --radius-1-25: 0.3125rem;
+  --radius-2: 0.5rem;
+  --radius-2-5: 0.625rem;
+  --radius-2-25: 0.5625rem;
+  --radius-3: 0.75rem;
+  --radius-3-5: 0.875rem;
+  --radius-4: 1rem;
+  --radius-4-5: 1.125rem;
+  --radius-pill: 62.4375rem;
+
+  /* Lines: the hairline stays one pixel; thicker lines and outline gaps are numbered as px ÷ 4. */
+  --border-0-5: 0.125rem;
+  --border-0-75: 0.1875rem;
+  --border-0-375: 0.09375rem;
+  --border-1: 0.25rem;
+  --hairline: 1px;
+
+  /* Blurs, numbered as px ÷ 4. */
+  --blur-0-5: 0.125rem;
+  --blur-0-75: 0.1875rem;
+  --blur-0-375: 0.09375rem;
+  --blur-1: 0.25rem;
+  --blur-2: 0.5rem;
+  --blur-2-5: 0.625rem;
+  --blur-3: 0.75rem;
+  --blur-5-5: 1.375rem;
+  --blur-6: 1.5rem;
+  --blur-9: 2.25rem;
+  --blur-10: 2.5rem;
+  --blur-16: 4rem;
+  --blur-18: 4.5rem;
+
+  /* Text sizes beyond the scale above, named by their px; letter spacing in hundredths of an em. */
+  --text-10: 0.625rem;
+  --text-11: 0.6875rem;
+  --text-13-5: 0.84375rem;
+  --text-14: 0.875rem;
+  --text-14-5: 0.90625rem;
+  --text-17: 1.0625rem;
+  --text-19: 1.1875rem;
+  --text-22: 1.375rem;
+  --text-23-2: 1.45rem;
+  --text-28: 1.75rem;
+  --text-32: 2rem;
+  --text-44: 2.75rem;
+  --text-inherit: 1em;
+  --tracking-1: 0.01em;
+  --tracking-2: 0.02em;
+  --tracking-6: 0.06em;
+  --tracking-8: 0.08em;
+  --tracking-10: 0.1em;
 }
 
 /* The window sizes the layouts change at, used as `@media (--narrow)` (postcss.config.js). */

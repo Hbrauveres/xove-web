@@ -5,18 +5,18 @@
 .pill {
   position: relative;
   display: flex;
-  height: 48px;
-  border-radius: 999px;
+  height: var(--control-3xl);
+  border-radius: var(--radius-pill);
   background: var(--glass);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 4px 16px var(--black-35);
+  backdrop-filter: blur(var(--blur-2));
+  box-shadow: 0 var(--space-1) var(--space-4) var(--black-35);
   color: var(--text);
 }
 
 /* One ring around the whole pill when its button has the keyboard's focus. */
 .pill:has(:focus-visible) {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  outline: var(--border-0-5) solid var(--accent);
+  outline-offset: var(--border-0-75);
 }
 
 .main {
@@ -42,8 +42,8 @@
 }
 
 .main {
-  width: 48px;
-  border-radius: 999px;
+  width: var(--control-3xl);
+  border-radius: var(--radius-pill);
 }
 
 /* Live: the pill lights up. */
@@ -65,11 +65,11 @@
    to 280 px. Measured on the controls' layer itself, not the window. */
 @container (max-width: 359px) {
   .pill {
-    height: 36px;
+    height: var(--control-md);
   }
 
   .main {
-    width: 36px;
+    width: var(--control-md);
   }
 }
 
@@ -85,8 +85,8 @@
 .iconHover {
   display: grid;
   place-items: center;
-  width: 20px;
-  height: 20px;
+  width: var(--size-5);
+  height: var(--size-5);
   line-height: 0;
 }
 

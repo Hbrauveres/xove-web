@@ -17,7 +17,7 @@
  */
 .box {
   --shape: 1.7778;
-  --free-h: max(100cqw * 9 / 16, 100cqh - var(--info-h, 104px) - var(--info-gap, 14px));
+  --free-h: max(100cqw * 9 / 16, 100cqh - var(--info-h, var(--info-row)) - var(--info-gap, var(--size-3-5)));
   position: relative;
   width: 100cqw;
   height: min(100cqw / var(--shape), var(--free-h));
@@ -64,7 +64,7 @@
   height: 100%;
   background: var(--black);
   /* Rounded, no border: the light around it is the frame (spec 0104). */
-  border-radius: 12px;
+  border-radius: var(--radius-3);
   overflow: hidden;
   z-index: 1;
 }
@@ -134,9 +134,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  height: var(--info-h, 104px);
-  margin-top: var(--info-gap, 14px);
+  gap: var(--space-6);
+  height: var(--info-h, var(--info-row));
+  margin-top: var(--info-gap, var(--space-3-5));
 }
 
 @media (max-width: 760px) {
@@ -144,7 +144,7 @@
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
-    gap: 12px;
+    gap: var(--space-3);
   }
 }
 
@@ -158,6 +158,6 @@
 @container (max-width: 359px) {
   .stage [data-overlay],
   .stage .controls {
-    --btn: 36px;
+    --btn: var(--control-md);
   }
 }

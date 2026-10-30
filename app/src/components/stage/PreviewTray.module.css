@@ -8,7 +8,10 @@
   display: flex;
   justify-content: center;
   opacity: 0;
-  clip-path: inset(-24px -24px calc(100% + 24px) -24px round 16px);
+  clip-path: inset(
+    calc(var(--space-6) * -1) calc(var(--space-6) * -1) calc(100% + var(--space-6)) calc(var(--space-6) * -1) round
+      var(--space-4)
+  );
 }
 
 /* Moving only while it shows or leaves, never while it is being placed. */
@@ -20,7 +23,10 @@
 }
 
 .tray[data-up] {
-  clip-path: inset(calc(100% + 24px) -24px -24px -24px round 16px);
+  clip-path: inset(
+    calc(100% + var(--space-6)) calc(var(--space-6) * -1) calc(var(--space-6) * -1) calc(var(--space-6) * -1) round
+      var(--space-4)
+  );
 }
 
 /* Above the preview, the slider opens above the buttons: the buttons stay next to the preview,
@@ -30,12 +36,15 @@
 }
 
 .tray[data-up] :global([data-slider]) {
-  padding-block: 4px 8px;
+  padding-block: var(--space-1) var(--space-2);
 }
 
 .tray[data-shown] {
   opacity: 1;
-  clip-path: inset(-24px -24px -24px -24px round 16px);
+  clip-path: inset(
+    calc(var(--space-6) * -1) calc(var(--space-6) * -1) calc(var(--space-6) * -1) calc(var(--space-6) * -1) round
+      var(--space-4)
+  );
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,5 +1,6 @@
 import { useSearchParams } from "react-router";
 import { GOOGLE_LOGIN_URL } from "@services/xove-api-service";
+import { ErrorNotice } from "@shared/components/error-notice";
 import { XoveMark } from "../components/brand/XoveMark";
 import styles from "./HomePage.module.css";
 
@@ -31,11 +32,7 @@ export function HomePage() {
             Share your screen or camera in sharp, fast streams. Watch them play, hang out, help out. Invite only.
           </p>
 
-          {error && (
-            <p className={styles.error} role="alert">
-              {ERRORS[error] ?? "Something went wrong signing you in. Try again."}
-            </p>
-          )}
+          {error && <ErrorNotice>{ERRORS[error] ?? "Something went wrong signing you in. Try again."}</ErrorNotice>}
 
           <a className={styles.google} href={GOOGLE_LOGIN_URL}>
             <GoogleMark />

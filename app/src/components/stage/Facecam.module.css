@@ -5,10 +5,10 @@
   width: 24%;
   aspect-ratio: 16 / 9;
   background: var(--black);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-1-5);
   overflow: hidden;
-  outline: 1px solid var(--white-18);
-  box-shadow: 0 6px 20px var(--black-45);
+  outline: var(--hairline) solid var(--white-18);
+  box-shadow: 0 var(--space-1-5) var(--space-5) var(--black-45);
   cursor: grab;
   touch-action: none;
 }
@@ -18,7 +18,7 @@
 }
 
 .facecam:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: var(--border-0-5) solid var(--accent);
 }
 
 .facecam video {
@@ -28,18 +28,18 @@
 /* Its buttons look like the player's: semi-transparent, and they fade with them. */
 .controls {
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: var(--space-1-5);
+  right: var(--space-1-5);
   display: flex;
-  gap: 4px;
+  gap: var(--space-1);
   transition: opacity 0.25s ease;
 }
 
 .button {
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: var(--size-7);
+  height: var(--size-7);
   border: none;
   border-radius: 50%;
   background: var(--glass);
@@ -70,10 +70,10 @@
   top: 50%;
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 44px;
+  width: var(--size-7);
+  height: var(--control-2xl);
   border: none;
-  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  border-radius: var(--radius-1-5) 0 0 var(--radius-1-5);
   background: var(--glass);
   color: var(--text);
   cursor: pointer;

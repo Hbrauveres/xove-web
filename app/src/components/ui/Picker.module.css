@@ -7,8 +7,8 @@
 .picker {
   --pick-bg: var(--white-05);
   --pick-hover: var(--panel-line);
-  --pick-r: 10px;
-  --pick-pad: 12px;
+  --pick-r: var(--radius-2-5);
+  --pick-pad: var(--space-3);
   position: relative;
   display: grid;
   /* Never wider than its box, whatever the names (spec 0114): the pill and its list stay one width. */
@@ -18,18 +18,18 @@
 .picker[data-look="glass"] {
   --pick-bg: var(--glass);
   --pick-hover: var(--grey-40-85);
-  --pick-r: 18px;
-  --pick-pad: 14px;
+  --pick-r: var(--radius-4-5);
+  --pick-pad: var(--space-3-5);
 }
 
 .pill {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-2);
   width: 100%;
   min-width: 0;
-  height: var(--ctl, 38px);
+  height: var(--ctl, var(--control-lg));
   padding: 0 var(--pick-pad);
   border: 0;
   border-radius: var(--pick-r);
@@ -43,9 +43,9 @@
 }
 
 .picker[data-look="glass"] .pill {
-  border-radius: 999px;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 4px 16px var(--black-35);
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(var(--blur-2));
+  box-shadow: 0 var(--space-1) var(--space-4) var(--black-35);
 }
 
 .pill:hover {
@@ -94,7 +94,7 @@
   top: 100%;
   z-index: 10;
   display: grid;
-  max-height: calc(var(--ctl, 38px) * 3.5);
+  max-height: calc(var(--ctl, var(--control-lg)) * 3.5);
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -113,7 +113,7 @@
 
 /* A long list scrolls with the app's slim scrollbar, inside it, clear of its rounded corners. */
 .list::-webkit-scrollbar {
-  width: 4px;
+  width: var(--size-1);
 }
 
 .list::-webkit-scrollbar-button {
@@ -123,12 +123,12 @@
 }
 
 .list::-webkit-scrollbar-track {
-  margin-block: 6px;
+  margin-block: var(--space-1-5);
   background: transparent;
 }
 
 .list::-webkit-scrollbar-thumb {
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--white-22);
 }
 
@@ -147,8 +147,8 @@
   top: auto;
   bottom: 100%;
   border-radius: var(--pick-r) var(--pick-r) 0 0;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 -12px 24px var(--black-40);
+  backdrop-filter: blur(var(--blur-2));
+  box-shadow: 0 calc(var(--space-3) * -1) var(--space-6) var(--black-40);
   clip-path: inset(100% 0 0 0 round var(--pick-r) var(--pick-r) 0 0);
 }
 
@@ -163,7 +163,7 @@
   isolation: isolate;
   display: flex;
   align-items: center;
-  min-height: var(--ctl, 38px);
+  min-height: var(--ctl, var(--control-lg));
   padding: 0 var(--pick-pad);
   border: 0;
   background: transparent;
