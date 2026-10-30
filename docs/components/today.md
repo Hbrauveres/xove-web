@@ -315,6 +315,7 @@ The shared controls today, and the copies that become one component each.
 | Icons | `components/stage/icons.tsx`, `components/room/ActivityIcon.tsx`, and inline drawings in 14 files | `shared/components/icons/` | Merged |
 | Toast | `components/ui/Toast.tsx`, `toast.ts` | `shared/components/toast/` | Kept |
 | Full-page message | `components/ui/FullPageMessage.tsx` | `shared/components/page-shell/`, with the pages' copied shells | Merged |
+| Error notice | `shared/components/error-notice/`: the red-tinted box a problem is told in, on the home page and over the room (it was a copied `.error` rule in both pages) | Already there | Merged |
 
 ## Removed
 
