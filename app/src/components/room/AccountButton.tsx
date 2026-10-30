@@ -1,3 +1,4 @@
+import { Switch } from "@shared/components/switch";
 import { Face } from "@shared/components/face";
 import { IconButton } from "@shared/components/icon-button";
 import { useRef, useState } from "react";
@@ -79,19 +80,11 @@ export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightC
         </DropdownSection>
 
         <DropdownSection className={styles.light}>
-          <label className={styles.switchRow}>
-            <span>Ambilight</span>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={ambilight.on}
-              aria-label="Ambilight"
-              className={styles.switch}
-              onClick={() => change({ ...ambilight, on: !ambilight.on })}
-            >
-              <i />
-            </button>
-          </label>
+          <Switch
+            label="Ambilight"
+            checked={ambilight.on}
+            onToggle={() => change({ ...ambilight, on: !ambilight.on })}
+          />
           <Range
             className={styles.slider}
             min={0.2}

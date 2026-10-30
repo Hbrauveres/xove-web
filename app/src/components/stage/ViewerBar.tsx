@@ -1,3 +1,4 @@
+import { micState } from "@shared/utils/mic-state.util";
 import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
 import { useEffect, useRef, useState, type Dispatch, type ReactNode, type SetStateAction } from "react";
@@ -88,16 +89,16 @@ export function ViewerBar(props: Props) {
             </IconButton>
           </Tooltip>
         ) : live ? (
-          <Tooltip text={micOn ? "Mute your voice" : "Share your voice"}>
+          <Tooltip text={micState(Boolean(micOn)).label}>
             <IconButton
               variant="stage"
               className={styles.round}
               data-on={micOn || undefined}
               aria-pressed={Boolean(micOn)}
-              aria-label={micOn ? "Mute your voice" : "Share your voice"}
+              aria-label={micState(Boolean(micOn)).label}
               onClick={onMic}
             >
-              {micOn ? <Icon name="mic" size={20} /> : <Icon name="mic-off" size={20} />}
+              <Icon name={micState(Boolean(micOn)).icon} size={20} />
             </IconButton>
           </Tooltip>
         ) : (

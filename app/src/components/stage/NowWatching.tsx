@@ -1,3 +1,4 @@
+import { LiveBadge } from "@shared/components/live-badge";
 import { Face } from "@shared/components/face";
 import { useElapsed } from "@features/room/hooks/use-elapsed.hook";
 import type { Friend, Sharer } from "@features/room/types/room-view.types";
@@ -62,7 +63,7 @@ export function NowWatching({ sharer, watchers = [], others = [] }: Props) {
       <div className={styles.text}>
         <h2 className={styles.name}>{name}</h2>
         <p className={styles.meta}>
-          <span className={styles.live}>LIVE</span>
+          <LiveBadge variant="stage" />
           <span>{whatOf(sharer)}</span>
           <span className={styles.elapsed}>{elapsed}</span>
           {watchers.length > 0 && (

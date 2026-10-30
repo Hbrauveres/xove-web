@@ -1,3 +1,4 @@
+import { micState } from "@shared/utils/mic-state.util";
 import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
@@ -349,12 +350,12 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
               <IconButton
                 variant="player"
                 live={micOn}
-                around={(button) => <Tooltip text={micOn ? "Mute your voice" : "Share your voice"}>{button}</Tooltip>}
+                around={(button) => <Tooltip text={micState(micOn).label}>{button}</Tooltip>}
                 aria-pressed={micOn}
-                aria-label={micOn ? "Mute your voice" : "Share your voice"}
+                aria-label={micState(micOn).label}
                 onClick={toggleMic}
               >
-                {micOn ? <Icon name="mic" size={20} /> : <Icon name="mic-off" size={20} />}
+                <Icon name={micState(micOn).icon} size={20} />
               </IconButton>
             }
           />

@@ -46,34 +46,6 @@
 }
 
 /* A filled LIVE badge, its dot pulsing (spec 0107). */
-.live {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1-25);
-  padding: var(--space-0-5) var(--space-1-75) var(--space-0-5) var(--space-1-5);
-  border-radius: var(--radius-1-25);
-  background: var(--live);
-  /* Deep red on red (spec 0111): reads at 4.7:1. */
-  color: var(--accent-ink);
-  font-family: var(--font-mono);
-  font-size: var(--text-10);
-  letter-spacing: var(--tracking-10);
-}
-
-.live::before {
-  content: "";
-  width: var(--size-1-5);
-  height: var(--size-1-5);
-  border-radius: 50%;
-  background: var(--accent-ink);
-  animation: pulse var(--duration-1600) ease-in-out infinite;
-}
-
-@keyframes pulse {
-  50% {
-    opacity: 0.3;
-  }
-}
 
 .elapsed {
   font-family: var(--font-mono);
@@ -158,10 +130,4 @@
 .nobodyBig {
   width: var(--avatar-big);
   height: var(--avatar-big);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .live::before {
-    animation: none;
-  }
 }

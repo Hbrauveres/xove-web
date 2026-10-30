@@ -1,10 +1,11 @@
+import { LiveBadge } from "@shared/components/live-badge";
+import { Switch } from "@shared/components/switch";
 import { Icon } from "@shared/components/icon";
 import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { CAMERA_BLOCKED, CAMERA_MISSING, CAMERA_QUALITIES, SHARE_QUALITIES } from "@services/media-devices-service";
 import type { CameraDevice, CameraProblem, MicDevice, ScreenSurface } from "@services/media-devices-service";
 import type { VoicePrefs } from "@services/preferences-service";
 import { useMicLevel } from "@features/room/hooks/use-mic-level.hook";
-import sw from "../room/AccountButton.module.css";
 import { MODE_OPTIONS } from "@features/room/constants/stream-modes.constants";
 import type { StreamKind, StreamMode, StreamQuality, StreamSettings } from "@services/xove-api-service";
 import type { MediaTrack } from "@services/livekit-service";
@@ -352,7 +353,7 @@ function CameraTab(props: Props & { cue?: number }) {
               <>
                 <Preview video={cameraVideo} />
                 {mine.camera ? (
-                  <span className={styles.live}>LIVE</span>
+                  <LiveBadge variant="preview" className={styles.live} />
                 ) : (
                   <span className={styles.badge}>Only you see this</span>
                 )}
@@ -488,27 +489,17 @@ function VoiceTab(props: Props & { shown: boolean }) {
         <p className={styles.heading}>Voice processing</p>
         {SWITCHES.map((s) => (
           <Tooltip key={s.key} text={s.unavailable ?? s.hint}>
-            <label
-              className={`${sw.switchRow} ${styles.voiceRow}`}
-              // What it does, on hover: the rows stay one calm line each (spec 0123).
-            >
-              <span>{s.label}</span>
-              <button
-                type="button"
-                role="switch"
-                className={sw.switch}
-                aria-label={s.label}
-                aria-checked={voicePrefs[s.key]}
-                aria-disabled={s.unavailable ? true : undefined}
-                onClick={() =>
-                  s.unavailable
-                    ? showToast(s.unavailable, <Icon name="mic" size={20} />)
-                    : set({ [s.key]: !voicePrefs[s.key] })
-                }
-              >
-                <i />
-              </button>
-            </label>
+            <Switch
+              className={styles.voiceRow}
+              label={s.label}
+              checked={voicePrefs[s.key]}
+              unavailable={Boolean(s.unavailable)}
+              onToggle={() =>
+                s.unavailable
+                  ? showToast(s.unavailable, <Icon name="mic" size={20} />)
+                  : set({ [s.key]: !voicePrefs[s.key] })
+              }
+            />
           </Tooltip>
         ))}
       </div>

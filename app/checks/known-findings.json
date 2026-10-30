@@ -10,7 +10,7 @@
     "tool": "code",
     "rule": "crossCss",
     "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 2,
+    "count": 1,
     "owner": "#193 settings"
   },
   {
@@ -108,7 +108,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/room/AccountButton.module.css",
-    "count": 4,
+    "count": 2,
     "owner": "#189 room: header"
   },
   {
@@ -311,7 +311,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/NowWatching.module.css",
-    "count": 6,
+    "count": 5,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -374,7 +374,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 15,
+    "count": 14,
     "owner": "#193 settings"
   },
   {
@@ -3708,13 +3708,6 @@
     "file": "src/components/ui/Segmented.tsx",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(label-has-associated-control)",
-    "file": "src/components/room/AccountButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
   },
   {
     "tool": "lint",
