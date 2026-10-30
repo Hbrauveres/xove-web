@@ -27,24 +27,6 @@
   justify-content: flex-end;
 }
 
-.iconButton {
-  pointer-events: auto;
-  display: grid;
-  place-items: center;
-  width: var(--control-sm);
-  height: var(--control-sm);
-  border: none;
-  border-radius: 50%;
-  background: var(--glass);
-  color: var(--text);
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.iconButton:hover {
-  background: var(--grey-10-90);
-}
-
 /* Hidden with the player's bars when the mouse stops (see Stage). */
 :global([data-chrome="hidden"]) .overlay {
   opacity: 0;

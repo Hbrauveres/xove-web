@@ -1,21 +1,11 @@
+import { micState } from "@shared/utils/mic-state.util";
+import { IconButton } from "@shared/components/icon-button";
+import { Icon } from "@shared/components/icon";
 import { useEffect, useRef, useState, type Dispatch, type ReactNode, type SetStateAction } from "react";
 import type { StreamKind } from "@services/xove-api-service";
 import { Range } from "../ui/Range";
 import { showToast } from "../ui/toast";
 import { FULL_ROOM } from "./PlayerButtons";
-import {
-  CameraOffIcon,
-  CameraOnIcon,
-  CogIcon,
-  MicIcon,
-  MicOffIcon,
-  ScreenOffIcon,
-  ScreenOnIcon,
-  SoundIcon,
-  VoiceIcon,
-  VoiceOffIcon,
-  VolumeOffIcon,
-} from "./icons";
 import styles from "./ViewerBar.module.css";
 import { Tooltip } from "../ui/Tooltip";
 import { claimFloating, releaseFloating } from "../ui/floating";
@@ -94,22 +84,22 @@ export function ViewerBar(props: Props) {
       <div className={styles.right}>
         {settingsOnly ? (
           <Tooltip text={"Settings"}>
-            <button type="button" className={styles.round} aria-label="Settings" onClick={onSettings}>
-              <CogIcon />
-            </button>
+            <IconButton variant="stage" className={styles.round} aria-label="Settings" onClick={onSettings}>
+              <Icon name="cog" size={20} />
+            </IconButton>
           </Tooltip>
         ) : live ? (
-          <Tooltip text={micOn ? "Mute your voice" : "Share your voice"}>
-            <button
-              type="button"
+          <Tooltip text={micState(Boolean(micOn)).label}>
+            <IconButton
+              variant="stage"
               className={styles.round}
               data-on={micOn || undefined}
               aria-pressed={Boolean(micOn)}
-              aria-label={micOn ? "Mute your voice" : "Share your voice"}
+              aria-label={micState(Boolean(micOn)).label}
               onClick={onMic}
             >
-              {micOn ? <MicIcon /> : <MicOffIcon />}
-            </button>
+              <Icon name={micState(Boolean(micOn)).icon} size={20} />
+            </IconButton>
           </Tooltip>
         ) : (
           <span className={styles.anchor}>
@@ -128,7 +118,7 @@ export function ViewerBar(props: Props) {
             {menu && (
               <div className={styles.menu} role="menu">
                 <MenuItem
-                  icon={canShareScreen ? <ScreenOnIcon /> : <ScreenOffIcon />}
+                  icon={canShareScreen ? <Icon name="screen-on" size={20} /> : <Icon name="screen-off" size={20} />}
                   label="Share your screen"
                   unavailable={!canShareScreen ? "This browser can't share a screen" : full ? FULL_ROOM : undefined}
                   onPick={() => {
@@ -137,7 +127,7 @@ export function ViewerBar(props: Props) {
                   }}
                 />
                 <MenuItem
-                  icon={full ? <CameraOffIcon /> : <CameraOnIcon />}
+                  icon={full ? <Icon name="camera-off" size={20} /> : <Icon name="camera-on" size={20} />}
                   label="Turn on your camera"
                   unavailable={full ? FULL_ROOM : undefined}
                   onPick={() => {
@@ -147,7 +137,7 @@ export function ViewerBar(props: Props) {
                 />
                 <span className={styles.sep} />
                 <MenuItem
-                  icon={<CogIcon />}
+                  icon={<Icon name="cog" size={20} />}
                   label="Settings"
                   onPick={() => {
                     setMenu(false);
@@ -232,7 +222,17 @@ function Hear({
       ? `${s.muted ? "Unmute" : "Mute"} the screen's sound`
       : `${s.muted ? "Unmute" : "Mute"} ${name}'s voice`);
   const icon =
-    kind === "sound" ? silent ? <VolumeOffIcon /> : <SoundIcon /> : silent ? <VoiceOffIcon /> : <VoiceIcon />;
+    kind === "sound" ? (
+      silent ? (
+        <Icon name="volume-off" size={20} />
+      ) : (
+        <Icon name="sound" size={20} />
+      )
+    ) : silent ? (
+      <Icon name="voice-off" size={20} />
+    ) : (
+      <Icon name="voice" size={20} />
+    );
   return (
     <span
       className={styles.anchor}
@@ -251,8 +251,8 @@ function Hear({
         text={kind === "sound" ? (s.unavailable ?? "Screen sound") : (s.unavailable ?? `${name}'s voice`)}
         hidden={quiet}
       >
-        <button
-          type="button"
+        <IconButton
+          variant="stage"
           className={styles.round}
           data-voice={kind === "voice" || undefined}
           data-talking={(kind === "voice" && talking && !silent) || undefined}
@@ -275,7 +275,7 @@ function Hear({
           }}
         >
           {icon}
-        </button>
+        </IconButton>
       </Tooltip>
       {!s.unavailable && (
         <span className={styles.slider} data-open={open || undefined} data-muted={s.muted || undefined} inert={!open}>

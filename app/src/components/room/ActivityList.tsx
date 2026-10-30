@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import type { StreamKind } from "@services/xove-api-service";
 import type { ActivityEvent, Friend } from "@features/room/types/room-view.types";
-import { ActivityIcon } from "./ActivityIcon";
+import { Icon } from "@shared/components/icon";
+import { activityIconOf } from "@features/room/utils/activity-icon.util";
 import { describeEvent, shortAgo } from "./activityText";
 import styles from "./ActivityList.module.css";
 
@@ -40,7 +41,7 @@ export function ActivityList({ events, people, meId, unseen, isLive, watching, o
         const isStream = e.kind === "started" || e.kind === "stopped";
         const icon = (
           <span className={styles.icon} data-stream={isStream || undefined}>
-            <ActivityIcon event={e} />
+            <Icon name={activityIconOf(e)} size={13} />
           </span>
         );
         const time = <time className={styles.time}>{shortAgo(e.at, now)}</time>;

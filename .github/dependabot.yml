@@ -13,11 +13,6 @@ updates:
       # (docs/architecture.md, "The checks"), and that PR fixes them before it merges.
       checks: { patterns: [oxlint, typescript, prettier, knip, jscpd] }
       npm: { patterns: ["*"], exclude-patterns: [oxlint, typescript, prettier, knip, jscpd] }
-    # jscpd 5 finds two copies jscpd 4 missed, both removed by the shared basic blocks
-    # in the reorganisation; that step takes jscpd 5 and removes this.
-    ignore:
-      - dependency-name: jscpd
-        update-types: [version-update:semver-major]
 
   - package-ecosystem: docker
     directory: /app

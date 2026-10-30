@@ -36,6 +36,9 @@ describe("the guard: reading each tool", () => {
     ]);
     const copy = '{"duplicates":[{"firstFile":{"name":"src/a.ts"},"secondFile":{"name":"src/b.ts"}}]}';
     expect(fromJscpd(copy).map((f) => f.file)).toEqual(["src/a.ts", "src/b.ts"]);
+    // jscpd 5 names files from the scanned folder: the same findings, at the same paths.
+    const five = '{"duplicates":[{"firstFile":{"name":"a.ts"},"secondFile":{"name":"components/b.ts"}}]}';
+    expect(fromJscpd(five).map((f) => f.file)).toEqual(["src/a.ts", "src/components/b.ts"]);
     const knip = '{"issues":[{"file":"src/a.ts","files":[{}],"exports":[{},{}],"types":[{}]}]}';
     expect(fromKnip(knip).map((f) => f.rule)).toEqual(["files", "exports", "exports", "types"]);
   });

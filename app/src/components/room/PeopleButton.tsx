@@ -1,7 +1,9 @@
+import { Face } from "@shared/components/face";
+import { IconButton } from "@shared/components/icon-button";
+import { Icon } from "@shared/components/icon";
 import { useRef, useState } from "react";
 import type { RoomSeatsState, StreamKind } from "@services/xove-api-service";
 import type { Friend } from "@features/room/types/room-view.types";
-import { Avatar } from "../ui/Avatar";
 import { Dropdown, DropdownSection } from "../ui/Dropdown";
 import styles from "./PeopleButton.module.css";
 
@@ -15,11 +17,6 @@ type Props = {
   watchingOf: Record<string, { sharerId: string; kind: StreamKind }>;
   /** The room's seats, or null when the API doesn't say. */
   seats: RoomSeatsState | null;
-};
-
-const icon = {
-  screen: "M3 4.5h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM7 17.5h6M10 14.5v3",
-  camera: "M3 6h9a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1zM13 9l5-3v8l-5-3",
 };
 
 /**
@@ -59,35 +56,18 @@ export function PeopleButton({ people, meId, sharing, watchingOf, seats }: Props
 
   return (
     <div ref={anchor} className={styles.wrap}>
-      <button
+      <IconButton
+        variant="header"
         ref={button}
-        type="button"
         className={styles.button}
         aria-label={`${count} ${count === 1 ? "person" : "people"} here`}
         aria-haspopup="dialog"
         aria-expanded={open}
         onClick={() => setOpen(!open)}
       >
-        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
-          <circle cx="7.5" cy="7" r="3" fill="none" stroke="currentColor" strokeWidth="1.6" />
-          <path
-            d="M2 16c.6-2.8 2.8-4.3 5.5-4.3S12.4 13.2 13 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-          />
-          <circle cx="14" cy="6.5" r="2.4" fill="none" stroke="currentColor" strokeWidth="1.5" />
-          <path
-            d="M14.5 11.3c1.9.3 3.1 1.6 3.5 3.7"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-        </svg>
+        <Icon name="people" size={18} />
         <span className={styles.count}>{count}</span>
-      </button>
+      </IconButton>
 
       <Dropdown
         open={open}
@@ -124,7 +104,7 @@ export function PeopleButton({ people, meId, sharing, watchingOf, seats }: Props
               const shares = sharing[p.id];
               return (
                 <li key={p.id} className={styles.person}>
-                  <Avatar person={p} size={30} onAir={Boolean(shares?.screen || shares?.camera)} />
+                  <Face name={p.name} hue={p.hue} size={30} onAir={Boolean(shares?.screen || shares?.camera)} />
                   <span className={styles.who}>
                     <b>{p.name}</b>
                     {p.id === meId && <span className={styles.you}> (you)</span>}
@@ -140,16 +120,7 @@ export function PeopleButton({ people, meId, sharing, watchingOf, seats }: Props
                           role="img"
                           aria-label={kind === "screen" ? "Screen" : "Camera"}
                         >
-                          <svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true">
-                            <path
-                              d={icon[kind]}
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.8"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
+                          <Icon name={kind === "camera" ? "stream-camera" : "stream-screen"} size={14} />
                         </span>
                       ))}
                   </span>

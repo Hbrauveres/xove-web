@@ -1,10 +1,12 @@
+import { Switch } from "@shared/components/switch";
+import { Face } from "@shared/components/face";
+import { IconButton } from "@shared/components/icon-button";
 import { useRef, useState } from "react";
 import { Link } from "react-router";
 import { saveAmbilight } from "@services/preferences-service";
 import type { AmbilightPrefs } from "@services/preferences-service";
 import type { ConnectionState } from "@services/livekit-service";
 import type { Friend } from "@features/room/types/room-view.types";
-import { Avatar } from "../ui/Avatar";
 import { Dropdown, DropdownSection } from "../ui/Dropdown";
 import { Range } from "../ui/Range";
 import styles from "./AccountButton.module.css";
@@ -40,18 +42,18 @@ export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightC
 
   return (
     <div ref={anchor} className={styles.wrap}>
-      <button
+      <IconButton
+        variant="header"
         ref={button}
-        type="button"
         className={styles.button}
         aria-label={`${me.name}: account, ${connection}`}
         aria-haspopup="dialog"
         aria-expanded={open}
         onClick={() => setOpen(!open)}
       >
-        <Avatar person={me} size={32} />
+        <Face name={me.name} hue={me.hue} size={32} />
         <i className={styles.dot} data-state={connection} aria-hidden="true" />
-      </button>
+      </IconButton>
 
       <Dropdown
         open={open}
@@ -65,7 +67,7 @@ export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightC
       >
         <DropdownSection className={styles.me}>
           <div className={styles.who}>
-            <Avatar person={me} size={40} />
+            <Face name={me.name} hue={me.hue} size={40} />
             <div>
               <b>{me.name}</b>
               <small>{isAdmin ? "Admin" : "Member"}</small>
@@ -78,19 +80,11 @@ export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightC
         </DropdownSection>
 
         <DropdownSection className={styles.light}>
-          <label className={styles.switchRow}>
-            <span>Ambilight</span>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={ambilight.on}
-              aria-label="Ambilight"
-              className={styles.switch}
-              onClick={() => change({ ...ambilight, on: !ambilight.on })}
-            >
-              <i />
-            </button>
-          </label>
+          <Switch
+            label="Ambilight"
+            checked={ambilight.on}
+            onToggle={() => change({ ...ambilight, on: !ambilight.on })}
+          />
           <Range
             className={styles.slider}
             min={0.2}

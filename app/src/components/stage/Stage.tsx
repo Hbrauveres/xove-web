@@ -1,3 +1,6 @@
+import { micState } from "@shared/utils/mic-state.util";
+import { IconButton } from "@shared/components/icon-button";
+import { Icon } from "@shared/components/icon";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { viewerQualities } from "@features/room/utils/viewer-qualities.util";
 import { useHearing } from "@features/room/hooks/use-hearing.hook";
@@ -12,8 +15,6 @@ import { StageOverlay } from "./StageOverlay";
 import { PlayerButtons, type StreamControls } from "./PlayerButtons";
 import { VoiceAudio } from "./VoiceAudio";
 import { ViewerBar } from "./ViewerBar";
-import { MicIcon, MicOffIcon } from "./icons";
-import round from "./RoundButton.module.css";
 import { AlsoLive } from "./AlsoLive";
 import { Ambilight } from "./Ambilight";
 import { CornerGlow } from "./CornerGlow";
@@ -346,19 +347,16 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
             onSettings={toggleSettings}
             onMenuChange={onMenuChange}
             extra={
-              <div className={`${round.pill} ${micOn ? round.live : ""}`}>
-                <Tooltip text={micOn ? "Mute your voice" : "Share your voice"}>
-                  <button
-                    type="button"
-                    className={round.main}
-                    aria-pressed={micOn}
-                    aria-label={micOn ? "Mute your voice" : "Share your voice"}
-                    onClick={toggleMic}
-                  >
-                    {micOn ? <MicIcon /> : <MicOffIcon />}
-                  </button>
-                </Tooltip>
-              </div>
+              <IconButton
+                variant="player"
+                live={micOn}
+                around={(button) => <Tooltip text={micState(micOn).label}>{button}</Tooltip>}
+                aria-pressed={micOn}
+                aria-label={micState(micOn).label}
+                onClick={toggleMic}
+              >
+                <Icon name={micState(micOn).icon} size={20} />
+              </IconButton>
             }
           />
         )}

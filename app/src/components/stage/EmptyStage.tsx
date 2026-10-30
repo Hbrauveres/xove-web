@@ -1,6 +1,7 @@
+import { Headline } from "@shared/components/headline";
+import { Icon } from "@shared/components/icon";
 import { useEffect, useState } from "react";
 import type { StreamKind } from "@services/xove-api-service";
-import { CameraOnIcon, ScreenOffIcon, ScreenOnIcon } from "./icons";
 import { showToast } from "../ui/toast";
 import styles from "./EmptyStage.module.css";
 import { StaticNoise } from "./StaticNoise";
@@ -36,10 +37,12 @@ export function EmptyStage({ canShareScreen = true, onStart }: Props) {
         aria-disabled={canShareScreen ? undefined : true}
         aria-label="Share your screen"
         onClick={() =>
-          canShareScreen ? onStart?.("screen") : showToast("This browser can't share a screen", <ScreenOffIcon />)
+          canShareScreen
+            ? onStart?.("screen")
+            : showToast("This browser can't share a screen", <Icon name="screen-off" size={20} />)
         }
       >
-        {canShareScreen ? <ScreenOnIcon /> : <ScreenOffIcon />}
+        {canShareScreen ? <Icon name="screen-on" size={20} /> : <Icon name="screen-off" size={20} />}
         Screen
       </button>
     </Tooltip>
@@ -51,7 +54,7 @@ export function EmptyStage({ canShareScreen = true, onStart }: Props) {
       aria-label="Turn on your camera"
       onClick={() => onStart?.("camera")}
     >
-      <CameraOnIcon />
+      <Icon name="camera-on" size={20} />
       Camera
     </button>
   );
@@ -78,9 +81,9 @@ export function EmptyStage({ canShareScreen = true, onStart }: Props) {
         </span>
       )}
       <div className={styles.focus}>
-        <h2 className={styles.title}>
+        <Headline level="section" className={styles.title}>
           Go <em>live</em>
-        </h2>
+        </Headline>
         {/* An invitation, not an order (spec 0138): a TV asking what's on. */}
         <p className={styles.copy}>What's on today?</p>
         <div className={styles.go}>

@@ -24,17 +24,6 @@
 .title {
   font-size: clamp(var(--text-32), var(--vw-8), var(--text-44));
   line-height: 1.05;
-  letter-spacing: calc(var(--tracking-1) * -1);
-}
-
-/*
- * LIVE in the accent, as the room's live marks (spec 0141). Written "live" and
- * shown in capitals, so a screen reader says the word, not its letters.
- */
-.title em {
-  font-style: normal;
-  text-transform: uppercase;
-  color: var(--accent);
 }
 
 .copy {

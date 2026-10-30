@@ -1,3 +1,4 @@
+import { Headline } from "@shared/components/headline";
 import { useSearchParams } from "react-router";
 import { GOOGLE_LOGIN_URL } from "@services/xove-api-service";
 import { ErrorNotice } from "@shared/components/error-notice";
@@ -21,11 +22,11 @@ export function HomePage() {
           <p className={styles.brand}>
             <XoveMark height={40} />
           </p>
-          <h1 id="home-title" className={styles.title}>
+          <Headline level="page" id="home-title" className={styles.title}>
             Go <em>live</em> with
             <br />
             your friends.
-          </h1>
+          </Headline>
         </div>
         <div className={styles.act}>
           <p className={styles.copy}>

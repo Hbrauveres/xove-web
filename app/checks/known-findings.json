@@ -10,7 +10,7 @@
     "tool": "code",
     "rule": "crossCss",
     "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 2,
+    "count": 1,
     "owner": "#193 settings"
   },
   {
@@ -18,7 +18,7 @@
     "rule": "cssText",
     "file": "src/brand/brand.test.ts",
     "count": 2,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -67,48 +67,48 @@
     "rule": "history",
     "file": "src/brand/mark.ts",
     "count": 3,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/brand/markTimeline.ts",
     "count": 2,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/components/brand/useMarkAnimation.test.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/components/brand/useMarkAnimation.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/components/brand/XoveIcon.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/components/brand/XoveMark.tsx",
     "count": 2,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/components/room/AccountButton.module.css",
-    "count": 4,
+    "count": 2,
     "owner": "#189 room: header"
   },
   {
@@ -241,7 +241,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/EmptyStage.module.css",
-    "count": 5,
+    "count": 4,
     "owner": "#190 room: stage, Stage split"
   },
   {
@@ -296,13 +296,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/stage/icons.tsx",
-    "count": 5,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/stage/MicTest.module.css",
     "count": 1,
     "owner": "#193 settings"
@@ -318,7 +311,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/NowWatching.module.css",
-    "count": 6,
+    "count": 4,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -346,7 +339,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/PlayerButtons.tsx",
-    "count": 8,
+    "count": 7,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -366,13 +359,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/stage/RoundButton.module.css",
-    "count": 3,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/stage/ScreenVideo.tsx",
     "count": 2,
     "owner": "#190 room: stage, Stage split"
@@ -388,7 +374,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 15,
+    "count": 14,
     "owner": "#193 settings"
   },
   {
@@ -485,23 +471,9 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/ui/Avatar.module.css",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/ui/Avatar.tsx",
-    "count": 2,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/ui/cue.module.css",
     "count": 2,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -543,35 +515,35 @@
     "rule": "history",
     "file": "src/components/ui/Range.module.css",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/components/ui/Range.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/components/ui/Toast.module.css",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/components/ui/toast.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/components/ui/Toast.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -592,21 +564,21 @@
     "rule": "history",
     "file": "src/hooks/useFullscreenElement.ts",
     "count": 2,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/hooks/useVideoShape.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -626,7 +598,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/pages/HomePage.module.css",
-    "count": 2,
+    "count": 1,
     "owner": "#194 home, request access, admin, the shell"
   },
   {
@@ -676,7 +648,7 @@
     "rule": "lineLength",
     "file": "src/brand/iconSvg.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -690,13 +662,6 @@
     "rule": "lineLength",
     "file": "src/components/stage/EmptyStage.tsx",
     "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "lineLength",
-    "file": "src/components/stage/icons.tsx",
-    "count": 4,
     "owner": "#190 room: stage, Stage split"
   },
   {
@@ -732,84 +697,84 @@
     "rule": "naming",
     "file": "src/brand/brand.test.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/brand/iconSvg.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/brand/mark.test.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/brand/mark.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/brand/markTimeline.test.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/brand/markTimeline.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/brand/parts.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/brand/useMarkAnimation.test.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/brand/useMarkAnimation.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/brand/XoveIcon.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/brand/XoveMark.test.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/brand/XoveMark.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -829,13 +794,6 @@
     "tool": "code",
     "rule": "naming",
     "file": "src/components/room/AccountButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/ActivityIcon.tsx",
     "count": 1,
     "owner": "#189 room: header"
   },
@@ -1094,13 +1052,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/stage/icons.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/components/stage/MicTest.module.css",
     "count": 1,
     "owner": "#193 settings"
@@ -1174,13 +1125,6 @@
     "file": "src/components/stage/PreviewTray.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/RoundButton.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -1367,37 +1311,23 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/ui/Avatar.module.css",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/Avatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/components/ui/Button.module.css",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/ui/Button.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/ui/cue.module.css",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -1472,20 +1402,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/ui/PersonAvatar.module.css",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/PersonAvatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/components/ui/Picker.module.css",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
@@ -1509,77 +1425,77 @@
     "rule": "naming",
     "file": "src/components/ui/Range.module.css",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/ui/Range.test.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/ui/Range.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/ui/Segmented.module.css",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/ui/Segmented.test.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/ui/Segmented.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/ui/Toast.module.css",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/ui/toast.test.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/ui/Toast.test.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/ui/toast.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/components/ui/Toast.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -1607,42 +1523,42 @@
     "rule": "naming",
     "file": "src/hooks/useFullscreenElement.test.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/hooks/useFullscreenElement.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/hooks/usePinnedRow.test.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/hooks/useVideoShape.test.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
     "rule": "naming",
     "file": "src/hooks/useVideoShape.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -1782,28 +1698,21 @@
     "rule": "noTest",
     "file": "src/brand/iconSvg.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "noTest",
     "file": "src/components/brand/parts.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "noTest",
     "file": "src/components/brand/XoveIcon.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/components/room/ActivityIcon.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -1839,13 +1748,6 @@
     "file": "src/components/room/WaitingRoom.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/components/stage/icons.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -1899,16 +1801,9 @@
   {
     "tool": "code",
     "rule": "noTest",
-    "file": "src/components/ui/Avatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
     "file": "src/components/ui/Button.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -1916,13 +1811,6 @@
     "file": "src/components/ui/FullPageMessage.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/components/ui/PersonAvatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
@@ -1936,69 +1824,62 @@
     "rule": "orphanTest",
     "file": "src/brand/brand.test.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "partInCode",
     "file": "src/brand/iconSvg.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "partInCode",
     "file": "src/brand/mark.ts",
     "count": 25,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "partInCode",
     "file": "src/brand/markTimeline.ts",
     "count": 14,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/brand/parts.tsx",
     "count": 3,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/brand/useMarkAnimation.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/brand/XoveIcon.tsx",
     "count": 2,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/brand/XoveMark.tsx",
     "count": 2,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/room/AccountButton.tsx",
     "count": 2,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/room/ActivityIcon.tsx",
-    "count": 1,
     "owner": "#189 room: header"
   },
   {
@@ -2019,7 +1900,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/room/PeopleButton.tsx",
-    "count": 2,
+    "count": 1,
     "owner": "#189 room: header"
   },
   {
@@ -2084,13 +1965,6 @@
     "file": "src/components/stage/HearToggles.tsx",
     "count": 7,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/icons.tsx",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -2207,16 +2081,9 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/components/ui/Avatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
     "file": "src/components/ui/Button.tsx",
     "count": 2,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -2249,13 +2116,6 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/components/ui/PersonAvatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
     "file": "src/components/ui/Picker.tsx",
     "count": 5,
     "owner": "#187 shared: one menu, one floating system"
@@ -2265,28 +2125,28 @@
     "rule": "partInCode",
     "file": "src/components/ui/Range.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/ui/Segmented.tsx",
     "count": 2,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/ui/toast.ts",
     "count": 6,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/ui/Toast.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -2300,21 +2160,21 @@
     "rule": "partInCode",
     "file": "src/hooks/useFullscreenElement.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
     "rule": "partInCode",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 2,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
     "rule": "partInCode",
     "file": "src/hooks/useVideoShape.ts",
     "count": 3,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -2356,7 +2216,7 @@
     "rule": "sharedData",
     "file": "src/brand/brand.test.ts",
     "count": 3,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -2391,84 +2251,84 @@
     "rule": "structure",
     "file": "src/brand/brand.test.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/brand/iconSvg.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/brand/mark.test.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/brand/mark.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/brand/markTimeline.test.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/brand/markTimeline.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/brand/parts.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/brand/useMarkAnimation.test.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/brand/useMarkAnimation.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/brand/XoveIcon.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/brand/XoveMark.test.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/brand/XoveMark.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -2488,13 +2348,6 @@
     "tool": "code",
     "rule": "structure",
     "file": "src/components/room/AccountButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/ActivityIcon.tsx",
     "count": 1,
     "owner": "#189 room: header"
   },
@@ -2753,13 +2606,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/stage/icons.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/components/stage/MicTest.module.css",
     "count": 1,
     "owner": "#193 settings"
@@ -2833,13 +2679,6 @@
     "file": "src/components/stage/PreviewTray.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/RoundButton.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -3026,37 +2865,23 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/ui/Avatar.module.css",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/Avatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/components/ui/Button.module.css",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/ui/Button.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/ui/cue.module.css",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -3131,20 +2956,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/ui/PersonAvatar.module.css",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/PersonAvatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/components/ui/Picker.module.css",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
@@ -3168,77 +2979,77 @@
     "rule": "structure",
     "file": "src/components/ui/Range.module.css",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/ui/Range.test.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/ui/Range.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/ui/Segmented.module.css",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/ui/Segmented.test.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/ui/Segmented.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/ui/Toast.module.css",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/ui/toast.test.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/ui/Toast.test.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/ui/toast.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/components/ui/Toast.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -3266,42 +3077,42 @@
     "rule": "structure",
     "file": "src/hooks/useFullscreenElement.test.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/hooks/useFullscreenElement.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/hooks/usePinnedRow.test.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/hooks/useVideoShape.test.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
     "rule": "structure",
     "file": "src/hooks/useVideoShape.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -3700,35 +3511,35 @@
     "rule": "eslint(max-params)",
     "file": "src/brand/mark.ts",
     "count": 2,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
     "file": "src/brand/iconSvg.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
     "file": "src/brand/mark.ts",
     "count": 38,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
     "file": "src/brand/markTimeline.ts",
     "count": 18,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
     "file": "src/components/brand/useMarkAnimation.ts",
     "count": 5,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
@@ -3838,20 +3649,6 @@
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/ui/Avatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/ui/PersonAvatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
     "file": "src/components/ui/Picker.tsx",
     "count": 3,
     "owner": "#187 shared: one menu, one floating system"
@@ -3861,7 +3658,7 @@
     "rule": "eslint(no-magic-numbers)",
     "file": "src/components/ui/Range.tsx",
     "count": 2,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
@@ -3875,14 +3672,14 @@
     "rule": "eslint(no-magic-numbers)",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
     "file": "src/hooks/useVideoShape.ts",
     "count": 2,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "lint",
@@ -3910,14 +3707,7 @@
     "rule": "jsx-a11y(interactive-supports-focus)",
     "file": "src/components/ui/Segmented.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(label-has-associated-control)",
-    "file": "src/components/room/AccountButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
@@ -3938,7 +3728,7 @@
     "rule": "jsx-a11y(no-noninteractive-element-interactions)",
     "file": "src/components/brand/XoveMark.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
@@ -3959,7 +3749,7 @@
     "rule": "jsx-a11y(no-noninteractive-tabindex)",
     "file": "src/components/brand/XoveMark.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
@@ -4015,14 +3805,14 @@
     "rule": "jsx-a11y(prefer-tag-over-role)",
     "file": "src/components/brand/XoveIcon.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
     "rule": "jsx-a11y(prefer-tag-over-role)",
     "file": "src/components/brand/XoveMark.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
@@ -4099,14 +3889,14 @@
     "rule": "jsx-a11y(prefer-tag-over-role)",
     "file": "src/components/ui/Segmented.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
     "rule": "jsx-a11y(prefer-tag-over-role)",
     "file": "src/components/ui/Toast.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
@@ -4239,14 +4029,14 @@
     "rule": "typescript(consistent-type-assertions)",
     "file": "src/components/ui/Range.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
     "file": "src/components/ui/Segmented.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
@@ -4260,7 +4050,7 @@
     "rule": "typescript(consistent-type-assertions)",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "lint",
@@ -4288,7 +4078,7 @@
     "rule": "TS18048",
     "file": "src/brand/mark.test.ts",
     "count": 10,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "tsc",
@@ -4316,7 +4106,7 @@
     "rule": "TS2345",
     "file": "src/brand/mark.test.ts",
     "count": 3,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "tsc",
@@ -4470,7 +4260,7 @@
     "rule": "TS2375",
     "file": "src/components/ui/Segmented.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "tsc",
@@ -4519,28 +4309,28 @@
     "rule": "TS2532",
     "file": "src/brand/brand.test.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "tsc",
     "rule": "TS2532",
     "file": "src/brand/mark.test.ts",
     "count": 6,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "tsc",
     "rule": "TS2532",
     "file": "src/brand/markTimeline.test.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "tsc",
     "rule": "TS2532",
     "file": "src/components/brand/useMarkAnimation.ts",
     "count": 2,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "tsc",
@@ -4582,7 +4372,7 @@
     "rule": "TS2532",
     "file": "src/components/ui/Segmented.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "tsc",
@@ -4629,13 +4419,6 @@
   {
     "tool": "unused",
     "rule": "exports",
-    "file": "src/components/stage/icons.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
     "file": "src/components/stage/staticBands.ts",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
@@ -4652,14 +4435,14 @@
     "rule": "exports",
     "file": "src/components/ui/toast.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "unused",
     "rule": "exports",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "unused",
@@ -4673,7 +4456,7 @@
     "rule": "types",
     "file": "src/brand/mark.ts",
     "count": 2,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "unused",
@@ -4694,7 +4477,7 @@
     "rule": "types",
     "file": "src/components/ui/Segmented.tsx",
     "count": 1,
-    "owner": "#186 shared: the basic blocks"
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "unused",

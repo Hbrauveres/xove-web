@@ -1,0 +1,12 @@
+/* A big statement: tight letters, and its key words in the accent ("Go LIVE"). They're written in
+   lowercase and shown in capitals, so a screen reader says the word, not its letters. Its size is
+   where it sits. */
+.headline {
+  letter-spacing: calc(var(--tracking-1) * -1);
+}
+
+.headline em {
+  font-style: normal;
+  text-transform: uppercase;
+  color: var(--accent);
+}

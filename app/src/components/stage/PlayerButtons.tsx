@@ -1,3 +1,5 @@
+import { IconButton } from "@shared/components/icon-button";
+import { Icon } from "@shared/components/icon";
 import { useState, type ReactNode } from "react";
 import type { CameraDevice, ScreenSurface } from "@services/media-devices-service";
 import { usePinnedRow } from "../../hooks/usePinnedRow";
@@ -5,16 +7,6 @@ import type { StreamKind } from "@services/xove-api-service";
 import { DropUp } from "../ui/DropUp";
 import drop from "../ui/DropUp.module.css";
 import { Picker } from "../ui/Picker";
-import {
-  CameraOffIcon,
-  CameraOnIcon,
-  CogIcon,
-  ScreenOffIcon,
-  ScreenOnIcon,
-  ScreenShareIcon,
-  WindowIcon,
-} from "./icons";
-import round from "./RoundButton.module.css";
 import styles from "./PlayerButtons.module.css";
 import { Tooltip } from "../ui/Tooltip";
 
@@ -88,20 +80,21 @@ export function PlayerButtons(props: Props) {
         ))}
         {extra && <div className={styles.control}>{extra}</div>}
         <div className={styles.control}>
-          <div className={round.pill} data-open={settingsOpen || undefined}>
-            <Tooltip text="Settings" hidden={settingsOpen}>
-              <button
-                type="button"
-                className={round.main}
-                aria-label="Settings"
-                aria-expanded={settingsOpen}
-                aria-haspopup="dialog"
-                onClick={onSettings}
-              >
-                <CogIcon />
-              </button>
-            </Tooltip>
-          </div>
+          <IconButton
+            variant="player"
+            open={settingsOpen}
+            around={(button) => (
+              <Tooltip text="Settings" hidden={settingsOpen}>
+                {button}
+              </Tooltip>
+            )}
+            aria-label="Settings"
+            aria-expanded={settingsOpen}
+            aria-haspopup="dialog"
+            onClick={onSettings}
+          >
+            <Icon name="cog" size={20} />
+          </IconButton>
         </div>
       </div>
     </div>
@@ -141,25 +134,27 @@ function StreamButton({
 
   const button = (
     <div className={styles.control}>
-      <div className={`${round.pill} ${live ? round.live : ""} ${full ? round.disabled : ""}`}>
-        {/* A live button's drop-up takes its tooltip's place (spec 0107). */}
-        <Tooltip text={tip} hidden={live}>
-          <button
-            type="button"
-            className={round.main}
-            aria-label={label}
-            aria-pressed={live}
-            aria-disabled={blocked || undefined}
-            onClick={() => {
-              if (blocked) return;
-              if (live) onStop(kind);
-              else onStart(kind);
-            }}
-          >
-            <Icon kind={kind} off={!live} />
-          </button>
-        </Tooltip>
-      </div>
+      {/* A live button's drop-up takes its tooltip's place. */}
+      <IconButton
+        variant="player"
+        live={live}
+        unavailable={full}
+        around={(button) => (
+          <Tooltip text={tip} hidden={live}>
+            {button}
+          </Tooltip>
+        )}
+        aria-label={label}
+        aria-pressed={live}
+        aria-disabled={blocked || undefined}
+        onClick={() => {
+          if (blocked) return;
+          if (live) onStop(kind);
+          else onStart(kind);
+        }}
+      >
+        <StreamIcon kind={kind} off={!live} />
+      </IconButton>
     </div>
   );
 
@@ -167,12 +162,12 @@ function StreamButton({
     kind === "screen" ? (
       <div className={drop.row}>
         <span className={styles.source}>
-          <WindowIcon />
+          <Icon name="window" size={20} />
           <span>{screenSurface ? SURFACE[screenSurface] : "Your screen"}</span>
         </span>
         <Tooltip text={"Pick another window or tab; viewers keep watching the same stream"}>
-          <button
-            type="button"
+          <IconButton
+            variant="words"
             className={styles.change}
             disabled={busy}
             onClick={() => {
@@ -181,7 +176,7 @@ function StreamButton({
             }}
           >
             Change
-          </button>
+          </IconButton>
         </Tooltip>
       </div>
     ) : (
@@ -221,16 +216,16 @@ function StreamButton({
 }
 
 /** The design's icons: plain while live; crossed while off, the screen showing "share" on hover and focus. */
-function Icon({ kind, off }: { kind: StreamKind; off: boolean }) {
-  if (kind === "camera") return off ? <CameraOffIcon /> : <CameraOnIcon />;
-  if (!off) return <ScreenOnIcon />;
+function StreamIcon({ kind, off }: { kind: StreamKind; off: boolean }) {
+  if (kind === "camera") return off ? <Icon name="camera-off" size={20} /> : <Icon name="camera-on" size={20} />;
+  if (!off) return <Icon name="screen-on" size={20} />;
   return (
     <>
-      <span className={round.iconRest}>
-        <ScreenOffIcon />
+      <span className={styles.iconRest}>
+        <Icon name="screen-off" size={20} />
       </span>
-      <span className={round.iconHover}>
-        <ScreenShareIcon />
+      <span className={styles.iconHover}>
+        <Icon name="screen-share" size={20} />
       </span>
     </>
   );

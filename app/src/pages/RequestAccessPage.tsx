@@ -1,10 +1,10 @@
+import { Face } from "@shared/components/face";
 import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import { api, ApiError } from "@services/xove-api-service";
 import type { Me } from "@services/xove-api-service";
 import { useAuth } from "@shared/stores/auth-store";
 import { Button } from "../components/ui/Button";
-import { PersonAvatar } from "../components/ui/PersonAvatar";
 import { XoveMark } from "../components/brand/XoveMark";
 import styles from "./RequestAccessPage.module.css";
 
@@ -43,7 +43,7 @@ export function RequestAccessPage() {
         {me.status === "PENDING" ? <Waiting /> : <AskForAccess me={me} onSent={refresh} />}
 
         <div className={styles.account}>
-          <PersonAvatar name={me.name} email={me.email} src={me.avatarUrl} size={32} />
+          <Face name={me.name || me.email} photo={me.avatarUrl} size={32} />
           <div className={styles.accountText}>
             <span className={styles.accountLabel}>Signed in as</span>
             <span className={styles.accountEmail}>{me.email}</span>
