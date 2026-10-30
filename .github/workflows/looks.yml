@@ -83,13 +83,14 @@ jobs:
           LOOK_CHANGE: ${{ contains(github.event.pull_request.labels.*.name, 'look change') }}
         run: |
           latest() {
-            gh run list --repo "$GITHUB_REPOSITORY" --workflow looks.yml --status success --limit 20 "$@" \
+            gh run list --repo "$GITHUB_REPOSITORY" --workflow looks.yml --limit 20 "$@" \
               --json databaseId,headSha -q "[.[] | select(.databaseId != $GITHUB_RUN_ID)][0] // empty"
           }
-          ref=$(latest --branch main --event push)
+          ref=$(latest --branch main --event push --status success)
           against="main"
           if [ -z "$ref" ]; then
-            ref=$(latest --branch "$BRANCH" --event pull_request)
+            # Its previous run, failed or not: a failed comparison still kept its recording.
+            ref=$(latest --branch "$BRANCH" --event pull_request --status completed)
             against="this branch's previous run"
           fi
           if [ -z "$ref" ] || ! gh run download "$(jq -r .databaseId <<< "$ref")" --repo "$GITHUB_REPOSITORY" \

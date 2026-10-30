@@ -34,6 +34,18 @@ const AFTER_CLICK_MS = 500;
 const POINTER_MS = 400;
 /** Placed this far left, an element is off screen: measured, never seen (the preview tray's labels). */
 const OFF_SCREEN = -1000;
+/** The clock moves in steps this long, with a real pause after each, so every answer from the fake server
+ * (a promise, not a timer) lands before the next step: otherwise whether it lands in time is a race. */
+const STEP_MS = 50;
+const PAUSE_MS = 15;
+
+/** Moves the page's clock on by `ms`, step by step, letting what each step started finish. */
+async function settle(page: Page, ms: number) {
+  for (let passed = 0; passed < ms; passed += STEP_MS) {
+    await page.clock.runFor(STEP_MS);
+    await page.waitForTimeout(PAUSE_MS);
+  }
+}
 
 /** Every element's computed style and box on the page, by its path. */
 function readPage(offScreen: number) {
@@ -71,12 +83,12 @@ async function screenOf(page: Page, url: string, clicks: RegExp[], [width, heigh
   await page.clock.install({ time: NOW });
   await page.goto(url);
   await page.evaluate(() => document.fonts.ready);
-  await page.clock.runFor(SETTLE_MS);
+  await settle(page, SETTLE_MS);
   await page.mouse.move((width ?? 0) / 2, (height ?? 0) / 2);
-  await page.clock.runFor(POINTER_MS);
+  await settle(page, POINTER_MS);
   for (const name of clicks) {
     await page.getByRole("button", { name }).first().click();
-    await page.clock.runFor(AFTER_CLICK_MS);
+    await settle(page, AFTER_CLICK_MS);
   }
   const elements = await page.evaluate(readPage, OFF_SCREEN);
   return Object.fromEntries(Object.entries(elements).map(([path, styles]) => [path, asRecorded(styles as Styles)]));
