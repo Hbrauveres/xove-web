@@ -11,6 +11,7 @@ export const RULES = {
   testName: "test named .spec (rename to .test: a spec is a workspace requirement document)",
   orphanTest: "test or stories file with no file of the same name beside it",
   noStories: "component with no stories beside it, for the workbench (ADR-0089)",
+  storiesPlace: "stories for something that isn't a component in a components/ folder of the new structure",
   partPlace: "a utils, constants, types or enum file outside its kind's folder (utils/, constants/, types/, enums/)",
   partInCode:
     "a type, named constant or helper inside working code: types to types/, constants to constants/, helpers to utils/",
@@ -154,6 +155,7 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
   }
   if (isStories(r) && !exists(r.replace(/\.stories\.tsx$/, ".tsx"))) add("orphanTest");
   if (isShown(r) && !exists(r.replace(/\.tsx$/, ".stories.tsx"))) add("noStories");
+  if (isStories(r) && !isShown(r.replace(/\.stories\.tsx$/, ".tsx"))) add("storiesPlace");
   if (!isTest(r) && misplacedPart(r)) add("partPlace");
   const working = isWorking(r) && top !== "testing";
   const jobOnly = /\.(component|page|hook)\.tsx?$/.test(r);

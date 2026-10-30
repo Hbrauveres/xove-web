@@ -95,7 +95,7 @@
       }
     },
     {
-      "files": ["**/*.test.ts", "**/*.test.tsx", "src/testing/**", "scripts/**"],
+      "files": ["**/*.test.ts", "**/*.test.tsx", "**/*.stories.tsx", "src/testing/**", "scripts/**"],
       "rules": {
         "max-lines-per-function": "off",
         "complexity": "off",

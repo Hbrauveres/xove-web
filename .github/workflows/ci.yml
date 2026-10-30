@@ -3,6 +3,8 @@
 #   1 · Build               the web app's Docker image, saved as an artifact
 #   2 · Validate build      start the web app from that image, wait until healthy
 #   3 · Unit tests          Vitest
+#   3 · Code checks         the guard (every check against the known findings), Prettier, the size budget
+#   3 · Workbench           every story of the component workbench in a browser, with the accessibility checks
 #   3 · Vulnerability scan  Trivy on the image and the web dependencies
 #   3 · SAST                Semgrep on the source code
 #

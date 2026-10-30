@@ -121,6 +121,18 @@ describe("the layout (ADR-0086)", () => {
     ]);
   });
 
+  it("reads a component's stories like a test: they may use testing/, and their parts don't count as used", () => {
+    expect(
+      layout({
+        ...unit("shared/components/face", "face.component.tsx"),
+        "shared/components/face/face.component.stories.tsx":
+          'import { aSharer } from "@testing/factories/person.factory";\nimport { SIZES } from "./constants/face.constants";\n',
+        "shared/components/face/constants/face.constants.ts": "",
+        "testing/factories/person.factory.ts": "",
+      }),
+    ).not.toContain("importTesting shared/components/face/face.component.stories.tsx");
+  });
+
   it("reads imports and re-exports written over several lines", () => {
     expect(
       layout({

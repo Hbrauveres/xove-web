@@ -116,6 +116,18 @@ describe("the code check", () => {
       "noStories",
     );
     expect(rules("components/ui/Button.tsx", "", ["components/ui/Button.test.tsx"])).not.toContain("noStories");
+    const page = "features/home/components/home-page/home.page.tsx";
+    expect(rules(page, "", ["features/home/components/home-page/home.page.test.tsx"])).toContain("noStories");
+  });
+
+  it("keeps stories to the components that have them, not the routes", () => {
+    const story = 'import type { Meta } from "@storybook/react-vite";\nexport default {} satisfies Meta;\n';
+    expect(rules("routes/root/root.component.stories.tsx", story, ["routes/root/root.component.tsx"])).toContain(
+      "storiesPlace",
+    );
+    expect(
+      rules("shared/components/face/face.component.stories.tsx", story, ["shared/components/face/face.component.tsx"]),
+    ).not.toContain("storiesPlace");
   });
 
   it("names a test that waits in real time, or shares data at file level", () => {
