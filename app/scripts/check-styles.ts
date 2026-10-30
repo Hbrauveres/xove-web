@@ -88,10 +88,12 @@ export function checkStyles(src: string) {
     file,
     root: postcss.parse(readFileSync(join(src, file), "utf8"), { from: file }),
   }));
+  const tokens = parsed.find((p) => p.file.endsWith("shared/styles/tokens.css"));
   const global = parsed.find((p) => p.file.endsWith("shared/styles/global.css"));
+  if (!tokens) return ["src/shared/styles/tokens.css not found"];
   if (!global) return ["src/shared/styles/global.css not found"];
   return [
-    ...contrastProblems(tokensOf(global.root)),
+    ...contrastProblems(tokensOf(tokens.root)),
     ...parsed.flatMap(({ root, file }) => mixedVendorRules(root, file)),
     ...reducedMotionProblems(global.root),
   ];

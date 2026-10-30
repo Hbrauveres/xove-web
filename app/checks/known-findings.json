@@ -653,13 +653,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/shared/styles/global.css",
-    "count": 2,
-    "owner": "#185 shared: tokens"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/testing/fakeApi.ts",
     "count": 2,
     "owner": "#195 the sweep"

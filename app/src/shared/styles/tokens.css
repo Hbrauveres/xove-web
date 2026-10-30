@@ -1,0 +1,56 @@
+/*
+ * The design tokens: every value the app's CSS uses, named once. No other CSS file writes a colour,
+ * size, duration, easing, layer or window size of its own. Sizes are in rem (16 px at the browser's
+ * default text size), so the whole interface follows the reader's text-size setting; only hairlines
+ * stay in px. The design sheet (docs/design.md) lists them with their use.
+ */
+:root {
+  /* Soft black and neutral greys: the record light reads best on black, and the stream keeps the
+     colour; pure black stays only behind the video, as its frame. Panels sit just above the ground
+     so they still stand apart, and red and faint text still pass on the raised surface. */
+  --ground: #0c0c0d;
+  --surface: #161617;
+  --surface-raised: #1b1b1d;
+  --line: #2c2c2f;
+  --text: #ebebec;
+  --text-muted: #9a9a9f;
+  --text-faint: #66666b;
+
+  /* The one accent is red, the record light: the same red as LIVE. Text on a red fill is a deep
+     red, which reads at 4.7:1. */
+  --accent: #ef4b4b;
+  --accent-ink: #3a0808;
+  --accent-soft: rgba(239, 75, 75, 0.14);
+
+  /* Status colours keep their meaning, whatever the palette. */
+  --live: #ef4b4b;
+  --ok: #3fbf7f;
+  --warn: #e0b341;
+
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-md: 0.9375rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2.25rem;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --gutter: 1rem;
+  /* The player's controls: the frosted glass of the round buttons and drop-ups, the settings
+     panel, and the dark pill of a chosen option. */
+  --glass: rgba(10, 10, 11, 0.72);
+  --panel: rgba(18, 18, 20, 0.74);
+  --panel-line: rgba(255, 255, 255, 0.08);
+  --sel-bg: var(--surface-raised);
+  --sel-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --sel-hover: #26262a;
+  --unroll: 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* The window sizes the layouts change at, used as `@media (--narrow)` (postcss.config.js). */
+@custom-media --narrow (max-width: 47.5rem);
