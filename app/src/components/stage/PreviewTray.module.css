@@ -4,7 +4,7 @@
    shadow shows. */
 .tray {
   position: fixed;
-  z-index: 40;
+  z-index: var(--layer-tray);
   display: flex;
   justify-content: center;
   opacity: 0;
@@ -19,7 +19,7 @@
 .tray[data-leaving] {
   transition:
     clip-path var(--unroll),
-    opacity 200ms ease;
+    opacity var(--duration-200) ease;
 }
 
 .tray[data-up] {

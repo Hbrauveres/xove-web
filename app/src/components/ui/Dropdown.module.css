@@ -5,7 +5,7 @@
 .panel {
   position: absolute;
   top: calc(100% + var(--space-2));
-  z-index: 30;
+  z-index: var(--layer-dropdown);
   width: var(--dropdown-width);
   color: var(--text);
   line-height: 1.25; /* the design's rows, tighter than the page's text */
@@ -14,7 +14,7 @@
    * clip, a fade or a filter here or on an ancestor: those stop the sections' blur.
    */
   display: grid; /* grid-template-rows: 0fr → 1fr, set by the component */
-  transition: grid-template-rows 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: grid-template-rows var(--duration-260) var(--ease-out);
 }
 
 .end {
@@ -84,7 +84,7 @@
   background: transparent;
 }
 
-@media (max-width: 760px) {
+@media (--narrow) {
   .panel,
   .center {
     position: fixed;

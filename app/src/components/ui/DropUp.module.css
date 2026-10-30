@@ -20,16 +20,16 @@
   position: absolute;
   bottom: calc(100% + var(--space-2-5));
   left: 50%;
-  z-index: 5;
+  z-index: var(--layer-popup);
   width: var(--dropup-width, var(--dropup-width));
   transform: translate(-50%, var(--space-1-5));
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
   transition:
-    opacity 140ms ease,
-    transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    visibility 0s linear 180ms;
+    opacity var(--duration-140) ease,
+    transform var(--duration-180) var(--ease-out),
+    visibility 0s linear var(--duration-180);
 }
 
 /* A bridge over the gap, so the pointer can travel up into it. */
@@ -48,8 +48,8 @@
   visibility: visible;
   pointer-events: auto;
   transition:
-    opacity 140ms ease,
-    transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity var(--duration-140) ease,
+    transform var(--duration-180) var(--ease-out),
     visibility 0s;
 }
 

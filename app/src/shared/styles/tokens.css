@@ -47,7 +47,7 @@
   --sel-bg: var(--surface-raised);
   --sel-shadow: 0 var(--hairline) var(--space-0-5) var(--black-40);
   --sel-hover: #26262a;
-  --unroll: 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --unroll: var(--duration-260) var(--ease-out);
 
   /* Shades: each colour family at the strengths the app uses (white-08 is white at 8%). */
   --accent-00: rgba(239, 75, 75, 0);
@@ -278,7 +278,60 @@
   --tracking-6: 0.06em;
   --tracking-8: 0.08em;
   --tracking-10: 0.1em;
+
+  /* Durations, in milliseconds (--duration-120 is 120 ms). */
+  --duration-0-01: 0.01ms;
+  --duration-30: 30ms;
+  --duration-40: 40ms;
+  --duration-80: 80ms;
+  --duration-90: 90ms;
+  --duration-100: 100ms;
+  --duration-120: 120ms;
+  --duration-140: 140ms;
+  --duration-150: 150ms;
+  --duration-160: 160ms;
+  --duration-180: 180ms;
+  --duration-200: 200ms;
+  --duration-220: 220ms;
+  --duration-240: 240ms;
+  --duration-250: 250ms;
+  --duration-260: 260ms;
+  --duration-280: 280ms;
+  --duration-300: 300ms;
+  --duration-350: 350ms;
+  --duration-360: 360ms;
+  --duration-500: 500ms;
+  --duration-800: 800ms;
+  --duration-900: 900ms;
+  --duration-1000: 1000ms;
+  --duration-1600: 1600ms;
+  --duration-2000: 2000ms;
+
+  /* Easings. */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Layers, back to front: what sits over what. */
+  --layer-behind: -1;
+  --layer-raised: 1;
+  --layer-over: 2;
+  --layer-popup: 5;
+  --layer-panel: 6;
+  --layer-menu: 8;
+  --layer-overlay: 10;
+  --layer-bars: 20;
+  --layer-error: 25;
+  --layer-dropdown: 30;
+  --layer-tray: 40;
+  --layer-tooltip: 60;
 }
 
-/* The window sizes the layouts change at, used as `@media (--narrow)` (postcss.config.js). */
+/* The window and box sizes the layouts change at, used as `@media (--narrow)` or `@container (--tiny)`
+   (postcss.config.js). */
+@custom-media --short (max-height: 20rem);
+@custom-media --tiny (max-width: 22.4375rem);
+@custom-media --compact (max-width: 40rem);
 @custom-media --narrow (max-width: 47.5rem);
+@custom-media --medium (max-width: 56.25rem);

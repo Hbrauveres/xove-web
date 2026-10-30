@@ -32,7 +32,7 @@
 
 /* Pointed at, a glass pill lightens (as in the design); a live one stays as it is. */
 .pill {
-  transition: background 120ms ease;
+  transition: background var(--duration-120) ease;
 }
 
 @media (hover: hover) {
@@ -63,7 +63,7 @@
 
 /* A narrow stage (spec 0133): compact, so a row of four and the fullscreen button still fit, down
    to 280 px. Measured on the controls' layer itself, not the window. */
-@container (max-width: 359px) {
+@container (--tiny) {
   .pill {
     height: var(--control-md);
   }

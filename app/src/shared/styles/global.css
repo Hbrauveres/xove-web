@@ -57,7 +57,7 @@ button {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: var(--duration-0-01) !important;
+    transition-duration: var(--duration-0-01) !important;
   }
 }

@@ -66,7 +66,7 @@
   height: var(--size-1-5);
   border-radius: 50%;
   background: var(--accent-ink);
-  animation: pulse 1.6s ease-in-out infinite;
+  animation: pulse var(--duration-1600) ease-in-out infinite;
 }
 
 @keyframes pulse {
@@ -118,7 +118,7 @@
 }
 
 /* Short of room, the left gives way first: the words go, then the avatars (spec 0107). */
-@container (max-width: 900px) {
+@container (--medium) {
   /* Hidden to the eye only: screen readers still hear "N watching". */
   .count {
     position: absolute;
@@ -130,7 +130,7 @@
   }
 }
 
-@container (max-width: 760px) {
+@container (--narrow) {
   .row,
   .watchers::before {
     display: none;

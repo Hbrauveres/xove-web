@@ -7,7 +7,7 @@
   justify-content: center;
   padding: var(--space-3);
   pointer-events: none;
-  z-index: 2;
+  z-index: var(--layer-over);
 }
 
 .buttons {
@@ -25,7 +25,7 @@
 
 /* A narrow stage (spec 0133): closer together, and centred clear of the fullscreen button in the
    corner (34 px, 12 px in, and an 8 px gap) on both sides. */
-@container (max-width: 359px) {
+@container (--tiny) {
   .row {
     padding-inline: calc(var(--space-3) + var(--space-8-5) + var(--space-2));
   }

@@ -46,7 +46,7 @@
   align-items: start;
 }
 
-@media (max-width: 760px) {
+@media (--narrow) {
   .columns {
     grid-template-columns: minmax(0, 1fr);
   }

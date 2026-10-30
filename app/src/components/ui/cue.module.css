@@ -35,8 +35,8 @@
   border-radius: inherit;
   pointer-events: none;
   animation:
-    pulse 1s ease-in-out 2,
-    settle 0.5s ease-in-out 2s forwards;
+    pulse var(--duration-1000) ease-in-out 2,
+    settle var(--duration-500) ease-in-out var(--duration-2000) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {

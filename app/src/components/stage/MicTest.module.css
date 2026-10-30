@@ -26,7 +26,7 @@
   inset: var(--space-1-625) 0;
   border-radius: var(--radius-pill);
   background: linear-gradient(to right, var(--fill-colour) 0 var(--level), var(--text-shade-16) var(--level));
-  transition: background 90ms linear;
+  transition: background var(--duration-90) linear;
 }
 
 .meter input {
@@ -59,8 +59,8 @@
   -webkit-appearance: none;
   cursor: ew-resize;
   transition:
-    height 0.12s,
-    margin-top 0.12s;
+    height var(--duration-120),
+    margin-top var(--duration-120);
 }
 
 .meter input:hover::-webkit-slider-thumb,

@@ -1,9 +1,9 @@
 .overlay {
   /* The translate: it rises with the round buttons above the settings sheet, together (spec 0118). */
   transition:
-    opacity 0.25s ease,
+    opacity var(--duration-250) ease,
     translate var(--unroll),
-    bottom 0.28s ease;
+    bottom var(--duration-280) ease;
   position: absolute;
   inset: 0;
   display: flex;

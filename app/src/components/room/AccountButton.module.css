@@ -139,8 +139,8 @@
   background: var(--grey-189);
   box-shadow: 0 var(--hairline) var(--space-0-75) var(--black-50);
   transition:
-    transform 0.18s ease,
-    background 0.18s ease;
+    transform var(--duration-180) ease,
+    background var(--duration-180) ease;
 }
 
 .switch[aria-checked="true"] i {

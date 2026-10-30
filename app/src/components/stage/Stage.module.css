@@ -23,8 +23,8 @@
   height: min(100cqw / var(--shape), var(--free-h));
   margin-inline: auto;
   transition:
-    width 0.35s ease,
-    height 0.35s ease,
+    width var(--duration-350) ease,
+    height var(--duration-350) ease,
     translate var(--unroll);
 }
 
@@ -35,7 +35,7 @@
   container-type: size;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: var(--layer-raised);
 }
 
 .frame:fullscreen {
@@ -53,8 +53,8 @@
   translate: -50% -50%;
   /* A new picture's shape: the view glides to it, as the stage did (the design sheet's motion). */
   transition:
-    width 0.35s ease,
-    height 0.35s ease,
+    width var(--duration-350) ease,
+    height var(--duration-350) ease,
     translate var(--unroll);
 }
 
@@ -66,7 +66,7 @@
   /* Rounded, no border: the light around it is the frame (spec 0104). */
   border-radius: var(--radius-3);
   overflow: hidden;
-  z-index: 1;
+  z-index: var(--layer-raised);
 }
 
 /* A picture filling the stage: no black behind it to show as a sliver at an edge (spec 0123,
@@ -89,14 +89,14 @@
   inset: 0;
   pointer-events: none;
   transition:
-    opacity 0.25s ease,
+    opacity var(--duration-250) ease,
     translate var(--unroll),
-    bottom 0.28s ease;
+    bottom var(--duration-280) ease;
 }
 
 /* Fading, part by part: a heard voice stays, for its speaking cue (spec 0131). */
 .controls > * {
-  transition: opacity 0.25s ease;
+  transition: opacity var(--duration-250) ease;
 }
 
 .frame[data-chrome="hidden"] .controls > :not(:has([data-stays])) {
@@ -129,7 +129,7 @@
  */
 .info {
   position: relative;
-  z-index: 2;
+  z-index: var(--layer-over);
   container-type: inline-size;
   display: flex;
   align-items: center;
@@ -139,7 +139,7 @@
   margin-top: var(--info-gap, var(--space-3-5));
 }
 
-@media (max-width: 760px) {
+@media (--narrow) {
   .info {
     flex-direction: column;
     align-items: stretch;
@@ -155,7 +155,7 @@
 }
 
 /* A narrow stage's compact buttons (spec 0133): the fullscreen button stays level with them. */
-@container (max-width: 359px) {
+@container (--tiny) {
   .stage [data-overlay],
   .stage .controls {
     --btn: var(--control-md);

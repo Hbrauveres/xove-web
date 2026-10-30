@@ -9,9 +9,9 @@
   cursor: pointer;
   white-space: nowrap;
   transition:
-    background-color 120ms ease,
-    border-color 120ms ease,
-    transform 80ms ease;
+    background-color var(--duration-120) ease,
+    border-color var(--duration-120) ease,
+    transform var(--duration-80) ease;
 }
 
 .button:active {

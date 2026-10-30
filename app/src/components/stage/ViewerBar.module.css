@@ -12,7 +12,7 @@
   align-items: center;
   justify-content: space-between;
   pointer-events: none;
-  z-index: 2;
+  z-index: var(--layer-over);
 }
 
 .left,
@@ -33,10 +33,10 @@
 .left > *,
 .right > * {
   transition:
-    opacity 0.25s ease,
-    margin 0.25s ease,
-    background-color 120ms ease,
-    color 120ms ease;
+    opacity var(--duration-250) ease,
+    margin var(--duration-250) ease,
+    background-color var(--duration-120) ease,
+    color var(--duration-120) ease;
 }
 
 :global([data-chrome="hidden"]:not(:has(:focus-visible))) :is(.left, .right) > :not([data-stays]) {
@@ -63,8 +63,8 @@
   color: var(--text);
   cursor: pointer;
   transition:
-    background-color 120ms ease,
-    color 120ms ease;
+    background-color var(--duration-120) ease,
+    color var(--duration-120) ease;
   user-select: none;
 }
 
@@ -101,7 +101,7 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  transition: box-shadow 120ms ease;
+  transition: box-shadow var(--duration-120) ease;
   pointer-events: none;
 }
 
@@ -210,7 +210,7 @@
   position: absolute;
   right: 0;
   bottom: calc(100% + var(--space-2-5));
-  z-index: 8;
+  z-index: var(--layer-menu);
   display: grid;
   gap: var(--space-0-5);
   min-width: var(--viewer-menu-width);

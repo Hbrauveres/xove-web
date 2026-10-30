@@ -23,8 +23,8 @@
   color: var(--text);
   cursor: pointer;
   transition:
-    background 120ms ease,
-    box-shadow 160ms ease;
+    background var(--duration-120) ease,
+    box-shadow var(--duration-160) ease;
 }
 
 .toggle svg {
@@ -60,7 +60,7 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  transition: box-shadow 120ms ease;
+  transition: box-shadow var(--duration-120) ease;
   pointer-events: none;
 }
 
@@ -127,16 +127,16 @@
   align-self: stretch;
   opacity: 0;
   transition:
-    grid-template-rows 240ms cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 180ms ease;
+    grid-template-rows var(--duration-240) var(--ease-standard),
+    opacity var(--duration-180) ease;
 }
 
 .drawer[data-open] {
   grid-template-rows: 1fr;
   opacity: 1;
   transition:
-    grid-template-rows 300ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    opacity 220ms ease 40ms;
+    grid-template-rows var(--duration-300) var(--ease-out),
+    opacity var(--duration-220) ease var(--duration-40);
 }
 
 .inner {
@@ -172,20 +172,20 @@
 }
 
 .slider[data-leaving] svg {
-  animation: fade-out 160ms ease forwards;
+  animation: fade-out var(--duration-160) ease forwards;
 }
 
 .slider[data-leaving] .range {
-  animation: shrink 220ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: shrink var(--duration-220) var(--ease-standard) forwards;
 }
 
 /* The new one: its icon fading in, its bar growing from the left as the old one goes. */
 .slider[data-entering] svg {
-  animation: fade-in 180ms ease 80ms backwards;
+  animation: fade-in var(--duration-180) ease var(--duration-80) backwards;
 }
 
 .slider[data-entering] .range {
-  animation: grow 260ms cubic-bezier(0.2, 0.8, 0.2, 1) 120ms backwards;
+  animation: grow var(--duration-260) var(--ease-out) var(--duration-120) backwards;
 }
 
 /* Both ends given: a clip can't be blended to or from none. */

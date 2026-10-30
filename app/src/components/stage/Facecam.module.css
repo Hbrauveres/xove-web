@@ -1,7 +1,7 @@
 /* The small window over the big player (spec 0060). */
 .facecam {
   position: absolute;
-  z-index: 2;
+  z-index: var(--layer-over);
   width: 24%;
   aspect-ratio: 16 / 9;
   background: var(--black);
@@ -32,7 +32,7 @@
   right: var(--space-1-5);
   display: flex;
   gap: var(--space-1);
-  transition: opacity 0.25s ease;
+  transition: opacity var(--duration-250) ease;
 }
 
 .button {
@@ -65,7 +65,7 @@
 /* Collapsed: a small tab at the player's right edge. */
 .tab {
   position: absolute;
-  z-index: 2;
+  z-index: var(--layer-over);
   right: 0;
   top: 50%;
   display: grid;

@@ -1,7 +1,7 @@
 /* The header (spec 0104): see specs/0104-room-theater/design.html. Above the light, no background. */
 .header {
   position: relative;
-  z-index: 20;
+  z-index: var(--layer-bars);
   flex: none;
   display: grid;
   grid-template-columns: 1fr minmax(0, auto) 1fr;
@@ -28,7 +28,7 @@
   gap: var(--space-1);
 }
 
-@media (max-width: 760px) {
+@media (--narrow) {
   .header {
     grid-template-columns: auto 1fr auto;
   }

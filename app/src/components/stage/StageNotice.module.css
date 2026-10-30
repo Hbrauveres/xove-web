@@ -32,7 +32,7 @@
   border-radius: 50%;
   border: var(--border-0-5) solid var(--text-muted);
   border-right-color: transparent;
-  animation: spin 0.8s linear infinite;
+  animation: spin var(--duration-800) linear infinite;
 }
 
 @keyframes spin {

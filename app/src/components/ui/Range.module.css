@@ -40,9 +40,9 @@
   appearance: none;
   -webkit-appearance: none;
   transition:
-    width 0.12s,
-    height 0.12s,
-    margin-top 0.12s;
+    width var(--duration-120),
+    height var(--duration-120),
+    margin-top var(--duration-120);
 }
 
 .range:hover::-webkit-slider-thumb,
@@ -72,8 +72,8 @@
   border-radius: 50%;
   background: var(--white);
   transition:
-    width 0.12s,
-    height 0.12s;
+    width var(--duration-120),
+    height var(--duration-120);
 }
 
 .range:hover::-moz-range-thumb,
