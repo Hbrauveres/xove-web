@@ -10,6 +10,7 @@ export const RULES = {
   noTest: "code with logic but no .test file beside it",
   testName: "test named .spec (rename to .test: a spec is a workspace requirement document)",
   orphanTest: "test or stories file with no file of the same name beside it",
+  noStories: "component with no stories beside it, for the workbench (ADR-0089)",
   partPlace: "a utils, constants, types or enum file outside its kind's folder (utils/, constants/, types/, enums/)",
   partInCode:
     "a type, named constant or helper inside working code: types to types/, constants to constants/, helpers to utils/",
@@ -38,6 +39,8 @@ const MAX_LINE = 120;
 const isTest = (f: string) => /\.(spec|test)\.tsx?$/.test(f);
 /** A component's states for the workbench (ADR-0089): like a test, it's never part of the app. */
 const isStories = (f: string) => /\.stories\.tsx$/.test(f);
+/** A component or page in a new-structure `components/` folder: it has its states in the workbench. */
+const isShown = (f: string) => /^(features\/[^/]+|shared)\/components\/[^/]+\/[^/]+\.(component|page)\.tsx$/.test(f);
 const isCode = (f: string) => /\.tsx?$/.test(f) && !isTest(f) && !isStories(f) && !f.endsWith(".d.ts");
 const noLogic = (f: string) =>
   /(\.types|\.enum|\.constants)\.ts$/.test(f) ||
@@ -150,6 +153,7 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
     if (![".ts", ".tsx"].some((e) => exists(codeStemOf(r) + e))) add("orphanTest");
   }
   if (isStories(r) && !exists(r.replace(/\.stories\.tsx$/, ".tsx"))) add("orphanTest");
+  if (isShown(r) && !exists(r.replace(/\.tsx$/, ".stories.tsx"))) add("noStories");
   if (!isTest(r) && misplacedPart(r)) add("partPlace");
   const working = isWorking(r) && top !== "testing";
   const jobOnly = /\.(component|page|hook)\.tsx?$/.test(r);

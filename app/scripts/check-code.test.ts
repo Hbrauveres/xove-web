@@ -102,6 +102,22 @@ describe("the code check", () => {
     );
   });
 
+  it("names a component in the new structure with no stories, but not a route or the old folders", () => {
+    const face = "shared/components/face/face.component.tsx";
+    const test = "shared/components/face/face.component.test.tsx";
+    expect(rules(face, "", [test])).toContain("noStories");
+    expect(rules(face, "", [test, "shared/components/face/face.component.stories.tsx"])).not.toContain("noStories");
+    expect(
+      rules("features/room/components/stage-facecam/stage-facecam.component.tsx", "", [
+        "features/room/components/stage-facecam/stage-facecam.component.test.tsx",
+      ]),
+    ).toContain("noStories");
+    expect(rules("routes/root/root.component.tsx", "", ["routes/root/root.component.test.tsx"])).not.toContain(
+      "noStories",
+    );
+    expect(rules("components/ui/Button.tsx", "", ["components/ui/Button.test.tsx"])).not.toContain("noStories");
+  });
+
   it("names a test that waits in real time, or shares data at file level", () => {
     expect(
       rules("shared/utils/c.util.test.ts", "await new Promise((r) => setTimeout(r, 500));\n", [
