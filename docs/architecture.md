@@ -190,7 +190,7 @@ app/src/
 └── testing/      the fakes, the sample data and the setup tests share; only tests import it
 ```
 
-- **A unit is a folder:** a component, a store, a service or an adapter, with its code, its test beside it (`facecam.component.test.tsx`), its CSS module if it's a component, and `index.ts`: the only door other code goes through.
+- **A unit is a folder:** a component, a store, a service or an adapter, with its code, its test beside it (`facecam.component.test.tsx`), its CSS module if it's a component, a component's stories (`facecam.component.stories.tsx`: its states in the workbench, [Testing](testing.md#the-workbench)), and `index.ts`: the only door other code goes through.
 - **Its parts sit inside it,** as files in folders by kind: `hooks/`, `utils/` (helpers that format, build or map, each with its test beside it), `constants/`, `types/`, `enums/`, only when it has some. A part used by several units of a feature sits in the feature's own part folders; one used by several features in `shared/`'s; a service's parts in the service. A working file holds no type (its props and inputs too), named constant or helper; a function that makes calls (the network, storage, LiveKit) belongs to a service.
 - **Nothing nested:** no unit inside a unit, no folder inside a part folder, a flat `components/` with the area in the name. A path is at most 6 levels under `src/`. A feature past about 25 components is split into features.
 - **Names:** kebab-case with the type as a suffix: `.component.tsx`, `.page.tsx`, `.hook.ts`, `.util.ts`, `.service.ts`, `.adapter.ts`, `.store.ts`, `.model.ts`, `.selectors.ts`, `.constants.ts`, `.enum.ts`, `.types.ts`; tests `.test.ts(x)`.
@@ -221,7 +221,7 @@ app/src/
 Every rule a tool can measure runs in the commit checks as `3 · Code checks`, on the whole app's code.
 
 **What's exempt, and why:**
-- **Tests** (`*.test.ts(x)`, `src/testing/`, its fakes and factories) are exempt from the size, number and escape-hatch limits. A `describe` block is long by nature, and expected values belong in the test. They keep their own rules ([Testing](testing.md#test-rules)).
+- **Tests and stories** (`*.test.ts(x)`, `*.stories.tsx`, `src/testing/`, its fakes and factories) are exempt from the size, number and escape-hatch limits. A `describe` block is long by nature, and expected values belong in the test. They keep their own rules ([Testing](testing.md#test-rules)).
 - **`scripts/`** (the checks themselves) is exempt from the same limits. It's tooling run with Node, not part of the app.
 - **The copy check skips tests.** Tests repeat their arrange steps on purpose, so each one reads on its own.
 - **No exemption from the escape hatches' own back door.** A comment that switches a check off (`oxlint-disable`, `@ts-ignore`, `@ts-expect-error`, `@ts-nocheck`, `jscpd:ignore`, `prettier-ignore`) is a finding in app code. Fix the code instead.
@@ -232,7 +232,8 @@ Every rule a tool can measure runs in the commit checks as `3 · Code checks`, o
 | oxlint | Hooks' dependencies, accessibility, unused code, the import direction, the size and shape limits above, escape hatches, unexplained numbers, default exports | through the guard |
 | jscpd | A block of code copied into another place (8 lines or 60 tokens, CSS included) | `npm run check:copies` |
 | knip | Files nothing imports, exports nothing uses | `npm run check:unused` |
-| The code check | The structure's rules: folders and names, every part in its kind's folder and none inside working code, a test beside every file with logic, units in their own folders with their parts inside them, nothing nested past 6 levels, imports through a unit's `index.ts` and never up, across features or into `testing/`, any colour, size, duration, easing, layer or window size written in CSS outside `tokens.css` (zero isn't a value), no DOM queries between components, LiveKit only in `services/`, no history in comments, lines over 120 characters (Prettier doesn't wrap strings and comments), comments that switch a check off, and the tests' own rules | `npm run check:code -- <folder> --all` |
+| The code check | The structure's rules: folders and names, every part in its kind's folder and none inside working code, a test beside every file with logic, units in their own folders with their parts inside them, nothing nested past 6 levels, imports through a unit's `index.ts` and never up, across features or into `testing/`, any colour, size, duration, easing, layer or window size written in CSS outside `tokens.css` (zero isn't a value), no DOM queries between components, LiveKit only in `services/`, a component in a `components/` folder of the new structure with no stories, no history in comments, lines over 120 characters (Prettier doesn't wrap strings and comments), comments that switch a check off, and the tests' own rules | `npm run check:code -- <folder> --all` |
+| The workbench | Every story in headless Chromium: one that throws, or breaks an accessibility rule (contrast included), fails | `npm run test:workbench` |
 | Prettier | Layout | `npm run format` fixes, `npm run format:check` checks |
 | The size budget | The built JavaScript and styles, compressed, against `checks/size-budget.json` | `npm run build && npm run check:size` |
 

@@ -3,6 +3,8 @@
 #   1 · Build               the web app's Docker image, saved as an artifact
 #   2 · Validate build      start the web app from that image, wait until healthy
 #   3 · Unit tests          Vitest
+#   3 · Code checks         the guard (every check against the known findings), Prettier, the size budget
+#   3 · Workbench           every story of the component workbench in a browser, with the accessibility checks
 #   3 · Vulnerability scan  Trivy on the image and the web dependencies
 #   3 · SAST                Semgrep on the source code
 #
@@ -148,6 +150,45 @@ jobs:
       # tests never do (docs/testing.md).
       - name: Style check
         run: npm run check:styles
+
+  # The component workbench (ADR-0089): every story rendered in a real browser, with the
+  # accessibility checks; a story that throws or breaks a rule fails. Its own job, beside the others.
+  workbench:
+    name: 3 · Workbench
+    needs: validate
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Playwright's version (its browser is cached per version)
+        id: playwright
+        run: echo "version=$(node -p 'require("playwright/package.json").version')" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ steps.playwright.outputs.version }}
+
+      - name: Chromium, and the libraries it needs
+        run: npx playwright install --with-deps chromium
+
+      - name: Every story in the browser
+        run: npm run test:workbench
+
+      - name: The workbench builds
+        run: npm run workbench:build
 
   code-checks:
     name: 3 · Code checks

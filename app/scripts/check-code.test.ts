@@ -91,6 +91,45 @@ describe("the code check", () => {
     );
   });
 
+  it("takes a component's stories as its states, like a test: named after it, beside it, no test of their own", () => {
+    const stories = "shared/components/face/face.component.stories.tsx";
+    const text =
+      'import type { Meta } from "@storybook/react-vite";\nconst meta = { title: "Face" } satisfies Meta;\nexport default meta;\n';
+    expect(rules(stories, text, ["shared/components/face/face.component.tsx"])).toEqual([]);
+    expect(rules(stories, text)).toContain("orphanTest");
+    expect(rules("shared/components/face/Face.stories.tsx", text, ["shared/components/face/Face.tsx"])).toContain(
+      "naming",
+    );
+  });
+
+  it("names a component in the new structure with no stories, but not a route or the old folders", () => {
+    const face = "shared/components/face/face.component.tsx";
+    const test = "shared/components/face/face.component.test.tsx";
+    expect(rules(face, "", [test])).toContain("noStories");
+    expect(rules(face, "", [test, "shared/components/face/face.component.stories.tsx"])).not.toContain("noStories");
+    expect(
+      rules("features/room/components/stage-facecam/stage-facecam.component.tsx", "", [
+        "features/room/components/stage-facecam/stage-facecam.component.test.tsx",
+      ]),
+    ).toContain("noStories");
+    expect(rules("routes/root/root.component.tsx", "", ["routes/root/root.component.test.tsx"])).not.toContain(
+      "noStories",
+    );
+    expect(rules("components/ui/Button.tsx", "", ["components/ui/Button.test.tsx"])).not.toContain("noStories");
+    const page = "features/home/components/home-page/home.page.tsx";
+    expect(rules(page, "", ["features/home/components/home-page/home.page.test.tsx"])).toContain("noStories");
+  });
+
+  it("keeps stories to the components that have them, not the routes", () => {
+    const story = 'import type { Meta } from "@storybook/react-vite";\nexport default {} satisfies Meta;\n';
+    expect(rules("routes/root/root.component.stories.tsx", story, ["routes/root/root.component.tsx"])).toContain(
+      "storiesPlace",
+    );
+    expect(
+      rules("shared/components/face/face.component.stories.tsx", story, ["shared/components/face/face.component.tsx"]),
+    ).not.toContain("storiesPlace");
+  });
+
   it("names a test that waits in real time, or shares data at file level", () => {
     expect(
       rules("shared/utils/c.util.test.ts", "await new Promise((r) => setTimeout(r, 500));\n", [

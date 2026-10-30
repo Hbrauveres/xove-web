@@ -27,7 +27,8 @@ const UNIT_FILE = /\.(component|page|store|service|adapter)\.tsx?$/;
 const IMPORT = /^[ \t]*(?:import|export)\b[^;"']*?["']([^"']+)["']/gm;
 const EXTENSIONS = ["", ".ts", ".tsx", "/index.ts", "/index.tsx"];
 
-const isTest = (f: string) => /\.test\.tsx?$/.test(f);
+// Tests and a component's stories (ADR-0089): neither is part of the app, so neither counts as an importer.
+const isTest = (f: string) => /\.(test\.tsx?|stories\.tsx)$/.test(f);
 const top = (f: string) => f.split("/")[0] ?? "";
 const isNew = (f: string) => top(f) in RANK;
 const isOld = (f: string) => f.includes("/") && !isNew(f) && top(f) !== "testing";
