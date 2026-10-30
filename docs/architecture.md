@@ -250,7 +250,7 @@ Every rule a tool can measure runs in the commit checks as `3 · Code checks`, o
 - **The tools are pinned** (oxlint, TypeScript, Prettier, knip, jscpd at exact versions). Dependabot proposes their upgrades in a PR of their own (the `checks` group). An upgrade that brings new findings fixes them in that PR, since the list can't grow.
 
 **The size budget.**
-- **Today:** JavaScript 286 kB and styles 18 kB, compressed (kB as Vite prints them), about 10% above what the app weighs today. The styles grew when every value became a token (#185): a `var(--name)` is longer than the value it names.
+- **Today:** JavaScript 286 kB and styles 18 kB, compressed (kB as Vite prints them), about 10% above what the app weighs today. The styles grew when every value became a token: a `var(--name)` is longer than the value it names.
 - **Over budget fails.** So does falling more than 10% under it: a lighter app lowers its budget, so the room it freed isn't quietly used up.
 - **Raising a budget** is a deliberate change in `checks/size-budget.json`, in the PR that needs it, saying why.
 
