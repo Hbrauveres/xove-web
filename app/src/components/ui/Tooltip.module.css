@@ -8,7 +8,7 @@
   max-width: 260px;
   padding: 6px 9px;
   border-radius: var(--radius-sm);
-  background: #070708;
+  background: var(--grey-7);
   color: var(--text);
   font-size: var(--text-xs);
   line-height: 1.35;

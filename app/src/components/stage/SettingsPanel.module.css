@@ -63,7 +63,7 @@
 }
 
 .close:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--panel-line);
   color: var(--text);
 }
 
@@ -199,17 +199,17 @@
 
 .panes::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--white-10);
 }
 
 .panes:hover::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.28);
+  background: var(--white-28);
 }
 
 @supports not selector(::-webkit-scrollbar) {
   .panes {
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+    scrollbar-color: var(--white-10) transparent;
   }
 }
 
@@ -243,7 +243,7 @@
   height: var(--ctl);
   padding: 2px 2px 2px 10px;
   border-radius: 999px;
-  background: var(--seg-track, rgba(255, 255, 255, 0.05));
+  background: var(--seg-track, var(--white-05));
 }
 
 .source {
@@ -304,7 +304,7 @@
   aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: var(--radius-sm);
-  background: #000;
+  background: var(--black);
 }
 
 /* The camera refused or missing: said in the preview's place, so it's clear how to allow it. */
@@ -312,7 +312,7 @@
   display: grid;
   place-items: center;
   padding: 12px;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--white-04);
   border: 1px dashed var(--line);
 }
 
@@ -388,7 +388,7 @@
   padding: 0 12px 0 3px;
   /* The panel's scale: options read like the picker's own text, never above the title, and a
      touch softer than pure white. */
-  color: rgba(235, 235, 236, 0.82);
+  color: var(--text-shade-82);
   font-size: var(--pick-font, 12px);
   font-weight: 400;
 }

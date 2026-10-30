@@ -24,7 +24,7 @@
   position: absolute;
   inset: -1%;
   border-radius: 6%;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--white-80);
   filter: blur(clamp(36px, 4.5vmin, 72px));
   opacity: 0;
   animation: wall-flash 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;

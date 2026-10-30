@@ -64,7 +64,7 @@
   border-radius: 999px;
   background: var(--glass);
   backdrop-filter: blur(8px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 16px var(--black-35);
   font-size: var(--text-xs);
 }
 

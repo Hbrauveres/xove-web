@@ -39,7 +39,7 @@
 }
 
 .primary:hover:not(:disabled) {
-  background: #f36a6a;
+  background: var(--accent-light);
 }
 
 .danger {

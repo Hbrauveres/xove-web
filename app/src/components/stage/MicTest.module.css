@@ -9,7 +9,7 @@
 
 /* The track: the live level drawn in it, green when it's over the knob (sent), faint under. */
 .meter {
-  --fill-colour: rgba(235, 235, 236, 0.4);
+  --fill-colour: var(--text-shade-40);
   position: relative;
   flex: 1;
   min-width: 0;
@@ -25,7 +25,7 @@
   position: absolute;
   inset: 6.5px 0;
   border-radius: 999px;
-  background: linear-gradient(to right, var(--fill-colour) 0 var(--level), rgba(235, 235, 236, 0.16) var(--level));
+  background: linear-gradient(to right, var(--fill-colour) 0 var(--level), var(--text-shade-16) var(--level));
   transition: background 90ms linear;
 }
 
@@ -53,8 +53,8 @@
   margin-top: -5.5px;
   border: 0;
   border-radius: 2px;
-  background: #ffffff;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35);
+  background: var(--white);
+  box-shadow: 0 0 0 2px var(--black-35);
   appearance: none;
   -webkit-appearance: none;
   cursor: ew-resize;
@@ -79,8 +79,8 @@
   height: 14px;
   border: 0;
   border-radius: 2px;
-  background: #ffffff;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35);
+  background: var(--white);
+  box-shadow: 0 0 0 2px var(--black-35);
   cursor: ew-resize;
 }
 
@@ -113,7 +113,7 @@
 
 .hear[data-on] {
   background: var(--text);
-  color: #0c0c0d;
+  color: var(--ground);
 }
 
 .hear:disabled {

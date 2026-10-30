@@ -16,7 +16,7 @@
   text-align: center;
   container-type: size;
   /* One flat dark: a gradient this dim has too few shades and shows them as bands. */
-  background: #0f0f11;
+  background: var(--grey-15);
 }
 
 /* The viewfinder's corners: two thin arms each. */
@@ -24,10 +24,10 @@
   position: absolute;
   width: var(--arm);
   height: var(--arm);
-  border: 0 solid rgba(235, 235, 236, 0.32);
+  border: 0 solid var(--text-shade-32);
   pointer-events: none;
   /* Lit, as a camera's display: each corner glows softly in its own colour. */
-  filter: drop-shadow(0 0 3px rgba(235, 235, 236, 0.35)) drop-shadow(0 0 10px rgba(235, 235, 236, 0.18));
+  filter: drop-shadow(0 0 3px var(--text-shade-35)) drop-shadow(0 0 10px var(--text-shade-18));
 }
 
 .corner[data-at="tl"] {
@@ -41,7 +41,7 @@
   right: var(--inset);
   border-width: var(--stroke) var(--stroke) 0 0;
   border-color: var(--accent);
-  filter: drop-shadow(0 0 3px rgba(239, 75, 75, 0.7)) drop-shadow(0 0 12px rgba(239, 75, 75, 0.4));
+  filter: drop-shadow(0 0 3px var(--accent-70)) drop-shadow(0 0 12px var(--accent-40));
 }
 
 .corner[data-at="bl"] {
@@ -65,7 +65,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: rgba(235, 235, 236, 0.45);
+  color: var(--text-shade-45);
   font: 500 11px/1 var(--font-mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -76,7 +76,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: rgba(235, 235, 236, 0.4);
+  background: var(--text-shade-40);
 }
 
 /* The way to start: a heading, a line, the buttons; no frame of its own. */
@@ -148,13 +148,13 @@
 
 /* The second way: a soft fill, no outline. */
 .ghost {
-  background: rgba(235, 235, 236, 0.08);
+  background: var(--text-shade-08);
   color: var(--text);
 }
 
 /* Can't be used in this browser: the same pill, greyed in place; its tooltip says why. */
 .unavailable {
-  background: rgba(235, 235, 236, 0.06);
+  background: var(--text-shade-06);
   color: var(--text);
   opacity: 0.45;
   cursor: not-allowed;
@@ -162,11 +162,11 @@
 
 @media (hover: hover) {
   .primary:hover {
-    background: #f36a6a;
+    background: var(--accent-light);
   }
 
   .ghost:hover {
-    background: rgba(235, 235, 236, 0.14);
+    background: var(--text-shade-14);
   }
 }
 
@@ -278,7 +278,7 @@
   z-index: 2;
   overflow: hidden;
   pointer-events: none;
-  background: #050506;
+  background: var(--grey-5);
   animation: intro-dark var(--intro) cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
@@ -300,10 +300,10 @@
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    #fff 0 3%,
-    rgba(255, 255, 255, 0.8) 6%,
-    rgba(255, 255, 255, 0.3) 22%,
-    rgba(239, 75, 75, 0.1) 42%,
+    var(--white) 0 3%,
+    var(--white-80) 6%,
+    var(--white-30) 22%,
+    var(--accent-10) 42%,
     transparent 62%
   );
   filter: blur(3px);
@@ -314,11 +314,11 @@
 .intro i[data-part="line"] {
   height: 3px;
   margin-top: -1.5px;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.35), #fff 30%, #fff 70%, rgba(255, 255, 255, 0.35));
+  background: linear-gradient(90deg, var(--white-35), var(--white) 30%, var(--white) 70%, var(--white-35));
   box-shadow:
-    0 0 8px 2px rgba(255, 255, 255, 0.9),
-    0 0 32px 8px rgba(255, 255, 255, 0.45),
-    0 0 56px 14px rgba(239, 75, 75, 0.14);
+    0 0 8px 2px var(--white-90),
+    0 0 32px 8px var(--white-45),
+    0 0 56px 14px var(--accent-soft);
   filter: blur(1.5px);
   transform: scaleX(0.01);
   animation: intro-line var(--intro) cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -330,11 +330,11 @@
   height: 100%;
   background: radial-gradient(
     ellipse 50% 50% at 50% 50%,
-    #fff 0%,
-    #fff 30%,
-    rgba(255, 255, 255, 0.8) 58%,
-    rgba(255, 228, 228, 0.3) 78%,
-    rgba(239, 75, 75, 0.1) 90%,
+    var(--white) 0%,
+    var(--white) 30%,
+    var(--white-80) 58%,
+    var(--pink-30) 78%,
+    var(--accent-10) 90%,
     transparent 100%
   );
   filter: blur(24px);
@@ -348,16 +348,16 @@
   top: 27%;
   height: 46%;
   background:
-    repeating-linear-gradient(0deg, rgba(60, 60, 64, 0.3) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(0deg, var(--grey-60-30) 0 1px, transparent 1px 3px),
     repeating-linear-gradient(
       90deg,
-      rgba(90, 90, 96, 0.14) 0 2px,
+      var(--grey-90-14) 0 2px,
       transparent 2px 7px,
-      rgba(90, 90, 96, 0.1) 7px 8px,
+      var(--grey-90-10) 7px 8px,
       transparent 8px 13px
     ),
-    linear-gradient(180deg, transparent, #b9b9bc 18%, #cfcfd2 50%, #b0b0b4 82%, transparent);
-  box-shadow: 0 0 48px 12px rgba(255, 255, 255, 0.18);
+    linear-gradient(180deg, transparent, var(--grey-185) 18%, var(--grey-207) 50%, var(--grey-176) 82%, transparent);
+  box-shadow: 0 0 48px 12px var(--white-18);
   filter: blur(4px);
   animation: intro-band var(--intro) cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }

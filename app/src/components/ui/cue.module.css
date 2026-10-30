@@ -9,14 +9,14 @@
   0%,
   100% {
     box-shadow:
-      0 0 0 1.5px rgba(239, 75, 75, 0),
-      0 0 14px rgba(239, 75, 75, 0);
+      0 0 0 1.5px var(--accent-00),
+      0 0 14px var(--accent-00);
   }
 
   50% {
     box-shadow:
-      0 0 0 1.5px rgba(239, 75, 75, 0.95),
-      0 0 14px rgba(239, 75, 75, 0.35);
+      0 0 0 1.5px var(--accent-95),
+      0 0 14px var(--accent-35);
   }
 }
 
@@ -24,8 +24,8 @@
 @keyframes settle {
   to {
     box-shadow:
-      0 0 0 1.5px rgba(239, 75, 75, 0.95),
-      0 0 14px rgba(239, 75, 75, 0.35);
+      0 0 0 1.5px var(--accent-95),
+      0 0 14px var(--accent-35);
   }
 }
 
@@ -43,7 +43,7 @@
   .cue {
     animation: none;
     box-shadow:
-      0 0 0 1.5px rgba(239, 75, 75, 0.95),
-      0 0 14px rgba(239, 75, 75, 0.35);
+      0 0 0 1.5px var(--accent-95),
+      0 0 14px var(--accent-35);
   }
 }

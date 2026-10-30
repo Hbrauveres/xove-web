@@ -27,7 +27,7 @@
 .range::-webkit-slider-runnable-track {
   height: 3px;
   border-radius: 999px;
-  background: linear-gradient(to right, #ffffff 0 var(--fill, 0%), rgba(235, 235, 236, 0.22) var(--fill, 0%));
+  background: linear-gradient(to right, var(--white) 0 var(--fill, 0%), var(--text-shade-22) var(--fill, 0%));
 }
 
 .range::-webkit-slider-thumb {
@@ -36,7 +36,7 @@
   margin-top: -4.5px;
   border: 0;
   border-radius: 50%;
-  background: #ffffff;
+  background: var(--white);
   appearance: none;
   -webkit-appearance: none;
   transition:
@@ -56,13 +56,13 @@
 .range::-moz-range-track {
   height: 3px;
   border-radius: 999px;
-  background: rgba(235, 235, 236, 0.22);
+  background: var(--text-shade-22);
 }
 
 .range::-moz-range-progress {
   height: 3px;
   border-radius: 999px;
-  background: #ffffff;
+  background: var(--white);
 }
 
 .range::-moz-range-thumb {
@@ -70,7 +70,7 @@
   height: 12px;
   border: 0;
   border-radius: 50%;
-  background: #ffffff;
+  background: var(--white);
   transition:
     width 0.12s,
     height 0.12s;

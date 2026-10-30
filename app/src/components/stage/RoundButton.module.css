@@ -7,9 +7,9 @@
   display: flex;
   height: 48px;
   border-radius: 999px;
-  background: rgba(10, 10, 11, 0.72);
+  background: var(--glass);
   backdrop-filter: blur(8px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 16px var(--black-35);
   color: var(--text);
 }
 
@@ -37,7 +37,7 @@
 
 @media (hover: hover) {
   .pill:not(.live):not(.disabled):hover {
-    background: rgba(40, 40, 44, 0.85);
+    background: var(--grey-40-85);
   }
 }
 

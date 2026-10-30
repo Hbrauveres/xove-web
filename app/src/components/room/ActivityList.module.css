@@ -17,7 +17,7 @@
   border: 0;
   border-radius: 10px;
   background: transparent;
-  color: #d0d0d3;
+  color: var(--grey-208);
   font: inherit;
   font-size: var(--text-sm);
   font-weight: 500;
@@ -26,7 +26,7 @@
 
 .row[data-unseen] {
   background: color-mix(in srgb, var(--accent) 12%, transparent);
-  color: #fff;
+  color: var(--white);
 }
 
 .icon {
@@ -35,8 +35,8 @@
   width: 22px;
   height: 22px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #cacacd;
+  background: var(--panel-line);
+  color: var(--grey-202);
 }
 
 .icon[data-stream] {
@@ -51,7 +51,7 @@
 .time {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  color: #a4a4a9;
+  color: var(--grey-164);
   white-space: nowrap;
 }
 
@@ -62,8 +62,8 @@
 
 .link:hover,
 .link:focus-visible {
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: var(--panel-line);
+  color: var(--white);
   outline: none;
 }
 

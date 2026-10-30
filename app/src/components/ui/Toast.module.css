@@ -20,7 +20,7 @@
   border-radius: 18px;
   background: var(--glass);
   backdrop-filter: blur(8px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 16px var(--black-35);
   color: var(--text);
   font-size: 13px;
   line-height: 1.35;

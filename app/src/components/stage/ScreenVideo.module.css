@@ -5,7 +5,7 @@
   height: 100%;
   /* Screens come in any shape: show all of it, letterboxed. */
   object-fit: contain;
-  background: #000;
+  background: var(--black);
 }
 
 /* Its box has the picture's own shape (within 1%): filled, so no thin black line at an edge

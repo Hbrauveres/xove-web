@@ -17,7 +17,7 @@
 
 .button:hover,
 .button[aria-expanded="true"] {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--panel-line);
 }
 
 .button:focus-visible {
@@ -62,7 +62,7 @@
 
 .who small {
   display: block;
-  color: #b3b3b8;
+  color: var(--grey-179);
   font-weight: 500;
 }
 
@@ -71,7 +71,7 @@
   align-items: center;
   gap: 8px;
   padding: 2px 10px 8px;
-  color: #cacacd;
+  color: var(--grey-202);
   font-size: var(--text-sm);
   font-weight: 500;
 }
@@ -99,7 +99,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: rgba(235, 235, 236, 0.82);
+  color: var(--text-shade-82);
   font-size: var(--text-xs);
   font-weight: 400;
 }
@@ -124,7 +124,7 @@
   width: 36px;
   height: 12px;
   border-radius: 999px;
-  background: #3a3a3d;
+  background: var(--grey-58);
 }
 
 /* A 16 px knob (spec 0123, design decision 10), over the track's height but never past its
@@ -136,8 +136,8 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #bdbdc0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  background: var(--grey-189);
+  box-shadow: 0 1px 3px var(--black-50);
   transition:
     transform 0.18s ease,
     background 0.18s ease;

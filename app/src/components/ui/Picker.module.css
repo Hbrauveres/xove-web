@@ -5,8 +5,8 @@
  * or upward over the video in the glass. It unrolls from the pill and rolls back.
  */
 .picker {
-  --pick-bg: rgba(255, 255, 255, 0.05);
-  --pick-hover: rgba(255, 255, 255, 0.08);
+  --pick-bg: var(--white-05);
+  --pick-hover: var(--panel-line);
   --pick-r: 10px;
   --pick-pad: 12px;
   position: relative;
@@ -17,7 +17,7 @@
 
 .picker[data-look="glass"] {
   --pick-bg: var(--glass);
-  --pick-hover: rgba(40, 40, 44, 0.85);
+  --pick-hover: var(--grey-40-85);
   --pick-r: 18px;
   --pick-pad: 14px;
 }
@@ -45,7 +45,7 @@
 .picker[data-look="glass"] .pill {
   border-radius: 999px;
   backdrop-filter: blur(8px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 16px var(--black-35);
 }
 
 .pill:hover {
@@ -129,17 +129,17 @@
 
 .list::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.22);
+  background: var(--white-22);
 }
 
 .list:hover::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--white-40);
 }
 
 @supports not selector(::-webkit-scrollbar) {
   .list {
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+    scrollbar-color: var(--white-22) transparent;
   }
 }
 
@@ -148,7 +148,7 @@
   bottom: 100%;
   border-radius: var(--pick-r) var(--pick-r) 0 0;
   backdrop-filter: blur(8px);
-  box-shadow: 0 -12px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 -12px 24px var(--black-40);
   clip-path: inset(100% 0 0 0 round var(--pick-r) var(--pick-r) 0 0);
 }
 
@@ -193,12 +193,7 @@
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.05) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background: linear-gradient(90deg, var(--white-00) 0%, var(--white-05) 50%, var(--white-00) 100%);
   opacity: 0;
   transition: opacity 160ms ease;
 }

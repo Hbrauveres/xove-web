@@ -39,11 +39,11 @@
 
 .strip::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--white-10);
 }
 
 .strip:hover::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.28);
+  background: var(--white-28);
 }
 
 .strip::-webkit-scrollbar-thumb:hover {
@@ -53,7 +53,7 @@
 @supports not selector(::-webkit-scrollbar) {
   .strip {
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.28) transparent;
+    scrollbar-color: var(--white-28) transparent;
   }
 }
 
@@ -88,7 +88,7 @@
   aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: 8px;
-  background: #000;
+  background: var(--black);
 }
 
 /* The ring is drawn inside, so nothing clips it (spec 0101). */
@@ -97,7 +97,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px var(--panel-line);
   pointer-events: none;
 }
 
@@ -112,13 +112,13 @@
 }
 
 .item[data-talking] .video {
-  box-shadow: 0 0 6px 0 rgba(22, 163, 74, 0.35);
+  box-shadow: 0 0 6px 0 var(--green-35);
 }
 
 .item[data-talking] .video::after {
   box-shadow:
-    inset 0 0 0 1px rgba(43, 205, 104, 0.85),
-    inset 0 0 4px rgba(22, 163, 74, 0.45);
+    inset 0 0 0 1px var(--green-light-85),
+    inset 0 0 4px var(--green-45);
 }
 
 /* Hover and keyboard focus: drawn inside, so the scrolling strip never cuts it (spec 0107). */
@@ -145,7 +145,7 @@
   gap: 5px;
   padding: 2px 7px 2px 3px;
   border-radius: 999px;
-  background: rgba(10, 10, 11, 0.72);
+  background: var(--glass);
   color: var(--text);
   font-size: 0.6875rem;
 }
@@ -163,10 +163,10 @@
   left: 6px;
   right: -6px;
   height: calc(128px * 9 / 16);
-  border: 1px solid rgba(235, 235, 236, 0.28);
+  border: 1px solid var(--text-shade-28);
   border-radius: 8px;
   overflow: hidden;
-  background: rgba(22, 22, 23, 0.9);
+  background: var(--grey-22-90);
   pointer-events: none;
 }
 
@@ -230,14 +230,14 @@
   width: 16px;
   height: 10px;
   border-radius: 2px;
-  background: rgba(235, 235, 236, 0.14);
+  background: var(--text-shade-14);
 }
 
 .free i[data-on] {
   background: var(--accent);
   box-shadow:
-    0 0 6px rgba(239, 75, 75, 0.45),
-    0 4px 12px rgba(239, 75, 75, 0.35);
+    0 0 6px var(--accent-45),
+    0 4px 12px var(--accent-35);
 }
 
 @media (max-width: 760px) {

@@ -39,7 +39,7 @@
 }
 
 .frame:fullscreen {
-  background: #000;
+  background: var(--black);
 }
 
 /* The view (spec 0133): the picture in its own shape, as big as the controls' layer allows,
@@ -62,7 +62,7 @@
   position: relative;
   width: 100%;
   height: 100%;
-  background: #000;
+  background: var(--black);
   /* Rounded, no border: the light around it is the frame (spec 0104). */
   border-radius: 12px;
   overflow: hidden;
