@@ -253,14 +253,23 @@ function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
           />
         </div>
         {/* Over the bottom of the middle: the column is sized exactly, nothing may push it. */}
-        {session.error && !fullscreen && <ErrorNotice className={styles.errorBelow}>{session.error}</ErrorNotice>}
+        {session.error && !fullscreen && (
+          <div className={styles.errorBelow}>
+            <ErrorNotice floating>{session.error}</ErrorNotice>
+          </div>
+        )}
       </main>
 
       <RoomFooter />
 
       {fullscreen &&
         session.error &&
-        createPortal(<ErrorNotice className={styles.errorOver}>{session.error}</ErrorNotice>, overPage)}
+        createPortal(
+          <div className={styles.errorOver}>
+            <ErrorNotice floating>{session.error}</ErrorNotice>
+          </div>,
+          overPage,
+        )}
     </div>
   );
 }

@@ -20,7 +20,7 @@
 
 .text {
   margin: 0;
-  max-width: 42ch;
+  max-width: var(--measure-42);
   font-size: var(--text-sm);
   color: var(--text-muted);
 }

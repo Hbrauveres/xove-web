@@ -22,7 +22,7 @@
 }
 
 .title {
-  font-size: clamp(var(--text-28), 6vw, var(--text-2xl));
+  font-size: clamp(var(--text-28), var(--vw-6), var(--text-2xl));
   line-height: 1.1;
 }
 

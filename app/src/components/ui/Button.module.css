@@ -15,7 +15,7 @@
 }
 
 .button:active {
-  transform: translateY(var(--hairline));
+  transform: translateY(var(--space-0-25));
 }
 
 .button:disabled {
@@ -45,11 +45,11 @@
 .danger {
   background: transparent;
   color: var(--live);
-  border-color: color-mix(in srgb, var(--live) 55%, transparent);
+  border-color: var(--live-55);
 }
 
 .danger:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--live) 12%, transparent);
+  background: var(--live-12);
 }
 
 .ghost {

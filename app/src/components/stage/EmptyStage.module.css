@@ -105,7 +105,7 @@
 
 .copy {
   margin: 0;
-  max-width: 38ch;
+  max-width: var(--measure-38);
   color: var(--text-muted);
   font-size: var(--text-14);
   line-height: 1.5;
@@ -294,9 +294,9 @@
 /* The point: a bright dot in a soft halo, where the tube lights first. */
 .intro i[data-part="dot"] {
   left: 50%;
-  width: 22vmin;
-  height: 22vmin;
-  margin: -11vmin 0 0 -11vmin;
+  width: var(--vmin-22);
+  height: var(--vmin-22);
+  margin: calc(var(--vmin-11) * -1) 0 0 calc(var(--vmin-11) * -1);
   border-radius: 50%;
   background: radial-gradient(
     circle,

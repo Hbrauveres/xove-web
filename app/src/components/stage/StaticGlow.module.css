@@ -15,7 +15,7 @@
   inset: -4% -6%;
   width: 112%;
   height: 108%;
-  filter: blur(clamp(var(--blur-9), 4vmin, var(--blur-16)));
+  filter: blur(clamp(var(--blur-9), var(--vmin-4), var(--blur-16)));
 }
 
 /* The turn-on's light on the wall (spec 0136): a white glow round the stage that swells with
@@ -25,7 +25,7 @@
   inset: -1%;
   border-radius: 6%;
   background: var(--white-80);
-  filter: blur(clamp(var(--blur-9), 4.5vmin, var(--blur-18)));
+  filter: blur(clamp(var(--blur-9), var(--vmin-4-5), var(--blur-18)));
   opacity: 0;
   animation: wall-flash var(--duration-900) var(--ease-out-quint) forwards;
 }

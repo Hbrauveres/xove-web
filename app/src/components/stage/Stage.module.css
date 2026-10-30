@@ -17,10 +17,13 @@
  */
 .box {
   --shape: 1.7778;
-  --free-h: max(100cqw * 9 / 16, 100cqh - var(--info-h, var(--info-row)) - var(--info-gap, var(--size-3-5)));
+  --free-h: max(
+    var(--box-width) * 9 / 16,
+    var(--box-height) - var(--info-h, var(--info-row)) - var(--info-gap, var(--size-3-5))
+  );
   position: relative;
-  width: 100cqw;
-  height: min(100cqw / var(--shape), var(--free-h));
+  width: var(--box-width);
+  height: min(var(--box-width) / var(--shape), var(--free-h));
   margin-inline: auto;
   transition:
     width var(--duration-350) ease,
@@ -48,8 +51,8 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: min(100cqw, 100cqh * var(--shape));
-  height: min(100cqh, 100cqw / var(--shape));
+  width: min(var(--box-width), var(--box-height) * var(--shape));
+  height: min(var(--box-height), var(--box-width) / var(--shape));
   translate: -50% -50%;
   /* A new picture's shape: the view glides to it, as the stage did (the design sheet's motion). */
   transition:

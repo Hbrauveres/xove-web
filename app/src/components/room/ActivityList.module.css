@@ -25,7 +25,7 @@
 }
 
 .row[data-unseen] {
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  background: var(--accent-12);
   color: var(--white);
 }
 
@@ -40,7 +40,7 @@
 }
 
 .icon[data-stream] {
-  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  background: var(--accent-18);
   color: var(--accent);
 }
 

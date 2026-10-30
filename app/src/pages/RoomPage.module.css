@@ -8,7 +8,7 @@
   --info-gap: var(--space-3-5);
   display: flex;
   flex-direction: column;
-  height: 100dvh;
+  height: var(--window-height);
   overflow: hidden;
   /* The design's base size (14px): the room's text and panels are set from it. */
   font-size: var(--text-14);
@@ -31,7 +31,7 @@
   flex-direction: column;
   justify-content: center;
   min-height: 0;
-  width: min(100cqw, (100cqh - var(--info-h) - var(--info-gap)) * 16 / 9);
+  width: min(var(--box-width), (var(--box-height) - var(--info-h) - var(--info-gap)) * 16 / 9);
 }
 
 @media (--narrow) {
@@ -49,7 +49,6 @@
   z-index: var(--layer-error);
   transform: translateX(-50%);
   max-width: min(var(--error-width), calc(100% - var(--size-8)));
-  background: color-mix(in srgb, var(--live) 18%, var(--surface));
 }
 
 /* The same line over the fullscreen player (spec 0101): at its top, readable over video. */
@@ -60,5 +59,4 @@
   z-index: var(--layer-popup);
   transform: translateX(-50%);
   max-width: min(var(--error-width), calc(100% - var(--size-8)));
-  background: color-mix(in srgb, var(--live) 18%, var(--surface));
 }

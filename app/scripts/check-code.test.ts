@@ -53,19 +53,34 @@ describe("the code check", () => {
       ".a { z-index: -1; }",
       "@media (max-width: 760px) {",
       "@container (max-height: 320px) {",
+      ".a { color: white; }",
+      ".a { background: oklch(70% 0.1 30); }",
+      ".a { border-color: color-mix(in srgb, var(--live) 45%, transparent); }",
+      ".a { width: 92vw; max-width: 36ch; }",
+      ".a { font-size: 12PT; }",
+      ".a { z-index : 9; }",
+      "  0 0 var(--space-2) red,",
     ])
       expect(rules(css, `${line}\n`), line).toContain("literal");
+  });
+
+  it("reads past comments, however they're laid out", () => {
+    const css = "shared/ui/face/face.component.module.css";
+    expect(rules(css, "/*\n  the old look: 12px, #fff\n*/\n.a { gap: var(--space-2); }\n")).not.toContain("literal");
   });
 
   it("lets CSS write tokens, zero and plain numbers, and lets tokens.css write every value", () => {
     const css = "shared/ui/face/face.component.module.css";
     for (const line of [
-      ".a { padding: var(--space-2-5) var(--space-3); border: var(--hairline) solid var(--white-08); }",
+      ".a { padding: var(--space-2-5) var(--space-3); border: var(--hairline) solid var(--white-10); }",
       ".a { margin: 0; transition: visibility 0s linear var(--duration-180); z-index: 0; }",
       ".a { opacity: 0.5; line-height: 1.5; flex: 1; font-weight: 500; transform: scale(1.04); }",
       "@media (--narrow) {",
       "@container (--tiny) {",
       "/* was 12px before the tokens */",
+      ".a { gap: var(--space-2); } /* was 8px */",
+      ".a { white-space: nowrap; background: transparent; color: currentColor; width: 50%; }",
+      ".a { grid-template-columns: 1fr 2fr; }",
     ])
       expect(rules(css, `${line}\n`), line).not.toContain("literal");
     expect(

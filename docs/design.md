@@ -179,23 +179,32 @@ Body line height is 1.5; headings balance their lines (`text-wrap: balance`). Fo
 Every value the CSS uses has a name in `app/src/shared/styles/tokens.css`, and no other CSS file writes a value of its own: a colour, a size, a duration, an easing, a layer or a window size written anywhere else is a finding of the code check ([Architecture](architecture.md#the-checks)). So changing a gap or a shade is one line, and two places meant to match can't drift apart.
 
 - **Sizes are in rem,** 16 px at the browser's default text size, so the whole interface follows the reader's text-size setting: at 20 px everything is 1.25 times larger. Only the hairline (`--hairline`, a one-pixel line) stays in px. The tables give each size in px at the default.
-- **Names:** small spacing (padding, gaps, offsets, shadow distances) is one scale numbered as px ÷ 4 (`--space-3` is 12 px); small sizes, corners, lines and blurs have their own such scales; anything with a role is named for it (`--control-md`, `--card-width`, `--info-row`); colours by family and strength (`--white-08` is white at 8%); durations by their milliseconds; layers and window sizes by what they are. Equal values share one name.
+- **Names:** small spacing (padding, gaps, offsets, shadow distances) is one scale numbered as px ÷ 4 (`--space-3` is 12 px); small sizes, corners, lines and blurs have their own such scales; anything with a role is named for it (`--control-md`, `--card-width`, `--info-row`); colours by family and strength (`--white-10` is white at 10%); durations by their milliseconds; layers and window sizes by what they are. Equal values share one name.
+- **Proportions are tokens too:** a share of the window (`--vw-6`), of a box (`--box-width`, `--cqw-20`) or a line's length in characters (`--measure-36`); so is a colour mixed from tokens (`--live-45`). Only `%` and `fr`, which share out a layout, are written as they are.
 - **Zero isn't a value:** it's written `0` (or `0s` where CSS needs a unit).
 - **A new value is a design decision:** it needs an approved draft, then it lands in `tokens.css` and here. A value only one component uses still goes in `tokens.css`.
 
 The colours above, the type scale and the fonts are tokens too. The rest:
 
-**Shades: each colour family at the strengths the app uses (white-08 is white at 8%).**
+**Shades: each colour family at the strengths the app uses (white-10 is white at 10%).**
 
 `--accent-00` rgba(239, 75, 75, 0) · `--accent-10` rgba(239, 75, 75, 0.1) · `--accent-35` rgba(239, 75, 75, 0.35) · `--accent-40` rgba(239, 75, 75, 0.4) · `--accent-45` rgba(239, 75, 75, 0.45) · `--accent-70` rgba(239, 75, 75, 0.7) · `--accent-95` rgba(239, 75, 75, 0.95) · `--accent-light` #f36a6a · `--black` #000000 · `--black-35` rgba(0, 0, 0, 0.35) · `--black-40` rgba(0, 0, 0, 0.4) · `--black-45` rgba(0, 0, 0, 0.45) · `--black-50` rgba(0, 0, 0, 0.5) · `--black-55` rgba(0, 0, 0, 0.55) · `--blue-grey-50` rgba(138, 150, 172, 0.5) · `--green-18` rgba(22, 163, 74, 0.18) · `--green-25` rgba(22, 163, 74, 0.25) · `--green-30` rgba(22, 163, 74, 0.3) · `--green-35` rgba(22, 163, 74, 0.35) · `--green-45` rgba(22, 163, 74, 0.45) · `--green-60` rgba(22, 163, 74, 0.6) · `--green-light-85` rgba(43, 205, 104, 0.85) · `--green-lighter` #45e087 · `--grey-5` #050506 · `--grey-7` #070708 · `--grey-7-70` rgba(7, 7, 8, 0.7) · `--grey-10-90` rgba(10, 10, 11, 0.9) · `--grey-12-74` rgba(12, 12, 13, 0.74) · `--grey-15` #0f0f11 · `--grey-15-75` rgba(15, 15, 17, 0.75) · `--grey-15-92` rgba(15, 15, 17, 0.92) · `--grey-20-72` rgba(20, 20, 21, 0.72) · `--grey-20-85` rgba(20, 20, 21, 0.85) · `--grey-22-90` rgba(22, 22, 23, 0.9) · `--grey-31` #1f1f1f · `--grey-40-85` rgba(40, 40, 44, 0.85) · `--grey-40-90` rgba(40, 40, 44, 0.9) · `--grey-58` #3a3a3d · `--grey-60-30` rgba(60, 60, 64, 0.3) · `--grey-90-10` rgba(90, 90, 96, 0.1) · `--grey-90-14` rgba(90, 90, 96, 0.14) · `--grey-164` #a4a4a9 · `--grey-176` #b0b0b4 · `--grey-179` #b3b3b8 · `--grey-185` #b9b9bc · `--grey-189` #bdbdc0 · `--grey-202` #cacacd · `--grey-207` #cfcfd2 · `--grey-208` #d0d0d3 · `--pink-30` rgba(255, 228, 228, 0.3) · `--text-shade-05` rgba(235, 235, 236, 0.05) · `--text-shade-06` rgba(235, 235, 236, 0.06) · `--text-shade-08` rgba(235, 235, 236, 0.08) · `--text-shade-14` rgba(235, 235, 236, 0.14) · `--text-shade-16` rgba(235, 235, 236, 0.16) · `--text-shade-18` rgba(235, 235, 236, 0.18) · `--text-shade-22` rgba(235, 235, 236, 0.22) · `--text-shade-28` rgba(235, 235, 236, 0.28) · `--text-shade-32` rgba(235, 235, 236, 0.32) · `--text-shade-35` rgba(235, 235, 236, 0.35) · `--text-shade-40` rgba(235, 235, 236, 0.4) · `--text-shade-45` rgba(235, 235, 236, 0.45) · `--text-shade-82` rgba(235, 235, 236, 0.82) · `--white` #ffffff · `--white-00` rgba(255, 255, 255, 0) · `--white-04` rgba(255, 255, 255, 0.04) · `--white-05` rgba(255, 255, 255, 0.05) · `--white-06` rgba(255, 255, 255, 0.06) · `--white-10` rgba(255, 255, 255, 0.1) · `--white-18` rgba(255, 255, 255, 0.18) · `--white-22` rgba(255, 255, 255, 0.22) · `--white-28` rgba(255, 255, 255, 0.28) · `--white-30` rgba(255, 255, 255, 0.3) · `--white-35` rgba(255, 255, 255, 0.35) · `--white-40` rgba(255, 255, 255, 0.4) · `--white-45` rgba(255, 255, 255, 0.45) · `--white-55` rgba(255, 255, 255, 0.55) · `--white-80` rgba(255, 255, 255, 0.8) · `--white-90` rgba(255, 255, 255, 0.9)
 
+**Mixed shades: a colour token mixed with clear or with another token (live-45 is LIVE's red at 45%).**
+
+`--accent-12` color-mix(in srgb, var(--accent) 12%, transparent) · `--accent-18` color-mix(in srgb, var(--accent) 18%, transparent) · `--accent-on-line-55` color-mix(in srgb, var(--accent) 55%, var(--line)) · `--live-10` color-mix(in srgb, var(--live) 10%, transparent) · `--live-12` color-mix(in srgb, var(--live) 12%, transparent) · `--live-45` color-mix(in srgb, var(--live) 45%, transparent) · `--live-55` color-mix(in srgb, var(--live) 55%, transparent) · `--live-on-surface-18` color-mix(in srgb, var(--live) 18%, var(--surface)) · `--warn-55` color-mix(in srgb, var(--warn) 55%, transparent) · `--warn-on-grey-20-14` color-mix(in srgb, var(--warn) 14%, var(--grey-20-85))
+
+**Proportions: a share of the window (vw, vh, vmin), of the box a rule sits in (cqw, cqh), or a line's length in characters (measure-36 is 36 characters). They follow what they measure, not the text size.**
+
+`--box-height` 100cqh · `--box-width` 100cqw · `--cqw-20` 20cqw · `--measure-34` 34ch · `--measure-36` 36ch · `--measure-38` 38ch · `--measure-42` 42ch · `--vh-56` 56vh · `--vmin-1-8` 1.8vmin · `--vmin-4` 4vmin · `--vmin-4-5` 4.5vmin · `--vmin-11` 11vmin · `--vmin-13` 13vmin · `--vmin-22` 22vmin · `--vw-6` 6vw · `--vw-8` 8vw · `--vw-40` 40vw · `--vw-92` 92vw · `--window-height` 100dvh
+
 **Spacing: padding, gaps, offsets and shadow distances, numbered as px ÷ 4 (--space-3 is 12 px).**
 
-`--space-0-5` 2 px · `--space-0-75` 3 px · `--space-0-375` 1.5 px · `--space-0-625` 2.5 px · `--space-1` 4 px · `--space-1-5` 6 px · `--space-1-25` 5 px · `--space-1-75` 7 px · `--space-1-125` 4.5 px · `--space-1-375` 5.5 px · `--space-1-625` 6.5 px · `--space-2` 8 px · `--space-2-5` 10 px · `--space-2-25` 9 px · `--space-2-75` 11 px · `--space-3` 12 px · `--space-3-5` 14 px · `--space-3-25` 13 px · `--space-4` 16 px · `--space-4-5` 18 px · `--space-4-25` 17 px · `--space-5` 20 px · `--space-5-5` 22 px · `--space-6` 24 px · `--space-7` 28 px · `--space-7-5` 30 px · `--space-8` 32 px · `--space-8-5` 34 px · `--space-10` 40 px · `--space-12` 48 px · `--space-14` 56 px · `--space-16` 64 px · `--space-18` 72 px · `--space-offscreen` 9999 px
+`--space-0-25` 1 px · `--space-0-375` 1.5 px · `--space-0-5` 2 px · `--space-0-625` 2.5 px · `--space-0-75` 3 px · `--space-1` 4 px · `--space-1-125` 4.5 px · `--space-1-25` 5 px · `--space-1-375` 5.5 px · `--space-1-5` 6 px · `--space-1-625` 6.5 px · `--space-1-75` 7 px · `--space-2` 8 px · `--space-2-25` 9 px · `--space-2-5` 10 px · `--space-2-75` 11 px · `--space-3` 12 px · `--space-3-25` 13 px · `--space-3-5` 14 px · `--space-4` 16 px · `--space-4-25` 17 px · `--space-4-5` 18 px · `--space-5` 20 px · `--space-5-5` 22 px · `--space-6` 24 px · `--space-7` 28 px · `--space-7-5` 30 px · `--space-8` 32 px · `--space-8-5` 34 px · `--space-10` 40 px · `--space-12` 48 px · `--space-14` 56 px · `--space-16` 64 px · `--space-18` 72 px · `--space-offscreen` 9999 px
 
 **Small sizes (icons, dots, bars), numbered as px ÷ 4.**
 
-`--size-0-5` 2 px · `--size-0-75` 3 px · `--size-1` 4 px · `--size-1-5` 6 px · `--size-2` 8 px · `--size-2-5` 10 px · `--size-2-75` 11 px · `--size-3` 12 px · `--size-3-5` 14 px · `--size-3-25` 13 px · `--size-3-75` 15 px · `--size-4` 16 px · `--size-4-5` 18 px · `--size-4-25` 17 px · `--size-5` 20 px · `--size-5-5` 22 px · `--size-6` 24 px · `--size-7` 28 px · `--size-7-5` 30 px · `--size-8` 32 px
+`--size-0-5` 2 px · `--size-0-75` 3 px · `--size-1` 4 px · `--size-1-5` 6 px · `--size-2` 8 px · `--size-2-5` 10 px · `--size-2-75` 11 px · `--size-3` 12 px · `--size-3-25` 13 px · `--size-3-5` 14 px · `--size-3-75` 15 px · `--size-4` 16 px · `--size-4-25` 17 px · `--size-4-5` 18 px · `--size-5` 20 px · `--size-5-5` 22 px · `--size-6` 24 px · `--size-7` 28 px · `--size-7-5` 30 px · `--size-8` 32 px
 
 **Things with a role.**
 
@@ -237,15 +246,15 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 
 **Corners, numbered as px ÷ 4, and the pill.**
 
-`--radius-0-5` 2 px · `--radius-1` 4 px · `--radius-1-5` 6 px · `--radius-1-25` 5 px · `--radius-2` 8 px · `--radius-2-5` 10 px · `--radius-2-25` 9 px · `--radius-3` 12 px · `--radius-3-5` 14 px · `--radius-4` 16 px · `--radius-4-5` 18 px · `--radius-pill` 999 px
+`--radius-0-5` 2 px · `--radius-1` 4 px · `--radius-1-25` 5 px · `--radius-1-5` 6 px · `--radius-2` 8 px · `--radius-2-25` 9 px · `--radius-2-5` 10 px · `--radius-3` 12 px · `--radius-3-5` 14 px · `--radius-4` 16 px · `--radius-4-5` 18 px · `--radius-pill` 999 px
 
 **Lines: the hairline stays one pixel; thicker lines and outline gaps are numbered as px ÷ 4.**
 
-`--border-0-5` 2 px · `--border-0-75` 3 px · `--border-0-375` 1.5 px · `--border-1` 4 px · `--hairline` 1px
+`--border-0-375` 1.5 px · `--border-0-5` 2 px · `--border-0-75` 3 px · `--border-1` 4 px · `--hairline` 1px
 
 **Blurs, numbered as px ÷ 4.**
 
-`--blur-0-5` 2 px · `--blur-0-75` 3 px · `--blur-0-375` 1.5 px · `--blur-1` 4 px · `--blur-2` 8 px · `--blur-2-5` 10 px · `--blur-3` 12 px · `--blur-5-5` 22 px · `--blur-6` 24 px · `--blur-9` 36 px · `--blur-10` 40 px · `--blur-16` 64 px · `--blur-18` 72 px
+`--blur-0-375` 1.5 px · `--blur-0-5` 2 px · `--blur-0-75` 3 px · `--blur-1` 4 px · `--blur-2` 8 px · `--blur-2-5` 10 px · `--blur-3` 12 px · `--blur-5-5` 22 px · `--blur-6` 24 px · `--blur-9` 36 px · `--blur-10` 40 px · `--blur-16` 64 px · `--blur-18` 72 px
 
 **Text sizes beyond the scale above, named by their px; letter spacing in hundredths of an em.**
 
@@ -257,12 +266,7 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 
 **Easings.**
 
-| Token | rem | px |
-| --- | --- | --- |
-| `--ease-out` | cubic-bezier(0.2, 0.8, 0.2, 1) |  |
-| `--ease-out-expo` | cubic-bezier(0.16, 1, 0.3, 1) |  |
-| `--ease-out-quint` | cubic-bezier(0.22, 1, 0.36, 1) |  |
-| `--ease-standard` | cubic-bezier(0.4, 0, 0.2, 1) |  |
+`--ease-out` cubic-bezier(0.2, 0.8, 0.2, 1) · `--ease-out-expo` cubic-bezier(0.16, 1, 0.3, 1) · `--ease-out-quint` cubic-bezier(0.22, 1, 0.36, 1) · `--ease-standard` cubic-bezier(0.4, 0, 0.2, 1)
 
 **Layers, back to front: what sits over what.**
 
@@ -370,7 +374,7 @@ The settings for what you send, from the cog on my own stream or, with nobody li
 | Ghost | Transparent, muted text, a `--line` border; raised surface on hover | Secondary actions |
 | Danger | Transparent, red text and a red border at 55% | Removing a member, stopping |
 
-Two sizes: **md** (10 × 18 px padding, 15 px text) and **sm** (6 × 12 px, 13 px). Weight 600, `--radius-sm`, 45% opacity when disabled.
+Two sizes: **md** (10 × 18 px padding, 15 px text) and **sm** (6 × 12 px, 13 px). Weight 600, `--radius-1-5`, 45% opacity when disabled.
 
 ### Sliders
 
@@ -417,7 +421,7 @@ The sliders' rules stay one browser per rule, checked by `npm run check:styles` 
 - **Even spacing:** 10 px between previews, and between the last one and the seats, with a peek counted in.
 
 ![A preview's row, its voice slider open](images/design/preview-row.png) ![A heard preview lit while Marina speaks](images/design/preview-ring.png)
-- **The facecam belongs to the picture:** it stays on the screen it's shown over, sized and placed from it, not from the stage's box. The camera as a small window over the screen, 24% of the player's width, `--radius-sm`, with 28 px round buttons (swap views, collapse) that fade with the controls; collapsed, a 28 × 44 px tab at the right edge. It **starts at the top right** (just under the top bar where one lies over the player), clear of the round buttons and the fullscreen button. It can be dragged, or moved with the arrow keys. Swapping also works on your own preview; the swap and the collapse last for the visit only.
+- **The facecam belongs to the picture:** it stays on the screen it's shown over, sized and placed from it, not from the stage's box. The camera as a small window over the screen, 24% of the player's width, `--radius-1-5`, with 28 px round buttons (swap views, collapse) that fade with the controls; collapsed, a 28 × 44 px tab at the right edge. It **starts at the top right** (just under the top bar where one lies over the player), clear of the round buttons and the fullscreen button. It can be dragged, or moved with the arrow keys. Swapping also works on your own preview; the swap and the collapse last for the visit only.
 - **The fullscreen button has one place:** the **bottom right** of the stage's box (the controls' layer, whatever the picture's shape), its centre level with the round buttons, to enter and to leave, over a stream and over the empty stage, so stopping the only stream in fullscreen never strands you there.
 
 ![The empty stage with its fullscreen button at the bottom right](images/design/stage-empty-fullscreen.png)
@@ -427,7 +431,7 @@ The sliders' rules stay one browser per rule, checked by `npm run check:styles` 
 - **The activity pill** (desktop header, centre): 38 px tall, up to 440 px wide, frosted. It shows the latest event with its person and time, and a **red count** (18 px pill) of the ones not seen yet. A click opens the activity list; a live stream's event puts it on the stage.
 - **Losing the connection** takes over the pill: **yellow** (`--warn`), with a 12 px spinner, until it's back. The account button's dot is green when connected.
 - **Stage messages** (`StageNotice`): centred over the stage, a title in `--text-lg` and a line under it (up to 42 characters wide, `--text-sm`), with a 22 px spinner while something loads ("Loading Marina's screen…").
-- **The seat offer:** when a seat frees up for someone in the queue, a dialog (up to 400 px, `--radius-md`) offers it for 60 seconds, with the time running down.
+- **The seat offer:** when a seat frees up for someone in the queue, a dialog (up to 400 px, `--radius-2-5`) offers it for 60 seconds, with the time running down.
 - **The waiting room:** the place in the queue, in plain words, while the room is full.
 - **Tooltips** (`components/ui/Tooltip`, the app's only one; never the browser's own) say what a control does or why it can't be used, with a mouse after a **120 ms** rest (then at once along a row, for 400 ms after one hides) or on the keyboard's focus; they go the moment the pointer leaves or presses. A finger on a touch screen gets none (a tap leaves a button "hovered"); a greyed-out control says why in the toast instead. The round buttons' look: near-black `#070708`, 12 px text, 6 px corners, at most 260 px wide, **floating on its own layer** 10 px above its control (below it where there's no room), never clipped. **One floating thing at a time:** a tooltip showing closes any other tooltip or drop-up; one on a drop-up's own controls belongs to it. Told to keep quiet (a live button, whose drop-up takes its place), it still describes its control for screen readers.
 - **The toast** (`components/ui/Toast`, called with `showToast`): a short message to the user, the app's one way to announce something briefly. The round buttons' glass (frosted, 8 px blur, their shadow), a pill up to 360 px wide and two lines, 13 px text, with the icon of what it's about (the control you touched, crossed out) and no alert sign. At the top centre of the player. It fades in and drops 6 px, stays **3 s** and fades out by itself; one at a time, the newest replacing it; screen readers hear it once. Today it says why a greyed-out control can't be used when a finger or a pen touches it ("This browser can't share a screen", the full room).

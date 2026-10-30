@@ -7,7 +7,7 @@
  */
 .panel {
   --ctl: var(--size-7-5);
-  --w: clamp(var(--settings-width), 20cqw, var(--settings-width-wide));
+  --w: clamp(var(--settings-width), var(--cqw-20), var(--settings-width-wide));
   --room: var(--above-row, var(--space-18));
   position: absolute;
   left: clamp(var(--space-2-5), calc(var(--cog-x, 50%) - var(--w) / 2), calc(100% - var(--w) - var(--space-2-5)));
@@ -338,7 +338,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1-5);
-  padding: var(--hairline) var(--space-1-5);
+  padding: var(--space-0-25) var(--space-1-5);
   border-radius: var(--radius-pill);
   background: var(--accent);
   color: var(--accent-ink);

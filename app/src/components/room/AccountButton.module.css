@@ -28,7 +28,7 @@
 /* The connection, on the avatar: green connected, yellow otherwise. */
 .dot {
   position: absolute;
-  right: var(--hairline);
+  right: var(--space-0-25);
   bottom: var(--space-0-75);
   width: var(--size-2-75);
   height: var(--size-2-75);
@@ -137,7 +137,7 @@
   height: var(--size-4);
   border-radius: 50%;
   background: var(--grey-189);
-  box-shadow: 0 var(--hairline) var(--space-0-75) var(--black-50);
+  box-shadow: 0 var(--space-0-25) var(--space-0-75) var(--black-50);
   transition:
     transform var(--duration-180) ease,
     background var(--duration-180) ease;

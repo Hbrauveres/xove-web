@@ -2,6 +2,6 @@ import type { ReactNode } from "react";
 
 export interface ErrorNoticeProps {
   children: ReactNode;
-  /** The page's own class, for where the notice sits. */
-  className?: string | undefined;
+  /** Over the stage or the page, where a see-through tint would show what's behind. */
+  floating?: boolean;
 }

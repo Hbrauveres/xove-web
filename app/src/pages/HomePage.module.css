@@ -22,7 +22,7 @@
 }
 
 .title {
-  font-size: clamp(var(--text-32), 8vw, var(--text-44));
+  font-size: clamp(var(--text-32), var(--vw-8), var(--text-44));
   line-height: 1.05;
   letter-spacing: calc(var(--tracking-1) * -1);
 }
@@ -40,7 +40,7 @@
 .copy {
   margin: 0;
   color: var(--text-muted);
-  max-width: 36ch;
+  max-width: var(--measure-36);
 }
 
 .google {
@@ -65,7 +65,7 @@
 }
 
 .google:active {
-  transform: translateY(var(--hairline));
+  transform: translateY(var(--space-0-25));
 }
 
 .note {

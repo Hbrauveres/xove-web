@@ -1,5 +1,5 @@
 .wrap {
-  min-height: 100dvh;
+  min-height: var(--window-height);
   display: grid;
   place-content: center;
   justify-items: center;
