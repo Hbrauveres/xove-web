@@ -286,7 +286,7 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 
 - **48 px** circles in a pill, 10 px apart; **on a stage narrower than 360 px, compact: 36 px, 6 px apart**, centred clear of the fullscreen button (measured on the stage's own box, not the window). Every button of the stage, the sounds, Go live and the fullscreen button included, shares one centre line. Dark frosted glass (`rgba(10, 10, 11, 0.72)`, blur 8 px, shadow `0 4px 16px` black at 35%), with a 20 px icon.
 - **One state system, on every round button:** **sending** (your screen, your camera) is a red pill (`--accent`) with the plain icon in deep red (`--accent-ink`); **off** is dark glass with the crossed icon in white; **unavailable** is 45% opacity, with the reason in the tooltip. Red means live (and, elsewhere, the brand and [the cue](#rules-for-new-work)).
-- **The icons** (`components/stage/icons.tsx`): the screen is a crossed monitor while you're not sharing, and shows **a screen with an arrow up** while it's pointed at or focused, so it says what a click does (not while it's unavailable); while you share, the plain monitor. The camera is crossed while off, plain while on. My mic is crossed while off, plain and red while my voice is on. Settings is **a cog with teeth**.
+- **The icons** (`shared/components/icon`, `<Icon name="…" />`, every drawing in `shared/constants/icons.constants.ts`): the screen is a crossed monitor while you're not sharing, and shows **a screen with an arrow up** while it's pointed at or focused, so it says what a click does (not while it's unavailable); while you share, the plain monitor. The camera is crossed while off, plain while on. My mic is crossed while off, plain and red while my voice is on. Settings is **a cog with teeth**.
 - **Order**, centred at the bottom of my own stream: screen, camera, mic, settings. They show only on my stream (my tile, or the stage once I start a stream, which opens mine).
 - **Plain on/off buttons, no arrows.** A click starts or stops; what you send is set in the [settings panel](#the-settings-panel), and while a stream is live, resting the mouse on its button unrolls its [drop-up](#drop-ups). With a mouse, a live button shows its drop-up instead of a tooltip.
 - **Hover:** a glass pill lightens to `rgba(40, 40, 44, 0.85)` in 120 ms (only with a mouse); a red pill and an unavailable one don't change. **Focus** draws one red ring around the pill.
@@ -402,9 +402,9 @@ The sliders' rules stay one browser per rule, checked by `npm run check:styles` 
 
 ### Avatars and LIVE
 
-- **Avatars:** round, the person's photo or their hue with a white initial (`hsl(<hue> 42% 38%)`), weight 700.
+- **Avatars** (the `Face` block): round, the person's photo or their hue with a white initial (`hsl(<hue> 42% 38%)`), weight 700; on the account's pages, a missing photo shows the initial in the accent.
 - **On air:** a red ring with a ground-coloured gap, outside the avatar in lists and **inside its edge** in the info row, so its outer edge stays the avatar's.
-- **LIVE badge:** a filled red pill with a deep-red dot and "LIVE" in mono, next to the stream's kind and its running time.
+- **LIVE badge** (the `LiveBadge` block): "LIVE" in mono with a deep-red dot on red. Beside who's on the stage it's a small tag whose dot pulses; over my preview in the settings, a pill with a still dot.
 - **The live dot:** 8 px red, with a ring that pings outward every 1.8 s.
 
 ### On the stage
@@ -514,7 +514,7 @@ Its content stays clear of the phone's bars (the browser's safe areas).
 - **Unavailable, not hidden.** An option that can't be used here stays in its place, greyed out (a text option, like a tab: the faint text colour at 50%; a control, like a round button or a sound I can't hear: 45% opacity), with its reason in its tooltip, so a panel looks the same on every device.
 - **Draft first:** a visual change starts as a draft approved before the work starts: a change to screens that exist, as a prototype in the app itself; a brand-new screen may start as a clickable HTML draft with these tokens and fonts. The approved draft is the reference the code must match.
 - **Check every size:** a 2K monitor both ways (2560 × 1440 and 1440 × 2560), 1920 × 1080, a narrow window, the empty room, and the phone and tablet screen.
-- **Reuse the components:** `RoundButton` styles, `Button`, `Range`, the switch, `Dropdown`, `Segmented`, `Picker`, `DropUp`, `Avatar`, `StageNotice`, `Toast`. A new control follows their sizes, motion and focus ring. A choice from a list is a `Picker` (one box, floating, with the slim scrollbar when long), a few options a `Segmented`, and a quick action over a live button a `DropUp`, everywhere in the app.
+- **Reuse the components:** the shared blocks (`Icon`, `IconButton` with its variants, `Face`, `Switch`, `LiveBadge`, `Headline`, `ErrorNotice`, in `shared/components/`, each shown in Storybook), and `Button`, `Range`, `Dropdown`, `Segmented`, `Picker`, `DropUp`, `StageNotice`, `Toast`. A new control follows their sizes, motion and focus ring. A choice from a list is a `Picker` (one box, floating, with the slim scrollbar when long), a few options a `Segmented`, and a quick action over a live button a `DropUp`, everywhere in the app.
 - **Panels open over the button that opened them,** never from a side. **Panels are frosted, never opaque**; nothing over the video hides the round buttons.
 - **Say what effects cost:** blur, canvases and animations run on every frame; keep them to what's here.
 - **A screen says only what matters.** No readouts that imitate real equipment (clocks, meters, rulers, format tags, made-up numbers), and no frame inside another frame.

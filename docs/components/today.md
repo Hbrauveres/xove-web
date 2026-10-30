@@ -145,7 +145,7 @@ Over my own stream: my screen, camera and mic, on or off, and the settings.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/PlayerButtons.tsx`, its icons in `icons.tsx` | `features/room/components/stage-player-buttons/` (on the shared Icon button and icons) | Kept; the next version's send buttons replace it |
+| `components/stage/PlayerButtons.tsx`, on the shared Icon and Icon button | `features/room/components/stage-player-buttons/` (on the shared Icon button and icons) | Kept; the next version's send buttons replace it |
 
 ### Stage overlay
 
@@ -309,10 +309,12 @@ The shared controls today, and the copies that become one component each.
 | Segmented control | `components/ui/Segmented.tsx` | `shared/components/segmented/` | Kept |
 | Picker, drop-up, dropdown | `components/ui/Picker.tsx`, `DropUp.tsx`, `Dropdown.tsx`, `floating.ts` | `shared/components/menu/`: one floating system for all of them | Merged |
 | Tooltip | `components/ui/Tooltip.tsx` | `shared/components/tooltip/`, on the Menu's floating layer | Kept |
-| Avatar | `components/ui/Avatar.tsx`, `PersonAvatar.tsx` | `shared/components/face/`: one face with sizes and states | Merged |
-| Round button | `components/stage/RoundButton.module.css`, and copies in `ViewerBar`, `HearToggles`, `StageOverlay` and the header's buttons | `shared/components/icon-button/`: one component with variants | Merged |
-| Switch | CSS in `AccountButton.module.css` and `SettingsPanel.module.css` | `shared/components/switch/` | Merged |
-| Icons | `components/stage/icons.tsx`, `components/room/ActivityIcon.tsx`, and inline drawings in 14 files | `shared/components/icons/` | Merged |
+| Avatar | `shared/components/face/` (was `ui/Avatar.tsx`, `PersonAvatar.tsx`): the room's colour and initial with its rings, the account's photo | Already there | Merged |
+| Round button | `shared/components/icon-button/` (was `RoundButton.module.css` and its copies): the player's pills, the stage's glass, the fullscreen corner, a sound's toggle, the header's, the small pill with words | Already there | Merged |
+| Switch | `shared/components/switch/`: a setting's line, its words and the switch | Already there | Merged |
+| Icons | `shared/components/icon/` and its drawings in `shared/constants/icons.constants.ts` (was `stage/icons.tsx`, `room/ActivityIcon.tsx` and inline drawings) | Already there | Merged |
+| LIVE badge | `shared/components/live-badge/`: beside who's on the stage, and over my preview | Already there | Merged |
+| Headline | `shared/components/headline/`: the big statement with its key words in the accent (sign-in, the empty stage) | Already there | Merged |
 | Toast | `components/ui/Toast.tsx`, `toast.ts` | `shared/components/toast/` | Kept |
 | Full-page message | `components/ui/FullPageMessage.tsx` | `shared/components/page-shell/`, with the pages' copied shells | Merged |
 | Error notice | `shared/components/error-notice/`: the red-tinted box a problem is told in, on the home page and over the room (it was a copied `.error` rule in both pages) | Already there | Merged |
