@@ -41,8 +41,14 @@ export function fromJscpd(json: string): Finding[] {
   const { duplicates } = JSON.parse(json) as {
     duplicates: { firstFile: { name: string }; secondFile: { name: string } }[];
   };
+  // jscpd 5 names a file from the folder it scanned (components/…), jscpd 4 from app/ (src/components/…).
+  const fromApp = (name: string) => (name.startsWith("src/") ? name : `src/${name}`);
   return duplicates.flatMap((d) =>
-    [d.firstFile.name, d.secondFile.name].map((file) => ({ tool: "copies", rule: "copied-block", file })),
+    [d.firstFile.name, d.secondFile.name].map((file) => ({
+      tool: "copies",
+      rule: "copied-block",
+      file: fromApp(file),
+    })),
   );
 }
 
