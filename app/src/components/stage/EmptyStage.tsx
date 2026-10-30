@@ -81,7 +81,7 @@ export function EmptyStage({ canShareScreen = true, onStart }: Props) {
         </span>
       )}
       <div className={styles.focus}>
-        <Headline level={2} className={styles.title}>
+        <Headline level="section" className={styles.title}>
           Go <em>live</em>
         </Headline>
         {/* An invitation, not an order (spec 0138): a TV asking what's on. */}

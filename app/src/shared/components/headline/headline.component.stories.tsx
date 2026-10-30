@@ -5,7 +5,7 @@ const meta = {
   title: "Shared/Headline",
   component: Headline,
   args: {
-    level: 2,
+    level: "section",
     children: (
       <>
         Go <em>live</em>

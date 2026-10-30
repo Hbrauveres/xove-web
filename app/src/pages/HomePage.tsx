@@ -22,7 +22,7 @@ export function HomePage() {
           <p className={styles.brand}>
             <XoveMark height={40} />
           </p>
-          <Headline level={1} id="home-title" className={styles.title}>
+          <Headline level="page" id="home-title" className={styles.title}>
             Go <em>live</em> with
             <br />
             your friends.

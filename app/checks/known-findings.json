@@ -241,7 +241,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/EmptyStage.module.css",
-    "count": 5,
+    "count": 4,
     "owner": "#190 room: stage, Stage split"
   },
   {
@@ -598,7 +598,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/pages/HomePage.module.css",
-    "count": 2,
+    "count": 1,
     "owner": "#194 home, request access, admin, the shell"
   },
   {
