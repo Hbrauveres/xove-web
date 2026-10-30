@@ -23,5 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-# The component workbench, built (npm run workbench:build)
+# Storybook, built (npm run build-storybook)
 storybook-static

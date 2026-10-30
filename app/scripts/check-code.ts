@@ -10,7 +10,7 @@ export const RULES = {
   noTest: "code with logic but no .test file beside it",
   testName: "test named .spec (rename to .test: a spec is a workspace requirement document)",
   orphanTest: "test or stories file with no file of the same name beside it",
-  noStories: "component with no stories beside it, for the workbench (ADR-0089)",
+  noStories: "component with no stories beside it, for Storybook (ADR-0089)",
   storiesPlace: "stories for something that isn't a component in a components/ folder of the new structure",
   partPlace: "a utils, constants, types or enum file outside its kind's folder (utils/, constants/, types/, enums/)",
   partInCode:
@@ -38,9 +38,9 @@ export type Finding = { rule: Rule; file: string; line: number; text: string };
 /** Prettier's width (.prettierrc.json): what it can't wrap must stay inside it too. */
 const MAX_LINE = 120;
 const isTest = (f: string) => /\.(spec|test)\.tsx?$/.test(f);
-/** A component's states for the workbench (ADR-0089): like a test, it's never part of the app. */
+/** A component's states in Storybook (ADR-0089): like a test, it's never part of the app. */
 const isStories = (f: string) => /\.stories\.tsx$/.test(f);
-/** A component or page in a new-structure `components/` folder: it has its states in the workbench. */
+/** A component or page in a new-structure `components/` folder: it has its states in Storybook. */
 const isShown = (f: string) => /^(features\/[^/]+|shared)\/components\/[^/]+\/[^/]+\.(component|page)\.tsx$/.test(f);
 const isCode = (f: string) => /\.tsx?$/.test(f) && !isTest(f) && !isStories(f) && !f.endsWith(".d.ts");
 const noLogic = (f: string) =>

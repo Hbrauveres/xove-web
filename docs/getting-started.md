@@ -27,7 +27,7 @@ npm run dev          # http://localhost:5173
 
 Vite forwards every `/api` request to `http://localhost:8080`, so the web app talks to a local API without any CORS setup. It keeps the browser's address, so the API's redirects, Google's sign-in callback included, come back to `http://localhost:5173`. Without the API running, you'll see the home page and a failed sign-in.
 
-The component workbench, every component alone in each of its states: `npm run workbench` (http://localhost:6006); its stories' checks run in a real browser, so the first time, `npx playwright install chromium` ([Testing](testing.md#the-workbench)).
+Storybook, every component alone in each of its states: `npm run storybook` (http://localhost:6006); its stories' checks run in a real browser, so the first time, `npx playwright install chromium` ([Testing](testing.md#storybook)).
 
 The tests, the style check and running every test alone: [Testing](testing.md#running-them). The code checks (`npm run guard`, `npm run format`, the size budget): [Architecture](architecture.md#the-checks).
 
