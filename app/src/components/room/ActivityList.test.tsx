@@ -97,4 +97,20 @@ describe("activity list (spec 0104)", () => {
     expect(screen.queryByRole("button", { name: /joined|left|Reconnected/ })).not.toBeInTheDocument();
     expect(screen.getAllByRole("button")).toHaveLength(3);
   });
+
+  it("says when someone turns their camera off", () => {
+    onFakeClock();
+    render(
+      <ActivityList
+        events={[ev("1", "stopped", "user-7", 1, "camera")]}
+        people={people()}
+        meId="user-99"
+        unseen={new Set()}
+        isLive={() => false}
+        watching={null}
+        onWatch={vi.fn()}
+      />,
+    );
+    expect(screen.getByText("Bruno turned off their camera")).toBeInTheDocument();
+  });
 });

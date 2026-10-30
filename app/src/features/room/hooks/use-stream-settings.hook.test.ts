@@ -41,4 +41,13 @@ describe("how I send my streams", () => {
     hook.rerender();
     expect(hook.result.current).toBe(before);
   });
+
+  it("starts each stream from what this browser remembered", () => {
+    localStorage.setItem("xove.share.quality", "720p");
+    localStorage.setItem("xove.share.mode", "sharp");
+    localStorage.setItem("xove.camera.quality", "480p");
+    const { hook } = settings(false);
+    expect(hook.result.current.prefs.screen).toEqual({ quality: "720p", mode: "sharp" });
+    expect(hook.result.current.prefs.camera.quality).toBe("480p");
+  });
 });

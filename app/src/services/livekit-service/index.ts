@@ -9,4 +9,4 @@ export type {
   RoomPerson,
   VideoRoomState,
 } from "./types/livekit.types";
-export { cameraCaptureOptions, cameraPublishOptions, capOf, screenPublishOptions } from "./utils/publish-options.util";
+export { cameraCaptureOptions, capOf } from "./utils/publish-options.util";

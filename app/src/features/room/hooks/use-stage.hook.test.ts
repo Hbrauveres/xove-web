@@ -41,4 +41,15 @@ describe("who is on my stage", () => {
     hook.rerender();
     expect(hook.result.current).toBe(before);
   });
+
+  it("swaps one person's screen and camera, not the next person's", () => {
+    const bruno = aSharer({ id: "user-7", kinds: ["screen", "camera"] });
+    const ana = aSharer({ id: "user-3", kinds: ["screen", "camera"] });
+    const hook = renderHook(() => useStage([bruno, ana]));
+    act(() => hook.result.current.toggleSwap("user-7"));
+    expect(hook.result.current.mainKind).toBe("camera");
+    act(() => hook.result.current.pick("user-3"));
+    expect(hook.result.current.big?.person.id).toBe("user-3");
+    expect(hook.result.current.mainKind).toBe("screen");
+  });
 });

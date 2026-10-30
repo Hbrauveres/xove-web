@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { newCaptureController, pickScreen } from "./screen-picker.service";
+import { screenCaptureRequest } from "./utils/screen-picker.util";
 
 describe("staying on Xovê after the picker", () => {
   it("has no controller where the browser has none", () => {
@@ -21,6 +22,8 @@ describe("staying on Xovê after the picker", () => {
 
     await expect(pickScreen()).resolves.toBe(stream);
     expect(setFocusBehavior).toHaveBeenCalledWith("no-focus-change");
+    // The best quality, the sound as played, never this tab: the request the picker is asked with.
+    expect(getDisplayMedia).toHaveBeenCalledWith(expect.objectContaining(screenCaptureRequest()));
   });
 
   it("still gives the screen when the browser can't stay on Xovê (a whole screen has no window)", async () => {

@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { aUser, installFakeApi, MY_USER_ID } from "../../../testing/fakeApi";
 import { aLiveStream, anAnswer } from "../../../testing/factories/streams-state.factory";
@@ -88,5 +88,31 @@ describe("my streams and the API in step", () => {
       }),
     );
     await waitFor(() => expect(stopSending).toHaveBeenCalledWith("screen"));
+  });
+
+  it("registers the stream again with its connection and its accepted settings", async () => {
+    const { server } = sync(false, true);
+    await waitFor(() => expect(server.calls.some((c) => c.method === "POST" && c.path === "/api/streams")).toBe(true));
+    const again = server.calls.find((c) => c.method === "POST" && c.path === "/api/streams");
+    expect(again?.body).toEqual({
+      kind: "screen",
+      participantSid: "PA_me",
+      trackSid: "TR_1",
+      quality: "1080p",
+      mode: "smooth",
+    });
+  });
+
+  it("keeps sending when registering again fails for another reason, and tries again after the next poll", async () => {
+    const { hook, server, store, stopSending } = sync(false, true);
+    server.failures.set("POST /api/streams", { status: 503, body: { status: 503, detail: "Starting up" } });
+    await waitFor(() => expect(server.calls.filter((c) => c.path === "/api/streams")).toHaveLength(1));
+    server.failures.delete("POST /api/streams");
+    await act(async () => {
+      store.change((m) => withStreams(m, anAnswer({ streams: [] }), Date.now() + 1, true));
+    });
+    hook.rerender();
+    await waitFor(() => expect(server.calls.filter((c) => c.path === "/api/streams")).toHaveLength(2));
+    expect(stopSending).not.toHaveBeenCalled();
   });
 });

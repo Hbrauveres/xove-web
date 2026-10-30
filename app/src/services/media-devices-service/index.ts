@@ -26,4 +26,4 @@ export type {
 } from "./types/devices.types";
 export { gateStep, levelOf } from "./utils/audio-level.util";
 export { HANDHELD_QUERY, isHandheld } from "./utils/is-handheld.util";
-export { canShareScreen, screenCaptureRequest } from "./utils/screen-picker.util";
+export { canShareScreen } from "./utils/screen-picker.util";
