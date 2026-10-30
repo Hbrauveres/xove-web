@@ -42,11 +42,11 @@ it("names who is on the stage, live, what they share and for how long", () => {
 });
 ```
 
-## The workbench
+## Storybook
 
-Every component in the new structure has its **stories** beside it (`error-notice.component.stories.tsx`): one per state, shown alone in the component workbench (Storybook). The code check flags a component without them ([the checks](architecture.md#the-checks)). The workbench uses the app's tokens, fonts and build settings, so a story looks as the component does in the app.
+Every component in the new structure has its **stories** beside it (`error-notice.component.stories.tsx`): one per state, shown alone in Storybook. The code check flags a component without them ([the checks](architecture.md#the-checks)). Storybook uses the app's tokens, fonts and build settings, so a story looks as the component does in the app.
 
-Each story also runs as a test in a real browser (headless Chromium, through Vitest's browser mode): it fails if it throws, or if it breaks an accessibility rule (axe, contrast included). That's its own run, apart from `npm test`, so the jsdom suite stays fast; the commit checks run it as `3 · Workbench`.
+Each story also runs as a test in a real browser (headless Chromium, through Vitest's browser mode): it fails if it throws, or if it breaks an accessibility rule (axe, contrast included). That's its own run, apart from `npm test`, so the jsdom suite stays fast; the commit checks run it as `3 · Storybook`.
 
 A story keeps its own sample text, like a test, and shows a state a person can reach: resting, floating, too long, disabled. It isn't a test of behaviour: what a component does is still tested in its `.test.tsx`.
 
@@ -112,8 +112,8 @@ npm test -- --sequence.seed=<seed>   # the same order again
 npm run test:watch       # again on every save
 npm run check:styles     # contrast, per-browser rules, reduced motion
 npm run test:alone       # every file, then every test, run alone (slow; before a PR that changes tests)
-npm run test:workbench   # every story in headless Chromium, with the accessibility checks
-npm run workbench        # the component workbench on http://localhost:6006
+npm run test:storybook   # every story in headless Chromium, with the accessibility checks
+npm run storybook        # Storybook on http://localhost:6006
 npm run build            # type check, then the production build
 ```
 

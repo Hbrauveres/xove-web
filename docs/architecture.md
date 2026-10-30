@@ -190,7 +190,7 @@ app/src/
 └── testing/      the fakes, the sample data and the setup tests share; only tests import it
 ```
 
-- **A unit is a folder:** a component, a store, a service or an adapter, with its code, its test beside it (`facecam.component.test.tsx`), its CSS module if it's a component, a component's stories (`facecam.component.stories.tsx`: its states in the workbench, [Testing](testing.md#the-workbench)), and `index.ts`: the only door other code goes through.
+- **A unit is a folder:** a component, a store, a service or an adapter, with its code, its test beside it (`facecam.component.test.tsx`), its CSS module if it's a component, a component's stories (`facecam.component.stories.tsx`: its states in Storybook, [Testing](testing.md#storybook)), and `index.ts`: the only door other code goes through.
 - **Its parts sit inside it,** as files in folders by kind: `hooks/`, `utils/` (helpers that format, build or map, each with its test beside it), `constants/`, `types/`, `enums/`, only when it has some. A part used by several units of a feature sits in the feature's own part folders; one used by several features in `shared/`'s; a service's parts in the service. A working file holds no type (its props and inputs too), named constant or helper; a function that makes calls (the network, storage, LiveKit) belongs to a service.
 - **Nothing nested:** no unit inside a unit, no folder inside a part folder, a flat `components/` with the area in the name. A path is at most 6 levels under `src/`. A feature past about 25 components is split into features.
 - **Names:** kebab-case with the type as a suffix: `.component.tsx`, `.page.tsx`, `.hook.ts`, `.util.ts`, `.service.ts`, `.adapter.ts`, `.store.ts`, `.model.ts`, `.selectors.ts`, `.constants.ts`, `.enum.ts`, `.types.ts`; tests `.test.ts(x)`.
@@ -233,7 +233,7 @@ Every rule a tool can measure runs in the commit checks as `3 · Code checks`, o
 | jscpd | A block of code copied into another place (8 lines or 60 tokens, CSS included) | `npm run check:copies` |
 | knip | Files nothing imports, exports nothing uses | `npm run check:unused` |
 | The code check | The structure's rules: folders and names, every part in its kind's folder and none inside working code, a test beside every file with logic, units in their own folders with their parts inside them, nothing nested past 6 levels, imports through a unit's `index.ts` and never up, across features or into `testing/`, any colour, size, duration, easing, layer or window size written in CSS outside `tokens.css` (zero isn't a value), no DOM queries between components, LiveKit only in `services/`, a component in a `components/` folder of the new structure with no stories, no history in comments, lines over 120 characters (Prettier doesn't wrap strings and comments), comments that switch a check off, and the tests' own rules | `npm run check:code -- <folder> --all` |
-| The workbench | Every story in headless Chromium: one that throws, or breaks an accessibility rule (contrast included), fails | `npm run test:workbench` |
+| Storybook | Every story in headless Chromium: one that throws, or breaks an accessibility rule (contrast included), fails | `npm run test:storybook` |
 | Prettier | Layout | `npm run format` fixes, `npm run format:check` checks |
 | The size budget | The built JavaScript and styles, compressed, against `checks/size-budget.json` | `npm run build && npm run check:size` |
 

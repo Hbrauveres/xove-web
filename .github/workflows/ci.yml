@@ -4,7 +4,7 @@
 #   2 · Validate build      start the web app from that image, wait until healthy
 #   3 · Unit tests          Vitest
 #   3 · Code checks         the guard (every check against the known findings), Prettier, the size budget
-#   3 · Workbench           every story of the component workbench in a browser, with the accessibility checks
+#   3 · Storybook           every story in a browser, with the accessibility checks
 #   3 · Vulnerability scan  Trivy on the image and the web dependencies
 #   3 · SAST                Semgrep on the source code
 #
@@ -151,10 +151,10 @@ jobs:
       - name: Style check
         run: npm run check:styles
 
-  # The component workbench (ADR-0089): every story rendered in a real browser, with the
+  # Storybook (ADR-0089): every story rendered in a real browser, with the
   # accessibility checks; a story that throws or breaks a rule fails. Its own job, beside the others.
-  workbench:
-    name: 3 · Workbench
+  storybook:
+    name: 3 · Storybook
     needs: validate
     runs-on: ubuntu-latest
     defaults:
@@ -185,10 +185,10 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Every story in the browser
-        run: npm run test:workbench
+        run: npm run test:storybook
 
-      - name: The workbench builds
-        run: npm run workbench:build
+      - name: Storybook builds
+        run: npm run build-storybook
 
   code-checks:
     name: 3 · Code checks
