@@ -1,9 +1,9 @@
+import { Face } from "@shared/components/face";
 import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
 import { useRef, useState } from "react";
 import type { RoomSeatsState, StreamKind } from "@services/xove-api-service";
 import type { Friend } from "@features/room/types/room-view.types";
-import { Avatar } from "../ui/Avatar";
 import { Dropdown, DropdownSection } from "../ui/Dropdown";
 import styles from "./PeopleButton.module.css";
 
@@ -104,7 +104,7 @@ export function PeopleButton({ people, meId, sharing, watchingOf, seats }: Props
               const shares = sharing[p.id];
               return (
                 <li key={p.id} className={styles.person}>
-                  <Avatar person={p} size={30} onAir={Boolean(shares?.screen || shares?.camera)} />
+                  <Face name={p.name} hue={p.hue} size={30} onAir={Boolean(shares?.screen || shares?.camera)} />
                   <span className={styles.who}>
                     <b>{p.name}</b>
                     {p.id === meId && <span className={styles.you}> (you)</span>}

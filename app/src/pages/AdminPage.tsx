@@ -1,9 +1,9 @@
+import { Face } from "@shared/components/face";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router";
 import { api, ApiError } from "@services/xove-api-service";
 import type { AccessRequestView, MemberView } from "@services/xove-api-service";
 import { Button } from "../components/ui/Button";
-import { PersonAvatar } from "../components/ui/PersonAvatar";
 import { timeAgo } from "@features/admin/utils/time-ago.util";
 import { XoveMark } from "../components/brand/XoveMark";
 import { ErrorNotice } from "@shared/components/error-notice";
@@ -78,7 +78,7 @@ export function AdminPage() {
                 {data.requests.map((r) => (
                   <li key={r.id} className={styles.request}>
                     <div className={styles.person}>
-                      <PersonAvatar name={r.name} email={r.email} src={r.avatarUrl} />
+                      <Face name={r.name || r.email} photo={r.avatarUrl} size={36} />
                       <div className={styles.who}>
                         <span className={styles.name}>{r.name ?? r.email}</span>
                         <span className={styles.email}>{r.email}</span>
@@ -118,7 +118,7 @@ export function AdminPage() {
             <ul className={styles.list}>
               {data.members.map((m) => (
                 <li key={m.id} className={styles.member}>
-                  <PersonAvatar name={m.name} email={m.email} src={m.avatarUrl} size={32} />
+                  <Face name={m.name || m.email} photo={m.avatarUrl} size={32} />
                   <div className={styles.who}>
                     <span className={styles.name}>{m.name ?? m.email}</span>
                     <span className={styles.email}>{m.email}</span>

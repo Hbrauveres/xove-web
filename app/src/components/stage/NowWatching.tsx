@@ -1,6 +1,6 @@
+import { Face } from "@shared/components/face";
 import { useElapsed } from "@features/room/hooks/use-elapsed.hook";
 import type { Friend, Sharer } from "@features/room/types/room-view.types";
-import { Avatar } from "../ui/Avatar";
 import styles from "./NowWatching.module.css";
 import { whoIsHere } from "@features/room/utils/who-is-here.util";
 import { Tooltip } from "../ui/Tooltip";
@@ -44,7 +44,7 @@ export function NowWatching({ sharer, watchers = [], others = [] }: Props) {
               <span className={styles.row}>
                 {others.slice(0, MAX_AVATARS).map((p) => (
                   <span key={p.id} data-here className={styles.face}>
-                    <Avatar person={p} size={22} />
+                    <Face name={p.name} hue={p.hue} size={22} />
                   </span>
                 ))}
               </span>
@@ -58,7 +58,7 @@ export function NowWatching({ sharer, watchers = [], others = [] }: Props) {
   const name = sharer.isMe ? "You" : sharer.person.name;
   return (
     <div className={styles.now}>
-      <Avatar person={sharer.person} size={52} onAir ring="inside" />
+      <Face name={sharer.person.name} hue={sharer.person.hue} size={52} onAir ring="inside" />
       <div className={styles.text}>
         <h2 className={styles.name}>{name}</h2>
         <p className={styles.meta}>
@@ -71,7 +71,7 @@ export function NowWatching({ sharer, watchers = [], others = [] }: Props) {
                 <span className={styles.row}>
                   {watchers.slice(0, MAX_AVATARS).map((p) => (
                     <span key={p.id} data-watcher className={styles.face}>
-                      <Avatar person={p} size={22} />
+                      <Face name={p.name} hue={p.hue} size={22} />
                     </span>
                   ))}
                 </span>

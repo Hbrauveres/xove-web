@@ -1,5 +1,5 @@
+import { Face } from "@shared/components/face";
 import type { LiveFeed, Sharer } from "@features/room/types/room-view.types";
-import { Avatar } from "../ui/Avatar";
 import { ScreenVideo } from "./ScreenVideo";
 import { stackOf, useSwapping } from "./stack";
 import { HearToggles, type Hearing } from "./HearToggles";
@@ -108,7 +108,7 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
                   )}
                 </span>
                 <span className={styles.chip}>
-                  <Avatar person={s.person} size={16} />
+                  <Face name={s.person.name} hue={s.person.hue} size={16} />
                   {name} · {what}
                 </span>
               </button>

@@ -1,3 +1,4 @@
+import { Face } from "@shared/components/face";
 import { IconButton } from "@shared/components/icon-button";
 import { useRef, useState } from "react";
 import { Link } from "react-router";
@@ -5,7 +6,6 @@ import { saveAmbilight } from "@services/preferences-service";
 import type { AmbilightPrefs } from "@services/preferences-service";
 import type { ConnectionState } from "@services/livekit-service";
 import type { Friend } from "@features/room/types/room-view.types";
-import { Avatar } from "../ui/Avatar";
 import { Dropdown, DropdownSection } from "../ui/Dropdown";
 import { Range } from "../ui/Range";
 import styles from "./AccountButton.module.css";
@@ -50,7 +50,7 @@ export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightC
         aria-expanded={open}
         onClick={() => setOpen(!open)}
       >
-        <Avatar person={me} size={32} />
+        <Face name={me.name} hue={me.hue} size={32} />
         <i className={styles.dot} data-state={connection} aria-hidden="true" />
       </IconButton>
 
@@ -66,7 +66,7 @@ export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightC
       >
         <DropdownSection className={styles.me}>
           <div className={styles.who}>
-            <Avatar person={me} size={40} />
+            <Face name={me.name} hue={me.hue} size={40} />
             <div>
               <b>{me.name}</b>
               <small>{isAdmin ? "Admin" : "Member"}</small>

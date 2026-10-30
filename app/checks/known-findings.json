@@ -471,20 +471,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/ui/Avatar.module.css",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/ui/Avatar.tsx",
-    "count": 2,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/ui/cue.module.css",
     "count": 2,
     "owner": "#186 shared: the basic blocks"
@@ -1325,20 +1311,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/ui/Avatar.module.css",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/Avatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/components/ui/Button.module.css",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
@@ -1426,20 +1398,6 @@
     "file": "src/components/ui/FullPageMessage.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/PersonAvatar.module.css",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/PersonAvatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
@@ -1843,13 +1801,6 @@
   {
     "tool": "code",
     "rule": "noTest",
-    "file": "src/components/ui/Avatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
     "file": "src/components/ui/Button.tsx",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
@@ -1860,13 +1811,6 @@
     "file": "src/components/ui/FullPageMessage.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/components/ui/PersonAvatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
@@ -2137,13 +2081,6 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/components/ui/Avatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
     "file": "src/components/ui/Button.tsx",
     "count": 2,
     "owner": "#186 shared: the basic blocks"
@@ -2175,13 +2112,6 @@
     "file": "src/components/ui/FullPageMessage.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/ui/PersonAvatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
@@ -2935,20 +2865,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/ui/Avatar.module.css",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/Avatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/components/ui/Button.module.css",
     "count": 1,
     "owner": "#186 shared: the basic blocks"
@@ -3036,20 +2952,6 @@
     "file": "src/components/ui/FullPageMessage.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/PersonAvatar.module.css",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/PersonAvatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "code",
@@ -3743,20 +3645,6 @@
     "file": "src/components/stage/ViewerBar.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/ui/Avatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/ui/PersonAvatar.tsx",
-    "count": 1,
-    "owner": "#186 shared: the basic blocks"
   },
   {
     "tool": "lint",

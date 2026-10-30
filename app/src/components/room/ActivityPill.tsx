@@ -1,9 +1,9 @@
+import { Face } from "@shared/components/face";
 import { Icon } from "@shared/components/icon";
 import { useEffect, useRef, useState } from "react";
 import type { StreamKind } from "@services/xove-api-service";
 import type { ConnectionState } from "@services/livekit-service";
 import type { ActivityEvent, Friend } from "@features/room/types/room-view.types";
-import { Avatar } from "../ui/Avatar";
 import { Dropdown, DropdownSection } from "../ui/Dropdown";
 import { ActivityList } from "./ActivityList";
 import { describeEvent, shortAgo } from "./activityText";
@@ -78,7 +78,7 @@ export function ActivityPill({ events, people, meId, connection, isLive, watchin
     label = `Activity: ${text}, ${ago === "now" ? "just now" : `${ago} ago`}${fresh ? `, ${fresh} new` : ""}`;
     content = (
       <span key={latest.id} className={`${styles.tick} ${styles.enter}`}>
-        {actor && <Avatar person={actor} size={22} />}
+        {actor && <Face name={actor.name} hue={actor.hue} size={22} />}
         <span className={styles.what}>{text}</span>
         <time className={styles.time}>{ago}</time>
       </span>
