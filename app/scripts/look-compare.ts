@@ -41,13 +41,13 @@ export function compare(main: Recording, branch: Recording): Difference[] {
   return differences;
 }
 
-/** The run's summary, in Markdown: what was compared, and every difference by screen. */
+/** The run's summary, in Markdown: what it was compared with (`main` at abc1234), and every difference. */
 export function report(differences: Difference[], against: string, lookChange: boolean) {
-  if (!differences.length) return `**Looks the same** as \`main\` at ${against}: every element, every property.\n`;
+  if (!differences.length) return `**Looks the same** as ${against}: every element, every property.\n`;
   const lines = [
     lookChange
-      ? `**${differences.length} differences** from \`main\` at ${against}, expected: this PR is labelled \`look change\`.`
-      : `**${differences.length} differences** from \`main\` at ${against}. If the PR changes the look on purpose, label it \`look change\`; if \`main\` moved on, update the branch.`,
+      ? `**${differences.length} differences** from ${against}, expected: this PR is labelled \`look change\`.`
+      : `**${differences.length} differences** from ${against}. If the PR changes the look on purpose, label it \`look change\`; if \`main\` moved on, update the branch.`,
     "",
     "| Screen | Element | Property | `main` | This branch |",
     "| --- | --- | --- | --- | --- |",

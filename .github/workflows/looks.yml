@@ -1,0 +1,104 @@
+# Looks the same: every screen of the harness, at each desktop size, compared with main's by computed
+# style (docs/testing.md, "Looks the same").
+#
+#   on main         record each size and keep it (the reference, 30 days)
+#   on a pull request  record its head, compare with main's latest recording; any difference fails,
+#                   unless the PR is labelled "look change": then it passes and lists them
+#
+# The report is the run's summary. When main has no recording yet (the first pull request after this
+# check arrived), a pull request is compared with its own previous run, and the summary says so.
+name: Looks the same
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: looks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  look:
+    name: Looks the same (${{ matrix.size }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        size: [2560x1440, 1440x2560, 1920x1080, 760x900]
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Playwright's version (its browser is cached per version)
+        id: playwright
+        run: echo "version=$(node -p 'require("playwright/package.json").version')" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ steps.playwright.outputs.version }}
+
+      - name: Chromium, and the libraries it needs
+        run: npx playwright install --with-deps chromium
+
+      - name: Build and serve the harness
+        run: |
+          npm run build-harness
+          npx vite preview --config harness/vite.config.ts > /dev/null 2>&1 &
+          timeout 60 bash -c 'until curl -sf http://localhost:5199 > /dev/null; do sleep 1; done'
+
+      - name: Record every screen
+        run: npm run look -- record ${{ matrix.size }} look.json
+
+      - name: Keep the recording
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: look-${{ matrix.size }}
+          path: app/look.json
+          retention-days: 30
+
+      - name: Compare with main
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SIZE: ${{ matrix.size }}
+          BRANCH: ${{ github.head_ref }}
+          LOOK_CHANGE: ${{ contains(github.event.pull_request.labels.*.name, 'look change') }}
+        run: |
+          latest() {
+            gh run list --repo "$GITHUB_REPOSITORY" --workflow looks.yml --status success --limit 20 "$@" \
+              --json databaseId,headSha -q "[.[] | select(.databaseId != $GITHUB_RUN_ID)][0] // empty"
+          }
+          ref=$(latest --branch main --event push)
+          against="main"
+          if [ -z "$ref" ]; then
+            ref=$(latest --branch "$BRANCH" --event pull_request)
+            against="this branch's previous run"
+          fi
+          if [ -z "$ref" ] || ! gh run download "$(jq -r .databaseId <<< "$ref")" --repo "$GITHUB_REPOSITORY" \
+            -n "look-$SIZE" -D reference; then
+            echo "Nothing to compare with yet: this run only records $SIZE." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          sha=$(jq -r .headSha <<< "$ref")
+          flag=""
+          if [ "$LOOK_CHANGE" = "true" ]; then flag="--look-change"; fi
+          if [ "$against" = "main" ]; then against="\`main\` at ${sha:0:7}"; else against="this branch's previous run at ${sha:0:7} (\`main\` has no recording yet)"; fi
+          npm run look -- compare reference/look.json look.json "$against" $flag --summary "$GITHUB_STEP_SUMMARY"

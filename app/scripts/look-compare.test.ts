@@ -33,9 +33,11 @@ describe("the looks-the-same comparison", () => {
 
   it("reports what it compared with, and tells a look change from an accident", () => {
     const one = compare(screen({ padding: "12px" }), screen({ padding: "14px" }));
-    expect(report([], "abc1234", false)).toContain("Looks the same");
-    expect(report(one, "abc1234", false)).toMatch(/1 differences.*abc1234.*label it `look change`/);
-    expect(report(one, "abc1234", true)).toContain("expected: this PR is labelled `look change`");
-    expect(report(one, "abc1234", false)).toContain("| 1920x1080 home | `body>main>p` | padding | `12px` | `14px` |");
+    expect(report([], "`main` at abc1234", false)).toContain("Looks the same");
+    expect(report(one, "`main` at abc1234", false)).toMatch(/1 differences.*`main` at abc1234.*label it `look change`/);
+    expect(report(one, "`main` at abc1234", true)).toContain("expected: this PR is labelled `look change`");
+    expect(report(one, "`main` at abc1234", false)).toContain(
+      "| 1920x1080 home | `body>main>p` | padding | `12px` | `14px` |",
+    );
   });
 });
