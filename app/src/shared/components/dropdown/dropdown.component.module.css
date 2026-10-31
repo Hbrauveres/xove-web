@@ -1,0 +1,56 @@
+/*
+ * The room's floating panels: activity, people and account. See
+ * specs/0104-room-theater/design.html, which this matches.
+ */
+.panel {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  z-index: var(--layer-dropdown);
+  width: var(--dropdown-width);
+  color: var(--text);
+  line-height: 1.25; /* the design's rows, tighter than the page's text */
+  /*
+   * Unrolls downward when it opens and rolls back up when it closes, by its height. Never a
+   * clip, a fade or a filter here or on an ancestor: those stop the sections' blur.
+   */
+  display: grid; /* grid-template-rows: 0fr → 1fr, set by the component */
+  transition: grid-template-rows var(--duration-260) var(--ease-out);
+}
+
+.end {
+  right: 0;
+}
+
+.center {
+  left: 50%;
+  width: min(var(--card-width), var(--vw-92));
+  transform: translateX(-50%);
+}
+
+/* Sections stacked with a clear 2px cut between them: the divider is the page behind, sharp. */
+.roll {
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+  border-radius: var(--radius-4);
+}
+
+@media (--narrow) {
+  .panel,
+  .center {
+    position: fixed;
+    top: var(--space-18);
+    left: var(--space-2);
+    right: var(--space-2);
+    width: auto !important; /* full width in a narrow window, whatever the panel's own width */
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
+  }
+}

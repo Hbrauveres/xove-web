@@ -207,7 +207,7 @@ describe("the settings panel: the Camera tab", () => {
     expect(
       within(panel()).getByRole("button", { name: "Camera: Logitech C920" }).closest("[data-picker]"),
     ).toHaveAttribute("data-opens", "down");
-    await user.click(within(panel()).getByRole("radio", { name: "Integrated Webcam" }));
+    await user.click(within(panel()).getByRole("menuitemradio", { name: "Integrated Webcam" }));
     expect(onPickCamera).toHaveBeenCalledWith("cam-2");
   });
 

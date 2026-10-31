@@ -1,0 +1,143 @@
+/* The picker's list: the colours and corners come from the picker around it (`--pick-*`). */
+.list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: var(--layer-overlay);
+  display: grid;
+  max-height: calc(var(--ctl, var(--control-lg)) * 3.5);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: 0 0 var(--pick-r) var(--pick-r);
+  background: var(--pick-bg);
+  /* Rolled up into the pill's edge; it unrolls in 220 ms and rolls back in 150 ms. The clip keeps
+     the box's rounded corners, or the blur behind it would show square at them. */
+  clip-path: inset(0 0 100% 0 round 0 0 var(--pick-r) var(--pick-r));
+  transition: clip-path var(--duration-150) ease-in;
+}
+
+.list[data-unroll] {
+  clip-path: inset(0 round 0 0 var(--pick-r) var(--pick-r));
+  transition: clip-path var(--duration-220) var(--ease-out);
+}
+
+/* A long list scrolls with the app's slim scrollbar, inside it, clear of its rounded corners. */
+.list::-webkit-scrollbar {
+  width: var(--size-1);
+}
+
+.list::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.list::-webkit-scrollbar-track {
+  margin-block: var(--space-1-5);
+  background: transparent;
+}
+
+.list::-webkit-scrollbar-thumb {
+  border-radius: var(--radius-pill);
+  background: var(--white-22);
+}
+
+.list:hover::-webkit-scrollbar-thumb {
+  background: var(--white-40);
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  .list {
+    scrollbar-width: thin;
+    scrollbar-color: var(--white-22) transparent;
+  }
+}
+
+.list[data-up] {
+  top: auto;
+  bottom: 100%;
+  border-radius: var(--pick-r) var(--pick-r) 0 0;
+  backdrop-filter: blur(var(--blur-2));
+  box-shadow: 0 calc(var(--space-3) * -1) var(--space-6) var(--black-40);
+  clip-path: inset(100% 0 0 0 round var(--pick-r) var(--pick-r) 0 0);
+}
+
+.list[data-up][data-unroll] {
+  clip-path: inset(0 round var(--pick-r) var(--pick-r) 0 0);
+}
+
+.option {
+  position: relative;
+  /* It may shrink to the list's width, so its name can end in "…". */
+  min-width: 0;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: var(--ctl, var(--control-lg));
+  padding: 0 var(--pick-pad);
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: var(--pick-font, var(--text-sm));
+  text-align: left;
+  cursor: pointer;
+  /* Each option fades in as the unrolling edge reaches it, the nearest to the pill first (--k). */
+  opacity: 0;
+  transition:
+    opacity var(--duration-100) ease,
+    color var(--duration-120) ease;
+}
+
+.list[data-unroll] .option {
+  opacity: 1;
+  transition:
+    opacity var(--duration-140) ease calc(var(--duration-30) + var(--k, 0) * var(--duration-40)),
+    color var(--duration-120) ease;
+}
+
+/* The soft light, fading only sideways, kept inside its row so a short list never scrolls. */
+.option::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: var(--layer-behind);
+  pointer-events: none;
+  background: linear-gradient(90deg, var(--white-00) 0%, var(--white-05) 50%, var(--white-00) 100%);
+  opacity: 0;
+  transition: opacity var(--duration-160) ease;
+}
+
+.option:hover,
+.option:focus-visible {
+  color: var(--text);
+}
+
+.option:hover::before,
+.option:focus-visible::before {
+  opacity: 1;
+}
+
+.option:focus-visible {
+  outline: none;
+}
+
+/* A name too long for its row ends in "…", on one line; the whole name is its tooltip. */
+.name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .list,
+  .list[data-unroll],
+  .option,
+  .list[data-unroll] .option,
+  .option::before {
+    transition: none;
+  }
+}

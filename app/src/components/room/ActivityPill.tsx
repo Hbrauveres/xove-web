@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import type { StreamKind } from "@services/xove-api-service";
 import type { ConnectionState } from "@services/livekit-service";
 import type { ActivityEvent, Friend } from "@features/room/types/room-view.types";
-import { Dropdown, DropdownSection } from "../ui/Dropdown";
+import { Dropdown } from "@shared/components/dropdown";
+import { DropdownSection } from "@shared/components/dropdown-section";
 import { ActivityList } from "./ActivityList";
 import { describeEvent, shortAgo } from "./activityText";
 import styles from "./ActivityPill.module.css";
@@ -109,7 +110,7 @@ export function ActivityPill({ events, people, meId, connection, isLive, watchin
         <Icon name="chevron-bold" size={12} className={styles.chev} />
       </button>
 
-      <Dropdown open={open} label="Activity" align="center" anchor={anchor} onClose={close}>
+      <Dropdown open={open} label="Activity" align="center" anchor={anchor} onClose={() => close(false)}>
         <DropdownSection scroll>
           <ActivityList
             events={events}

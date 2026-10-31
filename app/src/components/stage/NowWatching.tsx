@@ -4,7 +4,7 @@ import { useElapsed } from "@features/room/hooks/use-elapsed.hook";
 import type { Friend, Sharer } from "@features/room/types/room-view.types";
 import styles from "./NowWatching.module.css";
 import { whoIsHere } from "@features/room/utils/who-is-here.util";
-import { Tooltip } from "../ui/Tooltip";
+import { Tooltip } from "@shared/components/tooltip";
 
 /** What a person shares, in two words. */
 // "· voice" while their voice is on (spec 0123).

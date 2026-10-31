@@ -2,21 +2,22 @@ import { LiveBadge } from "@shared/components/live-badge";
 import { Switch } from "@shared/components/switch";
 import { Icon } from "@shared/components/icon";
 import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
-import { CAMERA_BLOCKED, CAMERA_MISSING, CAMERA_QUALITIES, SHARE_QUALITIES } from "@services/media-devices-service";
+import { cameraProblemWords } from "@features/room/utils/camera-problem.util";
+import { CAMERA_QUALITIES, SHARE_QUALITIES } from "@services/media-devices-service";
 import type { CameraDevice, CameraProblem, MicDevice, ScreenSurface } from "@services/media-devices-service";
 import type { VoicePrefs } from "@services/preferences-service";
 import { useMicLevel } from "@features/room/hooks/use-mic-level.hook";
 import { MODE_OPTIONS } from "@features/room/constants/stream-modes.constants";
 import type { StreamKind, StreamMode, StreamQuality, StreamSettings } from "@services/xove-api-service";
 import type { MediaTrack } from "@services/livekit-service";
-import { Picker } from "../ui/Picker";
+import { Cue } from "@shared/components/cue";
+import { Picker } from "@shared/components/picker";
 import { Segmented } from "../ui/Segmented";
 import { showToast } from "../ui/toast";
 import { NO_SCREEN, NO_SOUND } from "./PlayerButtons";
 import styles from "./SettingsPanel.module.css";
-import cueStyles from "../ui/cue.module.css";
 import { MicTest } from "./MicTest";
-import { Tooltip } from "../ui/Tooltip";
+import { Tooltip } from "@shared/components/tooltip";
 
 /** How long it takes to come in or go out; it leaves the page once it's out. */
 const PANEL_MS = 260;
@@ -293,11 +294,6 @@ function QualityAndMode({
   );
 }
 
-/** The cue's ring over a control, drawn anew for each request so its pulses start over. */
-function CueRing({ n }: { n?: number }) {
-  return n ? <span key={n} className={cueStyles.cue} aria-hidden="true" data-cue /> : null;
-}
-
 /** `cue`: the request the tab's control is cued for, if any. */
 function ScreenTab(props: Props & { cue?: number }) {
   const { mine, screenSurface, onChangeWindow, busy, noSound } = props;
@@ -315,7 +311,7 @@ function ScreenTab(props: Props & { cue?: number }) {
               </span>
               <Tooltip text={"Pick another window or tab; viewers keep watching the same stream"}>
                 <button type="button" className={styles.button} disabled={busy} onClick={onChangeWindow}>
-                  <CueRing n={props.cue} />
+                  <Cue request={props.cue} />
                   Change
                 </button>
               </Tooltip>
@@ -336,8 +332,14 @@ function ScreenTab(props: Props & { cue?: number }) {
 
 function CameraTab(props: Props & { cue?: number }) {
   const { mine, cameras, cameraId, onPickCamera, cameraVideo, busy, cameraProblem } = props;
-  const problem =
-    !cameraVideo && cameraProblem ? (cameraProblem === "blocked" ? CAMERA_BLOCKED : CAMERA_MISSING) : null;
+  // Gone to from the live camera button: its list opens, once per request.
+  const [listOpen, setListOpen] = useState(false);
+  const [lastCue, setLastCue] = useState<number | undefined>(undefined);
+  if (props.cue !== lastCue) {
+    setLastCue(props.cue);
+    if (props.cue !== undefined && !busy) setListOpen(true);
+  }
+  const problem = cameraVideo ? null : cameraProblemWords(cameraProblem);
   return (
     <>
       {/* What you see (spec 0111, design decisions 3 and 4). */}
@@ -375,8 +377,8 @@ function CameraTab(props: Props & { cue?: number }) {
               value={cameraId ?? cameras[0].deviceId}
               disabled={busy}
               onChange={onPickCamera}
-              // Gone to from the live camera button: its list opens (spec 0115).
-              openSignal={props.cue}
+              open={listOpen}
+              onOpenChange={setListOpen}
               // Cued round the pill and its open list together (spec 0123).
               cue={props.cue}
             />

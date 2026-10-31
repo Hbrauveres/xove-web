@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { onFakeClock } from "../../testing/factories/clock.factory";
-import { OPEN_DELAY_MS } from "../ui/DropUp";
+import { OPEN_DELAY_MS } from "@shared/constants/floating.constants";
 import { FULL_ROOM, NO_SCREEN, NO_SOUND, PlayerButtons } from "./PlayerButtons";
 
 const CAMERAS = [
@@ -139,7 +139,7 @@ describe("stream buttons: the drop-ups (spec 0107)", () => {
     expect(pill.closest("[data-picker]")).toHaveAttribute("data-look", "glass");
     await user.click(pill);
     expect(onMenuChange).toHaveBeenLastCalledWith(true);
-    await user.click(within(quick).getByRole("radio", { name: "Integrated Webcam" }));
+    await user.click(within(quick).getByRole("menuitemradio", { name: "Integrated Webcam" }));
     expect(onPickCamera).toHaveBeenCalledWith("cam-2");
   });
 });

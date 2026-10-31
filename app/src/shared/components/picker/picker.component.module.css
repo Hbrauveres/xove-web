@@ -1,0 +1,94 @@
+/*
+ * The picker. Closed: a pill as tall as the panel's
+ * controls (`--ctl`). Open: the pill and its list are one box, in the pill's own colour, with
+ * no gap. The list floats: down over its panel (what's behind it is masked),
+ * or upward over the video in the glass. It unrolls from the pill and rolls back.
+ */
+.picker {
+  --pick-bg: var(--white-05);
+  --pick-hover: var(--panel-line);
+  --pick-r: var(--radius-2-5);
+  --pick-pad: var(--space-3);
+  position: relative;
+  display: grid;
+  /* Never wider than its box, whatever the names: the pill and its list stay one width. */
+  min-width: 0;
+}
+
+.picker[data-look="glass"] {
+  --pick-bg: var(--glass);
+  --pick-hover: var(--grey-40-85);
+  --pick-r: var(--radius-4-5);
+  --pick-pad: var(--space-3-5);
+}
+
+.pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  min-width: 0;
+  height: var(--ctl, var(--control-lg));
+  padding: 0 var(--pick-pad);
+  border: 0;
+  border-radius: var(--pick-r);
+  background: var(--pick-bg);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--pick-font, var(--text-sm));
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--duration-120) ease;
+}
+
+.picker[data-look="glass"] .pill {
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(var(--blur-2));
+  box-shadow: 0 var(--space-1) var(--space-4) var(--black-35);
+}
+
+.pill:hover {
+  background: var(--pick-hover);
+}
+
+/* A name too long for its row ends in "…", on one line; the whole name is its tooltip. */
+.chosen {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chosen {
+  flex: 1;
+}
+
+.chevron {
+  flex: none;
+  color: var(--text-muted);
+  transition: transform var(--duration-200) var(--ease-out);
+}
+
+.pill[aria-expanded="true"] .chevron {
+  transform: rotate(180deg);
+}
+
+/* Open: one box. The pill keeps its colour (no hover change) and squares the side it opens on. */
+.picker[data-open] .pill,
+.picker[data-open] .pill:hover {
+  background: var(--pick-bg);
+  border-radius: var(--pick-r) var(--pick-r) 0 0;
+}
+
+.picker[data-open][data-opens="up"] .pill {
+  border-radius: 0 0 var(--pick-r) var(--pick-r);
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill,
+  .chevron {
+    transition: none;
+  }
+}

@@ -2,9 +2,8 @@ import "@testing-library/jest-dom/vitest";
 import { cleanup, configure } from "@testing-library/react";
 import { afterEach, vi } from "vitest";
 import { resetTv } from "../components/stage/staticBands";
-import { resetFloating } from "../components/ui/floating";
+import { floatingStore } from "@shared/stores/floating-store";
 import { resetToast } from "../components/ui/toast";
-import { resetTooltipWarmth } from "../components/ui/Tooltip";
 import { fakeCameras, fakeMics, resetFakeLiveKit, rooms } from "./fakeLiveKit";
 
 // findBy and waitFor give up after 1 s: a wait that needs longer is a delay that belongs on fake
@@ -35,8 +34,7 @@ afterEach(() => {
   }
   resetFakeLiveKit();
   resetToast();
-  resetFloating();
-  resetTooltipWarmth();
+  floatingStore.reset();
   resetTv();
   resetBrowserStandIns();
 });

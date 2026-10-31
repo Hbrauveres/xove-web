@@ -6,6 +6,7 @@ import { aSharer } from "../../testing/factories/sharer.factory";
 import { aTrack } from "../../testing/factories/track.factory";
 import type { FakeTrack } from "../../testing/fakeLiveKit";
 import type { Sharer } from "@features/room/types/room-view.types";
+import { floatingStore } from "@shared/stores/floating-store";
 import { AlsoLive } from "./AlsoLive";
 import type { Hearing } from "./HearToggles";
 
@@ -228,6 +229,7 @@ describe("also live (specs 0104 and 0123)", () => {
     await user.tab();
     await user.keyboard("{Escape}");
     expect(preview(/^Watch Ana/)).toHaveFocus();
+    expect(document.querySelector('[data-tray-for="user-3"]')).toHaveAttribute("data-leaving");
   });
 
   it("greys a sound that isn't there, in its place, saying why", async () => {
@@ -285,5 +287,14 @@ describe("also live (specs 0104 and 0123)", () => {
   it("has no box at all when all 6 seats are taken", () => {
     const { container } = render(<Harness others={[ana()]} live={6} free={0} />);
     expect(container.querySelector("[data-free]")).toBeNull();
+  });
+
+  it("doesn't open a row on a rest over what I opened", () => {
+    const close = vi.fn();
+    floatingStore.add({ kind: "opened", close, area: () => null });
+    render(<Harness others={[bruno()]} />);
+    fireEvent.pointerEnter(preview(/^Watch Bruno/).closest("li")!);
+    expect(document.querySelector("[data-tray-for]")).toBeNull();
+    expect(close).not.toHaveBeenCalled();
   });
 });

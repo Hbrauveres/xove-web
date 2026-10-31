@@ -110,7 +110,7 @@ Small pieces used in many places. Each is built once and reused everywhere.
 
 ### Menu
 
-*Building block* · `shared/components/menu/`
+*Building block* · `shared/components/dropdown/`, on the floating layer (`shared/stores/floating-store/`)
 
 <table><tr>
 <td><img src="img/next/my-menu.webp" width="324" alt="My menu"><br><sub>My menu</sub></td>

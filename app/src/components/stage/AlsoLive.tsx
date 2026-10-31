@@ -4,11 +4,12 @@ import { ScreenVideo } from "./ScreenVideo";
 import { stackOf, useSwapping } from "./stack";
 import { HearToggles, type Hearing } from "./HearToggles";
 import { PreviewTray } from "./PreviewTray";
+import { floatingStore } from "@shared/stores/floating-store";
 import { usePreviewTray } from "./usePreviewTray";
 import { useKeyboardLast } from "@features/room/hooks/use-keyboard-last.hook";
 import { seatsOpen } from "./NowWatching";
 import styles from "./AlsoLive.module.css";
-import { Tooltip } from "../ui/Tooltip";
+import { Tooltip } from "@shared/components/tooltip";
 
 type Props = {
   /** Everyone sharing except the person on the stage, longest first. */
@@ -64,7 +65,7 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
               data-swapping={swapping === id || undefined}
               data-talking={talking || undefined}
               onPointerEnter={(e) => {
-                if (!s.isMe || both) tray.show(id, e.currentTarget);
+                if ((!s.isMe || both) && floatingStore.canRest()) tray.show(id, e.currentTarget);
               }}
               onPointerLeave={() => tray.leave()}
             >
@@ -80,7 +81,8 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
                 aria-label={`Watch ${whose} ${what}`}
                 // By keyboard, focusing a preview opens its row, and Tab goes into it (spec 0131).
                 onFocus={(e) => {
-                  if (keyboardLast() && (!s.isMe || both)) tray.show(id, e.currentTarget.closest("li")!);
+                  if (keyboardLast() && (!s.isMe || both) && floatingStore.canRest())
+                    tray.show(id, e.currentTarget.closest("li")!);
                 }}
                 onBlur={(e) => {
                   const to = e.relatedTarget as Element | null;

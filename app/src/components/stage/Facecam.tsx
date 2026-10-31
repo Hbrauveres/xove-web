@@ -3,7 +3,7 @@ import { useRef } from "react";
 import type { MediaTrack } from "@services/livekit-service";
 import { ScreenVideo } from "./ScreenVideo";
 import styles from "./Facecam.module.css";
-import { Tooltip } from "../ui/Tooltip";
+import { Tooltip } from "@shared/components/tooltip";
 
 /** Where the facecam sits over the player: its top-left corner, as fractions of the player (0 to 1). */
 export type FacecamPlace = { x: number; y: number };

@@ -4,11 +4,11 @@ import { useState, type ReactNode } from "react";
 import type { CameraDevice, ScreenSurface } from "@services/media-devices-service";
 import { usePinnedRow } from "../../hooks/usePinnedRow";
 import type { StreamKind } from "@services/xove-api-service";
-import { DropUp } from "../ui/DropUp";
-import drop from "../ui/DropUp.module.css";
-import { Picker } from "../ui/Picker";
+import { DropUp } from "@shared/components/drop-up";
+import { DropUpRow } from "@shared/components/drop-up-row";
+import { Picker } from "@shared/components/picker";
 import styles from "./PlayerButtons.module.css";
-import { Tooltip } from "../ui/Tooltip";
+import { Tooltip } from "@shared/components/tooltip";
 
 export const FULL_ROOM = "6 streams are live, the most at once. You can start yours when one stops.";
 /** Why the screen button and the Screen tab are greyed out where the browser can't share a screen. */
@@ -128,9 +128,9 @@ function StreamButton({
   const label = live ? LABEL[kind].stop : LABEL[kind].start;
   const tip = unavailable ? NO_SCREEN : full ? FULL_ROOM : silent ? `${label}. ${NO_SOUND}` : label;
   // The camera's list closes when its drop-up is left.
-  const [listClosed, setListClosed] = useState(false);
-  // Counts what's been done from the drop-up (Change, a camera picked): each one closes it.
-  const [done, setDone] = useState(0);
+  const [listOpen, setListOpen] = useState(false);
+  // Open while resting on it; what's done from it (Change, a camera picked) closes it.
+  const [upOpen, setUpOpen] = useState(false);
 
   const button = (
     <div className={styles.control}>
@@ -160,7 +160,7 @@ function StreamButton({
 
   const quick =
     kind === "screen" ? (
-      <div className={drop.row}>
+      <DropUpRow>
         <span className={styles.source}>
           <Icon name="window" size={20} />
           <span>{screenSurface ? SURFACE[screenSurface] : "Your screen"}</span>
@@ -171,14 +171,14 @@ function StreamButton({
             className={styles.change}
             disabled={busy}
             onClick={() => {
-              setDone((n) => n + 1);
+              setUpOpen(false);
               onChangeWindow();
             }}
           >
             Change
           </IconButton>
         </Tooltip>
-      </div>
+      </DropUpRow>
     ) : (
       <Picker
         label="Camera"
@@ -187,13 +187,13 @@ function StreamButton({
         opens="up"
         look="glass"
         disabled={busy}
-        closed={listClosed}
+        open={listOpen}
         onOpenChange={(open) => {
-          if (open) setListClosed(false);
+          setListOpen(open);
           onMenuChange?.(open);
         }}
         onChange={(deviceId) => {
-          setDone((n) => n + 1);
+          setUpOpen(false);
           onPickCamera(deviceId);
         }}
       />
@@ -204,8 +204,11 @@ function StreamButton({
       label={LABEL[kind].quick}
       enabled={live && (kind === "screen" || cameras.length > 0)}
       width={kind === "screen" ? 228 : 210}
-      onLeave={() => setListClosed(true)}
-      closeSignal={done}
+      open={upOpen}
+      onOpenChange={(open) => {
+        setUpOpen(open);
+        if (!open) setListOpen(false);
+      }}
       // The settings already show these controls: the gesture goes there instead (spec 0115).
       redirect={settingsOpen && onGoTo ? () => onGoTo(kind) : undefined}
       trigger={button}

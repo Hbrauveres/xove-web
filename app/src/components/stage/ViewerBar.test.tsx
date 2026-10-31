@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { onFakeClock } from "../../testing/factories/clock.factory";
-import { TIP_REST_MS } from "../ui/Tooltip";
+import { TIP_REST_MS } from "@shared/constants/floating.constants";
 import { ViewerBar, type Sound } from "./ViewerBar";
 
 // Fresh handlers per render, so no test sees another's calls.
@@ -201,5 +201,67 @@ describe("the bar over someone else's stream (spec 0123): me, at the right", () 
   it("is only the settings over an empty stage, in the corner (spec 0147)", () => {
     render(<ViewerBar {...base()} settingsOnly />);
     expect(screen.getAllByRole("button").map((b) => b.getAttribute("aria-label"))).toEqual(["Settings"]);
+  });
+});
+
+describe("the bar on the floating layer (#187)", () => {
+  const sliderOpen = () => screen.getByRole("slider", { name: "Screen sound volume" }).closest("[inert]") === null;
+  const restOnSound = () => {
+    vi.useFakeTimers();
+    render(<Bruno />);
+    fireEvent.pointerEnter(screen.getByRole("button", { name: "Mute the screen's sound" }).parentElement!, {
+      pointerType: "mouse",
+    });
+    act(() => vi.advanceTimersByTime(150));
+    expect(sliderOpen()).toBe(true);
+  };
+
+  it("a press outside closes an open slider", () => {
+    restOnSound();
+    fireEvent.pointerDown(document.body);
+    expect(sliderOpen()).toBe(false);
+  });
+
+  it("Escape closes an open slider and goes back to its button", () => {
+    restOnSound();
+    fireEvent.keyDown(document.body, { key: "Escape" });
+    expect(sliderOpen()).toBe(false);
+    expect(screen.getByRole("button", { name: "Mute the screen's sound" })).toHaveFocus();
+  });
+
+  it("a press outside closes Go live's menu; Escape closes it and goes back to its button", async () => {
+    const user = userEvent.setup();
+    render(<ViewerBar {...base()} />);
+    const goLive = screen.getByRole("button", { name: "Go live" });
+    await user.click(goLive);
+    fireEvent.pointerDown(document.body);
+    expect(screen.queryByRole("menu")).toBeNull();
+    await user.click(goLive);
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("menu")).toBeNull();
+    expect(goLive).toHaveFocus();
+  });
+
+  it("a mouse rest doesn't open a slider over the menu I opened", async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    vi.useFakeTimers();
+    render(<ViewerBar {...base()} sound={{ volume: 1, muted: false, onChange: vi.fn() }} />);
+    await user.click(screen.getByRole("button", { name: "Go live" }));
+    fireEvent.pointerEnter(screen.getByRole("button", { name: "Mute the screen's sound" }).parentElement!, {
+      pointerType: "mouse",
+    });
+    act(() => vi.advanceTimersByTime(150));
+    expect(sliderOpen()).toBe(false);
+    expect(screen.getByRole("menu")).toBeInTheDocument();
+  });
+
+  it("the keyboard's focus doesn't open a slider over the menu I opened either", async () => {
+    const user = userEvent.setup();
+    render(<ViewerBar {...base()} sound={{ volume: 1, muted: false, onChange: vi.fn() }} />);
+    await user.click(screen.getByRole("button", { name: "Go live" }));
+    await user.tab({ shift: true });
+    await user.tab({ shift: true });
+    expect(sliderOpen()).toBe(false);
+    expect(screen.getByRole("menu")).toBeInTheDocument();
   });
 });
