@@ -43,13 +43,6 @@
   },
   {
     "tool": "code",
-    "rule": "domQuery",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
     "rule": "history",
     "file": "src/brand/mark.ts",
     "count": 3,
@@ -555,27 +548,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/shared/components/dropdown/dropdown.component.module.css",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/shared/components/picker/picker.component.module.css",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/shared/components/tooltip/tooltip.component.module.css",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/testing/fakeApi.ts",
     "count": 2,
     "owner": "#195 the sweep"
@@ -628,13 +600,6 @@
     "file": "src/pages/HomePage.tsx",
     "count": 3,
     "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "lineLength",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
@@ -1851,7 +1816,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 15,
+    "count": 14,
     "owner": "#193 settings"
   },
   {
@@ -3032,13 +2997,6 @@
   },
   {
     "tool": "lint",
-    "rule": "eslint(complexity)",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 2,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
     "rule": "eslint(max-lines-per-function)",
     "file": "src/components/room/AccountButton.tsx",
     "count": 1,
@@ -3169,27 +3127,6 @@
     "file": "src/pages/RoomPage.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/shared/components/drop-up/drop-up.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/shared/components/tooltip/tooltip.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "lint",
@@ -3361,20 +3298,6 @@
   },
   {
     "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 3,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/shared/components/tooltip/tooltip.component.tsx",
-    "count": 2,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
     "rule": "jsx-a11y(click-events-have-key-events)",
     "file": "src/components/stage/HearToggles.tsx",
     "count": 1,
@@ -3463,13 +3386,6 @@
     "file": "src/components/stage/PreviewTray.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(no-static-element-interactions)",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "lint",
@@ -3564,20 +3480,6 @@
   },
   {
     "tool": "lint",
-    "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/shared/components/drop-up/drop-up.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
     "rule": "react-hooks(exhaustive-deps)",
     "file": "src/components/stage/Stage.tsx",
     "count": 2,
@@ -3589,13 +3491,6 @@
     "file": "src/components/stage/NowWatching.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "react(refs)",
-    "file": "src/shared/components/tooltip/tooltip.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "lint",
@@ -3676,20 +3571,6 @@
   },
   {
     "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/shared/components/drop-up/drop-up.component.tsx",
-    "count": 3,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 3,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
     "rule": "typescript(no-non-null-assertion)",
     "file": "src/components/stage/AlsoLive.tsx",
     "count": 2,
@@ -3764,13 +3645,6 @@
     "file": "src/components/stage/Stage.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2345",
-    "file": "src/shared/components/drop-up/drop-up.component.test.tsx",
-    "count": 3,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "tsc",
@@ -3869,13 +3743,6 @@
     "file": "src/components/stage/SettingsPanel.test.tsx",
     "count": 4,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2379",
-    "file": "src/shared/components/tooltip/tooltip.component.test.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "tsc",
@@ -3988,13 +3855,6 @@
     "file": "src/testing/setup.ts",
     "count": 2,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2769",
-    "file": "src/shared/components/tooltip/tooltip.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "unused",

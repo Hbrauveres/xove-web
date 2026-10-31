@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { WARM_MS } from "@shared/constants/floating.constants";
 import { FloatingStore } from "./floating.store";
 import type { Floating, FloatingKind } from "./types/floating.types";
 
@@ -155,5 +156,18 @@ describe("closing", () => {
     store.add(tip.f);
     store.remove(tip.f);
     expect(escape().defaultPrevented).toBe(false);
+  });
+
+  it("a tooltip that hid keeps the next one warm for a moment, until a reset", () => {
+    vi.useFakeTimers();
+    const { store } = setup();
+    expect(store.isWarm()).toBe(false);
+    store.warmUp();
+    expect(store.isWarm()).toBe(true);
+    vi.advanceTimersByTime(WARM_MS);
+    expect(store.isWarm()).toBe(false);
+    store.warmUp();
+    store.reset();
+    expect(store.isWarm()).toBe(false);
   });
 });

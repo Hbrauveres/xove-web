@@ -1,3 +1,4 @@
+import { WARM_MS } from "@shared/constants/floating.constants";
 import type { Floating } from "./types/floating.types";
 import { belongsTo, buttonIn } from "./utils/floating.util";
 
@@ -8,6 +9,7 @@ import { belongsTo, buttonIn } from "./utils/floating.util";
  */
 export class FloatingStore {
   private showing: Floating[] = [];
+  private warmUntil = 0;
 
   /** Something starts floating: whatever it replaces closes first. */
   add(floating: Floating) {
@@ -34,8 +36,19 @@ export class FloatingStore {
     this.closeWhere((f) => f.kind !== "opened" && f.close !== keep && !(anchor && f.area()?.contains(anchor)));
   }
 
-  /** Only for tests: nothing floats, and nothing is closed on the way. */
+  /** Whether a tooltip just hid, so the next one shows at once. */
+  isWarm() {
+    return Date.now() < this.warmUntil;
+  }
+
+  /** A tooltip hid: the next along the row shows at once for a moment. */
+  warmUp() {
+    this.warmUntil = Date.now() + WARM_MS;
+  }
+
+  /** Only for tests: nothing floats, no tooltip just hid, and nothing is closed on the way. */
   reset() {
+    this.warmUntil = 0;
     if (this.showing.length) this.stopListening();
     this.showing = [];
   }

@@ -1,4 +1,4 @@
-/* The app's one tooltip (spec 0133): the round buttons' look, floating on its own layer. */
+/* The app's one tooltip: the round buttons' look, floating on its own layer. */
 .tip {
   position: fixed;
   left: calc(var(--space-offscreen) * -1);

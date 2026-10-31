@@ -27,16 +27,16 @@ describe("Picker, the app's one-box picker", () => {
   it("shows the chosen option in its pill, closed", () => {
     const { pill } = setup();
     expect(pill).toHaveAttribute("aria-expanded", "false");
-    expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
+    expect(screen.queryByRole("menu")).not.toBeInTheDocument();
   });
 
   it("opens into one box with the other options only: the chosen one stays in the pill", async () => {
     const { user, pill } = setup();
     await user.click(pill);
     expect(pill).toHaveAttribute("aria-expanded", "true");
-    const list = screen.getByRole("radiogroup", { name: "Camera" });
+    const list = screen.getByRole("menu", { name: "Camera" });
     const names = within(list)
-      .getAllByRole("radio")
+      .getAllByRole("menuitemradio")
       .map((r) => r.textContent);
     expect(names).toEqual(["MacBook Pro camera", "OBS Virtual Camera"]);
   });
@@ -44,7 +44,7 @@ describe("Picker, the app's one-box picker", () => {
   it("picks one and closes", async () => {
     const { user, pill, onChange } = setup();
     await user.click(pill);
-    await user.click(screen.getByRole("radio", { name: "OBS Virtual Camera" }));
+    await user.click(screen.getByRole("menuitemradio", { name: "OBS Virtual Camera" }));
     expect(onChange).toHaveBeenCalledWith("obs");
     expect(pill).toHaveAttribute("aria-expanded", "false");
   });
@@ -64,9 +64,9 @@ describe("Picker, the app's one-box picker", () => {
     const { user, pill } = setup();
     pill.focus();
     await user.keyboard("{ArrowDown}");
-    expect(screen.getByRole("radio", { name: "MacBook Pro camera" })).toHaveFocus();
+    expect(screen.getByRole("menuitemradio", { name: "MacBook Pro camera" })).toHaveFocus();
     await user.keyboard("{ArrowDown}");
-    expect(screen.getByRole("radio", { name: "OBS Virtual Camera" })).toHaveFocus();
+    expect(screen.getByRole("menuitemradio", { name: "OBS Virtual Camera" })).toHaveFocus();
   });
 
   it("can be told to close (its drop-up was left), and says when it opens or closes", async () => {
@@ -118,7 +118,7 @@ describe("Picker: floating over its panel (spec 0111)", () => {
     );
     const at: Record<string, [number, number]> = { list: [40, 140], under: [80, 120], far: [300, 340] };
     vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
-      const key = this.getAttribute("role") === "radiogroup" ? "list" : (this.dataset.testid ?? "");
+      const key = this.getAttribute("role") === "menu" ? "list" : (this.dataset.testid ?? "");
       const [top, bottom] = at[key] ?? [0, 0];
       return { top, bottom, left: 0, right: 300, width: 300, height: bottom - top, x: 0, y: top } as DOMRect;
     });
@@ -189,12 +189,12 @@ describe("Picker: floating over its panel (spec 0111)", () => {
     render(<Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} />);
     const pill = screen.getByRole("button", { name: "Camera: Webcam C920" });
     await user.click(pill);
-    const list = document.querySelector("[data-picker] [role=radiogroup]")!;
+    const list = document.querySelector("[data-picker] [role=menu]")!;
     await user.click(pill);
     expect(pill).toHaveAttribute("aria-expanded", "false");
     expect(list.isConnected).toBe(true);
     expect(list).toHaveAttribute("aria-hidden", "true");
-    expect(screen.queryByRole("radio")).toBeNull();
+    expect(screen.queryByRole("menuitemradio")).toBeNull();
     act(() => vi.advanceTimersByTime(200));
     expect(list.isConnected).toBe(false);
     vi.useRealTimers();
@@ -203,14 +203,14 @@ describe("Picker: floating over its panel (spec 0111)", () => {
   it("unrolls its options in order, the nearest to the pill first", async () => {
     const { user, pill } = setup();
     await user.click(pill);
-    const order = screen.getAllByRole("radio").map((r) => (r as HTMLElement).style.getPropertyValue("--k"));
+    const order = screen.getAllByRole("menuitemradio").map((r) => (r as HTMLElement).style.getPropertyValue("--k"));
     expect(order).toEqual(["0", "1"]);
   });
 
   it("upward, the nearest is the last one", async () => {
     const { user, pill } = setup({ opens: "up", look: "glass" });
     await user.click(pill);
-    const order = screen.getAllByRole("radio").map((r) => (r as HTMLElement).style.getPropertyValue("--k"));
+    const order = screen.getAllByRole("menuitemradio").map((r) => (r as HTMLElement).style.getPropertyValue("--k"));
     expect(order).toEqual(["1", "0"]);
   });
 });
@@ -227,7 +227,7 @@ describe("Picker: long names and an upward list (spec 0114)", () => {
     const pill = screen.getByRole("button", { name: "Camera: EMEET STUDIO Virtual Camera" });
     expect(pill).toHaveAccessibleDescription("EMEET STUDIO Virtual Camera");
     await user.click(pill);
-    expect(screen.getByRole("radio", { name: "EMEET PIXY (328f:00c0)" })).toHaveAccessibleDescription(
+    expect(screen.getByRole("menuitemradio", { name: "EMEET PIXY (328f:00c0)" })).toHaveAccessibleDescription(
       "EMEET PIXY (328f:00c0)",
     );
   });
@@ -237,7 +237,7 @@ describe("Picker: long names and an upward list (spec 0114)", () => {
     vi.spyOn(HTMLElement.prototype, "scrollHeight", "get").mockReturnValue(300);
     render(<Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} opens="up" look="glass" />);
     await user.click(screen.getByRole("button", { name: "Camera: Webcam C920" }));
-    expect(screen.getByRole("radiogroup", { name: "Camera" }).scrollTop).toBe(300);
+    expect(screen.getByRole("menu", { name: "Camera" }).scrollTop).toBe(300);
   });
 
   it("opened upward by the keyboard, focuses the option nearest the pill and stays at that end", async () => {
@@ -246,8 +246,8 @@ describe("Picker: long names and an upward list (spec 0114)", () => {
     render(<Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} opens="up" look="glass" />);
     screen.getByRole("button", { name: "Camera: Webcam C920" }).focus();
     await user.keyboard("{ArrowUp}");
-    expect(screen.getByRole("radio", { name: "OBS Virtual Camera" })).toHaveFocus();
-    expect(screen.getByRole("radiogroup", { name: "Camera" }).scrollTop).toBe(300);
+    expect(screen.getByRole("menuitemradio", { name: "OBS Virtual Camera" })).toHaveFocus();
+    expect(screen.getByRole("menu", { name: "Camera" }).scrollTop).toBe(300);
   });
 
   it("opens a downward list at its top", async () => {
@@ -255,7 +255,7 @@ describe("Picker: long names and an upward list (spec 0114)", () => {
     vi.spyOn(HTMLElement.prototype, "scrollHeight", "get").mockReturnValue(300);
     render(<Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} />);
     await user.click(screen.getByRole("button", { name: "Camera: Webcam C920" }));
-    expect(screen.getByRole("radiogroup", { name: "Camera" }).scrollTop).toBe(0);
+    expect(screen.getByRole("menu", { name: "Camera" }).scrollTop).toBe(0);
   });
 });
 
@@ -301,9 +301,7 @@ describe("Picker: cued (spec 0123, design decision 11)", () => {
     // Above the list (z-index 10), reaching down by the list's height.
     expect(ring.style.zIndex).toBe("11");
     expect(ring.style.bottom).toBe("calc(-1 * var(--list-h, 0px))");
-    expect(
-      ring.compareDocumentPosition(screen.getByRole("radiogroup")) & Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy();
+    expect(ring.compareDocumentPosition(screen.getByRole("menu")) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it("reaches up instead when the list opens upward, and draws no ring when not cued", () => {

@@ -20,3 +20,5 @@ export interface DropUpProps {
   redirect?: (() => void) | undefined;
   children: ReactNode;
 }
+
+export type DropUpOptions = Pick<DropUpProps, "enabled" | "open" | "onOpenChange" | "redirect">;

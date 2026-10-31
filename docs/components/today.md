@@ -308,7 +308,7 @@ The shared controls today, and the copies that become one component each.
 | Slider | `components/ui/Range.tsx` | `shared/components/slider/` | Kept |
 | Segmented control | `components/ui/Segmented.tsx` | `shared/components/segmented/` | Kept |
 | Floating layer | `shared/stores/floating-store/` | Here | Done (#187) |
-| Picker, drop-up, dropdown | `shared/components/picker/`, `drop-up/`, `drop-up-row/`, `dropdown/`, `dropdown-section/` | Here, on the floating layer | Done (#187) |
+| Picker, drop-up, dropdown | `shared/components/picker/`, `picker-list/`, `drop-up/`, `drop-up-row/`, `dropdown/`, `dropdown-section/` | Here, on the floating layer | Done (#187) |
 | Cue | `shared/components/cue/` | Here | Done (#187) |
 | Tooltip | `shared/components/tooltip/` | Here, on the floating layer | Done (#187) |
 | Avatar | `shared/components/face/` (was `ui/Avatar.tsx`, `PersonAvatar.tsx`): the room's colour and initial with its rings, the account's photo | Already there | Merged |

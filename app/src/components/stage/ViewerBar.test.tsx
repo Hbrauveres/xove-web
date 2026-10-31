@@ -254,4 +254,14 @@ describe("the bar on the floating layer (#187)", () => {
     expect(sliderOpen()).toBe(false);
     expect(screen.getByRole("menu")).toBeInTheDocument();
   });
+
+  it("the keyboard's focus doesn't open a slider over the menu I opened either", async () => {
+    const user = userEvent.setup();
+    render(<ViewerBar {...base()} sound={{ volume: 1, muted: false, onChange: vi.fn() }} />);
+    await user.click(screen.getByRole("button", { name: "Go live" }));
+    await user.tab({ shift: true });
+    await user.tab({ shift: true });
+    expect(sliderOpen()).toBe(false);
+    expect(screen.getByRole("menu")).toBeInTheDocument();
+  });
 });

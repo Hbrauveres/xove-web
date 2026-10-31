@@ -213,7 +213,8 @@ function Hear({
     idle.current = window.setTimeout(closeMine, IDLE_MS);
   };
   const show = () => {
-    if (s.unavailable) return;
+    // Never over what the person opened themselves, on a rest or the keyboard's focus.
+    if (s.unavailable || !floatingStore.canRest()) return;
     setOpen(kind);
     restart();
   };
@@ -232,10 +233,9 @@ function Hear({
       className={styles.anchor}
       // A voice I hear never fades with the controls: its speaking cue stays (spec 0131).
       data-stays={(kind === "voice" && !s.unavailable && !s.muted) || undefined}
-      onPointerEnter={(e) => {
+      onPointerEnter={() => {
         window.clearTimeout(leave.current);
-        const here = e.currentTarget;
-        rest.current = window.setTimeout(() => floatingStore.canRest(here) && show(), REST_MS);
+        rest.current = window.setTimeout(show, REST_MS);
       }}
       onPointerLeave={() => {
         window.clearTimeout(rest.current);

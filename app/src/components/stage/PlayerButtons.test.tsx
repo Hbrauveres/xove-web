@@ -139,7 +139,7 @@ describe("stream buttons: the drop-ups (spec 0107)", () => {
     expect(pill.closest("[data-picker]")).toHaveAttribute("data-look", "glass");
     await user.click(pill);
     expect(onMenuChange).toHaveBeenLastCalledWith(true);
-    await user.click(within(quick).getByRole("radio", { name: "Integrated Webcam" }));
+    await user.click(within(quick).getByRole("menuitemradio", { name: "Integrated Webcam" }));
     expect(onPickCamera).toHaveBeenCalledWith("cam-2");
   });
 });

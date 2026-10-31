@@ -14,6 +14,11 @@
 }
 
 .dropup {
+  /* A fieldset, with none of its own drawing. */
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
   /* Its controls: 36 px tall, 12 px text, like its row. */
   --ctl: var(--control-md);
   --pick-font: var(--text-xs);

@@ -2,7 +2,8 @@ import { LiveBadge } from "@shared/components/live-badge";
 import { Switch } from "@shared/components/switch";
 import { Icon } from "@shared/components/icon";
 import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
-import { CAMERA_BLOCKED, CAMERA_MISSING, CAMERA_QUALITIES, SHARE_QUALITIES } from "@services/media-devices-service";
+import { cameraProblemWords } from "@features/room/utils/camera-problem.util";
+import { CAMERA_QUALITIES, SHARE_QUALITIES } from "@services/media-devices-service";
 import type { CameraDevice, CameraProblem, MicDevice, ScreenSurface } from "@services/media-devices-service";
 import type { VoicePrefs } from "@services/preferences-service";
 import { useMicLevel } from "@features/room/hooks/use-mic-level.hook";
@@ -329,11 +330,6 @@ function ScreenTab(props: Props & { cue?: number }) {
   );
 }
 
-const problemWords = (problem: Props["cameraProblem"]) => {
-  if (!problem) return null;
-  return problem === "blocked" ? CAMERA_BLOCKED : CAMERA_MISSING;
-};
-
 function CameraTab(props: Props & { cue?: number }) {
   const { mine, cameras, cameraId, onPickCamera, cameraVideo, busy, cameraProblem } = props;
   // Gone to from the live camera button: its list opens, once per request.
@@ -343,7 +339,7 @@ function CameraTab(props: Props & { cue?: number }) {
     setLastCue(props.cue);
     if (props.cue !== undefined && !busy) setListOpen(true);
   }
-  const problem = cameraVideo ? null : problemWords(cameraProblem);
+  const problem = cameraVideo ? null : cameraProblemWords(cameraProblem);
   return (
     <>
       {/* What you see (spec 0111, design decisions 3 and 4). */}

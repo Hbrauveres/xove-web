@@ -1,6 +1,5 @@
-import type { ReactNode } from "react";
-
-type PickerOption<T extends string> = { value: T; label: string };
+import type { ReactNode, RefObject } from "react";
+import type { PickerOption } from "@shared/types/picker-option.types";
 
 export interface PickerProps<T extends string> {
   /** Its name for screen readers; the pill reads "<label>: <chosen>". */
@@ -23,4 +22,26 @@ export interface PickerProps<T extends string> {
   cue?: number | undefined;
   /** Shown in the pill before its arrow: the mic's live level. */
   adornment?: ReactNode;
+}
+
+export type Masked = HTMLElement | SVGElement;
+
+export interface MaskOptions {
+  root: RefObject<HTMLElement | null>;
+  list: RefObject<HTMLElement | null>;
+  open: boolean;
+  drawn: boolean;
+  down: boolean;
+}
+
+export interface ListSizeState {
+  open: boolean;
+  drawn: boolean;
+  up: boolean;
+}
+
+export interface PickerKeysState {
+  open: boolean;
+  up: boolean;
+  setOpen: (open: boolean) => void;
 }

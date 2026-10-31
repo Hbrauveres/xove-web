@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { LEAVE_GRACE_MS, OPEN_DELAY_MS, TIP_REST_MS } from "@shared/constants/floating.constants";
+import { floatingStore } from "@shared/stores/floating-store";
 import { DropUp } from "./drop-up.component";
 import { Tooltip } from "@shared/components/tooltip";
 
@@ -61,9 +62,8 @@ describe("DropUp, the quick-access pill over a live button", () => {
         </DropUp>
       </div>,
     );
-    const [screenUp, cameraUp] = ["Stop sharing your screen", "Turn off your camera"].map((name) =>
-      screen.getByRole("button", { name }).closest("[data-dropup]")!,
-    );
+    const upOf = (name: string) => screen.getByRole("button", { name }).closest("[data-dropup]")!;
+    const [screenUp, cameraUp] = [upOf("Stop sharing your screen"), upOf("Turn off your camera")];
     fireEvent.pointerEnter(screenUp);
     act(() => vi.advanceTimersByTime(OPEN_DELAY_MS));
     expect(screenUp).toHaveAttribute("data-open", "true");
@@ -172,7 +172,7 @@ describe("DropUp, the quick-access pill over a live button", () => {
   it("is out of reach while closed", () => {
     onDevice();
     setup();
-    expect(document.querySelector("[data-dropup] [role=group]")).toHaveAttribute("inert");
+    expect(document.querySelector("[data-dropup] fieldset")).toHaveAttribute("inert");
   });
 
   it("keeps its button, and the keyboard's focus on it, when the stream starts or stops", () => {
@@ -226,5 +226,35 @@ describe("DropUp redirected: another panel shows the setting (spec 0115)", () =>
     fireEvent.focus(button);
     expect(redirect).not.toHaveBeenCalled();
     expect(shown()).toBe(false);
+  });
+
+  it("doesn't unroll on a rest or the keyboard's focus over what I opened, which stays", () => {
+    vi.useFakeTimers();
+    const close = vi.fn();
+    floatingStore.add({ kind: "opened", close, area: () => null });
+    render(
+      <DropUp label="Quick" enabled trigger={<button>Trigger</button>}>
+        <button>Inside</button>
+      </DropUp>,
+    );
+    const up = screen.getByRole("button", { name: "Trigger" }).closest("[data-dropup]")!;
+    fireEvent.pointerEnter(up);
+    act(() => vi.advanceTimersByTime(OPEN_DELAY_MS));
+    expect(up).toHaveAttribute("data-open", "false");
+    expect(close).not.toHaveBeenCalled();
+  });
+
+  it("tells whoever holds it that it closed when its stream stops, after rendering", () => {
+    const onOpenChange = vi.fn();
+    const quiet = vi.spyOn(console, "error");
+    const up = (enabled: boolean) => (
+      <DropUp label="Quick" enabled={enabled} open onOpenChange={onOpenChange} trigger={<button>Trigger</button>}>
+        <button>Inside</button>
+      </DropUp>
+    );
+    const { rerender } = render(up(true));
+    rerender(up(false));
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(quiet).not.toHaveBeenCalled();
   });
 });

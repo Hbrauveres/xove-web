@@ -2,13 +2,13 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TIP_REST_MS } from "@shared/constants/floating.constants";
 import { Tooltip } from "./tooltip.component";
-import { resetTooltipWarmth } from "./utils/warmth.util";
+import { floatingStore } from "@shared/stores/floating-store";
 
 beforeEach(() => vi.useFakeTimers());
 
 const shown = () => document.querySelector('[role="tooltip"][data-shown]');
 
-function setup(props: { text?: string; hidden?: boolean } = {}) {
+function setup(props: { text?: string | undefined; hidden?: boolean } = {}) {
   render(
     <div>
       <Tooltip text="Turn on your camera" {...props}>
@@ -48,7 +48,7 @@ describe("the app's one tooltip (spec 0133)", () => {
     fireEvent.pointerEnter(camera, { pointerType: "mouse" });
     act(() => vi.advanceTimersByTime(TIP_REST_MS));
     fireEvent.pointerLeave(camera, { pointerType: "mouse" });
-    resetTooltipWarmth();
+    floatingStore.reset();
     fireEvent.pointerEnter(cog, { pointerType: "mouse" });
     expect(shown()).toBeNull();
   });
@@ -150,5 +150,16 @@ describe("the app's one tooltip (spec 0133)", () => {
     act(() => vi.advanceTimersByTime(TIP_REST_MS));
     expect(shown()).toBeNull();
     expect(camera).not.toHaveAccessibleDescription();
+  });
+
+  it("leaves what I opened open", () => {
+    vi.useFakeTimers();
+    const close = vi.fn();
+    floatingStore.add({ kind: "opened", close, area: () => null });
+    const { camera } = setup();
+    fireEvent.pointerEnter(camera, { pointerType: "mouse" });
+    act(() => vi.advanceTimersByTime(TIP_REST_MS));
+    expect(shown()).not.toBeNull();
+    expect(close).not.toHaveBeenCalled();
   });
 });

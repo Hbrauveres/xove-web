@@ -775,7 +775,7 @@ describe("room: change window and pick a camera", () => {
 
     const menu = await openMenu(user, "Camera");
     await user.click(await menu.findByRole("button", { name: "Camera: Logitech C920" }));
-    await user.click(menu.getByRole("radio", { name: "Integrated Webcam" }));
+    await user.click(menu.getByRole("menuitemradio", { name: "Integrated Webcam" }));
 
     await waitFor(() => expect(camera.restartTrack).toHaveBeenCalled());
     expect(lastRoom().localParticipant.camera?.track).toBe(camera);
@@ -1540,7 +1540,7 @@ describe("room: my voice", () => {
     const panel = await openMenu(user, "Voice");
 
     await user.click(panel.getByRole("button", { name: /^Microphone: / }));
-    await user.click(panel.getByRole("radio", { name: "MacBook Pro microphone" }));
+    await user.click(panel.getByRole("menuitemradio", { name: "MacBook Pro microphone" }));
     const track = mic()!.track;
     await waitFor(() =>
       expect(track.restartTrack).toHaveBeenLastCalledWith(expect.objectContaining({ deviceId: { ideal: "mic-2" } })),
