@@ -1,9 +1,9 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef } from "react";
 import { useFloating } from "@shared/stores/floating-store";
-import { ROLL_MS } from "./constants/dropdown.constants";
 import styles from "./dropdown.component.module.css";
 import type { DropdownProps } from "./types/dropdown.types";
 import { useMenuArrows } from "./hooks/use-menu-arrows.hook";
+import { useRoll } from "./hooks/use-roll.hook";
 import { takeFocus } from "./utils/take-focus.util";
 
 /**
@@ -24,24 +24,8 @@ export function Dropdown({
 }: DropdownProps) {
   const id = useId();
   const panel = useRef<HTMLDivElement>(null);
-  // Stays on the page while it rolls up.
-  const [mounted, setMounted] = useState(open);
-  const [unrolled, setUnrolled] = useState(false);
+  const { mounted, rolledOut } = useRoll(open);
   useFloating({ open, kind: "opened", close: onClose, area: () => panel.current, anchor: () => anchor.current });
-
-  if (open && !mounted) setMounted(true);
-  if (!open && unrolled) setUnrolled(false);
-  const rolledOut = unrolled && open;
-
-  useEffect(() => {
-    if (open) {
-      // One frame rolled up, then unroll: the height has something to animate from.
-      const frame = requestAnimationFrame(() => setUnrolled(true));
-      return () => cancelAnimationFrame(frame);
-    }
-    const timer = window.setTimeout(() => setMounted(false), ROLL_MS);
-    return () => window.clearTimeout(timer);
-  }, [open]);
 
   // Opening: take the focus.
   useEffect(() => {

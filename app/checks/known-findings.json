@@ -1,20 +1,6 @@
 [
   {
     "tool": "code",
-    "rule": "crossCss",
-    "file": "src/components/stage/PlayerButtons.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "crossCss",
-    "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
     "rule": "cssText",
     "file": "src/brand/brand.test.ts",
     "count": 2,
@@ -51,16 +37,16 @@
   {
     "tool": "code",
     "rule": "domQuery",
-    "file": "src/shared/components/picker/picker.component.tsx",
+    "file": "src/main.tsx",
     "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
+    "owner": "#194 home, request access, admin, the shell"
   },
   {
     "tool": "code",
     "rule": "domQuery",
-    "file": "src/main.tsx",
+    "file": "src/shared/components/picker/picker.component.tsx",
     "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
+    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
@@ -290,7 +276,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/HearToggles.tsx",
-    "count": 6,
+    "count": 5,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -374,7 +360,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 14,
+    "count": 13,
     "owner": "#193 settings"
   },
   {
@@ -458,7 +444,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/ViewerBar.tsx",
-    "count": 7,
+    "count": 6,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -467,48 +453,6 @@
     "file": "src/components/stage/VoiceAudio.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/shared/components/cue/cue.component.module.css",
-    "count": 2,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/shared/components/dropdown/dropdown.component.module.css",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/ui/Dropdown.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/ui/floating.ts",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/shared/components/picker/picker.component.module.css",
-    "count": 3,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 11,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
@@ -544,20 +488,6 @@
     "file": "src/components/ui/Toast.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/shared/components/tooltip/tooltip.component.module.css",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/shared/components/tooltip/tooltip.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
@@ -625,6 +555,27 @@
   {
     "tool": "code",
     "rule": "history",
+    "file": "src/shared/components/dropdown/dropdown.component.module.css",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/shared/components/picker/picker.component.module.css",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
+    "file": "src/shared/components/tooltip/tooltip.component.module.css",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "code",
+    "rule": "history",
     "file": "src/testing/fakeApi.ts",
     "count": 2,
     "owner": "#195 the sweep"
@@ -674,16 +625,16 @@
   {
     "tool": "code",
     "rule": "lineLength",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
+    "file": "src/pages/HomePage.tsx",
+    "count": 3,
+    "owner": "#194 home, request access, admin, the shell"
   },
   {
     "tool": "code",
     "rule": "lineLength",
-    "file": "src/pages/HomePage.tsx",
-    "count": 3,
-    "owner": "#194 home, request access, admin, the shell"
+    "file": "src/shared/components/picker/picker.component.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
@@ -1325,69 +1276,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/shared/components/cue/cue.component.module.css",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/shared/components/dropdown/dropdown.component.module.css",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/shared/components/dropdown/dropdown.component.test.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/Dropdown.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/shared/components/drop-up/drop-up.component.module.css",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/shared/components/drop-up/drop-up.component.test.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/shared/components/drop-up/drop-up.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/floating.test.ts",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/floating.ts",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/components/ui/FullPageMessage.module.css",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
@@ -1398,27 +1286,6 @@
     "file": "src/components/ui/FullPageMessage.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/shared/components/picker/picker.component.module.css",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/shared/components/picker/picker.component.test.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
@@ -1496,27 +1363,6 @@
     "file": "src/components/ui/Toast.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/shared/components/tooltip/tooltip.component.module.css",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/shared/components/tooltip/tooltip.component.test.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/shared/components/tooltip/tooltip.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
@@ -2088,37 +1934,9 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/components/ui/Dropdown.tsx",
-    "count": 4,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/shared/components/drop-up/drop-up.component.tsx",
-    "count": 3,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/ui/floating.ts",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
     "file": "src/components/ui/FullPageMessage.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 5,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
@@ -2147,13 +1965,6 @@
     "file": "src/components/ui/Toast.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/shared/components/tooltip/tooltip.component.tsx",
-    "count": 10,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
@@ -2231,13 +2042,6 @@
     "file": "src/components/stage/Stage.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "size",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
@@ -2879,69 +2683,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/shared/components/cue/cue.component.module.css",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/shared/components/dropdown/dropdown.component.module.css",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/shared/components/dropdown/dropdown.component.test.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/Dropdown.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/shared/components/drop-up/drop-up.component.module.css",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/shared/components/drop-up/drop-up.component.test.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/shared/components/drop-up/drop-up.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/floating.test.ts",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/floating.ts",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/components/ui/FullPageMessage.module.css",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
@@ -2952,27 +2693,6 @@
     "file": "src/components/ui/FullPageMessage.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/shared/components/picker/picker.component.module.css",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/shared/components/picker/picker.component.test.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
@@ -3050,27 +2770,6 @@
     "file": "src/components/ui/Toast.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/shared/components/tooltip/tooltip.component.module.css",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/shared/components/tooltip/tooltip.component.test.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/shared/components/tooltip/tooltip.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
@@ -3327,9 +3026,9 @@
   {
     "tool": "lint",
     "rule": "eslint(complexity)",
-    "file": "src/components/ui/Dropdown.tsx",
+    "file": "src/pages/RoomPage.tsx",
     "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "lint",
@@ -3337,13 +3036,6 @@
     "file": "src/shared/components/picker/picker.component.tsx",
     "count": 2,
     "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
-    "file": "src/pages/RoomPage.tsx",
-    "count": 1,
-    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "lint",
@@ -3467,9 +3159,16 @@
   {
     "tool": "lint",
     "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/ui/Dropdown.tsx",
+    "file": "src/pages/AdminPage.tsx",
     "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
+    "owner": "#194 home, request access, admin, the shell"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(max-lines-per-function)",
+    "file": "src/pages/RoomPage.tsx",
+    "count": 1,
+    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "lint",
@@ -3491,20 +3190,6 @@
     "file": "src/shared/components/tooltip/tooltip.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/pages/AdminPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/pages/RoomPage.tsx",
-    "count": 1,
-    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "lint",
@@ -3649,23 +3334,9 @@
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 3,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
     "file": "src/components/ui/Range.tsx",
     "count": 2,
     "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/shared/components/tooltip/tooltip.component.tsx",
-    "count": 2,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "lint",
@@ -3687,6 +3358,20 @@
     "file": "src/media/ambilight.ts",
     "count": 22,
     "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/shared/components/picker/picker.component.tsx",
+    "count": 3,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "eslint(no-magic-numbers)",
+    "file": "src/shared/components/tooltip/tooltip.component.tsx",
+    "count": 2,
+    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "lint",
@@ -3782,20 +3467,6 @@
   {
     "tool": "lint",
     "rule": "jsx-a11y(no-static-element-interactions)",
-    "file": "src/components/ui/Dropdown.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(no-static-element-interactions)",
-    "file": "src/shared/components/drop-up/drop-up.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(no-static-element-interactions)",
     "file": "src/shared/components/picker/picker.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
@@ -3866,23 +3537,9 @@
   {
     "tool": "lint",
     "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/shared/components/drop-up/drop-up.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(prefer-tag-over-role)",
     "file": "src/components/ui/FullPageMessage.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "lint",
@@ -3907,6 +3564,20 @@
   },
   {
     "tool": "lint",
+    "rule": "jsx-a11y(prefer-tag-over-role)",
+    "file": "src/shared/components/drop-up/drop-up.component.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
+    "rule": "jsx-a11y(prefer-tag-over-role)",
+    "file": "src/shared/components/picker/picker.component.tsx",
+    "count": 1,
+    "owner": "#187 shared: one menu, one floating system"
+  },
+  {
+    "tool": "lint",
     "rule": "react-hooks(exhaustive-deps)",
     "file": "src/components/stage/Stage.tsx",
     "count": 2,
@@ -3918,13 +3589,6 @@
     "file": "src/components/stage/NowWatching.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "react(only-export-components)",
-    "file": "src/shared/components/tooltip/tooltip.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "lint",
@@ -3964,13 +3628,6 @@
   {
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
-    "file": "src/components/stage/HearToggles.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
     "file": "src/components/stage/MicTest.tsx",
     "count": 1,
     "owner": "#193 settings"
@@ -3979,7 +3636,7 @@
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
     "file": "src/components/stage/PreviewTray.tsx",
-    "count": 4,
+    "count": 3,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -3999,34 +3656,6 @@
   {
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
-    "file": "src/components/stage/ViewerBar.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/components/ui/Dropdown.tsx",
-    "count": 3,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/shared/components/drop-up/drop-up.component.tsx",
-    "count": 3,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 4,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
     "file": "src/components/ui/Range.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
@@ -4041,16 +3670,23 @@
   {
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
-    "file": "src/shared/components/tooltip/tooltip.component.tsx",
+    "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
+    "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "lint",
+    "rule": "typescript(consistent-type-assertions)",
+    "file": "src/shared/components/drop-up/drop-up.component.tsx",
+    "count": 3,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
-    "file": "src/hooks/usePinnedRow.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
+    "file": "src/shared/components/picker/picker.component.tsx",
+    "count": 3,
+    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "lint",
@@ -4146,13 +3782,6 @@
   {
     "tool": "tsc",
     "rule": "TS2375",
-    "file": "src/components/room/AccountButton.tsx",
-    "count": 3,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
     "file": "src/components/room/ActivityList.test.tsx",
     "count": 1,
     "owner": "#189 room: header"
@@ -4162,13 +3791,6 @@
     "rule": "TS2375",
     "file": "src/components/room/ActivityPill.test.tsx",
     "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
-    "file": "src/components/room/PeopleButton.tsx",
-    "count": 2,
     "owner": "#189 room: header"
   },
   {
@@ -4188,13 +3810,6 @@
   {
     "tool": "tsc",
     "rule": "TS2375",
-    "file": "src/components/stage/EmptyStage.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
     "file": "src/components/stage/Facecam.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
@@ -4209,15 +3824,8 @@
   {
     "tool": "tsc",
     "rule": "TS2375",
-    "file": "src/components/stage/PlayerButtons.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
     "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 10,
+    "count": 7,
     "owner": "#193 settings"
   },
   {
@@ -4238,29 +3846,8 @@
     "tool": "tsc",
     "rule": "TS2375",
     "file": "src/components/stage/ViewerBar.tsx",
-    "count": 4,
+    "count": 3,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
-    "file": "src/components/ui/floating.ts",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
-    "file": "src/components/ui/Segmented.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "tsc",
@@ -4426,13 +4013,6 @@
   {
     "tool": "unused",
     "rule": "exports",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
     "file": "src/components/ui/toast.ts",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
@@ -4464,13 +4044,6 @@
     "file": "src/components/stage/ViewerBar.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "unused",
-    "rule": "types",
-    "file": "src/shared/components/picker/picker.component.tsx",
-    "count": 1,
-    "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "unused",
