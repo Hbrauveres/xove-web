@@ -7,7 +7,8 @@ import { saveAmbilight } from "@services/preferences-service";
 import type { AmbilightPrefs } from "@services/preferences-service";
 import type { ConnectionState } from "@services/livekit-service";
 import type { Friend } from "@features/room/types/room-view.types";
-import { Dropdown, DropdownSection } from "../ui/Dropdown";
+import { Dropdown } from "@shared/components/dropdown";
+import { DropdownSection } from "@shared/components/dropdown-section";
 import { Range } from "../ui/Range";
 import styles from "./AccountButton.module.css";
 
@@ -34,7 +35,6 @@ const STATE: Record<ConnectionState, string> = {
 export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightChange, onSignOut }: Props) {
   const [open, setOpen] = useState(false);
   const anchor = useRef<HTMLDivElement>(null);
-  const button = useRef<HTMLButtonElement>(null);
   const change = (next: AmbilightPrefs) => {
     saveAmbilight(next);
     onAmbilightChange(next);
@@ -44,7 +44,6 @@ export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightC
     <div ref={anchor} className={styles.wrap}>
       <IconButton
         variant="header"
-        ref={button}
         className={styles.button}
         aria-label={`${me.name}: account, ${connection}`}
         aria-haspopup="dialog"
@@ -55,16 +54,7 @@ export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightC
         <i className={styles.dot} data-state={connection} aria-hidden="true" />
       </IconButton>
 
-      <Dropdown
-        open={open}
-        label="Account"
-        anchor={anchor}
-        width={260}
-        onClose={(returnFocus) => {
-          setOpen(false);
-          if (returnFocus) button.current?.focus();
-        }}
-      >
+      <Dropdown open={open} label="Account" anchor={anchor} width={260} onClose={() => setOpen(false)}>
         <DropdownSection className={styles.me}>
           <div className={styles.who}>
             <Face name={me.name} hue={me.hue} size={40} />

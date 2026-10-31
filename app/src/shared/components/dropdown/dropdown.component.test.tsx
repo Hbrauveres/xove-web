@@ -1,8 +1,9 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useRef, useState } from "react";
 import { describe, expect, it } from "vitest";
-import { onFakeClock } from "../../testing/factories/clock.factory";
-import { Dropdown, DropdownSection } from "./Dropdown";
+import { onFakeClock } from "@testing/factories/clock.factory";
+import { DropdownSection } from "@shared/components/dropdown-section";
+import { Dropdown } from "./dropdown.component";
 
 /** A button with its dropdown, as the header uses them. */
 function Trigger({ name, role = "dialog" }: { name: string; role?: "dialog" | "menu" }) {
@@ -19,10 +20,7 @@ function Trigger({ name, role = "dialog" }: { name: string; role?: "dialog" | "m
         label={`${name} panel`}
         role={role}
         anchor={anchor}
-        onClose={(returnFocus) => {
-          setOpen(false);
-          if (returnFocus) button.current?.focus();
-        }}
+        onClose={() => setOpen(false)}
       >
         <DropdownSection>
           {role === "menu" ? (

@@ -58,7 +58,7 @@ export class FloatingStore {
     e.preventDefault();
     e.stopPropagation();
     // Back to the button first: its focus could otherwise open it again.
-    innermost.anchor?.()?.focus();
+    buttonIn(innermost.anchor?.())?.focus();
     this.closeWhere((f) => f === innermost);
   };
 
@@ -71,6 +71,11 @@ export class FloatingStore {
     document.removeEventListener("pointerdown", this.onPress, true);
     document.removeEventListener("keydown", this.onKey, true);
   }
+}
+
+/** What takes the focus back: the anchor, or the button inside its wrapper. */
+function buttonIn(anchor: HTMLElement | null | undefined) {
+  return anchor?.querySelector<HTMLElement>("button") ?? anchor;
 }
 
 /** Whether `inner` shows inside `outer`, by its button or its own area. */

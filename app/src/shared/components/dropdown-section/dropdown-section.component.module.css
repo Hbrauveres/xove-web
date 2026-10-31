@@ -1,0 +1,46 @@
+.section {
+  /* Full size while the panel unrolls: only its edge reveals them, so no scrollbar flashes. */
+  flex: none;
+  background: var(--grey-12-74);
+  backdrop-filter: blur(var(--blur-5-5)) saturate(1.4);
+  -webkit-backdrop-filter: blur(var(--blur-5-5)) saturate(1.4);
+  border: var(--hairline) solid var(--panel-line);
+  border-block-width: 0;
+}
+
+.section:first-child {
+  border-top-width: var(--hairline);
+  border-radius: var(--radius-4) var(--radius-4) 0 0;
+}
+
+.section:last-child {
+  border-bottom-width: var(--hairline);
+  border-radius: 0 0 var(--radius-4) var(--radius-4);
+}
+
+.section:only-child {
+  border-radius: var(--radius-4);
+}
+
+/* A long list scrolls inside its section, with a thin scrollbar that matches. */
+.scroll {
+  max-height: min(var(--vh-56), var(--card-width));
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--white-22) transparent;
+}
+
+.scroll::-webkit-scrollbar {
+  width: var(--size-2);
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  background: var(--white-22);
+  border-radius: var(--radius-pill);
+  border: var(--border-0-5) solid transparent;
+  background-clip: padding-box;
+}
+
+.scroll::-webkit-scrollbar-track {
+  background: transparent;
+}

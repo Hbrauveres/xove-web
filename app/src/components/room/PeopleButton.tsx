@@ -4,7 +4,8 @@ import { Icon } from "@shared/components/icon";
 import { useRef, useState } from "react";
 import type { RoomSeatsState, StreamKind } from "@services/xove-api-service";
 import type { Friend } from "@features/room/types/room-view.types";
-import { Dropdown, DropdownSection } from "../ui/Dropdown";
+import { Dropdown } from "@shared/components/dropdown";
+import { DropdownSection } from "@shared/components/dropdown-section";
 import styles from "./PeopleButton.module.css";
 
 type Props = {
@@ -26,7 +27,6 @@ type Props = {
 export function PeopleButton({ people, meId, sharing, watchingOf, seats }: Props) {
   const [open, setOpen] = useState(false);
   const anchor = useRef<HTMLDivElement>(null);
-  const button = useRef<HTMLButtonElement>(null);
   const count = people.length;
   // People sharing first (longest first), then me, then everyone else, as in the design.
   const sharerIds = Object.keys(sharing);
@@ -58,7 +58,6 @@ export function PeopleButton({ people, meId, sharing, watchingOf, seats }: Props
     <div ref={anchor} className={styles.wrap}>
       <IconButton
         variant="header"
-        ref={button}
         className={styles.button}
         aria-label={`${count} ${count === 1 ? "person" : "people"} here`}
         aria-haspopup="dialog"
@@ -69,15 +68,7 @@ export function PeopleButton({ people, meId, sharing, watchingOf, seats }: Props
         <span className={styles.count}>{count}</span>
       </IconButton>
 
-      <Dropdown
-        open={open}
-        label="Here now"
-        anchor={anchor}
-        onClose={(returnFocus) => {
-          setOpen(false);
-          if (returnFocus) button.current?.focus();
-        }}
-      >
+      <Dropdown open={open} label="Here now" anchor={anchor} onClose={() => setOpen(false)}>
         {seats && (
           <DropdownSection className={styles.head}>
             <div className={styles.line}>
