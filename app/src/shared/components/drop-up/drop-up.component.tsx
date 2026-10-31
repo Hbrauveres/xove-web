@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type FocusEvent } from "react";
 import { floatingStore, useFloating } from "@shared/stores/floating-store";
-import { LEAVE_GRACE_MS, OPEN_DELAY_MS } from "./constants/drop-up.constants";
+import { LEAVE_GRACE_MS, OPEN_DELAY_MS } from "@shared/constants/floating.constants";
 import styles from "./drop-up.component.module.css";
 import type { DropUpProps } from "./types/drop-up.types";
 

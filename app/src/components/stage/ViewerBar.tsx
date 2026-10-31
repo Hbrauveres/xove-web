@@ -225,18 +225,7 @@ function Hear({
     (kind === "sound"
       ? `${s.muted ? "Unmute" : "Mute"} the screen's sound`
       : `${s.muted ? "Unmute" : "Mute"} ${name}'s voice`);
-  const icon =
-    kind === "sound" ? (
-      silent ? (
-        <Icon name="volume-off" size={20} />
-      ) : (
-        <Icon name="sound" size={20} />
-      )
-    ) : silent ? (
-      <Icon name="voice-off" size={20} />
-    ) : (
-      <Icon name="voice" size={20} />
-    );
+  const icon = kind === "sound" ? (silent ? "volume-off" : "sound") : silent ? "voice-off" : "voice";
   return (
     <span
       ref={anchorRef}
@@ -280,7 +269,7 @@ function Hear({
             if (open) restart();
           }}
         >
-          {icon}
+          <Icon name={icon} size={20} />
         </IconButton>
       </Tooltip>
       {!s.unavailable && (

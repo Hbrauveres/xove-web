@@ -329,6 +329,11 @@ function ScreenTab(props: Props & { cue?: number }) {
   );
 }
 
+const problemWords = (problem: Props["cameraProblem"]) => {
+  if (!problem) return null;
+  return problem === "blocked" ? CAMERA_BLOCKED : CAMERA_MISSING;
+};
+
 function CameraTab(props: Props & { cue?: number }) {
   const { mine, cameras, cameraId, onPickCamera, cameraVideo, busy, cameraProblem } = props;
   // Gone to from the live camera button: its list opens, once per request.
@@ -338,8 +343,7 @@ function CameraTab(props: Props & { cue?: number }) {
     setLastCue(props.cue);
     if (props.cue !== undefined && !busy) setListOpen(true);
   }
-  const problem =
-    !cameraVideo && cameraProblem ? (cameraProblem === "blocked" ? CAMERA_BLOCKED : CAMERA_MISSING) : null;
+  const problem = cameraVideo ? null : problemWords(cameraProblem);
   return (
     <>
       {/* What you see (spec 0111, design decisions 3 and 4). */}

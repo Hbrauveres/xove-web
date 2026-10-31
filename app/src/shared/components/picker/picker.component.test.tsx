@@ -71,7 +71,6 @@ describe("Picker, the app's one-box picker", () => {
 
   it("can be told to close (its drop-up was left), and says when it opens or closes", async () => {
     const onOpenChange = vi.fn();
-    const user = userEvent.setup();
     const { rerender } = render(
       <Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} onOpenChange={onOpenChange} />,
     );

@@ -51,7 +51,7 @@
   {
     "tool": "code",
     "rule": "domQuery",
-    "file": "src/components/ui/Picker.tsx",
+    "file": "src/shared/components/picker/picker.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -471,14 +471,14 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/ui/cue.module.css",
+    "file": "src/shared/components/cue/cue.component.module.css",
     "count": 2,
     "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/ui/Dropdown.module.css",
+    "file": "src/shared/components/dropdown/dropdown.component.module.css",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -499,14 +499,14 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/ui/Picker.module.css",
+    "file": "src/shared/components/picker/picker.component.module.css",
     "count": 3,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/ui/Picker.tsx",
+    "file": "src/shared/components/picker/picker.component.tsx",
     "count": 11,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -548,14 +548,14 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/ui/Tooltip.module.css",
+    "file": "src/shared/components/tooltip/tooltip.component.module.css",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/ui/Tooltip.tsx",
+    "file": "src/shared/components/tooltip/tooltip.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -674,7 +674,7 @@
   {
     "tool": "code",
     "rule": "lineLength",
-    "file": "src/components/ui/Picker.tsx",
+    "file": "src/shared/components/picker/picker.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -1325,21 +1325,21 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/ui/cue.module.css",
+    "file": "src/shared/components/cue/cue.component.module.css",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/ui/Dropdown.module.css",
+    "file": "src/shared/components/dropdown/dropdown.component.module.css",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/ui/Dropdown.test.tsx",
+    "file": "src/shared/components/dropdown/dropdown.component.test.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -1353,21 +1353,21 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/ui/DropUp.module.css",
+    "file": "src/shared/components/drop-up/drop-up.component.module.css",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/ui/DropUp.test.tsx",
+    "file": "src/shared/components/drop-up/drop-up.component.test.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/ui/DropUp.tsx",
+    "file": "src/shared/components/drop-up/drop-up.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -1402,21 +1402,21 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/ui/Picker.module.css",
+    "file": "src/shared/components/picker/picker.component.module.css",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/ui/Picker.test.tsx",
+    "file": "src/shared/components/picker/picker.component.test.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/ui/Picker.tsx",
+    "file": "src/shared/components/picker/picker.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -1500,21 +1500,21 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/ui/Tooltip.module.css",
+    "file": "src/shared/components/tooltip/tooltip.component.module.css",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/ui/Tooltip.test.tsx",
+    "file": "src/shared/components/tooltip/tooltip.component.test.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/ui/Tooltip.tsx",
+    "file": "src/shared/components/tooltip/tooltip.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -2095,7 +2095,7 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/components/ui/DropUp.tsx",
+    "file": "src/shared/components/drop-up/drop-up.component.tsx",
     "count": 3,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -2116,7 +2116,7 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/components/ui/Picker.tsx",
+    "file": "src/shared/components/picker/picker.component.tsx",
     "count": 5,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -2151,7 +2151,7 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/components/ui/Tooltip.tsx",
+    "file": "src/shared/components/tooltip/tooltip.component.tsx",
     "count": 10,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -2235,7 +2235,7 @@
   {
     "tool": "code",
     "rule": "size",
-    "file": "src/components/ui/Picker.tsx",
+    "file": "src/shared/components/picker/picker.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -2879,21 +2879,21 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/ui/cue.module.css",
+    "file": "src/shared/components/cue/cue.component.module.css",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/ui/Dropdown.module.css",
+    "file": "src/shared/components/dropdown/dropdown.component.module.css",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/ui/Dropdown.test.tsx",
+    "file": "src/shared/components/dropdown/dropdown.component.test.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -2907,21 +2907,21 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/ui/DropUp.module.css",
+    "file": "src/shared/components/drop-up/drop-up.component.module.css",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/ui/DropUp.test.tsx",
+    "file": "src/shared/components/drop-up/drop-up.component.test.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/ui/DropUp.tsx",
+    "file": "src/shared/components/drop-up/drop-up.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -2956,21 +2956,21 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/ui/Picker.module.css",
+    "file": "src/shared/components/picker/picker.component.module.css",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/ui/Picker.test.tsx",
+    "file": "src/shared/components/picker/picker.component.test.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/ui/Picker.tsx",
+    "file": "src/shared/components/picker/picker.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -3054,21 +3054,21 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/ui/Tooltip.module.css",
+    "file": "src/shared/components/tooltip/tooltip.component.module.css",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/ui/Tooltip.test.tsx",
+    "file": "src/shared/components/tooltip/tooltip.component.test.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/ui/Tooltip.tsx",
+    "file": "src/shared/components/tooltip/tooltip.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -3334,7 +3334,7 @@
   {
     "tool": "lint",
     "rule": "eslint(complexity)",
-    "file": "src/components/ui/Picker.tsx",
+    "file": "src/shared/components/picker/picker.component.tsx",
     "count": 2,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -3474,21 +3474,21 @@
   {
     "tool": "lint",
     "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/ui/DropUp.tsx",
+    "file": "src/shared/components/drop-up/drop-up.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "lint",
     "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/ui/Picker.tsx",
+    "file": "src/shared/components/picker/picker.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "lint",
     "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/ui/Tooltip.tsx",
+    "file": "src/shared/components/tooltip/tooltip.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -3649,7 +3649,7 @@
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/ui/Picker.tsx",
+    "file": "src/shared/components/picker/picker.component.tsx",
     "count": 3,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -3663,7 +3663,7 @@
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/ui/Tooltip.tsx",
+    "file": "src/shared/components/tooltip/tooltip.component.tsx",
     "count": 2,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -3789,14 +3789,14 @@
   {
     "tool": "lint",
     "rule": "jsx-a11y(no-static-element-interactions)",
-    "file": "src/components/ui/DropUp.tsx",
+    "file": "src/shared/components/drop-up/drop-up.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "lint",
     "rule": "jsx-a11y(no-static-element-interactions)",
-    "file": "src/components/ui/Picker.tsx",
+    "file": "src/shared/components/picker/picker.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -3866,7 +3866,7 @@
   {
     "tool": "lint",
     "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/components/ui/DropUp.tsx",
+    "file": "src/shared/components/drop-up/drop-up.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -3880,7 +3880,7 @@
   {
     "tool": "lint",
     "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/components/ui/Picker.tsx",
+    "file": "src/shared/components/picker/picker.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -3922,14 +3922,14 @@
   {
     "tool": "lint",
     "rule": "react(only-export-components)",
-    "file": "src/components/ui/Tooltip.tsx",
+    "file": "src/shared/components/tooltip/tooltip.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "lint",
     "rule": "react(refs)",
-    "file": "src/components/ui/Tooltip.tsx",
+    "file": "src/shared/components/tooltip/tooltip.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -4013,14 +4013,14 @@
   {
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
-    "file": "src/components/ui/DropUp.tsx",
+    "file": "src/shared/components/drop-up/drop-up.component.tsx",
     "count": 3,
     "owner": "#187 shared: one menu, one floating system"
   },
   {
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
-    "file": "src/components/ui/Picker.tsx",
+    "file": "src/shared/components/picker/picker.component.tsx",
     "count": 4,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -4041,7 +4041,7 @@
   {
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
-    "file": "src/components/ui/Tooltip.tsx",
+    "file": "src/shared/components/tooltip/tooltip.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -4132,7 +4132,7 @@
   {
     "tool": "tsc",
     "rule": "TS2345",
-    "file": "src/components/ui/DropUp.test.tsx",
+    "file": "src/shared/components/drop-up/drop-up.component.test.tsx",
     "count": 3,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -4251,7 +4251,7 @@
   {
     "tool": "tsc",
     "rule": "TS2375",
-    "file": "src/components/ui/Picker.tsx",
+    "file": "src/shared/components/picker/picker.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -4286,7 +4286,7 @@
   {
     "tool": "tsc",
     "rule": "TS2379",
-    "file": "src/components/ui/Tooltip.test.tsx",
+    "file": "src/shared/components/tooltip/tooltip.component.test.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -4405,7 +4405,7 @@
   {
     "tool": "tsc",
     "rule": "TS2769",
-    "file": "src/components/ui/Tooltip.tsx",
+    "file": "src/shared/components/tooltip/tooltip.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -4426,7 +4426,7 @@
   {
     "tool": "unused",
     "rule": "exports",
-    "file": "src/components/ui/Picker.tsx",
+    "file": "src/shared/components/picker/picker.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },
@@ -4468,7 +4468,7 @@
   {
     "tool": "unused",
     "rule": "types",
-    "file": "src/components/ui/Picker.tsx",
+    "file": "src/shared/components/picker/picker.component.tsx",
     "count": 1,
     "owner": "#187 shared: one menu, one floating system"
   },

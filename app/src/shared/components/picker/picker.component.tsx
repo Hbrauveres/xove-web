@@ -67,7 +67,7 @@ export function Picker<T extends string>({
     [],
   );
 
-  useFloating({
+  const floating = useFloating({
     open,
     kind: "opened",
     close: () => setOpen(false),
@@ -139,10 +139,9 @@ export function Picker<T extends string>({
   }
   useEffect(() => {
     if (!open) return;
-    const close = () => setOpen(false);
-    window.addEventListener("resize", close);
-    return () => window.removeEventListener("resize", close);
-  }, [open]);
+    window.addEventListener("resize", floating.close);
+    return () => window.removeEventListener("resize", floating.close);
+  }, [open, floating]);
   useLayoutEffect(() => {
     const el = list.current;
     if (!open || opens !== "up" || !el) return;

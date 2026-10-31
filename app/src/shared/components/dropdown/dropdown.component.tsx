@@ -1,12 +1,15 @@
-import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useFloating } from "@shared/stores/floating-store";
 import { ROLL_MS } from "./constants/dropdown.constants";
 import styles from "./dropdown.component.module.css";
 import type { DropdownProps } from "./types/dropdown.types";
+import { useMenuArrows } from "./hooks/use-menu-arrows.hook";
+import { takeFocus } from "./utils/take-focus.util";
 
 /**
  * The room's floating panel: frosted sections with clear cuts between them, that
- * unroll downward and roll back up. It's one floating thing, opened by its button: a press outside, Escape or another opening closes it.
+ * unroll downward and roll back up. It's one floating thing, opened by its button: a press outside,
+ * Escape or another opening closes it.
  */
 export function Dropdown({
   open,
@@ -43,17 +46,10 @@ export function Dropdown({
   // Opening: take the focus.
   useEffect(() => {
     if (!open) return;
-    const first = panel.current?.querySelector<HTMLElement>(role === "menu" ? "[role^=menuitem]" : "[data-autofocus]");
-    (first ?? panel.current)?.focus();
+    takeFocus(panel.current, role);
   }, [open, role]);
 
-  const onKeyDown = (e: KeyboardEvent) => {
-    if (role !== "menu" || (e.key !== "ArrowDown" && e.key !== "ArrowUp")) return;
-    e.preventDefault();
-    const items = [...(panel.current?.querySelectorAll<HTMLElement>("[role^=menuitem]") ?? [])];
-    const at = items.indexOf(document.activeElement as HTMLElement);
-    items[(at + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length]?.focus();
-  };
+  useMenuArrows(panel, open && role === "menu");
 
   if (!mounted) return null;
   return (
@@ -67,7 +63,6 @@ export function Dropdown({
       // The roll is the height only: a clip, fade or filter would stop the sections' blur.
       style={{ gridTemplateRows: rolledOut ? "1fr" : "0fr", width }}
       data-rolled={rolledOut ? "out" : "up"}
-      onKeyDown={onKeyDown}
     >
       <div className={styles.roll}>{children}</div>
     </div>

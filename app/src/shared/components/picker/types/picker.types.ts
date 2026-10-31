@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-export type PickerOption<T extends string> = { value: T; label: string };
+type PickerOption<T extends string> = { value: T; label: string };
 
 export interface PickerProps<T extends string> {
   /** Its name for screen readers; the pill reads "<label>: <chosen>". */

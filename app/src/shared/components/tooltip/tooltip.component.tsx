@@ -11,7 +11,8 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { useFloating } from "@shared/stores/floating-store";
-import { EDGE, GAP, TIP_REST_MS } from "./constants/tooltip.constants";
+import { TIP_REST_MS } from "@shared/constants/floating.constants";
+import { EDGE, GAP } from "./constants/tooltip.constants";
 import styles from "./tooltip.component.module.css";
 import type { TooltipProps } from "./types/tooltip.types";
 import { assignRef } from "./utils/assign-ref.util";

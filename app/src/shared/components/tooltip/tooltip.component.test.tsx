@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { TIP_REST_MS } from "./constants/tooltip.constants";
+import { TIP_REST_MS } from "@shared/constants/floating.constants";
 import { Tooltip } from "./tooltip.component";
 import { resetTooltipWarmth } from "./utils/warmth.util";
 

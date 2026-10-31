@@ -1,6 +1,6 @@
 import type { FocusEvent, PointerEvent, ReactElement, Ref } from "react";
 
-export type TooltipTrigger = ReactElement<{
+type TooltipTrigger = ReactElement<{
   ref?: Ref<HTMLElement>;
   onPointerEnter?: (e: PointerEvent<HTMLElement>) => void;
   onPointerLeave?: (e: PointerEvent<HTMLElement>) => void;

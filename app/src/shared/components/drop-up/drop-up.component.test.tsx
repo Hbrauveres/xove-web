@@ -1,8 +1,8 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { LEAVE_GRACE_MS, OPEN_DELAY_MS } from "./constants/drop-up.constants";
+import { LEAVE_GRACE_MS, OPEN_DELAY_MS, TIP_REST_MS } from "@shared/constants/floating.constants";
 import { DropUp } from "./drop-up.component";
-import { TIP_REST_MS, Tooltip } from "@shared/components/tooltip";
+import { Tooltip } from "@shared/components/tooltip";
 
 /** Each test's own clock and pointer: fake timers, and a mouse that can hover. */
 function onDevice() {
