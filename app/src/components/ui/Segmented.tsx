@@ -1,6 +1,6 @@
 import { useRef, type CSSProperties, type KeyboardEvent } from "react";
 import styles from "./Segmented.module.css";
-import { Tooltip } from "./Tooltip";
+import { Tooltip } from "@shared/components/tooltip";
 
 export type SegmentOption<T extends string> = { value: T; label: string; title?: string };
 

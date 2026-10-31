@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { onFakeClock } from "../../testing/factories/clock.factory";
-import { TIP_REST_MS } from "../ui/Tooltip";
+import { TIP_REST_MS } from "@shared/components/tooltip";
 import { ViewerBar, type Sound } from "./ViewerBar";
 
 // Fresh handlers per render, so no test sees another's calls.

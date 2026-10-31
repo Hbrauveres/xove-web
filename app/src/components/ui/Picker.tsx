@@ -11,7 +11,7 @@ import {
 } from "react";
 import cueStyles from "./cue.module.css";
 import styles from "./Picker.module.css";
-import { Tooltip } from "./Tooltip";
+import { Tooltip } from "@shared/components/tooltip";
 
 export type PickerOption<T extends string> = { value: T; label: string };
 

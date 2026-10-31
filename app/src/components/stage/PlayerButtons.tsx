@@ -8,7 +8,7 @@ import { DropUp } from "../ui/DropUp";
 import drop from "../ui/DropUp.module.css";
 import { Picker } from "../ui/Picker";
 import styles from "./PlayerButtons.module.css";
-import { Tooltip } from "../ui/Tooltip";
+import { Tooltip } from "@shared/components/tooltip";
 
 export const FULL_ROOM = "6 streams are live, the most at once. You can start yours when one stops.";
 /** Why the screen button and the Screen tab are greyed out where the browser can't share a screen. */

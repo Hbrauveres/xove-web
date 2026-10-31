@@ -1,6 +1,8 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { resetTooltipWarmth, TIP_REST_MS, Tooltip } from "./Tooltip";
+import { TIP_REST_MS } from "./constants/tooltip.constants";
+import { Tooltip } from "./tooltip.component";
+import { resetTooltipWarmth } from "./utils/warmth.util";
 
 beforeEach(() => vi.useFakeTimers());
 

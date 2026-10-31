@@ -1,7 +1,7 @@
 import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
 import styles from "./StageOverlay.module.css";
-import { Tooltip } from "../ui/Tooltip";
+import { Tooltip } from "@shared/components/tooltip";
 
 type Props = {
   /** The player is fullscreen: the button leaves it. */

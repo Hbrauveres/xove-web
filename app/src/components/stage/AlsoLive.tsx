@@ -8,7 +8,7 @@ import { usePreviewTray } from "./usePreviewTray";
 import { useKeyboardLast } from "@features/room/hooks/use-keyboard-last.hook";
 import { seatsOpen } from "./NowWatching";
 import styles from "./AlsoLive.module.css";
-import { Tooltip } from "../ui/Tooltip";
+import { Tooltip } from "@shared/components/tooltip";
 
 type Props = {
   /** Everyone sharing except the person on the stage, longest first. */

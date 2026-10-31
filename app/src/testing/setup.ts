@@ -4,7 +4,7 @@ import { afterEach, vi } from "vitest";
 import { resetTv } from "../components/stage/staticBands";
 import { resetFloating } from "../components/ui/floating";
 import { resetToast } from "../components/ui/toast";
-import { resetTooltipWarmth } from "../components/ui/Tooltip";
+import { resetTooltipWarmth } from "@shared/components/tooltip";
 import { fakeCameras, fakeMics, resetFakeLiveKit, rooms } from "./fakeLiveKit";
 
 // findBy and waitFor give up after 1 s: a wait that needs longer is a delay that belongs on fake

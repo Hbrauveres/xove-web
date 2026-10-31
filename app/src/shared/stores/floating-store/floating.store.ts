@@ -52,7 +52,8 @@ export class FloatingStore {
 
   private readonly onKey = (e: KeyboardEvent) => {
     if (e.key !== "Escape") return;
-    const innermost = this.showing.filter((f) => f.kind !== "tooltip").at(-1);
+    // The innermost with a button to go back to: a slider inside a row closes with its row.
+    const innermost = this.showing.filter((f) => f.kind !== "tooltip" && f.anchor?.()).at(-1);
     if (!innermost) return;
     e.preventDefault();
     e.stopPropagation();

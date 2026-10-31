@@ -7,7 +7,7 @@ import { showToast } from "../ui/toast";
 import type { Sound } from "./ViewerBar";
 import { useKeyboardLast } from "@features/room/hooks/use-keyboard-last.hook";
 import styles from "./HearToggles.module.css";
-import { Tooltip } from "../ui/Tooltip";
+import { Tooltip } from "@shared/components/tooltip";
 import { claimFloating, releaseFloating } from "../ui/floating";
 
 /** What I hear from one person (spec 0123): their screen's sound and their voice, each its own mute. */

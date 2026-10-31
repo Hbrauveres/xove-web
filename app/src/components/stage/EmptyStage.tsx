@@ -6,7 +6,7 @@ import { showToast } from "../ui/toast";
 import styles from "./EmptyStage.module.css";
 import { StaticNoise } from "./StaticNoise";
 import { tv } from "./staticBands";
-import { Tooltip } from "../ui/Tooltip";
+import { Tooltip } from "@shared/components/tooltip";
 
 type Props = {
   canShareScreen?: boolean;

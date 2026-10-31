@@ -3,7 +3,7 @@ import { useEffect, useState, type CSSProperties } from "react";
 import type { MediaTrack } from "@services/livekit-service";
 import { VoiceAudio } from "./VoiceAudio";
 import styles from "./MicTest.module.css";
-import { Tooltip } from "../ui/Tooltip";
+import { Tooltip } from "@shared/components/tooltip";
 
 /** How long "Hear yourself" plays your mic back. */
 const HEAR_S = 5;

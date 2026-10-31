@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { tv } from "../components/stage/staticBands";
 import { claimFloating } from "../components/ui/floating";
 import { currentToast, showToast } from "../components/ui/toast";
-import { TIP_REST_MS, Tooltip } from "../components/ui/Tooltip";
+import { TIP_REST_MS, Tooltip } from "@shared/components/tooltip";
 import { fakeCameras, fakeMics, rooms } from "./fakeLiveKit";
 
 // Each pair: the first test leaves something behind, the second finds it gone. The pairs run in

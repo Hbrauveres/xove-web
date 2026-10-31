@@ -7,7 +7,7 @@ import { Range } from "../ui/Range";
 import { showToast } from "../ui/toast";
 import { FULL_ROOM } from "./PlayerButtons";
 import styles from "./ViewerBar.module.css";
-import { Tooltip } from "../ui/Tooltip";
+import { Tooltip } from "@shared/components/tooltip";
 import { claimFloating, releaseFloating } from "../ui/floating";
 
 /** One sound you hear from the person you watch (spec 0123): its volume and mute. */

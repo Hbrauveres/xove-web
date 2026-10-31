@@ -1,9 +1,13 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { FloatingStore } from "./floating.store";
 import type { Floating, FloatingKind } from "./types/floating.types";
 
+const stores: FloatingStore[] = [];
+afterEach(() => stores.splice(0).forEach((s) => s.reset()));
+
 function setup() {
   const store = new FloatingStore();
+  stores.push(store);
   const made: HTMLElement[] = [];
   const box = (parent: HTMLElement = document.body) => {
     const el = parent.appendChild(document.createElement("div"));
@@ -121,7 +125,18 @@ describe("closing", () => {
     expect(panel.f.close).not.toHaveBeenCalled();
     expect(document.activeElement).toBe(picker.anchor);
     expect(outer).not.toHaveBeenCalled();
-    store.reset();
+  });
+
+  it("Escape skips what has no button of its own: a slider closes with the row it's in", () => {
+    const { store, thing } = setup();
+    const row = thing("rest");
+    const slider = thing("rest", row.area);
+    delete slider.f.anchor;
+    store.add(row.f);
+    store.add(slider.f);
+    escape();
+    expect(row.f.close).toHaveBeenCalledOnce();
+    expect(slider.f.close).not.toHaveBeenCalled();
   });
 
   it("with nothing floating, Escape and presses are the page's", () => {

@@ -1,37 +1,26 @@
-/**
- * What floats over a control (spec 0133): a tooltip or a drop-up. One at a time, across the whole
- * app: whatever appears closes whatever else is showing, at once, so two never stand together.
- * What floats inside another (a tooltip on a drop-up's own picker) belongs to it and closes nothing.
- */
-let current: { close: () => void; area?: Element | null } | null = null;
+import { floatingStore } from "@shared/stores/floating-store";
 
-/** Show something floating: whatever else floats closes first. `close` puts this one away; `area`
- * is what it covers, so what shows inside it belongs to it. */
+/** The old calls, on the floating store, until every piece is on it. */
+const entries = new Map<() => void, Parameters<typeof floatingStore.add>[0]>();
+
 export function claimFloating(close: () => void, area?: Element | null) {
-  if (current && current.close !== close) current.close();
-  current = { close, area };
+  const entry = entries.get(close) ?? { kind: "rest" as const, close, area: () => area ?? null };
+  entry.area = () => area ?? null;
+  entries.set(close, entry);
+  floatingStore.add(entry);
 }
 
-/** This one went away on its own. */
 export function releaseFloating(close: () => void) {
-  if (current?.close === close) current = null;
+  const entry = entries.get(close);
+  if (entry) floatingStore.remove(entry);
+  entries.delete(close);
 }
 
-/** Close whatever floats, unless it's `keep`: before something opens, without claiming yet. */
 export function dismissFloating(keep?: () => void) {
-  if (current && current.close !== keep) {
-    const { close } = current;
-    current = null;
-    close();
-  }
+  floatingStore.clearForRest(keep);
 }
 
-/** Only for tests: nothing floats, and nothing is closed on the way. */
 export function resetFloating() {
-  current = null;
-}
-
-/** Whether `node` is inside what floats now: then it belongs to it and mustn't close it. */
-export function insideFloating(node: Node | null) {
-  return Boolean(node && current?.area?.contains(node));
+  entries.clear();
+  floatingStore.reset();
 }
