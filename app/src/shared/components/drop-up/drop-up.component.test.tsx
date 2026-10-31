@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { DropUp, LEAVE_GRACE_MS, OPEN_DELAY_MS } from "./DropUp";
+import { LEAVE_GRACE_MS, OPEN_DELAY_MS } from "./constants/drop-up.constants";
+import { DropUp } from "./drop-up.component";
 import { TIP_REST_MS, Tooltip } from "@shared/components/tooltip";
 
 /** Each test's own clock and pointer: fake timers, and a mouse that can hover. */
@@ -25,7 +26,7 @@ function setup(props: Partial<Parameters<typeof DropUp>[0]> = {}) {
     <DropUp
       label="The window you share"
       enabled
-      onLeave={onLeave}
+      onOpenChange={(open) => !open && onLeave()}
       trigger={<button>Stop sharing your screen</button>}
       {...props}
     >

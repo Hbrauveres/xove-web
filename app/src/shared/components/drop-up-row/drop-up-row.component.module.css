@@ -1,0 +1,14 @@
+/* A row in the drop-up (the window and Change): one frosted pill, like the round buttons. */
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  height: var(--control-md);
+  padding: var(--space-0-5) var(--space-0-75) var(--space-0-5) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--glass);
+  backdrop-filter: blur(var(--blur-2));
+  box-shadow: 0 var(--space-1) var(--space-4) var(--black-35);
+  font-size: var(--text-xs);
+}
