@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { tv } from "../components/stage/staticBands";
-import { claimFloating } from "../components/ui/floating";
+import { floatingStore } from "@shared/stores/floating-store";
 import { currentToast, showToast } from "../components/ui/toast";
 import { TIP_REST_MS, Tooltip } from "@shared/components/tooltip";
 import { fakeCameras, fakeMics, rooms } from "./fakeLiveKit";
@@ -51,14 +51,18 @@ describe("after every test, the app's shared pieces are reset", { shuffle: false
   it("1. leaves a toast, something floating and the TV on", () => {
     vi.useFakeTimers();
     showToast("Left behind");
-    claimFloating(() => {
-      throw new Error("a closed piece from an earlier test was closed again");
+    floatingStore.add({
+      kind: "rest",
+      close: () => {
+        throw new Error("a closed piece from an earlier test was closed again");
+      },
+      area: () => null,
     });
     tv.on = true;
   });
   it("2. finds no toast, nothing floating, and the TV off", () => {
     expect(currentToast()).toBeNull();
-    expect(() => claimFloating(() => {})).not.toThrow();
+    expect(() => floatingStore.add({ kind: "rest", close: () => {}, area: () => null })).not.toThrow();
     expect(tv.on).toBe(false);
   });
 });

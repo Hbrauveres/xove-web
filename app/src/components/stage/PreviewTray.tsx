@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { useFloating } from "@shared/stores/floating-store";
 import type { Open, usePreviewTray } from "./usePreviewTray";
 import styles from "./PreviewTray.module.css";
 
@@ -47,22 +48,21 @@ export function PreviewTray({
     });
   }
   const gone = useCallback((id: string) => setLayers((ls) => ls.filter((l) => !(l.leaving && l.open.id === id))), []);
-  // A press elsewhere closes the row. Scrolling the previews moves them away: it closes too.
+  useFloating({
+    open: open !== null,
+    kind: "rest",
+    close,
+    area: () => ref.current,
+    anchor: () => open?.anchor ?? null,
+  });
+  // Scrolling the previews moves them away: it closes the row too.
   useEffect(() => {
     if (!open) return;
-    const away = (e: PointerEvent) => {
-      const t = e.target as Node;
-      if (!ref.current?.contains(t) && !open.anchor.contains(t)) close();
-    };
     const scrolled = (e: Event) => {
       if (!busy && !ref.current?.contains(e.target as Node)) close();
     };
-    document.addEventListener("pointerdown", away);
     document.addEventListener("scroll", scrolled, true);
-    return () => {
-      document.removeEventListener("pointerdown", away);
-      document.removeEventListener("scroll", scrolled, true);
-    };
+    return () => document.removeEventListener("scroll", scrolled, true);
   }, [open, busy, close]);
   if (!layers.length) return null;
   return createPortal(
@@ -154,7 +154,7 @@ function Row({
       onKeyDown={(e) => {
         const inRow = tabbables(e.currentTarget);
         const back = open.anchor.querySelector<HTMLElement>(TABBABLE);
-        if (e.key === "Escape" || (e.key === "Tab" && e.shiftKey && e.target === inRow[0])) {
+        if (e.key === "Tab" && e.shiftKey && e.target === inRow[0]) {
           e.preventDefault();
           back?.focus();
         } else if (e.key === "Tab" && !e.shiftKey && e.target === inRow.at(-1)) {

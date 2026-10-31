@@ -82,6 +82,8 @@ function buttonIn(anchor: HTMLElement | null | undefined) {
 function belongsTo(inner: Floating, outer: Floating) {
   const area = outer.area();
   const [anchor, own] = [inner.anchor?.(), inner.area()];
+  // Also what shows over its button: a preview's tooltip belongs to the row that preview opened.
+  if (anchor && outer.anchor?.()?.contains(anchor)) return true;
   return Boolean(area && ((anchor && area.contains(anchor)) || (own && area.contains(own))));
 }
 

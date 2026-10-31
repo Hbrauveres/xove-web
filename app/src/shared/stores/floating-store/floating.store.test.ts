@@ -47,6 +47,16 @@ describe("one thing on screen at a time", () => {
     expect(panel.f.close).not.toHaveBeenCalled();
   });
 
+  it("what shows over its button belongs to it: a preview's tooltip keeps the preview's row", () => {
+    const { store, thing, box } = setup();
+    const row = thing("rest");
+    const tipArea = box();
+    const tip: Floating = { kind: "tooltip", close: vi.fn(), area: () => tipArea, anchor: () => row.anchor };
+    store.add(row.f);
+    store.add(tip);
+    expect(row.f.close).not.toHaveBeenCalled();
+  });
+
   it("a rest isn't allowed over what I opened, but is inside it", () => {
     const { store, thing, box } = setup();
     const panel = thing("opened");

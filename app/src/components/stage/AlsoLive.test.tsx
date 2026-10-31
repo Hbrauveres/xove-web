@@ -228,6 +228,7 @@ describe("also live (specs 0104 and 0123)", () => {
     await user.tab();
     await user.keyboard("{Escape}");
     expect(preview(/^Watch Ana/)).toHaveFocus();
+    expect(document.querySelector('[data-tray-for="user-3"]')).toHaveAttribute("data-leaving");
   });
 
   it("greys a sound that isn't there, in its place, saying why", async () => {

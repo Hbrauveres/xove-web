@@ -2,7 +2,7 @@ import "@testing-library/jest-dom/vitest";
 import { cleanup, configure } from "@testing-library/react";
 import { afterEach, vi } from "vitest";
 import { resetTv } from "../components/stage/staticBands";
-import { resetFloating } from "../components/ui/floating";
+import { floatingStore } from "@shared/stores/floating-store";
 import { resetToast } from "../components/ui/toast";
 import { resetTooltipWarmth } from "@shared/components/tooltip";
 import { fakeCameras, fakeMics, resetFakeLiveKit, rooms } from "./fakeLiveKit";
@@ -35,7 +35,7 @@ afterEach(() => {
   }
   resetFakeLiveKit();
   resetToast();
-  resetFloating();
+  floatingStore.reset();
   resetTooltipWarmth();
   resetTv();
   resetBrowserStandIns();

@@ -8,7 +8,7 @@ import { showToast } from "../ui/toast";
 import { FULL_ROOM } from "./PlayerButtons";
 import styles from "./ViewerBar.module.css";
 import { Tooltip } from "@shared/components/tooltip";
-import { claimFloating, releaseFloating } from "../ui/floating";
+import { floatingStore, useFloating } from "@shared/stores/floating-store";
 
 /** One sound you hear from the person you watch (spec 0123): its volume and mute. */
 export type Sound = { volume: number; muted: boolean };
@@ -44,31 +44,32 @@ export function ViewerBar(props: Props) {
   const { sound, voice, live, micOn, onMic, canShareScreen, full, onStart, onSettings, settingsOnly } = props;
   const [open, setOpen] = useState<"sound" | "voice" | null>(null);
   const [menu, setMenu] = useState(false);
-  const bar = useRef<HTMLDivElement>(null);
-  // A press anywhere else closes the slider and the menu.
-  useEffect(() => {
-    if (!open && !menu) return;
-    const outside = (e: PointerEvent) => {
-      if (!bar.current?.contains(e.target as Node)) {
-        setOpen(null);
-        setMenu(false);
-      }
-    };
-    document.addEventListener("pointerdown", outside, true);
-    return () => document.removeEventListener("pointerdown", outside, true);
-  }, [open, menu]);
-  // An open slider is one floating thing (spec 0133, #128): a tooltip or a drop-up showing closes
-  // it at once, and opening it closes them.
-  const [closeSlider] = useState(() => () => setOpen(null));
-  useEffect(() => {
-    if (open) claimFloating(closeSlider);
-    else releaseFloating(closeSlider);
-  }, [open, closeSlider]);
+  // Each is one floating thing: the open slider, on a rest; the menu, opened by its button.
+  const sounds = useRef<Partial<Record<"sound" | "voice", HTMLElement | null>>>({});
+  const openSound = () => (open ? (sounds.current[open] ?? null) : null);
+  useFloating({ open: open !== null, kind: "rest", close: () => setOpen(null), area: openSound, anchor: openSound });
+  const menuAnchor = useRef<HTMLSpanElement>(null);
+  useFloating({
+    open: menu,
+    kind: "opened",
+    close: () => setMenu(false),
+    area: () => menuAnchor.current,
+    anchor: () => menuAnchor.current,
+  });
 
   return (
-    <div ref={bar} className={styles.bar} data-buttons data-viewer-bar>
+    <div className={styles.bar} data-buttons data-viewer-bar>
       <div className={styles.left}>
-        {sound && <Hear kind="sound" s={sound} open={open === "sound"} quiet={open !== null} setOpen={setOpen} />}
+        {sound && (
+          <Hear
+            kind="sound"
+            s={sound}
+            open={open === "sound"}
+            quiet={open !== null}
+            setOpen={setOpen}
+            anchorRef={(el) => (sounds.current.sound = el)}
+          />
+        )}
         {voice && (
           <Hear
             kind="voice"
@@ -76,6 +77,7 @@ export function ViewerBar(props: Props) {
             open={open === "voice"}
             quiet={open !== null}
             setOpen={setOpen}
+            anchorRef={(el) => (sounds.current.voice = el)}
             name={voice.name}
             talking={voice.talking}
           />
@@ -102,7 +104,7 @@ export function ViewerBar(props: Props) {
             </IconButton>
           </Tooltip>
         ) : (
-          <span className={styles.anchor}>
+          <span ref={menuAnchor} className={styles.anchor}>
             {/* The settings, opened from its menu, open over it (design decision 5). */}
             <button
               type="button"
@@ -186,6 +188,7 @@ function Hear({
   open,
   quiet,
   setOpen,
+  anchorRef,
   name,
   talking,
 }: {
@@ -195,6 +198,7 @@ function Hear({
   /** A slider is open, this one or the other: its tooltip keeps quiet. */
   quiet: boolean;
   setOpen: Dispatch<SetStateAction<"sound" | "voice" | null>>;
+  anchorRef: (el: HTMLElement | null) => void;
   name?: string;
   talking?: boolean;
 }) {
@@ -235,12 +239,14 @@ function Hear({
     );
   return (
     <span
+      ref={anchorRef}
       className={styles.anchor}
       // A voice I hear never fades with the controls: its speaking cue stays (spec 0131).
       data-stays={(kind === "voice" && !s.unavailable && !s.muted) || undefined}
-      onPointerEnter={() => {
+      onPointerEnter={(e) => {
         window.clearTimeout(leave.current);
-        rest.current = window.setTimeout(show, REST_MS);
+        const here = e.currentTarget;
+        rest.current = window.setTimeout(() => floatingStore.canRest(here) && show(), REST_MS);
       }}
       onPointerLeave={() => {
         window.clearTimeout(rest.current);

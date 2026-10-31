@@ -4,6 +4,7 @@ import { ScreenVideo } from "./ScreenVideo";
 import { stackOf, useSwapping } from "./stack";
 import { HearToggles, type Hearing } from "./HearToggles";
 import { PreviewTray } from "./PreviewTray";
+import { floatingStore } from "@shared/stores/floating-store";
 import { usePreviewTray } from "./usePreviewTray";
 import { useKeyboardLast } from "@features/room/hooks/use-keyboard-last.hook";
 import { seatsOpen } from "./NowWatching";
@@ -64,7 +65,7 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
               data-swapping={swapping === id || undefined}
               data-talking={talking || undefined}
               onPointerEnter={(e) => {
-                if (!s.isMe || both) tray.show(id, e.currentTarget);
+                if ((!s.isMe || both) && floatingStore.canRest(e.currentTarget)) tray.show(id, e.currentTarget);
               }}
               onPointerLeave={() => tray.leave()}
             >

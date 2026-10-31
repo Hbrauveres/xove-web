@@ -8,7 +8,7 @@ import type { Sound } from "./ViewerBar";
 import { useKeyboardLast } from "@features/room/hooks/use-keyboard-last.hook";
 import styles from "./HearToggles.module.css";
 import { Tooltip } from "@shared/components/tooltip";
-import { claimFloating, releaseFloating } from "../ui/floating";
+import { useFloating } from "@shared/stores/floating-store";
 
 /** What I hear from one person (spec 0123): their screen's sound and their voice, each its own mute. */
 export type Hearing = { sound: Sound; voice: Sound };
@@ -57,24 +57,9 @@ export function HearToggles({
     tell.current = onActive;
   });
   useEffect(() => tell.current?.(open !== null), [open]);
-  // A press anywhere else closes the slider.
+  // The open slider floats inside its row. No button to go back to: Escape closes the row.
   const root = useRef<HTMLSpanElement>(null);
-  useEffect(() => {
-    if (!open) return;
-    const away = (e: PointerEvent) => {
-      if (!root.current?.contains(e.target as Node)) setOpen(null);
-    };
-    document.addEventListener("pointerdown", away);
-    return () => document.removeEventListener("pointerdown", away);
-  }, [open]);
-  // The open slider is one floating thing (spec 0133, #128): a tooltip or a drop-up showing closes
-  // it at once, and opening it closes them.
-  const drawer = useRef<HTMLSpanElement>(null);
-  const [closeSlider] = useState(() => () => setOpen(null));
-  useEffect(() => {
-    if (open) claimFloating(closeSlider, drawer.current);
-    else releaseFloating(closeSlider);
-  }, [open, closeSlider]);
+  useFloating({ open: open !== null, kind: "rest", close: () => setOpen(null), area: () => root.current });
   // What the row's slider sets: the open sound, kept while it rolls up so it doesn't change on the
   // way. Switching, the one it replaces shrinks away while the new one grows, each let go when its
   // own animation ends (spec 0131).
@@ -164,7 +149,7 @@ export function HearToggles({
         {!sharer.isMe && button("voice")}
         {!sharer.isMe && button("sound")}
         {swap && (
-          <Tooltip text={"Swap screen and camera"}>
+          <Tooltip text={"Swap screen and camera"} hidden={open !== null}>
             <IconButton
               variant="toggle"
               className={styles.toggle}
@@ -182,7 +167,7 @@ export function HearToggles({
       </span>
       {/* In the row: one slider after the buttons, unrolling once; moving between buttons only changes
           what it sets, so the row never moves under the pointer (spec 0131). */}
-      <span ref={drawer} className={styles.drawer} data-drawer data-open={open ? true : undefined} inert={!open}>
+      <span className={styles.drawer} data-drawer data-open={open ? true : undefined} inert={!open}>
         <span className={styles.inner}>
           {leaving && leaving !== shown && (
             <span
