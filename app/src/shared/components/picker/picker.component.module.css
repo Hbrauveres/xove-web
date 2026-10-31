@@ -11,7 +11,7 @@
   --pick-pad: var(--space-3);
   position: relative;
   display: grid;
-  /* Never wider than its box, whatever the names (spec 0114): the pill and its list stay one width. */
+  /* Never wider than its box, whatever the names: the pill and its list stay one width. */
   min-width: 0;
 }
 
@@ -101,7 +101,7 @@
   border-radius: 0 0 var(--pick-r) var(--pick-r);
   background: var(--pick-bg);
   /* Rolled up into the pill's edge; it unrolls in 220 ms and rolls back in 150 ms. The clip keeps
-     the box's rounded corners, or the blur behind it would show square at them (spec 0114). */
+     the box's rounded corners, or the blur behind it would show square at them. */
   clip-path: inset(0 0 100% 0 round 0 0 var(--pick-r) var(--pick-r));
   transition: clip-path var(--duration-150) ease-in;
 }
@@ -158,7 +158,7 @@
 
 .option {
   position: relative;
-  /* It may shrink to the list's width, so its name can end in "…" (spec 0114). */
+  /* It may shrink to the list's width, so its name can end in "…". */
   min-width: 0;
   isolation: isolate;
   display: flex;

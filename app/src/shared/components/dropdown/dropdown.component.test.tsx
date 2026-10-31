@@ -15,13 +15,7 @@ function Trigger({ name, role = "dialog" }: { name: string; role?: "dialog" | "m
       <button ref={button} type="button" aria-expanded={open} onClick={() => setOpen(!open)}>
         {name}
       </button>
-      <Dropdown
-        open={open}
-        label={`${name} panel`}
-        role={role}
-        anchor={anchor}
-        onClose={() => setOpen(false)}
-      >
+      <Dropdown open={open} label={`${name} panel`} role={role} anchor={anchor} onClose={() => setOpen(false)}>
         <DropdownSection>
           {role === "menu" ? (
             <>

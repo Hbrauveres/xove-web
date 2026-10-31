@@ -6,7 +6,7 @@ import { usePinnedRow } from "../../hooks/usePinnedRow";
 import type { StreamKind } from "@services/xove-api-service";
 import { DropUp } from "../ui/DropUp";
 import drop from "../ui/DropUp.module.css";
-import { Picker } from "../ui/Picker";
+import { Picker } from "@shared/components/picker";
 import styles from "./PlayerButtons.module.css";
 import { Tooltip } from "@shared/components/tooltip";
 
@@ -128,7 +128,7 @@ function StreamButton({
   const label = live ? LABEL[kind].stop : LABEL[kind].start;
   const tip = unavailable ? NO_SCREEN : full ? FULL_ROOM : silent ? `${label}. ${NO_SOUND}` : label;
   // The camera's list closes when its drop-up is left.
-  const [listClosed, setListClosed] = useState(false);
+  const [listOpen, setListOpen] = useState(false);
   // Counts what's been done from the drop-up (Change, a camera picked): each one closes it.
   const [done, setDone] = useState(0);
 
@@ -187,9 +187,9 @@ function StreamButton({
         opens="up"
         look="glass"
         disabled={busy}
-        closed={listClosed}
+        open={listOpen}
         onOpenChange={(open) => {
-          if (open) setListClosed(false);
+          setListOpen(open);
           onMenuChange?.(open);
         }}
         onChange={(deviceId) => {
@@ -204,7 +204,7 @@ function StreamButton({
       label={LABEL[kind].quick}
       enabled={live && (kind === "screen" || cameras.length > 0)}
       width={kind === "screen" ? 228 : 210}
-      onLeave={() => setListClosed(true)}
+      onLeave={() => setListOpen(false)}
       closeSignal={done}
       // The settings already show these controls: the gesture goes there instead (spec 0115).
       redirect={settingsOpen && onGoTo ? () => onGoTo(kind) : undefined}

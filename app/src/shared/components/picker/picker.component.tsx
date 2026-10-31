@@ -1,55 +1,16 @@
 import { Icon } from "@shared/components/icon";
-import {
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-  type KeyboardEvent,
-  type ReactNode,
-} from "react";
-import cueStyles from "./cue.module.css";
-import styles from "./Picker.module.css";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { Cue } from "@shared/components/cue";
 import { Tooltip } from "@shared/components/tooltip";
-
-export type PickerOption<T extends string> = { value: T; label: string };
-
-type Props<T extends string> = {
-  /** Its name for screen readers; the pill reads "<label>: <chosen>". */
-  label: string;
-  options: readonly PickerOption<T>[];
-  value: T;
-  onChange: (value: T) => void;
-  /**
-   * Down, floating over its panel in the pill's own see-through colour (spec 0111), or upward
-   * over the video, in the pill's glass. Either way nothing moves when it opens.
-   */
-  opens?: "down" | "up";
-  look?: "panel" | "glass";
-  disabled?: boolean;
-  /** Told when the list opens or closes. */
-  onOpenChange?: (open: boolean) => void;
-  /** True closes the list (its drop-up was left). */
-  closed?: boolean;
-  /** Opens the list each time it changes (asked from elsewhere, spec 0115). */
-  openSignal?: number;
-  /** Cued (spec 0115): the request it's cued for. The ring goes round the pill and its open list together. */
-  cue?: number;
-  /** Shown in the pill before its arrow: the mic's live level (spec 0123). */
-  adornment?: ReactNode;
-};
-
-/** How long the list takes to roll back before it leaves (spec 0111, design decision 9). */
-export const CLOSE_MS = 150;
-/** The fade under the list, back to fully there (design decision 8). */
-const FADE_GAP = 4;
-const FADE_PX = 30;
+import { useFloating } from "@shared/stores/floating-store";
+import { CLOSE_MS, FADE_GAP, FADE_PX } from "./constants/picker.constants";
+import styles from "./picker.component.module.css";
+import type { PickerProps } from "./types/picker.types";
 
 /**
  * The app's picker: a pill showing the chosen option that grows into one box with the other
  * options, no gap. The chosen option stays in the pill and isn't repeated. Rows are as tall as
- * the pill; after three and a half the list scrolls with the app's slim scrollbar (spec 0111).
+ * the pill; after three and a half the list scrolls with the app's slim scrollbar.
  * The list floats: in a panel (the nearest `[data-list-host]`), what's right behind it is
  * hidden while it's open and what's just under it fades back in, so it reads as one box with
  * its pill and nothing moves. It unrolls from the pill and rolls back.
@@ -62,13 +23,13 @@ export function Picker<T extends string>({
   opens = "down",
   look = "panel",
   disabled = false,
+  open: openFromOutside,
   onOpenChange,
-  closed = false,
-  openSignal,
   cue,
   adornment,
-}: Props<T>) {
-  const [open, setOpenState] = useState(false);
+}: PickerProps<T>) {
+  const [own, setOwn] = useState(false);
+  const open = openFromOutside ?? own;
   // Drawn while open, and while it rolls back after.
   const [drawn, setDrawn] = useState(false);
   if (open && !drawn) setDrawn(true);
@@ -84,7 +45,7 @@ export function Picker<T extends string>({
   const chosen = options.find((o) => o.value === value) ?? options[0];
   const others = options.filter((o) => o !== chosen);
 
-  const setOpen = setOpenState;
+  const setOpen = (next: boolean) => (openFromOutside === undefined ? setOwn(next) : onOpenChange?.(next));
 
   // Tells whoever listens each time it opens or closes, however it happened (its drop-up
   // left, a press outside), and that it's closed when it goes away open.
@@ -106,29 +67,13 @@ export function Picker<T extends string>({
     [],
   );
 
-  // Closed from outside (its drop-up was left).
-  const [wasClosed, setWasClosed] = useState(closed);
-  if (closed !== wasClosed) {
-    setWasClosed(closed);
-    if (closed && open) setOpenState(false);
-  }
-
-  // Asked to open from elsewhere (a live button with the settings open).
-  // Starts unset, so a picker that mounts already asked (a tab drawn on its own) still opens.
-  const [lastOpenSignal, setLastOpenSignal] = useState<number | undefined>(undefined);
-  if (openSignal !== lastOpenSignal) {
-    setLastOpenSignal(openSignal);
-    if (openSignal !== undefined && !disabled) setOpenState(true);
-  }
-  // A press anywhere else closes it.
-  useEffect(() => {
-    if (!open) return;
-    const away = (e: PointerEvent) => {
-      if (!root.current?.contains(e.target as Node)) setOpenState(false);
-    };
-    document.addEventListener("pointerdown", away);
-    return () => document.removeEventListener("pointerdown", away);
-  }, [open]);
+  useFloating({
+    open,
+    kind: "opened",
+    close: () => setOpen(false),
+    area: () => root.current,
+    anchor: () => pill.current,
+  });
 
   const optionsIn = () => [...(root.current?.querySelectorAll<HTMLButtonElement>("[role=radio]") ?? [])];
 
@@ -144,7 +89,7 @@ export function Picker<T extends string>({
     return () => cancelAnimationFrame(next);
   }, [open]);
   // Over its panel: what's right behind the list is masked away while it's open, and what's
-  // just under it comes back over 30 px, nearly invisible near the list (design decisions 7, 8).
+  // just under it comes back over 30 px, nearly invisible near the list.
   // Measured when it opens; kept until it has rolled back, so nothing shows through it on the way.
   const masked = useRef<HTMLElement[]>([]);
   const unmask = () => {
@@ -190,11 +135,11 @@ export function Picker<T extends string>({
   const [wasKey, setWasKey] = useState(optionsKey);
   if (optionsKey !== wasKey) {
     setWasKey(optionsKey);
-    if (open) setOpenState(false);
+    if (open) setOpen(false);
   }
   useEffect(() => {
     if (!open) return;
-    const close = () => setOpenState(false);
+    const close = () => setOpen(false);
     window.addEventListener("resize", close);
     return () => window.removeEventListener("resize", close);
   }, [open]);
@@ -207,11 +152,11 @@ export function Picker<T extends string>({
     const top = clip ? clip.getBoundingClientRect().top : 0;
     const room = (root.current?.getBoundingClientRect().top ?? 0) - top - 8;
     el.style.maxHeight = room > 0 ? `min(${Math.floor(room)}px, calc(var(--ctl, 38px) * 3.5))` : "";
-    // Upward, it opens at the pill's end: the nearest option whole, the half-shown one at the top (spec 0114).
+    // Upward, it opens at the pill's end: the nearest option whole, the half-shown one at the top.
     el.scrollTop = el.scrollHeight;
   }, [open, opens]);
 
-  // The cue's ring reaches over the open list (spec 0123): the list's height, while drawn.
+  // The cue's ring reaches over the open list: the list's height, while drawn.
   useLayoutEffect(() => {
     const h = open && list.current ? list.current.offsetHeight : 0;
     root.current?.style.setProperty("--list-h", `${h}px`);
@@ -222,7 +167,7 @@ export function Picker<T extends string>({
   useEffect(() => {
     if (!open || !focusFirst.current) return;
     focusFirst.current = false;
-    // The option nearest the pill, without scrolling the list away from it (spec 0114).
+    // The option nearest the pill, without scrolling the list away from it.
     const all = optionsIn();
     (opens === "up" ? all[all.length - 1] : all[0])?.focus({
       preventScroll: true,
@@ -230,13 +175,6 @@ export function Picker<T extends string>({
   });
 
   const onKeyDown = (e: KeyboardEvent) => {
-    if (e.key === "Escape" && open) {
-      e.preventDefault();
-      e.stopPropagation();
-      setOpen(false);
-      pill.current?.focus();
-      return;
-    }
     const step = { ArrowDown: 1, ArrowUp: -1 }[e.key];
     if (!step) return;
     e.preventDefault();
@@ -266,7 +204,7 @@ export function Picker<T extends string>({
       data-open={drawn || undefined}
       onKeyDown={onKeyDown}
     >
-      {/* A long name ends in "…" in the pill; the whole of it in its tooltip (spec 0114). */}
+      {/* A long name ends in "…" in the pill; the whole of it in its tooltip. */}
       <Tooltip text={chosen?.label}>
         <button
           ref={pill}
@@ -283,21 +221,16 @@ export function Picker<T extends string>({
           <Icon name="chevron" size={12} className={styles.chevron} />
         </button>
       </Tooltip>
-      {cue ? (
-        <span
-          key={cue}
-          className={cueStyles.cue}
-          aria-hidden="true"
-          data-cue
-          // Over the list, round the pill and the list as one box.
-          style={{
-            zIndex: 11,
-            borderRadius: "var(--pick-r)",
-            [opens === "up" ? "top" : "bottom"]: "calc(-1 * var(--list-h, 0px))",
-            transition: "top 220ms cubic-bezier(0.2, 0.8, 0.2, 1), bottom 220ms cubic-bezier(0.2, 0.8, 0.2, 1)",
-          }}
-        />
-      ) : null}
+      {/* Over the list, round the pill and the list as one box. */}
+      <Cue
+        request={cue}
+        style={{
+          zIndex: 11,
+          borderRadius: "var(--pick-r)",
+          [opens === "up" ? "top" : "bottom"]: "calc(-1 * var(--list-h, 0px))",
+          transition: "top 220ms cubic-bezier(0.2, 0.8, 0.2, 1), bottom 220ms cubic-bezier(0.2, 0.8, 0.2, 1)",
+        }}
+      />
       {drawn && (
         <div
           ref={list}

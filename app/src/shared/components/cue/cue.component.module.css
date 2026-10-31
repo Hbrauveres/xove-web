@@ -1,7 +1,7 @@
 /*
- * The cue (spec 0115, design decision 2): how the app points at a control. A sharp red border
+ * The cue: how the app points at a control. A sharp red border
  * pulsing in place, with no spreading ring, and a slight glow around it like the stage's
- * ambilight; two slow 1 s pulses, then lit and still until the next press (spec 0123).
+ * ambilight; two slow 1 s pulses, then lit and still until the next press.
  * A ring of its own over the control (whose box is `position: relative`), so the control keeps
  * its own shadow and focus.
  */

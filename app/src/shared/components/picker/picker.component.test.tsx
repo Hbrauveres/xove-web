@@ -1,8 +1,9 @@
+import { useState } from "react";
 import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { onFakeClock } from "../../testing/factories/clock.factory";
-import { Picker } from "./Picker";
+import { onFakeClock } from "@testing/factories/clock.factory";
+import { Picker } from "./picker.component";
 
 const CAMERAS = [
   { value: "c920", label: "Webcam C920" },
@@ -74,10 +75,19 @@ describe("Picker, the app's one-box picker", () => {
     const { rerender } = render(
       <Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} onOpenChange={onOpenChange} />,
     );
-    await user.click(screen.getByRole("button", { name: "Camera: Webcam C920" }));
+    rerender(
+      <Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} onOpenChange={onOpenChange} open />,
+    );
     expect(onOpenChange).toHaveBeenLastCalledWith(true);
     rerender(
-      <Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} onOpenChange={onOpenChange} closed />,
+      <Picker
+        label="Camera"
+        options={CAMERAS}
+        value="c920"
+        onChange={() => {}}
+        onOpenChange={onOpenChange}
+        open={false}
+      />,
     );
     expect(screen.getByRole("button", { name: "Camera: Webcam C920" })).toHaveAttribute("aria-expanded", "false");
     // Closed from outside, it says so too: the player lets its controls fade again.
@@ -253,15 +263,31 @@ describe("Picker: long names and an upward list (spec 0114)", () => {
 describe("Picker: opened on request (spec 0115)", () => {
   it("opens when asked, again each time the request changes", async () => {
     const user = userEvent.setup();
-    const view = render(<Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} />);
+    function Told() {
+      const [open, setOpen] = useState(false);
+      return (
+        <>
+          <button onClick={() => setOpen(true)}>Ask</button>
+          <Picker
+            label="Camera"
+            options={CAMERAS}
+            value="c920"
+            onChange={() => {}}
+            open={open}
+            onOpenChange={setOpen}
+          />
+        </>
+      );
+    }
+    render(<Told />);
     const pill = screen.getByRole("button", { name: "Camera: Webcam C920" });
     expect(pill).toHaveAttribute("aria-expanded", "false");
-    view.rerender(<Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} openSignal={1} />);
+    await user.click(screen.getByRole("button", { name: "Ask" }));
     expect(pill).toHaveAttribute("aria-expanded", "true");
-    pill.focus();
     await user.keyboard("{Escape}");
     expect(pill).toHaveAttribute("aria-expanded", "false");
-    view.rerender(<Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} openSignal={2} />);
+    expect(pill).toHaveFocus();
+    await user.click(screen.getByRole("button", { name: "Ask" }));
     expect(pill).toHaveAttribute("aria-expanded", "true");
   });
 });
@@ -269,7 +295,7 @@ describe("Picker: opened on request (spec 0115)", () => {
 describe("Picker: cued (spec 0123, design decision 11)", () => {
   it("draws the cue's ring over its list, round the pill and the open list together", () => {
     const { container } = render(
-      <Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} openSignal={1} cue={1} />,
+      <Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} open cue={1} />,
     );
     const ring = container.querySelector("[data-cue]") as HTMLElement;
     expect(ring).not.toBeNull();
@@ -283,7 +309,7 @@ describe("Picker: cued (spec 0123, design decision 11)", () => {
 
   it("reaches up instead when the list opens upward, and draws no ring when not cued", () => {
     const { container, rerender } = render(
-      <Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} opens="up" openSignal={1} cue={1} />,
+      <Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} opens="up" open cue={1} />,
     );
     expect((container.querySelector("[data-cue]") as HTMLElement).style.top).toBe("calc(-1 * var(--list-h, 0px))");
     rerender(<Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} opens="up" />);
