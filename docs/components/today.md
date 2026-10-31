@@ -79,7 +79,7 @@ My picture; it opens my menu.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/room/AccountButton.tsx` (it holds a switch, a slider and the footer's items) | `features/room/components/header-my-picture-button/`, `my-menu/` (on the shared Menu, Switch and Slider) | Kept |
+| `components/room/AccountButton.tsx` (it holds a switch, a slider and the footer's items) | `features/room/components/header-my-picture-button/`, `my-menu/` (on the shared Dropdown, Switch and Slider) | Kept |
 
 ## The stage
 
@@ -133,7 +133,7 @@ Starts what I share, from a drop-up over the stage.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| In `ViewerBar.tsx`, on `components/ui/DropUp.tsx` | On the shared Menu | Kept; the next version's send buttons replace it |
+| In `ViewerBar.tsx`, on the floating layer | On the floating layer | Kept; the next version's send buttons replace it |
 
 ### Player buttons
 
@@ -307,8 +307,10 @@ The shared controls today, and the copies that become one component each.
 | Button | `components/ui/Button.tsx` | `shared/components/button/` | Kept |
 | Slider | `components/ui/Range.tsx` | `shared/components/slider/` | Kept |
 | Segmented control | `components/ui/Segmented.tsx` | `shared/components/segmented/` | Kept |
-| Picker, drop-up, dropdown | `components/ui/Picker.tsx`, `DropUp.tsx`, `Dropdown.tsx`, `floating.ts` | `shared/components/menu/`: one floating system for all of them | Merged |
-| Tooltip | `components/ui/Tooltip.tsx` | `shared/components/tooltip/`, on the Menu's floating layer | Kept |
+| Floating layer | `shared/stores/floating-store/` | Here | Done (#187) |
+| Picker, drop-up, dropdown | `shared/components/picker/`, `drop-up/`, `drop-up-row/`, `dropdown/`, `dropdown-section/` | Here, on the floating layer | Done (#187) |
+| Cue | `shared/components/cue/` | Here | Done (#187) |
+| Tooltip | `shared/components/tooltip/` | Here, on the floating layer | Done (#187) |
 | Avatar | `shared/components/face/` (was `ui/Avatar.tsx`, `PersonAvatar.tsx`): the room's colour and initial with its rings, the account's photo | Already there | Merged |
 | Round button | `shared/components/icon-button/` (was `RoundButton.module.css` and its copies): the player's pills, the stage's glass, the fullscreen corner, a sound's toggle, the header's, the small pill with words | Already there | Merged |
 | Switch | `shared/components/switch/`: a setting's line, its words and the switch | Already there | Merged |

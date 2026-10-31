@@ -325,7 +325,7 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 
 ### Pickers
 
-`components/ui/Picker`: every choice from a list (which camera) is one, in any panel or over the video.
+`shared/components/picker`: every choice from a list (which camera) is one, in any panel or over the video.
 
 - **Closed:** a pill as tall as the other controls, the chosen option and a small chevron.
 - **Open, it's one box with its pill:** the pill grows into the list with **no gap and no separate floating box**, in the pill's own colour. **The chosen option stays in the pill and isn't repeated**; the others follow in rows as tall as the pill, their text lined up with the pill's.
@@ -340,9 +340,9 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 
 ### Drop-ups
 
-`components/ui/DropUp`: quick access to a live button's most used action, where the pointer already is. Any later quick action follows these rules.
+`shared/components/drop-up`: quick access to a live button's most used action, where the pointer already is. Any later quick action follows these rules.
 
-- **One floating thing at a time** (with the [tooltips](#notifications-and-status)): a drop-up opening closes any other drop-up or tooltip at once, without its grace, and a tooltip showing elsewhere closes it; a tooltip on the drop-up's own controls (its picker) belongs to it and closes nothing. The sound sliders follow the same rule.
+- **One floating thing at a time** (with the [tooltips](#notifications-and-status)), the rule for everything that floats: what you open with a click or the keyboard replaces what's open. A mouse rest never closes what you opened: while a panel or menu is open, a drop-up, a sound's slider or a preview's row doesn't unroll on a rest. A drop-up opening on a rest closes any other drop-up, slider, row or tooltip at once, without its grace, and a tooltip showing elsewhere closes those too, never what you opened. What's inside another belongs to it and stays (a picker in a panel, a tooltip on a drop-up's own controls). A press outside or Escape closes it, and Escape returns the focus to its button. The settings panel stays pinned, open while the room is used.
 - **Resting the mouse on a live round button** unrolls one frosted pill above it, centred, after **120 ms**: the round buttons' glass, blur and shadow, **with no box around it**. It fades and slides 6 px; nothing blurred is animated.
 - **Moving up into it keeps it open** (the gap is bridged), and on into an open list inside it. It closes when the pointer leaves, its list with it, **also right after a click**; a slip outside shorter than **300 ms** doesn't close it. Keyboard focus opens it; a click's focus doesn't keep it open.
 - **The button's own click still does what it always does** (stop the stream).
@@ -397,7 +397,7 @@ The sliders' rules stay one browser per rule, checked by `npm run check:styles` 
 ![The people panel](images/design/panel-people.png) ![The account menu, with the switch and a slider](images/design/panel-account.png)
 
 - Frosted sections (dark at 74%, blur 22 px, a 1 px white border at 8%), **16 px corners**, stacked with 2 px clear cuts. 340 px wide (the activity list: up to 440 px, centred under the pill).
-- Open 8 px under their button; **one at a time**; they unroll by their height (260 ms).
+- Open 8 px under their button; **one thing on screen at a time** (the [floating rule](#drop-ups)); they unroll by their height (260 ms).
 - **Activity:** the latest events, each with its icon, what happened and when. **People:** the seats bar (green), who's here and what each is doing or watching, and the queue. **Account:** me and my connection, the ambilight's switch and brightness, Admin for admins, Sign out.
 
 ### Avatars and LIVE
@@ -433,7 +433,7 @@ The sliders' rules stay one browser per rule, checked by `npm run check:styles` 
 - **Stage messages** (`StageNotice`): centred over the stage, a title in `--text-lg` and a line under it (up to 42 characters wide, `--text-sm`), with a 22 px spinner while something loads ("Loading Marina's screen…").
 - **The seat offer:** when a seat frees up for someone in the queue, a dialog (up to 400 px, `--radius-2-5`) offers it for 60 seconds, with the time running down.
 - **The waiting room:** the place in the queue, in plain words, while the room is full.
-- **Tooltips** (`components/ui/Tooltip`, the app's only one; never the browser's own) say what a control does or why it can't be used, with a mouse after a **120 ms** rest (then at once along a row, for 400 ms after one hides) or on the keyboard's focus; they go the moment the pointer leaves or presses. A finger on a touch screen gets none (a tap leaves a button "hovered"); a greyed-out control says why in the toast instead. The round buttons' look: near-black `#070708`, 12 px text, 6 px corners, at most 260 px wide, **floating on its own layer** 10 px above its control (below it where there's no room), never clipped. **One floating thing at a time:** a tooltip showing closes any other tooltip or drop-up; one on a drop-up's own controls belongs to it. Told to keep quiet (a live button, whose drop-up takes its place), it still describes its control for screen readers.
+- **Tooltips** (`shared/components/tooltip`, the app's only one; never the browser's own) say what a control does or why it can't be used, with a mouse after a **120 ms** rest (then at once along a row, for 400 ms after one hides) or on the keyboard's focus; they go the moment the pointer leaves or presses. A finger on a touch screen gets none (a tap leaves a button "hovered"); a greyed-out control says why in the toast instead. The round buttons' look: near-black `#070708`, 12 px text, 6 px corners, at most 260 px wide, **floating on its own layer** 10 px above its control (below it where there's no room), never clipped. **One floating thing at a time:** a tooltip showing closes any other tooltip and whatever opened on a mouse rest, never what you opened; one on a drop-up's own controls belongs to it. Told to keep quiet (a live button, whose drop-up takes its place), it still describes its control for screen readers.
 - **The toast** (`components/ui/Toast`, called with `showToast`): a short message to the user, the app's one way to announce something briefly. The round buttons' glass (frosted, 8 px blur, their shadow), a pill up to 360 px wide and two lines, 13 px text, with the icon of what it's about (the control you touched, crossed out) and no alert sign. At the top centre of the player. It fades in and drops 6 px, stays **3 s** and fades out by itself; one at a time, the newest replacing it; screen readers hear it once. Today it says why a greyed-out control can't be used when a finger or a pen touches it ("This browser can't share a screen", the full room).
 
 ![The app's tooltip over my mic](images/design/tooltip.png)
@@ -500,7 +500,7 @@ Its content stays clear of the phone's bars (the browser's safe areas).
 
 - **Use the tokens.** Every colour, size, duration, easing, layer and window size comes from `tokens.css` ([Tokens](#tokens)), sizes in rem. A new one is a design decision: it needs an approved draft first, then it lands in `tokens.css` and here.
 - **Red means the brand, live, or the cue.** Don't use it for anything else.
-- **The cue** (`components/ui/cue.module.css`) is how the app points at a control: a sharp 1.5 px red border pulsing in place (never a spreading ring), with a slight glow around it like the stage's ambilight (14 px, the red at 35%); two slow 1 s pulses, then lit and still until the next press anywhere else (or the panel closing). With reduced motion, lit and still from the start. It's a ring of its own over the control, drawn anew for each request, so the control keeps its shadow and focus; round a picker, it takes the open list in too.
+- **The cue** (`shared/components/cue`) is how the app points at a control: a sharp 1.5 px red border pulsing in place (never a spreading ring), with a slight glow around it like the stage's ambilight (14 px, the red at 35%); two slow 1 s pulses, then lit and still until the next press anywhere else (or the panel closing). With reduced motion, lit and still from the start. It's a ring of its own over the control, drawn anew for each request, so the control keeps its shadow and focus; round a picker, it takes the open list in too.
 
   ![The cue on Change](images/design/cue.png)
 - **A button that opens a panel never also changes a setting** (the cog only opens the settings). A button that *is* a sound mutes it with a click, and opens its own slider on a rest.
