@@ -401,27 +401,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/hooks/useFullscreenElement.ts",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/hooks/usePinnedRow.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/hooks/useVideoShape.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/media/ambilight.ts",
     "count": 3,
     "owner": "#190 room: stage, Stage split"
@@ -1066,48 +1045,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/hooks/useFullscreenElement.test.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/hooks/useFullscreenElement.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/hooks/usePinnedRow.test.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/hooks/usePinnedRow.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/hooks/useVideoShape.test.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/hooks/useVideoShape.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/media/ambilight.test.ts",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
@@ -1545,27 +1482,6 @@
     "file": "src/components/ui/FullPageMessage.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/hooks/useFullscreenElement.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/hooks/usePinnedRow.ts",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/hooks/useVideoShape.ts",
-    "count": 3,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -2172,48 +2088,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/hooks/useFullscreenElement.test.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/hooks/useFullscreenElement.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/hooks/usePinnedRow.test.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/hooks/usePinnedRow.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/hooks/useVideoShape.test.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/hooks/useVideoShape.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/media/ambilight.test.ts",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
@@ -2669,20 +2543,6 @@
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
-    "file": "src/hooks/usePinnedRow.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/hooks/useVideoShape.ts",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
     "file": "src/media/ambilight.ts",
     "count": 22,
     "owner": "#190 room: stage, Stage split"
@@ -2887,13 +2747,6 @@
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
     "file": "src/components/stage/Stage.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
   },
@@ -3146,13 +2999,6 @@
     "tool": "unused",
     "rule": "exports",
     "file": "src/components/stage/staticBands.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
-    "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
   },

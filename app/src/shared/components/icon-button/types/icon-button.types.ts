@@ -8,8 +8,10 @@ import type { ButtonHTMLAttributes, ReactElement, ReactNode, Ref } from "react";
  * - toggle: a sound's small round toggle
  * - header: the header's clear pill buttons
  * - words: a small pill with words, in the settings' own style (Change, Test)
+ * - mini: a small round glass button on a small picture (the facecam's)
+ * - close: a panel's close, clear until pointed at
  */
-type IconButtonVariant = "player" | "stage" | "overlay" | "toggle" | "header" | "words";
+type IconButtonVariant = "player" | "stage" | "overlay" | "toggle" | "header" | "words" | "mini" | "close";
 
 export interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant: IconButtonVariant;

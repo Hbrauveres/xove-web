@@ -50,28 +50,6 @@
   font-size: var(--text-sm);
 }
 
-.close {
-  display: grid;
-  place-items: center;
-  width: var(--size-8);
-  height: var(--size-8);
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: transparent;
-  color: var(--text-muted);
-  cursor: pointer;
-}
-
-.close:hover {
-  background: var(--panel-line);
-  color: var(--text);
-}
-
-.close svg {
-  width: var(--size-4);
-  height: var(--size-4);
-}
-
 /* The tabs, a red marker sliding under the chosen one. */
 .tabs {
   position: relative;

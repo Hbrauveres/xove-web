@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
-
-/** The stage's shape when there's no picture to follow: empty, or still loading. */
-export const WIDESCREEN = 16 / 9;
-
-/** Changes smaller than this (simulcast layers of the same window) don't move the stage. */
-const IGNORE = 0.01;
+import { IGNORE_SHAPE, WIDESCREEN } from "../constants/video-shape.constants";
+import type { ShapeRead } from "../types/video-shape.types";
 
 /**
- * The shape of a video's picture, width ÷ height (spec 0107): 16:9 until its size is known,
+ * The shape of a video's picture, width ÷ height: 16:9 until its size is known,
  * then the picture's own, following it when the sharer resizes or switches the window.
  */
 export function useVideoShape(video: HTMLVideoElement | null): number {
   // The shape read, and the video it was read from: another video starts again at 16:9.
-  const [read, setRead] = useState<{ video: HTMLVideoElement; shape: number } | null>(null);
+  const [read, setRead] = useState<ShapeRead | null>(null);
 
   useEffect(() => {
     if (!video) return;
@@ -21,7 +17,9 @@ export function useVideoShape(video: HTMLVideoElement | null): number {
       if (!w || !h) return;
       const next = w / h;
       setRead((prev) =>
-        prev?.video === video && Math.abs(next - prev.shape) / prev.shape < IGNORE ? prev : { video, shape: next },
+        prev?.video === video && Math.abs(next - prev.shape) / prev.shape < IGNORE_SHAPE
+          ? prev
+          : { video, shape: next },
       );
     };
     update();

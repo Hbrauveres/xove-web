@@ -1,17 +1,9 @@
 import { act, fireEvent, render } from "@testing-library/react";
 import { createElement } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { heldShift, usePinnedRow } from "./usePinnedRow";
+import { usePinnedRow } from "./use-pinned-row.hook";
 
-describe("keeping the clicked button still (spec 0106)", () => {
-  it("moves the row by however far the button under the pointer was pushed", () => {
-    expect(heldShift(0, 400, 409)).toBe(-9);
-    expect(heldShift(-9, 400, 391)).toBe(0);
-    expect(heldShift(12, 300, 300)).toBe(12);
-  });
-});
-
-describe("the row holds the button under the pointer when its width changes (spec 0106)", () => {
+describe("the row holds the button under the pointer when its width changes", () => {
   /** This test's own ResizeObserver: `resize.now()` tells the row its width changed. */
   function onResize() {
     const resize = { now: () => {} };

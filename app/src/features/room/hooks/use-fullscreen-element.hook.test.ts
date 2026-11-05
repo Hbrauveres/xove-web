@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { useFullscreenElement } from "./useFullscreenElement";
+import { useFullscreenElement } from "./use-fullscreen-element.hook";
 
 /** Each test's own fullscreen: `page.fullscreen` is what the browser says is fullscreen (setup removes it after). */
 function onPage() {
@@ -9,7 +9,7 @@ function onPage() {
   return { page };
 }
 
-describe("the fullscreen element (spec 0101)", () => {
+describe("the fullscreen element", () => {
   it("is the player when the player is fullscreen", () => {
     const { page } = onPage();
     const hook = renderHook(() => useFullscreenElement());

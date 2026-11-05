@@ -1,6 +1,7 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { WIDESCREEN, useVideoShape } from "./useVideoShape";
+import { WIDESCREEN } from "../constants/video-shape.constants";
+import { useVideoShape } from "./use-video-shape.hook";
 
 /** A <video> whose picture size the test sets, as the browser would. */
 function videoOf(width: number, height: number) {

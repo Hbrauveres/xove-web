@@ -1,3 +1,4 @@
+import { IconButton } from "@shared/components/icon-button";
 import { LiveBadge } from "@shared/components/live-badge";
 import { Switch } from "@shared/components/switch";
 import { Icon } from "@shared/components/icon";
@@ -178,9 +179,9 @@ export function SettingsPanel(props: Props) {
     >
       <div className={styles.head}>
         <h2>Settings</h2>
-        <button type="button" className={styles.close} aria-label="Close settings" onClick={onClose}>
+        <IconButton variant="close" aria-label="Close settings" onClick={onClose}>
           <Icon name="close" size={20} />
-        </button>
+        </IconButton>
       </div>
       <div
         className={styles.tabs}

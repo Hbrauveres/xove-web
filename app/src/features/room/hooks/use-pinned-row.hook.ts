@@ -1,16 +1,9 @@
 import { useEffect, useRef } from "react";
-
-/** How long the row takes to glide back to the centre once the pointer leaves it. */
-export const RECENTRE_MS = 220;
-const EASE = "cubic-bezier(0.2, 0.8, 0.2, 1)";
-
-/** The row's offset after the button under the pointer moved from `before` to `now` (px). */
-export function heldShift(shift: number, before: number, now: number): number {
-  return shift + (before - now);
-}
+import { RECENTRE_EASE, RECENTRE_MS, STILL_PX } from "../constants/pinned-row.constants";
+import { heldShift } from "../utils/held-shift.util";
 
 /**
- * Keeps the button under the pointer still whenever the row changes width (spec 0106): a
+ * Keeps the button under the pointer still whenever the row changes width: a
  * button coming or going, a live stream's arrow appearing or going on the click itself.
  * The row is watched with a ResizeObserver, which reports a change after layout and before
  * paint, so the row moves back by however far the button was pushed in the same frame, and
@@ -29,11 +22,11 @@ export function usePinnedRow<T extends HTMLElement>() {
     let rest = 0;
 
     const apply = (animate: boolean) => {
-      row.style.transition = animate ? `transform ${RECENTRE_MS}ms ${EASE}` : "none";
+      row.style.transition = animate ? `transform ${RECENTRE_MS}ms ${RECENTRE_EASE}` : "none";
       row.style.transform = shift ? `translateX(${shift}px)` : "";
     };
     const over = (e: PointerEvent) => {
-      const button = (e.target as Element | null)?.closest("button");
+      const button = e.target instanceof Element ? e.target.closest("button") : null;
       if (!button || button === anchor) return;
       anchor = button;
       rest = button.getBoundingClientRect().left;
@@ -48,7 +41,7 @@ export function usePinnedRow<T extends HTMLElement>() {
     const resized = () => {
       if (!anchor || !anchor.isConnected) return;
       const now = anchor.getBoundingClientRect().left;
-      if (Math.abs(now - rest) < 0.5) return;
+      if (Math.abs(now - rest) < STILL_PX) return;
       shift = heldShift(shift, rest, now);
       apply(false);
     };

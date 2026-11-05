@@ -35,23 +35,6 @@
   transition: opacity var(--duration-250) ease;
 }
 
-.button {
-  display: grid;
-  place-items: center;
-  width: var(--size-7);
-  height: var(--size-7);
-  border: none;
-  border-radius: 50%;
-  background: var(--glass);
-  color: var(--text);
-  cursor: pointer;
-}
-
-.button:hover,
-.button:focus-visible {
-  background: var(--grey-10-90);
-}
-
 :global([data-chrome="hidden"]) .controls {
   opacity: 0;
   pointer-events: none;
