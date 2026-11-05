@@ -1,13 +1,13 @@
 import { act, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { Toast } from "./Toast";
-import { showToast, TOAST_MS } from "./toast";
+import { Toast } from "./toast.component";
+import { TOAST_MS, toastStore } from "@shared/stores/toast-store";
 
 beforeEach(() => vi.useFakeTimers());
 
 const pill = () => screen.getByRole("status");
 
-describe("the toast (design decision 10)", () => {
+describe("the toast", () => {
   it("is an empty live region until there's something to say", () => {
     render(<Toast />);
     expect(pill()).toBeEmptyDOMElement();
@@ -17,7 +17,7 @@ describe("the toast (design decision 10)", () => {
 
   it("says a message with its icon, and fades out by itself after 3 s", () => {
     render(<Toast />);
-    act(() => showToast("This browser can't share a screen", <svg data-icon="screen-off" />));
+    act(() => toastStore.show("This browser can't share a screen", <svg data-icon="screen-off" />));
     expect(pill()).toHaveTextContent("This browser can't share a screen");
     expect(pill()).toHaveAttribute("data-show");
     expect(pill().querySelector('svg[data-icon="screen-off"]')).not.toBeNull();
@@ -34,9 +34,9 @@ describe("the toast (design decision 10)", () => {
 
   it("shows one at a time: a new message replaces it and starts the 3 s over", () => {
     render(<Toast />);
-    act(() => showToast("First"));
+    act(() => toastStore.show("First"));
     act(() => vi.advanceTimersByTime(2000));
-    act(() => showToast("Second"));
+    act(() => toastStore.show("Second"));
     expect(pill()).toHaveTextContent("Second");
     expect(pill()).not.toHaveTextContent("First");
     act(() => vi.advanceTimersByTime(2000));

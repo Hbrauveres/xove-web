@@ -1,17 +1,15 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { currentToast, subscribeToast, type ToastMessage } from "./toast";
-import styles from "./Toast.module.css";
-
-/** How long it takes to fade out; the last message stays drawn until then. */
-const FADE_MS = 200;
+import { toastStore, type ToastMessage } from "@shared/stores/toast-store";
+import { FADE_MS } from "./constants/toast.constants";
+import styles from "./toast.component.module.css";
 
 /**
- * The toast (design decision 10): a frosted pill at the top centre of what holds it, with an
+ * The toast: a frosted pill at the top centre of what holds it, with an
  * icon and a short message, read once by screen readers. The live region is always there,
  * so a message that arrives is announced.
  */
 export function Toast() {
-  const message = useSyncExternalStore(subscribeToast, currentToast, currentToast);
+  const message = useSyncExternalStore(toastStore.subscribe, toastStore.current, toastStore.current);
   // Keeps the last message drawn while it fades out.
   const [shown, setShown] = useState<ToastMessage | null>(message);
   if (message && message !== shown) setShown(message);
@@ -22,7 +20,7 @@ export function Toast() {
   }, [message]);
 
   return (
-    <div className={styles.toast} role="status" aria-live="polite" data-show={message ? true : undefined}>
+    <output className={styles.toast} aria-live="polite" data-show={message ? true : undefined}>
       {shown && (
         <>
           {shown.icon && (
@@ -35,6 +33,6 @@ export function Toast() {
           </span>
         </>
       )}
-    </div>
+    </output>
   );
 }

@@ -2,7 +2,7 @@ import { Headline } from "@shared/components/headline";
 import { Icon } from "@shared/components/icon";
 import { useEffect, useState } from "react";
 import type { StreamKind } from "@services/xove-api-service";
-import { showToast } from "../ui/toast";
+import { toastStore } from "@shared/stores/toast-store";
 import styles from "./EmptyStage.module.css";
 import { StaticNoise } from "./StaticNoise";
 import { tv } from "./staticBands";
@@ -39,7 +39,7 @@ export function EmptyStage({ canShareScreen = true, onStart }: Props) {
         onClick={() =>
           canShareScreen
             ? onStart?.("screen")
-            : showToast("This browser can't share a screen", <Icon name="screen-off" size={20} />)
+            : toastStore.show("This browser can't share a screen", <Icon name="screen-off" size={20} />)
         }
       >
         {canShareScreen ? <Icon name="screen-on" size={20} /> : <Icon name="screen-off" size={20} />}

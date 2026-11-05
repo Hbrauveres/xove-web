@@ -1,5 +1,5 @@
 /*
- * The toast (design decision 10): the round buttons' glass, a pill up to 360 px wide and two
+ * The toast: the round buttons' glass, a pill up to 360 px wide and two
  * lines, at the top centre of what holds it. It fades in and drops 6 px, and fades out by
  * itself. It never takes a click.
  */

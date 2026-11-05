@@ -450,27 +450,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/ui/Toast.module.css",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/ui/toast.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/ui/Toast.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/hooks/useFullscreenElement.ts",
     "count": 2,
     "owner": "#190 room: stage, Stage split"
@@ -1227,41 +1206,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/ui/Toast.module.css",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/toast.test.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/Toast.test.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/toast.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/Toast.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/hooks/useFullscreenElement.test.ts",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
@@ -1816,20 +1760,6 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/ui/FullPageMessage.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/ui/toast.ts",
-    "count": 6,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/ui/Toast.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
   },
@@ -2550,41 +2480,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/ui/Toast.module.css",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/toast.test.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/Toast.test.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/toast.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/Toast.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/hooks/useFullscreenElement.test.ts",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
@@ -3292,13 +3187,6 @@
   {
     "tool": "lint",
     "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/components/ui/Toast.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(prefer-tag-over-role)",
     "file": "src/pages/RequestAccessPage.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
@@ -3673,13 +3561,6 @@
     "file": "src/components/stage/staticBands.ts",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
-    "file": "src/components/ui/toast.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "unused",

@@ -21,7 +21,7 @@ import { CornerGlow } from "./CornerGlow";
 import { StaticGlow } from "./StaticGlow";
 import { NowWatching } from "./NowWatching";
 import { STREAM_PLACES } from "@features/room/constants/room.constants";
-import { Toast } from "../ui/Toast";
+import { Toast } from "@shared/components/toast";
 import { Tooltip } from "@shared/components/tooltip";
 import { useVideoShape } from "../../hooks/useVideoShape";
 import { useKeyboardLast } from "@features/room/hooks/use-keyboard-last.hook";

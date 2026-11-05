@@ -13,7 +13,7 @@ import type { MediaTrack } from "@services/livekit-service";
 import { Cue } from "@shared/components/cue";
 import { Picker } from "@shared/components/picker";
 import { Segmented } from "@shared/components/segmented";
-import { showToast } from "../ui/toast";
+import { toastStore } from "@shared/stores/toast-store";
 import { NO_SCREEN, NO_SOUND } from "./PlayerButtons";
 import styles from "./SettingsPanel.module.css";
 import { MicTest } from "./MicTest";
@@ -213,7 +213,7 @@ export function SettingsPanel(props: Props) {
               onClick={() => {
                 if (usable.includes(t)) setTab(t);
                 else if (pointer.current === "touch" || pointer.current === "pen")
-                  showToast(NO_SCREEN, <Icon name="screen-off" size={20} />);
+                  toastStore.show(NO_SCREEN, <Icon name="screen-off" size={20} />);
               }}
             >
               {t === "screen" ? (
@@ -498,7 +498,7 @@ function VoiceTab(props: Props & { shown: boolean }) {
               unavailable={Boolean(s.unavailable)}
               onToggle={() =>
                 s.unavailable
-                  ? showToast(s.unavailable, <Icon name="mic" size={20} />)
+                  ? toastStore.show(s.unavailable, <Icon name="mic" size={20} />)
                   : set({ [s.key]: !voicePrefs[s.key] })
               }
             />
