@@ -192,15 +192,6 @@
   gap: var(--space-1-5);
 }
 
-.heading {
-  margin: 0;
-  color: var(--text-faint);
-  font-family: var(--font-mono);
-  font-size: var(--text-10);
-  letter-spacing: var(--tracking-6);
-  text-transform: uppercase;
-}
-
 .hint {
   margin: 0;
   color: var(--text-muted);

@@ -1,3 +1,4 @@
+import { ControlLabel } from "@shared/components/control-label";
 import { Panel } from "@shared/components/panel";
 import { IconButton } from "@shared/components/icon-button";
 import { LiveBadge } from "@shared/components/live-badge";
@@ -273,7 +274,7 @@ function QualityAndMode({
   return (
     <>
       <div className={styles.group}>
-        <p className={styles.heading}>Quality</p>
+        <ControlLabel>Quality</ControlLabel>
         <Segmented<StreamQuality>
           label={`${name} quality`}
           options={qualities}
@@ -283,7 +284,7 @@ function QualityAndMode({
         />
       </div>
       <div className={styles.group}>
-        <p className={styles.heading}>Mode</p>
+        <ControlLabel>Mode</ControlLabel>
         <Segmented<StreamMode>
           label={`${name} mode`}
           options={MODE_OPTIONS}
@@ -305,7 +306,7 @@ function ScreenTab(props: Props & { cue?: number }) {
       <div className={styles.lead}>
         {mine.screen ? (
           <div className={styles.group}>
-            <p className={styles.heading}>Window</p>
+            <ControlLabel>Window</ControlLabel>
             <div className={styles.fieldRow}>
               <span className={styles.source}>
                 <Icon name="window" size={20} />
@@ -347,7 +348,7 @@ function CameraTab(props: Props & { cue?: number }) {
       {/* What you see (spec 0111, design decisions 3 and 4). */}
       <div className={styles.lead}>
         <div className={styles.group}>
-          <p className={styles.heading}>Preview</p>
+          <ControlLabel>Preview</ControlLabel>
           <div className={styles.preview} data-problem={problem ? true : undefined}>
             {problem ? (
               <p className={styles.problem} role="status">
@@ -368,7 +369,7 @@ function CameraTab(props: Props & { cue?: number }) {
       </div>
       {cameras.length > 0 && (
         <div className={styles.group}>
-          <p className={styles.heading}>Camera</p>
+          <ControlLabel>Camera</ControlLabel>
           <div className={styles.cueBox}>
             <Picker
               label="Camera"
@@ -467,7 +468,7 @@ function VoiceTab(props: Props & { shown: boolean }) {
     <>
       <div className={styles.lead}>
         <div className={styles.group}>
-          <p className={styles.heading}>Microphone</p>
+          <ControlLabel>Microphone</ControlLabel>
           {mics.length > 0 ? (
             <Picker
               label="Microphone"
@@ -480,7 +481,7 @@ function VoiceTab(props: Props & { shown: boolean }) {
           )}
         </div>
         <div className={styles.group}>
-          <p className={styles.heading}>Mic level</p>
+          <ControlLabel>Mic level</ControlLabel>
           <MicTest
             level={level}
             track={localVoice}
@@ -490,7 +491,7 @@ function VoiceTab(props: Props & { shown: boolean }) {
         </div>
       </div>
       <div className={styles.group}>
-        <p className={styles.heading}>Voice processing</p>
+        <ControlLabel>Voice processing</ControlLabel>
         {SWITCHES.map((s) => (
           <Tooltip key={s.key} text={s.unavailable ?? s.hint}>
             <Switch

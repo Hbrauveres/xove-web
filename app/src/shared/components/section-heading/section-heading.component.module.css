@@ -1,0 +1,13 @@
+/* What starts a part of a page: small capitals, muted, its count's chip centred beside it. */
+.heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-8);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}

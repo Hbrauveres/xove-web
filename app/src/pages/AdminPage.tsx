@@ -1,4 +1,4 @@
-import { CountChip } from "@shared/components/count-chip";
+import { SectionHeading } from "@shared/components/section-heading";
 import { Face } from "@shared/components/face";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router";
@@ -69,10 +69,14 @@ export function AdminPage() {
       ) : (
         <div className={styles.columns}>
           <section aria-labelledby="requests-title">
-            <h2 id="requests-title" className={styles.heading}>
-              Waiting for access{" "}
-              <CountChip count={data.requests.length} tone={data.requests.length > 0 ? "attention" : "neutral"} />
-            </h2>
+            <SectionHeading
+              id="requests-title"
+              className={styles.heading}
+              count={data.requests.length}
+              attention={data.requests.length > 0}
+            >
+              Waiting for access
+            </SectionHeading>
             {data.requests.length === 0 ? (
               <p className={styles.empty}>No one is waiting right now.</p>
             ) : (
@@ -114,9 +118,9 @@ export function AdminPage() {
           </section>
 
           <section aria-labelledby="members-title">
-            <h2 id="members-title" className={styles.heading}>
-              Members <CountChip count={data.members.length} />
-            </h2>
+            <SectionHeading id="members-title" className={styles.heading} count={data.members.length}>
+              Members
+            </SectionHeading>
             <ul className={styles.list}>
               {data.members.map((m) => (
                 <li key={m.id} className={styles.member}>
