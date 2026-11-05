@@ -44,7 +44,7 @@
 .note {
   margin: 0;
   font-size: var(--text-xs);
-  color: var(--text-faint);
+  color: var(--text-muted);
 }
 
 /* The mark and headline, then what to read and do, in one column. */

@@ -9,7 +9,7 @@
   gap: var(--space-4);
   height: var(--control-xl);
   padding: 0 var(--room-edge, var(--space-6));
-  color: var(--text-faint);
+  color: var(--text-muted);
   font-size: var(--text-xs);
   white-space: nowrap;
 }

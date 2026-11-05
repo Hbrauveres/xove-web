@@ -12,8 +12,14 @@ const TEXTS: [string, number][] = [
   ["text", 4.5],
   ["text-muted", 4.5],
   ["accent", 4.5],
-  ["text-faint", 3],
 ];
+/**
+ * The Panel's glass over the brightest stream, white, as it renders (measured in the browser):
+ * its text is checked there too. Change it with `--panel` or `--panel-filter`.
+ */
+export const GLASS_OVER_WHITE = "#313133";
+/** The smallest text, in rem (11 px). */
+const SMALLEST_TEXT_REM = 0.6875;
 
 /** The custom properties declared on `:root`, as name → value. */
 export function tokensOf(root: Root) {
@@ -48,6 +54,8 @@ export function contrastProblems(tokens: Map<string, string>) {
     if (ratio < min) problems.push(`--${fg} on --${bg}: ${ratio.toFixed(2)}:1, needs ${min}:1`);
   };
   for (const bg of SURFACES) for (const [fg, min] of TEXTS) check(fg, bg, min);
+  tokens.set("glass-over-white", GLASS_OVER_WHITE);
+  for (const fg of ["text", "text-muted"]) check(fg, "glass-over-white", 4.5);
   check("accent-ink", "accent", 4.5);
   return problems;
 }
@@ -62,6 +70,25 @@ export function faviconProblems(tokens: Map<string, string>, favicon: Record<"gr
   return pairs
     .filter(([key, token]) => favicon[key] !== tokens.get(token))
     .map(([key, token]) => `the favicon's ${key} (${favicon[key]}) isn't --${token} (${tokens.get(token)})`);
+}
+
+/** Text sizes under 11 px: every `--text-*` size token in rem. */
+export function smallTextProblems(tokens: Map<string, string>) {
+  return [...tokens]
+    .filter(([name, value]) => name.startsWith("text-") && /^[\d.]+rem$/.test(value))
+    .filter(([, value]) => parseFloat(value) < SMALLEST_TEXT_REM)
+    .map(([name, value]) => `--${name} is ${value}: text is never smaller than 11 px`);
+}
+
+/** The disabled colour is only a disabled control's: never on readable text. */
+export function disabledColourProblems(root: Root, file: string) {
+  const problems: string[] = [];
+  root.walkDecls("color", (d) => {
+    const selector = d.parent?.type === "rule" ? (d.parent as { selector: string }).selector : "";
+    if (d.value.includes("--text-disabled") && !/disabled/.test(selector))
+      problems.push(`${file}: ${selector} uses --text-disabled, which is only for a disabled control`);
+  });
+  return problems;
 }
 
 /** Rules mixing two browsers' pseudo-elements: a browser drops a whole rule with a selector it doesn't know. */
@@ -108,6 +135,8 @@ export function checkStyles(src: string) {
   return [
     ...contrastProblems(tokensOf(tokens.root)),
     ...faviconProblems(tokensOf(tokens.root), FAVICON),
+    ...smallTextProblems(tokensOf(tokens.root)),
+    ...parsed.flatMap(({ root, file }) => disabledColourProblems(root, file)),
     ...parsed.flatMap(({ root, file }) => mixedVendorRules(root, file)),
     ...reducedMotionProblems(global.root),
   ];

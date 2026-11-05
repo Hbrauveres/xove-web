@@ -14,7 +14,8 @@
   --line: #2c2c2f;
   --text: #ebebec;
   --text-muted: #9a9a9f;
-  --text-faint: #66666b;
+  /* Only a disabled control's words: never readable text (WCAG asks no contrast of a disabled control). */
+  --text-disabled: #66666b;
 
   /* The one accent is red, the record light: the same red as LIVE. Text on a red fill is a deep
      red, which reads at 4.7:1. */
@@ -113,7 +114,6 @@
   --text-shade-32: rgba(235, 235, 236, 0.32);
   --text-shade-35: rgba(235, 235, 236, 0.35);
   --text-shade-40: rgba(235, 235, 236, 0.4);
-  --text-shade-45: rgba(235, 235, 236, 0.45);
   --text-shade-82: rgba(235, 235, 236, 0.82);
   --white: #ffffff;
   --white-00: rgba(255, 255, 255, 0);
@@ -298,7 +298,6 @@
   --blur-18: 4.5rem;
 
   /* Text sizes beyond the scale above, named by their px; letter spacing in hundredths of an em. */
-  --text-10: 0.625rem;
   --text-11: 0.6875rem;
   --text-13-5: 0.84375rem;
   --text-14: 0.875rem;

@@ -74,7 +74,7 @@
 .act {
   display: none;
   font-family: var(--font-mono);
-  font-size: var(--text-10);
+  font-size: var(--text-11);
   letter-spacing: var(--tracking-8);
   padding: var(--space-0-75) var(--space-1-75);
   border-radius: var(--radius-pill);

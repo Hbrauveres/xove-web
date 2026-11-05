@@ -31,7 +31,7 @@
 .signOut {
   background: none;
   border: 0;
-  color: var(--text-faint);
+  color: var(--text-muted);
   font-size: var(--text-sm);
   cursor: pointer;
 }

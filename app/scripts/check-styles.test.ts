@@ -3,6 +3,8 @@ import { describe, expect, it } from "vitest";
 import {
   contrast,
   contrastProblems,
+  disabledColourProblems,
+  smallTextProblems,
   faviconProblems,
   mixedVendorRules,
   reducedMotionProblems,
@@ -18,7 +20,6 @@ const palette = (change: Record<string, string> = {}) => {
     "surface-raised": "#1b1b1d",
     text: "#ebebec",
     "text-muted": "#9a9a9f",
-    "text-faint": "#66666b",
     accent: "#ef4b4b",
     "accent-ink": "#3a0808",
     ...change,
@@ -90,5 +91,28 @@ describe("the favicon's colours", () => {
     expect(faviconProblems(page, { ground: "#0c0c0d", ink: "#ebebec", red: "#ff0000" })).toEqual([
       "the favicon's red (#ff0000) isn't --accent (#ef4b4b)",
     ]);
+  });
+});
+
+describe("readable text", () => {
+  it("names a text size under 11 px, not one at 11 px or a size that isn't text", () => {
+    const sizes = tokens(
+      ":root { --text-10: 0.625rem; --text-11: 0.6875rem; --text-xs: 0.75rem; --tracking-6: 0.06em; }",
+    );
+    expect(smallTextProblems(sizes)).toEqual(["--text-10 is 0.625rem: text is never smaller than 11 px"]);
+  });
+
+  it("allows the disabled colour only on a disabled control", () => {
+    const css = (rule: string) => disabledColourProblems(postcss.parse(rule), "a.css");
+    expect(css(".tab[aria-disabled='true'] { color: var(--text-disabled); }")).toEqual([]);
+    expect(css(".time { color: var(--text-disabled); }")).toEqual([
+      "a.css: .time uses --text-disabled, which is only for a disabled control",
+    ]);
+  });
+
+  it("asks every text colour for 4.5 : 1 on the glass over a white stream", () => {
+    expect(
+      contrastProblems(tokens(palette({ "text-muted": "#77777b" }))).some((p) => p.includes("glass-over-white")),
+    ).toBe(true);
   });
 });
