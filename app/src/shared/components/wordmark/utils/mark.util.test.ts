@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { CAP, ICON_SPACING, OPTICAL, STROKE, iconMark, wordMark } from "./mark";
+import { CAP, ICON_SPACING, OPTICAL, STROKE } from "../constants/mark.constants";
+import { iconMark, wordMark } from "./mark.util";
 
-describe("the wordmark (spec 0111)", () => {
+describe("the wordmark", () => {
   const w = wordMark();
 
   it("is X, O, V and E on one cap height, framed by four corners", () => {
@@ -39,7 +40,7 @@ describe("the wordmark (spec 0111)", () => {
     for (const c of w.corners) expect(c.width).toBe(STROKE);
   });
 
-  it("closes on the logo's left (spec 0113): the left corners stay, the word slides, the right corners meet the O", () => {
+  it("closes on the logo's left: the left corners stay, the word slides, the right corners meet the O", () => {
     const o = w.letters[1];
     expect(w.closed.dx.left).toBe(0);
     // The O slides to where the icon has it, next to the left corners that didn't move.
@@ -50,7 +51,7 @@ describe("the wordmark (spec 0111)", () => {
   });
 });
 
-describe("the icon (spec 0111)", () => {
+describe("the icon", () => {
   const i = iconMark();
 
   it("is the record O alone in the same corners, the top-right one red", () => {
@@ -69,7 +70,7 @@ describe("the icon (spec 0111)", () => {
   });
 });
 
-describe("the icon at each size (spec 0113)", () => {
+describe("the icon at each size", () => {
   const outer = (i: ReturnType<typeof iconMark>) => {
     const w = i.corners[0].width;
     return [i.frame.left - w / 2, i.frame.right + w / 2, i.frame.top - w / 2, i.frame.bottom + w / 2];

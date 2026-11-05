@@ -1123,7 +1123,7 @@ describe("room: theater mode", () => {
 
     const header = screen.getByRole("banner");
     // The drawn mark, not the name typed as text.
-    expect(within(header).getByRole("img", { name: "Xovê" })).toBeInTheDocument();
+    expect(within(header).getByLabelText("Xovê")).toBeInTheDocument();
     expect(within(header).queryByText(/xovê/)).not.toBeInTheDocument();
     expect(within(header).getByRole("button", { name: /^Activity/ })).toBeInTheDocument();
     expect(within(header).getByRole("button", { name: "1 person here" })).toBeInTheDocument();

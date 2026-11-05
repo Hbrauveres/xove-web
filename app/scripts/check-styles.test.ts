@@ -1,6 +1,13 @@
 import postcss from "postcss";
 import { describe, expect, it } from "vitest";
-import { contrast, contrastProblems, mixedVendorRules, reducedMotionProblems, tokensOf } from "./check-styles.ts";
+import {
+  contrast,
+  contrastProblems,
+  faviconProblems,
+  mixedVendorRules,
+  reducedMotionProblems,
+  tokensOf,
+} from "./check-styles.ts";
 
 const tokens = (css: string) => tokensOf(postcss.parse(css));
 /** A palette that passes, with one token changed. */
@@ -68,5 +75,20 @@ describe("the style check: reduced motion", () => {
     expect(reducedMotionProblems(postcss.parse("* { color: red; }"))).toHaveLength(1);
     const half = postcss.parse("@media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms; } }");
     expect(reducedMotionProblems(half)).toHaveLength(1);
+  });
+});
+
+describe("the favicon's colours", () => {
+  const page = new Map([
+    ["ground", "#0c0c0d"],
+    ["text", "#ebebec"],
+    ["accent", "#ef4b4b"],
+  ]);
+
+  it("pass while they match the tokens, and are named when one drifts", () => {
+    expect(faviconProblems(page, { ground: "#0c0c0d", ink: "#ebebec", red: "#ef4b4b" })).toEqual([]);
+    expect(faviconProblems(page, { ground: "#0c0c0d", ink: "#ebebec", red: "#ff0000" })).toEqual([
+      "the favicon's red (#ff0000) isn't --accent (#ef4b4b)",
+    ]);
   });
 });

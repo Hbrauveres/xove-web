@@ -9,7 +9,7 @@ describe("the phone and tablet screen", () => {
     expect(screen.getByText(/^Sorry, Xovê doesn't work on phones or tablets yet\./)).toHaveTextContent(
       "Open xove.app on your laptop or desktop to watch and share with your friends.",
     );
-    expect(screen.getByRole("img", { name: "Xovê" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Xovê")).toBeInTheDocument();
   });
 
   it("offers nothing to press: the address is to type on the computer", () => {

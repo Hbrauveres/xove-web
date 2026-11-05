@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import html from "../../index.html?raw";
-import favicon from "../../public/favicon.svg?raw";
-import { iconSvg } from "./iconSvg";
+import html from "../../../../../index.html?raw";
+import favicon from "../../../../../public/favicon.svg?raw";
+import { iconSvg } from "./icon-svg.util";
 
 /** Everything in public/, by name. */
-const shipped = Object.keys(import.meta.glob("../../public/*")).map((p) => p.split("/").pop());
+const shipped = Object.keys(import.meta.glob("../../../../../public/*")).map((p) => p.split("/").pop());
 /** The page's <link> tags, as rel → href. */
 const links = new Map(
   [...html.matchAll(/<link\b[^>]*>/g)].map(([tag]) => [
@@ -22,7 +22,7 @@ const metas = new Map(
 );
 const meta = (name: string) => metas.get(name);
 
-describe("Xovê's icon in the browser, and no home-screen app (specs 0111 and 0223)", () => {
+describe("Xovê's icon in the browser, and no home-screen app", () => {
   it("links the favicon and nothing to install: no manifest, no home-screen icon or app tags", () => {
     expect(href("icon")).toBe("/favicon.svg");
     expect(html).toMatch(/<meta name="theme-color" content="#0c0c0d"/);
@@ -45,7 +45,7 @@ describe("Xovê's icon in the browser, and no home-screen app (specs 0111 and 02
     expect(favicon).toBe(iconSvg());
   });
 
-  it("makes the favicon only the symbol, at its 16 px weight, edge to edge (spec 0113)", () => {
+  it("makes the favicon only the symbol, at its 16 px weight, edge to edge", () => {
     expect(favicon).not.toMatch(/<rect/);
     expect(favicon).toMatch(/stroke-width="16"/);
     // Square, and the symbol's full height (146, strokes included) fills it.
@@ -54,7 +54,7 @@ describe("Xovê's icon in the browser, and no home-screen app (specs 0111 and 02
     expect(h).toBe(146);
   });
 
-  it("follows the browser's mode: white strokes on dark, soft black on light, the red fixed (specs 0113 and 0121)", () => {
+  it("follows the browser's mode: white strokes on dark, soft black on light, the red fixed", () => {
     expect(favicon).toMatch(/\.ink\s*\{\s*stroke:\s*#ebebec/);
     expect(favicon).toMatch(/@media \(prefers-color-scheme: light\)\s*\{\s*\.ink\s*\{\s*stroke:\s*#0c0c0d/);
     expect(favicon).toMatch(/stroke="#ef4b4b"/);

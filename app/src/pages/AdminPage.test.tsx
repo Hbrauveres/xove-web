@@ -26,7 +26,7 @@ describe("admin page", () => {
     installFakeApi({ me: admin(), requests: [], members: members() });
     renderApp("/admin");
 
-    expect(await screen.findByRole("img", { name: "Xovê" })).toBeInTheDocument();
+    expect(await screen.findByLabelText("Xovê")).toBeInTheDocument();
     expect(screen.getByText("admin")).toBeInTheDocument();
     expect(screen.queryByText(/xovê/)).not.toBeInTheDocument();
   });

@@ -22,7 +22,7 @@ describe("request access page", () => {
     installFakeApi({ me: aUser() });
     renderApp("/request-access");
 
-    expect(await screen.findByRole("img", { name: "Xovê" })).toBeInTheDocument();
+    expect(await screen.findByLabelText("Xovê")).toBeInTheDocument();
     expect(screen.queryByText(/xovê/)).not.toBeInTheDocument();
   });
 

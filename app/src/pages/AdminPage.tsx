@@ -5,7 +5,7 @@ import { api, ApiError } from "@services/xove-api-service";
 import type { AccessRequestView, MemberView } from "@services/xove-api-service";
 import { Button } from "@shared/components/button";
 import { timeAgo } from "@features/admin/utils/time-ago.util";
-import { XoveMark } from "../components/brand/XoveMark";
+import { Wordmark } from "@shared/components/wordmark";
 import { ErrorNotice } from "@shared/components/error-notice";
 import styles from "./AdminPage.module.css";
 
@@ -50,7 +50,7 @@ export function AdminPage() {
     <div className={styles.shell}>
       <header className={styles.header}>
         <span className={styles.brand}>
-          <XoveMark height={30} /> <span className={styles.section}>admin</span>
+          <Wordmark height={30} /> <span className={styles.section}>admin</span>
         </span>
         <Link to="/room" className={styles.back}>
           Back to the room

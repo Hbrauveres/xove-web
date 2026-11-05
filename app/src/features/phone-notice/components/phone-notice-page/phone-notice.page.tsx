@@ -1,4 +1,4 @@
-import { XoveIcon } from "../../../../components/brand/XoveIcon";
+import { Wordmark } from "@shared/components/wordmark";
 import { BigScreenArt } from "../big-screen-art";
 import { MARK_PX } from "./constants/phone-notice.constants";
 import styles from "./phone-notice.page.module.css";
@@ -7,7 +7,7 @@ import styles from "./phone-notice.page.module.css";
 export function PhoneNoticePage() {
   return (
     <main className={styles.page}>
-      <XoveIcon size={MARK_PX} />
+      <Wordmark variant="icon" height={MARK_PX} />
       <div className={styles.middle}>
         <BigScreenArt />
         <h1 className={styles.title}>

@@ -4,6 +4,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import postcss, { type Root } from "postcss";
+import { FAVICON } from "../src/shared/components/wordmark/constants/favicon.constants.ts";
 
 /** The surfaces text sits on, and each text colour with the contrast it needs there (WCAG AA). */
 const SURFACES = ["ground", "surface", "surface-raised"];
@@ -51,6 +52,18 @@ export function contrastProblems(tokens: Map<string, string>) {
   return problems;
 }
 
+/** The favicon can't read the tokens, so it copies three of them: they must still match. */
+export function faviconProblems(tokens: Map<string, string>, favicon: Record<"ground" | "ink" | "red", string>) {
+  const pairs: [keyof typeof favicon, string][] = [
+    ["ground", "ground"],
+    ["ink", "text"],
+    ["red", "accent"],
+  ];
+  return pairs
+    .filter(([key, token]) => favicon[key] !== tokens.get(token))
+    .map(([key, token]) => `the favicon's ${key} (${favicon[key]}) isn't --${token} (${tokens.get(token)})`);
+}
+
 /** Rules mixing two browsers' pseudo-elements: a browser drops a whole rule with a selector it doesn't know. */
 export function mixedVendorRules(root: Root, file: string) {
   const problems: string[] = [];
@@ -94,6 +107,7 @@ export function checkStyles(src: string) {
   if (!global) return ["src/shared/styles/global.css not found"];
   return [
     ...contrastProblems(tokensOf(tokens.root)),
+    ...faviconProblems(tokensOf(tokens.root), FAVICON),
     ...parsed.flatMap(({ root, file }) => mixedVendorRules(root, file)),
     ...reducedMotionProblems(global.root),
   ];

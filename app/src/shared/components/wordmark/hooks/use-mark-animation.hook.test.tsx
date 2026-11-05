@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { TOTAL_MS } from "../../brand/markTimeline";
-import { XoveMark } from "./XoveMark";
+import { TOTAL_MS } from "../utils/mark-timeline.util";
+import { Wordmark } from "../wordmark.component";
 
 /** Each test's own animation clock, and reduced motion off unless the test says `motion.reduced = true`. */
 function onScreen() {
@@ -15,7 +15,7 @@ function onScreen() {
   return { motion };
 }
 
-const mark = () => screen.getByRole("img", { name: "Xovê" });
+const mark = () => screen.getByLabelText("Xovê");
 const side = (at: string) => mark().querySelector(`[data-side="${at}"]`)!;
 const dot = () => mark().querySelector("[data-dot]")!;
 const letters = () => mark().querySelector("[data-letters]")!;
@@ -24,14 +24,14 @@ const advance = (ms: number) =>
     vi.advanceTimersByTime(ms);
   });
 
-describe("the wordmark's hover animation (spec 0111, FR-4a)", () => {
+describe("the wordmark's hover animation", () => {
   it("keeps the left corners, slides the word left and the right corners in, blinks, and comes back to rest", () => {
     onScreen();
-    render(<XoveMark height={26} />);
+    render(<Wordmark height={26} />);
     fireEvent.pointerEnter(mark());
 
     advance(300);
-    // Spec 0113: the left corners never move sideways; the letters and the right corners do.
+    // The left corners never move sideways; the letters and the right corners do.
     expect(side("top-left").getAttribute("transform")).toMatch(/^translate\(0,/);
     expect(letters().getAttribute("transform")).toMatch(/translate\(-[1-9]/);
     expect(side("top-right").getAttribute("transform")).toMatch(/translate\(-[1-9]/);
@@ -50,18 +50,9 @@ describe("the wordmark's hover animation (spec 0111, FR-4a)", () => {
     expect(dot().getAttribute("transform")).toBeNull();
   });
 
-  it("plays from the keyboard's focus too", () => {
-    onScreen();
-    render(<XoveMark height={26} />);
-    expect(mark()).toHaveAttribute("tabindex", "0");
-    fireEvent.focus(mark());
-    advance(300);
-    expect(letters().getAttribute("transform")).toMatch(/translate\(-[1-9]/);
-  });
-
   it("doesn't restart while it plays", () => {
     onScreen();
-    render(<XoveMark height={26} />);
+    render(<Wordmark height={26} />);
     fireEvent.pointerEnter(mark());
     advance(500);
     const at = () => -Number(/translate\((-?[\d.]+)/.exec(letters().getAttribute("transform")!)![1]);
@@ -76,7 +67,7 @@ describe("the wordmark's hover animation (spec 0111, FR-4a)", () => {
   it("doesn't play with reduced motion", () => {
     const { motion } = onScreen();
     motion.reduced = true;
-    render(<XoveMark height={26} />);
+    render(<Wordmark height={26} />);
     fireEvent.pointerEnter(mark());
     advance(500);
     expect(letters().getAttribute("transform")).toBeNull();

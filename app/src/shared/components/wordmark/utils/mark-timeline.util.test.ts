@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { TOTAL_MS, frameAt } from "./markTimeline";
+import { TOTAL_MS, frameAt } from "./mark-timeline.util";
 
-describe("the mark's animation timeline (spec 0111, FR-4a)", () => {
+describe("the mark's animation timeline", () => {
   it("starts and ends at rest: the full wordmark, the dot round", () => {
     for (const t of [0, TOTAL_MS]) expect(frameAt(t)).toEqual({ slide: 0, settle: 0, eye: { sx: 1, sy: 1 } });
   });

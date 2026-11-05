@@ -2,7 +2,7 @@
   {
     "tool": "code",
     "rule": "cssText",
-    "file": "src/brand/brand.test.ts",
+    "file": "src/shared/components/wordmark/utils/icon-svg.util.test.ts",
     "count": 2,
     "owner": "#188 shared: Panel, Page shell"
   },
@@ -40,48 +40,6 @@
     "file": "src/main.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/brand/mark.ts",
-    "count": 3,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/brand/markTimeline.ts",
-    "count": 2,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/brand/useMarkAnimation.test.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/brand/useMarkAnimation.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/brand/XoveIcon.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/brand/XoveMark.tsx",
-    "count": 2,
-    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -534,13 +492,6 @@
   {
     "tool": "code",
     "rule": "lineLength",
-    "file": "src/brand/iconSvg.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "lineLength",
     "file": "src/components/stage/AlsoLive.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
@@ -572,90 +523,6 @@
     "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/brand/brand.test.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/brand/iconSvg.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/brand/mark.test.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/brand/mark.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/brand/markTimeline.test.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/brand/markTimeline.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/brand/parts.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/brand/useMarkAnimation.test.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/brand/useMarkAnimation.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/brand/XoveIcon.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/brand/XoveMark.test.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/brand/XoveMark.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -1381,27 +1248,6 @@
   {
     "tool": "code",
     "rule": "noTest",
-    "file": "src/brand/iconSvg.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/components/brand/parts.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/components/brand/XoveIcon.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
     "file": "src/components/room/activityText.ts",
     "count": 1,
     "owner": "#189 room: header"
@@ -1496,62 +1342,6 @@
     "file": "src/main.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "orphanTest",
-    "file": "src/brand/brand.test.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/brand/iconSvg.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/brand/mark.ts",
-    "count": 25,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/brand/markTimeline.ts",
-    "count": 14,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/brand/parts.tsx",
-    "count": 3,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/brand/useMarkAnimation.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/brand/XoveIcon.tsx",
-    "count": 2,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/brand/XoveMark.tsx",
-    "count": 2,
-    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -1822,7 +1612,7 @@
   {
     "tool": "code",
     "rule": "sharedData",
-    "file": "src/brand/brand.test.ts",
+    "file": "src/shared/components/wordmark/utils/icon-svg.util.test.ts",
     "count": 3,
     "owner": "#188 shared: Panel, Page shell"
   },
@@ -1846,90 +1636,6 @@
     "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/brand/brand.test.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/brand/iconSvg.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/brand/mark.test.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/brand/mark.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/brand/markTimeline.test.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/brand/markTimeline.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/brand/parts.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/brand/useMarkAnimation.test.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/brand/useMarkAnimation.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/brand/XoveIcon.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/brand/XoveMark.test.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/brand/XoveMark.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -2871,41 +2577,6 @@
   },
   {
     "tool": "lint",
-    "rule": "eslint(max-params)",
-    "file": "src/brand/mark.ts",
-    "count": 2,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/brand/iconSvg.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/brand/mark.ts",
-    "count": 38,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/brand/markTimeline.ts",
-    "count": 18,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/brand/useMarkAnimation.ts",
-    "count": 5,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
     "file": "src/components/room/ActivityList.tsx",
     "count": 1,
@@ -3061,13 +2732,6 @@
   {
     "tool": "lint",
     "rule": "jsx-a11y(no-noninteractive-element-interactions)",
-    "file": "src/components/brand/XoveMark.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(no-noninteractive-element-interactions)",
     "file": "src/components/stage/HearToggles.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
@@ -3078,13 +2742,6 @@
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 1,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(no-noninteractive-tabindex)",
-    "file": "src/components/brand/XoveMark.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
@@ -3113,20 +2770,6 @@
     "file": "src/components/stage/PreviewTray.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/components/brand/XoveIcon.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/components/brand/XoveMark.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
@@ -3292,16 +2935,16 @@
   {
     "tool": "tsc",
     "rule": "TS18048",
-    "file": "src/brand/mark.test.ts",
-    "count": 10,
-    "owner": "#188 shared: Panel, Page shell"
+    "file": "src/media/ambilight.test.ts",
+    "count": 3,
+    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "tsc",
     "rule": "TS18048",
-    "file": "src/media/ambilight.test.ts",
-    "count": 3,
-    "owner": "#190 room: stage, Stage split"
+    "file": "src/shared/components/wordmark/utils/mark.util.test.ts",
+    "count": 10,
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "tsc",
@@ -3316,13 +2959,6 @@
     "file": "src/media/ambilight.test.ts",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2345",
-    "file": "src/brand/mark.test.ts",
-    "count": 3,
-    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "tsc",
@@ -3344,6 +2980,13 @@
     "file": "src/components/stage/Stage.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2345",
+    "file": "src/shared/components/wordmark/utils/mark.util.test.ts",
+    "count": 3,
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "tsc",
@@ -3460,34 +3103,6 @@
   {
     "tool": "tsc",
     "rule": "TS2532",
-    "file": "src/brand/brand.test.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
-    "file": "src/brand/mark.test.ts",
-    "count": 6,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
-    "file": "src/brand/markTimeline.test.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
-    "file": "src/components/brand/useMarkAnimation.ts",
-    "count": 2,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
     "file": "src/components/room/ActivityList.test.tsx",
     "count": 3,
     "owner": "#189 room: header"
@@ -3526,6 +3141,27 @@
     "file": "src/media/ambilight.test.ts",
     "count": 5,
     "owner": "#190 room: stage, Stage split"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/shared/components/wordmark/utils/icon-svg.util.test.ts",
+    "count": 1,
+    "owner": "#188 shared: Panel, Page shell"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/shared/components/wordmark/utils/mark-timeline.util.test.ts",
+    "count": 1,
+    "owner": "#188 shared: Panel, Page shell"
+  },
+  {
+    "tool": "tsc",
+    "rule": "TS2532",
+    "file": "src/shared/components/wordmark/utils/mark.util.test.ts",
+    "count": 6,
+    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "tsc",
@@ -3575,13 +3211,6 @@
     "file": "src/media/ambilight.ts",
     "count": 2,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "unused",
-    "rule": "types",
-    "file": "src/brand/mark.ts",
-    "count": 2,
-    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "unused",

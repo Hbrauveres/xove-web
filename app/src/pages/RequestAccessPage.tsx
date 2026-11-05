@@ -5,7 +5,7 @@ import { api, ApiError } from "@services/xove-api-service";
 import type { Me } from "@services/xove-api-service";
 import { useAuth } from "@shared/stores/auth-store";
 import { Button } from "@shared/components/button";
-import { XoveMark } from "../components/brand/XoveMark";
+import { Wordmark } from "@shared/components/wordmark";
 import styles from "./RequestAccessPage.module.css";
 
 const MAX_MESSAGE = 500;
@@ -37,7 +37,7 @@ export function RequestAccessPage() {
     <main className={styles.wrap}>
       <section className={styles.card}>
         <p className={styles.brand}>
-          <XoveMark height={36} />
+          <Wordmark height={36} />
         </p>
 
         {me.status === "PENDING" ? <Waiting /> : <AskForAccess me={me} onSent={refresh} />}

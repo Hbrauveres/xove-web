@@ -2,7 +2,7 @@ import { Headline } from "@shared/components/headline";
 import { useSearchParams } from "react-router";
 import { GOOGLE_LOGIN_URL } from "@services/xove-api-service";
 import { ErrorNotice } from "@shared/components/error-notice";
-import { XoveMark } from "../components/brand/XoveMark";
+import { Wordmark } from "@shared/components/wordmark";
 import styles from "./HomePage.module.css";
 
 const ERRORS: Record<string, string> = {
@@ -20,7 +20,7 @@ export function HomePage() {
       <section className={styles.card} aria-labelledby="home-title">
         <div className={styles.lead}>
           <p className={styles.brand}>
-            <XoveMark height={40} />
+            <Wordmark height={40} />
           </p>
           <Headline level="page" id="home-title" className={styles.title}>
             Go <em>live</em> with
