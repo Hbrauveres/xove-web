@@ -1,3 +1,4 @@
+import { Field } from "@shared/components/field";
 import { PageShell } from "@shared/components/page-shell";
 import { Face } from "@shared/components/face";
 import { useEffect, useState, type FormEvent } from "react";
@@ -86,26 +87,21 @@ function AskForAccess({ me, onSent }: { me: Me; onSent: () => Promise<void> }) {
       </p>
 
       <form className={styles.form} onSubmit={submit}>
-        <label htmlFor="access-message" className={styles.label}>
-          Message <span className={styles.optional}>(optional)</span>
-        </label>
-        <textarea
+        <Field
+          label="Message"
+          hint="(optional)"
           id="access-message"
-          className={styles.textarea}
           rows={3}
           maxLength={MAX_MESSAGE}
           placeholder="Hey, it's me from…"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={setMessage}
+          action={
+            <Button type="submit" disabled={sending}>
+              {sending ? "Sending…" : declined ? "Ask again" : "Request access"}
+            </Button>
+          }
         />
-        <div className={styles.formFooter}>
-          <span className={styles.counter}>
-            {message.length}/{MAX_MESSAGE}
-          </span>
-          <Button type="submit" disabled={sending}>
-            {sending ? "Sending…" : declined ? "Ask again" : "Request access"}
-          </Button>
-        </div>
         {error && (
           <p className={styles.error} role="alert">
             {error}
