@@ -1,3 +1,4 @@
+import { CountChip } from "@shared/components/count-chip";
 import { Face } from "@shared/components/face";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router";
@@ -69,7 +70,8 @@ export function AdminPage() {
         <div className={styles.columns}>
           <section aria-labelledby="requests-title">
             <h2 id="requests-title" className={styles.heading}>
-              Waiting for access <span className={styles.count}>{data.requests.length}</span>
+              Waiting for access{" "}
+              <CountChip count={data.requests.length} tone={data.requests.length > 0 ? "attention" : "neutral"} />
             </h2>
             {data.requests.length === 0 ? (
               <p className={styles.empty}>No one is waiting right now.</p>
@@ -113,7 +115,7 @@ export function AdminPage() {
 
           <section aria-labelledby="members-title">
             <h2 id="members-title" className={styles.heading}>
-              Members <span className={styles.count}>{data.members.length}</span>
+              Members <CountChip count={data.members.length} />
             </h2>
             <ul className={styles.list}>
               {data.members.map((m) => (
