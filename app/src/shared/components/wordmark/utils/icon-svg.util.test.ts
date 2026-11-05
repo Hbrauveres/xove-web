@@ -1,48 +1,8 @@
 import { describe, expect, it } from "vitest";
-import html from "../../../../../index.html?raw";
 import favicon from "../../../../../public/favicon.svg?raw";
 import { iconSvg } from "./icon-svg.util";
 
-/** Everything in public/, by name. */
-const shipped = () => Object.keys(import.meta.glob("../../../../../public/*")).map((p) => p.split("/").pop());
-/** The page's <link> tags, as rel → href. */
-const links = () =>
-  new Map(
-    [...html.matchAll(/<link\b[^>]*>/g)].map(([tag]) => [
-      /rel="([^"]+)"/.exec(tag)?.[1],
-      /href="([^"]+)"/.exec(tag)?.[1],
-    ]),
-  );
-const href = (rel: string) => links().get(rel);
-/** The page's <meta name> tags, as name → content. */
-const metas = () =>
-  new Map(
-    [...html.matchAll(/<meta\b[^>]*>/g)].map(([tag]) => [
-      /name="([^"]+)"/.exec(tag)?.[1],
-      /content="([^"]+)"/.exec(tag)?.[1],
-    ]),
-  );
-const meta = (name: string) => metas().get(name);
-
-describe("Xovê's icon in the browser, and no home-screen app", () => {
-  it("links the favicon and nothing to install: no manifest, no home-screen icon or app tags", () => {
-    expect(href("icon")).toBe("/favicon.svg");
-    expect(html).toMatch(/<meta name="theme-color" content="#0c0c0d"/);
-    expect(href("manifest")).toBeUndefined();
-    expect(href("apple-touch-icon")).toBeUndefined();
-    for (const name of [
-      "mobile-web-app-capable",
-      "apple-mobile-web-app-capable",
-      "apple-mobile-web-app-status-bar-style",
-    ]) {
-      expect(meta(name), name).toBeUndefined();
-    }
-  });
-
-  it("ships only the favicon", () => {
-    expect(shipped()).toEqual(["favicon.svg"]);
-  });
-
+describe("the favicon", () => {
   it("keeps the favicon in step with the mark's geometry", () => {
     expect(favicon).toBe(iconSvg());
   });

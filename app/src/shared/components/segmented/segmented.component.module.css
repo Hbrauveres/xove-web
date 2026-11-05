@@ -101,7 +101,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .pill,
-  .seg button,
+  .option,
   .option::before {
     transition: none;
   }

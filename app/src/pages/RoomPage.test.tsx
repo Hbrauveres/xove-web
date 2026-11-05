@@ -1467,10 +1467,14 @@ describe("room: under the stage", () => {
       lastRoom().publishScreen("user-7");
     });
 
-    await waitFor(() => expect(document.querySelector("[data-stat]")).toHaveTextContent("1 watching"));
+    expect(
+      await screen.findByText((_, el) => el?.textContent?.endsWith("1 watching") === true && el.children.length === 3),
+    ).toBeInTheDocument();
     // Once my stage is reported (after a second of stillness), I count too.
     await pass(REPORT_STILL_MS);
-    await waitFor(() => expect(document.querySelector("[data-stat]")).toHaveTextContent("2 watching"));
+    expect(
+      await screen.findByText((_, el) => el?.textContent?.endsWith("2 watching") === true && el.children.length === 3),
+    ).toBeInTheDocument();
   });
 
   it("invites someone to go live on an empty stage, naming who's here", async () => {

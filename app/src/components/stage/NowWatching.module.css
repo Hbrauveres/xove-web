@@ -77,11 +77,6 @@
   display: inline-flex;
 }
 
-/* The faces overlap a little in the pill, each ringed by the glass. */
-.face + .face {
-  margin-left: calc(var(--space-1-5) * -1);
-}
-
 /* An empty stage: who's here, in a sentence that may shorten. */
 .here {
   overflow: hidden;

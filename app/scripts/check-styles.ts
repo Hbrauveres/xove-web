@@ -80,6 +80,19 @@ export function smallTextProblems(tokens: Map<string, string>) {
     .map(([name, value]) => `--${name} is ${value}: text is never smaller than 11 px`);
 }
 
+/** Text set under 11 px anywhere: a `font-size` whose token, or own value, is smaller. */
+export function smallFontProblems(root: Root, file: string, tokens: Map<string, string>) {
+  const problems: string[] = [];
+  root.walkDecls("font-size", (d) => {
+    const name = /^var\(--([\w-]+)\)$/.exec(d.value.trim())?.[1];
+    const value = name ? tokens.get(name) : d.value.trim();
+    const rem = /^([\d.]+)rem$/.exec(value ?? "")?.[1];
+    if (rem !== undefined && parseFloat(rem) < SMALLEST_TEXT_REM)
+      problems.push(`${file}: font-size ${d.value} is ${value}: text is never smaller than 11 px`);
+  });
+  return problems;
+}
+
 /** The disabled colour is only a disabled control's: never on readable text. */
 export function disabledColourProblems(root: Root, file: string) {
   const problems: string[] = [];
@@ -137,6 +150,7 @@ export function checkStyles(src: string) {
     ...faviconProblems(tokensOf(tokens.root), FAVICON),
     ...smallTextProblems(tokensOf(tokens.root)),
     ...parsed.flatMap(({ root, file }) => disabledColourProblems(root, file)),
+    ...parsed.flatMap(({ root, file }) => smallFontProblems(root, file, tokensOf(tokens.root))),
     ...parsed.flatMap(({ root, file }) => mixedVendorRules(root, file)),
     ...reducedMotionProblems(global.root),
   ];

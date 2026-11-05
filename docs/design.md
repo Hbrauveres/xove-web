@@ -379,7 +379,7 @@ Two sizes: **md** (10 × 18 px padding, 15 px text) and **sm** (6 × 12 px, 13 p
 
 ### Sliders
 
-`shared/components/slider` (the `Slider`), white like a video player's: a **3 px track**, white up to the knob and `#ebebec` at 22% after, and a **12 px white knob** that grows to 14 px on hover or keyboard focus. Used for the ambilight's brightness, each sound's volume over the stage and on the phone's feed cards ([upright](#what-i-hear-and-go-live), in the stage's glass pill), and in a small preview's row ([across, after the buttons](#on-the-stage)). WebKit has no part for the filled side, so `Range` sets a `--fill` variable; Firefox uses `::-moz-range-progress`.
+`shared/components/slider` (the `Slider`), white like a video player's: a **3 px track**, white up to the knob and `#ebebec` at 22% after, and a **12 px white knob** that grows to 14 px on hover or keyboard focus. Used for the ambilight's brightness, each sound's volume over the stage and on the phone's feed cards ([upright](#what-i-hear-and-go-live), in the stage's glass pill), and in a small preview's row ([across, after the buttons](#on-the-stage)). WebKit has no part for the filled side, so the `Slider` sets a `--fill` variable; Firefox uses `::-moz-range-progress`.
 
 **A threshold is a line, not a knob:** the mic's sensitivity is a slim upright white line (3 × 14 px, growing to 16 px) across the same slim track, the common mark for a threshold.
 
@@ -434,7 +434,7 @@ A number that changes takes the look of **its space**, and each space's look is 
 
 - **Muted (`--text-muted`) is the dimmest text, anywhere,** on the page and on glass: 6.9 : 1 on the ground, 4.6 : 1 on the glass over white. The dim grey is `--text-disabled`, only for a disabled control.
 - **11 px is the smallest text.** An avatar's initial is part of its picture, not text.
-- **The style check holds both:** 4.5 : 1 for every text colour on every surface and on the glass over white, no size token under 11 px, and `--text-disabled` only in a disabled rule.
+- **The style check holds both:** 4.5 : 1 for the text colours (`--text`, `--text-muted`, `--accent`) on every surface and on the glass over white, no `font-size` under 11 px in any rule, and `--text-disabled` only in a disabled rule. Text uses those colours; a new text colour joins the check.
 
 ### Avatars and LIVE
 

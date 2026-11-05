@@ -6,5 +6,7 @@ it("shows its lead and the number, and says what it counts", () => {
   render(<StatPill lead={<span>faces</span>} count={3} unit="watching" />);
   expect(screen.getByText("faces")).toBeInTheDocument();
   expect(screen.getByText("3")).toBeInTheDocument();
-  expect(screen.getByText("3").closest("[data-stat]")).toHaveTextContent("3 watching");
+  expect(
+    screen.getByText((_, el) => el?.textContent === "faces3 watching" && el.children.length === 3),
+  ).toBeInTheDocument();
 });

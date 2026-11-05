@@ -4,6 +4,7 @@ import {
   contrast,
   contrastProblems,
   disabledColourProblems,
+  smallFontProblems,
   smallTextProblems,
   faviconProblems,
   mixedVendorRules,
@@ -100,6 +101,16 @@ describe("readable text", () => {
       ":root { --text-10: 0.625rem; --text-11: 0.6875rem; --text-xs: 0.75rem; --tracking-6: 0.06em; }",
     );
     expect(smallTextProblems(sizes)).toEqual(["--text-10 is 0.625rem: text is never smaller than 11 px"]);
+  });
+
+  it("names a font size under 11 px in any rule, by its token or its own value", () => {
+    const sizes = tokens(":root { --size-2-5: 0.625rem; --text-11: 0.6875rem; }");
+    const css = (rule: string) => smallFontProblems(postcss.parse(rule), "a.css", sizes);
+    expect(css(".a { font-size: var(--text-11); }")).toEqual([]);
+    expect(css(".a { font-size: var(--size-2-5); }")).toEqual([
+      "a.css: font-size var(--size-2-5) is 0.625rem: text is never smaller than 11 px",
+    ]);
+    expect(css(".a { font-size: 0.5rem; }")).toHaveLength(1);
   });
 
   it("allows the disabled colour only on a disabled control", () => {
