@@ -1,13 +1,6 @@
 [
   {
     "tool": "code",
-    "rule": "cssText",
-    "file": "src/shared/components/wordmark/utils/icon-svg.util.test.ts",
-    "count": 2,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
     "rule": "domQuery",
     "file": "src/components/stage/AlsoLive.tsx",
     "count": 2,
@@ -1611,13 +1604,6 @@
   },
   {
     "tool": "code",
-    "rule": "sharedData",
-    "file": "src/shared/components/wordmark/utils/icon-svg.util.test.ts",
-    "count": 3,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
     "rule": "size",
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 1,
@@ -2941,13 +2927,6 @@
   },
   {
     "tool": "tsc",
-    "rule": "TS18048",
-    "file": "src/shared/components/wordmark/utils/mark.util.test.ts",
-    "count": 10,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "tsc",
     "rule": "TS2322",
     "file": "src/components/stage/Ambilight.tsx",
     "count": 1,
@@ -2980,13 +2959,6 @@
     "file": "src/components/stage/Stage.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2345",
-    "file": "src/shared/components/wordmark/utils/mark.util.test.ts",
-    "count": 3,
-    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "tsc",
@@ -3141,27 +3113,6 @@
     "file": "src/media/ambilight.test.ts",
     "count": 5,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
-    "file": "src/shared/components/wordmark/utils/icon-svg.util.test.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
-    "file": "src/shared/components/wordmark/utils/mark-timeline.util.test.ts",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
-    "file": "src/shared/components/wordmark/utils/mark.util.test.ts",
-    "count": 6,
-    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "tsc",

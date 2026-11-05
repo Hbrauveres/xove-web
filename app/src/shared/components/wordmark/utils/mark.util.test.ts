@@ -2,6 +2,13 @@ import { describe, expect, it } from "vitest";
 import { CAP, ICON_SPACING, OPTICAL, STROKE } from "../constants/mark.constants";
 import { iconMark, wordMark } from "./mark.util";
 
+/** The item at `i`, failing the test where there is none. */
+function nth<T>(list: readonly T[], i: number): T {
+  const item = list[i];
+  if (item === undefined) throw new Error(`nothing at ${i}`);
+  return item;
+}
+
 describe("the wordmark", () => {
   const w = wordMark();
 
@@ -15,7 +22,7 @@ describe("the wordmark", () => {
   });
 
   it("draws the X with square ends that stay on the cap height", () => {
-    const x = w.letters[0];
+    const x = nth(w.letters, 0);
     for (const s of x.strokes) {
       expect(s.cap).toBe("butt");
       for (const [, y] of s.points) {
@@ -33,7 +40,7 @@ describe("the wordmark", () => {
   });
 
   it("frames the letters 28 apart, with every corner as slim as the letters", () => {
-    const [first] = w.letters;
+    const first = nth(w.letters, 0);
     expect(first.left - w.frame.left).toBe(28);
     expect(w.frame.top).toBe(-28);
     expect(w.frame.bottom).toBe(CAP + 28);
@@ -41,7 +48,7 @@ describe("the wordmark", () => {
   });
 
   it("closes on the logo's left: the left corners stay, the word slides, the right corners meet the O", () => {
-    const o = w.letters[1];
+    const o = nth(w.letters, 1);
     expect(w.closed.dx.left).toBe(0);
     // The O slides to where the icon has it, next to the left corners that didn't move.
     expect(o.left + w.closed.textShift).toBe(w.frame.left + ICON_SPACING.left);
@@ -72,14 +79,14 @@ describe("the icon", () => {
 
 describe("the icon at each size", () => {
   const outer = (i: ReturnType<typeof iconMark>) => {
-    const w = i.corners[0].width;
+    const w = nth(i.corners, 0).width;
     return [i.frame.left - w / 2, i.frame.right + w / 2, i.frame.top - w / 2, i.frame.bottom + w / 2];
   };
-  const fill = (i: ReturnType<typeof iconMark>) => (outer(i)[3] - outer(i)[2]) / i.viewBox.height;
+  const fill = (i: ReturnType<typeof iconMark>) => (nth(outer(i), 3) - nth(outer(i), 2)) / i.viewBox.height;
 
   it("draws large slim with room to breathe, small and tiny heavier and fuller", () => {
-    const [large, small, tiny] = (["large", "small", "tiny"] as const).map((o) => iconMark(o));
-    expect([large.corners[0].width, small.corners[0].width, tiny.corners[0].width]).toEqual([10, 12, 16]);
+    const [large, small, tiny] = [iconMark("large"), iconMark("small"), iconMark("tiny")];
+    expect([large, small, tiny].map((i) => nth(i.corners, 0).width)).toEqual([10, 12, 16]);
     expect(fill(large)).toBeCloseTo(0.7, 2);
     expect(fill(small)).toBeCloseTo(0.84, 2);
     expect(fill(tiny)).toBeCloseTo(1, 2);
@@ -96,8 +103,7 @@ describe("the icon at each size", () => {
     for (const o of ["large", "small", "tiny"] as const) {
       const i = iconMark(o);
       expect(i.viewBox.width).toBe(i.viewBox.height);
-      const [l, r] = outer(i);
-      expect(i.viewBox.x + i.viewBox.width / 2).toBeCloseTo((l + r) / 2);
+      expect(i.viewBox.x + i.viewBox.width / 2).toBeCloseTo((nth(outer(i), 0) + nth(outer(i), 1)) / 2);
     }
   });
 });

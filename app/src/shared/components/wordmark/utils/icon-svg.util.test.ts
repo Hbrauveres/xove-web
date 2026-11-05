@@ -4,23 +4,25 @@ import favicon from "../../../../../public/favicon.svg?raw";
 import { iconSvg } from "./icon-svg.util";
 
 /** Everything in public/, by name. */
-const shipped = Object.keys(import.meta.glob("../../../../../public/*")).map((p) => p.split("/").pop());
+const shipped = () => Object.keys(import.meta.glob("../../../../../public/*")).map((p) => p.split("/").pop());
 /** The page's <link> tags, as rel → href. */
-const links = new Map(
-  [...html.matchAll(/<link\b[^>]*>/g)].map(([tag]) => [
-    /rel="([^"]+)"/.exec(tag)?.[1],
-    /href="([^"]+)"/.exec(tag)?.[1],
-  ]),
-);
-const href = (rel: string) => links.get(rel);
+const links = () =>
+  new Map(
+    [...html.matchAll(/<link\b[^>]*>/g)].map(([tag]) => [
+      /rel="([^"]+)"/.exec(tag)?.[1],
+      /href="([^"]+)"/.exec(tag)?.[1],
+    ]),
+  );
+const href = (rel: string) => links().get(rel);
 /** The page's <meta name> tags, as name → content. */
-const metas = new Map(
-  [...html.matchAll(/<meta\b[^>]*>/g)].map(([tag]) => [
-    /name="([^"]+)"/.exec(tag)?.[1],
-    /content="([^"]+)"/.exec(tag)?.[1],
-  ]),
-);
-const meta = (name: string) => metas.get(name);
+const metas = () =>
+  new Map(
+    [...html.matchAll(/<meta\b[^>]*>/g)].map(([tag]) => [
+      /name="([^"]+)"/.exec(tag)?.[1],
+      /content="([^"]+)"/.exec(tag)?.[1],
+    ]),
+  );
+const meta = (name: string) => metas().get(name);
 
 describe("Xovê's icon in the browser, and no home-screen app", () => {
   it("links the favicon and nothing to install: no manifest, no home-screen icon or app tags", () => {
@@ -38,7 +40,7 @@ describe("Xovê's icon in the browser, and no home-screen app", () => {
   });
 
   it("ships only the favicon", () => {
-    expect(shipped).toEqual(["favicon.svg"]);
+    expect(shipped()).toEqual(["favicon.svg"]);
   });
 
   it("keeps the favicon in step with the mark's geometry", () => {
@@ -49,7 +51,7 @@ describe("Xovê's icon in the browser, and no home-screen app", () => {
     expect(favicon).not.toMatch(/<rect/);
     expect(favicon).toMatch(/stroke-width="16"/);
     // Square, and the symbol's full height (146, strokes included) fills it.
-    const [, , w, h] = /viewBox="([^"]+)"/.exec(favicon)![1].split(" ").map(Number);
+    const [, , w, h] = (/viewBox="([^"]+)"/.exec(favicon)?.[1] ?? "").split(" ").map(Number);
     expect(w).toBe(h);
     expect(h).toBe(146);
   });

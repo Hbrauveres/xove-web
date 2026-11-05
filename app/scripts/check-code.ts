@@ -194,7 +194,7 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
         /^const \w+(:[^=]+)?\s*=\s*(new |(?!vi\.mock\b|Date\.parse\("[^"]*"\))[a-zA-Z_][\w.]*\()/.test(l))
     )
       add("sharedData", n, l);
-    if (isTest(r) && /readFileSync\(|\?raw["']/.test(l)) add("cssText", n, l);
+    if (isTest(r) && /readFileSync\([^)]*\.css|\.css\?raw["']/.test(l)) add("cssText", n, l);
     if (isCode(r) && /(oxlint|eslint)-disable|@ts-(ignore|expect-error|nocheck)|jscpd:ignore|prettier-ignore/.test(l))
       add("disable", n, l);
     if (isCode(r) && l.length > MAX_LINE) add("lineLength", n, `${l.length} characters`);

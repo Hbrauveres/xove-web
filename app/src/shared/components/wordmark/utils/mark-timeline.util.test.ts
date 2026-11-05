@@ -15,7 +15,7 @@ describe("the mark's animation timeline", () => {
 
   it("blinks twice: the dot squashes nearly shut, opens, and again", () => {
     const sy = Array.from({ length: 1000 }, (_, i) => frameAt(1000 + i).eye.sy);
-    const shut = sy.filter((v, i) => v < 0.1 && (i === 0 || sy[i - 1] >= 0.1));
+    const shut = sy.filter((v, i) => v < 0.1 && (i === 0 || (sy[i - 1] ?? 0) >= 0.1));
     expect(shut).toHaveLength(2);
   });
 
