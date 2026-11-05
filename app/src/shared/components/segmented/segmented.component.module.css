@@ -36,6 +36,8 @@
 
 .option {
   position: relative;
+  display: grid;
+  place-items: center;
   z-index: var(--layer-raised);
   isolation: isolate;
   border: 0;
