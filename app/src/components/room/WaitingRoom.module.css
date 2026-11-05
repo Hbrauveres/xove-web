@@ -1,12 +1,3 @@
-.wrap {
-  min-height: var(--window-height);
-  display: grid;
-  place-content: center;
-  justify-items: center;
-  gap: var(--space-4);
-  padding: var(--gutter) var(--gutter) var(--gutter) var(--gutter);
-}
-
 .card {
   display: flex;
   flex-direction: column;

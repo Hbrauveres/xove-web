@@ -1,19 +1,3 @@
-.wrap {
-  min-height: 100%;
-  display: grid;
-  place-items: center;
-  padding: var(--space-12) var(--gutter) var(--space-12) var(--gutter);
-  background: var(--ground);
-}
-
-.card {
-  width: 100%;
-  max-width: var(--card-width);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3-5);
-}
-
 /* The mark (spec 0111). */
 .brand {
   display: flex;

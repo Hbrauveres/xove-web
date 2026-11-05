@@ -1,3 +1,4 @@
+import { PageShell } from "@shared/components/page-shell";
 import { Headline } from "@shared/components/headline";
 import { useSearchParams } from "react-router";
 import { GOOGLE_LOGIN_URL } from "@services/xove-api-service";
@@ -16,33 +17,31 @@ export function HomePage() {
   const error = params.get("error");
 
   return (
-    <main className={styles.wrap}>
-      <section className={styles.card} aria-labelledby="home-title">
-        <div className={styles.lead}>
-          <p className={styles.brand}>
-            <Wordmark height={40} />
-          </p>
-          <Headline level="page" id="home-title" className={styles.title}>
-            Go <em>live</em> with
-            <br />
-            your friends.
-          </Headline>
-        </div>
-        <div className={styles.act}>
-          <p className={styles.copy}>
-            Share your screen or camera in sharp, fast streams. Watch them play, hang out, help out. Invite only.
-          </p>
+    <PageShell variant="home" labelledBy="home-title">
+      <div className={styles.lead}>
+        <p className={styles.brand}>
+          <Wordmark height={40} />
+        </p>
+        <Headline level="page" id="home-title" className={styles.title}>
+          Go <em>live</em> with
+          <br />
+          your friends.
+        </Headline>
+      </div>
+      <div className={styles.act}>
+        <p className={styles.copy}>
+          Share your screen or camera in sharp, fast streams. Watch them play, hang out, help out. Invite only.
+        </p>
 
-          {error && <ErrorNotice>{ERRORS[error] ?? "Something went wrong signing you in. Try again."}</ErrorNotice>}
+        {error && <ErrorNotice>{ERRORS[error] ?? "Something went wrong signing you in. Try again."}</ErrorNotice>}
 
-          <a className={styles.google} href={GOOGLE_LOGIN_URL}>
-            <GoogleMark />
-            Continue with Google
-          </a>
-          <p className={styles.note}>New here? Sign in and ask for access. The owner approves each person.</p>
-        </div>
-      </section>
-    </main>
+        <a className={styles.google} href={GOOGLE_LOGIN_URL}>
+          <GoogleMark />
+          Continue with Google
+        </a>
+        <p className={styles.note}>New here? Sign in and ask for access. The owner approves each person.</p>
+      </div>
+    </PageShell>
   );
 }
 

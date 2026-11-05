@@ -1031,20 +1031,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/ui/FullPageMessage.module.css",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/FullPageMessage.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/media/ambilight.test.ts",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
@@ -1262,13 +1248,6 @@
   {
     "tool": "code",
     "rule": "noTest",
-    "file": "src/components/ui/FullPageMessage.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
     "file": "src/main.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
@@ -1475,13 +1454,6 @@
     "file": "src/components/stage/VoiceAudio.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/ui/FullPageMessage.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "code",
@@ -2074,20 +2046,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/ui/FullPageMessage.module.css",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/FullPageMessage.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/media/ambilight.test.ts",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
@@ -2644,13 +2602,6 @@
     "file": "src/components/stage/StageNotice.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/components/ui/FullPageMessage.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",

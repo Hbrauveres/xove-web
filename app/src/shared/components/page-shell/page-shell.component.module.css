@@ -1,0 +1,44 @@
+/* Every page on its own: a frame centred in the window, each variant its own background and column. */
+.frame {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: var(--space-12) var(--gutter) var(--space-12) var(--gutter);
+  background: var(--ground);
+}
+
+.home {
+  background: radial-gradient(60% 50% at 50% 0%, var(--accent-soft), transparent 70%), var(--ground);
+}
+
+.column {
+  width: 100%;
+  max-width: var(--card-width);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3-5);
+}
+
+.home .column {
+  max-width: var(--home-card-width);
+  gap: var(--space-4);
+}
+
+/* The waiting room: its card and what's under it, centred together. */
+.waiting {
+  min-height: var(--window-height);
+  place-items: initial;
+  place-content: center;
+  justify-items: center;
+  gap: var(--space-4);
+  padding: var(--gutter) var(--gutter) var(--gutter) var(--gutter);
+  background: none;
+}
+
+/* One short line, while something loads. */
+.message {
+  padding: 0 var(--gutter);
+  background: none;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}

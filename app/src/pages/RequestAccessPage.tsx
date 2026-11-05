@@ -1,3 +1,4 @@
+import { PageShell } from "@shared/components/page-shell";
 import { Face } from "@shared/components/face";
 import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
@@ -34,26 +35,24 @@ export function RequestAccessPage() {
   };
 
   return (
-    <main className={styles.wrap}>
-      <section className={styles.card}>
-        <p className={styles.brand}>
-          <Wordmark height={36} />
-        </p>
+    <PageShell variant="form">
+      <p className={styles.brand}>
+        <Wordmark height={36} />
+      </p>
 
-        {me.status === "PENDING" ? <Waiting /> : <AskForAccess me={me} onSent={refresh} />}
+      {me.status === "PENDING" ? <Waiting /> : <AskForAccess me={me} onSent={refresh} />}
 
-        <div className={styles.account}>
-          <Face name={me.name || me.email} photo={me.avatarUrl} size={32} />
-          <div className={styles.accountText}>
-            <span className={styles.accountLabel}>Signed in as</span>
-            <span className={styles.accountEmail}>{me.email}</span>
-          </div>
-          <button type="button" className={styles.link} onClick={handleSignOut}>
-            Use another account
-          </button>
+      <div className={styles.account}>
+        <Face name={me.name || me.email} photo={me.avatarUrl} size={32} />
+        <div className={styles.accountText}>
+          <span className={styles.accountLabel}>Signed in as</span>
+          <span className={styles.accountEmail}>{me.email}</span>
         </div>
-      </section>
-    </main>
+        <button type="button" className={styles.link} onClick={handleSignOut}>
+          Use another account
+        </button>
+      </div>
+    </PageShell>
   );
 }
 
