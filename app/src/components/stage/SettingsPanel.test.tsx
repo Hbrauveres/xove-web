@@ -136,8 +136,8 @@ describe("the settings panel: the Screen tab", () => {
     expect(within(tab).getByRole("radiogroup", { name: "Screen quality" })).toBeInTheDocument();
     expect(
       within(tab)
-        .getAllByRole("radio")
-        .map((r) => r.textContent),
+        .getAllByRole<HTMLInputElement>("radio")
+        .map((r) => r.labels?.[0]?.textContent),
     ).toEqual(["1080p", "720p", "480p", "Smooth", "Sharp"]);
     expect(within(tab).queryByRole("button", { name: /change/i })).not.toBeInTheDocument();
   });
@@ -216,8 +216,8 @@ describe("the settings panel: the Camera tab", () => {
     const tab = within(panel()).getByRole("tabpanel", { name: "Camera" });
     expect(
       within(within(tab).getByRole("radiogroup", { name: "Camera quality" }))
-        .getAllByRole("radio")
-        .map((r) => r.textContent),
+        .getAllByRole<HTMLInputElement>("radio")
+        .map((r) => r.labels?.[0]?.textContent),
     ).toEqual(["720p", "480p"]);
     await user.click(within(tab).getByRole("radio", { name: "480p" }));
     expect(onPrefsChange).toHaveBeenLastCalledWith("camera", { quality: "480p", mode: "smooth" });

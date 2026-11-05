@@ -1,5 +1,5 @@
 /*
- * The white slider (spec 0121): a 3 px track, white up to the knob and faint after, with a
+ * The white slider: a 3 px track, white up to the knob and faint after, with a
  * 12 px white knob that grows on hover or keyboard focus. Each browser's parts are styled in
  * their own rules: a rule naming another browser's part is dropped whole.
  */

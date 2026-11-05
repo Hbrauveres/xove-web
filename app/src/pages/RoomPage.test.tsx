@@ -168,8 +168,8 @@ async function pickInMenu(user: User, option: string, kind: MenuKind = "Screen")
 /** The quality chosen on the settings' open tab. */
 const tickedQuality = (kind: MenuKind = "Screen") =>
   within(screen.getByRole("radiogroup", { name: `${kind} quality` }))
-    .getAllByRole("radio")
-    .find((r) => r.getAttribute("aria-checked") === "true")?.textContent;
+    .getAllByRole<HTMLInputElement>("radio")
+    .find((r) => r.checked)?.value;
 
 describe("room: sharing", () => {
   it("names what's shared by what the browser says was picked: a tab, a window, the whole screen", async () => {

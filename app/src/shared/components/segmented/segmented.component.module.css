@@ -1,5 +1,5 @@
 /*
- * The segmented control (the Player controls design): a light translucent track as tall as
+ * The segmented control: a light translucent track as tall as
  * the panel's controls (`--ctl`), and one dark pill that slides under the chosen option.
  */
 .seg {
@@ -34,7 +34,7 @@
     background var(--duration-120) ease;
 }
 
-.seg button {
+.option {
   position: relative;
   z-index: var(--layer-raised);
   isolation: isolate;
@@ -50,7 +50,7 @@
 }
 
 /* A soft light behind the option pointed at, fading only sideways, the track's full height. */
-.seg button::before {
+.option::before {
   content: "";
   position: absolute;
   inset: calc(-1 * var(--p)) 0;
@@ -61,30 +61,46 @@
   transition: opacity var(--duration-160) ease;
 }
 
-.seg button:not([aria-checked="true"]):hover {
+.option:not(:has(:checked)):hover {
   color: var(--text);
 }
 
-.seg button:not([aria-checked="true"]):hover::before {
+.option:not(:has(:checked)):hover::before {
   opacity: 1;
 }
 
 /* The chosen option doesn't react: it's already chosen. */
-.seg button[aria-checked="true"] {
+.option:has(:checked) {
   color: var(--text);
   font-weight: 600;
   cursor: default;
 }
 
-.seg button:disabled {
+.option:has(:disabled) {
   cursor: not-allowed;
   opacity: 0.45;
+}
+
+/* The real radio, over the whole option and unseen: it takes the clicks, the keys and the focus ring. */
+.input {
+  position: absolute;
+  inset: 0;
+  z-index: var(--layer-raised);
+  margin: 0;
+  border-radius: var(--radius-pill);
+  opacity: 0;
+  cursor: inherit;
+  appearance: none;
+}
+
+.input:focus-visible {
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .pill,
   .seg button,
-  .seg button::before {
+  .option::before {
     transition: none;
   }
 }

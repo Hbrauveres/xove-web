@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router";
 import { api, ApiError } from "@services/xove-api-service";
 import type { AccessRequestView, MemberView } from "@services/xove-api-service";
-import { Button } from "../components/ui/Button";
+import { Button } from "@shared/components/button";
 import { timeAgo } from "@features/admin/utils/time-ago.util";
 import { XoveMark } from "../components/brand/XoveMark";
 import { ErrorNotice } from "@shared/components/error-notice";

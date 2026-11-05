@@ -3,7 +3,7 @@ import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
 import { useEffect, useRef, useState, type Dispatch, type ReactNode, type SetStateAction } from "react";
 import type { StreamKind } from "@services/xove-api-service";
-import { Range } from "../ui/Range";
+import { Slider } from "@shared/components/slider";
 import { showToast } from "../ui/toast";
 import { FULL_ROOM } from "./PlayerButtons";
 import styles from "./ViewerBar.module.css";
@@ -274,7 +274,7 @@ function Hear({
       </Tooltip>
       {!s.unavailable && (
         <span className={styles.slider} data-open={open || undefined} data-muted={s.muted || undefined} inert={!open}>
-          <Range
+          <Slider
             className={styles.range}
             min={0}
             max={1}

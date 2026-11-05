@@ -9,7 +9,7 @@ import type { ConnectionState } from "@services/livekit-service";
 import type { Friend } from "@features/room/types/room-view.types";
 import { Dropdown } from "@shared/components/dropdown";
 import { DropdownSection } from "@shared/components/dropdown-section";
-import { Range } from "../ui/Range";
+import { Slider } from "@shared/components/slider";
 import styles from "./AccountButton.module.css";
 
 type Props = {
@@ -75,7 +75,7 @@ export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightC
             checked={ambilight.on}
             onToggle={() => change({ ...ambilight, on: !ambilight.on })}
           />
-          <Range
+          <Slider
             className={styles.slider}
             min={0.2}
             max={1}

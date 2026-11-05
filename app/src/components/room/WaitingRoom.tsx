@@ -1,5 +1,5 @@
 import type { RoomSeat } from "@features/room/types/room.types";
-import { Button } from "../ui/Button";
+import { Button } from "@shared/components/button";
 import { SeatOffer } from "./SeatOffer";
 import styles from "./WaitingRoom.module.css";
 

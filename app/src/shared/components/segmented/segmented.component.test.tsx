@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { Segmented } from "./Segmented";
+import { Segmented } from "./segmented.component";
 
 const MODES = [
   { value: "smooth", label: "Smooth", title: "Keeps motion fluid" },
@@ -12,8 +12,8 @@ describe("Segmented, the app's segmented control", () => {
   it("is a group of radios named by its label, the chosen one checked, each with its tooltip", () => {
     render(<Segmented label="Mode" options={MODES} value="smooth" onChange={() => {}} />);
     expect(screen.getByRole("radiogroup", { name: "Mode" })).toBeInTheDocument();
-    expect(screen.getByRole("radio", { name: "Smooth" })).toHaveAttribute("aria-checked", "true");
-    expect(screen.getByRole("radio", { name: "Sharp" })).toHaveAttribute("aria-checked", "false");
+    expect(screen.getByRole("radio", { name: "Smooth" })).toBeChecked();
+    expect(screen.getByRole("radio", { name: "Sharp" })).not.toBeChecked();
     expect(screen.getByRole("radio", { name: "Sharp" })).toHaveAccessibleDescription("Keeps detail sharp");
   });
 
@@ -31,9 +31,8 @@ describe("Segmented, the app's segmented control", () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
     render(<Segmented label="Mode" options={MODES} value="smooth" onChange={onChange} />);
-    expect(screen.getByRole("radio", { name: "Smooth" })).toHaveAttribute("tabindex", "0");
-    expect(screen.getByRole("radio", { name: "Sharp" })).toHaveAttribute("tabindex", "-1");
-    screen.getByRole("radio", { name: "Smooth" }).focus();
+    await user.tab();
+    expect(screen.getByRole("radio", { name: "Smooth" })).toHaveFocus();
     await user.keyboard("{ArrowRight}");
     expect(onChange).toHaveBeenCalledWith("sharp");
   });

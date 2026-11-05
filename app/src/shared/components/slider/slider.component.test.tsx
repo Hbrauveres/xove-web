@@ -1,11 +1,11 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { Range } from "./Range";
+import { Slider } from "./slider.component";
 
-describe("Range, the white slider (spec 0121)", () => {
+describe("Slider, the white one", () => {
   it("is a plain range input, with every prop passed through", () => {
     const onChange = vi.fn();
-    render(<Range aria-label="Volume" className="mine" min={0} max={1} step={0.05} value={0.5} onChange={onChange} />);
+    render(<Slider aria-label="Volume" className="mine" min={0} max={1} step={0.05} value={0.5} onChange={onChange} />);
     const slider = screen.getByRole("slider", { name: "Volume" });
     expect(slider).toHaveAttribute("type", "range");
     expect(slider).toHaveAttribute("step", "0.05");
@@ -17,7 +17,7 @@ describe("Range, the white slider (spec 0121)", () => {
 
   it("tells its stylesheet how far the white fill goes, from min to max", () => {
     const fill = (value: number, min = 0.2, max = 1) => {
-      const { unmount } = render(<Range aria-label="r" min={min} max={max} value={value} onChange={() => {}} />);
+      const { unmount } = render(<Slider aria-label="r" min={min} max={max} value={value} onChange={() => {}} />);
       const at = screen.getByRole("slider").style.getPropertyValue("--fill");
       unmount();
       return at;
@@ -30,7 +30,7 @@ describe("Range, the white slider (spec 0121)", () => {
   });
 
   it("fills nothing, rather than breaking the track, without a value", () => {
-    render(<Range aria-label="r" min={0} max={1} defaultValue={0.5} />);
+    render(<Slider aria-label="r" min={0} max={1} defaultValue={0.5} />);
     expect(screen.getByRole("slider").style.getPropertyValue("--fill")).toBe("0%");
   });
 });

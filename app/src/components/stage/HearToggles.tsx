@@ -2,7 +2,7 @@ import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
 import { useEffect, useRef, useState } from "react";
 import type { Sharer } from "@features/room/types/room-view.types";
-import { Range } from "../ui/Range";
+import { Slider } from "@shared/components/slider";
 import { showToast } from "../ui/toast";
 import type { Sound } from "./ViewerBar";
 import { useKeyboardLast } from "@features/room/hooks/use-keyboard-last.hook";
@@ -179,7 +179,7 @@ export function HearToggles({
               onAnimationEnd={(e) => e.animationName.includes("shrink") && setLeaving(null)}
             >
               {iconOf(leaving, hearing[leaving].muted)}
-              <Range
+              <Slider
                 className={styles.range}
                 min={0}
                 max={1}
@@ -199,7 +199,7 @@ export function HearToggles({
               onAnimationEnd={(e) => e.animationName.includes("grow") && setEntering(null)}
             >
               {iconOf(shown, hearing[shown].muted)}
-              <Range
+              <Slider
                 className={styles.range}
                 min={0}
                 max={1}

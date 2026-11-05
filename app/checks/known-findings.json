@@ -450,20 +450,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/ui/Range.module.css",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/ui/Range.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/ui/Toast.module.css",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
@@ -1227,20 +1213,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/ui/Button.module.css",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/Button.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/components/ui/FullPageMessage.module.css",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
@@ -1249,48 +1221,6 @@
     "tool": "code",
     "rule": "naming",
     "file": "src/components/ui/FullPageMessage.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/Range.module.css",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/Range.test.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/Range.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/Segmented.module.css",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/Segmented.test.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/ui/Segmented.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
   },
@@ -1612,13 +1542,6 @@
   {
     "tool": "code",
     "rule": "noTest",
-    "file": "src/components/ui/Button.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
     "file": "src/components/ui/FullPageMessage.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
@@ -1892,29 +1815,8 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/components/ui/Button.tsx",
-    "count": 2,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
     "file": "src/components/ui/FullPageMessage.tsx",
     "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/ui/Range.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/ui/Segmented.tsx",
-    "count": 2,
     "owner": "#188 shared: Panel, Page shell"
   },
   {
@@ -2634,20 +2536,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/ui/Button.module.css",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/Button.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/components/ui/FullPageMessage.module.css",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
@@ -2656,48 +2544,6 @@
     "tool": "code",
     "rule": "structure",
     "file": "src/components/ui/FullPageMessage.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/Range.module.css",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/Range.test.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/Range.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/Segmented.module.css",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/Segmented.test.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/ui/Segmented.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
   },
@@ -3271,13 +3117,6 @@
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/ui/Range.tsx",
-    "count": 2,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
     "file": "src/hooks/usePinnedRow.ts",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
@@ -3309,13 +3148,6 @@
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 1,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(interactive-supports-focus)",
-    "file": "src/components/ui/Segmented.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
@@ -3460,13 +3292,6 @@
   {
     "tool": "lint",
     "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/components/ui/Segmented.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(prefer-tag-over-role)",
     "file": "src/components/ui/Toast.tsx",
     "count": 1,
     "owner": "#188 shared: Panel, Page shell"
@@ -3547,20 +3372,6 @@
     "file": "src/components/stage/Stage.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/components/ui/Range.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/components/ui/Segmented.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "lint",
@@ -3824,13 +3635,6 @@
   {
     "tool": "tsc",
     "rule": "TS2532",
-    "file": "src/components/ui/Segmented.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
     "file": "src/media/ambilight.test.ts",
     "count": 5,
     "owner": "#190 room: stage, Stage split"
@@ -3904,13 +3708,6 @@
     "file": "src/components/stage/ViewerBar.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "unused",
-    "rule": "types",
-    "file": "src/components/ui/Segmented.tsx",
-    "count": 1,
-    "owner": "#188 shared: Panel, Page shell"
   },
   {
     "tool": "unused",

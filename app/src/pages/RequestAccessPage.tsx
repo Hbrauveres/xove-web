@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { api, ApiError } from "@services/xove-api-service";
 import type { Me } from "@services/xove-api-service";
 import { useAuth } from "@shared/stores/auth-store";
-import { Button } from "../components/ui/Button";
+import { Button } from "@shared/components/button";
 import { XoveMark } from "../components/brand/XoveMark";
 import styles from "./RequestAccessPage.module.css";
 

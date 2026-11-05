@@ -12,7 +12,7 @@ import type { StreamKind, StreamMode, StreamQuality, StreamSettings } from "@ser
 import type { MediaTrack } from "@services/livekit-service";
 import { Cue } from "@shared/components/cue";
 import { Picker } from "@shared/components/picker";
-import { Segmented } from "../ui/Segmented";
+import { Segmented } from "@shared/components/segmented";
 import { showToast } from "../ui/toast";
 import { NO_SCREEN, NO_SOUND } from "./PlayerButtons";
 import styles from "./SettingsPanel.module.css";
