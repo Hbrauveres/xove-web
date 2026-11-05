@@ -1,3 +1,6 @@
+import { ControlLabel } from "@shared/components/control-label";
+import { Panel } from "@shared/components/panel";
+import { IconButton } from "@shared/components/icon-button";
 import { LiveBadge } from "@shared/components/live-badge";
 import { Switch } from "@shared/components/switch";
 import { Icon } from "@shared/components/icon";
@@ -12,8 +15,8 @@ import type { StreamKind, StreamMode, StreamQuality, StreamSettings } from "@ser
 import type { MediaTrack } from "@services/livekit-service";
 import { Cue } from "@shared/components/cue";
 import { Picker } from "@shared/components/picker";
-import { Segmented } from "../ui/Segmented";
-import { showToast } from "../ui/toast";
+import { Segmented } from "@shared/components/segmented";
+import { toastStore } from "@shared/stores/toast-store";
 import { NO_SCREEN, NO_SOUND } from "./PlayerButtons";
 import styles from "./SettingsPanel.module.css";
 import { MicTest } from "./MicTest";
@@ -167,7 +170,7 @@ export function SettingsPanel(props: Props) {
   const tabId = (t: Tab) => `${ids}-${t}`;
 
   return (
-    <div
+    <Panel
       ref={root}
       className={styles.panel}
       role="dialog"
@@ -178,9 +181,9 @@ export function SettingsPanel(props: Props) {
     >
       <div className={styles.head}>
         <h2>Settings</h2>
-        <button type="button" className={styles.close} aria-label="Close settings" onClick={onClose}>
+        <IconButton variant="close" aria-label="Close settings" onClick={onClose}>
           <Icon name="close" size={20} />
-        </button>
+        </IconButton>
       </div>
       <div
         className={styles.tabs}
@@ -213,7 +216,7 @@ export function SettingsPanel(props: Props) {
               onClick={() => {
                 if (usable.includes(t)) setTab(t);
                 else if (pointer.current === "touch" || pointer.current === "pen")
-                  showToast(NO_SCREEN, <Icon name="screen-off" size={20} />);
+                  toastStore.show(NO_SCREEN, <Icon name="screen-off" size={20} />);
               }}
             >
               {t === "screen" ? (
@@ -255,7 +258,7 @@ export function SettingsPanel(props: Props) {
           </div>
         ))}
       </div>
-    </div>
+    </Panel>
   );
 }
 
@@ -271,7 +274,7 @@ function QualityAndMode({
   return (
     <>
       <div className={styles.group}>
-        <p className={styles.heading}>Quality</p>
+        <ControlLabel>Quality</ControlLabel>
         <Segmented<StreamQuality>
           label={`${name} quality`}
           options={qualities}
@@ -281,7 +284,7 @@ function QualityAndMode({
         />
       </div>
       <div className={styles.group}>
-        <p className={styles.heading}>Mode</p>
+        <ControlLabel>Mode</ControlLabel>
         <Segmented<StreamMode>
           label={`${name} mode`}
           options={MODE_OPTIONS}
@@ -303,7 +306,7 @@ function ScreenTab(props: Props & { cue?: number }) {
       <div className={styles.lead}>
         {mine.screen ? (
           <div className={styles.group}>
-            <p className={styles.heading}>Window</p>
+            <ControlLabel>Window</ControlLabel>
             <div className={styles.fieldRow}>
               <span className={styles.source}>
                 <Icon name="window" size={20} />
@@ -345,7 +348,7 @@ function CameraTab(props: Props & { cue?: number }) {
       {/* What you see (spec 0111, design decisions 3 and 4). */}
       <div className={styles.lead}>
         <div className={styles.group}>
-          <p className={styles.heading}>Preview</p>
+          <ControlLabel>Preview</ControlLabel>
           <div className={styles.preview} data-problem={problem ? true : undefined}>
             {problem ? (
               <p className={styles.problem} role="status">
@@ -366,7 +369,7 @@ function CameraTab(props: Props & { cue?: number }) {
       </div>
       {cameras.length > 0 && (
         <div className={styles.group}>
-          <p className={styles.heading}>Camera</p>
+          <ControlLabel>Camera</ControlLabel>
           <div className={styles.cueBox}>
             <Picker
               label="Camera"
@@ -465,7 +468,7 @@ function VoiceTab(props: Props & { shown: boolean }) {
     <>
       <div className={styles.lead}>
         <div className={styles.group}>
-          <p className={styles.heading}>Microphone</p>
+          <ControlLabel>Microphone</ControlLabel>
           {mics.length > 0 ? (
             <Picker
               label="Microphone"
@@ -478,7 +481,7 @@ function VoiceTab(props: Props & { shown: boolean }) {
           )}
         </div>
         <div className={styles.group}>
-          <p className={styles.heading}>Mic level</p>
+          <ControlLabel>Mic level</ControlLabel>
           <MicTest
             level={level}
             track={localVoice}
@@ -488,7 +491,7 @@ function VoiceTab(props: Props & { shown: boolean }) {
         </div>
       </div>
       <div className={styles.group}>
-        <p className={styles.heading}>Voice processing</p>
+        <ControlLabel>Voice processing</ControlLabel>
         {SWITCHES.map((s) => (
           <Tooltip key={s.key} text={s.unavailable ?? s.hint}>
             <Switch
@@ -498,7 +501,7 @@ function VoiceTab(props: Props & { shown: boolean }) {
               unavailable={Boolean(s.unavailable)}
               onToggle={() =>
                 s.unavailable
-                  ? showToast(s.unavailable, <Icon name="mic" size={20} />)
+                  ? toastStore.show(s.unavailable, <Icon name="mic" size={20} />)
                   : set({ [s.key]: !voicePrefs[s.key] })
               }
             />

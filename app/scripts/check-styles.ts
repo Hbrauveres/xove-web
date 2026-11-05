@@ -4,6 +4,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import postcss, { type Root } from "postcss";
+import { FAVICON } from "../src/shared/components/wordmark/constants/favicon.constants.ts";
 
 /** The surfaces text sits on, and each text colour with the contrast it needs there (WCAG AA). */
 const SURFACES = ["ground", "surface", "surface-raised"];
@@ -11,8 +12,14 @@ const TEXTS: [string, number][] = [
   ["text", 4.5],
   ["text-muted", 4.5],
   ["accent", 4.5],
-  ["text-faint", 3],
 ];
+/**
+ * The Panel's glass over the brightest stream, white, as it renders (measured in the browser):
+ * its text is checked there too. Change it with `--panel` or `--panel-filter`.
+ */
+export const GLASS_OVER_WHITE = "#313133";
+/** The smallest text, in rem (11 px). */
+const SMALLEST_TEXT_REM = 0.6875;
 
 /** The custom properties declared on `:root`, as name → value. */
 export function tokensOf(root: Root) {
@@ -47,7 +54,53 @@ export function contrastProblems(tokens: Map<string, string>) {
     if (ratio < min) problems.push(`--${fg} on --${bg}: ${ratio.toFixed(2)}:1, needs ${min}:1`);
   };
   for (const bg of SURFACES) for (const [fg, min] of TEXTS) check(fg, bg, min);
+  tokens.set("glass-over-white", GLASS_OVER_WHITE);
+  for (const fg of ["text", "text-muted"]) check(fg, "glass-over-white", 4.5);
   check("accent-ink", "accent", 4.5);
+  return problems;
+}
+
+/** The favicon can't read the tokens, so it copies three of them: they must still match. */
+export function faviconProblems(tokens: Map<string, string>, favicon: Record<"ground" | "ink" | "red", string>) {
+  const pairs: [keyof typeof favicon, string][] = [
+    ["ground", "ground"],
+    ["ink", "text"],
+    ["red", "accent"],
+  ];
+  return pairs
+    .filter(([key, token]) => favicon[key] !== tokens.get(token))
+    .map(([key, token]) => `the favicon's ${key} (${favicon[key]}) isn't --${token} (${tokens.get(token)})`);
+}
+
+/** Text sizes under 11 px: every `--text-*` size token in rem. */
+export function smallTextProblems(tokens: Map<string, string>) {
+  return [...tokens]
+    .filter(([name, value]) => name.startsWith("text-") && /^[\d.]+rem$/.test(value))
+    .filter(([, value]) => parseFloat(value) < SMALLEST_TEXT_REM)
+    .map(([name, value]) => `--${name} is ${value}: text is never smaller than 11 px`);
+}
+
+/** Text set under 11 px anywhere: a `font-size` whose token, or own value, is smaller. */
+export function smallFontProblems(root: Root, file: string, tokens: Map<string, string>) {
+  const problems: string[] = [];
+  root.walkDecls("font-size", (d) => {
+    const name = /^var\(--([\w-]+)\)$/.exec(d.value.trim())?.[1];
+    const value = name ? tokens.get(name) : d.value.trim();
+    const rem = /^([\d.]+)rem$/.exec(value ?? "")?.[1];
+    if (rem !== undefined && parseFloat(rem) < SMALLEST_TEXT_REM)
+      problems.push(`${file}: font-size ${d.value} is ${value}: text is never smaller than 11 px`);
+  });
+  return problems;
+}
+
+/** The disabled colour is only a disabled control's: never on readable text. */
+export function disabledColourProblems(root: Root, file: string) {
+  const problems: string[] = [];
+  root.walkDecls("color", (d) => {
+    const selector = d.parent?.type === "rule" ? (d.parent as { selector: string }).selector : "";
+    if (d.value.includes("--text-disabled") && !/disabled/.test(selector))
+      problems.push(`${file}: ${selector} uses --text-disabled, which is only for a disabled control`);
+  });
   return problems;
 }
 
@@ -94,6 +147,10 @@ export function checkStyles(src: string) {
   if (!global) return ["src/shared/styles/global.css not found"];
   return [
     ...contrastProblems(tokensOf(tokens.root)),
+    ...faviconProblems(tokensOf(tokens.root), FAVICON),
+    ...smallTextProblems(tokensOf(tokens.root)),
+    ...parsed.flatMap(({ root, file }) => disabledColourProblems(root, file)),
+    ...parsed.flatMap(({ root, file }) => smallFontProblems(root, file, tokensOf(tokens.root))),
     ...parsed.flatMap(({ root, file }) => mixedVendorRules(root, file)),
     ...reducedMotionProblems(global.root),
   ];

@@ -168,8 +168,8 @@ async function pickInMenu(user: User, option: string, kind: MenuKind = "Screen")
 /** The quality chosen on the settings' open tab. */
 const tickedQuality = (kind: MenuKind = "Screen") =>
   within(screen.getByRole("radiogroup", { name: `${kind} quality` }))
-    .getAllByRole("radio")
-    .find((r) => r.getAttribute("aria-checked") === "true")?.textContent;
+    .getAllByRole<HTMLInputElement>("radio")
+    .find((r) => r.checked)?.value;
 
 describe("room: sharing", () => {
   it("names what's shared by what the browser says was picked: a tab, a window, the whole screen", async () => {
@@ -1123,7 +1123,7 @@ describe("room: theater mode", () => {
 
     const header = screen.getByRole("banner");
     // The drawn mark, not the name typed as text.
-    expect(within(header).getByRole("img", { name: "Xovê" })).toBeInTheDocument();
+    expect(within(header).getByLabelText("Xovê")).toBeInTheDocument();
     expect(within(header).queryByText(/xovê/)).not.toBeInTheDocument();
     expect(within(header).getByRole("button", { name: /^Activity/ })).toBeInTheDocument();
     expect(within(header).getByRole("button", { name: "1 person here" })).toBeInTheDocument();
@@ -1467,10 +1467,14 @@ describe("room: under the stage", () => {
       lastRoom().publishScreen("user-7");
     });
 
-    expect(await screen.findByText("1 watching")).toBeInTheDocument();
+    expect(
+      await screen.findByText((_, el) => el?.textContent?.endsWith("1 watching") === true && el.children.length === 3),
+    ).toBeInTheDocument();
     // Once my stage is reported (after a second of stillness), I count too.
     await pass(REPORT_STILL_MS);
-    expect(await screen.findByText("2 watching")).toBeInTheDocument();
+    expect(
+      await screen.findByText((_, el) => el?.textContent?.endsWith("2 watching") === true && el.children.length === 3),
+    ).toBeInTheDocument();
   });
 
   it("invites someone to go live on an empty stage, naming who's here", async () => {

@@ -58,7 +58,7 @@ Small pieces used in many places. Each is built once and reused everywhere.
 
 ### Count badge
 
-*Building block* · `shared/components/count-badge/`
+*Building block* · by space (ADR-0094): `shared/components/count-chip/` in a heading, `stat-pill/` over a stream; a number on a control belongs to the control
 
 <table><tr>
 <td><img src="img/next/count-badge.webp" width="18" alt="On the bell"><br><sub>On the bell</sub></td>
@@ -138,7 +138,7 @@ Small pieces used in many places. Each is built once and reused everywhere.
 
 ### Section label
 
-*Building block* · `shared/components/section-label/`
+*Building block* · by space (ADR-0094): `shared/components/section-heading/` starting a part of a page, `control-label/` over a control in a panel, the `field/`'s label in a form
 
 <table><tr>
 <td><img src="img/next/section-label.webp" width="252" alt="&quot;In the room · 6&quot;"><br><sub>&quot;In the room · 6&quot;</sub></td>

@@ -40,7 +40,7 @@ Xovê's name and mark, drawn with its red corner; it animates on hover.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/brand/XoveMark.tsx`, `XoveIcon.tsx`, `parts.tsx`, `useMarkAnimation.ts`; its geometry in `brand/mark.ts`, `markTimeline.ts` | `shared/components/wordmark/` (its geometry in `shared/utils/`) | Kept |
+| `shared/components/wordmark/` (full and icon; its geometry, timeline and favicon in its `utils/`) | Here | Done (#188) |
 
 ### Activity pill and list
 
@@ -304,11 +304,11 @@ The shared controls today, and the copies that become one component each.
 
 | Block | Today | Goes to | What happens |
 | --- | --- | --- | --- |
-| Button | `components/ui/Button.tsx` | `shared/components/button/` | Kept |
-| Slider | `components/ui/Range.tsx` | `shared/components/slider/` | Kept |
-| Segmented control | `components/ui/Segmented.tsx` | `shared/components/segmented/` | Kept |
+| Button | `shared/components/button/` | Here | Done (#188) |
+| Slider | `shared/components/slider/` | Here | Done (#188) |
+| Segmented control | `shared/components/segmented/` (real radios) | Here | Done (#188) |
 | Floating layer | `shared/stores/floating-store/` | Here | Done (#187) |
-| Picker, drop-up, dropdown | `shared/components/picker/`, `picker-list/`, `drop-up/`, `drop-up-row/`, `dropdown/`, `dropdown-section/` | Here, on the floating layer | Done (#187) |
+| Picker, drop-up, dropdown | `shared/components/picker/`, `picker-list/`, `drop-up/`, `drop-up-row/`, `dropdown/` (its sections are the Panel's) | Here, on the floating layer | Done (#187) |
 | Cue | `shared/components/cue/` | Here | Done (#187) |
 | Tooltip | `shared/components/tooltip/` | Here, on the floating layer | Done (#187) |
 | Avatar | `shared/components/face/` (was `ui/Avatar.tsx`, `PersonAvatar.tsx`): the room's colour and initial with its rings, the account's photo | Already there | Merged |
@@ -317,8 +317,10 @@ The shared controls today, and the copies that become one component each.
 | Icons | `shared/components/icon/` and its drawings in `shared/constants/icons.constants.ts` (was `stage/icons.tsx`, `room/ActivityIcon.tsx` and inline drawings) | Already there | Merged |
 | LIVE badge | `shared/components/live-badge/`: beside who's on the stage, and over my preview | Already there | Merged |
 | Headline | `shared/components/headline/`: the big statement with its key words in the accent (sign-in, the empty stage) | Already there | Merged |
-| Toast | `components/ui/Toast.tsx`, `toast.ts` | `shared/components/toast/` | Kept |
-| Full-page message | `components/ui/FullPageMessage.tsx` | `shared/components/page-shell/`, with the pages' copied shells | Merged |
+| Toast | `shared/components/toast/`, its state `shared/stores/toast-store/` | Here | Done (#188) |
+| Page shell | `shared/components/page-shell/`: home, request access, the waiting room, the loading line | Here | Done (#188) |
+| Panel | `shared/components/panel/`, `panel-section/`: the settings, the menus, the waiting room's card | Here | Done (#188) |
+| Field, Stat pill, Count chip, Control label, Section heading | `shared/components/field/`, `stat-pill/`, `count-chip/`, `control-label/`, `section-heading/` | Here | Done (#188) |
 | Error notice | `shared/components/error-notice/`: the red-tinted box a problem is told in, on the home page and over the room (it was a copied `.error` rule in both pages) | Already there | Merged |
 
 ## Removed

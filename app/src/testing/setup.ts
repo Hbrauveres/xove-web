@@ -3,7 +3,7 @@ import { cleanup, configure } from "@testing-library/react";
 import { afterEach, vi } from "vitest";
 import { resetTv } from "../components/stage/staticBands";
 import { floatingStore } from "@shared/stores/floating-store";
-import { resetToast } from "../components/ui/toast";
+import { toastStore } from "@shared/stores/toast-store";
 import { fakeCameras, fakeMics, resetFakeLiveKit, rooms } from "./fakeLiveKit";
 
 // findBy and waitFor give up after 1 s: a wait that needs longer is a delay that belongs on fake
@@ -33,7 +33,7 @@ afterEach(() => {
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
   }
   resetFakeLiveKit();
-  resetToast();
+  toastStore.reset();
   floatingStore.reset();
   resetTv();
   resetBrowserStandIns();

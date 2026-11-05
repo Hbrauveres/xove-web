@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Button } from "../ui/Button";
+import { Button } from "@shared/components/button";
 import styles from "./SeatOffer.module.css";
 
 type Props = {

@@ -2,8 +2,8 @@ import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
 import { useEffect, useRef, useState } from "react";
 import type { Sharer } from "@features/room/types/room-view.types";
-import { Range } from "../ui/Range";
-import { showToast } from "../ui/toast";
+import { Slider } from "@shared/components/slider";
+import { toastStore } from "@shared/stores/toast-store";
 import type { Sound } from "./ViewerBar";
 import { useKeyboardLast } from "@features/room/hooks/use-keyboard-last.hook";
 import styles from "./HearToggles.module.css";
@@ -119,7 +119,7 @@ export function HearToggles({
             // The preview's own click opens the stream: a toggle doesn't.
             e.stopPropagation();
             if (unavailable)
-              return showToast(
+              return toastStore.show(
                 unavailable,
                 kind === "sound" ? <Icon name="volume-off" size={20} /> : <Icon name="voice-off" size={20} />,
               );
@@ -179,7 +179,7 @@ export function HearToggles({
               onAnimationEnd={(e) => e.animationName.includes("shrink") && setLeaving(null)}
             >
               {iconOf(leaving, hearing[leaving].muted)}
-              <Range
+              <Slider
                 className={styles.range}
                 min={0}
                 max={1}
@@ -199,7 +199,7 @@ export function HearToggles({
               onAnimationEnd={(e) => e.animationName.includes("grow") && setEntering(null)}
             >
               {iconOf(shown, hearing[shown].muted)}
-              <Range
+              <Slider
                 className={styles.range}
                 min={0}
                 max={1}

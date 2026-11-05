@@ -1,11 +1,13 @@
+import { Field } from "@shared/components/field";
+import { PageShell } from "@shared/components/page-shell";
 import { Face } from "@shared/components/face";
 import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import { api, ApiError } from "@services/xove-api-service";
 import type { Me } from "@services/xove-api-service";
 import { useAuth } from "@shared/stores/auth-store";
-import { Button } from "../components/ui/Button";
-import { XoveMark } from "../components/brand/XoveMark";
+import { Button } from "@shared/components/button";
+import { Wordmark } from "@shared/components/wordmark";
 import styles from "./RequestAccessPage.module.css";
 
 const MAX_MESSAGE = 500;
@@ -34,26 +36,24 @@ export function RequestAccessPage() {
   };
 
   return (
-    <main className={styles.wrap}>
-      <section className={styles.card}>
-        <p className={styles.brand}>
-          <XoveMark height={36} />
-        </p>
+    <PageShell variant="form">
+      <p className={styles.brand}>
+        <Wordmark height={36} />
+      </p>
 
-        {me.status === "PENDING" ? <Waiting /> : <AskForAccess me={me} onSent={refresh} />}
+      {me.status === "PENDING" ? <Waiting /> : <AskForAccess me={me} onSent={refresh} />}
 
-        <div className={styles.account}>
-          <Face name={me.name || me.email} photo={me.avatarUrl} size={32} />
-          <div className={styles.accountText}>
-            <span className={styles.accountLabel}>Signed in as</span>
-            <span className={styles.accountEmail}>{me.email}</span>
-          </div>
-          <button type="button" className={styles.link} onClick={handleSignOut}>
-            Use another account
-          </button>
+      <div className={styles.account}>
+        <Face name={me.name || me.email} photo={me.avatarUrl} size={32} />
+        <div className={styles.accountText}>
+          <span className={styles.accountLabel}>Signed in as</span>
+          <span className={styles.accountEmail}>{me.email}</span>
         </div>
-      </section>
-    </main>
+        <button type="button" className={styles.link} onClick={handleSignOut}>
+          Use another account
+        </button>
+      </div>
+    </PageShell>
   );
 }
 
@@ -87,26 +87,21 @@ function AskForAccess({ me, onSent }: { me: Me; onSent: () => Promise<void> }) {
       </p>
 
       <form className={styles.form} onSubmit={submit}>
-        <label htmlFor="access-message" className={styles.label}>
-          Message <span className={styles.optional}>(optional)</span>
-        </label>
-        <textarea
+        <Field
+          label="Message"
+          hint="(optional)"
           id="access-message"
-          className={styles.textarea}
           rows={3}
           maxLength={MAX_MESSAGE}
           placeholder="Hey, it's me from…"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={setMessage}
+          action={
+            <Button type="submit" disabled={sending}>
+              {sending ? "Sending…" : declined ? "Ask again" : "Request access"}
+            </Button>
+          }
         />
-        <div className={styles.formFooter}>
-          <span className={styles.counter}>
-            {message.length}/{MAX_MESSAGE}
-          </span>
-          <Button type="submit" disabled={sending}>
-            {sending ? "Sending…" : declined ? "Ask again" : "Request access"}
-          </Button>
-        </div>
         {error && (
           <p className={styles.error} role="alert">
             {error}

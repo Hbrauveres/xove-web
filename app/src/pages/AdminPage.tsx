@@ -1,11 +1,12 @@
+import { SectionHeading } from "@shared/components/section-heading";
 import { Face } from "@shared/components/face";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router";
 import { api, ApiError } from "@services/xove-api-service";
 import type { AccessRequestView, MemberView } from "@services/xove-api-service";
-import { Button } from "../components/ui/Button";
+import { Button } from "@shared/components/button";
 import { timeAgo } from "@features/admin/utils/time-ago.util";
-import { XoveMark } from "../components/brand/XoveMark";
+import { Wordmark } from "@shared/components/wordmark";
 import { ErrorNotice } from "@shared/components/error-notice";
 import styles from "./AdminPage.module.css";
 
@@ -50,7 +51,7 @@ export function AdminPage() {
     <div className={styles.shell}>
       <header className={styles.header}>
         <span className={styles.brand}>
-          <XoveMark height={30} /> <span className={styles.section}>admin</span>
+          <Wordmark height={30} /> <span className={styles.section}>admin</span>
         </span>
         <Link to="/room" className={styles.back}>
           Back to the room
@@ -68,9 +69,14 @@ export function AdminPage() {
       ) : (
         <div className={styles.columns}>
           <section aria-labelledby="requests-title">
-            <h2 id="requests-title" className={styles.heading}>
-              Waiting for access <span className={styles.count}>{data.requests.length}</span>
-            </h2>
+            <SectionHeading
+              id="requests-title"
+              className={styles.heading}
+              count={data.requests.length}
+              attention={data.requests.length > 0}
+            >
+              Waiting for access
+            </SectionHeading>
             {data.requests.length === 0 ? (
               <p className={styles.empty}>No one is waiting right now.</p>
             ) : (
@@ -112,9 +118,9 @@ export function AdminPage() {
           </section>
 
           <section aria-labelledby="members-title">
-            <h2 id="members-title" className={styles.heading}>
-              Members <span className={styles.count}>{data.members.length}</span>
-            </h2>
+            <SectionHeading id="members-title" className={styles.heading} count={data.members.length}>
+              Members
+            </SectionHeading>
             <ul className={styles.list}>
               {data.members.map((m) => (
                 <li key={m.id} className={styles.member}>

@@ -1,7 +1,7 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { DEFAULT_VOICE, MIC_DEVICE_KEY } from "../../../services/preferences-service";
-import { currentToast } from "../../../components/ui/toast";
+import { toastStore } from "@shared/stores/toast-store";
 import { useMyVoice } from "./use-my-voice.hook";
 
 /** The hook with its own video commands: the mic answers `problem` (nothing by default). */
@@ -32,7 +32,7 @@ describe("my voice", () => {
   it("says why when the mic is blocked", async () => {
     const { hook } = myVoice(false, true, "blocked");
     await act(async () => hook.result.current.toggleVoice());
-    expect(currentToast()?.text).toContain("Your browser blocked the microphone.");
+    expect(toastStore.current()?.text).toContain("Your browser blocked the microphone.");
   });
 
   it("moves the line live, and restarts the mic only for another mic or processing", () => {
@@ -80,9 +80,9 @@ describe("my voice", () => {
   it("says when there's no mic, or the voice couldn't be sent", async () => {
     const missing = myVoice(false, true, "missing");
     await act(async () => missing.hook.result.current.toggleVoice());
-    expect(currentToast()?.text).toBe("No microphone found.");
+    expect(toastStore.current()?.text).toBe("No microphone found.");
     const failed = myVoice(false, true, "failed");
     await act(async () => failed.hook.result.current.toggleVoice());
-    expect(currentToast()?.text).toBe("Your voice couldn't be sent. Try again in a moment.");
+    expect(toastStore.current()?.text).toBe("Your voice couldn't be sent. Try again in a moment.");
   });
 });

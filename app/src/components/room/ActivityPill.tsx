@@ -5,7 +5,7 @@ import type { StreamKind } from "@services/xove-api-service";
 import type { ConnectionState } from "@services/livekit-service";
 import type { ActivityEvent, Friend } from "@features/room/types/room-view.types";
 import { Dropdown } from "@shared/components/dropdown";
-import { DropdownSection } from "@shared/components/dropdown-section";
+import { PanelSection } from "@shared/components/panel-section";
 import { ActivityList } from "./ActivityList";
 import { describeEvent, shortAgo } from "./activityText";
 import styles from "./ActivityPill.module.css";
@@ -111,7 +111,7 @@ export function ActivityPill({ events, people, meId, connection, isLive, watchin
       </button>
 
       <Dropdown open={open} label="Activity" align="center" anchor={anchor} onClose={() => close(false)}>
-        <DropdownSection scroll>
+        <PanelSection scroll>
           <ActivityList
             events={events}
             people={people}
@@ -125,7 +125,7 @@ export function ActivityPill({ events, people, meId, connection, isLive, watchin
               close(true);
             }}
           />
-        </DropdownSection>
+        </PanelSection>
       </Dropdown>
     </div>
   );

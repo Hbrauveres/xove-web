@@ -3,8 +3,8 @@ import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
 import { useEffect, useRef, useState, type Dispatch, type ReactNode, type SetStateAction } from "react";
 import type { StreamKind } from "@services/xove-api-service";
-import { Range } from "../ui/Range";
-import { showToast } from "../ui/toast";
+import { Slider } from "@shared/components/slider";
+import { toastStore } from "@shared/stores/toast-store";
 import { FULL_ROOM } from "./PlayerButtons";
 import styles from "./ViewerBar.module.css";
 import { Tooltip } from "@shared/components/tooltip";
@@ -172,7 +172,7 @@ function MenuItem({
         type="button"
         role="menuitem"
         aria-disabled={unavailable ? true : undefined}
-        onClick={() => (unavailable ? showToast(unavailable, icon) : onPick())}
+        onClick={() => (unavailable ? toastStore.show(unavailable, icon) : onPick())}
       >
         {icon}
         {label}
@@ -274,7 +274,7 @@ function Hear({
       </Tooltip>
       {!s.unavailable && (
         <span className={styles.slider} data-open={open || undefined} data-muted={s.muted || undefined} inert={!open}>
-          <Range
+          <Slider
             className={styles.range}
             min={0}
             max={1}

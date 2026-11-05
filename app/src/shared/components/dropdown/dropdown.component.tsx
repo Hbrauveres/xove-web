@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef } from "react";
+import { Panel } from "@shared/components/panel";
 import { useFloating } from "@shared/stores/floating-store";
 import styles from "./dropdown.component.module.css";
 import type { DropdownProps } from "./types/dropdown.types";
@@ -48,7 +49,7 @@ export function Dropdown({
       style={{ gridTemplateRows: rolledOut ? "1fr" : "0fr", width }}
       data-rolled={rolledOut ? "out" : "up"}
     >
-      <div className={styles.roll}>{children}</div>
+      <Panel cuts>{children}</Panel>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { StatPill } from "@shared/components/stat-pill";
 import { LiveBadge } from "@shared/components/live-badge";
 import { Face } from "@shared/components/face";
 import { useElapsed } from "@features/room/hooks/use-elapsed.hook";
@@ -69,14 +70,15 @@ export function NowWatching({ sharer, watchers = [], others = [] }: Props) {
           {watchers.length > 0 && (
             <Tooltip text={watchers.map((p) => p.name).join(", ")}>
               <span className={styles.watchers}>
-                <span className={styles.row}>
-                  {watchers.slice(0, MAX_AVATARS).map((p) => (
+                <StatPill
+                  lead={watchers.slice(0, MAX_AVATARS).map((p) => (
                     <span key={p.id} data-watcher className={styles.face}>
-                      <Face name={p.name} hue={p.hue} size={22} />
+                      <Face name={p.name} hue={p.hue} size={20} />
                     </span>
                   ))}
-                </span>
-                <span className={styles.count}>{watchers.length} watching</span>
+                  count={watchers.length}
+                  unit="watching"
+                />
               </span>
             </Tooltip>
           )}

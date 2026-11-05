@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { XoveMark } from "../brand/XoveMark";
+import { Wordmark } from "@shared/components/wordmark";
 import styles from "./RoomHeader.module.css";
 
 /**
@@ -10,7 +10,7 @@ export function RoomHeader({ middle, right }: { middle: ReactNode; right: ReactN
   return (
     <header className={styles.header}>
       <span className={styles.logo}>
-        <XoveMark height={32} />
+        <Wordmark height={32} />
       </span>
       <div className={styles.middle}>{middle}</div>
       <div className={styles.right}>{right}</div>

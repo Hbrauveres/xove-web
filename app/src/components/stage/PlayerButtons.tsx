@@ -2,7 +2,7 @@ import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
 import { useState, type ReactNode } from "react";
 import type { CameraDevice, ScreenSurface } from "@services/media-devices-service";
-import { usePinnedRow } from "../../hooks/usePinnedRow";
+import { usePinnedRow } from "@features/room/hooks/use-pinned-row.hook";
 import type { StreamKind } from "@services/xove-api-service";
 import { DropUp } from "@shared/components/drop-up";
 import { DropUpRow } from "@shared/components/drop-up-row";

@@ -19,10 +19,6 @@
   max-width: calc(100% - var(--size-5));
   max-height: calc(100% - var(--room) - var(--size-2-5));
   min-height: min(var(--settings-min-height), calc(100% - var(--room) - var(--size-2-5)));
-  border: var(--hairline) solid var(--panel-line);
-  border-radius: var(--radius-4);
-  background: var(--panel);
-  backdrop-filter: blur(var(--blur-5-5));
   color: var(--text);
   opacity: 0;
   transform: translateY(var(--space-1-5));
@@ -48,28 +44,6 @@
   font-family: var(--font-display);
   font-weight: 700;
   font-size: var(--text-sm);
-}
-
-.close {
-  display: grid;
-  place-items: center;
-  width: var(--size-8);
-  height: var(--size-8);
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: transparent;
-  color: var(--text-muted);
-  cursor: pointer;
-}
-
-.close:hover {
-  background: var(--panel-line);
-  color: var(--text);
-}
-
-.close svg {
-  width: var(--size-4);
-  height: var(--size-4);
 }
 
 /* The tabs, a red marker sliding under the chosen one. */
@@ -125,7 +99,7 @@
 /* Can't be used in this browser (it can't share a screen): greyed out in its place, not hidden. */
 .tab[aria-disabled="true"],
 .tab[aria-disabled="true"]:hover {
-  color: var(--text-faint);
+  color: var(--text-disabled);
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -216,15 +190,6 @@
 .group {
   display: grid;
   gap: var(--space-1-5);
-}
-
-.heading {
-  margin: 0;
-  color: var(--text-faint);
-  font-family: var(--font-mono);
-  font-size: var(--text-10);
-  letter-spacing: var(--tracking-6);
-  text-transform: uppercase;
 }
 
 .hint {

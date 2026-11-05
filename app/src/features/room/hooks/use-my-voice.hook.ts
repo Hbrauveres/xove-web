@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { loadVoicePrefs, saveVoicePrefs } from "@services/preferences-service";
 import type { VoicePrefs } from "@services/preferences-service";
-import { showToast } from "../../../components/ui/toast";
+import { toastStore } from "@shared/stores/toast-store";
 import { VOICE_PROBLEMS } from "../constants/voice.constants";
 import type { MyVoiceInputs } from "../types/my-voice.types";
 
@@ -20,7 +20,7 @@ export function useMyVoice({ voice, sending, startVoice, stopVoice, applyVoice, 
     starting.current = true;
     try {
       const problem = await startVoice(voicePrefs);
-      if (problem) showToast(VOICE_PROBLEMS[problem]);
+      if (problem) toastStore.show(VOICE_PROBLEMS[problem]);
     } finally {
       starting.current = false;
     }

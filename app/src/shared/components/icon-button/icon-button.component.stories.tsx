@@ -50,3 +50,11 @@ export const Header: Story = {
 };
 /** A small pill with words. */
 export const Words: Story = { args: { variant: "words", "aria-label": undefined, children: "Change" } };
+/** On a small picture: the facecam's buttons. */
+export const Mini: Story = {
+  args: { variant: "mini", "aria-label": "Swap views", children: <Icon name="swap" size={16} /> },
+};
+/** A panel's close. */
+export const Close: Story = {
+  args: { variant: "close", "aria-label": "Close settings", children: <Icon name="close" size={20} /> },
+};

@@ -54,7 +54,9 @@ describe("now watching: who's watching (spec 0107)", () => {
   it("shows who's watching: their avatars side by side and how many", () => {
     const { container } = render(<NowWatching sharer={bruno(false)} watchers={people("Henrique", "Diego")} />);
 
-    expect(screen.getByText("2 watching")).toBeInTheDocument();
+    expect(
+      screen.getByText((_, el) => el?.textContent?.endsWith("2 watching") === true && el.children.length === 3),
+    ).toBeInTheDocument();
     expect(container.querySelectorAll("[data-watcher]")).toHaveLength(2);
   });
 
@@ -63,7 +65,9 @@ describe("now watching: who's watching (spec 0107)", () => {
       <NowWatching sharer={bruno(false)} watchers={people("Ana", "Diego", "Carla", "Leo", "Rui", "Bia")} />,
     );
 
-    expect(screen.getByText("6 watching")).toBeInTheDocument();
+    expect(
+      screen.getByText((_, el) => el?.textContent?.endsWith("6 watching") === true && el.children.length === 3),
+    ).toBeInTheDocument();
     expect(container.querySelectorAll("[data-watcher]")).toHaveLength(4);
   });
 

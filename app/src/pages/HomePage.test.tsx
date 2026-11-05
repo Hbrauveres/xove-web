@@ -8,7 +8,7 @@ describe("home page", () => {
     installFakeApi({ me: null });
     renderApp("/");
 
-    expect(await screen.findByRole("img", { name: "Xovê" })).toBeInTheDocument();
+    expect(await screen.findByLabelText("Xovê")).toBeInTheDocument();
     expect(screen.queryByText(/xovê/)).not.toBeInTheDocument();
   });
 

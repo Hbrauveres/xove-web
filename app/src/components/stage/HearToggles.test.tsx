@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { aSharer } from "../../testing/factories/sharer.factory";
 import type { Sharer } from "@features/room/types/room-view.types";
-import { currentToast } from "../ui/toast";
+import { toastStore } from "@shared/stores/toast-store";
 import { HearToggles, type Hearing } from "./HearToggles";
 
 const bruno = (extra: Partial<Sharer> = {}) => aSharer({ hasSound: true, hasVoice: true, ...extra });
@@ -34,7 +34,7 @@ describe("a preview's two toggles (spec 0123)", () => {
     expect(voice).toHaveAttribute("aria-disabled", "true");
     await userEvent.setup().click(voice);
     expect(onChange).not.toHaveBeenCalled();
-    expect(currentToast()?.text).toBe("Bruno's mic is off");
+    expect(toastStore.current()?.text).toBe("Bruno's mic is off");
   });
 
   it("lights the voice while they speak, never once I've muted it (who's talking)", () => {

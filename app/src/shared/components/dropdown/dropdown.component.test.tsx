@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useRef, useState } from "react";
 import { describe, expect, it } from "vitest";
 import { onFakeClock } from "@testing/factories/clock.factory";
-import { DropdownSection } from "@shared/components/dropdown-section";
+import { PanelSection } from "@shared/components/panel-section";
 import { Dropdown } from "./dropdown.component";
 
 /** A button with its dropdown, as the header uses them. */
@@ -16,7 +16,7 @@ function Trigger({ name, role = "dialog" }: { name: string; role?: "dialog" | "m
         {name}
       </button>
       <Dropdown open={open} label={`${name} panel`} role={role} anchor={anchor} onClose={() => setOpen(false)}>
-        <DropdownSection>
+        <PanelSection>
           {role === "menu" ? (
             <>
               <button type="button" role="menuitem">
@@ -29,10 +29,10 @@ function Trigger({ name, role = "dialog" }: { name: string; role?: "dialog" | "m
           ) : (
             <p>Inside {name}</p>
           )}
-        </DropdownSection>
-        <DropdownSection scroll>
+        </PanelSection>
+        <PanelSection scroll>
           <p>More of {name}</p>
-        </DropdownSection>
+        </PanelSection>
       </Dropdown>
     </div>
   );

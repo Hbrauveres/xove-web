@@ -8,7 +8,7 @@ import { CAMERA_BLOCKED } from "@services/media-devices-service";
 import { NO_SOUND, NO_SCREEN } from "./PlayerButtons";
 import { CUE_MS, SettingsPanel } from "./SettingsPanel";
 import { DEFAULT_VOICE } from "@services/preferences-service";
-import { currentToast } from "../ui/toast";
+import { toastStore } from "@shared/stores/toast-store";
 
 const PREFS: Record<StreamKind, StreamSettings> = {
   screen: { quality: "1080p", mode: "smooth" },
@@ -79,7 +79,7 @@ describe("the settings panel: tabs", () => {
     const screenTab = within(panel()).getByRole("tab", { name: "Screen" });
     fireEvent.pointerDown(screenTab, { pointerType: "touch" });
     fireEvent.click(screenTab);
-    expect(currentToast()?.text).toBe(NO_SCREEN);
+    expect(toastStore.current()?.text).toBe(NO_SCREEN);
   });
 
   it("marks with a red dot the tab of what I'm sending", () => {
@@ -136,8 +136,8 @@ describe("the settings panel: the Screen tab", () => {
     expect(within(tab).getByRole("radiogroup", { name: "Screen quality" })).toBeInTheDocument();
     expect(
       within(tab)
-        .getAllByRole("radio")
-        .map((r) => r.textContent),
+        .getAllByRole<HTMLInputElement>("radio")
+        .map((r) => r.labels?.[0]?.textContent),
     ).toEqual(["1080p", "720p", "480p", "Smooth", "Sharp"]);
     expect(within(tab).queryByRole("button", { name: /change/i })).not.toBeInTheDocument();
   });
@@ -216,8 +216,8 @@ describe("the settings panel: the Camera tab", () => {
     const tab = within(panel()).getByRole("tabpanel", { name: "Camera" });
     expect(
       within(within(tab).getByRole("radiogroup", { name: "Camera quality" }))
-        .getAllByRole("radio")
-        .map((r) => r.textContent),
+        .getAllByRole<HTMLInputElement>("radio")
+        .map((r) => r.labels?.[0]?.textContent),
     ).toEqual(["720p", "480p"]);
     await user.click(within(tab).getByRole("radio", { name: "480p" }));
     expect(onPrefsChange).toHaveBeenLastCalledWith("camera", { quality: "480p", mode: "smooth" });
@@ -398,6 +398,6 @@ describe("the settings panel: the Voice tab (spec 0123)", () => {
     expect(isolation).toHaveAttribute("aria-disabled", "true");
     await user.click(isolation);
     expect(onVoicePrefs).not.toHaveBeenCalled();
-    expect(currentToast()?.text).toBe("This browser can't isolate a voice");
+    expect(toastStore.current()?.text).toBe("This browser can't isolate a voice");
   });
 });

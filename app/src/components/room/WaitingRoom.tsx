@@ -1,5 +1,7 @@
+import { PageShell } from "@shared/components/page-shell";
+import { Panel } from "@shared/components/panel";
 import type { RoomSeat } from "@features/room/types/room.types";
-import { Button } from "../ui/Button";
+import { Button } from "@shared/components/button";
 import { SeatOffer } from "./SeatOffer";
 import styles from "./WaitingRoom.module.css";
 
@@ -41,17 +43,17 @@ export function WaitingRoom({ seat, onSignOut }: Props) {
   };
 
   return (
-    <main className={styles.wrap}>
-      <section className={styles.card} role="status" aria-live="polite">
+    <PageShell variant="waiting">
+      <Panel as="section" className={styles.card} role="status" aria-live="polite">
         {body()}
         {seat.error && <p className={styles.error}>{seat.error}</p>}
-      </section>
+      </Panel>
       <button type="button" className={styles.signOut} onClick={onSignOut}>
         Sign out
       </button>
       {status?.status === "offered" && (
         <SeatOffer seconds={status.seconds} onEnter={seat.accept} onCancel={seat.cancel} />
       )}
-    </main>
+    </PageShell>
   );
 }

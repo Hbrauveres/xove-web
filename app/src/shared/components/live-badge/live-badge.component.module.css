@@ -4,7 +4,7 @@
   align-items: center;
   color: var(--accent-ink);
   font-family: var(--font-mono);
-  font-size: var(--text-10);
+  font-size: var(--text-11);
 }
 
 .badge::before {

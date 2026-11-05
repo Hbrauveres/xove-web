@@ -141,6 +141,13 @@ describe("the code check", () => {
     ).toContain("sharedData");
   });
 
+  it("names a test that reads CSS as text, not one that reads another file", () => {
+    const test = (text: string) => rules("shared/utils/f.util.test.ts", text, ["shared/utils/f.util.ts"]);
+    expect(test('import css from "./f.module.css?raw";\n')).toContain("cssText");
+    expect(test('const css = readFileSync("tokens.css", "utf8");\n')).toContain("cssText");
+    expect(test('import page from "../../index.html?raw";\n')).not.toContain("cssText");
+  });
+
   it("names a comment that switches a check off, and a line past Prettier's width, outside tests", () => {
     const code = (text: string) => rules("shared/utils/e.util.ts", text, ["shared/utils/e.util.test.ts"]);
     for (const off of ["// oxlint-disable-next-line", "// @ts-ignore", "// @ts-expect-error", "/* eslint-disable */"])

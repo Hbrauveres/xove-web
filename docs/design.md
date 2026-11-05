@@ -42,10 +42,10 @@ The pictures are shot from the real app (`design-sheet.mjs`, see [Keeping this p
 
 - **The wordmark:** [XOVE] in a slim viewfinder. The O is a record button: a white ring as thick as the letters and a red dot inside. Four corners frame the word; the **top-right corner is red**.
 - **The symbol:** the record O alone, inside the same four corners. It's the app icon and the favicon.
-- **Construction** (`app/src/brand/mark.ts`, the only place the geometry lives): one grid with a cap height of 100 and a stroke of 10. Letter widths X 88, O 100, V 90, E 68, gaps 20. The viewfinder sits 28 from the letters, with arms of 24 (26 in the symbol). The dot's radius is 29.4 in an O 100 across. The X ends square, the V's tips are cut flat at the cap height.
+- **Construction** (`app/src/shared/components/wordmark/utils/mark.util.ts`, the only place the geometry lives, every number named in its `constants/`): one grid with a cap height of 100 and a stroke of 10. Letter widths X 88, O 100, V 90, E 68, gaps 20. The viewfinder sits 28 from the letters, with arms of 24 (26 in the symbol). The dot's radius is 29.4 in an O 100 across. The X ends square, the V's tips are cut flat at the cap height.
 - **Colours:** white strokes (`--text`, `#ebebec`), the red dot and corner (`--accent`, `#ef4b4b`), on the soft black ground. Never recoloured, outlined, stretched or put on a busy picture.
-- **Drawn, not typed:** `components/brand/XoveMark` (the wordmark, inline SVG, named "Xovê" for screen readers) and `XoveIcon` (the symbol). In the header it's about 110 px wide.
-- **The hover animation** (`brand/markTimeline.ts`, `useMarkAnimation`): pointing at the wordmark (or focusing it) plays it once, in about 3 seconds. The left corners stay and the word slides under them until the X is gone, while the right corners close in on the O; the corners settle into the symbol; the dot double-blinks like a surprised eye; everything plays back. A new hover doesn't restart it, and it never plays with reduced motion.
+- **Drawn, not typed:** the `Wordmark` block (inline SVG, named "Xovê" for screen readers), `variant="full"` for the wordmark and `"icon"` for the symbol. It's a picture, not a keyboard stop. In the header it's about 110 px wide.
+- **The hover animation** (the Wordmark's `mark-timeline.util.ts` and `useMarkAnimation`): pointing at the wordmark plays it once, in about 3 seconds. The left corners stay and the word slides under them until the X is gone, while the right corners close in on the O; the corners settle into the symbol; the dot double-blinks like a surprised eye; everything plays back. A new hover doesn't restart it, and it never plays with reduced motion.
 - **Three optical sizes of the symbol** (`iconMark("large" | "small" | "tiny")`): **large** (64 px and up) is slim, about 70% of its square; **small** (32 px) and **tiny** (16 px) have heavier strokes and fill more of the square, tiny edge to edge. The outer edges match in all three.
 
 ![The wordmark at header size](images/design/wordmark.png)
@@ -78,7 +78,7 @@ Dark only: Xovê is a room for watching screens, so the chrome stays out of the 
 | `--line` | `#2c2c2f` | Borders and dividers |
 | `--text` | `#ebebec` | Text, white strokes, the mark |
 | `--text-muted` | `#9a9a9f` | Secondary text |
-| `--text-faint` | `#66666b` | Labels that can be faint (3:1 at least) |
+| `--text-disabled` | `#66666b` | **Only a disabled control's words**, never readable text: muted is the dimmest text anywhere |
 | `--accent` | `#ef4b4b` | **The one accent**, red, the record light: live pills, on-air rings, the unseen count, focus rings, the switch when on, primary buttons |
 | `--accent-ink` | `#3a0808` | Text and icons on a red fill (4.7:1) |
 | `--accent-soft` | `rgba(239, 75, 75, 0.14)` | Soft red glows and tints |
@@ -86,7 +86,8 @@ Dark only: Xovê is a room for watching screens, so the chrome stays out of the 
 | `--ok` | `#3fbf7f` | Connected, the seats bar, the mic level when it's sent |
 | `--warn` | `#e0b341` | Reconnecting |
 | `--glass` | `rgba(10, 10, 11, 0.72)` | The round buttons, drop-ups and pickers over the video (with an 8 px blur) |
-| `--panel` | `rgba(18, 18, 20, 0.74)` | The settings panel (with a 22 px blur) |
+| `--panel` | `rgba(18, 18, 20, 0.74)` | The [Panel](#the-panel)'s glass, with `--panel-filter` |
+| `--panel-filter` | blur 22 px, brightness 55%, saturation 120% | The Panel's backdrop: dims what's behind it before blurring |
 | `--panel-line` | `rgba(255, 255, 255, 0.08)` | The panel's border and its tabs' line |
 | `--sel-bg` | `var(--surface-raised)` | The dark pill of a chosen option, and buttons in a row (Change) |
 | `--sel-shadow` | `0 1px 2px rgba(0, 0, 0, 0.4)` | Its shadow |
@@ -204,7 +205,7 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 
 **Small sizes (icons, dots, bars), numbered as px ÷ 4.**
 
-`--size-0-5` 2 px · `--size-0-75` 3 px · `--size-1` 4 px · `--size-1-5` 6 px · `--size-2` 8 px · `--size-2-5` 10 px · `--size-2-75` 11 px · `--size-3` 12 px · `--size-3-25` 13 px · `--size-3-5` 14 px · `--size-3-75` 15 px · `--size-4` 16 px · `--size-4-25` 17 px · `--size-4-5` 18 px · `--size-5` 20 px · `--size-5-5` 22 px · `--size-6` 24 px · `--size-7` 28 px · `--size-7-5` 30 px · `--size-8` 32 px
+`--size-0-5` 2 px · `--size-0-75` 3 px · `--size-1` 4 px · `--size-1-5` 6 px · `--size-2` 8 px · `--size-2-5` 10 px · `--size-2-75` 11 px · `--size-3` 12 px · `--size-3-25` 13 px · `--size-3-5` 14 px · `--size-3-75` 15 px · `--size-4` 16 px · `--size-4-25` 17 px · `--size-4-5` 18 px · `--size-5` 20 px · `--size-5-5` 22 px · `--size-6` 24 px · `--size-6-5` 26 px · `--size-7` 28 px · `--size-7-5` 30 px · `--size-8` 32 px
 
 **Things with a role.**
 
@@ -258,7 +259,7 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 
 **Text sizes beyond the scale above, named by their px; letter spacing in hundredths of an em.**
 
-`--text-10` 10 px · `--text-11` 11 px · `--text-13-5` 13.5 px · `--text-14` 14 px · `--text-14-5` 14.5 px · `--text-17` 17 px · `--text-19` 19 px · `--text-22` 22 px · `--text-23-2` 23.2 px · `--text-28` 28 px · `--text-32` 32 px · `--text-44` 44 px · `--text-inherit` 1em · `--tracking-1` 0.01em · `--tracking-2` 0.02em · `--tracking-6` 0.06em · `--tracking-8` 0.08em · `--tracking-10` 0.1em
+`--text-11` 11 px · `--text-13-5` 13.5 px · `--text-14` 14 px · `--text-14-5` 14.5 px · `--text-17` 17 px · `--text-19` 19 px · `--text-22` 22 px · `--text-23-2` 23.2 px · `--text-28` 28 px · `--text-32` 32 px · `--text-44` 44 px · `--text-inherit` 1em · `--tracking-1` 0.01em · `--tracking-2` 0.02em · `--tracking-6` 0.06em · `--tracking-8` 0.08em · `--tracking-10` 0.1em
 
 **Durations, in milliseconds (--duration-120 is 120 ms).**
 
@@ -317,7 +318,7 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 
 ### Segmented controls
 
-`components/ui/Segmented`: every choice between a few options (Quality, Mode) is one.
+`shared/components/segmented`: every choice between a few options (Quality, Mode) is one, real radios drawn as a track.
 
 - A light translucent **track** as tall as the panel's controls, and **one dark pill** (`--sel-bg`, a 1 px inner line, `--sel-shadow`) that slides under the chosen option in 200 ms.
 - An option pointed at gets **a soft light that fades only sideways** (white at 6% in the middle, nothing at its ends, the track's full height), fading in 160 ms, and its text goes from muted to white. **The chosen option doesn't react**: it's already chosen.
@@ -356,7 +357,7 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 The settings for what you send, from the cog on my own stream or, with nobody live, the cog in the stage's corner, or from Go live's menu (then over Go live).
 
 - **Over the cog:** a popover **centred on the cog** (or on Go live), **10 px above the round buttons** (never behind them) and never past the player's sides; it fades in and rises 6 px. **Every tab has the same height**, the tallest one's, so switching tabs never moves the tabs under the pointer; at least 240 px, at most the room above the buttons (then it scrolls inside). Its width follows the player: a fifth of it, **280 to 320 px**. **Another stream taking the stage closes the settings:** they belong to the buttons they opened from. The ✕, the cog or Escape closes it.
-- Frosted like the dropdown panels (the panel colour at 74%, blur 22 px, a 1 px white border at 8%), 16 px corners. **One control height:** 30 px.
+- On the one [Panel](#the-panel). **One control height:** 30 px. **Each control's name** is a [Control label](#labels-by-space).
 - **Tabs Screen, Camera and Voice**, with a **red marker** that slides under the chosen one and a **red dot** on the tab of what you're sending. **Where a screen can't be shared, the Screen tab is greyed out**: it stays in its place, says why ("This browser can't share a screen"), and the panel opens on Camera.
 - **Screen:** while you share, what's shared and **Change** (and, when the screen has no sound, a line saying how to share it); while you don't, one line saying these are used next time. **No preview**: the stage and the browser's picker already show it. Then Quality and Mode.
 - **Camera:** your camera's preview under its own **Preview** heading, like every other group, centred under it: **LIVE** while it's sent, **"Only you see this"** while it's off (the camera turns on for you alone while the tab is open). Like any app, the browser asks for the camera the first time; refused or missing, the preview's place says so, and how to allow it. Then the camera's picker, Quality and Mode.
@@ -378,7 +379,7 @@ Two sizes: **md** (10 × 18 px padding, 15 px text) and **sm** (6 × 12 px, 13 p
 
 ### Sliders
 
-`components/ui/Range`, white like a video player's: a **3 px track**, white up to the knob and `#ebebec` at 22% after, and a **12 px white knob** that grows to 14 px on hover or keyboard focus. Used for the ambilight's brightness, each sound's volume over the stage and on the phone's feed cards ([upright](#what-i-hear-and-go-live), in the stage's glass pill), and in a small preview's row ([across, after the buttons](#on-the-stage)). WebKit has no part for the filled side, so `Range` sets a `--fill` variable; Firefox uses `::-moz-range-progress`.
+`shared/components/slider` (the `Slider`), white like a video player's: a **3 px track**, white up to the knob and `#ebebec` at 22% after, and a **12 px white knob** that grows to 14 px on hover or keyboard focus. Used for the ambilight's brightness, each sound's volume over the stage and on the phone's feed cards ([upright](#what-i-hear-and-go-live), in the stage's glass pill), and in a small preview's row ([across, after the buttons](#on-the-stage)). WebKit has no part for the filled side, so the `Slider` sets a `--fill` variable; Firefox uses `::-moz-range-progress`.
 
 **A threshold is a line, not a knob:** the mic's sensitivity is a slim upright white line (3 × 14 px, growing to 16 px) across the same slim track, the common mark for a threshold.
 
@@ -396,9 +397,44 @@ The sliders' rules stay one browser per rule, checked by `npm run check:styles` 
 
 ![The people panel](images/design/panel-people.png) ![The account menu, with the switch and a slider](images/design/panel-account.png)
 
-- Frosted sections (dark at 74%, blur 22 px, a 1 px white border at 8%), **16 px corners**, stacked with 2 px clear cuts. 340 px wide (the activity list: up to 440 px, centred under the pill).
+- On the [Panel](#the-panel) with cuts: its sections stacked with 2 px clear cuts, each its own glass. 340 px wide (the activity list: up to 440 px, centred under the pill).
 - Open 8 px under their button; **one thing on screen at a time** (the [floating rule](#drop-ups)); they unroll by their height (260 ms).
 - **Activity:** the latest events, each with its icon, what happened and when. **People:** the seats bar (green), who's here and what each is doing or watching, and the queue. **Account:** me and my connection, the ambilight's switch and brightness, Admin for admins, Sign out.
+
+### The panel
+
+![The settings, on the Panel](images/design/settings-popover.png)
+
+`shared/components/panel` (`Panel`, and `PanelSection` for its sections): **the one surface** that holds content, for the settings, the menus and the waiting room's card. A rule for the whole app: a new panel is this one.
+
+- **Glass, 16 px corners:** the panel colour (`--panel`), a 1 px white border at 8%, and a backdrop that's **blurred 22 px and dimmed to 55%** (`--panel-filter`), so its text stays readable over the brightest stream. Over a white stream its muted text measures 4.6 : 1, its main text 10.9 : 1; the style check holds the glass to that.
+- **Cuts are optional:** a menu's sections are stacked with 2 px clear cuts, each section carrying the glass itself (a menu's unrolling clip would stop a blur on the outer box).
+- **On a plain page it's the same panel,** nearly solid there, with nothing behind it to blur.
+- What uses it places and moves it; the panel only draws itself.
+
+### Counters by space
+
+![Admin's section headings with their chips](images/design/section-headings.png)
+
+A number that changes takes the look of **its space**, and each space's look is its own: changing one never changes another.
+
+- **On a control:** the number belongs to the control (the people button's "4"), in its words' size and weight.
+- **Over a stream:** the `StatPill`, a small glass pill: the people's faces overlapping a little (or the eye where faces can't show), then the number. What it counts ("watching") is said to screen readers; the names are in its tooltip.
+- **In a heading:** the `CountChip`, a round chip centred with the heading's words, neutral, **red only when it needs you** (requests waiting).
+
+### Labels by space
+
+![The Field: its label at the box's border](images/design/field.png)
+
+- **Over a control in a panel:** the `ControlLabel`, 11 px capitals, muted (Quality, Mode, Camera).
+- **Over a field in a form:** the `Field`'s label, 13 px, bright and semibold, **starting exactly at the box's border**; a quiet word after it ("(optional)") in muted. Its counter sits under the box, the form's button at the row's end.
+- **Starting a part of a page:** the `SectionHeading`, 12 px capitals, muted, **no line**, its count in a chip.
+
+### Readable text
+
+- **Muted (`--text-muted`) is the dimmest text, anywhere,** on the page and on glass: 6.9 : 1 on the ground, 4.6 : 1 on the glass over white. The dim grey is `--text-disabled`, only for a disabled control.
+- **11 px is the smallest text.** An avatar's initial is part of its picture, not text.
+- **The style check holds both:** 4.5 : 1 for the text colours (`--text`, `--text-muted`, `--accent`) on every surface and on the glass over white, no `font-size` under 11 px in any rule, and `--text-disabled` only in a disabled rule. Text uses those colours; a new text colour joins the check.
 
 ### Avatars and LIVE
 
@@ -411,7 +447,7 @@ The sliders' rules stay one browser per rule, checked by `npm run check:styles` 
 
 ![The info row under the stage](images/design/info-row.png)
 
-- **The info row:** on the left, who's on the stage (avatar with its ring, name in the display font, LIVE, what (" · voice" while their voice is on), how long) and who's watching (up to 4 avatars and "N watching", me included, never the sharer); with nobody live, an empty circle where the photo goes, **"Nobody is sharing yet"**, and who's here. On the right, the other streams as **previews** with a name chip (their screen, or their camera when that's all they share), then **the seats**: a dashed box of six little screens (16 × 10 px, 2 px corners), three over three, grey for an open seat and red for each stream live with a steady red light under it, their count in words on hover; gone when all 6 are live. When room runs short, the left gives way first, then the previews scroll with a slim scrollbar, and the box stays put.
+- **The info row:** on the left, who's on the stage (avatar with its ring, name in the display font, LIVE, what (" · voice" while their voice is on), how long) and who's watching (a [Stat pill](#counters-by-space): up to 4 faces and the number, me included, never the sharer); with nobody live, an empty circle where the photo goes, **"Nobody is sharing yet"**, and who's here. On the right, the other streams as **previews** with a name chip (their screen, or their camera when that's all they share), then **the seats**: a dashed box of six little screens (16 × 10 px, 2 px corners), three over three, grey for an open seat and red for each stream live with a steady red light under it, their count in words on hover; gone when all 6 are live. When room runs short, the left gives way first, then the previews scroll with a slim scrollbar, and the box stays put.
 - **Previews can be heard:** each person's sound and voice have [one switch each](#what-i-hear-and-go-live), off at first while small; a preview I turn on plays at its own volume, as many as I like. A preview's sounds are downloaded only while I hear them.
 - **Small pictures show their buttons only when asked:** pointing at a preview (128 px) opens its **row** outside the picture: the voice (a speaking head), the screen's sound, and a swap when they share a screen and a camera.
 - **The row** floats under the preview, or above it where the window has no room under it (the side is chosen once, as it opens, with room for the slider); it's **exactly the picture's width**, centred on the picture (not on what peeks out behind it), and follows its preview. It wears the [panels' glass](#dropdown-panels) (16 px corners, its thin light border, the panels' shadow); its 28 px buttons are clear until hovered and **centred both ways** (5 px above and below while closed). **Resting on a button (120 ms) unrolls one slider after the buttons**, on the side away from the preview, so the buttons never move under the pointer; the row never changes width. The button whose slider is open has a soft 1 px ring. Moving to the other sound, the old bar shrinks to the left as the new one grows from it. The row stays while its slider is in use and while the pointer travels from the preview to it (250 ms); it closes a moment after the pointer leaves both, or on a press elsewhere. Moving to another preview, its row unrolls from it as the last one rolls back into its own.
@@ -434,7 +470,7 @@ The sliders' rules stay one browser per rule, checked by `npm run check:styles` 
 - **The seat offer:** when a seat frees up for someone in the queue, a dialog (up to 400 px, `--radius-2-5`) offers it for 60 seconds, with the time running down.
 - **The waiting room:** the place in the queue, in plain words, while the room is full.
 - **Tooltips** (`shared/components/tooltip`, the app's only one; never the browser's own) say what a control does or why it can't be used, with a mouse after a **120 ms** rest (then at once along a row, for 400 ms after one hides) or on the keyboard's focus; they go the moment the pointer leaves or presses. A finger on a touch screen gets none (a tap leaves a button "hovered"); a greyed-out control says why in the toast instead. The round buttons' look: near-black `#070708`, 12 px text, 6 px corners, at most 260 px wide, **floating on its own layer** 10 px above its control (below it where there's no room), never clipped. **One floating thing at a time:** a tooltip showing closes any other tooltip and whatever opened on a mouse rest, never what you opened; one on a drop-up's own controls belongs to it. Told to keep quiet (a live button, whose drop-up takes its place), it still describes its control for screen readers.
-- **The toast** (`components/ui/Toast`, called with `showToast`): a short message to the user, the app's one way to announce something briefly. The round buttons' glass (frosted, 8 px blur, their shadow), a pill up to 360 px wide and two lines, 13 px text, with the icon of what it's about (the control you touched, crossed out) and no alert sign. At the top centre of the player. It fades in and drops 6 px, stays **3 s** and fades out by itself; one at a time, the newest replacing it; screen readers hear it once. Today it says why a greyed-out control can't be used when a finger or a pen touches it ("This browser can't share a screen", the full room).
+- **The toast** (`shared/components/toast`, shown with `toastStore.show`): a short message to the user, the app's one way to announce something briefly. The round buttons' glass (frosted, 8 px blur, their shadow), a pill up to 360 px wide and two lines, 13 px text, with the icon of what it's about (the control you touched, crossed out) and no alert sign. At the top centre of the player. It fades in and drops 6 px, stays **3 s** and fades out by itself; one at a time, the newest replacing it; screen readers hear it once. Today it says why a greyed-out control can't be used when a finger or a pen touches it ("This browser can't share a screen", the full room).
 
 ![The app's tooltip over my mic](images/design/tooltip.png)
 
@@ -472,7 +508,7 @@ Xovê is for computers: laptops and desktops get the app, in one layout (theater
 
 ![The sign-in page on a desktop](images/design/sign-in.png)
 
-Sign-in, request access (and request sent), the room's queue and admin: centred on the page's ground, the wordmark above the heading.
+Sign-in, request access (and request sent), the room's queue and admin: centred on the page's ground, the wordmark above the heading. Each is in the **Page shell** (`home`, `form`, `waiting`, `message`); the queue's card is the [Panel](#the-panel).
 - **Sign-in:** "Go **LIVE** with your friends." and its line (see [Name and voice](#name-and-voice)), then "Continue with Google" and who can join.
 
 ### Phones and tablets: see you on the big screen
@@ -511,10 +547,10 @@ Its content stays clear of the phone's bars (the browser's safe areas).
 - **Even spacing:** a row of pictures keeps one gap between all of them, counting what peeks out behind one; a button sits in the middle of its box both ways.
 - **Say each thing once:** on one screen, a fact (who's here, the seats, that nobody's sharing) appears in one place only.
 - **A panel's places are fixed.** A set of controls (the sounds I hear, and any like it) keeps every place it will ever have; one that can't be used yet is greyed in place, never left out, and never counts for a summary.
-- **Unavailable, not hidden.** An option that can't be used here stays in its place, greyed out (a text option, like a tab: the faint text colour at 50%; a control, like a round button or a sound I can't hear: 45% opacity), with its reason in its tooltip, so a panel looks the same on every device.
+- **Unavailable, not hidden.** An option that can't be used here stays in its place, greyed out (a text option, like a tab: `--text-disabled` at 50%; a control, like a round button or a sound I can't hear: 45% opacity), with its reason in its tooltip, so a panel looks the same on every device.
 - **Draft first:** a visual change starts as a draft approved before the work starts: a change to screens that exist, as a prototype in the app itself; a brand-new screen may start as a clickable HTML draft with these tokens and fonts. The approved draft is the reference the code must match.
 - **Check every size:** a 2K monitor both ways (2560 × 1440 and 1440 × 2560), 1920 × 1080, a narrow window, the empty room, and the phone and tablet screen.
-- **Reuse the components:** the shared blocks (`Icon`, `IconButton` with its variants, `Face`, `Switch`, `LiveBadge`, `Headline`, `ErrorNotice`, in `shared/components/`, each shown in Storybook), and `Button`, `Range`, `Dropdown`, `Segmented`, `Picker`, `DropUp`, `StageNotice`, `Toast`. A new control follows their sizes, motion and focus ring. A choice from a list is a `Picker` (one box, floating, with the slim scrollbar when long), a few options a `Segmented`, and a quick action over a live button a `DropUp`, everywhere in the app.
+- **Reuse the components:** the shared blocks in `shared/components/`, each shown in Storybook: `Icon`, `IconButton` with its variants, `Face`, `Switch`, `LiveBadge`, `Headline`, `ErrorNotice`, `Button`, `Slider`, `Segmented`, `Toast`, `Wordmark`, `Panel` and `PanelSection`, `PageShell`, `Field`, `StatPill`, `CountChip`, `ControlLabel`, `SectionHeading`, `Dropdown`, `Picker`, `DropUp`, `Tooltip`; and `StageNotice`. **One block per purpose** (ADR-0094): what does the same job is one block, even where today's values differ; what does a different job is its own block, however alike it looks, so changing one never changes another. A new control follows their sizes, motion and focus ring. A choice from a list is a `Picker` (one box, floating, with the slim scrollbar when long), a few options a `Segmented`, and a quick action over a live button a `DropUp`, everywhere in the app.
 - **Panels open over the button that opened them,** never from a side. **Panels are frosted, never opaque**; nothing over the video hides the round buttons.
 - **Say what effects cost:** blur, canvases and animations run on every frame; keep them to what's here.
 - **A screen says only what matters.** No readouts that imitate real equipment (clocks, meters, rulers, format tags, made-up numbers), and no frame inside another frame.

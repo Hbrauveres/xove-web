@@ -1,3 +1,4 @@
+import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
 import { useRef } from "react";
 import type { MediaTrack } from "@services/livekit-service";
@@ -112,14 +113,14 @@ export function Facecam({ video, label, place, collapsed, onSwap, onMove, onColl
       <ScreenVideo video={video} label={label} />
       <div className={styles.controls}>
         <Tooltip text={"Swap views"}>
-          <button type="button" className={styles.button} onClick={onSwap} aria-label="Swap views">
+          <IconButton variant="mini" onClick={onSwap} aria-label="Swap views">
             <Icon name="swap" size={16} />
-          </button>
+          </IconButton>
         </Tooltip>
         <Tooltip text={"Hide facecam"}>
-          <button type="button" className={styles.button} onClick={() => onCollapse(true)} aria-label="Hide facecam">
+          <IconButton variant="mini" onClick={() => onCollapse(true)} aria-label="Hide facecam">
             <Icon name="minimize" size={16} />
-          </button>
+          </IconButton>
         </Tooltip>
       </div>
     </div>

@@ -1,0 +1,75 @@
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+import { TOTAL_MS } from "../utils/mark-timeline.util";
+import { Wordmark } from "../wordmark.component";
+
+/** Each test's own animation clock, and reduced motion off unless the test says `motion.reduced = true`. */
+function onScreen() {
+  const motion = { reduced: false };
+  vi.useFakeTimers({ toFake: ["requestAnimationFrame", "cancelAnimationFrame", "performance", "setTimeout"] });
+  vi.stubGlobal("matchMedia", (q: string) => ({
+    matches: q.includes("reduce") && motion.reduced,
+    addEventListener() {},
+    removeEventListener() {},
+  }));
+  return { motion };
+}
+
+const mark = () => screen.getByLabelText("Xovê");
+const side = (at: string) => mark().querySelector(`[data-side="${at}"]`)!;
+const dot = () => mark().querySelector("[data-dot]")!;
+const letters = () => mark().querySelector("[data-letters]")!;
+const advance = (ms: number) =>
+  act(() => {
+    vi.advanceTimersByTime(ms);
+  });
+
+describe("the wordmark's hover animation", () => {
+  it("keeps the left corners, slides the word left and the right corners in, blinks, and comes back to rest", () => {
+    onScreen();
+    render(<Wordmark height={26} />);
+    fireEvent.pointerEnter(mark());
+
+    advance(300);
+    // The left corners never move sideways; the letters and the right corners do.
+    expect(side("top-left").getAttribute("transform")).toMatch(/^translate\(0,/);
+    expect(letters().getAttribute("transform")).toMatch(/translate\(-[1-9]/);
+    expect(side("top-right").getAttribute("transform")).toMatch(/translate\(-[1-9]/);
+
+    // Somewhere in the blinks the dot is squashed nearly shut.
+    let shut = false;
+    for (let t = 0; t < 1000 && !shut; t += 16) {
+      advance(16);
+      shut = /scale\([\d.]+,0\.[0-2]/.test(dot().getAttribute("transform") ?? "");
+    }
+    expect(shut).toBe(true);
+
+    advance(TOTAL_MS);
+    expect(side("top-left").getAttribute("transform")).toBe("translate(0,0)");
+    expect(letters().getAttribute("transform")).toBe("translate(0,0)");
+    expect(dot().getAttribute("transform")).toBeNull();
+  });
+
+  it("doesn't restart while it plays", () => {
+    onScreen();
+    render(<Wordmark height={26} />);
+    fireEvent.pointerEnter(mark());
+    advance(500);
+    const at = () => -Number(/translate\((-?[\d.]+)/.exec(letters().getAttribute("transform")!)![1]);
+    const before = at();
+    fireEvent.pointerLeave(mark());
+    fireEvent.pointerEnter(mark());
+    advance(16);
+    // Still moving forward from where it was, not back at the start.
+    expect(at()).toBeGreaterThanOrEqual(before);
+  });
+
+  it("doesn't play with reduced motion", () => {
+    const { motion } = onScreen();
+    motion.reduced = true;
+    render(<Wordmark height={26} />);
+    fireEvent.pointerEnter(mark());
+    advance(500);
+    expect(letters().getAttribute("transform")).toBeNull();
+  });
+});

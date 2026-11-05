@@ -175,6 +175,15 @@ export const ICONS = {
   reconnected: { parts: [["path", { d: "M16 6a7 7 0 1 0 1.5 6M16 2.5V6h-3.5", ...SMALL }]] },
   /** Swap two pictures: two arrows, opposite ways. */
   swap: { parts: [["path", { d: SWAP, ...SMALL }]] },
+  /** Watching: an open eye. */
+  eye: {
+    viewBox: "0 0 24 24",
+    svg: BUTTON,
+    parts: [
+      ["path", { d: "M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z" }],
+      ["circle", { cx: "12", cy: "12", r: "3" }],
+    ],
+  },
   /** Fill the screen: four corners pointing out. */
   "fullscreen-enter": {
     parts: [

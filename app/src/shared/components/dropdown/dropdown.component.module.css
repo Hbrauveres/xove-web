@@ -27,16 +27,6 @@
   transform: translateX(-50%);
 }
 
-/* Sections stacked with a clear 2px cut between them: the divider is the page behind, sharp. */
-.roll {
-  min-height: 0;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-0-5);
-  border-radius: var(--radius-4);
-}
-
 @media (--narrow) {
   .panel,
   .center {

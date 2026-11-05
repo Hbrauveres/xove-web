@@ -1,0 +1,38 @@
+/* A number over a stream: a small pill of the round buttons' glass, faces or an icon, then the number. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  height: var(--size-6-5);
+  padding: 0 var(--space-2-25) 0 var(--space-1-75);
+  border: var(--hairline) solid var(--panel-line);
+  border-radius: var(--radius-pill);
+  background: var(--glass);
+  color: var(--text);
+  font-size: var(--text-sm);
+}
+
+.lead {
+  display: inline-flex;
+  color: var(--text-muted);
+}
+
+/* Faces overlap a little, each ringed by the glass. */
+.lead > * + * {
+  margin-left: calc(var(--space-1-5) * -1);
+}
+
+.count {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Said, not shown: the number explains itself on screen. */
+.unit {
+  position: absolute;
+  width: var(--hairline);
+  height: var(--hairline);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
