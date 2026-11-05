@@ -1,10 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { DropdownSection } from "./dropdown-section.component";
+import { PanelSection } from "./panel-section.component";
 
-describe("a dropdown's section", () => {
+describe("a panel's section", () => {
   it("holds what it's given", () => {
-    render(<DropdownSection>Seats</DropdownSection>);
+    render(<PanelSection>Seats</PanelSection>);
     expect(screen.getByText("Seats")).toBeInTheDocument();
   });
 });

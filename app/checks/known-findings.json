@@ -2186,20 +2186,6 @@
   {
     "tool": "copies",
     "rule": "copied-block",
-    "file": "src/components/room/SeatOffer.module.css",
-    "count": 1,
-    "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "copies",
-    "rule": "copied-block",
-    "file": "src/components/room/WaitingRoom.module.css",
-    "count": 1,
-    "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "copies",
-    "rule": "copied-block",
     "file": "src/components/stage/PlayerButtons.module.css",
     "count": 1,
     "owner": "#191 today's stage pieces"
@@ -2581,13 +2567,6 @@
     "file": "src/components/stage/HearToggles.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(no-noninteractive-element-interactions)",
-    "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 1,
-    "owner": "#193 settings"
   },
   {
     "tool": "lint",

@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { DropdownSection } from "./dropdown-section.component";
+import { PanelSection } from "./panel-section.component";
 
 const meta = {
-  title: "Shared/Dropdown section",
-  component: DropdownSection,
+  title: "Shared/Panel section",
+  component: PanelSection,
   args: { children: <span style={{ color: "var(--text)" }}>Nobody is waiting for a seat.</span> },
-} satisfies Meta<typeof DropdownSection>;
+} satisfies Meta<typeof PanelSection>;
 
 export default meta;
 
-/** One frosted section. */
+/** One section of glass. */
 export const Section: StoryObj<typeof meta> = {};

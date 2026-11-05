@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import type { RoomSeatsState, StreamKind } from "@services/xove-api-service";
 import type { Friend } from "@features/room/types/room-view.types";
 import { Dropdown } from "@shared/components/dropdown";
-import { DropdownSection } from "@shared/components/dropdown-section";
+import { PanelSection } from "@shared/components/panel-section";
 import styles from "./PeopleButton.module.css";
 
 type Props = {
@@ -70,7 +70,7 @@ export function PeopleButton({ people, meId, sharing, watchingOf, seats }: Props
 
       <Dropdown open={open} label="Here now" anchor={anchor} onClose={() => setOpen(false)}>
         {seats && (
-          <DropdownSection className={styles.head}>
+          <PanelSection className={styles.head}>
             <div className={styles.line}>
               <span>Seats</span>
               <span>
@@ -87,9 +87,9 @@ export function PeopleButton({ people, meId, sharing, watchingOf, seats }: Props
             >
               <i style={{ width: `${Math.min(100, (seats.taken / seats.total) * 100)}%` }} />
             </div>
-          </DropdownSection>
+          </PanelSection>
         )}
-        <DropdownSection scroll>
+        <PanelSection scroll>
           <ul className={styles.people}>
             {ordered.map((p) => {
               const shares = sharing[p.id];
@@ -119,8 +119,8 @@ export function PeopleButton({ people, meId, sharing, watchingOf, seats }: Props
               );
             })}
           </ul>
-        </DropdownSection>
-        {seats && <DropdownSection className={styles.foot}>{queue}</DropdownSection>}
+        </PanelSection>
+        {seats && <PanelSection className={styles.foot}>{queue}</PanelSection>}
       </Dropdown>
     </div>
   );

@@ -1,3 +1,4 @@
+import { Panel } from "@shared/components/panel";
 import { IconButton } from "@shared/components/icon-button";
 import { LiveBadge } from "@shared/components/live-badge";
 import { Switch } from "@shared/components/switch";
@@ -168,7 +169,7 @@ export function SettingsPanel(props: Props) {
   const tabId = (t: Tab) => `${ids}-${t}`;
 
   return (
-    <div
+    <Panel
       ref={root}
       className={styles.panel}
       role="dialog"
@@ -256,7 +257,7 @@ export function SettingsPanel(props: Props) {
           </div>
         ))}
       </div>
-    </div>
+    </Panel>
   );
 }
 

@@ -13,9 +13,6 @@
   gap: var(--space-3);
   width: min(var(--card-width), 100%);
   padding: var(--space-6);
-  background: var(--surface);
-  border: var(--hairline) solid var(--line);
-  border-radius: var(--radius-2-5);
 }
 
 .title {

@@ -1,0 +1,18 @@
+/* The one panel: the settings', the menus' and the waiting room's, one glass. */
+.panel {
+  border: var(--hairline) solid var(--panel-line);
+  border-radius: var(--radius-4);
+  background: var(--panel);
+  backdrop-filter: var(--panel-filter);
+  -webkit-backdrop-filter: var(--panel-filter);
+}
+
+/* Sections stacked with a clear 2 px cut between them: the divider is the page behind, sharp. */
+.cuts {
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+  border-radius: var(--radius-4);
+}

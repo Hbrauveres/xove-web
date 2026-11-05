@@ -8,7 +8,7 @@ import type { AmbilightPrefs } from "@services/preferences-service";
 import type { ConnectionState } from "@services/livekit-service";
 import type { Friend } from "@features/room/types/room-view.types";
 import { Dropdown } from "@shared/components/dropdown";
-import { DropdownSection } from "@shared/components/dropdown-section";
+import { PanelSection } from "@shared/components/panel-section";
 import { Slider } from "@shared/components/slider";
 import styles from "./AccountButton.module.css";
 
@@ -55,7 +55,7 @@ export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightC
       </IconButton>
 
       <Dropdown open={open} label="Account" anchor={anchor} width={260} onClose={() => setOpen(false)}>
-        <DropdownSection className={styles.me}>
+        <PanelSection className={styles.me}>
           <div className={styles.who}>
             <Face name={me.name} hue={me.hue} size={40} />
             <div>
@@ -67,9 +67,9 @@ export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightC
             <i aria-hidden="true" />
             {STATE[connection]}
           </div>
-        </DropdownSection>
+        </PanelSection>
 
-        <DropdownSection className={styles.light}>
+        <PanelSection className={styles.light}>
           <Switch
             label="Ambilight"
             checked={ambilight.on}
@@ -85,9 +85,9 @@ export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightC
             disabled={!ambilight.on}
             onChange={(e) => change({ ...ambilight, brightness: Number(e.target.value) })}
           />
-        </DropdownSection>
+        </PanelSection>
 
-        <DropdownSection className={styles.actions}>
+        <PanelSection className={styles.actions}>
           {isAdmin && (
             <Link to="/admin" className={styles.item}>
               Admin
@@ -96,7 +96,7 @@ export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightC
           <button type="button" className={styles.item} onClick={onSignOut}>
             Sign out
           </button>
-        </DropdownSection>
+        </PanelSection>
       </Dropdown>
     </div>
   );

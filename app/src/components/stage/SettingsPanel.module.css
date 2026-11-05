@@ -19,10 +19,6 @@
   max-width: calc(100% - var(--size-5));
   max-height: calc(100% - var(--room) - var(--size-2-5));
   min-height: min(var(--settings-min-height), calc(100% - var(--room) - var(--size-2-5)));
-  border: var(--hairline) solid var(--panel-line);
-  border-radius: var(--radius-4);
-  background: var(--panel);
-  backdrop-filter: blur(var(--blur-5-5));
   color: var(--text);
   opacity: 0;
   transform: translateY(var(--space-1-5));

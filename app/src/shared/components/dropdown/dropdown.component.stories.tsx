@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useRef } from "react";
-import { DropdownSection } from "@shared/components/dropdown-section";
+import { PanelSection } from "@shared/components/panel-section";
 import { Dropdown } from "./dropdown.component";
 
 function Open() {
@@ -8,9 +8,9 @@ function Open() {
   return (
     <div ref={anchor} style={{ position: "relative", height: "var(--strip-item)" }}>
       <Dropdown open label="Here now" anchor={anchor} align="center" onClose={() => undefined}>
-        <DropdownSection>
+        <PanelSection>
           <span style={{ color: "var(--text)" }}>Marina is here</span>
-        </DropdownSection>
+        </PanelSection>
       </Dropdown>
     </div>
   );

@@ -44,6 +44,8 @@
   --glass: rgba(10, 10, 11, 0.72);
   --panel: rgba(18, 18, 20, 0.74);
   --panel-line: rgba(255, 255, 255, 0.08);
+  /* The glass dims what's behind it before blurring, so its text stays readable over a bright stream. */
+  --panel-filter: blur(var(--blur-5-5)) brightness(0.55) saturate(1.2);
   --sel-bg: var(--surface-raised);
   --sel-shadow: 0 var(--space-0-25) var(--space-0-5) var(--black-40);
   --sel-hover: #26262a;
