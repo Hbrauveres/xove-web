@@ -7,6 +7,7 @@ import type { StreamKind } from "@services/xove-api-service";
 import { DropUp } from "@shared/components/drop-up";
 import { DropUpRow } from "@shared/components/drop-up-row";
 import { Picker } from "@shared/components/picker";
+import { useSettingsAnchor } from "@features/room/hooks/use-settings-anchor.hook";
 import styles from "./PlayerButtons.module.css";
 import { Tooltip } from "@shared/components/tooltip";
 
@@ -70,11 +71,19 @@ export function PlayerButtons(props: Props) {
 
   // A button that comes or goes never moves the one under the pointer (spec 0106).
   const { ref: rowRef } = usePinnedRow<HTMLDivElement>();
+  const anchor = useSettingsAnchor();
 
   const kinds: StreamKind[] = ["screen", "camera"];
   return (
     <div className={styles.row}>
-      <div className={styles.buttons} ref={rowRef} data-buttons>
+      <div
+        className={styles.buttons}
+        ref={(el) => {
+          rowRef.current = el;
+          anchor?.row(el);
+        }}
+        data-buttons
+      >
         {kinds.map((kind) => (
           <StreamButton key={kind} kind={kind} {...props} />
         ))}
@@ -88,6 +97,7 @@ export function PlayerButtons(props: Props) {
                 {button}
               </Tooltip>
             )}
+            ref={anchor?.cog}
             aria-label="Settings"
             aria-expanded={settingsOpen}
             aria-haspopup="dialog"

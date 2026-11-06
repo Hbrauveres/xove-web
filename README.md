@@ -41,10 +41,10 @@ app/src/
   shared/       what the whole app uses: who is signed in, the design tokens
   services/     the links to the outside: the API client, the video server, the devices, the browser's saved choices
   testing/      a fake API and a fake LiveKit for the tests
-  pages/  components/  hooks/  media/  brand/   today's screens, moving into features/ and shared/ step by step
+  pages/  components/   today's screens, moving into features/ and shared/ step by step
 ```
 
-Pages put the room together, components draw it, hooks hold the state and talk to the API and LiveKit, and `media/` keeps the rules as plain, tested functions. More in [Architecture](docs/architecture.md) and [Media](docs/media.md).
+Pages put the room together, components draw it, hooks hold the state and talk to the API and LiveKit, and the rules are plain, tested functions in each unit's `utils/`. More in [Architecture](docs/architecture.md) and [Media](docs/media.md).
 
 ## The stack
 

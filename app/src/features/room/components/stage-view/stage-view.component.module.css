@@ -1,0 +1,41 @@
+/* The view: the picture in its own shape, as big as the controls' layer allows,
+   centred; its light behind it, stretched past it. */
+.view {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(var(--box-width), var(--box-height) * var(--shape));
+  height: min(var(--box-height), var(--box-width) / var(--shape));
+  translate: -50% -50%;
+  /* A new picture's shape: the view glides to it, as the stage did (the design sheet's motion). */
+  transition:
+    width var(--duration-350) ease,
+    height var(--duration-350) ease,
+    translate var(--unroll);
+}
+
+.picture {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--black);
+  /* Rounded, no border: the light around it is the frame. */
+  border-radius: var(--radius-3);
+  overflow: hidden;
+  z-index: var(--layer-raised);
+}
+
+/* A picture filling the stage: no black behind it to show as a sliver at an edge. */
+.picture:has(video[data-fill]) {
+  background: transparent;
+}
+
+:fullscreen .picture {
+  border-radius: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .view {
+    transition: none;
+  }
+}

@@ -15,4 +15,11 @@ describe("whether the keyboard moved the focus last", () => {
     });
     expect(result.current()).toBe(true);
   });
+
+  it("is the same check from render to render", () => {
+    const hook = renderHook(() => useKeyboardLast());
+    const first = hook.result.current;
+    hook.rerender();
+    expect(hook.result.current).toBe(first);
+  });
 });

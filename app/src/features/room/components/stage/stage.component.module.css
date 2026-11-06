@@ -1,0 +1,44 @@
+.stage {
+  min-width: 0;
+  /* The column is the 16:9 box: the stage's size comes from its width. */
+  container-type: inline-size;
+}
+
+/*
+ * The stage's box: the controls' layer, its column's whole width, holding
+ * the buttons and a view with the picture and its light. Its height follows the picture : a wider picture makes it shorter, a taller one makes it as tall as the column allows;
+ * the view inside it takes the picture's own shape, centred, with no black bars.
+ *
+ * On a window taller than 16:9 (a vertical monitor), the box may also be as tall as the
+ * height that's free above the info row, so a portrait picture fills it instead of staying
+ * in a short 16:9 band. Wider windows don't change: there the 16:9 box already reaches it.
+ * (100cqh is the room's middle, the nearest container with a height.)
+ */
+.box {
+  --shape: 1.7778;
+  --free-h: max(
+    var(--box-width) * 9 / 16,
+    var(--box-height) - var(--info-h, var(--info-row)) - var(--info-gap, var(--size-3-5))
+  );
+  position: relative;
+  width: var(--box-width);
+  height: min(var(--box-width) / var(--shape), var(--free-h));
+  margin-inline: auto;
+  transition:
+    width var(--duration-350) ease,
+    height var(--duration-350) ease,
+    translate var(--unroll);
+}
+
+/* A narrow stage's compact buttons: the fullscreen button stays level with them. */
+@container (--tiny) {
+  .stage [data-overlay] {
+    --btn: var(--control-md);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .box {
+    transition: none;
+  }
+}

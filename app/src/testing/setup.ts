@@ -1,7 +1,6 @@
 import "@testing-library/jest-dom/vitest";
 import { cleanup, configure } from "@testing-library/react";
 import { afterEach, vi } from "vitest";
-import { resetTv } from "../components/stage/staticBands";
 import { floatingStore } from "@shared/stores/floating-store";
 import { toastStore } from "@shared/stores/toast-store";
 import { fakeCameras, fakeMics, resetFakeLiveKit, rooms } from "./fakeLiveKit";
@@ -35,7 +34,6 @@ afterEach(() => {
   resetFakeLiveKit();
   toastStore.reset();
   floatingStore.reset();
-  resetTv();
   resetBrowserStandIns();
 });
 

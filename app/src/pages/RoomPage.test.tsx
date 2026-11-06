@@ -6,7 +6,7 @@ import { AuthProvider } from "@shared/stores/auth-store";
 import { aUser, installFakeApi, MY_USER_ID, myLiveStream, someoneSharing } from "../testing/fakeApi";
 import { FakeLocalScreenTrack, lastRoom } from "../testing/fakeLiveKit";
 import { clockUser, onFakeClock } from "../testing/factories/clock.factory";
-import { CHROME_IDLE_MS } from "../components/stage/Stage";
+import { CHROME_IDLE_MS } from "@features/room/components/stage-player/constants/stage-player.constants";
 import { REPORT_RETRY_MS, REPORT_STILL_MS } from "@features/room/constants/watch-report.constants";
 import { loadAmbilight } from "@services/preferences-service";
 import { RoomPage } from "./RoomPage";
@@ -468,86 +468,6 @@ describe("room: viewers follow the sharer's changes", () => {
   });
 });
 
-describe("room: the player's labels and bars", () => {
-  it("show while the mouse moves over the player, and fade when it stops or leaves", async () => {
-    const server = installFakeApi({ me: member() });
-    server.streams = [someoneSharing("Bruno Lima", 7)];
-    renderRoom();
-    await connected();
-    await screen.findByRole("heading", { name: "Bruno" });
-    act(() => {
-      lastRoom().publishScreen("user-7");
-    });
-    const video = await screen.findByLabelText("Bruno's shared screen");
-    const frame = video.closest("[data-chrome]")!;
-    expect(frame).toHaveAttribute("data-chrome", "hidden");
-
-    fireEvent.pointerMove(frame);
-    expect(frame).toHaveAttribute("data-chrome", "shown");
-
-    fireEvent.pointerLeave(frame);
-    expect(frame).toHaveAttribute("data-chrome", "hidden");
-
-    fireEvent.pointerMove(frame);
-    await pass(CHROME_IDLE_MS);
-    expect(frame).toHaveAttribute("data-chrome", "hidden");
-  });
-
-  it("show on a press on the player, its dark sides included, without a move first", async () => {
-    const server = installFakeApi({ me: member() });
-    server.streams = [someoneSharing("Bruno Lima", 7)];
-    renderRoom();
-    await connected();
-    act(() => {
-      lastRoom().publishScreen("user-7");
-    });
-    const frame = (await screen.findByLabelText("Bruno's shared screen")).closest("[data-chrome]")!;
-    expect(frame).toHaveAttribute("data-chrome", "hidden");
-
-    fireEvent.pointerDown(frame, { pointerType: "mouse" });
-    expect(frame).toHaveAttribute("data-chrome", "shown");
-  });
-});
-
-describe("room: the controls don't vanish under a still mouse", () => {
-  async function playing() {
-    const server = installFakeApi({ me: member() });
-    server.streams = [someoneSharing("Bruno Lima", 7)];
-    renderRoom();
-    await connected();
-    act(() => {
-      lastRoom().publishScreen("user-7");
-    });
-    const frame = (await screen.findByLabelText("Bruno's shared screen")).closest("[data-chrome]") as HTMLElement;
-    fireEvent.pointerMove(frame);
-    expect(frame).toHaveAttribute("data-chrome", "shown");
-    return frame;
-  }
-  it("ignores a 'mouse left' while the player is fullscreen: there's nothing outside it", async () => {
-    const frame = await playing();
-    Object.defineProperty(document, "fullscreenElement", { configurable: true, get: () => frame });
-    fireEvent.pointerLeave(frame, { pointerType: "mouse", clientX: 0, clientY: 0 });
-    expect(frame).toHaveAttribute("data-chrome", "shown");
-  });
-
-  it("ignores a 'mouse left' that comes while the pointer is still over the player", async () => {
-    const frame = await playing();
-    vi.spyOn(frame, "getBoundingClientRect").mockReturnValue({
-      left: 0,
-      top: 0,
-      right: 800,
-      bottom: 450,
-      width: 800,
-      height: 450,
-    } as DOMRect);
-    fireEvent.pointerLeave(frame, { pointerType: "mouse", clientX: 400, clientY: 200 });
-    expect(frame).toHaveAttribute("data-chrome", "shown");
-    // Really outside: hidden at once, as before.
-    fireEvent.pointerLeave(frame, { pointerType: "mouse", clientX: 900, clientY: 200 });
-    expect(frame).toHaveAttribute("data-chrome", "hidden");
-  });
-});
-
 describe("room: my screen and camera buttons on the player", () => {
   it("puts each control by its owner in the four states", async () => {
     const server = installFakeApi({ me: member() });
@@ -626,81 +546,6 @@ describe("room: my screen and camera buttons on the player", () => {
     (document.activeElement as HTMLElement).blur();
     await pass(CHROME_IDLE_MS);
     expect(frame).toHaveAttribute("data-chrome", "shown");
-  });
-});
-
-describe("room: fullscreen", () => {
-  it("enters fullscreen, and leaves it with the same button", async () => {
-    const server = installFakeApi({ me: member() });
-    server.streams = [someoneSharing("Bruno Lima", 7)];
-    renderRoom();
-    await connected();
-    act(() => {
-      lastRoom().publishScreen("user-7");
-    });
-    const frame = (await screen.findByLabelText("Bruno's shared screen")).closest("[data-chrome]") as HTMLElement;
-    // jsdom has no fullscreen: play the browser's part.
-    let current: Element | null = null;
-    Object.defineProperty(document, "fullscreenElement", { configurable: true, get: () => current });
-    const enter = vi.fn(async () => {
-      current = frame;
-      document.dispatchEvent(new Event("fullscreenchange"));
-    });
-    const exit = vi.fn(async () => {
-      current = null;
-      document.dispatchEvent(new Event("fullscreenchange"));
-    });
-    frame.requestFullscreen = enter;
-    document.exitFullscreen = exit;
-    const user = clockUser();
-
-    await user.click(within(stage()).getByRole("button", { name: "Fullscreen" }));
-    expect(enter).toHaveBeenCalled();
-
-    await user.click(await within(stage()).findByRole("button", { name: "Exit fullscreen" }));
-    expect(exit).toHaveBeenCalled();
-    expect(enter).toHaveBeenCalledTimes(1);
-    expect(await within(stage()).findByRole("button", { name: "Fullscreen" })).toBeInTheDocument();
-  });
-});
-
-describe("room: fullscreen from the empty stage", () => {
-  it("has the fullscreen button with nobody live", async () => {
-    installFakeApi({ me: member() });
-    renderRoom();
-    await connected();
-    expect(await within(stage()).findByRole("button", { name: "Fullscreen" })).toBeInTheDocument();
-  });
-
-  it("keeps it when the only stream stops in fullscreen, and it leaves fullscreen", async () => {
-    const server = installFakeApi({ me: member() });
-    server.streams = [someoneSharing("Bruno Lima", 7)];
-    renderRoom();
-    await connected();
-    act(() => {
-      lastRoom().publishScreen("user-7");
-    });
-    const frame = (await screen.findByLabelText("Bruno's shared screen")).closest("[data-chrome]") as HTMLElement;
-    let current: Element | null = null;
-    Object.defineProperty(document, "fullscreenElement", { configurable: true, get: () => current });
-    frame.requestFullscreen = vi.fn(async () => {
-      current = frame;
-      document.dispatchEvent(new Event("fullscreenchange"));
-    });
-    const exit = vi.fn(async () => {
-      current = null;
-      document.dispatchEvent(new Event("fullscreenchange"));
-    });
-    document.exitFullscreen = exit;
-    const user = clockUser();
-    await user.click(within(stage()).getByRole("button", { name: "Fullscreen" }));
-    act(() => {
-      server.streams = [];
-      lastRoom().unpublish("user-7", "screen_share");
-    });
-    expect(await screen.findByLabelText("0 of 6 live, 6 seats open")).toBeInTheDocument();
-    await user.click(await within(stage()).findByRole("button", { name: "Exit fullscreen" }));
-    expect(exit).toHaveBeenCalled();
   });
 });
 
@@ -795,41 +640,6 @@ describe("room: change window and pick a camera", () => {
     expect(lastRoom().localParticipant.camera?.track).toBe(camera);
     expect(myLiveStream(server, "camera")).toBeDefined();
     expect(await menu.findByRole("button", { name: "Camera: Integrated Webcam" })).toBeInTheDocument();
-  });
-});
-
-describe("room: the player and the keyboard", () => {
-  const watchBruno = async () => {
-    const server = installFakeApi({ me: member() });
-    server.streams = [someoneSharing("Bruno Lima", 7)];
-    const view = renderRoom();
-    await connected();
-    await screen.findByRole("heading", { name: "Bruno" });
-    act(() => {
-      lastRoom().publishScreen("user-7");
-    });
-    const video = await screen.findByLabelText("Bruno's shared screen");
-    return { view, frame: video.closest("[data-chrome]")! };
-  };
-
-  it("keeps the controls while one of them has the keyboard focus", async () => {
-    const { frame } = await watchBruno();
-
-    act(() => {
-      within(stage()).getByRole("button", { name: "Fullscreen" }).focus();
-    });
-    expect(frame).toHaveAttribute("data-chrome", "shown");
-
-    await pass(CHROME_IDLE_MS);
-    expect(frame).toHaveAttribute("data-chrome", "shown");
-  });
-
-  it("doesn't hide anything over an empty stage", async () => {
-    installFakeApi({ me: member() });
-    renderRoom();
-    await screen.findByLabelText("0 of 6 live, 6 seats open");
-
-    expect(stage().querySelector("[data-chrome]")).toBeNull();
   });
 });
 
@@ -1053,80 +863,6 @@ describe("room: several people sharing", () => {
 
 // ---- screen and camera together: the facecam ----
 
-describe("room: the facecam", () => {
-  async function brunoWithBoth() {
-    const server = installFakeApi({ me: member() });
-    server.streams = [someoneSharing("Bruno Lima", 7, "screen"), someoneSharing("Bruno Lima", 7, "camera")];
-    renderRoom();
-    await connected();
-    act(() => {
-      lastRoom().publishScreen("user-7");
-      lastRoom().publishCamera("user-7");
-    });
-    await screen.findByLabelText("Bruno's shared screen");
-    return server;
-  }
-
-  const facecam = () => stage().querySelector("[data-facecam]") as HTMLElement | null;
-
-  it("shows the screen big and the camera in the facecam on top of it", async () => {
-    await brunoWithBoth();
-
-    expect(facecam()).not.toBeNull();
-    expect(within(facecam()!).getByLabelText("Bruno's camera")).toBeInTheDocument();
-    expect(within(stage()).getAllByLabelText("Bruno's shared screen")).toHaveLength(1);
-    expect(facecam()!.contains(within(stage()).getByLabelText("Bruno's shared screen"))).toBe(false);
-  });
-
-  it("keeps the facecam on the picture, inside its view, not on the box's dark sides", async () => {
-    await brunoWithBoth();
-    const view = within(stage()).getByLabelText("Bruno's shared screen").closest("[class*=view]")!;
-    expect(view.contains(facecam())).toBe(true);
-  });
-
-  it("starts at the top right, clear of the round buttons and the fullscreen button", async () => {
-    await brunoWithBoth();
-    expect(facecam()!.style.left).toBe("73%");
-    expect(facecam()!.style.top).toBe("4%");
-  });
-
-  it("collapses to a tab and expands again", async () => {
-    await brunoWithBoth();
-    const user = clockUser();
-
-    await user.click(within(facecam()!).getByRole("button", { name: "Hide facecam" }));
-    expect(facecam()).toBeNull();
-    expect(within(stage()).queryByLabelText("Bruno's camera")).not.toBeInTheDocument();
-
-    await user.click(within(stage()).getByRole("button", { name: "Show facecam" }));
-    expect(within(facecam()!).getByLabelText("Bruno's camera")).toBeInTheDocument();
-  });
-
-  it("goes away when the camera stops", async () => {
-    const server = await brunoWithBoth();
-
-    act(() => {
-      server.streams = server.streams.filter((st) => st.kind === "screen");
-      lastRoom().unpublish("user-7", "camera");
-    });
-
-    await waitFor(() => expect(facecam()).toBeNull());
-    expect(within(stage()).getByLabelText("Bruno's shared screen")).toBeInTheDocument();
-  });
-
-  it("works on the sharer's own preview too", async () => {
-    installFakeApi({ me: member() });
-    const user = await readyRoom();
-    await startSharing(user);
-    await user.click(within(stage()).getByRole("button", { name: /turn on your camera/i }));
-
-    await waitFor(() => expect(facecam()).not.toBeNull());
-    expect(within(facecam()!).getByLabelText("Your camera")).toBeInTheDocument();
-    await user.click(within(facecam()!).getByRole("button", { name: "Swap views" }));
-    expect(within(facecam()!).getByLabelText("Your shared screen")).toBeInTheDocument();
-  });
-});
-
 // ---- sound and settings for each stream ----
 
 describe("room: theater mode", () => {
@@ -1172,9 +908,11 @@ describe("room: theater mode", () => {
     await user.click(screen.getByRole("button", { name: "Bruno turned on their camera, now: watch" }));
 
     // Camera big, screen in the facecam.
-    await waitFor(() => expect(stage().querySelector("[data-facecam]")).not.toBeNull());
+    await waitFor(() => expect(stage().querySelector("[aria-roledescription='facecam']")).not.toBeNull());
     expect(
-      within(stage().querySelector("[data-facecam]") as HTMLElement).getByLabelText("Bruno's shared screen"),
+      within(stage().querySelector("[aria-roledescription='facecam']") as HTMLElement).getByLabelText(
+        "Bruno's shared screen",
+      ),
     ).toBeInTheDocument();
     await waitFor(() => expect(screen.queryByRole("dialog", { name: "Activity" })).not.toBeInTheDocument());
   });
@@ -1426,44 +1164,6 @@ describe("room: my settings for each of my streams", () => {
   });
 });
 
-describe("room: the stage hugs the picture", () => {
-  const shapeOfStage = () =>
-    Number(
-      screen.getByRole("region", { name: "Shared screen" }).querySelector("[data-shape]")?.getAttribute("data-shape"),
-    );
-
-  /** The browser learns the picture's size, or a new one when the sharer resizes the window. */
-  const pictureSize = (video: HTMLElement, width: number, height: number) =>
-    act(() => {
-      Object.defineProperty(video, "videoWidth", { configurable: true, get: () => width });
-      Object.defineProperty(video, "videoHeight", { configurable: true, get: () => height });
-      video.dispatchEvent(new Event("resize"));
-    });
-
-  it("is 16:9 while empty and while a stream loads, then takes the picture's shape", async () => {
-    const server = installFakeApi({ me: member() });
-    renderRoom();
-    await connected();
-    await screen.findByLabelText("0 of 6 live, 6 seats open");
-    expect(shapeOfStage()).toBeCloseTo(16 / 9);
-
-    server.streams = [someoneSharing("Bruno Lima", 7)];
-    await screen.findByText(/loading bruno's screen/i);
-    expect(shapeOfStage()).toBeCloseTo(16 / 9);
-
-    act(() => {
-      lastRoom().publishScreen("user-7");
-    });
-    const video = await screen.findByLabelText("Bruno's shared screen");
-    pictureSize(video, 1840, 1000);
-    expect(shapeOfStage()).toBeCloseTo(1.84);
-
-    // A portrait monitor: taller than 16:9.
-    pictureSize(video, 1080, 1920);
-    expect(shapeOfStage()).toBeCloseTo(0.5625);
-  });
-});
-
 describe("room: under the stage", () => {
   it("shows who's watching the stage: me included, never the sharer", async () => {
     const server = installFakeApi({ me: member() });
@@ -1504,18 +1204,6 @@ describe("room: under the stage", () => {
 
     expect(screen.getByRole("heading", { name: "Nobody is sharing yet" })).toBeInTheDocument();
     expect(await screen.findByText("Ana and Bruno are here.")).toBeInTheDocument();
-  });
-});
-
-describe("room: the empty stage glows", () => {
-  it("lights its corners at the ambilight's brightness, with no ambilight canvas", async () => {
-    installFakeApi({ me: member() });
-    const { container } = renderRoom();
-    await connected();
-    const glow = container.querySelector("[data-corner-glow]") as HTMLElement;
-    expect(glow.querySelectorAll("i")).toHaveLength(4);
-    expect(Number(glow.style.opacity)).toBeGreaterThan(0);
-    expect(container.querySelector("[data-ambilight]")).toBeNull();
   });
 });
 

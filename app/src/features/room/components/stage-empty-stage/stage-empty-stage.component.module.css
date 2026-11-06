@@ -1,0 +1,362 @@
+/*
+ * Nobody live: a TV on standby, like Xovê's mark. Thin viewfinder
+ * corners, the top right red as in the logo; a still "Standby" where there's room; the way to start
+ * in the middle, with room around it, over the TV's static; the first time, the TV turning on.
+ */
+.empty {
+  /* Close to the edge, so the stage's own buttons sit inside the bottom-right corner. */
+  --inset: var(--space-1-5);
+  --arm: var(--size-7);
+  --stroke: var(--border-0-5);
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--space-5);
+  text-align: center;
+  container-type: size;
+  /* One flat dark: a gradient this dim has too few shades and shows them as bands. */
+  background: var(--grey-15);
+}
+
+/* The viewfinder's corners: two thin arms each. */
+.corner {
+  position: absolute;
+  width: var(--arm);
+  height: var(--arm);
+  border: 0 solid var(--text-shade-32);
+  pointer-events: none;
+  /* Lit, as a camera's display: each corner glows softly in its own colour. */
+  filter: drop-shadow(0 0 var(--blur-0-75) var(--text-shade-35)) drop-shadow(0 0 var(--blur-2-5) var(--text-shade-18));
+}
+
+.corner[data-at="tl"] {
+  top: var(--inset);
+  left: var(--inset);
+  border-width: var(--stroke) 0 0 var(--stroke);
+}
+
+.corner[data-at="tr"] {
+  top: var(--inset);
+  right: var(--inset);
+  border-width: var(--stroke) var(--stroke) 0 0;
+  border-color: var(--accent);
+  filter: drop-shadow(0 0 var(--blur-0-75) var(--accent-70)) drop-shadow(0 0 var(--blur-3) var(--accent-40));
+}
+
+.corner[data-at="bl"] {
+  bottom: var(--inset);
+  left: var(--inset);
+  border-width: 0 0 var(--stroke) var(--stroke);
+}
+
+.corner[data-at="br"] {
+  bottom: var(--inset);
+  right: var(--inset);
+  border-width: 0 var(--stroke) var(--stroke) 0;
+}
+
+/* "Standby": small mono capitals inside the top-left corner, a still grey dot (red would mean
+   recording). */
+.readout {
+  position: absolute;
+  top: calc(var(--inset) + var(--space-4-5));
+  left: calc(var(--inset) + var(--space-4-5));
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-muted);
+  font: 500 var(--text-11)/1 var(--font-mono);
+  letter-spacing: var(--tracking-8);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.dot {
+  width: var(--size-1-5);
+  height: var(--size-1-5);
+  border-radius: 50%;
+  background: var(--text-shade-40);
+}
+
+/* The way to start: a heading, a line, the buttons; no frame of its own. */
+.focus {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+}
+
+.title {
+  margin: 0;
+  font: 800 var(--text-28)/1.1 var(--font-display);
+}
+
+.copy {
+  margin: 0;
+  max-width: var(--measure-38);
+  color: var(--text-muted);
+  font-size: var(--text-14);
+  line-height: 1.5;
+  text-wrap: balance;
+}
+
+/* A small stage (a narrow window): finer corners, no "Standby", a smaller heading, compact buttons. */
+@container (--compact) {
+  .empty {
+    --arm: var(--size-4-5);
+    --stroke: var(--border-0-375);
+  }
+
+  .readout {
+    display: none;
+  }
+
+  .title {
+    font-size: var(--text-22);
+  }
+}
+
+/* A short stage: finer corners, no line, and the way to start
+   in its middle both ways, the stage's own buttons in their corner. */
+@container (--short) {
+  .empty {
+    --arm: var(--size-4);
+    /* In the stage's middle both ways; the stage's own buttons sit in its corner. */
+    padding: var(--space-3) var(--space-5);
+  }
+
+  .focus {
+    gap: 0;
+  }
+
+  .title {
+    font-size: var(--text-19);
+  }
+
+  .copy {
+    display: none;
+  }
+}
+
+/* The narrowest stages (under 360 px): smaller still, so the stage's own buttons stay clear. */
+@container (--tiny) {
+  .title {
+    font-size: var(--text-17);
+  }
+}
+
+/*
+ * The TV turning on, once a visit, the first time the stage stands by, in under a second, smooth rather than
+ * jerky: a point of light glows in the middle and draws a thin glowing line across; the line blooms
+ * into a white glow that fills the screen and lights the wall round it; the glow settles into
+ * a dimmer band streaked with scan lines, darkening as it opens softly onto the static. A hint of
+ * the theme's red at the edges of the glow. Over everything, then
+ * gone; only transforms, opacity and a fixed blur. None for reduced motion.
+ */
+.intro {
+  --intro: var(--duration-900);
+  position: absolute;
+  inset: 0;
+  z-index: var(--layer-over);
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--grey-5);
+  animation: intro-dark var(--intro) var(--ease-standard) forwards;
+}
+
+.intro i {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* The point: a bright dot in a soft halo, where the tube lights first. */
+.intro i[data-part="dot"] {
+  left: 50%;
+  width: var(--vmin-22);
+  height: var(--vmin-22);
+  margin: calc(var(--vmin-11) * -1) 0 0 calc(var(--vmin-11) * -1);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--white) 0 3%,
+    var(--white-80) 6%,
+    var(--white-30) 22%,
+    var(--accent-10) 42%,
+    transparent 62%
+  );
+  filter: blur(var(--blur-0-75));
+  animation: intro-dot var(--intro) var(--ease-out) forwards;
+}
+
+/* The line: drawn across from the point, white, fading at its ends, glowing. */
+.intro i[data-part="line"] {
+  height: var(--size-0-75);
+  margin-top: calc(var(--space-0-375) * -1);
+  background: linear-gradient(90deg, var(--white-35), var(--white) 30%, var(--white) 70%, var(--white-35));
+  box-shadow:
+    0 0 var(--space-2) var(--space-0-5) var(--white-90),
+    0 0 var(--space-8) var(--space-2) var(--white-45),
+    0 0 var(--space-14) var(--space-3-5) var(--accent-soft);
+  filter: blur(var(--blur-0-375));
+  transform: scaleX(0.01);
+  animation: intro-line var(--intro) var(--ease-out-expo) forwards;
+}
+
+/* The bloom: the line's glow swelling into a white light over the whole screen. */
+.intro i[data-part="flare"] {
+  top: 0;
+  height: 100%;
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    var(--white) 0%,
+    var(--white) 30%,
+    var(--white-80) 58%,
+    var(--pink-30) 78%,
+    var(--accent-10) 90%,
+    transparent 100%
+  );
+  filter: blur(var(--blur-6));
+  transform: scale(0.2, 0.03);
+  animation: intro-flare var(--intro) var(--ease-out-quint) forwards;
+}
+
+/* The band: a wide pale band streaked with scan lines, opening onto the picture. */
+.intro i[data-part="band"] {
+  /* Centred on the screen's middle, so it opens from there. */
+  top: 27%;
+  height: 46%;
+  background:
+    repeating-linear-gradient(0deg, var(--grey-60-30) 0 var(--hairline), transparent var(--hairline) var(--space-0-75)),
+    repeating-linear-gradient(
+      90deg,
+      var(--grey-90-14) 0 var(--space-0-5),
+      transparent var(--space-0-5) var(--space-1-75),
+      var(--grey-90-10) var(--space-1-75) var(--space-2),
+      transparent var(--space-2) var(--space-3-25)
+    ),
+    linear-gradient(180deg, transparent, var(--grey-185) 18%, var(--grey-207) 50%, var(--grey-176) 82%, transparent);
+  box-shadow: 0 0 var(--space-12) var(--space-3) var(--white-18);
+  filter: blur(var(--blur-1));
+  animation: intro-band var(--intro) var(--ease-standard) forwards;
+}
+
+@keyframes intro-dark {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes intro-dot {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  8% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  26% {
+    opacity: 1;
+    transform: scale(1.4);
+  }
+  40% {
+    opacity: 0;
+    transform: scale(2);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes intro-line {
+  0%,
+  5% {
+    opacity: 0;
+    transform: scaleX(0.01);
+  }
+  8% {
+    opacity: 1;
+    transform: scaleX(0.04);
+  }
+  24% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  38% {
+    opacity: 0;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes intro-flare {
+  0%,
+  18% {
+    opacity: 0;
+    transform: scale(0.2, 0.03);
+  }
+  28% {
+    opacity: 1;
+    transform: scale(0.9, 0.22);
+  }
+  42% {
+    opacity: 1;
+    transform: scale(1.6, 1.7);
+  }
+  /* After the flash the light dims steadily into the dark screen, never snapping off. */
+  50% {
+    opacity: 0.6;
+    transform: scale(1.6, 1.7);
+  }
+  60% {
+    opacity: 0.25;
+    transform: scale(1.6, 1.7);
+  }
+  70% {
+    opacity: 0;
+    transform: scale(1.6, 1.7);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes intro-band {
+  0%,
+  44% {
+    opacity: 0;
+    transform: scaleY(0.3);
+  }
+  52% {
+    opacity: 0.75;
+    transform: scaleY(0.35);
+  }
+  64% {
+    opacity: 0.5;
+    transform: scaleY(0.85);
+  }
+  76% {
+    opacity: 0.28;
+    transform: scaleY(1.6);
+  }
+  88% {
+    opacity: 0.1;
+    transform: scaleY(2.3);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleY(2.6);
+  }
+}

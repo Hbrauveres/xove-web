@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 
 import type { StreamKind } from "@services/xove-api-service";
 import { Slider } from "@shared/components/slider";
 import { FULL_ROOM } from "./PlayerButtons";
+import { useSettingsAnchor } from "@features/room/hooks/use-settings-anchor.hook";
 import styles from "./ViewerBar.module.css";
 import { Tooltip } from "@shared/components/tooltip";
 import { MenuRow } from "@shared/components/menu-row";
@@ -42,6 +43,7 @@ type Props = {
  */
 export function ViewerBar(props: Props) {
   const { sound, voice, live, micOn, onMic, canShareScreen, full, onStart, onSettings, settingsOnly } = props;
+  const anchor = useSettingsAnchor();
   const [open, setOpen] = useState<"sound" | "voice" | null>(null);
   const [menu, setMenu] = useState(false);
   // Each is one floating thing: the open slider, on a rest; the menu, opened by its button.
@@ -58,7 +60,7 @@ export function ViewerBar(props: Props) {
   });
 
   return (
-    <div className={styles.bar} data-buttons data-viewer-bar>
+    <div ref={anchor?.row} className={styles.bar} data-buttons data-viewer-bar>
       <div className={styles.left}>
         {sound && (
           <Hear
@@ -86,7 +88,13 @@ export function ViewerBar(props: Props) {
       <div className={styles.right}>
         {settingsOnly ? (
           <Tooltip text={"Settings"}>
-            <IconButton variant="stage" className={styles.round} aria-label="Settings" onClick={onSettings}>
+            <IconButton
+              ref={anchor?.cog}
+              variant="stage"
+              className={styles.round}
+              aria-label="Settings"
+              onClick={onSettings}
+            >
               <Icon name="cog" size={20} />
             </IconButton>
           </Tooltip>
@@ -108,6 +116,7 @@ export function ViewerBar(props: Props) {
             {/* The settings, opened from its menu, open over it (design decision 5). */}
             <button
               type="button"
+              ref={anchor?.cog}
               className={styles.golive}
               data-settings-anchor
               aria-expanded={menu}

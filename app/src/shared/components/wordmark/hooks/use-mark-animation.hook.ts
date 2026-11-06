@@ -3,7 +3,7 @@ import type { Frame, WordMark } from "../types/mark.types";
 import { applyFrame } from "../utils/apply-frame.util";
 import { frameTransforms } from "../utils/frame-transforms.util";
 import { TOTAL_MS, frameAt } from "../utils/mark-timeline.util";
-import { reducedMotion } from "../utils/reduced-motion.util";
+import { reducedMotion } from "@shared/utils/reduced-motion.util";
 
 /**
  * Plays the wordmark's animation on its SVG, frame by frame, without re-rendering. Once per hover:

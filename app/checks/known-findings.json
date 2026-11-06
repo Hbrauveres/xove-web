@@ -9,23 +9,9 @@
   {
     "tool": "code",
     "rule": "domQuery",
-    "file": "src/components/stage/Facecam.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "domQuery",
     "file": "src/components/stage/PreviewTray.tsx",
     "count": 2,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "domQuery",
-    "file": "src/components/stage/Stage.tsx",
-    "count": 3,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -75,62 +61,6 @@
     "file": "src/components/stage/AlsoLive.tsx",
     "count": 9,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/Ambilight.tsx",
-    "count": 3,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/CornerGlow.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/EmptyStage.module.css",
-    "count": 4,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/EmptyStage.test.tsx",
-    "count": 3,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/EmptyStage.tsx",
-    "count": 4,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/Facecam.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/Facecam.test.tsx",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/Facecam.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -212,13 +142,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/stage/ScreenVideo.tsx",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/stage/SettingsPanel.module.css",
     "count": 3,
     "owner": "#193 settings"
@@ -240,20 +163,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/stage/Stage.module.css",
-    "count": 10,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/Stage.tsx",
-    "count": 18,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/stage/StageOverlay.module.css",
     "count": 2,
     "owner": "#191 today's stage pieces"
@@ -268,41 +177,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/stage/staticBands.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/StaticGlow.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/StaticGlow.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/StaticNoise.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/StaticNoise.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/stage/ViewerBar.module.css",
     "count": 4,
     "owner": "#191 today's stage pieces"
@@ -313,20 +187,6 @@
     "file": "src/components/stage/ViewerBar.tsx",
     "count": 6,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/VoiceAudio.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/media/ambilight.ts",
-    "count": 3,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -390,13 +250,6 @@
     "file": "src/components/stage/AlsoLive.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "lineLength",
-    "file": "src/components/stage/EmptyStage.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -481,90 +334,6 @@
     "file": "src/components/stage/AlsoLive.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/Ambilight.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/Ambilight.test.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/Ambilight.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/CornerGlow.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/CornerGlow.test.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/CornerGlow.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/EmptyStage.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/EmptyStage.test.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/EmptyStage.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/Facecam.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/Facecam.test.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/Facecam.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -667,27 +436,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/stage/ScreenVideo.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/ScreenVideo.test.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/ScreenVideo.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/components/stage/SettingsPanel.module.css",
     "count": 1,
     "owner": "#193 settings"
@@ -716,34 +464,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/stage/Stage.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/Stage.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/StageNotice.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/StageNotice.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/components/stage/StageOverlay.module.css",
     "count": 1,
     "owner": "#191 today's stage pieces"
@@ -754,62 +474,6 @@
     "file": "src/components/stage/StageOverlay.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/staticBands.test.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/staticBands.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/StaticGlow.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/StaticGlow.test.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/StaticGlow.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/StaticNoise.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/StaticNoise.test.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/StaticNoise.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -838,27 +502,6 @@
     "file": "src/components/stage/ViewerBar.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/VoiceAudio.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/ambilight.test.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/ambilight.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -1017,20 +660,6 @@
   {
     "tool": "code",
     "rule": "noTest",
-    "file": "src/components/stage/Stage.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/components/stage/StageNotice.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
     "file": "src/components/stage/StageOverlay.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
@@ -1041,13 +670,6 @@
     "file": "src/components/stage/usePreviewTray.ts",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/components/stage/VoiceAudio.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -1076,34 +698,6 @@
     "file": "src/components/stage/AlsoLive.tsx",
     "count": 2,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/Ambilight.tsx",
-    "count": 7,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/CornerGlow.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/EmptyStage.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/Facecam.tsx",
-    "count": 6,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -1143,13 +737,6 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/components/stage/ScreenVideo.tsx",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 14,
     "owner": "#193 settings"
@@ -1164,44 +751,9 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/components/stage/Stage.tsx",
-    "count": 8,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/StageNotice.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
     "file": "src/components/stage/StageOverlay.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/staticBands.ts",
-    "count": 5,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/StaticGlow.tsx",
-    "count": 3,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/StaticNoise.tsx",
-    "count": 5,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -1216,20 +768,6 @@
     "file": "src/components/stage/ViewerBar.tsx",
     "count": 7,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/VoiceAudio.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/media/ambilight.ts",
-    "count": 13,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -1265,13 +803,6 @@
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 1,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "size",
-    "file": "src/components/stage/Stage.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -1342,90 +873,6 @@
     "file": "src/components/stage/AlsoLive.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/Ambilight.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/Ambilight.test.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/Ambilight.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/CornerGlow.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/CornerGlow.test.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/CornerGlow.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/EmptyStage.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/EmptyStage.test.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/EmptyStage.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/Facecam.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/Facecam.test.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/Facecam.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -1528,27 +975,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/stage/ScreenVideo.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/ScreenVideo.test.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/ScreenVideo.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/components/stage/SettingsPanel.module.css",
     "count": 1,
     "owner": "#193 settings"
@@ -1577,34 +1003,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/stage/Stage.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/Stage.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/StageNotice.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/StageNotice.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/components/stage/StageOverlay.module.css",
     "count": 1,
     "owner": "#191 today's stage pieces"
@@ -1615,62 +1013,6 @@
     "file": "src/components/stage/StageOverlay.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/staticBands.test.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/staticBands.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/StaticGlow.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/StaticGlow.test.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/StaticGlow.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/StaticNoise.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/StaticNoise.test.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/StaticNoise.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -1699,27 +1041,6 @@
     "file": "src/components/stage/ViewerBar.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/VoiceAudio.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/ambilight.test.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/ambilight.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -1820,20 +1141,6 @@
     "owner": "#193 settings"
   },
   {
-    "tool": "copies",
-    "rule": "copied-block",
-    "file": "src/components/stage/StaticGlow.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "copies",
-    "rule": "copied-block",
-    "file": "src/components/stage/StaticNoise.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
     "tool": "lint",
     "rule": "eslint(complexity)",
     "file": "src/components/room/SeatOffer.tsx",
@@ -1878,13 +1185,6 @@
   {
     "tool": "lint",
     "rule": "eslint(complexity)",
-    "file": "src/components/stage/Stage.tsx",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
     "file": "src/components/stage/ViewerBar.tsx",
     "count": 2,
     "owner": "#191 today's stage pieces"
@@ -1909,27 +1209,6 @@
     "file": "src/components/stage/AlsoLive.tsx",
     "count": 2,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/stage/Ambilight.tsx",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/stage/EmptyStage.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/stage/Facecam.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "lint",
@@ -1962,30 +1241,9 @@
   {
     "tool": "lint",
     "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/stage/ScreenVideo.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 2,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/stage/Stage.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/stage/StaticNoise.tsx",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "lint",
@@ -2018,20 +1276,6 @@
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/stage/Ambilight.tsx",
-    "count": 6,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/stage/Facecam.tsx",
-    "count": 4,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
     "file": "src/components/stage/MicTest.tsx",
     "count": 3,
     "owner": "#193 settings"
@@ -2053,44 +1297,9 @@
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/stage/Stage.tsx",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/stage/staticBands.ts",
-    "count": 22,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/stage/StaticGlow.tsx",
-    "count": 6,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/stage/StaticNoise.tsx",
-    "count": 15,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
     "file": "src/components/stage/ViewerBar.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/media/ambilight.ts",
-    "count": 22,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "lint",
@@ -2108,20 +1317,6 @@
   },
   {
     "tool": "lint",
-    "rule": "jsx-a11y(media-has-caption)",
-    "file": "src/components/stage/ScreenVideo.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(media-has-caption)",
-    "file": "src/components/stage/VoiceAudio.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
     "rule": "jsx-a11y(no-noninteractive-element-interactions)",
     "file": "src/components/stage/HearToggles.tsx",
     "count": 1,
@@ -2129,24 +1324,10 @@
   },
   {
     "tool": "lint",
-    "rule": "jsx-a11y(no-noninteractive-tabindex)",
-    "file": "src/components/stage/Facecam.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
     "rule": "jsx-a11y(no-static-element-interactions)",
     "file": "src/components/room/SeatOffer.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(no-static-element-interactions)",
-    "file": "src/components/stage/Facecam.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "lint",
@@ -2193,23 +1374,9 @@
   {
     "tool": "lint",
     "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/components/stage/StageNotice.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(prefer-tag-over-role)",
     "file": "src/pages/RequestAccessPage.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "react-hooks(exhaustive-deps)",
-    "file": "src/components/stage/Stage.tsx",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "lint",
@@ -2217,13 +1384,6 @@
     "file": "src/components/stage/NowWatching.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "react(set-state-in-effect)",
-    "file": "src/components/stage/Stage.tsx",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "lint",
@@ -2238,13 +1398,6 @@
     "file": "src/components/stage/AlsoLive.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/components/stage/Facecam.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "lint",
@@ -2269,24 +1422,10 @@
   },
   {
     "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/components/stage/Stage.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
     "rule": "typescript(no-non-null-assertion)",
     "file": "src/components/stage/AlsoLive.tsx",
     "count": 2,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(no-non-null-assertion)",
-    "file": "src/components/stage/StaticGlow.tsx",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "lint",
@@ -2297,45 +1436,10 @@
   },
   {
     "tool": "tsc",
-    "rule": "TS18048",
-    "file": "src/media/ambilight.test.ts",
-    "count": 3,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2322",
-    "file": "src/components/stage/Ambilight.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2322",
-    "file": "src/media/ambilight.test.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2345",
-    "file": "src/components/stage/EmptyStage.test.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
     "rule": "TS2345",
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 5,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2345",
-    "file": "src/components/stage/Stage.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "tsc",
@@ -2361,13 +1465,6 @@
   {
     "tool": "tsc",
     "rule": "TS2375",
-    "file": "src/components/stage/Facecam.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
     "file": "src/components/stage/NowWatching.test.tsx",
     "count": 2,
     "owner": "#191 today's stage pieces"
@@ -2378,13 +1475,6 @@
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 7,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
-    "file": "src/components/stage/Stage.tsx",
-    "count": 5,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "tsc",
@@ -2452,27 +1542,6 @@
   {
     "tool": "tsc",
     "rule": "TS2532",
-    "file": "src/components/stage/staticBands.test.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
-    "file": "src/components/stage/StaticNoise.tsx",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
-    "file": "src/media/ambilight.test.ts",
-    "count": 5,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
     "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
@@ -2490,34 +1559,6 @@
     "file": "src/testing/setup.ts",
     "count": 2,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
-    "file": "src/components/stage/Ambilight.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
-    "file": "src/components/stage/staticBands.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
-    "file": "src/media/ambilight.ts",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "unused",
-    "rule": "types",
-    "file": "src/components/stage/ViewerBar.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "unused",
