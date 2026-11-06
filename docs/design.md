@@ -34,7 +34,7 @@ The pictures are shot from the real app (`design-sheet.mjs`, see [Keeping this p
 - **Public words** (the sign-in page, and any page someone sees before the room): a short headline with personality ("Go **LIVE** with your friends."), then one short line with substance: what you do and why it's good ("Share your screen or camera in sharp, fast streams. Watch them play, hang out, help out. Invite only.").
 - **Say what happens, then what to do:** "The room is full. You're 2nd in line." A disabled control says why in its tooltip.
 - **The middle dot (·)** joins short facts on one line: "Marina · Screen", "3 of 6 live · 3 free".
-- **Every control has a spoken name** (`aria-label`) that says what it does or what it shows: "Watch Rafa's screen", "4 people here", "Marina: account, connected".
+- **Every control has a spoken name** (`aria-label`) that says what it does or what it shows, holding any words it shows (so a voice command finds it): "Watch Rafa · screen", "4 people here", "Marina: account, connected".
 
 ## The mark
 
