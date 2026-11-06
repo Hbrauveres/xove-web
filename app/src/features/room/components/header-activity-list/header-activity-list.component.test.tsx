@@ -59,7 +59,14 @@ describe("the activity list", () => {
     const items = within(screen.getByRole("list"))
       .getAllByRole("listitem")
       .map((li) => li.textContent);
-    expect(items.map((t) => t?.replace(/(\d+ min|now)$/, "").replace(/WATCH(ING)?$/, ""))).toEqual([
+    expect(
+      items.map((t) =>
+        t
+          ?.replace(/ (\d+ min|now)$/, "")
+          .replace(/ WATCH(ING)?$/, "")
+          .trim(),
+      ),
+    ).toEqual([
       "Reconnected",
       "Diego left",
       "Diego stopped sharing",
@@ -80,9 +87,9 @@ describe("the activity list", () => {
   it("lets a live stream's event put it on the stage", async () => {
     const { onWatch, user } = setup();
 
-    await user.click(screen.getByRole("button", { name: "Bruno turned on their camera: watch" }));
+    await user.click(screen.getByRole("button", { name: "Bruno turned on their camera, 6 min: watch" }));
     expect(onWatch).toHaveBeenCalledWith("user-7", "camera");
-    await user.click(screen.getByRole("button", { name: "Ana started sharing: watch" }));
+    await user.click(screen.getByRole("button", { name: "Ana started sharing, 2 min: watch" }));
     expect(onWatch).toHaveBeenLastCalledWith("user-3", "screen");
   });
 

@@ -8,6 +8,6 @@ export function activityPillLabel(
 ): string {
   if (reconnecting) return RECONNECTING;
   if (!latest) return "Activity: nothing new yet";
-  const when = latest.ago === "now" ? "just now" : `${latest.ago} ago`;
-  return `Activity: ${latest.text}, ${when}${fresh ? `, ${fresh} new` : ""}`;
+  // The words the pill shows, in its order, so what's read out is what's seen.
+  return `Activity: ${latest.text}, ${latest.ago}${fresh ? `, ${fresh} new` : ""}`;
 }

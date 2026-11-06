@@ -1155,7 +1155,7 @@ describe("room: theater mode", () => {
     const user = clockUser();
 
     await user.click(screen.getByRole("button", { name: /^Activity/ }));
-    await user.click(screen.getByRole("button", { name: "Bruno turned on their camera: watch" }));
+    await user.click(screen.getByRole("button", { name: "Bruno turned on their camera, now: watch" }));
 
     // Camera big, screen in the facecam.
     await waitFor(() => expect(stage().querySelector("[data-facecam]")).not.toBeNull());

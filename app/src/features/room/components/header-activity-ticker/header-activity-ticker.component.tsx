@@ -21,9 +21,8 @@ export function HeaderActivityTicker({ reconnecting, latest }: HeaderActivityTic
   }
   return (
     <span key={latest.id} className={`${styles.tick} ${styles.enter}`}>
-      {latest.actor && <Face name={latest.actor.name} hue={latest.actor.hue} size={22} />}
-      <span className={styles.what}>{latest.text}</span>
-      <time className={styles.time}>{latest.ago}</time>
+      {latest.actor && <Face name={latest.actor.name} hue={latest.actor.hue} size={22} />}{" "}
+      <span className={styles.what}>{latest.text}</span> <time className={styles.time}>{latest.ago}</time>
     </span>
   );
 }

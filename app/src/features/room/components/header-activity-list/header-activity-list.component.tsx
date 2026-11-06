@@ -27,14 +27,16 @@ export function HeaderActivityList({
     <ul className={styles.list}>
       {[...events].reverse().map((e) => {
         const row = activityRow(e, { nameOf, meId, isLive, watching });
+        const ago = shortAgo(e.at, now);
+        // Spaces between the parts: the row's words read apart, as its name says them.
         const inside = (
           <>
             <span className={styles.icon} data-stream={row.isStream || undefined}>
               <Icon name={activityIconOf(e)} size={13} />
-            </span>
-            <span className={styles.text}>{row.text}</span>
-            {row.watchable && <span className={styles.act}>{row.watched ? "WATCHING" : "WATCH"}</span>}
-            <time className={styles.time}>{shortAgo(e.at, now)}</time>
+            </span>{" "}
+            <span className={styles.text}>{row.text}</span>{" "}
+            {row.watchable && <span className={styles.act}>{row.watched ? "WATCHING" : "WATCH"}</span>}{" "}
+            <time className={styles.time}>{ago}</time>
           </>
         );
         const unseenMark = unseen.has(e.id) || undefined;
@@ -44,7 +46,7 @@ export function HeaderActivityList({
               <button
                 type="button"
                 className={`${styles.row} ${styles.link}`}
-                aria-label={`${row.text}: ${row.watched ? "watching" : "watch"}`}
+                aria-label={row.watched ? `${row.text}: watching` : `${row.text}, ${ago}: watch`}
                 data-watching={row.watched || undefined}
                 data-unseen={unseenMark}
                 onClick={() => onWatch(e.actorId, row.kind)}

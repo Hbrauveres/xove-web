@@ -45,7 +45,7 @@ export function HeaderActivityPill({
         onClick={toggle}
       >
         {!reconnecting && <Icon name="bell" size={16} className={styles.bell} />}
-        <HeaderActivityTicker reconnecting={reconnecting ? RECONNECTING : null} latest={latest} />
+        <HeaderActivityTicker reconnecting={reconnecting ? RECONNECTING : null} latest={latest} />{" "}
         {fresh > 0 && !reconnecting && <span className={styles.new}>{fresh}</span>}
         <Icon name="chevron-bold" size={12} className={styles.chev} />
       </button>

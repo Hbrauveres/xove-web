@@ -45,7 +45,7 @@ describe("the activity pill", () => {
     rerender(<Pill events={[...first, ev("left", "user-9")]} />);
     await user.keyboard("{Escape}");
 
-    expect(pill()).toHaveAccessibleName("Activity: Diego left, just now");
+    expect(pill()).toHaveAccessibleName("Activity: Diego left, now");
     expect(pill()).toHaveFocus();
   });
 
@@ -58,7 +58,7 @@ describe("the activity pill", () => {
     rerender(<Pill events={[...first, ev("started", "user-3", "screen")]} />);
 
     expect(pill()).toHaveTextContent("Ana started sharing");
-    expect(pill()).toHaveAccessibleName("Activity: Ana started sharing, just now, 2 new");
+    expect(pill()).toHaveAccessibleName("Activity: Ana started sharing, now, 2 new");
   });
 
   it("opens the list on a click, and the new ones count as seen", async () => {
@@ -69,7 +69,7 @@ describe("the activity pill", () => {
 
     const list = screen.getByRole("dialog", { name: "Activity" });
     expect(within(list).getAllByRole("listitem")).toHaveLength(2);
-    expect(pill()).toHaveAccessibleName("Activity: Ana started sharing, just now");
+    expect(pill()).toHaveAccessibleName("Activity: Ana started sharing, now");
   });
 
   it("says when the connection drops, then shows the latest event again", () => {
