@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { ErrorNotice } from "@shared/components/error-notice";
 import { useAuth } from "@shared/stores/auth-store";
 import { AccountButton } from "../components/room/AccountButton";
-import { ActivityPill } from "../components/room/ActivityPill";
+import { HeaderActivityPill } from "@features/room/components/header-activity-pill";
 import { PeopleButton } from "../components/room/PeopleButton";
 import { RoomFooter } from "../components/room/RoomFooter";
 import { Header } from "@features/room/components/header";
@@ -209,7 +209,7 @@ function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
     <div className={styles.theater} data-room>
       <Header
         middle={
-          <ActivityPill
+          <HeaderActivityPill
             events={session.activity}
             people={session.knownPeople}
             meId={session.me.id}

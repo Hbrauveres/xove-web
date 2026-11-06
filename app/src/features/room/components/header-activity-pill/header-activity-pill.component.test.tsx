@@ -2,8 +2,8 @@ import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import type { ConnectionState } from "@services/livekit-service";
-import type { ActivityEvent, Friend } from "@features/room/types/room-view.types";
-import { ActivityPill } from "./ActivityPill";
+import type { ActivityEvent, Friend } from "../../types/room-view.types";
+import { HeaderActivityPill } from "./header-activity-pill.component";
 
 const people = (): Friend[] => [
   { id: "user-99", name: "Henrique", hue: 210, online: true },
@@ -16,12 +16,12 @@ const ev = (kind: ActivityEvent["kind"], actorId: string, stream?: "screen" | "c
   kind,
   actorId,
   at: Date.now(),
-  stream,
+  ...(stream ? { stream } : {}),
 });
 
 function Pill({ events, connection = "connected" }: { events: ActivityEvent[]; connection?: ConnectionState }) {
   return (
-    <ActivityPill
+    <HeaderActivityPill
       events={events}
       people={people()}
       meId="user-99"
@@ -35,7 +35,7 @@ function Pill({ events, connection = "connected" }: { events: ActivityEvent[]; c
 
 const pill = () => screen.getByRole("button", { name: /^Activity|Connection/ });
 
-describe("activity pill (spec 0104)", () => {
+describe("the activity pill", () => {
   it("counts events that came in while the list was open as seen once it closes", async () => {
     const user = userEvent.setup();
     const first = [ev("joined", "user-9")];
