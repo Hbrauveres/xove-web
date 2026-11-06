@@ -29,7 +29,7 @@ export function StageSoundButton(props: StageSoundButtonProps) {
         className={styles.sound}
         data-cue={cue}
         data-active={active || undefined}
-        aria-disabled={unavailable ? true : undefined}
+        unavailable={Boolean(unavailable)}
         aria-pressed={unavailable ? undefined : muted}
         aria-label={label}
         onPointerEnter={props.onPointerEnter}
