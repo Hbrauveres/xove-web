@@ -1,7 +1,9 @@
 import type { IconDrawing } from "../types/icon.types";
 
+/** A line with round ends, in the text's colour. */
+const ROUND_ENDS = { fill: "none", stroke: "currentColor", strokeLinecap: "round" } as const;
 /** A line drawn round at its ends and corners, in the text's colour. */
-const LINE = { fill: "none", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round" } as const;
+const LINE = { ...ROUND_ENDS, strokeLinejoin: "round" } as const;
 /** The round buttons' set: a 20 × 20 grid, lines 1.75 px wide with round ends, set on the whole drawing. */
 const BUTTON = { ...LINE, strokeWidth: 1.75 } as const;
 /** The small icons' lines, set on each shape. */
@@ -239,31 +241,23 @@ export const ICONS = {
       ["path", { d: "M5 10h10", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round" }],
     ],
   },
+  /** Admin: a shield. */
+  shield: {
+    svg: BUTTON,
+    parts: [["path", { d: "M10 2.5 16.5 5v4.5c0 4-2.8 6.9-6.5 8-3.7-1.1-6.5-4-6.5-8V5z" }]],
+  },
+  /** Sign out: an arrow leaving through a door. */
+  "sign-out": {
+    svg: BUTTON,
+    parts: [["path", { d: "M12.5 3.5h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1h-3M8.5 6.5 5 10l3.5 3.5M5 10h9" }]],
+  },
   /** Who's here: two people. */
   people: {
     parts: [
       ["circle", { cx: "7.5", cy: "7", r: "3", fill: "none", stroke: "currentColor", strokeWidth: "1.6" }],
-      [
-        "path",
-        {
-          d: "M2 16c.6-2.8 2.8-4.3 5.5-4.3S12.4 13.2 13 16",
-          fill: "none",
-          stroke: "currentColor",
-          strokeWidth: "1.6",
-          strokeLinecap: "round",
-        },
-      ],
+      ["path", { ...ROUND_ENDS, d: "M2 16c.6-2.8 2.8-4.3 5.5-4.3S12.4 13.2 13 16", strokeWidth: "1.6" }],
       ["circle", { cx: "14", cy: "6.5", r: "2.4", fill: "none", stroke: "currentColor", strokeWidth: "1.5" }],
-      [
-        "path",
-        {
-          d: "M14.5 11.3c1.9.3 3.1 1.6 3.5 3.7",
-          fill: "none",
-          stroke: "currentColor",
-          strokeWidth: "1.5",
-          strokeLinecap: "round",
-        },
-      ],
+      ["path", { ...ROUND_ENDS, d: "M14.5 11.3c1.9.3 3.1 1.6 3.5 3.7", strokeWidth: "1.5" }],
     ],
   },
   /** What happened lately: a bell. */

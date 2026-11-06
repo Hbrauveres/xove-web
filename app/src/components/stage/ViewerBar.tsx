@@ -1,13 +1,13 @@
 import { micState } from "@shared/utils/mic-state.util";
 import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
-import { useEffect, useRef, useState, type Dispatch, type ReactNode, type SetStateAction } from "react";
+import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
 import type { StreamKind } from "@services/xove-api-service";
 import { Slider } from "@shared/components/slider";
-import { toastStore } from "@shared/stores/toast-store";
 import { FULL_ROOM } from "./PlayerButtons";
 import styles from "./ViewerBar.module.css";
 import { Tooltip } from "@shared/components/tooltip";
+import { MenuRow } from "@shared/components/menu-row";
 import { floatingStore, useFloating } from "@shared/stores/floating-store";
 
 /** One sound you hear from the person you watch (spec 0123): its volume and mute. */
@@ -119,8 +119,9 @@ export function ViewerBar(props: Props) {
             </button>
             {menu && (
               <div className={styles.menu} role="menu">
-                <MenuItem
-                  icon={canShareScreen ? <Icon name="screen-on" size={20} /> : <Icon name="screen-off" size={20} />}
+                <MenuRow
+                  role="menuitem"
+                  icon={canShareScreen ? "screen-on" : "screen-off"}
                   label="Share your screen"
                   unavailable={!canShareScreen ? "This browser can't share a screen" : full ? FULL_ROOM : undefined}
                   onPick={() => {
@@ -128,8 +129,9 @@ export function ViewerBar(props: Props) {
                     onStart("screen");
                   }}
                 />
-                <MenuItem
-                  icon={full ? <Icon name="camera-off" size={20} /> : <Icon name="camera-on" size={20} />}
+                <MenuRow
+                  role="menuitem"
+                  icon={full ? "camera-off" : "camera-on"}
                   label="Turn on your camera"
                   unavailable={full ? FULL_ROOM : undefined}
                   onPick={() => {
@@ -138,8 +140,9 @@ export function ViewerBar(props: Props) {
                   }}
                 />
                 <span className={styles.sep} />
-                <MenuItem
-                  icon={<Icon name="cog" size={20} />}
+                <MenuRow
+                  role="menuitem"
+                  icon="cog"
                   label="Settings"
                   onPick={() => {
                     setMenu(false);
@@ -152,32 +155,6 @@ export function ViewerBar(props: Props) {
         )}
       </div>
     </div>
-  );
-}
-
-function MenuItem({
-  icon,
-  label,
-  unavailable,
-  onPick,
-}: {
-  icon: ReactNode;
-  label: string;
-  unavailable?: string;
-  onPick: () => void;
-}) {
-  return (
-    <Tooltip text={unavailable}>
-      <button
-        type="button"
-        role="menuitem"
-        aria-disabled={unavailable ? true : undefined}
-        onClick={() => (unavailable ? toastStore.show(unavailable, icon) : onPick())}
-      >
-        {icon}
-        {label}
-      </button>
-    </Tooltip>
   );
 }
 

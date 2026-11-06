@@ -3,13 +3,13 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router";
 import { ErrorNotice } from "@shared/components/error-notice";
 import { useAuth } from "@shared/stores/auth-store";
-import { AccountButton } from "../components/room/AccountButton";
-import { ActivityPill } from "../components/room/ActivityPill";
-import { PeopleButton } from "../components/room/PeopleButton";
+import { HeaderMyPictureButton } from "@features/room/components/header-my-picture-button";
+import { HeaderActivityPill } from "@features/room/components/header-activity-pill";
+import { HeaderPeopleButton } from "@features/room/components/header-people-button";
 import { RoomFooter } from "../components/room/RoomFooter";
-import { RoomHeader } from "../components/room/RoomHeader";
+import { Header } from "@features/room/components/header";
 import { WaitingRoom } from "../components/room/WaitingRoom";
-import { loadAmbilight } from "@services/preferences-service";
+import { useAmbilight } from "@features/room/hooks/use-ambilight.hook";
 import { canShareScreen } from "@services/media-devices-service";
 import { SettingsPanel } from "../components/stage/SettingsPanel";
 import { Stage } from "../components/stage/Stage";
@@ -126,7 +126,7 @@ function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
   // In fullscreen only the player can be seen: the setup window and errors go inside it (spec 0101).
   const fullscreen = useFullscreenElement();
   const overPage = useFullscreenHost();
-  const [ambilight, setAmbilight] = useState(loadAmbilight);
+  const [ambilight, setAmbilight] = useAmbilight();
   // What each person shares, for the people panel; and whether a stream is still live.
   const sharing = useMemo(
     () =>
@@ -187,14 +187,14 @@ function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
   // People, then me at the far right.
   const myButtons = (
     <>
-      <PeopleButton
+      <HeaderPeopleButton
         people={session.people}
         meId={session.me.id}
         sharing={sharing}
         watchingOf={session.watchingOf}
         seats={session.seats}
       />
-      <AccountButton
+      <HeaderMyPictureButton
         me={session.me}
         isAdmin={isAdmin}
         connection={session.connection}
@@ -207,9 +207,9 @@ function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
 
   return (
     <div className={styles.theater} data-room>
-      <RoomHeader
+      <Header
         middle={
-          <ActivityPill
+          <HeaderActivityPill
             events={session.activity}
             people={session.knownPeople}
             meId={session.me.id}

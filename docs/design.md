@@ -60,7 +60,7 @@ The pictures are shot from the real app (`design-sheet.mjs`, see [Keeping this p
 
 **No home-screen app** while Xovê is desktop only: the page links no manifest and has no home-screen icons or app tags, so no browser offers to install it; Safari's "Add to Home Screen" only adds a bookmark. It comes back with the phones.
 
-`node scripts/brand-icons.mjs` (from `app/`) rewrites the favicon from `mark.ts`. A test fails if the favicon drifts from the geometry.
+`node scripts/brand-icons.mjs` (from `app/`) rewrites the favicon from the Wordmark's geometry (`shared/components/wordmark/utils/`). A test fails if the favicon drifts from the geometry.
 
 **Interface icons** are drawn inline as SVG in the components, on a 20 × 20 grid (12 × 12 for the small arrows), with round 1.5–2 px strokes in `currentColor`, so they take the colour of their button. There's no icon library: a new icon follows the same grid and stroke.
 
@@ -189,7 +189,7 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 
 **Shades: each colour family at the strengths the app uses (white-10 is white at 10%).**
 
-`--accent-00` rgba(239, 75, 75, 0) · `--accent-10` rgba(239, 75, 75, 0.1) · `--accent-35` rgba(239, 75, 75, 0.35) · `--accent-40` rgba(239, 75, 75, 0.4) · `--accent-45` rgba(239, 75, 75, 0.45) · `--accent-70` rgba(239, 75, 75, 0.7) · `--accent-95` rgba(239, 75, 75, 0.95) · `--accent-light` #f36a6a · `--black` #000000 · `--black-35` rgba(0, 0, 0, 0.35) · `--black-40` rgba(0, 0, 0, 0.4) · `--black-45` rgba(0, 0, 0, 0.45) · `--black-50` rgba(0, 0, 0, 0.5) · `--black-55` rgba(0, 0, 0, 0.55) · `--blue-grey-50` rgba(138, 150, 172, 0.5) · `--green-18` rgba(22, 163, 74, 0.18) · `--green-25` rgba(22, 163, 74, 0.25) · `--green-30` rgba(22, 163, 74, 0.3) · `--green-35` rgba(22, 163, 74, 0.35) · `--green-45` rgba(22, 163, 74, 0.45) · `--green-60` rgba(22, 163, 74, 0.6) · `--green-light-85` rgba(43, 205, 104, 0.85) · `--green-lighter` #45e087 · `--grey-5` #050506 · `--grey-7` #070708 · `--grey-7-70` rgba(7, 7, 8, 0.7) · `--grey-10-90` rgba(10, 10, 11, 0.9) · `--grey-12-74` rgba(12, 12, 13, 0.74) · `--grey-15` #0f0f11 · `--grey-15-75` rgba(15, 15, 17, 0.75) · `--grey-15-92` rgba(15, 15, 17, 0.92) · `--grey-20-72` rgba(20, 20, 21, 0.72) · `--grey-20-85` rgba(20, 20, 21, 0.85) · `--grey-22-90` rgba(22, 22, 23, 0.9) · `--grey-31` #1f1f1f · `--grey-40-85` rgba(40, 40, 44, 0.85) · `--grey-40-90` rgba(40, 40, 44, 0.9) · `--grey-58` #3a3a3d · `--grey-60-30` rgba(60, 60, 64, 0.3) · `--grey-90-10` rgba(90, 90, 96, 0.1) · `--grey-90-14` rgba(90, 90, 96, 0.14) · `--grey-164` #a4a4a9 · `--grey-176` #b0b0b4 · `--grey-179` #b3b3b8 · `--grey-185` #b9b9bc · `--grey-189` #bdbdc0 · `--grey-202` #cacacd · `--grey-207` #cfcfd2 · `--grey-208` #d0d0d3 · `--pink-30` rgba(255, 228, 228, 0.3) · `--text-shade-05` rgba(235, 235, 236, 0.05) · `--text-shade-06` rgba(235, 235, 236, 0.06) · `--text-shade-08` rgba(235, 235, 236, 0.08) · `--text-shade-14` rgba(235, 235, 236, 0.14) · `--text-shade-16` rgba(235, 235, 236, 0.16) · `--text-shade-18` rgba(235, 235, 236, 0.18) · `--text-shade-22` rgba(235, 235, 236, 0.22) · `--text-shade-28` rgba(235, 235, 236, 0.28) · `--text-shade-32` rgba(235, 235, 236, 0.32) · `--text-shade-35` rgba(235, 235, 236, 0.35) · `--text-shade-40` rgba(235, 235, 236, 0.4) · `--text-shade-45` rgba(235, 235, 236, 0.45) · `--text-shade-82` rgba(235, 235, 236, 0.82) · `--white` #ffffff · `--white-00` rgba(255, 255, 255, 0) · `--white-04` rgba(255, 255, 255, 0.04) · `--white-05` rgba(255, 255, 255, 0.05) · `--white-06` rgba(255, 255, 255, 0.06) · `--white-10` rgba(255, 255, 255, 0.1) · `--white-18` rgba(255, 255, 255, 0.18) · `--white-22` rgba(255, 255, 255, 0.22) · `--white-28` rgba(255, 255, 255, 0.28) · `--white-30` rgba(255, 255, 255, 0.3) · `--white-35` rgba(255, 255, 255, 0.35) · `--white-40` rgba(255, 255, 255, 0.4) · `--white-45` rgba(255, 255, 255, 0.45) · `--white-55` rgba(255, 255, 255, 0.55) · `--white-80` rgba(255, 255, 255, 0.8) · `--white-90` rgba(255, 255, 255, 0.9)
+`--accent-00` rgba(239, 75, 75, 0) · `--accent-10` rgba(239, 75, 75, 0.1) · `--accent-35` rgba(239, 75, 75, 0.35) · `--accent-40` rgba(239, 75, 75, 0.4) · `--accent-45` rgba(239, 75, 75, 0.45) · `--accent-70` rgba(239, 75, 75, 0.7) · `--accent-95` rgba(239, 75, 75, 0.95) · `--accent-light` #f36a6a · `--black` #000000 · `--black-35` rgba(0, 0, 0, 0.35) · `--black-40` rgba(0, 0, 0, 0.4) · `--black-45` rgba(0, 0, 0, 0.45) · `--black-50` rgba(0, 0, 0, 0.5) · `--black-55` rgba(0, 0, 0, 0.55) · `--blue-grey-50` rgba(138, 150, 172, 0.5) · `--green-18` rgba(22, 163, 74, 0.18) · `--green-25` rgba(22, 163, 74, 0.25) · `--green-30` rgba(22, 163, 74, 0.3) · `--green-35` rgba(22, 163, 74, 0.35) · `--green-45` rgba(22, 163, 74, 0.45) · `--green-60` rgba(22, 163, 74, 0.6) · `--green-light-85` rgba(43, 205, 104, 0.85) · `--green-lighter` #45e087 · `--grey-5` #050506 · `--grey-7` #070708 · `--grey-7-70` rgba(7, 7, 8, 0.7) · `--grey-10-90` rgba(10, 10, 11, 0.9) · `--grey-12-74` rgba(12, 12, 13, 0.74) · `--grey-15` #0f0f11 · `--grey-15-75` rgba(15, 15, 17, 0.75) · `--grey-15-92` rgba(15, 15, 17, 0.92) · `--grey-20-72` rgba(20, 20, 21, 0.72) · `--grey-20-85` rgba(20, 20, 21, 0.85) · `--grey-22-90` rgba(22, 22, 23, 0.9) · `--grey-31` #1f1f1f · `--grey-40-85` rgba(40, 40, 44, 0.85) · `--grey-40-90` rgba(40, 40, 44, 0.9) · `--grey-58` #3a3a3d · `--grey-60-30` rgba(60, 60, 64, 0.3) · `--grey-90-10` rgba(90, 90, 96, 0.1) · `--grey-90-14` rgba(90, 90, 96, 0.14) · `--grey-164` #a4a4a9 · `--grey-176` #b0b0b4 · `--grey-185` #b9b9bc · `--grey-189` #bdbdc0 · `--grey-202` #cacacd · `--grey-207` #cfcfd2 · `--grey-208` #d0d0d3 · `--pink-30` rgba(255, 228, 228, 0.3) · `--text-shade-05` rgba(235, 235, 236, 0.05) · `--text-shade-06` rgba(235, 235, 236, 0.06) · `--text-shade-08` rgba(235, 235, 236, 0.08) · `--text-shade-14` rgba(235, 235, 236, 0.14) · `--text-shade-16` rgba(235, 235, 236, 0.16) · `--text-shade-18` rgba(235, 235, 236, 0.18) · `--text-shade-22` rgba(235, 235, 236, 0.22) · `--text-shade-28` rgba(235, 235, 236, 0.28) · `--text-shade-32` rgba(235, 235, 236, 0.32) · `--text-shade-35` rgba(235, 235, 236, 0.35) · `--text-shade-40` rgba(235, 235, 236, 0.4) · `--text-shade-45` rgba(235, 235, 236, 0.45) · `--text-shade-82` rgba(235, 235, 236, 0.82) · `--white` #ffffff · `--white-00` rgba(255, 255, 255, 0) · `--white-04` rgba(255, 255, 255, 0.04) · `--white-05` rgba(255, 255, 255, 0.05) · `--white-06` rgba(255, 255, 255, 0.06) · `--white-10` rgba(255, 255, 255, 0.1) · `--white-18` rgba(255, 255, 255, 0.18) · `--white-22` rgba(255, 255, 255, 0.22) · `--white-28` rgba(255, 255, 255, 0.28) · `--white-30` rgba(255, 255, 255, 0.3) · `--white-35` rgba(255, 255, 255, 0.35) · `--white-40` rgba(255, 255, 255, 0.4) · `--white-45` rgba(255, 255, 255, 0.45) · `--white-55` rgba(255, 255, 255, 0.55) · `--white-80` rgba(255, 255, 255, 0.8) · `--white-90` rgba(255, 255, 255, 0.9)
 
 **Mixed shades: a colour token mixed with clear or with another token (live-45 is LIVE's red at 45%).**
 
@@ -385,7 +385,7 @@ Two sizes: **md** (10 × 18 px padding, 15 px text) and **sm** (6 × 12 px, 13 p
 
 ### Switch
 
-A slim grey track (**36 × 12 px**, `#3a3a3d`) that looks the same off and on, and a **16 px knob** over its height but never past its ends: `#bdbdc0` when off, red when on, sliding in 180 ms. The ambilight's on/off in the account menu, the Voice tab's processing.
+A slim grey track (**36 × 12 px**, `#3a3a3d`) that looks the same off and on, and a **16 px knob** over its height but never past its ends: `#bdbdc0` when off, red when on, sliding in 180 ms. The ambilight's on/off in my menu, the Voice tab's processing.
 
 **Settings rows** (every settings list): the label on the panel's type scale (12 px, regular, white at 82%), never heavier or bigger than the panel's title; what a row does in its tooltip, not under it; the label 3 px inside its heading; the switch ending 12 px in from the column's edge, where a picker's arrow does.
 
@@ -395,11 +395,27 @@ The sliders' rules stay one browser per rule, checked by `npm run check:styles` 
 
 ![The activity list](images/design/panel-activity.png)
 
-![The people panel](images/design/panel-people.png) ![The account menu, with the switch and a slider](images/design/panel-account.png)
+![The people panel](images/design/panel-people.png) ![My menu, with the switch and a slider](images/design/panel-account.png)
 
 - On the [Panel](#the-panel) with cuts: its sections stacked with 2 px clear cuts, each its own glass. 340 px wide (the activity list: up to 440 px, centred under the pill).
 - Open 8 px under their button; **one thing on screen at a time** (the [floating rule](#drop-ups)); they unroll by their height (260 ms).
 - **Activity:** the latest events, each with its icon, what happened and when. **People:** the seats bar (green), who's here and what each is doing or watching, and the queue. **Account:** me and my connection, the ambilight's switch and brightness, Admin for admins, Sign out.
+
+### Menu rows
+
+![The Go live menu, on Menu rows](images/design/go-live.png)
+
+`shared/components/menu-row` (`MenuRow`): **one action in a menu**, the same in every menu (my menu's Admin and Sign out, the Go live menu's three).
+
+- **An icon, then the words:** the icon 17 px in the muted grey; the words 13.5 px, medium (500), in the text colour; 9 × 11 px inside, 9 px corners.
+- **Pointed at or focused:** a faint white (6%) under it, and its icon brightens to the text colour. **Red is never a hover:** it stays for live and attention.
+- **A link when it goes to a page** (Admin), a button otherwise. The menu gives it its role: `menuitem` in a menu, none in a dialog with other controls (my menu).
+- **Can't be used now:** dimmed to 45%, its reason in its tooltip, and said in a toast on a click.
+
+### Second lines and hovers
+
+- **One grey for a second line:** what describes something under or beside its name (a role, a connection, what someone is doing or watching, "(you)", the seats and the queue lines) is `--text-muted`. The first line, the name, is the text colour.
+- **A hover promises a click:** only what a click acts on lights up when pointed at. A list of people, or anything else to read, stays still.
 
 ### The panel
 
@@ -528,7 +544,7 @@ Its content stays clear of the phone's bars (the browser's safe areas).
 
 - **Focus is always visible:** a 2 px red ring, 2 px out (3 px around the round buttons' pill, white 4 px out around sliders).
 - **Keyboard:** every control is a real button or input; a sound's button mutes on Enter and opens its slider on focus, which moves with the arrow keys; focusing a preview opens its row, Tab goes through it and on to the next preview, Shift+Tab and Escape back to the preview; the facecam moves with the arrow keys; Escape closes panels.
-- **Names:** every control and picture has a spoken name; the mark is "Xovê"; videos are named by whose stream they are.
+- **Names:** every control and picture has a spoken name; the mark is "Xovê"; videos are named by whose stream they are. **A control's name holds the words it shows, in their order** (the activity pill: "Activity: Ana joined, now, 2 new"), so a person who speaks to their computer can say what they see; the stories' check holds it. A face's initial is drawn, not text, so it never joins a name.
 - **Contrast** as in [Colour](#colour), checked by a test.
 - **Reduced motion** as in [Motion](#motion).
 
@@ -550,7 +566,7 @@ Its content stays clear of the phone's bars (the browser's safe areas).
 - **Unavailable, not hidden.** An option that can't be used here stays in its place, greyed out (a text option, like a tab: `--text-disabled` at 50%; a control, like a round button or a sound I can't hear: 45% opacity), with its reason in its tooltip, so a panel looks the same on every device.
 - **Draft first:** a visual change starts as a draft approved before the work starts: a change to screens that exist, as a prototype in the app itself; a brand-new screen may start as a clickable HTML draft with these tokens and fonts. The approved draft is the reference the code must match.
 - **Check every size:** a 2K monitor both ways (2560 × 1440 and 1440 × 2560), 1920 × 1080, a narrow window, the empty room, and the phone and tablet screen.
-- **Reuse the components:** the shared blocks in `shared/components/`, each shown in Storybook: `Icon`, `IconButton` with its variants, `Face`, `Switch`, `LiveBadge`, `Headline`, `ErrorNotice`, `Button`, `Slider`, `Segmented`, `Toast`, `Wordmark`, `Panel` and `PanelSection`, `PageShell`, `Field`, `StatPill`, `CountChip`, `ControlLabel`, `SectionHeading`, `Dropdown`, `Picker`, `DropUp`, `Tooltip`; and `StageNotice`. **One block per purpose** (ADR-0094): what does the same job is one block, even where today's values differ; what does a different job is its own block, however alike it looks, so changing one never changes another. A new control follows their sizes, motion and focus ring. A choice from a list is a `Picker` (one box, floating, with the slim scrollbar when long), a few options a `Segmented`, and a quick action over a live button a `DropUp`, everywhere in the app.
+- **Reuse the components:** the shared blocks in `shared/components/`, each shown in Storybook: `Icon`, `IconButton` with its variants, `Face`, `Switch`, `LiveBadge`, `Headline`, `ErrorNotice`, `Button`, `Slider`, `Segmented`, `Toast`, `Wordmark`, `Panel` and `PanelSection`, `PageShell`, `Field`, `StatPill`, `CountChip`, `ControlLabel`, `SectionHeading`, `MenuRow`, `Dropdown`, `Picker`, `DropUp`, `Tooltip`; and `StageNotice`. **One block per purpose** (ADR-0094): what does the same job is one block, even where today's values differ; what does a different job is its own block, however alike it looks, so changing one never changes another. A new control follows their sizes, motion and focus ring. A choice from a list is a `Picker` (one box, floating, with the slim scrollbar when long), a few options a `Segmented`, and a quick action over a live button a `DropUp`, everywhere in the app.
 - **Panels open over the button that opened them,** never from a side. **Panels are frosted, never opaque**; nothing over the video hides the round buttons.
 - **Say what effects cost:** blur, canvases and animations run on every frame; keep them to what's here.
 - **A screen says only what matters.** No readouts that imitate real equipment (clocks, meters, rulers, format tags, made-up numbers), and no frame inside another frame.

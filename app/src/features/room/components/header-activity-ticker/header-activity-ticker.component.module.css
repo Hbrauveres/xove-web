@@ -1,0 +1,59 @@
+/* The activity pill's line: the latest event slides in. */
+.tick {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2-5);
+  min-width: 0;
+  flex: 1;
+}
+
+.enter {
+  animation: tick-in var(--duration-350) ease;
+}
+
+@keyframes tick-in {
+  from {
+    transform: translateY(var(--space-3-5));
+    opacity: 0;
+  }
+}
+
+.what {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+.time {
+  font-family: var(--font-mono);
+  font-size: var(--text-11);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.spin {
+  flex: none;
+  width: var(--size-3);
+  height: var(--size-3);
+  margin-left: var(--space-1);
+  border-radius: 50%;
+  border: var(--border-0-5) solid currentColor;
+  border-right-color: transparent;
+  animation: spin var(--duration-800) linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter,
+  .spin {
+    animation: none;
+  }
+}

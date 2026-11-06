@@ -28,7 +28,7 @@ The room's top bar: the wordmark at the left, the activity pill in the middle, t
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/room/RoomHeader.tsx` | `features/room/components/header/` | Kept, then redrawn in the next version |
+| `features/room/components/header/` (`Header`) | Here | Done (#189); redrawn in the next version |
 
 ### Wordmark
 
@@ -53,7 +53,7 @@ What happened in the room (someone joined, went live), as a pill that opens a li
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/room/ActivityPill.tsx`, `ActivityList.tsx`, `activityText.ts` | `features/room/components/header-activity-pill/`, `activity-list/` (the text in `utils/`) | Kept; the next version's bell replaces the pill |
+| `features/room/components/header-activity-pill/` (its seen marks a hook), its moving line `header-activity-ticker/`, `header-activity-list/`; the words in `features/room/utils/activity-text.util.ts`, how long ago in `shared/utils/time-ago.util.ts` | Here | Done (#189); the next version's bell replaces the pill |
 
 ### People button
 
@@ -66,9 +66,9 @@ How many people are here; it opens the seats and the list of people with what ea
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/room/PeopleButton.tsx` | `features/room/components/header-people-button/` | Kept; the next version's people column replaces it |
+| `features/room/components/header-people-button/` (the order, the line under each name and the queue in its `utils/`), the seats `header-seats/` | Here | Done (#189); the next version's people column replaces it |
 
-### Account button and menu
+### My picture button and my menu
 
 <table><tr>
 <td><img src="img/today/account-button.webp" width="54" alt="My picture"><br><sub>My picture</sub></td>
@@ -79,7 +79,7 @@ My picture; it opens my menu.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/room/AccountButton.tsx` (it holds a switch, a slider and the footer's items) | `features/room/components/header-my-picture-button/`, `my-menu/` (on the shared Dropdown, Switch and Slider) | Kept |
+| `features/room/components/header-my-picture-button/` and `header-my-menu/` (on the shared Dropdown, Switch, Slider and Menu row); the ambilight's settings in `features/room/hooks/use-ambilight.hook.ts` | Here | Done (#189) |
 
 ## The stage
 
@@ -126,14 +126,14 @@ Over someone else's stream: each sound I hear from them (screen sound, voice) as
 ### Go live menu
 
 <table><tr>
-<td><img src="img/today/go-live-menu.webp" width="363" alt="Share my screen, turn on my camera, settings"><br><sub>Share my screen, turn on my camera, settings</sub></td>
+<td><img src="img/today/go-live-menu.webp" width="260" alt="Share my screen, turn on my camera, settings"><br><sub>Share my screen, turn on my camera, settings</sub></td>
 </tr></table>
 
 Starts what I share, from a drop-up over the stage.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| In `ViewerBar.tsx`, on the floating layer | On the floating layer | Kept; the next version's send buttons replace it |
+| In `ViewerBar.tsx`, on the floating layer, its rows the shared Menu row (#189) | On the floating layer | Kept; the next version's send buttons replace it |
 
 ### Player buttons
 
@@ -296,7 +296,7 @@ For the admin: the access requests and the members.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `pages/AdminPage.tsx` | `features/admin/` | Kept |
+| `pages/AdminPage.tsx` ("3 min ago" from `shared/utils/time-ago.util.ts`) | `features/admin/` | Kept |
 
 ## Building blocks
 
@@ -321,6 +321,7 @@ The shared controls today, and the copies that become one component each.
 | Page shell | `shared/components/page-shell/`: home, request access, the waiting room, the loading line | Here | Done (#188) |
 | Panel | `shared/components/panel/`, `panel-section/`: the settings, the menus, the waiting room's card | Here | Done (#188) |
 | Field, Stat pill, Count chip, Control label, Section heading | `shared/components/field/`, `stat-pill/`, `count-chip/`, `control-label/`, `section-heading/` | Here | Done (#188) |
+| Menu row | `shared/components/menu-row/`: one action in a menu, its icon and words; my menu's Admin and Sign out, the Go live menu's three (they were two looks) | Here | Done (#189) |
 | Error notice | `shared/components/error-notice/`: the red-tinted box a problem is told in, on the home page and over the room (it was a copied `.error` rule in both pages) | Already there | Merged |
 
 ## Removed

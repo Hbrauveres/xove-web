@@ -1,0 +1,31 @@
+/* My picture in the header, with a dot for the connection. */
+.wrap {
+  position: relative;
+}
+
+.button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 0 var(--space-0-75);
+}
+
+/* The connection, on the avatar: green connected, yellow otherwise. */
+.dot {
+  position: absolute;
+  right: var(--space-0-25);
+  bottom: var(--space-0-75);
+  width: var(--size-2-75);
+  height: var(--size-2-75);
+  border-radius: 50%;
+  border: var(--border-0-5) solid var(--ground);
+  background: var(--warn);
+}
+
+.dot[data-state="connected"] {
+  background: var(--ok);
+}
+
+.dot[data-state="disconnected"] {
+  background: var(--live);
+}

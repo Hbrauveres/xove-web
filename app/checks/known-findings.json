@@ -37,86 +37,9 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/room/AccountButton.module.css",
-    "count": 2,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/room/AccountButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/room/ActivityList.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/room/ActivityList.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/room/ActivityPill.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/room/ActivityPill.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/room/activityText.ts",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/room/PeopleButton.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/room/PeopleButton.tsx",
-    "count": 2,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/room/RoomFooter.module.css",
     "count": 2,
     "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/room/RoomHeader.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/room/RoomHeader.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
   },
   {
     "tool": "code",
@@ -499,97 +422,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/room/AccountButton.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/AccountButton.test.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/AccountButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/ActivityList.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/ActivityList.test.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/ActivityList.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/ActivityPill.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/ActivityPill.test.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/ActivityPill.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/activityText.ts",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/PeopleButton.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/PeopleButton.test.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/PeopleButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/components/room/RoomFooter.module.css",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
@@ -600,20 +432,6 @@
     "file": "src/components/room/RoomFooter.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/RoomHeader.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/RoomHeader.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
   },
   {
     "tool": "code",
@@ -1164,23 +982,9 @@
   {
     "tool": "code",
     "rule": "noTest",
-    "file": "src/components/room/activityText.ts",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
     "file": "src/components/room/RoomFooter.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/components/room/RoomHeader.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
   },
   {
     "tool": "code",
@@ -1251,41 +1055,6 @@
     "file": "src/main.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/room/AccountButton.tsx",
-    "count": 2,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/room/ActivityList.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/room/ActivityPill.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/room/PeopleButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/room/RoomHeader.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
   },
   {
     "tool": "code",
@@ -1445,7 +1214,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/stage/ViewerBar.tsx",
-    "count": 9,
+    "count": 7,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -1514,97 +1283,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/room/AccountButton.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/AccountButton.test.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/AccountButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/ActivityList.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/ActivityList.test.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/ActivityList.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/ActivityPill.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/ActivityPill.test.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/ActivityPill.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/activityText.ts",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/PeopleButton.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/PeopleButton.test.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/PeopleButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/components/room/RoomFooter.module.css",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
@@ -1615,20 +1293,6 @@
     "file": "src/components/room/RoomFooter.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/RoomHeader.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/RoomHeader.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
   },
   {
     "tool": "code",
@@ -2172,20 +1836,6 @@
   {
     "tool": "lint",
     "rule": "eslint(complexity)",
-    "file": "src/components/room/ActivityList.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
-    "file": "src/components/room/ActivityPill.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
     "file": "src/components/room/SeatOffer.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
@@ -2245,27 +1895,6 @@
     "file": "src/pages/RoomPage.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/room/AccountButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/room/ActivityPill.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/room/PeopleButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
   },
   {
     "tool": "lint",
@@ -2378,34 +2007,6 @@
     "file": "src/pages/RoomPage.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/room/ActivityList.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/room/ActivityPill.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/room/activityText.ts",
-    "count": 5,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/room/PeopleButton.tsx",
-    "count": 2,
-    "owner": "#189 room: header"
   },
   {
     "tool": "lint",
@@ -2553,13 +2154,6 @@
     "file": "src/components/stage/PreviewTray.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/components/room/PeopleButton.tsx",
-    "count": 2,
-    "owner": "#189 room: header"
   },
   {
     "tool": "lint",
@@ -2753,20 +2347,6 @@
   {
     "tool": "tsc",
     "rule": "TS2375",
-    "file": "src/components/room/ActivityList.test.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
-    "file": "src/components/room/ActivityPill.test.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
     "file": "src/components/stage/AlsoLive.test.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
@@ -2817,7 +2397,7 @@
     "tool": "tsc",
     "rule": "TS2375",
     "file": "src/components/stage/ViewerBar.tsx",
-    "count": 3,
+    "count": 1,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -2854,13 +2434,6 @@
     "file": "src/testing/fakeLiveKit.ts",
     "count": 3,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
-    "file": "src/components/room/ActivityList.test.tsx",
-    "count": 3,
-    "owner": "#189 room: header"
   },
   {
     "tool": "tsc",

@@ -8,6 +8,7 @@ import { FakeLocalScreenTrack, lastRoom } from "../testing/fakeLiveKit";
 import { clockUser, onFakeClock } from "../testing/factories/clock.factory";
 import { CHROME_IDLE_MS } from "../components/stage/Stage";
 import { REPORT_RETRY_MS, REPORT_STILL_MS } from "@features/room/constants/watch-report.constants";
+import { loadAmbilight } from "@services/preferences-service";
 import { RoomPage } from "./RoomPage";
 
 const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
@@ -75,6 +76,19 @@ describe("room: joining the video room", () => {
     });
     expect(screen.getByRole("button", { name: "1 person here" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /^Activity: Bruno left/ })).toBeInTheDocument();
+  });
+});
+
+describe("room: my menu", () => {
+  it("remembers the ambilight's switch for next time", async () => {
+    installFakeApi({ me: member() });
+    renderRoom();
+    const user = clockUser();
+    await user.click(await connected());
+    await user.click(screen.getByRole("switch", { name: "Ambilight" }));
+
+    expect(screen.getByRole("switch", { name: "Ambilight" })).not.toBeChecked();
+    expect(loadAmbilight().on).toBe(false);
   });
 });
 
@@ -1155,7 +1169,7 @@ describe("room: theater mode", () => {
     const user = clockUser();
 
     await user.click(screen.getByRole("button", { name: /^Activity/ }));
-    await user.click(screen.getByRole("button", { name: "Bruno turned on their camera: watch" }));
+    await user.click(screen.getByRole("button", { name: "Bruno turned on their camera, now: watch" }));
 
     // Camera big, screen in the facecam.
     await waitFor(() => expect(stage().querySelector("[data-facecam]")).not.toBeNull());

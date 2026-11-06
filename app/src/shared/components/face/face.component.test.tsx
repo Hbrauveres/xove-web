@@ -6,7 +6,8 @@ describe("a face", () => {
   it("in the room, shows the person's initial in their own colour, hidden from screen readers", () => {
     const { container } = render(<Face name="marina" hue={200} size={32} />);
     const face = container.firstElementChild as HTMLElement;
-    expect(face).toHaveTextContent("M");
+    expect(face).toHaveAttribute("data-initial", "M");
+    expect(face.textContent).toBe("");
     expect(face).toHaveAttribute("aria-hidden", "true");
     const other = render(<Face name="Rafa" hue={20} size={32} />).container.firstElementChild as HTMLElement;
     expect(face.style.background).not.toBe("");
@@ -28,6 +29,6 @@ describe("a face", () => {
     expect(photo).toHaveAttribute("src", "https://example.com/ana.jpg");
     fireEvent.error(photo as HTMLImageElement);
     expect(container.querySelector("img")).toBeNull();
-    expect(container).toHaveTextContent("A");
+    expect(container.firstElementChild).toHaveAttribute("data-initial", "A");
   });
 });
