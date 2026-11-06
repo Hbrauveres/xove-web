@@ -7,7 +7,7 @@ import { StagePreviewTrayRow } from "./stage-preview-tray-row.component";
 const setup = (leaving = false) => {
   document.body.innerHTML = "";
   const anchor = document.createElement("li");
-  anchor.innerHTML = "<button>Watch Ana's screen</button>";
+  anchor.innerHTML = "<button>Watch Ana · screen</button>";
   document.body.append(anchor);
   const handlers = { onGone: vi.fn(), onEnter: vi.fn(), onLeave: vi.fn(), onElement: vi.fn() };
   render(
@@ -31,7 +31,7 @@ describe("a preview's row on the tray", () => {
     const mute = screen.getByRole("button", { name: "Mute Ana's voice" });
     mute.focus();
     fireEvent.keyDown(mute, { key: "Tab", shiftKey: true });
-    expect(document.activeElement).toBe(screen.getByRole("button", { name: "Watch Ana's screen" }));
+    expect(document.activeElement).toBe(screen.getByRole("button", { name: "Watch Ana · screen" }));
   });
 
   it("rolling back, is gone once its time is up", () => {

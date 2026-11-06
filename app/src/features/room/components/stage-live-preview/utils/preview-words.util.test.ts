@@ -6,7 +6,7 @@ describe("previewWords", () => {
   it("names someone's screen", () => {
     const s = aSharer({ name: "Ana" });
     expect(s.screen && previewWords(s, s.screen)).toEqual({
-      label: "Watch Ana's screen",
+      label: "Watch Ana · screen",
       picture: "Ana's shared screen",
       pill: "Ana · screen",
     });
@@ -15,7 +15,7 @@ describe("previewWords", () => {
   it("names my own camera", () => {
     const s = aSharer({ kinds: ["camera"], isMe: true });
     expect(s.camera && previewWords(s, s.camera)).toEqual({
-      label: "Watch your camera",
+      label: "Watch You · camera",
       picture: "Your camera",
       pill: "You · camera",
     });

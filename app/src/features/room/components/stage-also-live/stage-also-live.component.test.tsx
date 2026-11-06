@@ -76,12 +76,12 @@ describe("also live (specs 0104 and 0123)", () => {
     };
     render(<Harness others={[me]} />);
 
-    expect(preview(/Watch your screen/)).toHaveTextContent("You · screen");
+    expect(preview(/Watch You · screen/)).toHaveTextContent("You · screen");
     expect((local as unknown as FakeTrack).attached).toHaveLength(1);
     expect(screen.queryByRole("button", { name: /Mute/ })).not.toBeInTheDocument();
     // Only a screen: pointing at it opens nothing.
     const user = onFakeClock();
-    await user.hover(preview(/Watch your screen/));
+    await user.hover(preview(/Watch You · screen/));
     act(() => vi.advanceTimersByTime(1000));
     expect(screen.queryByRole("group")).not.toBeInTheDocument();
   });
@@ -100,7 +100,7 @@ describe("also live (specs 0104 and 0123)", () => {
     };
     render(<Harness others={[me]} />);
 
-    await user.hover(preview(/^Watch your screen/));
+    await user.hover(preview(/^Watch You · screen/));
     const row = await screen.findByRole("group", { name: "Your stream" });
     expect(
       within(row)
@@ -108,7 +108,7 @@ describe("also live (specs 0104 and 0123)", () => {
         .map((b) => b.getAttribute("aria-label")),
     ).toEqual(["Swap your screen and camera"]);
     await user.click(within(row).getByRole("button"));
-    expect(preview(/^Watch your camera/)).toBeInTheDocument();
+    expect(preview(/^Watch You · camera/)).toBeInTheDocument();
   });
 
   it("says Loading until someone's video arrives", () => {
@@ -117,13 +117,13 @@ describe("also live (specs 0104 and 0123)", () => {
     const { remote: _arriving, ...feed } = one.screen;
     const waiting: Sharer = { ...one, screen: feed };
     render(<Harness others={[waiting]} />);
-    expect(preview(/Watch Ana's screen/)).toHaveTextContent("Loading…");
+    expect(preview(/Watch Ana · screen/)).toHaveTextContent("Loading…");
   });
 
   it("puts a preview on the stage when clicked", async () => {
     const onPick = vi.fn();
     render(<Harness others={[ana()]} onPick={onPick} />);
-    await onFakeClock().click(preview(/Watch Ana's screen/));
+    await onFakeClock().click(preview(/Watch Ana · screen/));
     expect(onPick).toHaveBeenCalledWith("user-3");
   });
 
@@ -253,13 +253,13 @@ describe("also live (specs 0104 and 0123)", () => {
   it("stacks a screen and a camera: the other picture behind, and the swap trades them (spec 0131, AC-3)", async () => {
     const user = onFakeClock();
     render(<Harness others={[bruno()]} />);
-    expect(item(/^Watch Bruno's screen/)).toHaveAttribute("data-stacked");
-    expect(item(/^Watch Bruno's screen/).querySelector(':scope > span[aria-hidden="true"] video')).not.toBeNull();
+    expect(item(/^Watch Bruno · screen/)).toHaveAttribute("data-stacked");
+    expect(item(/^Watch Bruno · screen/).querySelector(':scope > span[aria-hidden="true"] video')).not.toBeNull();
 
     const row = await rowOf("Bruno", user);
     await user.click(within(row).getByRole("button", { name: "Swap Bruno's screen and camera" }));
-    expect(preview(/^Watch Bruno's camera/)).toBeInTheDocument();
-    expect(item(/^Watch Bruno's camera/)).toHaveAttribute("data-swapping");
+    expect(preview(/^Watch Bruno · camera/)).toBeInTheDocument();
+    expect(item(/^Watch Bruno · camera/)).toHaveAttribute("data-swapping");
   });
 
   it("lights a heard preview's picture while they speak; open, its voice button instead; muted, nothing (spec 0131, AC-4)", async () => {

@@ -20,7 +20,7 @@ const setup = (sharer = aSharer({ name: "Ana", hasVoice: true })) => {
 describe("one small preview", () => {
   it("puts its person on the stage on a click", async () => {
     const { onPick } = setup();
-    await userEvent.click(screen.getByRole("button", { name: "Watch Ana's screen" }));
+    await userEvent.click(screen.getByRole("button", { name: "Watch Ana · screen" }));
     expect(onPick).toHaveBeenCalledWith("user-7");
   });
 

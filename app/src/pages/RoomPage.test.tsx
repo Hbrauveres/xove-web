@@ -455,7 +455,7 @@ describe("room: the viewer's quality and volume", () => {
     await user.click(within(stage()).getByRole("menuitem", { name: "Settings" }));
     expect(screen.getByRole("dialog", { name: "Settings" })).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Watch Ana's screen/ }));
+    await user.click(screen.getByRole("button", { name: /Watch Ana · screen/ }));
     await waitFor(() => expect(screen.queryByRole("dialog", { name: "Settings" })).not.toBeInTheDocument());
   });
 });
@@ -532,7 +532,7 @@ describe("room: my screen and camera buttons on the player", () => {
     expect(row()).not.toContain("Mute the screen's sound");
 
     // Watching someone while live: what I hear at the left, my mic at the right.
-    await user.click(screen.getByRole("button", { name: /Watch Bruno's screen/ }));
+    await user.click(screen.getByRole("button", { name: /Watch Bruno · screen/ }));
     await screen.findByLabelText("Bruno's shared screen");
     expect(row()).toEqual(["Mute the screen's sound", "Bruno's mic is off", "Share your voice"]);
   });
@@ -870,7 +870,7 @@ describe("room: several people sharing", () => {
     const names = within(thumbnails())
       .getAllByRole("button", { name: /watch/i })
       .map((b) => b.getAttribute("aria-label"));
-    expect(names).toEqual(["Watch Ana's screen", "Watch Caio's camera"]);
+    expect(names).toEqual(["Watch Ana · screen", "Watch Caio · camera"]);
   });
 
   it("asks for Auto for the big player, and keeps a stream on Auto when it leaves it", async () => {
