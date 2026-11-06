@@ -72,7 +72,7 @@ describe("the stage", () => {
     expect(shapeOf()).toBeCloseTo(0.5625);
   });
 
-  it("swaps my own screen and camera from my facecam", () => {
+  it("swaps my own screen and camera from my small view", () => {
     const me = { ...aSharer({ id: "me", kinds: ["screen", "camera"] }), isMe: true };
     const mine = (feed: NonNullable<Sharer["screen"]>) => ({
       kind: feed.kind,

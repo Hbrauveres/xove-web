@@ -41,7 +41,7 @@ describe("what plays on the stage", () => {
     expect(screen.getByRole("status")).toHaveTextContent("Starting your share…");
   });
 
-  it("puts the other stream in the facecam, and swaps them on its button", async () => {
+  it("puts the other stream in the small view, and swaps them on its button", async () => {
     const big = aSharer({ kinds: ["screen", "camera"] });
     const props = renderPicture({ big, main: big.screen!, small: big.camera });
     expect(screen.getByRole("application", { name: /Bruno's camera/ })).toBeInTheDocument();

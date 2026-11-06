@@ -52,7 +52,7 @@ describe("the stage's view", () => {
     expect(container.querySelectorAll("i[data-at]")).toHaveLength(0);
   });
 
-  it("starts the facecam at the top right", () => {
+  it("starts the small view at the top right", () => {
     const big = aSharer({ kinds: ["screen", "camera"] });
     renderView({ big, main: big.screen ?? null, small: big.camera });
     // At the top right, clear of the round buttons and the fullscreen button.
@@ -60,7 +60,7 @@ describe("the stage's view", () => {
     expect(screen.getByRole("application", { name: /Bruno's camera/ }).style.top).toBe("4%");
   });
 
-  it("puts the camera in the facecam over the screen, on the picture, not on the box's dark sides", () => {
+  it("puts the camera in the small view over the screen, on the picture, not on the box's dark sides", () => {
     const big = aSharer({ kinds: ["screen", "camera"] });
     const { container } = renderView({ big, main: big.screen ?? null, small: big.camera });
     const facecam = screen.getByRole("application", { name: /Bruno's camera/ });
@@ -84,7 +84,7 @@ describe("the stage's view", () => {
     expect(screen.getByLabelText("Bruno's shared screen")).toBeInTheDocument();
   });
 
-  it("swaps the views with the facecam's button", () => {
+  it("swaps the views with the small view's button", () => {
     const big = aSharer({ kinds: ["screen", "camera"] });
     const { props } = renderView({ big, main: big.screen ?? null, small: big.camera });
     fireEvent.click(screen.getByRole("button", { name: "Swap views" }));
