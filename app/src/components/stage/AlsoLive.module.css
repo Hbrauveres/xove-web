@@ -136,18 +136,11 @@
   font-size: var(--text-xs);
 }
 
+/* The name, a label pill, in the picture's bottom-left corner. */
 .chip {
   position: absolute;
   left: var(--space-1-25);
   bottom: var(--space-1-25);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1-25);
-  padding: var(--space-0-5) var(--space-1-75) var(--space-0-5) var(--space-0-75);
-  border-radius: var(--radius-pill);
-  background: var(--glass);
-  color: var(--text);
-  font-size: var(--text-11);
 }
 
 /* The preview whose row is open keeps its hover ring, drawn inside so nothing clips it: one ring,

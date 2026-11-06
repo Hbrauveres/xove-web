@@ -1,3 +1,4 @@
+import { ActionPill } from "@shared/components/action-pill";
 import { Icon } from "@shared/components/icon";
 import { Tooltip } from "@shared/components/tooltip";
 import { toastStore } from "@shared/stores/toast-store";
@@ -13,31 +14,31 @@ import type { StageStartButtonsProps } from "./types/stage-start-buttons.types";
 export function StageStartButtons({ canShareScreen = true, onStart }: StageStartButtonsProps) {
   const screen = (
     <Tooltip key="screen" text={canShareScreen ? undefined : NO_SCREEN}>
-      <button
-        type="button"
-        className={canShareScreen ? styles.primary : styles.unavailable}
-        aria-disabled={canShareScreen ? undefined : true}
+      <ActionPill
+        size="l"
+        fill="red"
+        lead={canShareScreen ? "screen-on" : "screen-off"}
+        unavailable={!canShareScreen}
         aria-label="Share your screen"
         onClick={() =>
           canShareScreen ? onStart?.("screen") : toastStore.show(NO_SCREEN, <Icon name="screen-off" size={20} />)
         }
       >
-        <Icon name={canShareScreen ? "screen-on" : "screen-off"} size={20} />
         Screen
-      </button>
+      </ActionPill>
     </Tooltip>
   );
   const camera = (
-    <button
+    <ActionPill
       key="camera"
-      type="button"
-      className={canShareScreen ? styles.ghost : styles.primary}
+      size="l"
+      fill={canShareScreen ? "soft" : "red"}
+      lead="camera-on"
       aria-label="Turn on your camera"
       onClick={() => onStart?.("camera")}
     >
-      <Icon name="camera-on" size={20} />
       Camera
-    </button>
+    </ActionPill>
   );
   return <div className={styles.go}>{canShareScreen ? [screen, camera] : [camera, screen]}</div>;
 }

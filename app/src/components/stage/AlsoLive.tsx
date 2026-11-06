@@ -9,6 +9,7 @@ import { usePreviewTray } from "./usePreviewTray";
 import { useKeyboardLast } from "@features/room/hooks/use-keyboard-last.hook";
 import { seatsOpen } from "./NowWatching";
 import styles from "./AlsoLive.module.css";
+import { LabelPill } from "@shared/components/label-pill";
 import { Tooltip } from "@shared/components/tooltip";
 
 type Props = {
@@ -111,10 +112,9 @@ export function AlsoLive({ others, liveCount, places, free, onPick, hearOf, onHe
                     <span className={styles.loading}>Loading…</span>
                   )}
                 </span>
-                <span className={styles.chip}>
-                  <Face name={s.person.name} hue={s.person.hue} size={16} />
+                <LabelPill className={styles.chip} lead={<Face name={s.person.name} hue={s.person.hue} size={16} />}>
                   {name} · {what}
-                </span>
+                </LabelPill>
               </button>
             </li>
           );

@@ -1,4 +1,5 @@
 import { micState } from "@shared/utils/mic-state.util";
+import { ActionPill } from "@shared/components/action-pill";
 import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
 import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
@@ -115,18 +116,18 @@ export function ViewerBar(props: Props) {
         ) : (
           <span ref={menuAnchor} className={styles.anchor}>
             {/* The settings, opened from its menu, open over it (design decision 5). */}
-            <button
-              type="button"
+            <ActionPill
+              size="m"
+              fill="glass"
+              lead="dot"
               ref={anchor?.cog}
-              className={styles.golive}
               data-settings-anchor
               aria-expanded={menu}
               aria-haspopup="menu"
               onClick={() => setMenu((m) => !m)}
             >
-              <i aria-hidden="true" />
               Go live
-            </button>
+            </ActionPill>
             {menu && (
               <div className={styles.menu} role="menu">
                 <MenuRow

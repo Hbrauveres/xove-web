@@ -1,0 +1,14 @@
+/* A name over a picture: 22 px of the round buttons' glass, a face or an icon, then the words. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  height: var(--size-5-5);
+  padding: 0 var(--space-2) 0 var(--space-0-75);
+  border-radius: var(--radius-pill);
+  background: var(--glass);
+  color: var(--text);
+  font-size: var(--text-11);
+  font-weight: 500;
+  white-space: nowrap;
+}
