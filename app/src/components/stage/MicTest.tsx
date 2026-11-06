@@ -1,7 +1,7 @@
 import { IconButton } from "@shared/components/icon-button";
 import { useEffect, useState, type CSSProperties } from "react";
 import type { MediaTrack } from "@services/livekit-service";
-import { VoiceAudio } from "./VoiceAudio";
+import { StageVoiceAudio } from "@features/room/components/stage-voice-audio";
 import styles from "./MicTest.module.css";
 import { Tooltip } from "@shared/components/tooltip";
 
@@ -71,7 +71,7 @@ export function MicTest({
           </IconButton>
         </span>
       </Tooltip>
-      {hearing && track && <VoiceAudio track={track} volume={1} muted={false} />}
+      {hearing && track && <StageVoiceAudio track={track} volume={1} muted={false} />}
     </div>
   );
 }

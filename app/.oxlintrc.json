@@ -43,7 +43,14 @@
         "ignoreDefaultValues": true
       }
     ],
-    "typescript/ban-ts-comment": "error"
+    "typescript/ban-ts-comment": "error",
+    "jsx-a11y/no-noninteractive-tabindex": [
+      "error",
+      {
+        "roles": ["tabpanel", "application"]
+      }
+    ],
+    "jsx-a11y/media-has-caption": "off"
   },
   "overrides": [
     {

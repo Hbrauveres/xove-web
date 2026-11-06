@@ -1067,7 +1067,7 @@ describe("room: the facecam", () => {
     return server;
   }
 
-  const facecam = () => stage().querySelector("[data-facecam]") as HTMLElement | null;
+  const facecam = () => stage().querySelector("[aria-roledescription='facecam']") as HTMLElement | null;
 
   it("shows the screen big and the camera in the facecam on top of it", async () => {
     await brunoWithBoth();
@@ -1172,9 +1172,11 @@ describe("room: theater mode", () => {
     await user.click(screen.getByRole("button", { name: "Bruno turned on their camera, now: watch" }));
 
     // Camera big, screen in the facecam.
-    await waitFor(() => expect(stage().querySelector("[data-facecam]")).not.toBeNull());
+    await waitFor(() => expect(stage().querySelector("[aria-roledescription='facecam']")).not.toBeNull());
     expect(
-      within(stage().querySelector("[data-facecam]") as HTMLElement).getByLabelText("Bruno's shared screen"),
+      within(stage().querySelector("[aria-roledescription='facecam']") as HTMLElement).getByLabelText(
+        "Bruno's shared screen",
+      ),
     ).toBeInTheDocument();
     await waitFor(() => expect(screen.queryByRole("dialog", { name: "Activity" })).not.toBeInTheDocument());
   });

@@ -8,12 +8,13 @@ import type { StagePick } from "@features/room/types/stage.types";
 import type { AmbilightPrefs } from "@services/preferences-service";
 import type { Friend, LiveFeed, Sharer } from "@features/room/types/room-view.types";
 import { EmptyStage } from "./EmptyStage";
-import { Facecam, type FacecamPlace } from "./Facecam";
-import { ScreenVideo } from "./ScreenVideo";
-import { StageNotice } from "./StageNotice";
+import { StageFacecam } from "@features/room/components/stage-facecam";
+import { StageScreenVideo } from "@features/room/components/stage-screen-video";
+import { StageNotice } from "@features/room/components/stage-notice";
+import type { FacecamPlace } from "@features/room/types/facecam.types";
 import { StageOverlay } from "./StageOverlay";
 import { PlayerButtons, type StreamControls } from "./PlayerButtons";
-import { VoiceAudio } from "./VoiceAudio";
+import { StageVoiceAudio } from "@features/room/components/stage-voice-audio";
 import { ViewerBar } from "./ViewerBar";
 import { AlsoLive } from "./AlsoLive";
 import { Ambilight } from "./Ambilight";
@@ -261,12 +262,12 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
     const content = big.isMe ? (
       main.local ? (
         // My quality and mode are in my buttons' menus (spec 0098).
-        <ScreenVideo video={main.local} label={`Your ${what(main)}`} onVideo={setBigVideoEl} />
+        <StageScreenVideo video={main.local} label={`Your ${what(main)}`} onVideo={setBigVideoEl} />
       ) : (
         <StageNotice spinner title="Starting your share…" text="Your screen shows here in a moment." />
       )
     ) : main.remote ? (
-      <ScreenVideo
+      <StageScreenVideo
         video={main.remote.video}
         sound={big.sound}
         label={`${big.person.name}'s ${what(main)}`}
@@ -283,7 +284,7 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
         <div className={styles.slide}>
           {content}
           {small && (
-            <Facecam
+            <StageFacecam
               video={big.isMe ? small.local : small.remote?.video}
               label={big.isMe ? `Your ${what(small)}` : `${big.person.name}'s ${what(small)}`}
               place={facecamPlace}
@@ -402,11 +403,11 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
           {chromeLayer}
           {settingsPanel}
           {voices.map((v) => (
-            <VoiceAudio key={v.id} track={v.track} volume={v.volume} muted={v.muted} />
+            <StageVoiceAudio key={v.id} track={v.track} volume={v.volume} muted={v.muted} />
           ))}
           {/* The previews I turned on: their screens' sound, at their own volume. */}
           {previewSounds.map((p) => (
-            <VoiceAudio key={`sound-${p.id}`} track={p.track} volume={p.volume} muted={p.muted} />
+            <StageVoiceAudio key={`sound-${p.id}`} track={p.track} volume={p.volume} muted={p.muted} />
           ))}
           {/* A short message to the user, at the top centre of the player. */}
           <Toast />

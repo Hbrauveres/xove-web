@@ -1,6 +1,6 @@
 import { Face } from "@shared/components/face";
 import type { LiveFeed, Sharer } from "@features/room/types/room-view.types";
-import { ScreenVideo } from "./ScreenVideo";
+import { StageScreenVideo } from "@features/room/components/stage-screen-video";
 import { stackOf, useSwapping } from "./stack";
 import { HearToggles, type Hearing } from "./HearToggles";
 import { PreviewTray } from "./PreviewTray";
@@ -72,7 +72,7 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
               {/* Someone sharing a screen and a camera: the other picture peeks out behind. */}
               {both && (
                 <span className={styles.behind} aria-hidden="true">
-                  {backVideo && <ScreenVideo key={back!.kind} video={backVideo} label="" />}
+                  {backVideo && <StageScreenVideo key={back!.kind} video={backVideo} label="" />}
                 </span>
               )}
               <button
@@ -101,7 +101,7 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
               >
                 <span className={styles.video} data-picture>
                   {video ? (
-                    <ScreenVideo
+                    <StageScreenVideo
                       video={video}
                       label={`${s.isMe ? "Your" : `${s.person.name}'s`} ${what === "screen" ? "shared screen" : "camera"}`}
                     />

@@ -1,4 +1,4 @@
-/* The small window over the big player (spec 0060). */
+/* The small window over the big player. */
 .facecam {
   position: absolute;
   z-index: var(--layer-over);
