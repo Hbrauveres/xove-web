@@ -72,13 +72,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/stage/Ambilight.tsx",
-    "count": 3,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/stage/CornerGlow.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
@@ -213,7 +206,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/Stage.tsx",
-    "count": 18,
+    "count": 17,
     "owner": "#190 room: stage, Stage split"
   },
   {
@@ -278,13 +271,6 @@
     "file": "src/components/stage/ViewerBar.tsx",
     "count": 6,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/media/ambilight.ts",
-    "count": 3,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -439,27 +425,6 @@
     "file": "src/components/stage/AlsoLive.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/Ambilight.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/Ambilight.test.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/Ambilight.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -740,20 +705,6 @@
     "file": "src/components/stage/ViewerBar.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/ambilight.test.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/media/ambilight.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -961,13 +912,6 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/components/stage/Ambilight.tsx",
-    "count": 7,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
     "file": "src/components/stage/CornerGlow.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
@@ -1032,7 +976,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/stage/Stage.tsx",
-    "count": 8,
+    "count": 7,
     "owner": "#190 room: stage, Stage split"
   },
   {
@@ -1076,13 +1020,6 @@
     "file": "src/components/stage/ViewerBar.tsx",
     "count": 7,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/media/ambilight.ts",
-    "count": 13,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -1195,27 +1132,6 @@
     "file": "src/components/stage/AlsoLive.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/Ambilight.module.css",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/Ambilight.test.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/Ambilight.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "code",
@@ -1500,20 +1416,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/media/ambilight.test.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/media/ambilight.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/pages/AdminPage.module.css",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
@@ -1703,13 +1605,6 @@
   {
     "tool": "lint",
     "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/stage/Ambilight.tsx",
-    "count": 2,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
     "file": "src/components/stage/EmptyStage.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
@@ -1794,13 +1689,6 @@
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/stage/Ambilight.tsx",
-    "count": 6,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
     "file": "src/components/stage/MicTest.tsx",
     "count": 3,
     "owner": "#193 settings"
@@ -1853,13 +1741,6 @@
     "file": "src/components/stage/ViewerBar.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/media/ambilight.ts",
-    "count": 22,
-    "owner": "#190 room: stage, Stage split"
   },
   {
     "tool": "lint",
@@ -2024,27 +1905,6 @@
   },
   {
     "tool": "tsc",
-    "rule": "TS18048",
-    "file": "src/media/ambilight.test.ts",
-    "count": 3,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2322",
-    "file": "src/components/stage/Ambilight.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2322",
-    "file": "src/media/ambilight.test.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
     "rule": "TS2345",
     "file": "src/components/stage/EmptyStage.test.tsx",
     "count": 1,
@@ -2186,13 +2046,6 @@
   {
     "tool": "tsc",
     "rule": "TS2532",
-    "file": "src/media/ambilight.test.ts",
-    "count": 5,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
     "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
@@ -2214,22 +2067,8 @@
   {
     "tool": "unused",
     "rule": "exports",
-    "file": "src/components/stage/Ambilight.tsx",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
     "file": "src/components/stage/staticBands.ts",
     "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "unused",
-    "rule": "exports",
-    "file": "src/media/ambilight.ts",
-    "count": 2,
     "owner": "#190 room: stage, Stage split"
   },
   {

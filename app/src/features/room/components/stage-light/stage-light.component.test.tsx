@@ -1,75 +1,16 @@
 import { act, render } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { easeFor, glowLayout } from "../../media/ambilight";
-import { Ambilight, EASE_MS, SLOW_EASE, SLOW_SAMPLE_MS } from "./Ambilight";
-
-type Recorded = {
-  pictureDraws: number;
-  pixelReads: number;
-  blurs: string[];
-  composites: string[];
-  masks: number;
-  alphas: number[];
-};
-
-/**
- * jsdom has no canvas: a 2D context that records what the ambilight asks of it, in `rec`.
- * `pictureDraws` counts updates (each draws the video nine times); `getImageData` must never be called.
- */
-function fakeContext(rec: Recorded) {
-  return function (this: HTMLCanvasElement) {
-    return {
-      canvas: this,
-      _alpha: 1,
-      set globalAlpha(a: number) {
-        this._alpha = a;
-        rec.alphas.push(a);
-      },
-      get globalAlpha() {
-        return this._alpha;
-      },
-      _filter: "none",
-      set filter(f: string) {
-        this._filter = f;
-        if (f.startsWith("blur")) rec.blurs.push(f);
-      },
-      get filter() {
-        return this._filter;
-      },
-      set globalCompositeOperation(op: string) {
-        rec.composites.push(op);
-      },
-      clearRect: () => {},
-      drawImage: (source: unknown) => {
-        if (source instanceof HTMLVideoElement) rec.pictureDraws++;
-      },
-      createImageData: (w: number, h: number) => ({ width: w, height: h, data: new Uint8ClampedArray(w * h * 4) }),
-      putImageData: () => {
-        rec.masks++;
-      },
-      getImageData: () => {
-        rec.pixelReads++;
-        return { data: new Uint8ClampedArray(4) };
-      },
-    };
-  };
-}
-
-function playingVideo(playing = true) {
-  const video = document.createElement("video");
-  Object.defineProperty(video, "paused", { configurable: true, get: () => !playing });
-  Object.defineProperty(video, "readyState", { configurable: true, get: () => 4 });
-  Object.defineProperty(video, "videoWidth", { configurable: true, get: () => 1920 });
-  Object.defineProperty(video, "videoHeight", { configurable: true, get: () => 1080 });
-  return video;
-}
+import { playingVideo, recordCanvases } from "../../../../testing/factories/canvas.factory";
+import { EASE_MS, SLOW_EASE, SLOW_SAMPLE_MS } from "./constants/stage-light.constants";
+import { StageLight } from "./stage-light.component";
+import { easeFor } from "./utils/ease.util";
+import { glowLayout } from "./utils/glow-layout.util";
 
 /**
  * Each test's own canvas, tab and clock: fake timers (animation frames included), a recorded 2D
  * context, and the tab's visibility to set. `updates()` is how many times the light was drawn.
  */
 function setup() {
-  const rec: Recorded = { pictureDraws: 0, pixelReads: 0, blurs: [], composites: [], masks: 0, alphas: [] };
   const tab = { hidden: false };
   vi.useFakeTimers({
     toFake: [
@@ -81,7 +22,7 @@ function setup() {
       "performance",
     ],
   });
-  vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockImplementation(fakeContext(rec) as never);
+  const rec = recordCanvases();
   vi.spyOn(document, "hidden", "get").mockImplementation(() => tab.hidden);
   return { rec, tab, updates: () => rec.pictureDraws / 9 };
 }
@@ -91,10 +32,10 @@ const advance = (ms: number) =>
     vi.advanceTimersByTime(ms);
   });
 
-describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () => {
+describe("the stage light", () => {
   it("updates once per screen refresh while the video plays, about 60 times a second", () => {
     const { updates } = setup();
-    render(<Ambilight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
+    render(<StageLight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
     advance(1000);
     expect(updates()).toBeGreaterThanOrEqual(55);
     expect(updates()).toBeLessThanOrEqual(63);
@@ -102,7 +43,7 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
 
   it("never reads the picture's pixels: it only draws, so any stream gets its light", () => {
     const { rec, updates } = setup();
-    render(<Ambilight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
+    render(<StageLight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
     advance(500);
     expect(rec.pixelReads).toBe(0);
     expect(updates()).toBeGreaterThan(0);
@@ -110,7 +51,7 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
 
   it("blurs the edges once per update, then cuts them with the fade mask made once", () => {
     const { rec, updates } = setup();
-    render(<Ambilight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
+    render(<StageLight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
     advance(200);
     expect(rec.masks).toBe(1);
     expect(rec.blurs.length).toBeGreaterThanOrEqual(updates());
@@ -119,7 +60,7 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
 
   it("draws nothing while the tab is hidden, and starts again when it's back", () => {
     const { tab, updates } = setup();
-    render(<Ambilight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
+    render(<StageLight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
     tab.hidden = true;
     act(() => {
       document.dispatchEvent(new Event("visibilitychange"));
@@ -139,13 +80,13 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
   it("draws nothing, and fades the light out, when the video is paused; no light without a video", () => {
     const { updates } = setup();
     const { container, rerender } = render(
-      <Ambilight video={playingVideo(false)} prefs={{ on: true, brightness: 0.9 }} />,
+      <StageLight video={playingVideo(false)} prefs={{ on: true, brightness: 0.9 }} />,
     );
     advance(1000);
     expect(updates()).toBe(0);
     expect(container.querySelector("canvas")).toHaveStyle({ opacity: "0" });
 
-    rerender(<Ambilight video={null} prefs={{ on: true, brightness: 0.9 }} />);
+    rerender(<StageLight video={null} prefs={{ on: true, brightness: 0.9 }} />);
     expect(container.querySelector("canvas")).toBeNull();
   });
 
@@ -154,7 +95,7 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
     const video = playingVideo();
     let playing = true;
     Object.defineProperty(video, "paused", { configurable: true, get: () => !playing });
-    const { container } = render(<Ambilight video={video} prefs={{ on: true, brightness: 0.9 }} />);
+    const { container } = render(<StageLight video={video} prefs={{ on: true, brightness: 0.9 }} />);
     advance(500);
     const before = updates();
 
@@ -171,7 +112,7 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
 
   it("draws nothing, and fades out, when switched off", () => {
     const { updates } = setup();
-    const { container } = render(<Ambilight video={playingVideo()} prefs={{ on: false, brightness: 0.9 }} />);
+    const { container } = render(<StageLight video={playingVideo()} prefs={{ on: false, brightness: 0.9 }} />);
     advance(1000);
     expect(updates()).toBe(0);
     expect(container.querySelector("canvas")).toHaveStyle({ opacity: "0" });
@@ -179,11 +120,11 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
 
   it("shows the light at the chosen brightness", () => {
     setup();
-    const { container, rerender } = render(<Ambilight video={playingVideo()} prefs={{ on: true, brightness: 0.4 }} />);
+    const { container, rerender } = render(<StageLight video={playingVideo()} prefs={{ on: true, brightness: 0.4 }} />);
     advance(200);
     expect(container.querySelector("canvas")).toHaveStyle({ opacity: "0.4" });
 
-    rerender(<Ambilight video={playingVideo()} prefs={{ on: true, brightness: 1 }} />);
+    rerender(<StageLight video={playingVideo()} prefs={{ on: true, brightness: 1 }} />);
     expect(container.querySelector("canvas")).toHaveStyle({ opacity: "1" });
   });
 
@@ -193,7 +134,7 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
       (query: string) =>
         ({ matches: query.includes("reduce"), addEventListener() {}, removeEventListener() {} }) as never,
     );
-    render(<Ambilight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
+    render(<StageLight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
     advance(1000);
     expect(SLOW_SAMPLE_MS).toBeGreaterThanOrEqual(400);
     expect(updates()).toBeGreaterThanOrEqual(2);
@@ -204,7 +145,7 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
 
   it("jumps to the picture the first time, then eases by the time between updates", () => {
     const { rec } = setup();
-    render(<Ambilight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
+    render(<StageLight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
     advance(200);
     expect(rec.alphas[0]).toBe(1);
     const expected = easeFor(1000 / 60, EASE_MS);
@@ -215,14 +156,14 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
     const { updates } = setup();
     const video = playingVideo();
     Object.defineProperty(video, "videoWidth", { configurable: true, get: () => 0 });
-    render(<Ambilight video={video} prefs={{ on: true, brightness: 0.9 }} />);
+    render(<StageLight video={video} prefs={{ on: true, brightness: 0.9 }} />);
     advance(500);
     expect(updates()).toBe(0);
   });
 
   it("stops drawing once it's gone", () => {
     const { updates } = setup();
-    const { unmount } = render(<Ambilight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
+    const { unmount } = render(<StageLight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} />);
     advance(200);
     unmount();
     const before = updates();
@@ -230,10 +171,10 @@ describe("ambilight drawn by the graphics pipeline (specs 0104 and 0118)", () =>
     expect(updates()).toBe(before);
   });
 
-  it("sizes and places its canvas from the stage's shape, the margin included (specs 0107 and 0118)", () => {
+  it("sizes and places its canvas from the stage's shape, the margin included", () => {
     setup();
     const { container } = render(
-      <Ambilight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} shape={9 / 16} />,
+      <StageLight video={playingVideo()} prefs={{ on: true, brightness: 0.9 }} shape={9 / 16} />,
     );
     const l = glowLayout(36, 64);
     const light = container.querySelector("canvas")!;

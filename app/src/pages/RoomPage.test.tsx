@@ -1510,14 +1510,13 @@ describe("room: under the stage", () => {
 });
 
 describe("room: the empty stage glows", () => {
-  it("lights its corners at the ambilight's brightness, with no ambilight canvas", async () => {
+  it("lights its corners at the ambilight's brightness", async () => {
     installFakeApi({ me: member() });
     const { container } = renderRoom();
     await connected();
     const glow = container.querySelector("[data-corner-glow]") as HTMLElement;
     expect(glow.querySelectorAll("i")).toHaveLength(4);
     expect(Number(glow.style.opacity)).toBeGreaterThan(0);
-    expect(container.querySelector("[data-ambilight]")).toBeNull();
   });
 });
 

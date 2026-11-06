@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { reducedMotion } from "@shared/utils/reduced-motion.util";
 import { CLOSE_MS } from "../constants/picker.constants";
 
 /** The list stays drawn while it rolls back, and unrolls a frame after it's drawn. */
@@ -7,8 +8,7 @@ export function useListRoll(open: boolean) {
   if (open && !drawn) setDrawn(true);
   useEffect(() => {
     if (open || !drawn) return;
-    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    const gone = window.setTimeout(() => setDrawn(false), reduce ? 0 : CLOSE_MS);
+    const gone = window.setTimeout(() => setDrawn(false), reducedMotion() ? 0 : CLOSE_MS);
     return () => window.clearTimeout(gone);
   }, [open, drawn]);
   const [unrolled, setUnrolled] = useState(false);

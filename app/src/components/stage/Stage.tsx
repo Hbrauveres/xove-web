@@ -17,7 +17,7 @@ import { PlayerButtons, type StreamControls } from "./PlayerButtons";
 import { StageVoiceAudio } from "@features/room/components/stage-voice-audio";
 import { ViewerBar } from "./ViewerBar";
 import { AlsoLive } from "./AlsoLive";
-import { Ambilight } from "./Ambilight";
+import { StageLight } from "@features/room/components/stage-light";
 import { CornerGlow } from "./CornerGlow";
 import { StaticGlow } from "./StaticGlow";
 import { NowWatching } from "./NowWatching";
@@ -26,7 +26,7 @@ import { Toast } from "@shared/components/toast";
 import { Tooltip } from "@shared/components/tooltip";
 import { useVideoShape } from "@features/room/hooks/use-video-shape.hook";
 import { useKeyboardLast } from "@features/room/hooks/use-keyboard-last.hook";
-import { gridFor } from "../../media/ambilight";
+import { gridKey } from "@features/room/utils/light-grid.util";
 import styles from "./Stage.module.css";
 
 /** The settings over the cog sit this far above the round buttons (design decision 9). */
@@ -58,12 +58,6 @@ export const CHROME_IDLE_MS = 2500;
 /** Watching a camera: there's no screen to hear. */
 const NO_SCREEN_SOUND = "No screen sound";
 const NO_SOUND_HERE = "No sound in this stream";
-
-/** The light's grid for a shape: a new grid starts a fresh light (spec 0107). */
-const gridKey = (shape: number) => {
-  const { cols, rows } = gridFor(shape);
-  return `${cols}x${rows}`;
-};
 
 const what = (feed: LiveFeed) => (feed.kind === "camera" ? "camera" : "shared screen");
 
@@ -392,7 +386,7 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
             {!big && <CornerGlow prefs={ambilight} />}
             {/* Nobody live: the static's bands light the wall round the stage. */}
             {!big && <StaticGlow prefs={ambilight} />}
-            <Ambilight
+            <StageLight
               key={big ? `${big.person.id}|${stage.mainKind}|${gridKey(shape)}` : "none"}
               video={big ? bigVideoEl : null}
               prefs={ambilight}
