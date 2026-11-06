@@ -5,7 +5,7 @@ import { Link } from "react-router";
 import { api, ApiError } from "@services/xove-api-service";
 import type { AccessRequestView, MemberView } from "@services/xove-api-service";
 import { Button } from "@shared/components/button";
-import { timeAgo } from "@features/admin/utils/time-ago.util";
+import { timeAgo } from "@shared/utils/time-ago.util";
 import { Wordmark } from "@shared/components/wordmark";
 import { ErrorNotice } from "@shared/components/error-notice";
 import styles from "./AdminPage.module.css";

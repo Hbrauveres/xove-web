@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
 import type { StreamKind } from "@services/xove-api-service";
 import type { ActivityEvent, Friend } from "@features/room/types/room-view.types";
 import { Icon } from "@shared/components/icon";
 import { activityIconOf } from "@features/room/utils/activity-icon.util";
-import { describeEvent, shortAgo } from "./activityText";
+import { describeEvent } from "@features/room/utils/activity-text.util";
+import { shortAgo } from "@shared/utils/time-ago.util";
+import { useNow } from "@features/room/hooks/use-now.hook";
+import { ACTIVITY_TICK_MS } from "@features/room/constants/activity.constants";
 import styles from "./ActivityList.module.css";
 
 type Props = {
@@ -25,11 +27,7 @@ type Props = {
  * that's still live is a button: WATCH puts it on the stage, WATCHING marks the one there.
  */
 export function ActivityList({ events, people, meId, unseen, isLive, watching, onWatch }: Props) {
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const timer = window.setInterval(() => setNow(Date.now()), 15000);
-    return () => window.clearInterval(timer);
-  }, []);
+  const now = useNow(ACTIVITY_TICK_MS);
   const nameOf = (id: string) => people.find((p) => p.id === id)?.name ?? "Someone";
   const newestFirst = [...events].reverse();
 

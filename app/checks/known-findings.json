@@ -79,13 +79,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/room/activityText.ts",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/room/PeopleButton.module.css",
     "count": 1,
     "owner": "#189 room: header"
@@ -556,13 +549,6 @@
     "tool": "code",
     "rule": "naming",
     "file": "src/components/room/ActivityPill.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/activityText.ts",
     "count": 1,
     "owner": "#189 room: header"
   },
@@ -1164,13 +1150,6 @@
   {
     "tool": "code",
     "rule": "noTest",
-    "file": "src/components/room/activityText.ts",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
     "file": "src/components/room/RoomFooter.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
@@ -1571,13 +1550,6 @@
     "tool": "code",
     "rule": "structure",
     "file": "src/components/room/ActivityPill.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/activityText.ts",
     "count": 1,
     "owner": "#189 room: header"
   },
@@ -2378,27 +2350,6 @@
     "file": "src/pages/RoomPage.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/room/ActivityList.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/room/ActivityPill.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/room/activityText.ts",
-    "count": 5,
-    "owner": "#189 room: header"
   },
   {
     "tool": "lint",

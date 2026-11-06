@@ -1,13 +1,16 @@
 import { Face } from "@shared/components/face";
 import { Icon } from "@shared/components/icon";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import type { StreamKind } from "@services/xove-api-service";
 import type { ConnectionState } from "@services/livekit-service";
 import type { ActivityEvent, Friend } from "@features/room/types/room-view.types";
 import { Dropdown } from "@shared/components/dropdown";
 import { PanelSection } from "@shared/components/panel-section";
 import { ActivityList } from "./ActivityList";
-import { describeEvent, shortAgo } from "./activityText";
+import { describeEvent } from "@features/room/utils/activity-text.util";
+import { shortAgo } from "@shared/utils/time-ago.util";
+import { useNow } from "@features/room/hooks/use-now.hook";
+import { ACTIVITY_TICK_MS } from "@features/room/constants/activity.constants";
 import styles from "./ActivityPill.module.css";
 
 type Props = {
@@ -33,11 +36,7 @@ export function ActivityPill({ events, people, meId, connection, isLive, watchin
   const [seenId, setSeenId] = useState<string | null>(null);
   // The ones that were new when the list opened: they stay highlighted while it's open.
   const [newWhenOpened, setNewWhenOpened] = useState<ReadonlySet<string>>(new Set());
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const timer = window.setInterval(() => setNow(Date.now()), 15000);
-    return () => window.clearInterval(timer);
-  }, []);
+  const now = useNow(ACTIVITY_TICK_MS);
 
   const latest = events.at(-1);
   const seenAt = seenId === null ? -1 : events.findIndex((e) => e.id === seenId);

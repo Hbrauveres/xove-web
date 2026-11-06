@@ -3,7 +3,6 @@ import { Face } from "@shared/components/face";
 import { IconButton } from "@shared/components/icon-button";
 import { useRef, useState } from "react";
 import { Link } from "react-router";
-import { saveAmbilight } from "@services/preferences-service";
 import type { AmbilightPrefs } from "@services/preferences-service";
 import type { ConnectionState } from "@services/livekit-service";
 import type { Friend } from "@features/room/types/room-view.types";
@@ -35,10 +34,7 @@ const STATE: Record<ConnectionState, string> = {
 export function AccountButton({ me, isAdmin, connection, ambilight, onAmbilightChange, onSignOut }: Props) {
   const [open, setOpen] = useState(false);
   const anchor = useRef<HTMLDivElement>(null);
-  const change = (next: AmbilightPrefs) => {
-    saveAmbilight(next);
-    onAmbilightChange(next);
-  };
+  const change = onAmbilightChange;
 
   return (
     <div ref={anchor} className={styles.wrap}>

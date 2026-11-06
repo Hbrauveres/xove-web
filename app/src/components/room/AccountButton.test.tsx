@@ -2,7 +2,6 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
 import { describe, expect, it, vi } from "vitest";
-import { loadAmbilight } from "@services/preferences-service";
 import type { ConnectionState } from "@services/livekit-service";
 import type { Friend } from "@features/room/types/room-view.types";
 import { AccountButton } from "./AccountButton";
@@ -60,13 +59,12 @@ describe("account button (spec 0104)", () => {
     expect(screen.getByText("Member")).toBeInTheDocument();
   });
 
-  it("switches the ambilight and sets its brightness, at once and for next time", async () => {
+  it("switches the ambilight and sets its brightness, at once", async () => {
     const { user, onAmbilightChange } = setup();
     await user.click(screen.getByRole("button", { name: /account/ }));
 
     await user.click(screen.getByRole("switch", { name: "Ambilight" }));
     expect(onAmbilightChange).toHaveBeenLastCalledWith({ on: false, brightness: 0.9 });
-    expect(loadAmbilight()).toEqual({ on: false, brightness: 0.9 });
     // Space toggles it too, from the keyboard (the test's prefs stay on, so it asks for off again).
     const calls = onAmbilightChange.mock.calls.length;
     screen.getByRole("switch", { name: "Ambilight" }).focus();
@@ -75,6 +73,5 @@ describe("account button (spec 0104)", () => {
 
     fireEvent.change(screen.getByRole("slider", { name: "Ambilight brightness" }), { target: { value: "0.85" } });
     expect(onAmbilightChange).toHaveBeenLastCalledWith({ on: true, brightness: 0.85 });
-    expect(loadAmbilight().brightness).toBe(0.85);
   });
 });

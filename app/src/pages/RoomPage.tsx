@@ -9,7 +9,7 @@ import { PeopleButton } from "../components/room/PeopleButton";
 import { RoomFooter } from "../components/room/RoomFooter";
 import { RoomHeader } from "../components/room/RoomHeader";
 import { WaitingRoom } from "../components/room/WaitingRoom";
-import { loadAmbilight } from "@services/preferences-service";
+import { useAmbilight } from "@features/room/hooks/use-ambilight.hook";
 import { canShareScreen } from "@services/media-devices-service";
 import { SettingsPanel } from "../components/stage/SettingsPanel";
 import { Stage } from "../components/stage/Stage";
@@ -126,7 +126,7 @@ function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
   // In fullscreen only the player can be seen: the setup window and errors go inside it (spec 0101).
   const fullscreen = useFullscreenElement();
   const overPage = useFullscreenHost();
-  const [ambilight, setAmbilight] = useState(loadAmbilight);
+  const [ambilight, setAmbilight] = useAmbilight();
   // What each person shares, for the people panel; and whether a stream is still live.
   const sharing = useMemo(
     () =>
