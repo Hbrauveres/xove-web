@@ -1424,7 +1424,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/stage/ViewerBar.tsx",
-    "count": 9,
+    "count": 7,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -2768,7 +2768,7 @@
     "tool": "tsc",
     "rule": "TS2375",
     "file": "src/components/stage/ViewerBar.tsx",
-    "count": 3,
+    "count": 1,
     "owner": "#191 today's stage pieces"
   },
   {
