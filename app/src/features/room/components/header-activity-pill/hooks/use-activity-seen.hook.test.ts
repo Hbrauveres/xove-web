@@ -23,4 +23,11 @@ describe("what's new in the activity", () => {
     hook.rerender({ events: [ev("a"), ev("b"), ev("c")] });
     expect(hook.result.current.fresh).toBe(1);
   });
+
+  it("doesn't count an event that comes in while the list is open", () => {
+    const hook = renderHook(({ events }) => useActivitySeen(events), { initialProps: { events: [ev("a")] } });
+    act(() => hook.result.current.toggle());
+    hook.rerender({ events: [ev("a"), ev("b")] });
+    expect(hook.result.current.fresh).toBe(0);
+  });
 });
