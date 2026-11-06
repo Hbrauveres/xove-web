@@ -130,13 +130,12 @@ describe("the bar over someone else's stream (spec 0123): who's talking", () => 
   it("lights the voice while they speak; silent, it's faded; muted, never lit", async () => {
     const { rerender } = render(<Bruno />);
     const voice = () => screen.getByRole("button", { name: /Bruno's voice/ });
-    expect(voice()).toHaveAttribute("data-silent");
-    expect(voice()).not.toHaveAttribute("data-talking");
+    expect(voice()).toHaveAttribute("data-cue", "silent");
+    expect(voice()).not.toHaveAttribute("data-cue", "talking");
     rerender(<Bruno talking />);
-    expect(voice()).toHaveAttribute("data-talking");
+    expect(voice()).toHaveAttribute("data-cue", "talking");
     await userEvent.setup().click(voice());
-    expect(voice()).not.toHaveAttribute("data-talking");
-    expect(voice()).not.toHaveAttribute("data-silent");
+    expect(voice()).not.toHaveAttribute("data-cue");
   });
 });
 

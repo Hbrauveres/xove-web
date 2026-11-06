@@ -2,10 +2,12 @@ import { micState } from "@shared/utils/mic-state.util";
 import { ActionPill } from "@shared/components/action-pill";
 import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
-import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
+import { useRef, useState, type Dispatch, type SetStateAction } from "react";
 import type { StreamKind } from "@services/xove-api-service";
 import { Slider } from "@shared/components/slider";
 import { useSettingsAnchor } from "@features/room/hooks/use-settings-anchor.hook";
+import { useHoldOrRest } from "@features/room/hooks/use-hold-or-rest.hook";
+import { StageSoundButton } from "@features/room/components/stage-sound-button";
 import styles from "./ViewerBar.module.css";
 import { Tooltip } from "@shared/components/tooltip";
 import { MenuRow } from "@shared/components/menu-row";
@@ -14,11 +16,6 @@ import { floatingStore, useFloating } from "@shared/stores/floating-store";
 /** One sound you hear from the person you watch (spec 0123): its volume and mute. */
 export type Sound = { volume: number; muted: boolean };
 export type HearSound = Sound & { unavailable?: string; onChange: (s: Sound) => void };
-
-/** How long a resting mouse waits before the slider unrolls, as the drop-ups (spec 0107). */
-const REST_MS = 120;
-/** The slider closes by itself after this long untouched. */
-const IDLE_MS = 4000;
 
 type Props = {
   /** What you hear from them, at the left: their screen's sound and their voice. */
@@ -169,7 +166,7 @@ export function ViewerBar(props: Props) {
   );
 }
 
-/** One sound: a click mutes it; resting the mouse on it opens its own slider. */
+/** One sound: a click mutes it; resting the mouse on it opens its own slider, over it. */
 function Hear({
   kind,
   s,
@@ -190,77 +187,41 @@ function Hear({
   name?: string;
   talking?: boolean;
 }) {
-  const rest = useRef<number | undefined>(undefined);
-  const leave = useRef<number | undefined>(undefined);
-  const idle = useRef<number | undefined>(undefined);
   // Closes this sound's slider only if it's still the open one: moving on to the other sound, its
-  // timers must not close the slider just opened there (spec 0133).
-  const closeMine = () => setOpen((now) => (now === kind ? null : now));
-  const restart = () => {
-    window.clearTimeout(idle.current);
-    idle.current = window.setTimeout(closeMine, IDLE_MS);
-  };
+  // timers must not close the slider just opened there.
+  const timing = useHoldOrRest(() => setOpen((now) => (now === kind ? null : now)));
   const show = () => {
-    // Never over what the person opened themselves, on a rest or the keyboard's focus.
+    // Never over what the person opened themselves.
     if (s.unavailable || !floatingStore.canRest()) return;
     setOpen(kind);
-    restart();
+    timing.touch();
   };
-  useEffect(() => () => [rest, leave, idle].forEach((t) => window.clearTimeout(t.current)), []);
-
-  const silent = Boolean(s.unavailable) || s.muted || s.volume === 0;
-  const label =
-    s.unavailable ??
-    (kind === "sound"
-      ? `${s.muted ? "Unmute" : "Mute"} the screen's sound`
-      : `${s.muted ? "Unmute" : "Mute"} ${name}'s voice`);
-  const icon = kind === "sound" ? (silent ? "volume-off" : "sound") : silent ? "voice-off" : "voice";
+  const tip = kind === "sound" ? "Screen sound" : `${name}'s voice`;
+  const what = kind === "sound" ? "the screen's sound" : `${name}'s voice`;
   return (
     <span
       ref={anchorRef}
       className={styles.anchor}
-      // A voice I hear never fades with the controls: its speaking cue stays (spec 0131).
+      // A voice I hear never fades with the controls: its speaking cue stays.
       data-stays={(kind === "voice" && !s.unavailable && !s.muted) || undefined}
-      onPointerEnter={() => {
-        window.clearTimeout(leave.current);
-        rest.current = window.setTimeout(show, REST_MS);
-      }}
-      onPointerLeave={() => {
-        window.clearTimeout(rest.current);
-        leave.current = window.setTimeout(closeMine, 300);
-      }}
+      onPointerEnter={() => timing.rest(show)}
+      onPointerLeave={() => timing.leave(true)}
     >
-      <Tooltip
-        text={kind === "sound" ? (s.unavailable ?? "Screen sound") : (s.unavailable ?? `${name}'s voice`)}
-        hidden={quiet}
-      >
-        <IconButton
-          variant="round"
-          size="m"
-          className={styles.round}
-          data-voice={kind === "voice" || undefined}
-          data-talking={(kind === "voice" && talking && !silent) || undefined}
-          data-silent={(kind === "voice" && !talking && !silent) || undefined}
-          aria-disabled={s.unavailable ? true : undefined}
-          aria-pressed={s.unavailable ? undefined : s.muted}
-          aria-label={label}
-          onFocus={(e) => {
-            try {
-              if (e.currentTarget.matches(":focus-visible")) show();
-            } catch {
-              /* old browsers */
-            }
-          }}
-          onClick={() => {
-            // Unavailable: its tooltip says why.
-            if (s.unavailable) return;
-            s.onChange({ ...s, muted: !s.muted });
-            if (open) restart();
-          }}
-        >
-          <Icon name={icon} size={20} />
-        </IconButton>
-      </Tooltip>
+      <StageSoundButton
+        kind={kind}
+        muted={s.muted}
+        volume={s.volume}
+        unavailable={s.unavailable}
+        talking={talking}
+        label={s.unavailable ?? `${s.muted ? "Unmute" : "Mute"} ${what}`}
+        tip={tip}
+        quiet={quiet}
+        onKeyboardFocus={show}
+        onToggle={() => {
+          s.onChange({ ...s, muted: !s.muted });
+          if (open) timing.touch();
+        }}
+      />
       {!s.unavailable && (
         <span className={styles.slider} data-open={open || undefined} data-muted={s.muted || undefined} inert={!open}>
           <Slider
@@ -273,7 +234,7 @@ function Hear({
             value={s.volume}
             onChange={(e) => {
               s.onChange({ volume: Number(e.target.value), muted: false });
-              restart();
+              timing.touch();
             }}
           />
         </span>

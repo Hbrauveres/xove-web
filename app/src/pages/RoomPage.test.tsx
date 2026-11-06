@@ -430,15 +430,18 @@ describe("room: the viewer's quality and volume", () => {
     });
     const button = await within(stage()).findByRole("button", { name: "Mute Bruno's voice" });
     await waitFor(() => expect(voice.attached).toHaveLength(1));
-    expect(button).not.toHaveAttribute("data-talking");
+    expect(button).not.toHaveAttribute("data-cue", "talking");
     act(() => {
       lastRoom().setSpeaking("user-7", true);
     });
-    await waitFor(() => expect(button).toHaveAttribute("data-talking"));
+    await waitFor(() => expect(button).toHaveAttribute("data-cue", "talking"));
 
     await user.click(button);
     expect((voice.attached[0] as HTMLAudioElement).muted).toBe(true);
-    expect(within(stage()).getByRole("button", { name: "Unmute Bruno's voice" })).not.toHaveAttribute("data-talking");
+    expect(within(stage()).getByRole("button", { name: "Unmute Bruno's voice" })).not.toHaveAttribute(
+      "data-cue",
+      "talking",
+    );
   });
 
   it("closes the settings when another stream takes the stage", async () => {

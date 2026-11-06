@@ -39,7 +39,7 @@ describe("a preview's two toggles (spec 0123)", () => {
 
   it("lights the voice while they speak, never once I've muted it (who's talking)", () => {
     const { rerender } = render(<HearToggles sharer={bruno({ speaking: true })} hearing={HEARD} onChange={() => {}} />);
-    expect(screen.getByRole("button", { name: "Mute Bruno's voice" })).toHaveAttribute("data-talking");
+    expect(screen.getByRole("button", { name: "Mute Bruno's voice" })).toHaveAttribute("data-cue", "talking");
     rerender(
       <HearToggles
         sharer={bruno({ speaking: true })}
@@ -47,8 +47,8 @@ describe("a preview's two toggles (spec 0123)", () => {
         onChange={() => {}}
       />,
     );
-    expect(screen.getByRole("button", { name: "Unmute Bruno's voice" })).not.toHaveAttribute("data-talking");
+    expect(screen.getByRole("button", { name: "Unmute Bruno's voice" })).not.toHaveAttribute("data-cue", "talking");
     rerender(<HearToggles sharer={bruno({ speaking: false })} hearing={HEARD} onChange={() => {}} />);
-    expect(screen.getByRole("button", { name: "Mute Bruno's voice" })).not.toHaveAttribute("data-talking");
+    expect(screen.getByRole("button", { name: "Mute Bruno's voice" })).not.toHaveAttribute("data-cue", "talking");
   });
 });

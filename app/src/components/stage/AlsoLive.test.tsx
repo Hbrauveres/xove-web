@@ -268,7 +268,7 @@ describe("also live (specs 0104 and 0123)", () => {
 
     const row = await rowOf("Bruno", user);
     expect(item(/^Watch Bruno/)).not.toHaveAttribute("data-talking");
-    expect(within(row).getByRole("button", { name: "Mute Bruno's voice" })).toHaveAttribute("data-talking");
+    expect(within(row).getByRole("button", { name: "Mute Bruno's voice" })).toHaveAttribute("data-cue", "talking");
 
     const off: Hearing = { ...HEARD, voice: { volume: 1, muted: true } };
     rerender(<Harness others={[speaking]} heard={off} />);

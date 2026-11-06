@@ -3,19 +3,16 @@ import { Icon } from "@shared/components/icon";
 import { useEffect, useRef, useState } from "react";
 import type { Sharer } from "@features/room/types/room-view.types";
 import { Slider } from "@shared/components/slider";
-import { toastStore } from "@shared/stores/toast-store";
 import type { Sound } from "./ViewerBar";
-import { useKeyboardLast } from "@features/room/hooks/use-keyboard-last.hook";
+import { useHoldOrRest } from "@features/room/hooks/use-hold-or-rest.hook";
+import { StageSoundButton } from "@features/room/components/stage-sound-button";
+import { soundIcon } from "@features/room/utils/sound-icon.util";
 import styles from "./HearToggles.module.css";
 import { Tooltip } from "@shared/components/tooltip";
 import { useFloating } from "@shared/stores/floating-store";
 
 /** What I hear from one person (spec 0123): their screen's sound and their voice, each its own mute. */
 export type Hearing = { sound: Sound; voice: Sound };
-
-/** As the stage's own sound buttons: the mouse rests 120 ms to open a slider; 4 s idle closes it. */
-const REST_MS = 120;
-const IDLE_MS = 4000;
 
 type Kind = "sound" | "voice";
 
@@ -43,15 +40,7 @@ export function HearToggles({
   const noSound = !(sharer.screen && sharer.hasSound) ? "No screen sound" : undefined;
   const noVoice = sharer.hasVoice ? undefined : `${name}'s mic is off`;
   const [open, setOpen] = useState<Kind | null>(null);
-  const keyboardLast = useKeyboardLast();
-  const timers = useRef<number[]>([]);
-  const idle = useRef<number | undefined>(undefined);
-  const clear = () => timers.current.splice(0).forEach((t) => window.clearTimeout(t));
-  const restart = () => {
-    window.clearTimeout(idle.current);
-    idle.current = window.setTimeout(() => setOpen(null), IDLE_MS);
-  };
-  useEffect(() => () => [...timers.current, idle.current].forEach((t) => window.clearTimeout(t)), []);
+  const timing = useHoldOrRest(() => setOpen(null));
   const tell = useRef(onActive);
   useEffect(() => {
     tell.current = onActive;
@@ -73,64 +62,35 @@ export function HearToggles({
     }
     setShown(open);
   }
-  const iconOf = (kind: Kind, off: boolean) =>
-    kind === "sound" ? (
-      off ? (
-        <Icon name="volume-off" size={20} />
-      ) : (
-        <Icon name="sound" size={20} />
-      )
-    ) : off ? (
-      <Icon name="voice-off" size={20} />
-    ) : (
-      <Icon name="voice" size={20} />
-    );
+  const iconOf = (kind: Kind, off: boolean) => <Icon name={soundIcon(kind, off)} />;
   const show = (kind: Kind) => {
     setOpen(kind);
-    restart();
+    timing.touch();
   };
 
   const button = (kind: Kind) => {
-    const unavailable = kind === "sound" ? noSound : noVoice;
-    const muted = hearing[kind].muted;
-    const off = Boolean(unavailable) || muted;
     const what = kind === "sound" ? `${name}'s screen sound` : `${name}'s voice`;
+    const { muted, volume } = hearing[kind];
+    const unavailable = kind === "sound" ? noSound : noVoice;
     return (
-      <Tooltip text={unavailable ?? what} hidden={open !== null}>
-        <IconButton
-          variant="round"
-          size="m"
-          className={styles.toggle}
-          data-talking={(kind === "voice" && !off && sharer.speaking) || undefined}
-          aria-disabled={unavailable ? true : undefined}
-          aria-pressed={unavailable ? undefined : muted}
-          aria-label={unavailable ? `${name}: ${unavailable}` : `${muted ? "Unmute" : "Mute"} ${what}`}
-          onPointerEnter={() => {
-            if (unavailable) return;
-            clear();
-            timers.current.push(window.setTimeout(() => show(kind), REST_MS));
-          }}
-          onPointerLeave={clear}
-          data-active={open === kind || undefined}
-          // By keyboard, a sound's focus opens its slider, as the stage's own (Enter mutes).
-          onFocus={() => {
-            if (keyboardLast() && !unavailable) show(kind);
-          }}
-          onClick={(e) => {
-            // The preview's own click opens the stream: a toggle doesn't.
-            e.stopPropagation();
-            if (unavailable)
-              return toastStore.show(
-                unavailable,
-                kind === "sound" ? <Icon name="volume-off" size={20} /> : <Icon name="voice-off" size={20} />,
-              );
-            onChange({ ...hearing, [kind]: { ...hearing[kind], muted: !muted } });
-            if (open) restart();
-          }}
-        >
-          {iconOf(kind, off)}
-        </IconButton>
-      </Tooltip>
+      <StageSoundButton
+        kind={kind}
+        muted={muted}
+        volume={volume}
+        unavailable={unavailable}
+        talking={sharer.speaking}
+        label={unavailable ? `${name}: ${unavailable}` : `${muted ? "Unmute" : "Mute"} ${what}`}
+        tip={what}
+        quiet={open !== null}
+        active={open === kind}
+        onPointerEnter={() => timing.rest(() => show(kind))}
+        onPointerLeave={() => timing.leave(false)}
+        onKeyboardFocus={() => show(kind)}
+        onToggle={() => {
+          onChange({ ...hearing, [kind]: { ...hearing[kind], muted: !muted } });
+          if (open) timing.touch();
+        }}
+      />
     );
   };
 
@@ -143,7 +103,7 @@ export function HearToggles({
       data-open={open ?? undefined}
       onClick={(e) => e.stopPropagation()}
       // Moving the mouse away leaves the slider open (4 s idle or a press elsewhere closes it).
-      onPointerMove={() => open && restart()}
+      onPointerMove={() => open && timing.touch()}
     >
       <span className={styles.buttons}>
         {/* My own preview: nothing of mine to hear, only the swap (spec 0131). */}
@@ -154,7 +114,6 @@ export function HearToggles({
             <IconButton
               variant="round"
               size="m"
-              className={styles.toggle}
               aria-pressed={swap.on}
               aria-label={`Swap ${sharer.isMe ? "your" : `${name}'s`} screen and camera`}
               onClick={(e) => {
@@ -210,7 +169,7 @@ export function HearToggles({
                 value={hearing[shown].volume}
                 onChange={(e) => {
                   onChange({ ...hearing, [shown]: { volume: Number(e.target.value), muted: false } });
-                  restart();
+                  timing.touch();
                 }}
               />
             </span>

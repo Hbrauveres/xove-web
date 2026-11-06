@@ -178,14 +178,14 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/ViewerBar.module.css",
-    "count": 4,
+    "count": 3,
     "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/ViewerBar.tsx",
-    "count": 6,
+    "count": 3,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -703,7 +703,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/stage/HearToggles.tsx",
-    "count": 7,
+    "count": 5,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -766,7 +766,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/stage/ViewerBar.tsx",
-    "count": 7,
+    "count": 5,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -1158,7 +1158,7 @@
     "tool": "lint",
     "rule": "eslint(complexity)",
     "file": "src/components/stage/HearToggles.tsx",
-    "count": 2,
+    "count": 1,
     "owner": "#191 today's stage pieces"
   },
   {
@@ -1293,13 +1293,6 @@
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 1,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/stage/ViewerBar.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "lint",
