@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { StageFacecam } from "./stage-facecam.component";
 
 const meta = {
-  title: "Room/Stage facecam",
+  title: "Room/Stage small view",
   component: StageFacecam,
   args: {
     label: "Bruno's camera",

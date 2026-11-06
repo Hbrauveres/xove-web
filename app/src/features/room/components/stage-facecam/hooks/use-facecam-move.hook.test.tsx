@@ -28,7 +28,7 @@ function Mover({ place, onMove }: { place: FacecamPlace; onMove: (p: FacecamPlac
   );
 }
 
-describe("moving the facecam", () => {
+describe("moving the small view", () => {
   it("follows a drag as shares of the player, kept inside it", () => {
     sizes();
     const onMove = vi.fn();

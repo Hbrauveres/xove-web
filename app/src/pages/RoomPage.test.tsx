@@ -275,7 +275,6 @@ describe("room: sharing", () => {
     expect(await screen.findByLabelText("0 of 6 live, 6 seats open")).toBeInTheDocument();
   });
 
-  // Six streams at once; a seventh can't start, and the buttons say why.
   it("counts the places from the app's setting: a room set to 4 is full at 4", async () => {
     vi.stubGlobal("fetch", async () => Response.json({ streamPlaces: 4 }));
     await appConfig.load();

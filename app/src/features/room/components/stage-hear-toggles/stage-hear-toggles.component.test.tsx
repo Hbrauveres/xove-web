@@ -10,7 +10,7 @@ import { StageHearToggles } from "./stage-hear-toggles.component";
 const bruno = (extra: Partial<Sharer> = {}) => aSharer({ hasSound: true, hasVoice: true, ...extra });
 const HEARD: Hearing = { sound: { volume: 1, muted: false }, voice: { volume: 0.7, muted: false } };
 
-describe("a preview's two toggles (spec 0123)", () => {
+describe("a preview's two toggles", () => {
   it("mutes that person's sound or voice for me, each on its own, keeping its volume", async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();

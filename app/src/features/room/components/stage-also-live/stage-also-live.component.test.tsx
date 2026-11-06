@@ -64,7 +64,7 @@ async function rowOf(name: string, user = onFakeClock()) {
   return screen.findByRole("group", { name: `${name}'s sounds` });
 }
 
-describe("also live (specs 0104 and 0123)", () => {
+describe("also live", () => {
   it("shows my own stream from my browser, as You, with no toggles", async () => {
     const local = aTrack();
     const me: Sharer = {
@@ -86,7 +86,7 @@ describe("also live (specs 0104 and 0123)", () => {
     expect(screen.queryByRole("group")).not.toBeInTheDocument();
   });
 
-  it("gives my own preview its swap alone when I share a screen and a camera (spec 0131)", async () => {
+  it("gives my own preview its swap alone when I share a screen and a camera", async () => {
     const user = onFakeClock();
     const local = aTrack();
     const feed = { startedAt: Date.now(), settings: { quality: "1080p" as const, mode: "smooth" as const }, local };
@@ -134,7 +134,7 @@ describe("also live (specs 0104 and 0123)", () => {
     expect((him.voice as unknown as FakeTrack).attached).toHaveLength(0);
   });
 
-  it("has no buttons on the picture; pointing at it opens its row, outside it (spec 0131)", async () => {
+  it("has no buttons on the picture; pointing at it opens its row, outside it", async () => {
     render(<Harness others={[bruno()]} />);
     expect(within(item(/^Watch Bruno/)).queryByRole("button", { name: /Mute|Swap/ })).not.toBeInTheDocument();
 
@@ -178,7 +178,7 @@ describe("also live (specs 0104 and 0123)", () => {
     await waitFor(() => expect(item(/^Watch Bruno/)).not.toHaveAttribute("data-open"));
   });
 
-  it("opens a sound's slider on a rest, one at a time; moving it turns that sound on (spec 0131)", async () => {
+  it("opens a sound's slider on a rest, one at a time; moving it turns that sound on", async () => {
     const user = onFakeClock();
     const off: Hearing = { sound: { volume: 0.5, muted: true }, voice: { volume: 0.5, muted: true } };
     render(<Harness others={[bruno()]} heard={off} />);
@@ -211,7 +211,7 @@ describe("also live (specs 0104 and 0123)", () => {
     expect(item(/^Watch Bruno/)).not.toHaveAttribute("data-open");
   });
 
-  it("reaches a preview's row by keyboard: Tab goes in and on to the next preview, Escape back (spec 0131)", async () => {
+  it("reaches a preview's row by keyboard: Tab goes in and on to the next preview, Escape back", async () => {
     const user = onFakeClock();
     render(<Harness others={[bruno(), ana()]} />);
 
@@ -250,7 +250,7 @@ describe("also live (specs 0104 and 0123)", () => {
     );
   });
 
-  it("stacks a screen and a camera: the other picture behind, and the swap trades them (spec 0131, AC-3)", async () => {
+  it("stacks a screen and a camera: the other picture behind, and the swap trades them", async () => {
     const user = onFakeClock();
     render(<Harness others={[bruno()]} />);
     expect(item(/^Watch Bruno · screen/)).toHaveAttribute("data-stacked");
@@ -262,7 +262,7 @@ describe("also live (specs 0104 and 0123)", () => {
     expect(item(/^Watch Bruno · camera/)).toHaveAttribute("data-swapping");
   });
 
-  it("lights a heard preview's picture while they speak; open, its voice button instead; muted, nothing (spec 0131, AC-4)", async () => {
+  it("lights a heard preview's picture while they speak; open, its voice button instead; muted, nothing", async () => {
     const user = onFakeClock();
     const speaking = { ...bruno(), speaking: true };
     const { rerender } = render(<Harness others={[speaking]} />);

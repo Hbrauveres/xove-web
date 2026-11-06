@@ -30,7 +30,7 @@ function Bruno({ voiceOff = false, noSound = false, talking = false }) {
   );
 }
 
-describe("the bar over someone else's stream (spec 0123): what I hear", () => {
+describe("the bar over someone else's stream: what I hear", () => {
   it("mutes one sound with a tap, crossed and pressed, leaving the other", async () => {
     const user = userEvent.setup();
     render(<Bruno />);
@@ -55,7 +55,7 @@ describe("the bar over someone else's stream (spec 0123): what I hear", () => {
     expect(screen.getByRole("button", { name: "Mute Bruno's voice" })).toBeInTheDocument();
   });
 
-  it("moving from one sound to the other, the one left closes and the one reached stays open (spec 0133)", () => {
+  it("moving from one sound to the other, the one left closes and the one reached stays open", () => {
     vi.useFakeTimers();
     render(<Bruno />);
     const sound = screen.getByRole("button", { name: "Mute the screen's sound" });
@@ -75,7 +75,7 @@ describe("the bar over someone else's stream (spec 0123): what I hear", () => {
     expect(isOpen("Screen sound volume")).toBe(false);
   });
 
-  it("an open slider is one floating thing: my mic's tooltip closes it at once, no grace (spec 0133, #128)", () => {
+  it("an open slider is one floating thing: my mic's tooltip closes it at once, no grace", () => {
     vi.useFakeTimers();
     const sound = { volume: 1, muted: false, onChange: vi.fn() };
     render(<StageViewerBar {...base()} live micOn onMic={vi.fn()} sound={sound} voice={{ ...sound, name: "Bruno" }} />);
@@ -127,7 +127,7 @@ describe("the bar over someone else's stream (spec 0123): what I hear", () => {
   });
 });
 
-describe("the bar over someone else's stream (spec 0123): who's talking", () => {
+describe("the bar over someone else's stream: who's talking", () => {
   it("lights the voice while they speak; silent, it's faded; muted, never lit", async () => {
     const { rerender } = render(<Bruno />);
     const voice = () => screen.getByRole("button", { name: /Bruno's voice/ });
@@ -140,8 +140,8 @@ describe("the bar over someone else's stream (spec 0123): who's talking", () => 
   });
 });
 
-describe("the bar over someone else's stream (spec 0123): me, at the right", () => {
-  it("marks a heard voice to stay through the fade, and only a heard one (spec 0131, design decision 18)", async () => {
+describe("the bar over someone else's stream: me, at the right", () => {
+  it("marks a heard voice to stay through the fade, and only a heard one", async () => {
     const user = userEvent.setup();
     const { rerender } = render(<Bruno />);
     const anchor = (name: string) => screen.getByRole("button", { name }).parentElement!;
@@ -199,7 +199,7 @@ describe("the bar over someone else's stream (spec 0123): me, at the right", () 
     expect(screen.getByRole("button", { name: "Mute your voice", pressed: true })).toBeInTheDocument();
   });
 
-  it("is only the settings over an empty stage, in the corner (spec 0147)", () => {
+  it("is only the settings over an empty stage, in the corner", () => {
     render(<StageViewerBar {...base()} settingsOnly />);
     expect(screen.getAllByRole("button").map((b) => b.getAttribute("aria-label"))).toEqual(["Settings"]);
   });

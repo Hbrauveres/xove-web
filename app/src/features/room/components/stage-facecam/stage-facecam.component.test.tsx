@@ -44,7 +44,7 @@ function renderFacecam(overrides: Partial<Omit<StageFacecamProps, "player">> = {
 
 const facecam = () => screen.getByRole("application", { name: /Bruno's camera/ });
 
-describe("the facecam", () => {
+describe("the small view", () => {
   it("plays the small video, where it was put", () => {
     const track = new FakeTrack();
     renderFacecam({ video: track as unknown as MediaTrack });
@@ -63,7 +63,7 @@ describe("the facecam", () => {
     expect(props.onSwap).toHaveBeenCalledTimes(1);
   });
 
-  it("doesn't swap when the facecam itself is clicked or dragged", async () => {
+  it("doesn't swap when the small view itself is clicked or dragged", async () => {
     sizes();
     const props = renderFacecam();
     await userEvent.setup().click(screen.getByLabelText("Bruno's camera"));

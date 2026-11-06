@@ -1,4 +1,4 @@
-import { APP_CONFIG_URL, NO_APP_CONFIG } from "./constants/app-config.constants";
+import { APP_CONFIG_URL, APP_CONFIG_WAIT_MS, NO_APP_CONFIG } from "./constants/app-config.constants";
 import type { AppConfig } from "./types/app-config.types";
 import { parseAppConfig } from "./utils/parse-app-config.util";
 
@@ -9,11 +9,14 @@ import { parseAppConfig } from "./utils/parse-app-config.util";
 class AppConfigService {
   #current: AppConfig = NO_APP_CONFIG;
 
-  /** Reads the file. It never fails: a missing or wrong file leaves the settings unsaid, and each
-   * reader falls back to what the API's answers say. */
+  /** Reads the file. It never fails: a missing, wrong or slow file leaves the settings unsaid, and
+   * each reader falls back to what the API's answers say. The app waits for it, so not for long. */
   async load(): Promise<void> {
     try {
-      const answer = await fetch(APP_CONFIG_URL, { cache: "no-store" });
+      const answer = await fetch(APP_CONFIG_URL, {
+        cache: "no-store",
+        signal: AbortSignal.timeout(APP_CONFIG_WAIT_MS),
+      });
       this.#current = answer.ok ? parseAppConfig(await answer.json()) : NO_APP_CONFIG;
     } catch {
       this.#current = NO_APP_CONFIG;

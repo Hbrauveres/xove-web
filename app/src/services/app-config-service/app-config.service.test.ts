@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { appConfig } from "./app-config.service";
+import { APP_CONFIG_WAIT_MS } from "./constants/app-config.constants";
 
 const answering = (body: string, ok = true) =>
   vi.fn(async () => new Response(body, { status: ok ? 200 : 404, headers: { "Content-Type": "application/json" } }));
@@ -13,7 +14,7 @@ describe("the app's config", () => {
     const fetch = answering('{"streamPlaces":4}');
     vi.stubGlobal("fetch", fetch);
     await appConfig.load();
-    expect(fetch).toHaveBeenCalledWith("/config.json", { cache: "no-store" });
+    expect(fetch).toHaveBeenCalledWith("/config.json", expect.objectContaining({ cache: "no-store" }));
     expect(appConfig.read()).toEqual({ streamPlaces: 4 });
   });
 
@@ -29,5 +30,19 @@ describe("the app's config", () => {
       await expect(appConfig.load()).resolves.toBeUndefined();
       expect(appConfig.read()).toEqual({ streamPlaces: null });
     }
+  });
+
+  it("gives up on a file that doesn't come in time, so the app still shows", async () => {
+    const wait = vi.spyOn(AbortSignal, "timeout").mockReturnValue(AbortSignal.abort());
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (_url: string, init: RequestInit) => {
+        if (init.signal?.aborted) throw new DOMException("timed out", "TimeoutError");
+        return Response.json({ streamPlaces: 4 });
+      }),
+    );
+    await appConfig.load();
+    expect(wait).toHaveBeenCalledWith(APP_CONFIG_WAIT_MS);
+    expect(appConfig.read()).toEqual({ streamPlaces: null });
   });
 });

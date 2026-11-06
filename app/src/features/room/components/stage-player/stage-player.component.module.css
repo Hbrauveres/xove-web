@@ -48,11 +48,10 @@
   pointer-events: auto;
 }
 
-/* A narrow stage's compact buttons: the fullscreen button stays level with them. */
-/* A narrow stage's compact buttons: the round buttons stay level with the fullscreen button. */
+/* A narrow stage's compact buttons (M): the round buttons stay level with the fullscreen button. */
 @container (--tiny) {
   .controls {
-    --btn: var(--control-md);
+    --btn: var(--control-sm);
   }
 }
 

@@ -44,7 +44,7 @@
 }
 
 /* Their voice heard while they speak, the row closed: the speaking cue around the picture, as on
-   their voice button (spec 0131). */
+   their voice button. */
 .video {
   transition: box-shadow var(--duration-120) ease;
 }

@@ -8,3 +8,6 @@ export const MAX_STREAM_PLACES = 6;
 
 /** Nothing said: every reader falls back to what the API's answers say. */
 export const NO_APP_CONFIG: AppConfig = { streamPlaces: null };
+
+/** How long the app waits for its settings before it shows without them. */
+export const APP_CONFIG_WAIT_MS = 3000;

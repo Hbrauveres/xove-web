@@ -64,7 +64,7 @@ describe("stream buttons: off and live", () => {
     expect(share).not.toHaveAccessibleDescription();
   });
 
-  it("lights a live stream's button, which stops it, with no arrow (spec 0107)", async () => {
+  it("lights a live stream's button, which stops it, with no arrow", async () => {
     const { user, onStart, onStop } = setup({ mine: { screen: true, camera: false } });
 
     const stop = screen.getByRole("button", { name: "Stop sharing your screen" });
@@ -84,8 +84,8 @@ describe("stream buttons: off and live", () => {
   });
 });
 
-describe("player buttons: the row (specs 0101 and 0107)", () => {
-  it("puts my screen and camera first, my mic after them, and the cog last (spec 0123)", () => {
+describe("player buttons: the row", () => {
+  it("puts my screen and camera first, my mic after them, and the cog last", () => {
     setup({ extra: <button type="button">Share your voice</button> });
     expect(screen.getAllByRole("button").map((b) => b.getAttribute("aria-label") ?? b.textContent)).toEqual([
       "Share your screen",
@@ -107,7 +107,7 @@ describe("player buttons: the row (specs 0101 and 0107)", () => {
   });
 });
 
-describe("stream buttons: the drop-ups (spec 0107)", () => {
+describe("stream buttons: the drop-ups", () => {
   it("are there only while the stream is live", () => {
     withMouse();
     const { rerender } = setup();
@@ -147,7 +147,7 @@ describe("stream buttons: the drop-ups (spec 0107)", () => {
   });
 });
 
-describe("stream buttons: with the settings open (spec 0115)", () => {
+describe("stream buttons: with the settings open", () => {
   it("resting on a live button goes to its setting, with no quick access over it", () => {
     withMouse();
     const onGoTo = vi.fn();
@@ -220,7 +220,7 @@ describe("stream buttons: when they can't be used", () => {
   });
 });
 
-describe("icons: one state system (spec 0106)", () => {
+describe("icons: one state system", () => {
   const icon = (button: HTMLElement) =>
     [...button.querySelectorAll("svg[data-icon]")].map((s) => s.getAttribute("data-icon"));
 

@@ -18,9 +18,6 @@
   padding-bottom: calc(var(--space-3) + (var(--btn, var(--space-12)) - var(--space-8-5)) / 2);
 }
 
-/* Above the open streams row, 6 px clear of its pictures, and the full view's settings sheet,
-   8 px, as the sounds (spec 0133). */
-
 /* The fullscreen button, at the right. */
 .top {
   display: flex;

@@ -30,10 +30,10 @@
     translate var(--unroll);
 }
 
-/* A narrow stage's compact buttons: the fullscreen button stays level with them. */
+/* A narrow stage's compact buttons (M): the fullscreen button stays level with them. */
 @container (--tiny) {
   .stage [data-overlay] {
-    --btn: var(--control-md);
+    --btn: var(--control-sm);
   }
 }
 

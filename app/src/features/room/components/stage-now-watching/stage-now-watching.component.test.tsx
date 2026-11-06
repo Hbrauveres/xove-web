@@ -16,7 +16,7 @@ const bruno = (camera: boolean): Sharer => ({
   ...(camera ? { camera: feed("camera", 11) } : {}),
 });
 
-describe("now watching (spec 0104)", () => {
+describe("now watching", () => {
   it("names who is on the stage, live, what they share and for how long", () => {
     render(<StageNowWatching sharer={bruno(true)} />);
 
@@ -35,7 +35,7 @@ describe("now watching (spec 0104)", () => {
     expect(screen.getByText("Camera")).toBeInTheDocument();
   });
 
-  it("says · voice while their voice is on, never for my own stream (spec 0123)", () => {
+  it("says · voice while their voice is on, never for my own stream", () => {
     const { rerender } = render(<StageNowWatching sharer={{ ...bruno(false), hasVoice: true }} />);
     expect(screen.getByText("Screen · voice")).toBeInTheDocument();
     rerender(<StageNowWatching sharer={{ ...bruno(false), hasVoice: true, isMe: true }} />);
@@ -51,7 +51,7 @@ describe("now watching (spec 0104)", () => {
 const friend = (id: string, name: string): Friend => ({ id, name, hue: 100, online: true });
 const people = (...names: string[]) => names.map((n, i) => friend(`user-${i + 1}`, n));
 
-describe("now watching: who's watching (spec 0107)", () => {
+describe("now watching: who's watching", () => {
   it("shows who's watching: their avatars side by side and how many", () => {
     const { container } = render(<StageNowWatching sharer={bruno(false)} watchers={people("Henrique", "Diego")} />);
 
@@ -78,7 +78,7 @@ describe("now watching: who's watching (spec 0107)", () => {
   });
 });
 
-describe("now watching: an empty stage (specs 0107 and 0123)", () => {
+describe("now watching: an empty stage", () => {
   it("says nobody's sharing, with who's here", () => {
     const { container } = render(<StageNowWatching sharer={null} others={people("Bruno", "Ana", "Diego")} />);
 
