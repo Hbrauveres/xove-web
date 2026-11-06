@@ -1,5 +1,5 @@
 /*
- * The empty stage's ambilight (see StaticGlow.tsx): the static's rows, stretched a little past the
+ * The empty stage's light on the wall (see the component): the static's rows, stretched a little past the
  * stage's sides and blurred, behind the stage, so the bands' light spills onto the wall round it.
  */
 .glow {
@@ -18,7 +18,7 @@
   filter: blur(clamp(var(--blur-9), var(--vmin-4), var(--blur-16)));
 }
 
-/* The turn-on's light on the wall (spec 0136): a white glow round the stage that swells with
+/* The turn-on's light on the wall: a white glow round the stage that swells with
    the stage's flash and fades with it, 900 ms, once. */
 .flash {
   position: absolute;

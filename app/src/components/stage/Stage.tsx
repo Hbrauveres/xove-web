@@ -7,7 +7,7 @@ import { useHearing } from "@features/room/hooks/use-hearing.hook";
 import type { StagePick } from "@features/room/types/stage.types";
 import type { AmbilightPrefs } from "@services/preferences-service";
 import type { Friend, LiveFeed, Sharer } from "@features/room/types/room-view.types";
-import { EmptyStage } from "./EmptyStage";
+import { StageEmptyStage } from "@features/room/components/stage-empty-stage";
 import { StageFacecam } from "@features/room/components/stage-facecam";
 import { StageScreenVideo } from "@features/room/components/stage-screen-video";
 import { StageNotice } from "@features/room/components/stage-notice";
@@ -18,8 +18,8 @@ import { StageVoiceAudio } from "@features/room/components/stage-voice-audio";
 import { ViewerBar } from "./ViewerBar";
 import { AlsoLive } from "./AlsoLive";
 import { StageLight } from "@features/room/components/stage-light";
-import { CornerGlow } from "./CornerGlow";
-import { StaticGlow } from "./StaticGlow";
+import { StageCornerGlow } from "@features/room/components/stage-corner-glow";
+import { StageStaticGlow } from "@features/room/components/stage-static-glow";
 import { NowWatching } from "./NowWatching";
 import { STREAM_PLACES } from "@features/room/constants/room.constants";
 import { Toast } from "@shared/components/toast";
@@ -86,6 +86,9 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
     [controls],
   );
   const bigId = big?.person.id ?? null;
+  // Whether the TV has turned on in this visit: only the first time the stage stands by.
+  const [tvOn, setTvOn] = useState(false);
+  const turnTvOn = useCallback(() => setTvOn(true), []);
 
   // Screen and camera together: the screen big, the camera in the facecam over it,
   // unless the viewer swapped them (for that person). Remembered for this visit only.
@@ -249,7 +252,15 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
   const chrome = playing ? (chromeShown ? "shown" : "hidden") : undefined;
 
   const body = () => {
-    if (!big || !main) return <EmptyStage canShareScreen={controls.canShareScreen} onStart={startMine} />;
+    if (!big || !main)
+      return (
+        <StageEmptyStage
+          canShareScreen={controls.canShareScreen}
+          onStart={startMine}
+          turnOn={!tvOn}
+          onStandby={turnTvOn}
+        />
+      );
 
     // My own stream as everyone sees it, without its sound (it would echo). Sharing
     // the whole screen shows the page inside itself: sharing a tab or window avoids it.
@@ -383,9 +394,9 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
             {/* Behind the picture, outside it: the picture clips what's inside it. */}
             {/* One per stream: a stream the browser won't let it read doesn't darken the next one. */}
             {/* Nobody live: each viewfinder corner glows outward, a blurred L. */}
-            {!big && <CornerGlow prefs={ambilight} />}
+            {!big && <StageCornerGlow prefs={ambilight} />}
             {/* Nobody live: the static's bands light the wall round the stage. */}
-            {!big && <StaticGlow prefs={ambilight} />}
+            {!big && <StageStaticGlow prefs={ambilight} turnOn={!tvOn} />}
             <StageLight
               key={big ? `${big.person.id}|${stage.mainKind}|${gridKey(shape)}` : "none"}
               video={big ? bigVideoEl : null}

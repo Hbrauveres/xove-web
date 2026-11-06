@@ -1,6 +1,5 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { tv } from "../components/stage/staticBands";
 import { floatingStore } from "@shared/stores/floating-store";
 import { toastStore } from "@shared/stores/toast-store";
 import { Tooltip } from "@shared/components/tooltip";
@@ -49,7 +48,7 @@ describe("after every test, spies, globals, variables and timers are put back", 
 });
 
 describe("after every test, the app's shared pieces are reset", { shuffle: false }, () => {
-  it("1. leaves a toast, something floating and the TV on", () => {
+  it("1. leaves a toast and something floating", () => {
     vi.useFakeTimers();
     toastStore.show("Left behind");
     floatingStore.add({
@@ -59,12 +58,10 @@ describe("after every test, the app's shared pieces are reset", { shuffle: false
       },
       area: () => null,
     });
-    tv.on = true;
   });
-  it("2. finds no toast, nothing floating, and the TV off", () => {
+  it("2. finds no toast and nothing floating", () => {
     expect(toastStore.current()).toBeNull();
     expect(() => floatingStore.add({ kind: "rest", close: () => {}, area: () => null })).not.toThrow();
-    expect(tv.on).toBe(false);
   });
 });
 

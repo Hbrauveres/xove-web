@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { StaticNoise } from "./StaticNoise";
+import { StageStaticNoise } from "./stage-static-noise.component";
 
 /** Each test's own stage and canvas; returns what the canvas was handed to draw. */
 function setup() {
@@ -31,12 +31,12 @@ const reducedMotion = (on: boolean) =>
         ({ matches: on && q.includes("reduce"), addEventListener() {}, removeEventListener() {} }) as never,
     );
 
-describe("the standby screen's static (spec 0136)", () => {
+describe("the standby screen's static", () => {
   it("keeps drawing while it's on the screen", () => {
     setup();
     reducedMotion(false);
     const frames = vi.spyOn(window, "requestAnimationFrame").mockReturnValue(1);
-    render(<StaticNoise />);
+    render(<StageStaticNoise />);
     expect(frames).toHaveBeenCalled();
   });
 
@@ -44,7 +44,7 @@ describe("the standby screen's static (spec 0136)", () => {
     const drawn = setup();
     reducedMotion(true);
     const frames = vi.spyOn(window, "requestAnimationFrame");
-    render(<StaticNoise />);
+    render(<StageStaticNoise />);
     expect(drawn).toHaveBeenCalledTimes(1);
     expect(frames).not.toHaveBeenCalled();
   });
@@ -65,7 +65,7 @@ describe("the standby screen's static (spec 0136)", () => {
         disconnect() {}
       },
     );
-    render(<StaticNoise />);
+    render(<StageStaticNoise />);
     expect(drawn).toHaveBeenCalledTimes(1);
     resized();
     expect(drawn).toHaveBeenCalledTimes(2);
@@ -77,14 +77,14 @@ describe("the standby screen's static (spec 0136)", () => {
     setup();
     reducedMotion(true);
     vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({ width: 3200, height: 1800 } as DOMRect);
-    const { container } = render(<StaticNoise />);
+    const { container } = render(<StageStaticNoise />);
     expect((container.querySelector("canvas") as HTMLCanvasElement).width).toBeLessThanOrEqual(1066);
   });
 
   it("draws a finer grain on a phone's stage than on a desktop's", () => {
     setup();
     reducedMotion(true);
-    const { container } = render(<StaticNoise />);
+    const { container } = render(<StageStaticNoise />);
     // 412 px wide: 0.75 px a grain, 550 grains across (a desktop's 1.5 px would give 275).
     expect((container.querySelector("canvas") as HTMLCanvasElement).width).toBe(550);
   });

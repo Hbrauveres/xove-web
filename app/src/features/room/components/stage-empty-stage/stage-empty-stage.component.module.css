@@ -1,5 +1,5 @@
 /*
- * Nobody live (spec 0123, calmed in spec 0136): a TV on standby, like Xovê's mark. Thin viewfinder
+ * Nobody live: a TV on standby, like Xovê's mark. Thin viewfinder
  * corners, the top right red as in the logo; a still "Standby" where there's room; the way to start
  * in the middle, with room around it, over the TV's static; the first time, the TV turning on.
  */
@@ -101,64 +101,6 @@
   text-wrap: balance;
 }
 
-/* Two pills of one width, side by side, alone in the row, centred (specs 0138, 0147). */
-.go {
-  --h: var(--control-2xl);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-2-5);
-  margin-top: var(--space-3);
-}
-
-.go button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  height: var(--h);
-  padding: 0 var(--space-5);
-  border: 0;
-  border-radius: var(--radius-pill);
-  font: inherit;
-  font-size: var(--text-14-5);
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.go svg {
-  width: var(--size-4-5);
-  height: var(--size-4-5);
-}
-
-.primary {
-  background: var(--accent);
-  color: var(--accent-ink);
-}
-
-/* The second way: a soft fill, no outline. */
-.ghost {
-  background: var(--text-shade-08);
-  color: var(--text);
-}
-
-/* Can't be used in this browser: the same pill, greyed in place; its tooltip says why. */
-.unavailable {
-  background: var(--text-shade-06);
-  color: var(--text);
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-@media (hover: hover) {
-  .primary:hover {
-    background: var(--accent-light);
-  }
-
-  .ghost:hover {
-    background: var(--text-shade-14);
-  }
-}
-
 /* A small stage (a narrow window): finer corners, no "Standby", a smaller heading, compact buttons. */
 @container (--compact) {
   .empty {
@@ -173,23 +115,14 @@
   .title {
     font-size: var(--text-22);
   }
-
-  .go {
-    --h: var(--control-xl);
-  }
-
-  .go button {
-    padding: 0 var(--space-4);
-    font-size: var(--text-14);
-  }
 }
 
 /* A short stage: finer corners, no line, and the way to start
-   in its middle both ways, the stage's own buttons in their corner (spec 0138). */
+   in its middle both ways, the stage's own buttons in their corner. */
 @container (--short) {
   .empty {
     --arm: var(--size-4);
-    /* In the stage's middle both ways (spec 0138); the stage's own buttons sit in its corner. */
+    /* In the stage's middle both ways; the stage's own buttons sit in its corner. */
     padding: var(--space-3) var(--space-5);
   }
 
@@ -204,25 +137,6 @@
   .copy {
     display: none;
   }
-
-  .go {
-    gap: var(--space-2);
-    margin-top: var(--space-4);
-  }
-
-  .go {
-    --h: var(--control-lg);
-  }
-
-  .go button {
-    padding: 0 var(--space-4);
-    font-size: var(--text-13-5);
-  }
-
-  .go svg {
-    width: var(--size-4-25);
-    height: var(--size-4-25);
-  }
 }
 
 /* The narrowest stages (under 360 px): smaller still, so the stage's own buttons stay clear. */
@@ -230,30 +144,10 @@
   .title {
     font-size: var(--text-17);
   }
-
-  .go {
-    gap: var(--space-1-5);
-    margin-top: var(--space-2-5);
-  }
-
-  .go {
-    --h: var(--control-sm);
-  }
-
-  .go button {
-    gap: var(--space-1-5);
-    padding: 0 var(--space-3-25);
-    font-size: var(--text-sm);
-  }
-
-  .go svg {
-    width: var(--size-4);
-    height: var(--size-4);
-  }
 }
 
 /*
- * The TV turning on (spec 0136), once a visit, the first time the stage stands by, in under a second, smooth rather than
+ * The TV turning on, once a visit, the first time the stage stands by, in under a second, smooth rather than
  * jerky: a point of light glows in the middle and draws a thin glowing line across; the line blooms
  * into a white glow that fills the screen and lights the wall round it; the glow settles into
  * a dimmer band streaked with scan lines, darkening as it opens softly onto the static. A hint of

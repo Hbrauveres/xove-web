@@ -1,5 +1,5 @@
 /*
- * The corner lights (see CornerGlow.tsx). Each is an L of two thick arms in its colour, at the
+ * The corner lights (see the component). Each is an L of two thick arms in its colour, at the
  * stage's corner, blurred: the blur makes the soft, endless fade. The grey is slightly blue, so
  * its three colours step at different shades and the dark end shows no bands.
  */

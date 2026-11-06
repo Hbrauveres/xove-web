@@ -1514,9 +1514,9 @@ describe("room: the empty stage glows", () => {
     installFakeApi({ me: member() });
     const { container } = renderRoom();
     await connected();
-    const glow = container.querySelector("[data-corner-glow]") as HTMLElement;
-    expect(glow.querySelectorAll("i")).toHaveLength(4);
-    expect(Number(glow.style.opacity)).toBeGreaterThan(0);
+    const corners = container.querySelectorAll("i[data-at]");
+    expect(corners).toHaveLength(4);
+    expect(Number(corners[0]?.parentElement?.style.opacity)).toBeGreaterThan(0);
   });
 });
 
