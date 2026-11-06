@@ -19,7 +19,7 @@ export function StageOverlay({ fullscreen, onFullscreen }: Props) {
     <div className={styles.overlay} data-overlay>
       <div className={styles.top}>
         <Tooltip text={label}>
-          <IconButton variant="overlay" onClick={onFullscreen} aria-label={label}>
+          <IconButton variant="round" size="m" onClick={onFullscreen} aria-label={label}>
             <Icon name={fullscreen ? "fullscreen-exit" : "fullscreen-enter"} size={16} />
           </IconButton>
         </Tooltip>

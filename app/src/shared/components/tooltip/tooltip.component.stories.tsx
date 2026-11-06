@@ -9,7 +9,7 @@ const meta = {
   args: {
     text: "Turn on your camera",
     children: (
-      <IconButton variant="stage" aria-label="Camera">
+      <IconButton variant="round" size="m" aria-label="Camera">
         <Icon name="camera-off" size={20} />
       </IconButton>
     ),

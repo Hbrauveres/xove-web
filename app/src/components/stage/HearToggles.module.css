@@ -37,8 +37,8 @@
     0 0 var(--space-1-5) 0 var(--green-35);
 }
 
-/* The row of a small preview: the preview's width whatever is open, the panels' glass, the buttons
-   centred and clear until hovered (spec 0131). The space to the slider is the slider's own padding,
+/* The row of a small preview: the preview's width whatever is open, the panels' glass, the round
+   buttons centred. The space to the slider is the slider's own padding,
    so closed, the buttons sit in the middle. */
 .toggles {
   box-sizing: border-box;
@@ -57,23 +57,6 @@
 
 .toggles .buttons {
   gap: var(--space-1-5);
-}
-
-.toggles .toggle {
-  width: var(--size-7);
-  height: var(--size-7);
-  background: transparent;
-}
-
-.toggles .toggle svg {
-  width: var(--size-3-75);
-  height: var(--size-3-75);
-}
-
-@media (hover: hover) {
-  .toggles .toggle:not([aria-disabled="true"]):hover {
-    background: var(--panel-line);
-  }
 }
 
 .toggles .toggle[data-active] {

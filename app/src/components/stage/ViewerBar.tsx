@@ -89,7 +89,8 @@ export function ViewerBar(props: Props) {
           <Tooltip text={"Settings"}>
             <IconButton
               ref={anchor?.cog}
-              variant="stage"
+              variant="round"
+              size="m"
               className={styles.round}
               aria-label="Settings"
               onClick={onSettings}
@@ -100,9 +101,10 @@ export function ViewerBar(props: Props) {
         ) : live ? (
           <Tooltip text={micState(Boolean(micOn)).label}>
             <IconButton
-              variant="stage"
+              variant="round"
+              size="m"
               className={styles.round}
-              data-on={micOn || undefined}
+              live={Boolean(micOn)}
               aria-pressed={Boolean(micOn)}
               aria-label={micState(Boolean(micOn)).label}
               onClick={onMic}
@@ -232,7 +234,8 @@ function Hear({
         hidden={quiet}
       >
         <IconButton
-          variant="stage"
+          variant="round"
+          size="m"
           className={styles.round}
           data-voice={kind === "voice" || undefined}
           data-talking={(kind === "voice" && talking && !silent) || undefined}

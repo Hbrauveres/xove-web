@@ -4,8 +4,6 @@ import { IconButton } from "./icon-button.component";
 
 const meta = {
   title: "Shared/Icon button",
-  component: IconButton,
-  args: { variant: "stage", "aria-label": "Settings", children: <Icon name="cog" size={20} /> },
   decorators: [
     (Story) => (
       <div style={{ padding: "var(--space-6)", background: "var(--grey-15)" }}>
@@ -13,48 +11,68 @@ const meta = {
       </div>
     ),
   ],
-} satisfies Meta<typeof IconButton>;
+} satisfies Meta;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
-/** The player's round button, in its pill. */
-export const Player: Story = {
-  args: { variant: "player", "aria-label": "Share your screen", children: <Icon name="screen-share" size={20} /> },
+/** Round, M 34: every round button but my own (the sounds, fullscreen, the small view's, the preview's row). */
+export const RoundM: Story = {
+  render: () => (
+    <IconButton variant="round" size="m" aria-label="Settings">
+      <Icon name="cog" />
+    </IconButton>
+  ),
 };
-/** The player's button for a stream that's live: the pill lights up. */
-export const PlayerLive: Story = {
-  args: { ...Player.args, live: true, "aria-label": "Stop sharing", children: <Icon name="screen-on" size={20} /> },
+/** Round, M 34, unavailable: faded, saying why in its tooltip. */
+export const RoundMUnavailable: Story = {
+  render: () => (
+    <IconButton variant="round" size="m" unavailable aria-label="Their sound: no sound shared">
+      <Icon name="sound" />
+    </IconButton>
+  ),
 };
-/** The player's button that can't be used now: faded. */
-export const PlayerUnavailable: Story = { args: { ...Player.args, unavailable: true, "aria-disabled": true } };
-/** Over a stream. */
-export const Stage: Story = {};
-/** Over a stream, unavailable. */
-export const StageUnavailable: Story = { args: { "aria-disabled": true } };
-/** The fullscreen corner. */
-export const Overlay: Story = {
-  args: { variant: "overlay", "aria-label": "Fullscreen", children: <Icon name="fullscreen-enter" size={16} /> },
+/** A muted sound: the same base, its own icon. */
+export const RoundMMuted: Story = {
+  render: () => (
+    <IconButton variant="round" size="m" aria-pressed aria-label="Unmute their sound">
+      <Icon name="volume-off" />
+    </IconButton>
+  ),
 };
-/** A sound's toggle. */
-export const Toggle: Story = {
-  args: { variant: "toggle", "aria-label": "Their sound", children: <Icon name="volume" /> },
+/** Round, L 48: my own buttons. */
+export const RoundL: Story = {
+  render: () => (
+    <IconButton variant="round" size="l" aria-label="Share your screen">
+      <Icon name="screen-share" />
+    </IconButton>
+  ),
 };
-/** A sound's toggle, muted. */
-export const ToggleMuted: Story = {
-  args: { ...Toggle.args, "aria-pressed": true, children: <Icon name="volume-off" /> },
+/** Round, L 48, on: a stream that's live, a mic that's on. */
+export const RoundLLive: Story = {
+  render: () => (
+    <IconButton variant="round" size="l" live aria-label="Stop sharing">
+      <Icon name="screen-on" />
+    </IconButton>
+  ),
 };
 /** A header button. */
 export const Header: Story = {
-  args: { variant: "header", "aria-label": "4 people here", children: <Icon name="people" size={18} /> },
+  render: () => (
+    <IconButton variant="header" aria-label="4 people here">
+      <Icon name="people" size={18} />
+    </IconButton>
+  ),
 };
 /** A small pill with words. */
-export const Words: Story = { args: { variant: "words", "aria-label": undefined, children: "Change" } };
-/** On a small picture: the facecam's buttons. */
-export const Mini: Story = {
-  args: { variant: "mini", "aria-label": "Swap views", children: <Icon name="swap" size={16} /> },
+export const Words: Story = {
+  render: () => <IconButton variant="words">Change</IconButton>,
 };
 /** A panel's close. */
 export const Close: Story = {
-  args: { variant: "close", "aria-label": "Close settings", children: <Icon name="close" size={20} /> },
+  render: () => (
+    <IconButton variant="close" aria-label="Close settings">
+      <Icon name="close" size={20} />
+    </IconButton>
+  ),
 };

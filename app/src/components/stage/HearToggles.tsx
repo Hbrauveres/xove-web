@@ -98,7 +98,8 @@ export function HearToggles({
     return (
       <Tooltip text={unavailable ?? what} hidden={open !== null}>
         <IconButton
-          variant="toggle"
+          variant="round"
+          size="m"
           className={styles.toggle}
           data-talking={(kind === "voice" && !off && sharer.speaking) || undefined}
           aria-disabled={unavailable ? true : undefined}
@@ -151,7 +152,8 @@ export function HearToggles({
         {swap && (
           <Tooltip text={"Swap screen and camera"} hidden={open !== null}>
             <IconButton
-              variant="toggle"
+              variant="round"
+              size="m"
               className={styles.toggle}
               aria-pressed={swap.on}
               aria-label={`Swap ${sharer.isMe ? "your" : `${name}'s`} screen and camera`}

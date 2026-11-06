@@ -11,7 +11,7 @@ const meta = {
     label: "Your screen",
     enabled: true,
     trigger: (
-      <IconButton variant="player" live aria-label="Stop sharing">
+      <IconButton variant="round" size="l" live aria-label="Stop sharing">
         <Icon name="screen-on" size={20} />
       </IconButton>
     ),

@@ -58,11 +58,6 @@
 }
 
 /* Your mic, red while your voice is on: the one state system (red means live). */
-.round[data-on] {
-  background: var(--accent);
-  color: var(--accent-ink);
-}
-
 /* Their voice: neon on dark while they speak (spec 0123, round 140); faded while silent. */
 .round[data-voice]::before {
   content: "";

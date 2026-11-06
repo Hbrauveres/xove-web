@@ -91,22 +91,19 @@ export function PlayerButtons(props: Props) {
         ))}
         {extra && <div className={styles.control}>{extra}</div>}
         <div className={styles.control}>
-          <IconButton
-            variant="player"
-            open={settingsOpen}
-            around={(button) => (
-              <Tooltip text="Settings" hidden={settingsOpen}>
-                {button}
-              </Tooltip>
-            )}
-            ref={anchor?.cog}
-            aria-label="Settings"
-            aria-expanded={settingsOpen}
-            aria-haspopup="dialog"
-            onClick={onSettings}
-          >
-            <Icon name="cog" size={20} />
-          </IconButton>
+          <Tooltip text="Settings" hidden={settingsOpen}>
+            <IconButton
+              variant="round"
+              size="l"
+              ref={anchor?.cog}
+              aria-label="Settings"
+              aria-expanded={settingsOpen}
+              aria-haspopup="dialog"
+              onClick={onSettings}
+            >
+              <Icon name="cog" />
+            </IconButton>
+          </Tooltip>
         </div>
       </div>
     </div>
@@ -148,26 +145,24 @@ function StreamButton({
   const button = (
     <div className={styles.control}>
       {/* A live button's drop-up takes its tooltip's place. */}
-      <IconButton
-        variant="player"
-        live={live}
-        unavailable={full}
-        around={(button) => (
-          <Tooltip text={tip} hidden={live}>
-            {button}
-          </Tooltip>
-        )}
-        aria-label={label}
-        aria-pressed={live}
-        aria-disabled={blocked || undefined}
-        onClick={() => {
-          if (blocked) return;
-          if (live) onStop(kind);
-          else onStart(kind);
-        }}
-      >
-        <StreamIcon kind={kind} off={!live} />
-      </IconButton>
+      <Tooltip text={tip} hidden={live}>
+        <IconButton
+          variant="round"
+          size="l"
+          live={live}
+          unavailable={full}
+          aria-label={label}
+          aria-pressed={live}
+          aria-disabled={blocked || undefined}
+          onClick={() => {
+            if (blocked) return;
+            if (live) onStop(kind);
+            else onStart(kind);
+          }}
+        >
+          <StreamIcon kind={kind} off={!live} />
+        </IconButton>
+      </Tooltip>
     </div>
   );
 

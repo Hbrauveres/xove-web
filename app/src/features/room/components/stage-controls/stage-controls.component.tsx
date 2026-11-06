@@ -51,16 +51,18 @@ export function StageControls(props: StageControlsProps) {
       onSettings={onSettings}
       onMenuChange={onMenuChange}
       extra={
-        <IconButton
-          variant="player"
-          live={micOn}
-          around={(button) => <Tooltip text={mic.label}>{button}</Tooltip>}
-          aria-pressed={micOn}
-          aria-label={mic.label}
-          onClick={toggleMic}
-        >
-          <Icon name={mic.icon} size={20} />
-        </IconButton>
+        <Tooltip text={mic.label}>
+          <IconButton
+            variant="round"
+            size="l"
+            live={micOn}
+            aria-pressed={micOn}
+            aria-label={mic.label}
+            onClick={toggleMic}
+          >
+            <Icon name={mic.icon} />
+          </IconButton>
+        </Tooltip>
       }
     />
   );

@@ -51,12 +51,12 @@ export function StageFacecam({
       <StageScreenVideo video={video} label={label} />
       <div ref={buttons} className={styles.controls}>
         <Tooltip text="Swap views">
-          <IconButton variant="mini" onClick={onSwap} aria-label="Swap views">
+          <IconButton variant="round" size="m" onClick={onSwap} aria-label="Swap views">
             <Icon name="swap" size={16} />
           </IconButton>
         </Tooltip>
         <Tooltip text="Hide facecam">
-          <IconButton variant="mini" onClick={() => onCollapse(true)} aria-label="Hide facecam">
+          <IconButton variant="round" size="m" onClick={() => onCollapse(true)} aria-label="Hide facecam">
             <Icon name="minimize" size={16} />
           </IconButton>
         </Tooltip>

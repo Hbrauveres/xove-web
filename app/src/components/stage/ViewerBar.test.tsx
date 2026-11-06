@@ -189,14 +189,14 @@ describe("the bar over someone else's stream (spec 0123): me, at the right", () 
     );
   });
 
-  it("shows my mic instead while I'm live, red while it's on", async () => {
+  it("shows my mic instead while I'm live, pressed while it's on", async () => {
     const onMic = vi.fn();
     const { rerender } = render(<ViewerBar {...base()} live micOn={false} onMic={onMic} />);
     expect(screen.queryByRole("button", { name: "Go live" })).not.toBeInTheDocument();
     await userEvent.setup().click(screen.getByRole("button", { name: "Share your voice" }));
     expect(onMic).toHaveBeenCalledTimes(1);
     rerender(<ViewerBar {...base()} live micOn onMic={onMic} />);
-    expect(screen.getByRole("button", { name: "Mute your voice" })).toHaveAttribute("data-on");
+    expect(screen.getByRole("button", { name: "Mute your voice", pressed: true })).toBeInTheDocument();
   });
 
   it("is only the settings over an empty stage, in the corner (spec 0147)", () => {
