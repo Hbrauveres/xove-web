@@ -90,4 +90,4 @@ The picture's own edges glow around the stage, like a TV's ambient light. It's d
 
 **When it updates** (`components/stage/Ambilight.tsx`): with the screen's refresh (`requestAnimationFrame`, at most 60 times a second), only while the tab is visible, the video plays and the ambilight is on. With reduced motion it updates twice a second instead, a gentle step each time. With nobody live there's no ambilight: the empty stage's corners glow on their own (still CSS: a blurred L at each corner, following the ambilight's switch and brightness).
 
-**What it costs:** one small canvas draw and one blur per frame while a video plays. The ambilight's switch and brightness are in the account menu.
+**What it costs:** one small canvas draw and one blur per frame while a video plays. The ambilight's switch and brightness are in my menu; `features/room/hooks/use-ambilight.hook.ts` holds them and remembers each change.

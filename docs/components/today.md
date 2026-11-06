@@ -28,7 +28,7 @@ The room's top bar: the wordmark at the left, the activity pill in the middle, t
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/room/RoomHeader.tsx` | `features/room/components/header/` | Kept, then redrawn in the next version |
+| `features/room/components/header/` (`Header`) | Here | Done (#189); redrawn in the next version |
 
 ### Wordmark
 
@@ -53,7 +53,7 @@ What happened in the room (someone joined, went live), as a pill that opens a li
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/room/ActivityPill.tsx`, `ActivityList.tsx`, `activityText.ts` | `features/room/components/header-activity-pill/`, `activity-list/` (the text in `utils/`) | Kept; the next version's bell replaces the pill |
+| `features/room/components/header-activity-pill/` (its seen marks a hook), its moving line `header-activity-ticker/`, `header-activity-list/`; the words in `features/room/utils/activity-text.util.ts`, how long ago in `shared/utils/time-ago.util.ts` | Here | Done (#189); the next version's bell replaces the pill |
 
 ### People button
 
@@ -66,7 +66,7 @@ How many people are here; it opens the seats and the list of people with what ea
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/room/PeopleButton.tsx` | `features/room/components/header-people-button/` | Kept; the next version's people column replaces it |
+| `features/room/components/header-people-button/` (the order, the line under each name and the queue in its `utils/`), the seats `header-seats/` | Here | Done (#189); the next version's people column replaces it |
 
 ### Account button and menu
 
@@ -79,7 +79,7 @@ My picture; it opens my menu.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/room/AccountButton.tsx` (it holds a switch, a slider and the footer's items) | `features/room/components/header-my-picture-button/`, `my-menu/` (on the shared Dropdown, Switch and Slider) | Kept |
+| `features/room/components/header-my-picture-button/` and `header-my-menu/` (on the shared Dropdown, Switch, Slider and Menu row); the ambilight's settings in `features/room/hooks/use-ambilight.hook.ts` | Here | Done (#189) |
 
 ## The stage
 
@@ -296,7 +296,7 @@ For the admin: the access requests and the members.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `pages/AdminPage.tsx` | `features/admin/` | Kept |
+| `pages/AdminPage.tsx` ("3 min ago" from `shared/utils/time-ago.util.ts`) | `features/admin/` | Kept |
 
 ## Building blocks
 

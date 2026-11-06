@@ -60,7 +60,7 @@ The pictures are shot from the real app (`design-sheet.mjs`, see [Keeping this p
 
 **No home-screen app** while Xovê is desktop only: the page links no manifest and has no home-screen icons or app tags, so no browser offers to install it; Safari's "Add to Home Screen" only adds a bookmark. It comes back with the phones.
 
-`node scripts/brand-icons.mjs` (from `app/`) rewrites the favicon from `mark.ts`. A test fails if the favicon drifts from the geometry.
+`node scripts/brand-icons.mjs` (from `app/`) rewrites the favicon from the Wordmark's geometry (`shared/components/wordmark/utils/`). A test fails if the favicon drifts from the geometry.
 
 **Interface icons** are drawn inline as SVG in the components, on a 20 × 20 grid (12 × 12 for the small arrows), with round 1.5–2 px strokes in `currentColor`, so they take the colour of their button. There's no icon library: a new icon follows the same grid and stroke.
 
@@ -401,6 +401,22 @@ The sliders' rules stay one browser per rule, checked by `npm run check:styles` 
 - Open 8 px under their button; **one thing on screen at a time** (the [floating rule](#drop-ups)); they unroll by their height (260 ms).
 - **Activity:** the latest events, each with its icon, what happened and when. **People:** the seats bar (green), who's here and what each is doing or watching, and the queue. **Account:** me and my connection, the ambilight's switch and brightness, Admin for admins, Sign out.
 
+### Menu rows
+
+![The Go live menu, on Menu rows](images/design/go-live.png)
+
+`shared/components/menu-row` (`MenuRow`): **one action in a menu**, the same in every menu (my menu's Admin and Sign out, the Go live menu's three).
+
+- **An icon, then the words:** the icon 17 px in the muted grey; the words 13.5 px, medium (500), in the text colour; 9 × 11 px inside, 9 px corners.
+- **Pointed at or focused:** a faint white (6%) under it, and its icon brightens to the text colour. **Red is never a hover:** it stays for live and attention.
+- **A link when it goes to a page** (Admin), a button otherwise. The menu gives it its role: `menuitem` in a menu, none in a dialog with other controls (my menu).
+- **Can't be used now:** dimmed to 45%, its reason in its tooltip, and said in a toast on a click.
+
+### Second lines and hovers
+
+- **One grey for a second line:** what describes something under or beside its name (a role, a connection, what someone is doing or watching, "(you)", the seats and the queue lines) is `--text-muted`. The first line, the name, is the text colour.
+- **A hover promises a click:** only what a click acts on lights up when pointed at. A list of people, or anything else to read, stays still.
+
 ### The panel
 
 ![The settings, on the Panel](images/design/settings-popover.png)
@@ -550,7 +566,7 @@ Its content stays clear of the phone's bars (the browser's safe areas).
 - **Unavailable, not hidden.** An option that can't be used here stays in its place, greyed out (a text option, like a tab: `--text-disabled` at 50%; a control, like a round button or a sound I can't hear: 45% opacity), with its reason in its tooltip, so a panel looks the same on every device.
 - **Draft first:** a visual change starts as a draft approved before the work starts: a change to screens that exist, as a prototype in the app itself; a brand-new screen may start as a clickable HTML draft with these tokens and fonts. The approved draft is the reference the code must match.
 - **Check every size:** a 2K monitor both ways (2560 × 1440 and 1440 × 2560), 1920 × 1080, a narrow window, the empty room, and the phone and tablet screen.
-- **Reuse the components:** the shared blocks in `shared/components/`, each shown in Storybook: `Icon`, `IconButton` with its variants, `Face`, `Switch`, `LiveBadge`, `Headline`, `ErrorNotice`, `Button`, `Slider`, `Segmented`, `Toast`, `Wordmark`, `Panel` and `PanelSection`, `PageShell`, `Field`, `StatPill`, `CountChip`, `ControlLabel`, `SectionHeading`, `Dropdown`, `Picker`, `DropUp`, `Tooltip`; and `StageNotice`. **One block per purpose** (ADR-0094): what does the same job is one block, even where today's values differ; what does a different job is its own block, however alike it looks, so changing one never changes another. A new control follows their sizes, motion and focus ring. A choice from a list is a `Picker` (one box, floating, with the slim scrollbar when long), a few options a `Segmented`, and a quick action over a live button a `DropUp`, everywhere in the app.
+- **Reuse the components:** the shared blocks in `shared/components/`, each shown in Storybook: `Icon`, `IconButton` with its variants, `Face`, `Switch`, `LiveBadge`, `Headline`, `ErrorNotice`, `Button`, `Slider`, `Segmented`, `Toast`, `Wordmark`, `Panel` and `PanelSection`, `PageShell`, `Field`, `StatPill`, `CountChip`, `ControlLabel`, `SectionHeading`, `MenuRow`, `Dropdown`, `Picker`, `DropUp`, `Tooltip`; and `StageNotice`. **One block per purpose** (ADR-0094): what does the same job is one block, even where today's values differ; what does a different job is its own block, however alike it looks, so changing one never changes another. A new control follows their sizes, motion and focus ring. A choice from a list is a `Picker` (one box, floating, with the slim scrollbar when long), a few options a `Segmented`, and a quick action over a live button a `DropUp`, everywhere in the app.
 - **Panels open over the button that opened them,** never from a side. **Panels are frosted, never opaque**; nothing over the video hides the round buttons.
 - **Say what effects cost:** blur, canvases and animations run on every frame; keep them to what's here.
 - **A screen says only what matters.** No readouts that imitate real equipment (clocks, meters, rulers, format tags, made-up numbers), and no frame inside another frame.
