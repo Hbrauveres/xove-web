@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { IGNORE_SHAPE, WIDESCREEN } from "../constants/video-shape.constants";
+import { IGNORE_SHAPE, WIDESCREEN } from "../../../constants/video-shape.constants";
 import type { ShapeRead } from "../types/video-shape.types";
 
 /**

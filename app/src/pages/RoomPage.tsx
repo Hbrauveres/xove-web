@@ -12,7 +12,7 @@ import { WaitingRoom } from "../components/room/WaitingRoom";
 import { useAmbilight } from "@features/room/hooks/use-ambilight.hook";
 import { canShareScreen } from "@services/media-devices-service";
 import { SettingsPanel } from "../components/stage/SettingsPanel";
-import { Stage } from "../components/stage/Stage";
+import { Stage } from "@features/room/components/stage";
 import { useFullscreenElement } from "@features/room/hooks/use-fullscreen-element.hook";
 import { useFullscreenHost } from "@features/room/hooks/use-fullscreen-host.hook";
 import { useRoomStore, useRoomSeat } from "@features/room/stores/room-store";

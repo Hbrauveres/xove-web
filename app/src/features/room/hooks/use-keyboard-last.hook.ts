@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 /**
  * Whether the keyboard, not a press, came last: the keyboard's focus keeps controls up, but a click
@@ -16,5 +16,5 @@ export function useKeyboardLast() {
       document.removeEventListener("keydown", key, true);
     };
   }, []);
-  return () => !pressed.current;
+  return useCallback(() => !pressed.current, []);
 }

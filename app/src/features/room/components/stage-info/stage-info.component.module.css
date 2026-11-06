@@ -1,0 +1,24 @@
+/*
+ * Under the stage, as wide as the 16:9 box: who's on it on the left, the
+ * other streams on the right, centred on one line. A container, so each side can give way.
+ */
+.info {
+  position: relative;
+  z-index: var(--layer-over);
+  container-type: inline-size;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  height: var(--info-h, var(--info-row));
+  margin-top: var(--info-gap, var(--space-3-5));
+}
+
+@media (--narrow) {
+  .info {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: var(--space-3);
+  }
+}

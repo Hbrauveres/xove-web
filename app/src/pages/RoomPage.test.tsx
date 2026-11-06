@@ -6,7 +6,7 @@ import { AuthProvider } from "@shared/stores/auth-store";
 import { aUser, installFakeApi, MY_USER_ID, myLiveStream, someoneSharing } from "../testing/fakeApi";
 import { FakeLocalScreenTrack, lastRoom } from "../testing/fakeLiveKit";
 import { clockUser, onFakeClock } from "../testing/factories/clock.factory";
-import { CHROME_IDLE_MS } from "../components/stage/Stage";
+import { CHROME_IDLE_MS } from "@features/room/components/stage-player/constants/stage-player.constants";
 import { REPORT_RETRY_MS, REPORT_STILL_MS } from "@features/room/constants/watch-report.constants";
 import { loadAmbilight } from "@services/preferences-service";
 import { RoomPage } from "./RoomPage";
@@ -1429,10 +1429,11 @@ describe("room: my settings for each of my streams", () => {
 });
 
 describe("room: the stage hugs the picture", () => {
-  const shapeOfStage = () =>
-    Number(
-      screen.getByRole("region", { name: "Shared screen" }).querySelector("[data-shape]")?.getAttribute("data-shape"),
-    );
+  /** The shape the stage's box is drawn with. */
+  const shapeOfStage = () => {
+    const box = screen.getByRole("region", { name: "Shared screen" }).firstElementChild;
+    return Number(box instanceof HTMLElement ? box.style.getPropertyValue("--shape") : NaN);
+  };
 
   /** The browser learns the picture's size, or a new one when the sharer resizes the window. */
   const pictureSize = (video: HTMLElement, width: number, height: number) =>

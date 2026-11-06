@@ -1,0 +1,5 @@
+/* The picture and its facecam, together. */
+.slide {
+  position: absolute;
+  inset: 0;
+}
