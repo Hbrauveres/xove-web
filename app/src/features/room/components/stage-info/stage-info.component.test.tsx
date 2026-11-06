@@ -10,7 +10,7 @@ describe("the row under the stage", () => {
     const sharers = [aSharer(), aSharer({ id: "user-3", name: "Ana", kinds: ["camera"] })];
     const stage = renderHook(() => useStage(sharers)).result.current;
     const hearing = renderHook(() => useHearing(sharers, stage.big?.person.id ?? null)).result.current;
-    render(<StageInfo sharers={sharers} stage={stage} hearing={hearing} free={4} />);
+    render(<StageInfo sharers={sharers} stage={stage} hearing={hearing} places={6} free={4} />);
     expect(screen.getByText("Bruno")).toBeInTheDocument();
     expect(screen.getByRole("region", { name: "Also live" })).toBeInTheDocument();
   });

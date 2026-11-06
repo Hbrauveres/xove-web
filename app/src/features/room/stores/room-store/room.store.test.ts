@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { aUser, installFakeApi, MY_USER_ID } from "../../../../testing/fakeApi";
 import { lastRoom } from "../../../../testing/fakeLiveKit";
+import { appConfig } from "@services/app-config-service";
 import { RoomStore } from "./room.store";
 import { POLL_MS } from "../../constants/room.constants";
 
@@ -126,6 +127,16 @@ describe("the room's store: in the room", () => {
 
     await vi.advanceTimersByTimeAsync(POLL_MS * 2);
     expect(calls(server, "GET /api/streams")).toBe(3);
+    store.close();
+  });
+
+  it("keeps the app's setting for the places, over what the API's answer says", async () => {
+    vi.stubGlobal("fetch", async () => Response.json({ streamPlaces: 4 }));
+    await appConfig.load();
+    const { store } = openStore();
+    await settle();
+    await settle();
+    expect(store.getState().model.places).toBe(4);
     store.close();
   });
 

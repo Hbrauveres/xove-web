@@ -17,7 +17,7 @@ import { requestHeaders } from "./utils/request-headers.util";
 /** An error the API answered with. `message` is safe to show to the user. */
 export class ApiError extends Error {
   readonly status: number;
-  /** Why, when the API says (e.g. "full" when the 6 stream places are taken). */
+  /** Why, when the API says (e.g. "full" when every stream place is taken). */
   readonly reason: string | undefined;
 
   constructor(status: number, message: string, reason?: string) {

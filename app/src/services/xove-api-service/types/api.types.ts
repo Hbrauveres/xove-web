@@ -58,8 +58,10 @@ export type LiveStream = {
 export type StreamsState = {
   /** Oldest first. */
   streams: LiveStream[];
-  /** Places left of the 6. */
+  /** Stream places left. */
   free: number;
+  /** How many streams can be live at once. Missing from an older API. */
+  places?: number;
   /** False when the API doesn't know this person is in the room (after a restart): enter again. */
   seated: boolean;
   /** How full the room is. Missing from an older API. */

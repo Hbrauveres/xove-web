@@ -9,6 +9,7 @@ import { clockUser, onFakeClock } from "../testing/factories/clock.factory";
 import { CHROME_IDLE_MS } from "@features/room/components/stage-player/constants/stage-player.constants";
 import { REPORT_RETRY_MS, REPORT_STILL_MS } from "@features/room/constants/watch-report.constants";
 import { loadAmbilight } from "@services/preferences-service";
+import { appConfig } from "@services/app-config-service";
 import { RoomPage } from "./RoomPage";
 
 const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
@@ -275,6 +276,27 @@ describe("room: sharing", () => {
   });
 
   // Six streams at once; a seventh can't start, and the buttons say why.
+  it("counts the places from the app's setting: a room set to 4 is full at 4", async () => {
+    vi.stubGlobal("fetch", async () => Response.json({ streamPlaces: 4 }));
+    await appConfig.load();
+    const server = installFakeApi({ me: member() });
+    server.places = 4;
+    server.streams = [someoneSharing("P1", 1, "screen")];
+    renderRoom();
+    await connected();
+    expect(await screen.findByLabelText("1 of 4 live, 3 seats open")).toBeInTheDocument();
+
+    server.streams = [1, 2].flatMap((id) => [
+      someoneSharing(`P${id}`, id, "screen"),
+      someoneSharing(`P${id}`, id, "camera"),
+    ]);
+    const user = clockUser();
+    await user.click(await within(stage()).findByRole("button", { name: "Go live" }));
+    const share = () => within(stage()).getByRole("menuitem", { name: /share your screen/i });
+    await waitFor(() => expect(share()).toHaveAttribute("aria-disabled", "true"));
+    expect(share()).toHaveAccessibleDescription(expect.stringMatching(/^4 streams are live/));
+  });
+
   it("says the room is full of streams, and waits for a free place", async () => {
     const server = installFakeApi({ me: member() });
     server.streams = [1, 2, 3].flatMap((id) => [

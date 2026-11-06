@@ -95,6 +95,7 @@ function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
     activity,
     mine: view.myLive,
     error: model.streamsError ?? video.error,
+    places: model.places,
     free: model.free,
     seats: model.seats,
     myCamera: video.local.camera,
@@ -233,6 +234,7 @@ function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
             others={others}
             controls={{
               mine: session.mine,
+              places: session.places,
               free: session.free,
               cameras: session.cameras,
               camera: session.cameraId,

@@ -26,6 +26,7 @@ const meta = {
     big: null,
     controls: {
       mine: { screen: false, camera: false },
+      places: 6,
       free: 6,
       cameras: [],
       camera: null,

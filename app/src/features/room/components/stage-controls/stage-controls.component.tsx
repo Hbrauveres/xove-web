@@ -3,6 +3,7 @@ import { IconButton } from "@shared/components/icon-button";
 import { Tooltip } from "@shared/components/tooltip";
 import { micState } from "@shared/utils/mic-state.util";
 import { PlayerButtons } from "../../../../components/stage/PlayerButtons";
+import { fullRoom } from "../../utils/full-room.util";
 import { ViewerBar } from "../../../../components/stage/ViewerBar";
 import type { StageControlsProps } from "./types/stage-controls.types";
 import { hearProps } from "./utils/hear-props.util";
@@ -36,7 +37,7 @@ export function StageControls(props: StageControlsProps) {
         micOn={micOn}
         onMic={toggleMic}
         canShareScreen={controls.canShareScreen}
-        full={controls.free <= 0}
+        {...(controls.free <= 0 ? { full: fullRoom(controls.places) } : {})}
         onStart={onStart}
         onSettings={onSettings}
       />

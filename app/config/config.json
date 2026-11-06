@@ -1,0 +1,1 @@
+{"streamPlaces": {{env "XOVE_STREAM_PLACES" | default "null"}}}

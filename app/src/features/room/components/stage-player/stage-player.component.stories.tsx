@@ -36,6 +36,7 @@ function Player({ sharers }: { sharers: Sharer[] }) {
         onVideo={noop}
         controls={{
           mine: { screen: false, camera: false },
+          places: 6,
           free: 6,
           cameras: [],
           camera: null,

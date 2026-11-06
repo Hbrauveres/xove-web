@@ -8,6 +8,8 @@ export interface StageInfoProps {
   /** Who is on the stage, kept by the room. */
   stage: StagePick;
   hearing: RoomHearing;
+  /** How many streams can be live at once. */
+  places: number;
   /** Stream places left. */
   free: number;
   watchers?: Friend[] | undefined;

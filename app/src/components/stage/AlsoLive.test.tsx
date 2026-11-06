@@ -27,12 +27,14 @@ const HEARD: Hearing = { sound: { volume: 1, muted: false }, voice: { volume: 1,
 function Harness({
   others,
   live = 3,
+  places = 6,
   free = 3,
   onPick = vi.fn(),
   heard = HEARD,
 }: {
   others: Sharer[];
   live?: number;
+  places?: number;
   free?: number;
   onPick?: (id: string) => void;
   heard?: Hearing;
@@ -43,6 +45,7 @@ function Harness({
     <AlsoLive
       others={others}
       liveCount={live}
+      places={places}
       free={free}
       onPick={onPick}
       hearOf={(id) => hearing[id] ?? heard}
@@ -272,6 +275,13 @@ describe("also live (specs 0104 and 0123)", () => {
     await user.unhover(preview(/^Watch Bruno/));
     await waitFor(() => expect(item(/^Watch Bruno/)).not.toHaveAttribute("data-open"));
     expect(item(/^Watch Bruno/)).not.toHaveAttribute("data-talking");
+  });
+
+  it("draws as many little screens as the room has places", () => {
+    const { container } = render(<Harness others={[ana()]} live={1} places={4} free={3} />);
+    const box = container.querySelector("[data-free]") as HTMLElement;
+    expect(box).toHaveAccessibleName("1 of 4 live, 3 seats open");
+    expect(box.querySelectorAll("i")).toHaveLength(4);
   });
 
   it("shows the seats as six little screens, red for each stream live, beside the previews (specs 0123 and 0136)", () => {

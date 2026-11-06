@@ -2,7 +2,8 @@ import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { onFakeClock } from "../../testing/factories/clock.factory";
 import { OPEN_DELAY_MS } from "@shared/constants/floating.constants";
-import { FULL_ROOM, NO_SCREEN, NO_SOUND, PlayerButtons } from "./PlayerButtons";
+import { fullRoom } from "@features/room/utils/full-room.util";
+import { NO_SCREEN, NO_SOUND, PlayerButtons } from "./PlayerButtons";
 
 const CAMERAS = [
   { deviceId: "cam-1", label: "Logitech C920" },
@@ -29,6 +30,7 @@ function setup(props: Partial<Parameters<typeof PlayerButtons>[0]> = {}) {
   const user = onFakeClock();
   const base = {
     mine: { screen: false, camera: false },
+    places: 6,
     free: 6,
     cameras: CAMERAS,
     camera: "cam-1",
@@ -172,7 +174,7 @@ describe("stream buttons: when they can't be used", () => {
 
     const camera = screen.getByRole("button", { name: "Turn on your camera" });
     expect(camera).toHaveAttribute("aria-disabled", "true");
-    expect(camera).toHaveAccessibleDescription(FULL_ROOM);
+    expect(camera).toHaveAccessibleDescription(fullRoom(6));
     await user.click(camera);
     expect(onStart).not.toHaveBeenCalled();
 

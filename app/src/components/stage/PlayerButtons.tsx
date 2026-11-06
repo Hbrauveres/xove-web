@@ -8,10 +8,10 @@ import { DropUp } from "@shared/components/drop-up";
 import { DropUpRow } from "@shared/components/drop-up-row";
 import { Picker } from "@shared/components/picker";
 import { useSettingsAnchor } from "@features/room/hooks/use-settings-anchor.hook";
+import { fullRoom } from "@features/room/utils/full-room.util";
 import styles from "./PlayerButtons.module.css";
 import { Tooltip } from "@shared/components/tooltip";
 
-export const FULL_ROOM = "6 streams are live, the most at once. You can start yours when one stops.";
 /** Why the screen button and the Screen tab are greyed out where the browser can't share a screen. */
 export const NO_SCREEN = "This browser can't share a screen";
 export const NO_SOUND =
@@ -20,7 +20,9 @@ export const NO_SOUND =
 type Props = {
   /** Which of my streams are live. */
   mine: Record<StreamKind, boolean>;
-  /** Stream places left of the 6. */
+  /** How many streams can be live at once. */
+  places: number;
+  /** Stream places left. */
   free: number;
   /** The browser's cameras, and the one in use. */
   cameras: CameraDevice[];
@@ -114,6 +116,7 @@ export function PlayerButtons(props: Props) {
 function StreamButton({
   kind,
   mine,
+  places,
   free,
   cameras,
   camera,
@@ -136,7 +139,7 @@ function StreamButton({
   const blocked = full || busy;
   const silent = kind === "screen" && live && noSound;
   const label = live ? LABEL[kind].stop : LABEL[kind].start;
-  const tip = unavailable ? NO_SCREEN : full ? FULL_ROOM : silent ? `${label}. ${NO_SOUND}` : label;
+  const tip = unavailable ? NO_SCREEN : full ? fullRoom(places) : silent ? `${label}. ${NO_SOUND}` : label;
   // The camera's list closes when its drop-up is left.
   const [listOpen, setListOpen] = useState(false);
   // Open while resting on it; what's done from it (Change, a camera picked) closes it.

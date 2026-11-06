@@ -4,7 +4,6 @@ import { Icon } from "@shared/components/icon";
 import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
 import type { StreamKind } from "@services/xove-api-service";
 import { Slider } from "@shared/components/slider";
-import { FULL_ROOM } from "./PlayerButtons";
 import { useSettingsAnchor } from "@features/room/hooks/use-settings-anchor.hook";
 import styles from "./ViewerBar.module.css";
 import { Tooltip } from "@shared/components/tooltip";
@@ -29,8 +28,8 @@ type Props = {
   micOn?: boolean;
   onMic?: () => void;
   canShareScreen: boolean;
-  /** All 6 places are taken: Go live's ways to start are greyed, saying why. */
-  full?: boolean;
+  /** Every stream place is taken: why Go live's ways to start are greyed. */
+  full?: string;
   onStart: (kind: StreamKind) => void;
   onSettings: () => void;
   /** Only the settings at the right (nobody live). */
@@ -132,7 +131,7 @@ export function ViewerBar(props: Props) {
                   role="menuitem"
                   icon={canShareScreen ? "screen-on" : "screen-off"}
                   label="Share your screen"
-                  unavailable={!canShareScreen ? "This browser can't share a screen" : full ? FULL_ROOM : undefined}
+                  unavailable={!canShareScreen ? "This browser can't share a screen" : full}
                   onPick={() => {
                     setMenu(false);
                     onStart("screen");
@@ -142,7 +141,7 @@ export function ViewerBar(props: Props) {
                   role="menuitem"
                   icon={full ? "camera-off" : "camera-on"}
                   label="Turn on your camera"
-                  unavailable={full ? FULL_ROOM : undefined}
+                  unavailable={full}
                   onPick={() => {
                     setMenu(false);
                     onStart("camera");

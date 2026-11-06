@@ -10,9 +10,6 @@ export const POLL_MS = 2000;
 /** How many events the activity keeps. */
 export const ACTIVITY_KEPT = 30;
 
-/** Stream places when the API hasn't said yet. */
-export const STREAM_PLACES = 6;
-
 export const KINDS: readonly StreamKind[] = ["screen", "camera"];
 
 /** The steps that mean a start is under way: the picker open, or the API not answered yet. */

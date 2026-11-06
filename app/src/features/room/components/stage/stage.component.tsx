@@ -35,6 +35,7 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
         sharers={sharers}
         stage={stage}
         hearing={hearing}
+        places={controls.places}
         free={controls.free}
         watchers={watchers}
         here={others}

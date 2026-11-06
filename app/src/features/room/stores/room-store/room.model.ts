@@ -1,6 +1,7 @@
 import type { StreamKind, StreamsState } from "@services/xove-api-service";
 import type { ConnectionState, RoomPerson } from "@services/livekit-service";
-import { NEXT_STEPS, STREAM_PLACES } from "../../constants/room.constants";
+import { MAX_STREAM_PLACES } from "@services/app-config-service";
+import { NEXT_STEPS } from "../../constants/room.constants";
 import type { MyStreamStep, PersonId, RoomModel, SeatState } from "../../types/room.types";
 import { personIdOf } from "../../utils/person-id.util";
 import { firstName } from "../../utils/first-name.util";
@@ -9,14 +10,19 @@ import { samePeople } from "./utils/same-people.util";
 import { sameStreams, streamOf, streamEvents } from "./utils/room-streams.util";
 import { withNames, watchesOf, myIdIn } from "./utils/room-answer.util";
 import { withEvents } from "./utils/activity-events.util";
+import { placesOf } from "./utils/places-of.util";
 
-export const initialRoom = (): RoomModel => ({
+/** The room before anyone answers; `placesSetting` is the app's own (`/config.json`), if it said. */
+export const initialRoom = (placesSetting: number | null = null): RoomModel => ({
   me: null,
   names: {},
   present: [],
   polledAt: 0,
   streams: null,
-  free: STREAM_PLACES,
+  placesSetting,
+  // Until the API says, every place the room is drawn for, or as many as the setting says.
+  places: placesSetting ?? MAX_STREAM_PLACES,
+  free: placesSetting ?? MAX_STREAM_PLACES,
   seats: null,
   seated: null,
   watching: null,
@@ -61,6 +67,7 @@ export function withStreams(model: RoomModel, answer: StreamsState, at: number, 
     ),
     polledAt: polled ? at : model.polledAt,
     streams,
+    places: placesOf(model.placesSetting, answer),
     free: answer.free,
     seats: answer.seats ? keepSame(model.seats, answer.seats) : null,
     seated: answer.seated,

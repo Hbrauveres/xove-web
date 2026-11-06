@@ -5,6 +5,7 @@ import type { StreamControls } from "../../components/stage/PlayerButtons";
 export function aStreamControls(over: Partial<StreamControls> = {}): StreamControls {
   return {
     mine: { screen: false, camera: false },
+    places: 6,
     free: 6,
     cameras: [],
     camera: null,

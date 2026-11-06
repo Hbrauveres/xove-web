@@ -16,7 +16,9 @@ type Props = {
   others: Sharer[];
   /** Live streams of the 6, everyone's. */
   liveCount: number;
-  /** Places left of the 6. */
+  /** How many streams can be live at once: one little screen each. */
+  places: number;
+  /** Places left. */
   free: number;
   onPick: (personId: string) => void;
   /** What I hear from each person, and muting it from their preview (spec 0123). */
@@ -36,7 +38,7 @@ const kindOf = (feed: LiveFeed) => (feed.kind === "camera" ? "camera" : "screen"
  * at a preview opens its row of buttons, to hear that person while they stay small
  * and swap their screen and camera (spec 0131).
  */
-export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swappedOf, onSwap }: Props) {
+export function AlsoLive({ others, liveCount, places, free, onPick, hearOf, onHear, swappedOf, onSwap }: Props) {
   // A small preview's row: pointing at it opens it.
   const tray = usePreviewTray();
   const keyboardLast = useKeyboardLast();
@@ -148,11 +150,16 @@ export function AlsoLive({ others, liveCount, free, onPick, hearOf, onHear, swap
         }}
       />
       {free > 0 && (
-        // The six seats as little screens, red for each stream live (specs 0123 and 0136); gone when
+        // The stream places as little screens, red for each stream live (specs 0123 and 0136); gone when
         // all are taken.
-        <Tooltip text={`${liveCount} of 6 live · ${seatsOpen(free)}`}>
-          <p className={styles.free} data-free role="img" aria-label={`${liveCount} of 6 live, ${seatsOpen(free)}`}>
-            {Array.from({ length: 6 }, (_, i) => (
+        <Tooltip text={`${liveCount} of ${places} live · ${seatsOpen(free)}`}>
+          <p
+            className={styles.free}
+            data-free
+            role="img"
+            aria-label={`${liveCount} of ${places} live, ${seatsOpen(free)}`}
+          >
+            {Array.from({ length: places }, (_, i) => (
               <i key={i} data-on={i < liveCount || undefined} />
             ))}
           </p>

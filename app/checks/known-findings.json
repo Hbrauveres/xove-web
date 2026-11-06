@@ -724,7 +724,7 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/stage/PlayerButtons.tsx",
-    "count": 9,
+    "count": 8,
     "owner": "#191 today's stage pieces"
   },
   {
