@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { StreamControls } from "../../components/stage/PlayerButtons";
+import type { StreamControls } from "@features/room/types/stream-controls.types";
 
 /** My controls, nothing live, every place free, every action a spy; anything given is laid over. */
 export function aStreamControls(over: Partial<StreamControls> = {}): StreamControls {

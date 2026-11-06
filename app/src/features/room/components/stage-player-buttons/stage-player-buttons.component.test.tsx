@@ -1,9 +1,10 @@
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { onFakeClock } from "../../testing/factories/clock.factory";
+import { onFakeClock } from "@testing/factories/clock.factory";
 import { OPEN_DELAY_MS } from "@shared/constants/floating.constants";
 import { fullRoom } from "@features/room/utils/full-room.util";
-import { NO_SCREEN, NO_SOUND, PlayerButtons } from "./PlayerButtons";
+import { NO_SCREEN, NO_SOUND } from "../../constants/stream-words.constants";
+import { StagePlayerButtons } from "./stage-player-buttons.component";
 
 const CAMERAS = [
   { deviceId: "cam-1", label: "Logitech C920" },
@@ -18,7 +19,7 @@ function withMouse() {
   );
 }
 
-function setup(props: Partial<Parameters<typeof PlayerButtons>[0]> = {}) {
+function setup(props: Partial<Parameters<typeof StagePlayerButtons>[0]> = {}) {
   const handlers = {
     onStart: vi.fn(),
     onStop: vi.fn(),
@@ -39,9 +40,9 @@ function setup(props: Partial<Parameters<typeof PlayerButtons>[0]> = {}) {
     ...handlers,
     ...props,
   };
-  const view = render(<PlayerButtons {...base} />);
-  const rerender = (next: Partial<Parameters<typeof PlayerButtons>[0]>) =>
-    view.rerender(<PlayerButtons {...base} {...next} />);
+  const view = render(<StagePlayerButtons {...base} />);
+  const rerender = (next: Partial<Parameters<typeof StagePlayerButtons>[0]>) =>
+    view.rerender(<StagePlayerButtons {...base} {...next} />);
   return { user, rerender, ...handlers };
 }
 
@@ -59,7 +60,7 @@ describe("stream buttons: off and live", () => {
     const camera = screen.getByRole("button", { name: "Turn on your camera" });
     expect(share).toHaveAttribute("aria-pressed", "false");
     expect(camera).toHaveAttribute("aria-pressed", "false");
-    // Its tooltip says what its name says: a screen reader hears it once (spec 0133).
+    // Its tooltip says what its name says: a screen reader hears it once.
     expect(share).not.toHaveAccessibleDescription();
   });
 
@@ -201,7 +202,7 @@ describe("stream buttons: when they can't be used", () => {
   it("says when a screen is shared without sound, and how to share it", () => {
     setup({ mine: { screen: true, camera: false }, noSound: true });
 
-    // No badge on the button (spec 0101): its description says it.
+    // No badge on the button: its description says it.
     expect(screen.queryByRole("img", { name: "No sound" })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Stop sharing your screen" })).toHaveAccessibleDescription(
       `Stop sharing your screen. ${NO_SOUND}`,

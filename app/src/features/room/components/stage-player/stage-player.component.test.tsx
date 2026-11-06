@@ -5,7 +5,7 @@ import { aSharer } from "../../../../testing/factories/sharer.factory";
 import { aStreamControls } from "../../../../testing/factories/stream-controls.factory";
 import { useHearing } from "../../hooks/use-hearing.hook";
 import { useStage } from "../../hooks/use-stage.hook";
-import type { StreamControls } from "../../../../components/stage/PlayerButtons";
+import type { StreamControls } from "@features/room/types/stream-controls.types";
 import type { Sharer } from "../../types/room-view.types";
 import { CHROME_IDLE_MS } from "./constants/stage-player.constants";
 import { StagePlayer } from "./stage-player.component";

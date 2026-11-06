@@ -1,0 +1,8 @@
+/* In the screen's drop-up, after what's shared: Change, the dark pill of a chosen option. */
+.change {
+  height: var(--size-7-5);
+}
+
+.change:hover {
+  background: var(--sel-hover);
+}

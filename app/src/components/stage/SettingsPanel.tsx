@@ -17,19 +17,14 @@ import { Cue } from "@shared/components/cue";
 import { Picker } from "@shared/components/picker";
 import { Segmented } from "@shared/components/segmented";
 import { toastStore } from "@shared/stores/toast-store";
-import { NO_SCREEN, NO_SOUND } from "./PlayerButtons";
+import { NO_SCREEN, NO_SOUND } from "@features/room/constants/stream-words.constants";
+import { StageScreenSource } from "@features/room/components/stage-screen-source";
 import styles from "./SettingsPanel.module.css";
 import { MicTest } from "./MicTest";
 import { Tooltip } from "@shared/components/tooltip";
 
 /** How long it takes to come in or go out; it leaves the page once it's out. */
 const PANEL_MS = 260;
-
-const SURFACE: Record<ScreenSurface, string> = {
-  window: "A window",
-  browser: "A tab",
-  monitor: "Your whole screen",
-};
 
 type Tab = "screen" | "camera" | "voice";
 
@@ -308,10 +303,7 @@ function ScreenTab(props: Props & { cue?: number }) {
           <div className={styles.group}>
             <ControlLabel>Window</ControlLabel>
             <div className={styles.fieldRow}>
-              <span className={styles.source}>
-                <Icon name="window" size={20} />
-                <span>{screenSurface ? SURFACE[screenSurface] : "Your screen"}</span>
-              </span>
+              <StageScreenSource surface={screenSurface} />
               <Tooltip text={"Pick another window or tab; viewers keep watching the same stream"}>
                 <button type="button" className={styles.button} disabled={busy} onClick={onChangeWindow}>
                   <Cue request={props.cue} />

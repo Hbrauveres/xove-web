@@ -2,7 +2,7 @@ import { ActionPill } from "@shared/components/action-pill";
 import { Icon } from "@shared/components/icon";
 import { Tooltip } from "@shared/components/tooltip";
 import { toastStore } from "@shared/stores/toast-store";
-import { NO_SCREEN } from "./constants/stage-start-buttons.constants";
+import { NO_SCREEN } from "../../constants/stream-words.constants";
 import styles from "./stage-start-buttons.component.module.css";
 import type { StageStartButtonsProps } from "./types/stage-start-buttons.types";
 

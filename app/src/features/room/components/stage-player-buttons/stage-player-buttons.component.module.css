@@ -1,0 +1,36 @@
+/* The centred row over the bottom of the stage; only the buttons take clicks. */
+.row {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: var(--space-3);
+  pointer-events: none;
+  z-index: var(--layer-over);
+}
+
+.buttons {
+  --gap: var(--space-2-5);
+  display: flex;
+  gap: var(--gap);
+  pointer-events: auto;
+}
+
+/* Mine and my mic: one wrapper each, as the stream buttons have. */
+.control {
+  position: relative;
+  display: flex;
+}
+
+/* A narrow stage: closer together, and centred clear of the fullscreen button in the
+   corner (34 px, 12 px in, and an 8 px gap) on both sides. */
+@container (--tiny) {
+  .row {
+    padding-inline: calc(var(--space-3) + var(--space-8-5) + var(--space-2));
+  }
+
+  .buttons {
+    --gap: var(--space-1-5);
+  }
+}

@@ -2,11 +2,11 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { onFakeClock } from "../../testing/factories/clock.factory";
+import { onFakeClock } from "@testing/factories/clock.factory";
 import { TIP_REST_MS } from "@shared/constants/floating.constants";
 import { fullRoom } from "@features/room/utils/full-room.util";
 import type { Sound } from "@features/room/types/sound.types";
-import { ViewerBar } from "./ViewerBar";
+import { StageViewerBar } from "./stage-viewer-bar.component";
 
 // Fresh handlers per render, so no test sees another's calls.
 const base = () => ({ live: false, canShareScreen: true, onStart: vi.fn(), onSettings: vi.fn() });
@@ -16,7 +16,7 @@ function Bruno({ voiceOff = false, noSound = false, talking = false }) {
   const [sound, setSound] = useState<Sound>({ volume: 0.8, muted: false });
   const [voice, setVoice] = useState<Sound>({ volume: 1, muted: false });
   return (
-    <ViewerBar
+    <StageViewerBar
       {...base()}
       sound={{ ...sound, onChange: setSound, unavailable: noSound ? "No sound in this stream" : undefined }}
       voice={{
@@ -78,7 +78,7 @@ describe("the bar over someone else's stream (spec 0123): what I hear", () => {
   it("an open slider is one floating thing: my mic's tooltip closes it at once, no grace (spec 0133, #128)", () => {
     vi.useFakeTimers();
     const sound = { volume: 1, muted: false, onChange: vi.fn() };
-    render(<ViewerBar {...base()} live micOn onMic={vi.fn()} sound={sound} voice={{ ...sound, name: "Bruno" }} />);
+    render(<StageViewerBar {...base()} live micOn onMic={vi.fn()} sound={sound} voice={{ ...sound, name: "Bruno" }} />);
     const voice = screen.getByRole("button", { name: "Mute Bruno's voice" });
     const isOpen = () => screen.getByRole("slider", { name: "Bruno's voice volume" }).closest("[inert]") === null;
     fireEvent.pointerEnter(voice.parentElement!, { pointerType: "mouse" });
@@ -157,7 +157,7 @@ describe("the bar over someone else's stream (spec 0123): me, at the right", () 
     const onStart = vi.fn();
     const onSettings = vi.fn();
     const user = userEvent.setup();
-    render(<ViewerBar {...base()} onStart={onStart} onSettings={onSettings} />);
+    render(<StageViewerBar {...base()} onStart={onStart} onSettings={onSettings} />);
     expect(screen.queryByRole("button", { name: /voice/i })).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Go live" }));
@@ -175,7 +175,7 @@ describe("the bar over someone else's stream (spec 0123): me, at the right", () 
   it("greys the ways to start where they can't be used, saying why", async () => {
     const onStart = vi.fn();
     const user = userEvent.setup();
-    const { rerender } = render(<ViewerBar {...base()} onStart={onStart} canShareScreen={false} />);
+    const { rerender } = render(<StageViewerBar {...base()} onStart={onStart} canShareScreen={false} />);
     await user.click(screen.getByRole("button", { name: "Go live" }));
     const screenItem = screen.getByRole("menuitem", { name: "Share your screen" });
     expect(screenItem).toHaveAttribute("aria-disabled", "true");
@@ -183,7 +183,7 @@ describe("the bar over someone else's stream (spec 0123): me, at the right", () 
     await user.click(screenItem);
     expect(onStart).not.toHaveBeenCalled();
 
-    rerender(<ViewerBar {...base()} onStart={onStart} full={fullRoom(6)} />);
+    rerender(<StageViewerBar {...base()} onStart={onStart} full={fullRoom(6)} />);
     expect(screen.getByRole("menuitem", { name: "Turn on your camera" })).toHaveAccessibleDescription(
       /6 streams are live/,
     );
@@ -191,16 +191,16 @@ describe("the bar over someone else's stream (spec 0123): me, at the right", () 
 
   it("shows my mic instead while I'm live, pressed while it's on", async () => {
     const onMic = vi.fn();
-    const { rerender } = render(<ViewerBar {...base()} live micOn={false} onMic={onMic} />);
+    const { rerender } = render(<StageViewerBar {...base()} live micOn={false} onMic={onMic} />);
     expect(screen.queryByRole("button", { name: "Go live" })).not.toBeInTheDocument();
     await userEvent.setup().click(screen.getByRole("button", { name: "Share your voice" }));
     expect(onMic).toHaveBeenCalledTimes(1);
-    rerender(<ViewerBar {...base()} live micOn onMic={onMic} />);
+    rerender(<StageViewerBar {...base()} live micOn onMic={onMic} />);
     expect(screen.getByRole("button", { name: "Mute your voice", pressed: true })).toBeInTheDocument();
   });
 
   it("is only the settings over an empty stage, in the corner (spec 0147)", () => {
-    render(<ViewerBar {...base()} settingsOnly />);
+    render(<StageViewerBar {...base()} settingsOnly />);
     expect(screen.getAllByRole("button").map((b) => b.getAttribute("aria-label"))).toEqual(["Settings"]);
   });
 });
@@ -232,7 +232,7 @@ describe("the bar on the floating layer (#187)", () => {
 
   it("a press outside closes Go live's menu; Escape closes it and goes back to its button", async () => {
     const user = userEvent.setup();
-    render(<ViewerBar {...base()} />);
+    render(<StageViewerBar {...base()} />);
     const goLive = screen.getByRole("button", { name: "Go live" });
     await user.click(goLive);
     fireEvent.pointerDown(document.body);
@@ -246,7 +246,7 @@ describe("the bar on the floating layer (#187)", () => {
   it("a mouse rest doesn't open a slider over the menu I opened", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     vi.useFakeTimers();
-    render(<ViewerBar {...base()} sound={{ volume: 1, muted: false, onChange: vi.fn() }} />);
+    render(<StageViewerBar {...base()} sound={{ volume: 1, muted: false, onChange: vi.fn() }} />);
     await user.click(screen.getByRole("button", { name: "Go live" }));
     fireEvent.pointerEnter(screen.getByRole("button", { name: "Mute the screen's sound" }).parentElement!, {
       pointerType: "mouse",
@@ -258,7 +258,7 @@ describe("the bar on the floating layer (#187)", () => {
 
   it("the keyboard's focus doesn't open a slider over the menu I opened either", async () => {
     const user = userEvent.setup();
-    render(<ViewerBar {...base()} sound={{ volume: 1, muted: false, onChange: vi.fn() }} />);
+    render(<StageViewerBar {...base()} sound={{ volume: 1, muted: false, onChange: vi.fn() }} />);
     await user.click(screen.getByRole("button", { name: "Go live" }));
     await user.tab({ shift: true });
     await user.tab({ shift: true });

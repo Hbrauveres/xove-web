@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, type RefCallback } from "react";
 import { RECENTRE_EASE, RECENTRE_MS, STILL_PX } from "../constants/pinned-row.constants";
 import { heldShift } from "../utils/held-shift.util";
 
@@ -10,11 +10,19 @@ import { heldShift } from "../utils/held-shift.util";
  * on every frame of a 220 ms slot animation. Once the pointer leaves the row, it glides back
  * to the centre. Without the pointer on the row, nothing is held.
  */
-export function usePinnedRow<T extends HTMLElement>() {
-  const ref = useRef<T>(null);
+export function usePinnedRow<T extends HTMLElement>(onElement?: RefCallback<T>) {
+  const node = useRef<T | null>(null);
+  // Its element, handed on too (the settings sit just above this row).
+  const ref = useCallback(
+    (el: T | null) => {
+      node.current = el;
+      onElement?.(el);
+    },
+    [onElement],
+  );
 
   useEffect(() => {
-    const row = ref.current;
+    const row = node.current;
     if (!row) return;
     let shift = 0;
     let anchor: HTMLElement | null = null;

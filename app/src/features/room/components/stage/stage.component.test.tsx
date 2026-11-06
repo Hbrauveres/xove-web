@@ -1,6 +1,6 @@
 import { act, render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import type { StreamControls } from "../../../../components/stage/PlayerButtons";
+import type { StreamControls } from "@features/room/types/stream-controls.types";
 import { aSharer } from "../../../../testing/factories/sharer.factory";
 import { aStreamControls } from "../../../../testing/factories/stream-controls.factory";
 import { useStage } from "../../hooks/use-stage.hook";

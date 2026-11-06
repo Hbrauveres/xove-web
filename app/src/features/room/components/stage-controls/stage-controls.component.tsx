@@ -1,10 +1,10 @@
 import { Icon } from "@shared/components/icon";
 import { IconButton } from "@shared/components/icon-button";
 import { Tooltip } from "@shared/components/tooltip";
-import { micState } from "@shared/utils/mic-state.util";
-import { PlayerButtons } from "../../../../components/stage/PlayerButtons";
+import { micState } from "@features/room/utils/mic-state.util";
+import { StagePlayerButtons } from "../stage-player-buttons";
 import { fullRoom } from "../../utils/full-room.util";
-import { ViewerBar } from "../../../../components/stage/ViewerBar";
+import { StageViewerBar } from "../stage-viewer-bar";
 import type { StageControlsProps } from "./types/stage-controls.types";
 import { hearProps } from "./utils/hear-props.util";
 
@@ -20,7 +20,7 @@ export function StageControls(props: StageControlsProps) {
 
   if (!big) {
     return (
-      <ViewerBar
+      <StageViewerBar
         live={false}
         settingsOnly
         canShareScreen={controls.canShareScreen}
@@ -31,7 +31,7 @@ export function StageControls(props: StageControlsProps) {
   }
   if (!big.isMe) {
     return (
-      <ViewerBar
+      <StageViewerBar
         {...hearProps(big, hearing.hearOf, hearing.setHear)}
         live={controls.mine.screen || controls.mine.camera}
         micOn={micOn}
@@ -45,7 +45,7 @@ export function StageControls(props: StageControlsProps) {
   }
   const mic = micState(micOn);
   return (
-    <PlayerButtons
+    <StagePlayerButtons
       {...controls}
       onStart={onStart}
       onSettings={onSettings}

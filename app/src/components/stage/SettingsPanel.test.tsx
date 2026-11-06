@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { moveFakeTimers } from "../../testing/factories/clock.factory";
 import type { StreamKind, StreamSettings } from "@services/xove-api-service";
 import { CAMERA_BLOCKED } from "@services/media-devices-service";
-import { NO_SOUND, NO_SCREEN } from "./PlayerButtons";
+import { NO_SOUND, NO_SCREEN } from "@features/room/constants/stream-words.constants";
 import { CUE_MS, SettingsPanel } from "./SettingsPanel";
 import { DEFAULT_VOICE } from "@services/preferences-service";
 import { toastStore } from "@shared/stores/toast-store";

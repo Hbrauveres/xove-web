@@ -1,6 +1,7 @@
 import type { HearSound } from "../../../types/sound.types";
 import type { Sharer } from "../../../types/room-view.types";
-import { NO_SCREEN_SOUND, NO_SOUND_HERE } from "../constants/stage-controls.constants";
+import { NO_SCREEN_SOUND } from "../../../constants/stream-words.constants";
+import { NO_SOUND_HERE } from "../constants/stage-controls.constants";
 import type { RoomHearing } from "../../../types/room-hearing.types";
 
 /**

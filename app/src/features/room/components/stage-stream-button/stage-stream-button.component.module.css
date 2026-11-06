@@ -1,0 +1,31 @@
+/* One button with its tooltip and menu, which open above it. */
+.control {
+  position: relative;
+  display: flex;
+}
+
+/* Screen off: the crossed monitor at rest; "share" (a screen with an arrow up) while the button is
+   pointed at or focused, so it says what a click does. Unavailable (a full room), it keeps the crossed
+   monitor: a click wouldn't share. */
+.iconRest,
+.iconHover {
+  display: grid;
+  place-items: center;
+  width: var(--size-5);
+  height: var(--size-5);
+  line-height: 0;
+}
+
+.iconHover {
+  display: none;
+}
+
+.control button:not([aria-disabled="true"]):hover .iconRest,
+.control button:not([aria-disabled="true"]):focus-visible .iconRest {
+  display: none;
+}
+
+.control button:not([aria-disabled="true"]):hover .iconHover,
+.control button:not([aria-disabled="true"]):focus-visible .iconHover {
+  display: grid;
+}
