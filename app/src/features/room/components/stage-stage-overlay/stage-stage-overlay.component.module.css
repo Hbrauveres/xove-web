@@ -27,6 +27,11 @@
   justify-content: flex-end;
 }
 
+/* The layer lets the stream take the pointer; its buttons take it back. */
+.top button {
+  pointer-events: auto;
+}
+
 /* Hidden with the player's bars when the mouse stops (see Stage). */
 :global([data-chrome="hidden"]) .overlay {
   opacity: 0;
