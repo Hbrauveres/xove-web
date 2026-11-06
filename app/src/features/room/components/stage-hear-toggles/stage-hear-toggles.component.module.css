@@ -1,0 +1,25 @@
+/* A preview's row: the preview's width whatever is open, the panels' glass, the round buttons
+   centred. The space to the slider is the slider's own padding, so closed, the buttons sit in the
+   middle. A fieldset: no margin or minimum width of its own. */
+.toggles {
+  display: inline-flex;
+  min-inline-size: 0;
+  margin: 0;
+  box-sizing: border-box;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 0;
+  padding: var(--space-1);
+  border: var(--hairline) solid var(--panel-line);
+  border-radius: var(--radius-4);
+  background: var(--panel);
+  backdrop-filter: blur(var(--blur-5-5));
+  -webkit-backdrop-filter: blur(var(--blur-5-5));
+  box-shadow: 0 var(--space-2) var(--space-7) var(--black-45);
+}
+
+.buttons {
+  display: inline-flex;
+  gap: var(--space-1-5);
+}

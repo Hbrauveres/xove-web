@@ -1,6 +1,6 @@
 import { useCallback, useRef } from "react";
 import { Toast } from "@shared/components/toast";
-import { StageOverlay } from "../../../../components/stage/StageOverlay";
+import { StageStageOverlay } from "../stage-stage-overlay";
 import { SettingsAnchorContext } from "../../hooks/use-settings-anchor.hook";
 import { StageControls } from "../stage-controls";
 import { StageSounds } from "../stage-sounds";
@@ -62,7 +62,7 @@ export function StagePlayer(props: StagePlayerProps) {
         onStart={startMine}
       />
       {/* Over a stream and the empty stage alike: stopping the last stream never strands you in fullscreen. */}
-      <StageOverlay fullscreen={fullscreen.fullscreen} onFullscreen={fullscreen.toggle} />
+      <StageStageOverlay fullscreen={fullscreen.fullscreen} onFullscreen={fullscreen.toggle} />
       <div className={styles.controls}>
         <SettingsAnchorContext value={settings.anchor}>
           <StageControls

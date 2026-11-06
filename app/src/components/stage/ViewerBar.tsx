@@ -8,14 +8,11 @@ import { Slider } from "@shared/components/slider";
 import { useSettingsAnchor } from "@features/room/hooks/use-settings-anchor.hook";
 import { useHoldOrRest } from "@features/room/hooks/use-hold-or-rest.hook";
 import { StageSoundButton } from "@features/room/components/stage-sound-button";
+import type { HearSound } from "@features/room/types/sound.types";
 import styles from "./ViewerBar.module.css";
 import { Tooltip } from "@shared/components/tooltip";
 import { MenuRow } from "@shared/components/menu-row";
 import { floatingStore, useFloating } from "@shared/stores/floating-store";
-
-/** One sound you hear from the person you watch (spec 0123): its volume and mute. */
-export type Sound = { volume: number; muted: boolean };
-export type HearSound = Sound & { unavailable?: string; onChange: (s: Sound) => void };
 
 type Props = {
   /** What you hear from them, at the left: their screen's sound and their voice. */

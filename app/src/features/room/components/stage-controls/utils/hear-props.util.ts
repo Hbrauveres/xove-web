@@ -1,4 +1,4 @@
-import type { HearSound } from "../../../../../components/stage/ViewerBar";
+import type { HearSound } from "../../../types/sound.types";
 import type { Sharer } from "../../../types/room-view.types";
 import { NO_SCREEN_SOUND, NO_SOUND_HERE } from "../constants/stage-controls.constants";
 import type { RoomHearing } from "../../../types/room-hearing.types";

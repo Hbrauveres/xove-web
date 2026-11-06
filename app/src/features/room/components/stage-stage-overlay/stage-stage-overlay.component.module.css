@@ -1,5 +1,5 @@
 .overlay {
-  /* The translate: it rises with the round buttons above the settings sheet, together (spec 0118). */
+  /* The translate: it rises with the round buttons above the settings sheet, together. */
   transition:
     opacity var(--duration-250) ease,
     translate var(--unroll),
@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;
   /*
-   * The fullscreen button has one place on every layout (spec 0111): the bottom right, its
+   * The fullscreen button has one place on every layout: the bottom right, its
    * centre level with the round buttons' row (12 px from the bottom, buttons --btn tall).
    */
   justify-content: flex-end;

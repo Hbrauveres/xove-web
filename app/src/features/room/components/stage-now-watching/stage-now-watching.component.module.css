@@ -1,6 +1,6 @@
-/* Who is on the stage (specs 0104 and 0107): see specs/0107-stage-hug/design.html. */
+/* Who is on the stage. */
 .now {
-  /* The left grows and gives way first (spec 0107). */
+  /* The left grows and gives way first. */
   flex: 1 1 auto;
   display: flex;
   align-items: center;
@@ -87,7 +87,7 @@
   flex: 0 1 auto;
 }
 
-/* Short of room, the left gives way first: the words go, then the avatars (spec 0107). */
+/* Short of room, the left gives way first: the words go, then the avatars. */
 @container (--medium) {
   /* Hidden to the eye only: screen readers still hear "N watching". */
   .count {
@@ -124,7 +124,7 @@
   background: var(--surface-raised);
 }
 
-/* On a wide screen, the size of the live person's photo (spec 0123). */
+/* On a wide screen, the size of the live person's photo. */
 .nobodyBig {
   width: var(--avatar-big);
   height: var(--avatar-big);

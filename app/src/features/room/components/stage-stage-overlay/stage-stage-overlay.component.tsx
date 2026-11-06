@@ -1,19 +1,14 @@
 import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
-import styles from "./StageOverlay.module.css";
+import styles from "./stage-stage-overlay.component.module.css";
+import type { StageStageOverlayProps } from "./types/stage-stage-overlay.types";
 import { Tooltip } from "@shared/components/tooltip";
-
-type Props = {
-  /** The player is fullscreen: the button leaves it. */
-  fullscreen: boolean;
-  onFullscreen: () => void;
-};
 
 /**
  * What sits over the video: the fullscreen button. Who is live, and for how long, is in the
- * info row under the stage (spec 0104).
+ * info row under the stage.
  */
-export function StageOverlay({ fullscreen, onFullscreen }: Props) {
+export function StageStageOverlay({ fullscreen, onFullscreen }: StageStageOverlayProps) {
   const label = fullscreen ? "Exit fullscreen" : "Fullscreen";
   return (
     <div className={styles.overlay} data-overlay>

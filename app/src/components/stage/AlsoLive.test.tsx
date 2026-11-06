@@ -8,7 +8,7 @@ import type { FakeTrack } from "../../testing/fakeLiveKit";
 import type { Sharer } from "@features/room/types/room-view.types";
 import { floatingStore } from "@shared/stores/floating-store";
 import { AlsoLive } from "./AlsoLive";
-import type { Hearing } from "./HearToggles";
+import type { Hearing } from "@features/room/types/sound.types";
 
 const bruno = () =>
   aSharer({
@@ -190,7 +190,7 @@ describe("also live (specs 0104 and 0123)", () => {
     await user.hover(within(row).getByRole("button", { name: "Unmute Bruno's screen sound" }));
     const soundBar = await within(row).findByRole("slider", { name: "Bruno's screen sound volume" });
     expect(voiceBar).not.toBeInTheDocument();
-    expect(row.querySelector("[data-leaving]")).not.toBeNull();
+    expect(row.querySelector('[data-phase="leaving"]')).not.toBeNull();
 
     fireEvent.change(soundBar, { target: { value: "0.3" } });
     expect(within(row).getByRole("button", { name: "Mute Bruno's screen sound" })).toBeInTheDocument();

@@ -1,10 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { aSharer } from "../../testing/factories/sharer.factory";
+import { aSharer } from "@testing/factories/sharer.factory";
 import type { Sharer } from "@features/room/types/room-view.types";
 import { toastStore } from "@shared/stores/toast-store";
-import { HearToggles, type Hearing } from "./HearToggles";
+import type { Hearing } from "../../types/sound.types";
+import { StageHearToggles } from "./stage-hear-toggles.component";
 
 const bruno = (extra: Partial<Sharer> = {}) => aSharer({ hasSound: true, hasVoice: true, ...extra });
 const HEARD: Hearing = { sound: { volume: 1, muted: false }, voice: { volume: 0.7, muted: false } };
@@ -13,7 +14,7 @@ describe("a preview's two toggles (spec 0123)", () => {
   it("mutes that person's sound or voice for me, each on its own, keeping its volume", async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
-    render(<HearToggles sharer={bruno()} hearing={HEARD} onChange={onChange} />);
+    render(<StageHearToggles sharer={bruno()} hearing={HEARD} onChange={onChange} />);
     await user.click(screen.getByRole("button", { name: "Mute Bruno's voice" }));
     expect(onChange).toHaveBeenLastCalledWith({ ...HEARD, voice: { volume: 0.7, muted: true } });
     await user.click(screen.getByRole("button", { name: "Mute Bruno's screen sound" }));
@@ -22,14 +23,20 @@ describe("a preview's two toggles (spec 0123)", () => {
 
   it("shows what I muted as pressed", () => {
     render(
-      <HearToggles sharer={bruno()} hearing={{ ...HEARD, voice: { volume: 0.7, muted: true } }} onChange={() => {}} />,
+      <StageHearToggles
+        sharer={bruno()}
+        hearing={{ ...HEARD, voice: { volume: 0.7, muted: true } }}
+        onChange={() => {}}
+      />,
     );
     expect(screen.getByRole("button", { name: "Unmute Bruno's voice" })).toHaveAttribute("aria-pressed", "true");
   });
 
   it("greys a sound that isn't there in its place, and a touch says why", async () => {
     const onChange = vi.fn();
-    render(<HearToggles sharer={bruno({ hasSound: false, hasVoice: false })} hearing={HEARD} onChange={onChange} />);
+    render(
+      <StageHearToggles sharer={bruno({ hasSound: false, hasVoice: false })} hearing={HEARD} onChange={onChange} />,
+    );
     const voice = screen.getByRole("button", { name: "Bruno: Bruno's mic is off" });
     expect(voice).toHaveAttribute("aria-disabled", "true");
     await userEvent.setup().click(voice);
@@ -38,17 +45,19 @@ describe("a preview's two toggles (spec 0123)", () => {
   });
 
   it("lights the voice while they speak, never once I've muted it (who's talking)", () => {
-    const { rerender } = render(<HearToggles sharer={bruno({ speaking: true })} hearing={HEARD} onChange={() => {}} />);
+    const { rerender } = render(
+      <StageHearToggles sharer={bruno({ speaking: true })} hearing={HEARD} onChange={() => {}} />,
+    );
     expect(screen.getByRole("button", { name: "Mute Bruno's voice" })).toHaveAttribute("data-cue", "talking");
     rerender(
-      <HearToggles
+      <StageHearToggles
         sharer={bruno({ speaking: true })}
         hearing={{ ...HEARD, voice: { volume: 0.7, muted: true } }}
         onChange={() => {}}
       />,
     );
     expect(screen.getByRole("button", { name: "Unmute Bruno's voice" })).not.toHaveAttribute("data-cue", "talking");
-    rerender(<HearToggles sharer={bruno({ speaking: false })} hearing={HEARD} onChange={() => {}} />);
+    rerender(<StageHearToggles sharer={bruno({ speaking: false })} hearing={HEARD} onChange={() => {}} />);
     expect(screen.getByRole("button", { name: "Mute Bruno's voice" })).not.toHaveAttribute("data-cue", "talking");
   });
 });

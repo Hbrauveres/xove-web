@@ -2,12 +2,13 @@ import { Face } from "@shared/components/face";
 import type { LiveFeed, Sharer } from "@features/room/types/room-view.types";
 import { StageScreenVideo } from "@features/room/components/stage-screen-video";
 import { stackOf, useSwapping } from "./stack";
-import { HearToggles, type Hearing } from "./HearToggles";
+import { StageHearToggles } from "@features/room/components/stage-hear-toggles";
+import type { Hearing } from "@features/room/types/sound.types";
 import { PreviewTray } from "./PreviewTray";
 import { floatingStore } from "@shared/stores/floating-store";
 import { usePreviewTray } from "./usePreviewTray";
 import { useKeyboardLast } from "@features/room/hooks/use-keyboard-last.hook";
-import { seatsOpen } from "./NowWatching";
+import { seatsOpen } from "@features/room/utils/seats-open.util";
 import styles from "./AlsoLive.module.css";
 import { LabelPill } from "@shared/components/label-pill";
 import { Tooltip } from "@shared/components/tooltip";
@@ -129,7 +130,7 @@ export function AlsoLive({ others, liveCount, places, free, onPick, hearOf, onHe
           // My own preview: only its swap, when I share both.
           if (!s || (s.isMe && !both)) return null;
           return (
-            <HearToggles
+            <StageHearToggles
               sharer={s}
               hearing={hearOf(id)}
               onChange={(h) => onHear(id, h)}

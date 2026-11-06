@@ -1,0 +1,85 @@
+/* One sound's slider in a preview's row: its icon, then its volume. */
+.slider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-2) var(--space-1);
+  color: var(--text);
+}
+
+.slider > svg {
+  flex: none;
+  width: var(--size-3-75);
+  height: var(--size-3-75);
+}
+
+.range {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Switching: the old one, laid over, its bar shrinking to the left and its icon fading. */
+.slider[data-phase="leaving"] {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.slider[data-phase="leaving"] svg {
+  animation: fade-out var(--duration-160) ease forwards;
+}
+
+.slider[data-phase="leaving"] .range {
+  animation: shrink var(--duration-220) var(--ease-standard) forwards;
+}
+
+/* The new one: its icon fading in, its bar growing from the left as the old one goes. */
+.slider[data-phase="entering"] svg {
+  animation: fade-in var(--duration-180) ease var(--duration-80) backwards;
+}
+
+.slider[data-phase="entering"] .range {
+  animation: grow var(--duration-260) var(--ease-out) var(--duration-120) backwards;
+}
+
+/* Both ends given: a clip can't be blended to or from none. */
+@keyframes shrink {
+  from {
+    clip-path: inset(calc(var(--space-2) * -1) 0 calc(var(--space-2) * -1) 0);
+  }
+  to {
+    clip-path: inset(calc(var(--space-2) * -1) 100% calc(var(--space-2) * -1) 0);
+  }
+}
+
+@keyframes grow {
+  from {
+    clip-path: inset(calc(var(--space-2) * -1) 100% calc(var(--space-2) * -1) 0);
+  }
+  to {
+    clip-path: inset(calc(var(--space-2) * -1) 0 calc(var(--space-2) * -1) 0);
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slider[data-phase="leaving"] {
+    display: none;
+  }
+
+  .slider[data-phase="entering"] svg,
+  .slider[data-phase="entering"] .range {
+    animation: none;
+  }
+}

@@ -1,38 +1,20 @@
 import { StatPill } from "@shared/components/stat-pill";
 import { LiveBadge } from "@shared/components/live-badge";
 import { Face } from "@shared/components/face";
-import { useElapsed } from "@features/room/hooks/use-elapsed.hook";
-import type { Friend, Sharer } from "@features/room/types/room-view.types";
-import styles from "./NowWatching.module.css";
-import { whoIsHere } from "@features/room/utils/who-is-here.util";
+import { useElapsed } from "./hooks/use-elapsed.hook";
+import { MAX_AVATARS } from "./constants/stage-now-watching.constants";
+import styles from "./stage-now-watching.component.module.css";
+import type { StageNowWatchingProps } from "./types/stage-now-watching.types";
+import { whatOf } from "./utils/what-of.util";
+import { whoIsHere } from "./utils/who-is-here.util";
 import { Tooltip } from "@shared/components/tooltip";
 
-/** What a person shares, in two words. */
-// "· voice" while their voice is on (spec 0123).
-const whatOf = (s: Sharer) =>
-  (s.screen && s.camera ? "Screen with camera" : s.screen ? "Screen" : "Camera") +
-  (!s.isMe && s.hasVoice ? " · voice" : "");
-
-/** The seats left for a stream, in words (spec 0123). */
-export const seatsOpen = (free: number) => `${free} ${free === 1 ? "seat" : "seats"} open`;
-
-/** The most avatars in a row: the count covers the rest. */
-const MAX_AVATARS = 4;
-
-type Props = {
-  sharer: Sharer | null;
-  /** Everyone with this stream on their stage, me included, never the sharer (spec 0107). */
-  watchers?: Friend[];
-  /** The others in the room, for an empty stage. */
-  others?: Friend[];
-};
-
 /**
- * The left of the info row (specs 0104 and 0107): who is on the stage, LIVE, what they share,
+ * The left of the info row: who is on the stage, LIVE, what they share,
  * for how long and who's watching, like YouTube's title row. Or, with nobody live, an
  * invitation with who's here.
  */
-export function NowWatching({ sharer, watchers = [], others = [] }: Props) {
+export function StageNowWatching({ sharer, watchers = [], others = [] }: StageNowWatchingProps) {
   const elapsed = useElapsed(sharer?.since ?? null);
   if (!sharer) {
     return (

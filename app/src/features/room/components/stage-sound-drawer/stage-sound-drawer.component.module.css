@@ -1,0 +1,30 @@
+/* One drawer after the row's buttons that unrolls by its height (300 ms) and rolls back (240 ms). */
+.drawer {
+  display: grid;
+  grid-template-rows: 0fr;
+  align-self: stretch;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--duration-240) var(--ease-standard),
+    opacity var(--duration-180) ease;
+}
+
+.drawer[data-open] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows var(--duration-300) var(--ease-out),
+    opacity var(--duration-220) ease var(--duration-40);
+}
+
+.inner {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer {
+    transition: none;
+  }
+}

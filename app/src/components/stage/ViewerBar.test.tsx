@@ -5,7 +5,8 @@ import { describe, expect, it, vi } from "vitest";
 import { onFakeClock } from "../../testing/factories/clock.factory";
 import { TIP_REST_MS } from "@shared/constants/floating.constants";
 import { fullRoom } from "@features/room/utils/full-room.util";
-import { ViewerBar, type Sound } from "./ViewerBar";
+import type { Sound } from "@features/room/types/sound.types";
+import { ViewerBar } from "./ViewerBar";
 
 // Fresh handlers per render, so no test sees another's calls.
 const base = () => ({ live: false, canShareScreen: true, onStart: vi.fn(), onSettings: vi.fn() });
