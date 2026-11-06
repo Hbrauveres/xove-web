@@ -7,8 +7,6 @@
   ["src/components/room/SeatOffer", "#192 room: queue, footer, page"],
   ["src/components/stage/StageOverlay", "#191 today's stage pieces"],
   ["src/components/stage/usePreviewTray", "#191 today's stage pieces"],
-  ["src/hooks/", "#190 room: stage, Stage split"],
-  ["src/media/", "#190 room: stage, Stage split"],
   ["src/pages/RoomPage.test", "#192 room: queue, footer, page"],
   ["src/shared/styles/", "#185 shared: tokens"],
   ["src/components/room/RoomFooter", "#192 room: queue, footer, page"],
@@ -20,10 +18,10 @@
   ["src/components/stage/ViewerBar", "#191 today's stage pieces"],
   ["src/components/stage/PlayerButtons", "#191 today's stage pieces"],
   ["src/components/stage/PreviewTray", "#191 today's stage pieces"],
-  ["src/components/stage/", "#190 room: stage, Stage split"],
   ["src/components/", "#192 room: queue, footer, page"],
   ["src/pages/RoomPage", "#192 room: queue, footer, page"],
   ["src/pages/", "#194 home, request access, admin, the shell"],
   ["src/main", "#194 home, request access, admin, the shell"],
-  ["src/testing/", "#195 the sweep"]
+  ["src/testing/", "#195 the sweep"],
+  ["src/components/stage/stack", "#191 today's stage pieces"]
 ]
