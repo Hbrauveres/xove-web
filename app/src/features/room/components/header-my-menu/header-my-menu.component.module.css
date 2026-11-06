@@ -1,0 +1,56 @@
+/* My menu: who I am and my connection, the ambilight, then Admin and Sign out. */
+.me {
+  padding: var(--space-1-5);
+}
+
+.who {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2-5);
+  padding: var(--space-2) var(--space-2-5) var(--space-2-5);
+}
+
+.who b {
+  font-weight: 700;
+}
+
+.who small {
+  display: block;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-0-5) var(--space-2-5) var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.status i {
+  width: var(--size-2);
+  height: var(--size-2);
+  border-radius: 50%;
+  background: var(--warn);
+}
+
+.status[data-state="connected"] i {
+  background: var(--ok);
+}
+
+.light {
+  display: grid;
+  gap: var(--space-2-5);
+  padding: var(--space-3) var(--space-4) var(--space-3-5);
+}
+
+.slider {
+  width: 100%;
+}
+
+.actions {
+  padding: var(--space-1-5);
+}

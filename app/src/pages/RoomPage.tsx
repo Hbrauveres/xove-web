@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router";
 import { ErrorNotice } from "@shared/components/error-notice";
 import { useAuth } from "@shared/stores/auth-store";
-import { AccountButton } from "../components/room/AccountButton";
+import { HeaderMyPictureButton } from "@features/room/components/header-my-picture-button";
 import { HeaderActivityPill } from "@features/room/components/header-activity-pill";
 import { HeaderPeopleButton } from "@features/room/components/header-people-button";
 import { RoomFooter } from "../components/room/RoomFooter";
@@ -194,7 +194,7 @@ function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
         watchingOf={session.watchingOf}
         seats={session.seats}
       />
-      <AccountButton
+      <HeaderMyPictureButton
         me={session.me}
         isAdmin={isAdmin}
         connection={session.connection}

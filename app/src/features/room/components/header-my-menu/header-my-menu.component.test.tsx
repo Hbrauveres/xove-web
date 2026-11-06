@@ -1,20 +1,22 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { createRef } from "react";
 import { MemoryRouter } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 import type { ConnectionState } from "@services/livekit-service";
-import type { Friend } from "@features/room/types/room-view.types";
-import { AccountButton } from "./AccountButton";
+import type { HeaderMyMenuProps } from "./types/header-my-menu.types";
+import { HeaderMyMenu } from "./header-my-menu.component";
 
-const me = (): Friend => ({ id: "user-99", name: "Henrique", hue: 210, online: true });
-
-function setup(props: Partial<Parameters<typeof AccountButton>[0]> = {}) {
+function setup(props: Partial<HeaderMyMenuProps> = {}) {
   const onSignOut = vi.fn();
   const onAmbilightChange = vi.fn();
-  const view = render(
+  render(
     <MemoryRouter>
-      <AccountButton
-        me={me()}
+      <HeaderMyMenu
+        open
+        anchor={createRef<HTMLElement>()}
+        onClose={vi.fn()}
+        me={{ id: "user-99", name: "Henrique", hue: 210, online: true }}
         isAdmin
         connection={"connected" as ConnectionState}
         ambilight={{ on: true, brightness: 0.9 }}
@@ -24,23 +26,17 @@ function setup(props: Partial<Parameters<typeof AccountButton>[0]> = {}) {
       />
     </MemoryRouter>,
   );
-  return { user: userEvent.setup(), onSignOut, onAmbilightChange, view };
+  return {
+    user: userEvent.setup(),
+    onSignOut,
+    onAmbilightChange,
+    panel: screen.getByRole("dialog", { name: "Account" }),
+  };
 }
 
-describe("account button (spec 0104)", () => {
-  it("is my avatar with a dot that follows the connection", () => {
-    const { view } = setup();
-    expect(screen.getByRole("button", { name: "Henrique: account, connected" })).toBeInTheDocument();
-    view.unmount();
-    setup({ connection: "reconnecting" });
-    expect(screen.getByRole("button", { name: "Henrique: account, reconnecting" })).toBeInTheDocument();
-  });
-
-  it("opens my name, role and connection, the ambilight, Admin and Sign out", async () => {
-    const { user, onSignOut } = setup();
-    await user.click(screen.getByRole("button", { name: /account/ }));
-
-    const panel = screen.getByRole("dialog", { name: "Account" });
+describe("my menu", () => {
+  it("shows my name, role and connection, the ambilight, Admin and Sign out", async () => {
+    const { user, onSignOut, panel } = setup();
     expect(within(panel).getByText("Henrique")).toBeInTheDocument();
     expect(within(panel).getByText("Admin", { selector: "small" })).toBeInTheDocument();
     expect(within(panel).getByText("Connected")).toBeInTheDocument();
@@ -51,17 +47,19 @@ describe("account button (spec 0104)", () => {
     expect(onSignOut).toHaveBeenCalled();
   });
 
-  it("shows Admin only to admins, and Member as the role otherwise", async () => {
-    const { user } = setup({ isAdmin: false });
-    await user.click(screen.getByRole("button", { name: /account/ }));
-
+  it("shows Admin only to admins, and Member as the role otherwise", () => {
+    setup({ isAdmin: false });
     expect(screen.queryByRole("link", { name: "Admin" })).not.toBeInTheDocument();
     expect(screen.getByText("Member")).toBeInTheDocument();
   });
 
-  it("switches the ambilight and sets its brightness, at once", async () => {
+  it("says the connection in words", () => {
+    setup({ connection: "disconnected" });
+    expect(screen.getByText("Video offline")).toBeInTheDocument();
+  });
+
+  it("switches the ambilight and sets its brightness", async () => {
     const { user, onAmbilightChange } = setup();
-    await user.click(screen.getByRole("button", { name: /account/ }));
 
     await user.click(screen.getByRole("switch", { name: "Ambilight" }));
     expect(onAmbilightChange).toHaveBeenLastCalledWith({ on: false, brightness: 0.9 });

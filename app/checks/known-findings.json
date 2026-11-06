@@ -37,20 +37,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/room/AccountButton.module.css",
-    "count": 2,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/room/AccountButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/room/RoomFooter.module.css",
     "count": 2,
     "owner": "#192 room: queue, footer, page"
@@ -432,27 +418,6 @@
     "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/AccountButton.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/AccountButton.test.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/AccountButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
   },
   {
     "tool": "code",
@@ -1094,13 +1059,6 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/components/room/AccountButton.tsx",
-    "count": 2,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
     "file": "src/components/room/SeatOffer.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
@@ -1321,27 +1279,6 @@
     "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/AccountButton.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/AccountButton.test.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/AccountButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
   },
   {
     "tool": "code",
@@ -1958,13 +1895,6 @@
     "file": "src/pages/RoomPage.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/room/AccountButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
   },
   {
     "tool": "lint",
