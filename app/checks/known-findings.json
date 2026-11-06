@@ -16,13 +16,6 @@
   {
     "tool": "code",
     "rule": "domQuery",
-    "file": "src/components/stage/Stage.tsx",
-    "count": 3,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "domQuery",
     "file": "src/main.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"

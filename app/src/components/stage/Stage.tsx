@@ -1,7 +1,7 @@
 import { micState } from "@shared/utils/mic-state.util";
 import { IconButton } from "@shared/components/icon-button";
 import { Icon } from "@shared/components/icon";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { viewerQualities } from "@features/room/utils/viewer-qualities.util";
 import { useHearing } from "@features/room/hooks/use-hearing.hook";
 import type { StagePick } from "@features/room/types/stage.types";
@@ -27,6 +27,8 @@ import { Tooltip } from "@shared/components/tooltip";
 import { useVideoShape } from "@features/room/hooks/use-video-shape.hook";
 import { useKeyboardLast } from "@features/room/hooks/use-keyboard-last.hook";
 import { gridKey } from "@features/room/utils/light-grid.util";
+import { SettingsAnchorContext } from "@features/room/hooks/use-settings-anchor.hook";
+import type { SettingsAnchor } from "@features/room/types/settings-anchor.types";
 import styles from "./Stage.module.css";
 
 /** The settings over the cog sit this far above the round buttons (design decision 9). */
@@ -110,6 +112,20 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
   const boxRef = useRef<HTMLDivElement>(null);
   const controlsRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<HTMLDivElement>(null);
+  // The controls hand over the cog and their row, for the settings to open over them.
+  const cogEl = useRef<HTMLElement | null>(null);
+  const rowEl = useRef<HTMLElement | null>(null);
+  const anchor = useMemo<SettingsAnchor>(
+    () => ({
+      cog: (el) => {
+        cogEl.current = el;
+      },
+      row: (el) => {
+        rowEl.current = el;
+      },
+    }),
+    [],
+  );
   // The keyboard's focus keeps the controls; a click doesn't.
   const keyboardFocus = useKeyboardLast();
   const focusInside = () =>
@@ -175,8 +191,8 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
     const place = () => {
       const controls = controlsRef.current;
       if (!controls) return;
-      const cog = controls.querySelector('button[aria-label="Settings"], [data-settings-anchor]');
-      const row = controls.querySelector("[data-buttons]");
+      const cog = cogEl.current;
+      const row = rowEl.current;
       const h = host.getBoundingClientRect();
       if (!cog || !row || !h.width) return;
       const c = cog.getBoundingClientRect();
@@ -188,8 +204,7 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
     // The row changes too (the volume comes and goes with who's on the stage).
     const watch = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(place);
     watch?.observe(host);
-    const row = controlsRef.current.querySelector("[data-buttons]");
-    if (row) watch?.observe(row);
+    if (rowEl.current) watch?.observe(rowEl.current);
     return () => {
       window.removeEventListener("resize", place);
       watch?.disconnect();
@@ -312,60 +327,62 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
 
       {/* Always there: over the empty stage they never fade; over a stream, with the bars. */}
       <div ref={controlsRef} className={styles.controls}>
-        {big && !big.isMe ? (
-          // Someone else's stream: what you hear at the left, you at the right (spec 0123, design decision 1).
-          <ViewerBar
-            sound={{
-              ...hearOf(big.person.id).sound,
-              onChange: (s) => setHear(big.person.id, { ...hearOf(big.person.id), sound: s }),
-              unavailable: !big.screen ? NO_SCREEN_SOUND : big.hasSound ? undefined : NO_SOUND_HERE,
-            }}
-            voice={{
-              ...hearOf(big.person.id).voice,
-              onChange: (v) => setHear(big.person.id, { ...hearOf(big.person.id), voice: v }),
-              unavailable: big.hasVoice ? undefined : `${big.person.name}'s mic is off`,
-              name: big.person.name,
-              talking: big.speaking,
-            }}
-            live={meLive}
-            micOn={micOn}
-            onMic={toggleMic}
-            canShareScreen={controls.canShareScreen}
-            full={controls.free <= 0}
-            onStart={startMine}
-            onSettings={toggleSettings}
-          />
-        ) : !big ? (
-          // Nobody live: the empty stage has the ways to start; the settings sit in the corner, beside
-          // fullscreen, as over a stream (spec 0147).
-          <ViewerBar
-            live={false}
-            settingsOnly
-            canShareScreen={controls.canShareScreen}
-            onStart={startMine}
-            onSettings={toggleSettings}
-          />
-        ) : (
-          // Your stream: your controls in the middle, your mic with them.
-          <PlayerButtons
-            {...controls}
-            onStart={startMine}
-            onSettings={toggleSettings}
-            onMenuChange={onMenuChange}
-            extra={
-              <IconButton
-                variant="player"
-                live={micOn}
-                around={(button) => <Tooltip text={micState(micOn).label}>{button}</Tooltip>}
-                aria-pressed={micOn}
-                aria-label={micState(micOn).label}
-                onClick={toggleMic}
-              >
-                <Icon name={micState(micOn).icon} size={20} />
-              </IconButton>
-            }
-          />
-        )}
+        <SettingsAnchorContext value={anchor}>
+          {big && !big.isMe ? (
+            // Someone else's stream: what you hear at the left, you at the right (spec 0123, design decision 1).
+            <ViewerBar
+              sound={{
+                ...hearOf(big.person.id).sound,
+                onChange: (s) => setHear(big.person.id, { ...hearOf(big.person.id), sound: s }),
+                unavailable: !big.screen ? NO_SCREEN_SOUND : big.hasSound ? undefined : NO_SOUND_HERE,
+              }}
+              voice={{
+                ...hearOf(big.person.id).voice,
+                onChange: (v) => setHear(big.person.id, { ...hearOf(big.person.id), voice: v }),
+                unavailable: big.hasVoice ? undefined : `${big.person.name}'s mic is off`,
+                name: big.person.name,
+                talking: big.speaking,
+              }}
+              live={meLive}
+              micOn={micOn}
+              onMic={toggleMic}
+              canShareScreen={controls.canShareScreen}
+              full={controls.free <= 0}
+              onStart={startMine}
+              onSettings={toggleSettings}
+            />
+          ) : !big ? (
+            // Nobody live: the empty stage has the ways to start; the settings sit in the corner, beside
+            // fullscreen, as over a stream (spec 0147).
+            <ViewerBar
+              live={false}
+              settingsOnly
+              canShareScreen={controls.canShareScreen}
+              onStart={startMine}
+              onSettings={toggleSettings}
+            />
+          ) : (
+            // Your stream: your controls in the middle, your mic with them.
+            <PlayerButtons
+              {...controls}
+              onStart={startMine}
+              onSettings={toggleSettings}
+              onMenuChange={onMenuChange}
+              extra={
+                <IconButton
+                  variant="player"
+                  live={micOn}
+                  around={(button) => <Tooltip text={micState(micOn).label}>{button}</Tooltip>}
+                  aria-pressed={micOn}
+                  aria-label={micState(micOn).label}
+                  onClick={toggleMic}
+                >
+                  <Icon name={micState(micOn).icon} size={20} />
+                </IconButton>
+              }
+            />
+          )}
+        </SettingsAnchorContext>
       </div>
     </>
   );
