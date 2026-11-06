@@ -39,4 +39,12 @@ describe("the quality asked of the big stream", () => {
     renderHook(() => useBigQuality(main, true));
     expect(setQuality).not.toHaveBeenCalled();
   });
+
+  it("asks again when the sharer changes their quality", () => {
+    const capped = feed("720p");
+    const hook = renderHook(({ main }) => useBigQuality(main, false), { initialProps: { main: capped.main } });
+    expect(capped.setQuality).toHaveBeenLastCalledWith("720p");
+    hook.rerender({ main: { ...capped.main, settings: { quality: "1080p", mode: "sharp" } } });
+    expect(capped.setQuality).toHaveBeenLastCalledWith("auto");
+  });
 });

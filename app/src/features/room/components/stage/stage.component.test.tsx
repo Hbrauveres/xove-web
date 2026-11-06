@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import type { StreamControls } from "../../../../components/stage/PlayerButtons";
 import { aSharer } from "../../../../testing/factories/sharer.factory";
@@ -42,8 +42,48 @@ describe("the stage", () => {
     expect(within(stage()).getByRole("dialog", { name: "Settings" })).toBeInTheDocument();
   });
 
-  it("takes the picture's shape: 16:9 while empty", () => {
-    render(<Room sharers={[]} />);
-    expect((stage().firstElementChild as HTMLElement).style.getPropertyValue("--shape")).toBe(String(16 / 9));
+  it("is 16:9 while empty and while a stream loads, then takes the picture's shape", () => {
+    const shapeOf = () => Number((stage().firstElementChild as HTMLElement).style.getPropertyValue("--shape"));
+    const { rerender } = render(<Room sharers={[]} />);
+    expect(shapeOf()).toBeCloseTo(16 / 9);
+    const bruno = aSharer();
+    const screenFeed = bruno.screen!;
+    rerender(
+      <Room
+        sharers={[
+          { ...bruno, screen: { kind: "screen", startedAt: screenFeed.startedAt, settings: screenFeed.settings } },
+        ]}
+      />,
+    );
+    expect(within(stage()).getByText(/Loading Bruno's screen/)).toBeInTheDocument();
+    expect(shapeOf()).toBeCloseTo(16 / 9);
+    rerender(<Room sharers={[bruno]} />);
+    const video = within(stage()).getByLabelText("Bruno's shared screen");
+    const pictureSize = (width: number, height: number) =>
+      act(() => {
+        Object.defineProperty(video, "videoWidth", { configurable: true, get: () => width });
+        Object.defineProperty(video, "videoHeight", { configurable: true, get: () => height });
+        video.dispatchEvent(new Event("resize"));
+      });
+    pictureSize(1840, 1000);
+    expect(shapeOf()).toBeCloseTo(1.84);
+    // A portrait monitor: taller than 16:9.
+    pictureSize(1080, 1920);
+    expect(shapeOf()).toBeCloseTo(0.5625);
+  });
+
+  it("swaps my own screen and camera from my facecam", () => {
+    const me = { ...aSharer({ id: "me", kinds: ["screen", "camera"] }), isMe: true };
+    const mine = (feed: NonNullable<Sharer["screen"]>) => ({
+      kind: feed.kind,
+      startedAt: feed.startedAt,
+      settings: feed.settings,
+      local: feed.remote!.video,
+    });
+    render(<Room sharers={[{ ...me, screen: mine(me.screen!), camera: mine(me.camera!) }]} />);
+    const facecam = () => within(stage()).getByRole("application", { name: /Your/ });
+    expect(within(facecam()).getByLabelText("Your camera")).toBeInTheDocument();
+    act(() => within(facecam()).getByRole("button", { name: "Swap views" }).click());
+    expect(within(facecam()).getByLabelText("Your shared screen")).toBeInTheDocument();
   });
 });
