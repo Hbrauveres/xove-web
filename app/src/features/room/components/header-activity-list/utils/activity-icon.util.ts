@@ -1,5 +1,5 @@
 import type { IconName } from "@shared/types/icon.types";
-import type { ActivityEvent } from "../types/room-view.types";
+import type { ActivityEvent } from "../../../types/room-view.types";
 
 /** The small icon in front of an event: a screen or a camera for streams, a door for people. */
 export function activityIconOf(event: ActivityEvent): IconName {

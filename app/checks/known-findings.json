@@ -51,20 +51,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/room/ActivityList.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/room/ActivityList.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/room/ActivityPill.module.css",
     "count": 1,
     "owner": "#189 room: header"
@@ -96,20 +82,6 @@
     "file": "src/components/room/RoomFooter.module.css",
     "count": 2,
     "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/room/RoomHeader.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/room/RoomHeader.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
   },
   {
     "tool": "code",
@@ -513,27 +485,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/room/ActivityList.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/ActivityList.test.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/ActivityList.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/components/room/ActivityPill.module.css",
     "count": 1,
     "owner": "#189 room: header"
@@ -586,20 +537,6 @@
     "file": "src/components/room/RoomFooter.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/RoomHeader.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/RoomHeader.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
   },
   {
     "tool": "code",
@@ -1157,13 +1094,6 @@
   {
     "tool": "code",
     "rule": "noTest",
-    "file": "src/components/room/RoomHeader.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
     "file": "src/components/room/SeatOffer.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
@@ -1241,13 +1171,6 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/components/room/ActivityList.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
     "file": "src/components/room/ActivityPill.tsx",
     "count": 1,
     "owner": "#189 room: header"
@@ -1256,13 +1179,6 @@
     "tool": "code",
     "rule": "partInCode",
     "file": "src/components/room/PeopleButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/room/RoomHeader.tsx",
     "count": 1,
     "owner": "#189 room: header"
   },
@@ -1514,27 +1430,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/room/ActivityList.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/ActivityList.test.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/ActivityList.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/components/room/ActivityPill.module.css",
     "count": 1,
     "owner": "#189 room: header"
@@ -1587,20 +1482,6 @@
     "file": "src/components/room/RoomFooter.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/RoomHeader.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/RoomHeader.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
   },
   {
     "tool": "code",
@@ -2140,13 +2021,6 @@
     "file": "src/components/stage/StaticNoise.tsx",
     "count": 1,
     "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
-    "file": "src/components/room/ActivityList.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
   },
   {
     "tool": "lint",
@@ -2704,13 +2578,6 @@
   {
     "tool": "tsc",
     "rule": "TS2375",
-    "file": "src/components/room/ActivityList.test.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
     "file": "src/components/room/ActivityPill.test.tsx",
     "count": 1,
     "owner": "#189 room: header"
@@ -2805,13 +2672,6 @@
     "file": "src/testing/fakeLiveKit.ts",
     "count": 3,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
-    "file": "src/components/room/ActivityList.test.tsx",
-    "count": 3,
-    "owner": "#189 room: header"
   },
   {
     "tool": "tsc",

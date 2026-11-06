@@ -1,4 +1,4 @@
-/* The activity list (spec 0104): see specs/0104-room-theater/design.html. */
+/* The activity list: one row per event, newest first. */
 .list {
   list-style: none;
   margin: 0;

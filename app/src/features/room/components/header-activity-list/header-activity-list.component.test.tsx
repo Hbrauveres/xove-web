@@ -1,8 +1,8 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { onFakeClock } from "../../testing/factories/clock.factory";
-import type { ActivityEvent, Friend } from "@features/room/types/room-view.types";
-import { ActivityList } from "./ActivityList";
+import { onFakeClock } from "../../../../testing/factories/clock.factory";
+import type { ActivityEvent, Friend } from "../../types/room-view.types";
+import { HeaderActivityList } from "./header-activity-list.component";
 
 const people = (): Friend[] => [
   { id: "user-99", name: "Henrique", hue: 210, online: true },
@@ -21,7 +21,7 @@ const ev = (
   kind,
   actorId,
   at: Date.now() - minutesAgo * 60_000,
-  stream,
+  ...(stream ? { stream } : {}),
 });
 const events = (): ActivityEvent[] => [
   ev("1", "joined", "user-99", 15),
@@ -39,7 +39,7 @@ function setup(watching: { personId: string; kind: "screen" | "camera" } | null 
   const user = onFakeClock();
   const onWatch = vi.fn();
   render(
-    <ActivityList
+    <HeaderActivityList
       events={events()}
       people={people()}
       meId="user-99"
@@ -53,7 +53,7 @@ function setup(watching: { personId: string; kind: "screen" | "camera" } | null 
   return { onWatch, user };
 }
 
-describe("activity list (spec 0104)", () => {
+describe("the activity list", () => {
   it("lists every kind of event, newest first", () => {
     setup();
     const items = within(screen.getByRole("list"))
@@ -74,9 +74,7 @@ describe("activity list (spec 0104)", () => {
   it("highlights the events not seen yet", () => {
     setup();
     const items = within(screen.getByRole("list")).getAllByRole("listitem");
-    expect(items[0].querySelector("[data-unseen]")).not.toBeNull();
-    expect(items[1].querySelector("[data-unseen]")).not.toBeNull();
-    expect(items[2].querySelector("[data-unseen]")).toBeNull();
+    expect(items.map((li) => li.querySelector("[data-unseen]") !== null).slice(0, 3)).toEqual([true, true, false]);
   });
 
   it("lets a live stream's event put it on the stage", async () => {
@@ -101,7 +99,7 @@ describe("activity list (spec 0104)", () => {
   it("says when someone turns their camera off", () => {
     onFakeClock();
     render(
-      <ActivityList
+      <HeaderActivityList
         events={[ev("1", "stopped", "user-7", 1, "camera")]}
         people={people()}
         meId="user-99"

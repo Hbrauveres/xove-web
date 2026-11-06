@@ -1,4 +1,4 @@
-/* The header (spec 0104): see specs/0104-room-theater/design.html. Above the light, no background. */
+/* The header: above the stage's light, with no background. */
 .header {
   position: relative;
   z-index: var(--layer-bars);

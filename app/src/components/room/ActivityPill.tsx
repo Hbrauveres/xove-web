@@ -6,7 +6,7 @@ import type { ConnectionState } from "@services/livekit-service";
 import type { ActivityEvent, Friend } from "@features/room/types/room-view.types";
 import { Dropdown } from "@shared/components/dropdown";
 import { PanelSection } from "@shared/components/panel-section";
-import { ActivityList } from "./ActivityList";
+import { HeaderActivityList } from "@features/room/components/header-activity-list";
 import { describeEvent } from "@features/room/utils/activity-text.util";
 import { shortAgo } from "@shared/utils/time-ago.util";
 import { useNow } from "@features/room/hooks/use-now.hook";
@@ -111,7 +111,7 @@ export function ActivityPill({ events, people, meId, connection, isLive, watchin
 
       <Dropdown open={open} label="Activity" align="center" anchor={anchor} onClose={() => close(false)}>
         <PanelSection scroll>
-          <ActivityList
+          <HeaderActivityList
             events={events}
             people={people}
             meId={meId}

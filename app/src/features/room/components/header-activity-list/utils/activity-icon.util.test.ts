@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ActivityEvent } from "../types/room-view.types";
+import type { ActivityEvent } from "../../../types/room-view.types";
 import { activityIconOf } from "./activity-icon.util";
 
 const event = (kind: ActivityEvent["kind"], stream?: "screen" | "camera") => ({ kind, stream }) as ActivityEvent;

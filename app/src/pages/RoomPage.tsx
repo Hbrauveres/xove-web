@@ -7,7 +7,7 @@ import { AccountButton } from "../components/room/AccountButton";
 import { ActivityPill } from "../components/room/ActivityPill";
 import { PeopleButton } from "../components/room/PeopleButton";
 import { RoomFooter } from "../components/room/RoomFooter";
-import { RoomHeader } from "../components/room/RoomHeader";
+import { Header } from "@features/room/components/header";
 import { WaitingRoom } from "../components/room/WaitingRoom";
 import { useAmbilight } from "@features/room/hooks/use-ambilight.hook";
 import { canShareScreen } from "@services/media-devices-service";
@@ -207,7 +207,7 @@ function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
 
   return (
     <div className={styles.theater} data-room>
-      <RoomHeader
+      <Header
         middle={
           <ActivityPill
             events={session.activity}
