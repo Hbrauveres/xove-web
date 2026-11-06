@@ -13,10 +13,19 @@ import { placeStyle } from "./utils/place-style.util";
  * together: their camera over the screen, or the other way round. Drag it (or move it with the
  * arrow keys) wherever it bothers least, collapse it to a tab, or swap it with the big video.
  */
-export function StageFacecam({ video, label, place, collapsed, onSwap, onMove, onCollapse }: StageFacecamProps) {
+export function StageFacecam({
+  video,
+  player,
+  label,
+  place,
+  collapsed,
+  onSwap,
+  onMove,
+  onCollapse,
+}: StageFacecamProps) {
   const box = useRef<HTMLDivElement>(null);
   const buttons = useRef<HTMLDivElement>(null);
-  const move = useFacecamMove(box, buttons, place, onMove);
+  const move = useFacecamMove({ box, buttons, player, place, onMove });
 
   if (collapsed) {
     return (

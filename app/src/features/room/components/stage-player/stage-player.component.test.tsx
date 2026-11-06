@@ -5,18 +5,19 @@ import { aSharer } from "../../../../testing/factories/sharer.factory";
 import { aStreamControls } from "../../../../testing/factories/stream-controls.factory";
 import { useHearing } from "../../hooks/use-hearing.hook";
 import { useStage } from "../../hooks/use-stage.hook";
+import type { StreamControls } from "../../../../components/stage/PlayerButtons";
 import type { Sharer } from "../../types/room-view.types";
 import { CHROME_IDLE_MS } from "./constants/stage-player.constants";
 import { StagePlayer } from "./stage-player.component";
 
 /** The player as the stage holds it, its pick and hearing kept by the room's own hooks. */
-function Player({ sharers }: { sharers: Sharer[] }) {
+function Player({ sharers, controls = aStreamControls() }: { sharers: Sharer[]; controls?: StreamControls }) {
   const stage = useStage(sharers);
   const hearing = useHearing(sharers, stage.big?.person.id ?? null);
   return (
     <StagePlayer
       sharers={sharers}
-      controls={aStreamControls()}
+      controls={controls}
       stage={stage}
       hearing={hearing}
       ambilight={{ on: true, brightness: 0.9 }}
@@ -136,5 +137,53 @@ describe("the player", () => {
     expect(within(frame).getByLabelText("Bruno's shared screen")).toBeInTheDocument();
     expect(within(frame).getByRole("button", { name: "Mute the screen's sound" })).toBeInTheDocument();
     expect(within(frame).getByRole("dialog", { name: "Settings" })).toBeInTheDocument();
+  });
+});
+
+describe("the settings over the player", () => {
+  /** The player 1600×900 at the page's corner; every button 40 px wide at x 900, every row's top at y 840. */
+  function sizes() {
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
+      if (this.tagName === "BUTTON") return DOMRect.fromRect({ x: 900, y: 850, width: 40, height: 40 });
+      if (this.getAttribute("aria-label") === null && this.querySelector("button")) {
+        return this.querySelector("video, h2")
+          ? DOMRect.fromRect({ x: 0, y: 0, width: 1600, height: 900 })
+          : DOMRect.fromRect({ x: 700, y: 840, width: 400, height: 60 });
+      }
+      return DOMRect.fromRect({ x: 0, y: 0, width: 1600, height: 900 });
+    });
+  }
+  const placed = (frame: HTMLElement) => [
+    frame.style.getPropertyValue("--cog-x"),
+    frame.style.getPropertyValue("--above-row"),
+  ];
+  const open = aStreamControls({ settingsOpen: true });
+
+  it("open over the cog in the corner with nobody live", () => {
+    sizes();
+    const { container } = render(<Player sharers={[]} controls={open} />);
+    expect(placed(container.firstElementChild as HTMLElement)).toEqual(["920px", "70px"]);
+  });
+
+  it("open over Go live over someone else's stream", () => {
+    sizes();
+    const { container } = render(<Player sharers={[aSharer()]} controls={open} />);
+    expect(placed(container.firstElementChild as HTMLElement)).toEqual(["920px", "70px"]);
+  });
+
+  it("open over my cog over my own stream", () => {
+    sizes();
+    const me = { ...aSharer({ id: "me" }), isMe: true };
+    const mine = {
+      ...me,
+      screen: { kind: "screen" as const, startedAt: 0, settings: me.screen!.settings, local: me.screen!.remote!.video },
+    };
+    const { container } = render(
+      <Player
+        sharers={[mine]}
+        controls={aStreamControls({ settingsOpen: true, mine: { screen: true, camera: false } })}
+      />,
+    );
+    expect(placed(container.firstElementChild as HTMLElement)).toEqual(["920px", "70px"]);
   });
 });

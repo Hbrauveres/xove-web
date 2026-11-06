@@ -32,8 +32,6 @@ export const SHIMMER_RATE = 1.9;
 export const SHIMMER_SPREAD = 0.004;
 /** Static flickers at this rate; more is wasted on a faded background. */
 export const FLICKER_FPS = 20;
-/** Half: a wave's middle, and a band's middle. */
-export const HALF = 0.5;
 /** The smooth step's curve, 3t² − 2t³. */
 export const SMOOTH_SQUARE = 3;
 export const SMOOTH_CUBE = 2;

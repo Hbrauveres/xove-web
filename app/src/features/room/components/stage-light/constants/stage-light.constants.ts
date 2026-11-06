@@ -22,8 +22,6 @@ export const FALLOFF_RATE = 3.4;
 /** The grain over the fade mask: a fixed seed, and how far it moves a shade (±0.8 of a level). */
 export const GRAIN_SEED = 118;
 export const GRAIN_LEVELS = 1.6;
-/** A pixel fully lit, in 8 bits. */
-export const OPAQUE = 255;
 /** The smallest easing step: drawing at less than this, 8-bit colours settle short of the target. */
 export const EASE_FLOOR = 0.12;
 /**
@@ -42,5 +40,3 @@ export const EASE_MS = 120;
 export const HAS_PICTURE = 2;
 /** The events that say whether a video plays. */
 export const PLAY_EVENTS = ["play", "playing", "pause", "ended", "emptied"];
-/** A share as a CSS percentage. */
-export const PERCENT = 100;

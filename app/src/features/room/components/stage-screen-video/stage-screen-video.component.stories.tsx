@@ -20,3 +20,8 @@ export default meta;
 
 /** Before its picture arrives: the stage's black. */
 export const Waiting: StoryObj<typeof meta> = {};
+/** A track that plays nothing. */
+const silence = { attach: (el: HTMLMediaElement) => el, detach: (el: HTMLMediaElement) => el };
+
+/** Someone's screen with its sound, at half volume. */
+export const WithSound: StoryObj<typeof meta> = { args: { video: silence, sound: silence, volume: 0.5 } };

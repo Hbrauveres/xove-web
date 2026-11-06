@@ -34,10 +34,12 @@ describe("the stage's view", () => {
   it("turns the TV on only the first time it stands by", () => {
     const big = aSharer();
     const { container, rerender, props } = renderView();
-    expect(container.querySelector('[class*="intro"]')).not.toBeNull();
+    // The stage's flash and the wall's, together.
+    const flashes = () => [container.querySelector('[class*="intro"]'), container.querySelector('[class*="flash"]')];
+    expect(flashes()).not.toContain(null);
     rerender(<StageView {...props} big={big} main={big.screen ?? null} />);
     rerender(<StageView {...props} />);
-    expect(container.querySelector('[class*="intro"]')).toBeNull();
+    expect(flashes()).toEqual([null, null]);
   });
 
   it("plays the big stream, with no standby glow", () => {

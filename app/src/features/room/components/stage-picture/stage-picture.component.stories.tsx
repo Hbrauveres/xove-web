@@ -11,6 +11,9 @@ const screen = {
   startedAt: 0,
   settings: { quality: "1080p" as const, mode: "sharp" as const },
 };
+/** A track that plays nothing: the story shows what's around the picture. */
+const silence = { attach: (el: HTMLMediaElement) => el, detach: (el: HTMLMediaElement) => el };
+const remote = { video: silence, setQuality: () => undefined };
 
 const meta = {
   title: "Room/Stage picture",
@@ -40,3 +43,21 @@ export default meta;
 
 /** Bruno's screen on its way: a notice until the video arrives. */
 export const Loading: StoryObj<typeof meta> = {};
+/** Bruno's screen playing. */
+export const Playing: StoryObj<typeof meta> = {
+  args: { big: { ...bruno, screen: { ...screen, remote } }, main: { ...screen, remote } },
+};
+
+/** Bruno's screen and camera: the camera in the facecam. */
+export const WithFacecam: StoryObj<typeof meta> = {
+  args: {
+    big: { ...bruno, screen: { ...screen, remote }, camera: { ...screen, kind: "camera", remote } },
+    main: { ...screen, remote },
+    small: { ...screen, kind: "camera", remote },
+  },
+};
+
+/** My own share, before its picture is there. */
+export const Starting: StoryObj<typeof meta> = {
+  args: { big: { ...bruno, isMe: true, screen }, main: screen },
+};

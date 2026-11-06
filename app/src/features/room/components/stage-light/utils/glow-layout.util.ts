@@ -1,4 +1,5 @@
-import { CELL_PX, MARGIN, PERCENT, SIDES, SPREAD } from "../constants/stage-light.constants";
+import { PERCENT } from "../../../constants/math.constants";
+import { CELL_PX, MARGIN, SIDES, SPREAD } from "../constants/stage-light.constants";
 import type { GlowLayout } from "../types/stage-light.types";
 
 /** The light's canvas for a grid: the reach and a margin round the stage, at 2 px a cell. */

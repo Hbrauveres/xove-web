@@ -1,4 +1,4 @@
-import { useCallback, type RefObject } from "react";
+import { useCallback, useMemo, type RefObject } from "react";
 import { useFullscreenElement } from "../../../hooks/use-fullscreen-element.hook";
 import type { StageFullscreen } from "../types/stage-fullscreen.types";
 
@@ -17,5 +17,5 @@ export function useStageFullscreen(frame: RefObject<HTMLElement | null>): StageF
     }
     el?.requestFullscreen?.().catch(() => undefined);
   }, [frame]);
-  return { fullscreen, toggle };
+  return useMemo(() => ({ fullscreen, toggle }), [fullscreen, toggle]);
 }

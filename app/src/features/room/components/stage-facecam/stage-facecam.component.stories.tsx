@@ -6,6 +6,8 @@ const meta = {
   component: StageFacecam,
   args: {
     label: "Bruno's camera",
+    // Only drawn here: there's no player to move it in.
+    player: { current: null },
     place: { x: 0.73, y: 0.04 },
     collapsed: false,
     onSwap: () => undefined,

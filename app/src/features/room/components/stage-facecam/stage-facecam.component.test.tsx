@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { useRef } from "react";
 import { describe, expect, it, vi } from "vitest";
 import type { MediaTrack } from "@services/livekit-service";
 import { FakeTrack } from "../../../../testing/fakeLiveKit";
@@ -16,8 +17,18 @@ function sizes() {
   });
 }
 
-function renderFacecam(overrides: Partial<StageFacecamProps> = {}) {
-  const props: StageFacecamProps = {
+/** The facecam in its player, as the stage's picture holds it. */
+function InPlayer(props: Omit<StageFacecamProps, "player">) {
+  const player = useRef<HTMLDivElement>(null);
+  return (
+    <div ref={player}>
+      <StageFacecam {...props} player={player} />
+    </div>
+  );
+}
+
+function renderFacecam(overrides: Partial<Omit<StageFacecamProps, "player">> = {}) {
+  const props: Omit<StageFacecamProps, "player"> = {
     video: new FakeTrack() as unknown as MediaTrack,
     label: "Bruno's camera",
     place: { x: 0.7, y: 0.6 },
@@ -27,11 +38,7 @@ function renderFacecam(overrides: Partial<StageFacecamProps> = {}) {
     onCollapse: vi.fn(),
     ...overrides,
   };
-  render(
-    <div>
-      <StageFacecam {...props} />
-    </div>,
-  );
+  render(<InPlayer {...props} />);
   return props;
 }
 

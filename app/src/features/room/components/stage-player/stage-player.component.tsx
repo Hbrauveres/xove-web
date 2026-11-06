@@ -36,7 +36,8 @@ export function StagePlayer(props: StagePlayerProps) {
     hold: chrome.hold,
   });
   const startMine = useGoToMine(controls.onStart, stage.pick, sharers);
-  const onMenuChange = useCallback((open: boolean) => chrome.hold(HOLD_MENU, open), [chrome]);
+  const { hold } = chrome;
+  const onMenuChange = useCallback((open: boolean) => hold(HOLD_MENU, open), [hold]);
   useBigQuality(main, Boolean(stage.big?.isMe));
 
   return (

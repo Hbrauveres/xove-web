@@ -22,5 +22,3 @@ export const RED_SHIFT = 16;
 export const GREEN_SHIFT = 8;
 /** The finest grain is half a desktop's. */
 export const FINEST = 0.5;
-/** Half: the picture's middle. */
-export const HALF = 0.5;

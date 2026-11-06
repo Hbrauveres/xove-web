@@ -9,5 +9,3 @@ export const ARROWS: Record<string, { dx: number; dy: number }> = {
   ArrowUp: { dx: 0, dy: -STEP },
   ArrowDown: { dx: 0, dy: STEP },
 };
-/** A share of the player, as a CSS percentage. */
-export const PERCENT = 100;

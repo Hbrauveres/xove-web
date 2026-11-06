@@ -13,11 +13,12 @@ function sizes() {
 }
 
 function Mover({ place, onMove }: { place: FacecamPlace; onMove: (p: FacecamPlace) => void }) {
+  const player = useRef<HTMLDivElement>(null);
   const box = useRef<HTMLDivElement>(null);
   const buttons = useRef<HTMLDivElement>(null);
-  const move = useFacecamMove(box, buttons, place, onMove);
+  const move = useFacecamMove({ box, buttons, player, place, onMove });
   return (
-    <div>
+    <div ref={player}>
       <div ref={box} data-testid="box" role="application" tabIndex={0} {...move}>
         <div ref={buttons}>
           <button type="button">Swap</button>

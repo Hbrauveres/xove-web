@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { reducedMotion } from "@shared/utils/reduced-motion.util";
 import { startFlicker } from "../../../utils/flicker.util";
 import { CELL } from "../constants/static-glow.constants";
@@ -44,5 +44,5 @@ export function useStaticGlow(on: boolean): StaticGlowRefs {
       resized.disconnect();
     };
   }, [on]);
-  return { canvas, stage };
+  return useMemo(() => ({ canvas, stage }), []);
 }

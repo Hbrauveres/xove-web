@@ -1,18 +1,19 @@
-import { render, screen } from "@testing-library/react";
+import { render, renderHook, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { aSharer } from "../../../../testing/factories/sharer.factory";
 import { aStreamControls } from "../../../../testing/factories/stream-controls.factory";
+import { useHearing } from "../../hooks/use-hearing.hook";
 import type { StageControlsProps } from "./types/stage-controls.types";
 import { StageControls } from "./stage-controls.component";
 
-const hear = { sound: { volume: 1, muted: false }, voice: { volume: 1, muted: false } };
-
 function renderControls(over: Partial<StageControlsProps> = {}) {
+  const big = over.big ?? null;
+  const hearing = renderHook(() => useHearing(big ? [big] : [], big?.person.id ?? null)).result.current;
   render(
     <StageControls
       big={null}
       controls={aStreamControls()}
-      hearing={{ hearOf: () => hear, setHear: vi.fn() } as never}
+      hearing={hearing}
       onStart={vi.fn()}
       onSettings={vi.fn()}
       onMenuChange={vi.fn()}

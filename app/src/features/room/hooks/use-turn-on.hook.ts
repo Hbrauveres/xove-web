@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { reducedMotion } from "@shared/utils/reduced-motion.util";
 import type { TurnOn } from "../types/turn-on.types";
 
@@ -9,5 +9,5 @@ import type { TurnOn } from "../types/turn-on.types";
 export function useTurnOn(turnOn: boolean): TurnOn {
   const [turningOn, setTurningOn] = useState(() => turnOn && !reducedMotion());
   const ended = useCallback(() => setTurningOn(false), []);
-  return { turningOn, ended };
+  return useMemo(() => ({ turningOn, ended }), [turningOn, ended]);
 }

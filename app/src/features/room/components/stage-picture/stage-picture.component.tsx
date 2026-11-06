@@ -1,4 +1,5 @@
 import { streamLabel } from "./utils/stream-label.util";
+import { useRef } from "react";
 import { StageFacecam } from "../stage-facecam";
 import { StageNotice } from "../stage-notice";
 import { StageScreenVideo } from "../stage-screen-video";
@@ -12,6 +13,7 @@ import type { StagePictureProps } from "./types/stage-picture.types";
  */
 export function StagePicture(props: StagePictureProps) {
   const { big, main, small, sound, facecam, onSwap, onVideo } = props;
+  const slide = useRef<HTMLDivElement>(null);
   const label = streamLabel(big, main);
   const name = big.person.name;
   const video = big.isMe ? main.local : main.remote?.video;
@@ -30,11 +32,12 @@ export function StagePicture(props: StagePictureProps) {
   );
 
   return (
-    <div className={styles.slide}>
+    <div ref={slide} className={styles.slide}>
       {content}
       {small && (
         <StageFacecam
           video={big.isMe ? small.local : small.remote?.video}
+          player={slide}
           label={streamLabel(big, small)}
           place={facecam.place}
           collapsed={facecam.collapsed}

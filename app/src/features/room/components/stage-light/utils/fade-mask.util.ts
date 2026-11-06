@@ -1,9 +1,7 @@
-import { CELL_PX, FALLOFF_RATE, GRAIN_LEVELS, GRAIN_SEED, OPAQUE, SPREAD } from "../constants/stage-light.constants";
+import { BYTE_MAX, HALF } from "../../../constants/math.constants";
+import { CELL_PX, FALLOFF_RATE, GRAIN_LEVELS, GRAIN_SEED, SPREAD } from "../constants/stage-light.constants";
 import type { GlowLayout } from "../types/stage-light.types";
 import { grainOf } from "./grain.util";
-
-/** A pixel's centre, from its index. */
-const HALF = 0.5;
 
 /** The light's strength at `s` of the reach: strong at the frame, a long tail, exactly zero at 1, with no kink. */
 export function falloff(s: number): number {
@@ -30,7 +28,7 @@ export function fadeMask(l: GlowLayout): Uint8ClampedArray {
       const dx = Math.max(stage.x - cx, 0, cx - (stage.x + stage.w));
       const s = Math.hypot(dx, dy) / reach;
       const g = (grain() - HALF) * GRAIN_LEVELS;
-      out[py * width + px] = s >= 1 ? 0 : s <= 0 ? OPAQUE : Math.round(falloff(s) * OPAQUE + g);
+      out[py * width + px] = s >= 1 ? 0 : s <= 0 ? BYTE_MAX : Math.round(falloff(s) * BYTE_MAX + g);
     }
   }
   return out;

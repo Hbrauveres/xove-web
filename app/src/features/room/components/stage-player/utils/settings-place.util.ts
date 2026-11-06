@@ -1,4 +1,5 @@
-import { HALF, ROW_GAP } from "../constants/stage-player.constants";
+import { HALF } from "../../../constants/math.constants";
+import { ROW_GAP } from "../constants/stage-player.constants";
 
 /**
  * Where the settings open: centred on the cog (`--cog-x`, from the player's left) and just above

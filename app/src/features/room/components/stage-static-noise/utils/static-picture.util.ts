@@ -1,9 +1,9 @@
+import { HALF } from "../../../constants/math.constants";
 import { MS_PER_SECOND } from "@shared/constants/time.constants";
 import { bandLight } from "../../../utils/static-bands.util";
 import {
   BULGE,
   GREEN_SHIFT,
-  HALF,
   OPAQUE_PIXEL,
   RED_SHIFT,
   TOP_BYTE,

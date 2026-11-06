@@ -1,8 +1,8 @@
+import { HALF } from "../constants/math.constants";
 import {
   EDGE_START,
   EDGE_WIDTH,
   GAPS,
-  HALF,
   MEAN,
   NARROW_BANDS,
   NARROW_DRIFT,
