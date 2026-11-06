@@ -44,7 +44,7 @@ app/src/
   pages/  components/  hooks/  media/  brand/   today's screens, moving into features/ and shared/ step by step
 ```
 
-Pages put the room together, components draw it, hooks hold the state and talk to the API and LiveKit, and `media/` keeps the rules as plain, tested functions. More in [Architecture](docs/architecture.md) and [Media](docs/media.md).
+Pages put the room together, components draw it, hooks hold the state and talk to the API and LiveKit, and the rules are plain, tested functions in each unit's `utils/`. More in [Architecture](docs/architecture.md) and [Media](docs/media.md).
 
 ## The stack
 

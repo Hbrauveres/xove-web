@@ -6,7 +6,7 @@ How the web app is tested, with a real example of each kind, and how to run the 
 
 | Kind | What it proves | Example |
 | --- | --- | --- |
-| [Rules as plain functions](#rules-as-plain-functions) | The decisions, with no browser: which device, which quality, how the ambilight is laid out, who is big; the room as data and what it shows (`features/room/stores/room-store/room.model`, `room.selectors`), in milliseconds | `services/media-devices-service/utils/is-handheld.util.test.ts`, `media/*.test.ts`, `brand/*.test.ts`, `features/room/stores/room-store/*.test.ts`, `**/utils/*.test.ts` |
+| [Rules as plain functions](#rules-as-plain-functions) | The decisions, with no browser: which device, which quality, how the ambilight is laid out, who is big; the room as data and what it shows (`features/room/stores/room-store/room.model`, `room.selectors`), in milliseconds | `services/media-devices-service/utils/is-handheld.util.test.ts`, `features/room/stores/room-store/*.test.ts`, `**/utils/*.test.ts` |
 | [Components](#components) | One component's output for given props | `components/**/*.test.tsx` |
 | [Pages, used like a person](#pages-used-like-a-person) | Whole flows: a page at a URL, with a fake API and a fake LiveKit | `pages/*.test.tsx`, `routes/app-routes/app-routes.component.test.tsx`, `features/room/hooks/*.test.ts` |
 | [The style check](#the-style-check) | What the stylesheets promise: text readable on every surface, rules no browser drops, motion off when asked | `scripts/check-styles.ts` |
@@ -25,7 +25,7 @@ it("isn't, for a computer, a touch-screen laptop or a narrow window: their main 
 });
 ```
 
-The same goes for the stream presets (`services/media-devices-service/constants/devices.constants.ts`) and how they're sent and capped (`services/livekit-service/utils/publish-options.util.ts`), the room's state person by person (`services/livekit-service/utils/room-state.util.ts`), the ambilight's grid and mask (`media/ambilight.ts`), who is big by default and what I hear (`features/room/utils/*.util.ts`), and the mark's geometry and animation (`brand/`): a test fails if the favicon drifts from the geometry.
+The same goes for the stream presets (`services/media-devices-service/constants/devices.constants.ts`) and how they're sent and capped (`services/livekit-service/utils/publish-options.util.ts`), the room's state person by person (`services/livekit-service/utils/room-state.util.ts`), the stage light's grid and mask (`features/room/utils/light-grid.util.ts`, `features/room/components/stage-light/utils/`), the static's bands (`features/room/utils/static-bands.util.ts`), who is big by default and what I hear (`features/room/utils/*.util.ts`), and the mark's geometry and animation (`shared/components/wordmark/utils/`): a test fails if the favicon drifts from the geometry.
 
 ## Components
 
@@ -56,8 +56,8 @@ Most tests render a real page, or the whole app at a URL (`testing/renderApp.tsx
 
 - **`testing/fakeApi.ts`** replaces `fetch` with a small in-memory API. A test sets its state (who I am, who's sharing, a forced failure), and checks the requests the app sent (`server.calls`), headers included, so the CSRF token is tested too.
 - **`testing/fakeLiveKit.ts`** replaces `livekit-client` (jsdom has no WebRTC). A test plays the other people: someone joins (`lastRoom().join(...)`), starts a screen (`publishScreen(...)`), or the browser's own "Stop sharing" bar is used (`browserStopsMyShare()`). What the next screen pick is (a window, a tab or the whole screen) is `nextSurface`. Voices too: someone's mic (`publishVoice`, `muteVoice`), who's speaking (`setSpeaking`), and my own mic, allowed, blocked or missing (`nextMic`), with the gate set on it (`setProcessor`).
-- **Factories** (`testing/factories/`) make each test's own data, fresh on every call: `aSharer()` (someone sharing, with new tracks), `aTrack()`, `aLiveStream()` and `anAnswer()` (the API's streams answer, for the room's model), and `onFakeClock()` (fake timers on a fixed clock, with a `userEvent` that moves them along).
-- **No canvas:** jsdom has none, so `testing/setup.ts` makes every canvas give no drawing context; what draws (the ambilight, the standby screen's static) does nothing in tests. A test of the drawing stubs its own context (`vi.spyOn(HTMLCanvasElement.prototype, "getContext")`), and how it looks is checked in a real browser.
+- **Factories** (`testing/factories/`) make each test's own data, fresh on every call: `aSharer()` (someone sharing, with new tracks), `aStreamControls()` (my screen, camera and voice controls, every action a spy), `aTrack()`, `aLiveStream()` and `anAnswer()` (the API's streams answer, for the room's model), and `onFakeClock()` (fake timers on a fixed clock, with a `userEvent` that moves them along).
+- **No canvas:** jsdom has none, so `testing/setup.ts` makes every canvas give no drawing context; what draws (the ambilight, the standby screen's static) does nothing in tests. A test of the drawing stubs its own context: `recordCanvases()` (`testing/factories/canvas.factory.ts`) records what the stage light asks of it (videos drawn, blurs, cuts, never a pixel read), with `playingVideo()`; how it looks is checked in a real browser.
 
 The room page's tests check only the wiring: that a click on the page reaches the store, LiveKit and the API, and the screen shows the result. What decides (the model, the hooks, the services) is tested in its own unit. They run on a fixed fake clock (`onFakeClock()` in a `beforeEach`, and `clockUser()`, a `userEvent` that moves it); a delay is passed with `pass(<the app's constant>)`, never waited out. From `pages/RoomPage.test.tsx`: Ana and Bruno share, and once my stage has been still for a second, the page tells the API whom I watch.
 

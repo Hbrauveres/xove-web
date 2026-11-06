@@ -96,7 +96,7 @@ The stream being watched, as large as the room allows, with its controls in the 
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/Stage.tsx` (one file holds audio, quality, fullscreen, and the controls' idle) | Split into `features/room/components/stage/`, `stage-light/`, `screen-video/`, `voice-audio/`, `stage-notice/`, with hooks for hearing and the idle | Kept, split into its pieces |
+| `features/room/components/stage/` (the box), `stage-player/` (the frame, its controls fading, fullscreen, the settings' place, the quality, each a hook), `stage-view/`, `stage-picture/`, `stage-screen-video/`, `stage-notice/`, `stage-controls/`, `stage-info/`, `stage-sounds/`, `stage-voice-audio/` | Here | Done (#190): `Stage.tsx` split into its pieces |
 
 ### Stage light (ambilight)
 
@@ -108,7 +108,7 @@ The stream's own colours glowing around the stage, drawn from its edges on a sma
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/Ambilight.tsx`; the maths in `media/ambilight.ts` | `features/room/components/stage-light/` (the maths in `utils/`) | Kept |
+| `features/room/components/stage-light/` (the maths in its `utils/`, the drawing a painter and a frame loop) | Here | Done (#190) |
 
 ### Viewer bar
 
@@ -170,7 +170,7 @@ When someone shares their screen and their camera, the camera sits over the scre
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/Facecam.tsx` | `features/room/components/stage-facecam/` | Kept |
+| `features/room/components/stage-facecam/` (its move a hook) | Here | Done (#190) |
 
 ### Empty stage
 
@@ -182,7 +182,7 @@ When nobody shares: a TV on standby, with its static and glow, and the ways to s
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/EmptyStage.tsx`, `StaticNoise.tsx`, `StaticGlow.tsx`, `CornerGlow.tsx`, `staticBands.ts` (with a module-level flag) | `features/room/components/stage-empty-stage/` (the flag becomes state) | Kept |
+| `features/room/components/stage-empty-stage/`, `stage-start-buttons/`, `stage-static-noise/`, `stage-static-glow/`, `stage-corner-glow/`; the bands in `features/room/utils/static-bands.util.ts`; the TV's turn-on kept by the view, no global | Here | Done (#190) |
 
 ### Now watching
 
