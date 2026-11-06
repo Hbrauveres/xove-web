@@ -9,7 +9,7 @@ function setup() {
 }
 
 describe("a static's flicker", () => {
-  it("draws at most 20 times a second: every fourth frame of a 60 Hz screen", () => {
+  it("draws about 15 times a second on a 60 Hz screen: every fourth frame, 50 ms apart", () => {
     const { draw } = setup();
     const stop = startFlicker(draw, false);
     vi.advanceTimersByTime(1000);

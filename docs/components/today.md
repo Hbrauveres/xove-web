@@ -219,7 +219,7 @@ The room while I share: my stream on the stage with my own buttons.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `Stage.tsx`, `PlayerButtons.tsx` | As above | Kept |
+| `features/room/components/stage*/`, `PlayerButtons.tsx` | As above | The stage done (#190); my buttons kept |
 
 ## Around the room
 

@@ -2,7 +2,7 @@ import { MS_PER_SECOND } from "@shared/constants/time.constants";
 import { FLICKER_FPS } from "../constants/static-bands.constants";
 
 /**
- * Draws a static's frame at most 20 times a second (every fourth frame of a 60 Hz screen),
+ * Draws a static's frame once 50 ms have passed: about 15 times a second on a 60 Hz screen (every fourth frame),
  * skipping while the tab is hidden; or once, still, for reduced motion. Each draw gets the time in
  * ms. Returns what stops it.
  */
