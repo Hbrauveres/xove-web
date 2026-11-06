@@ -544,7 +544,7 @@ Its content stays clear of the phone's bars (the browser's safe areas).
 
 - **Focus is always visible:** a 2 px red ring, 2 px out (3 px around the round buttons' pill, white 4 px out around sliders).
 - **Keyboard:** every control is a real button or input; a sound's button mutes on Enter and opens its slider on focus, which moves with the arrow keys; focusing a preview opens its row, Tab goes through it and on to the next preview, Shift+Tab and Escape back to the preview; the facecam moves with the arrow keys; Escape closes panels.
-- **Names:** every control and picture has a spoken name; the mark is "Xovê"; videos are named by whose stream they are.
+- **Names:** every control and picture has a spoken name; the mark is "Xovê"; videos are named by whose stream they are. **A control's name holds the words it shows, in their order** (the activity pill: "Activity: Ana joined, now, 2 new"), so a person who speaks to their computer can say what they see; the stories' check holds it. A face's initial is drawn, not text, so it never joins a name.
 - **Contrast** as in [Colour](#colour), checked by a test.
 - **Reduced motion** as in [Motion](#motion).
 
