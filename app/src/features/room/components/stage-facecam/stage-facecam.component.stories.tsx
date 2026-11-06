@@ -9,10 +9,16 @@ const meta = {
     // Only drawn here: there's no player to move it in.
     player: { current: null },
     place: { x: 0.73, y: 0.04 },
-    collapsed: false,
+    fold: {
+      folded: false,
+      hide: () => undefined,
+      show: () => undefined,
+      setBox: () => undefined,
+      setHide: () => undefined,
+      setCorner: () => undefined,
+    },
     onSwap: () => undefined,
     onMove: () => undefined,
-    onCollapse: () => undefined,
   },
   decorators: [
     (Story) => (
@@ -33,7 +39,5 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Over the screen, at the top right. */
+/** The small view over the screen, at the top right, with Swap and Hide. */
 export const Open: Story = {};
-/** Folded to a tab. */
-export const Collapsed: Story = { args: { collapsed: true } };

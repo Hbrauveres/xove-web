@@ -1,7 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { aSharer } from "../../../../testing/factories/sharer.factory";
+import { aSharer } from "@testing/factories/sharer.factory";
+import { aFold } from "@testing/factories/small-view-fold.factory";
 import type { StagePictureProps } from "./types/stage-picture.types";
 import { StagePicture } from "./stage-picture.component";
 
@@ -11,9 +12,9 @@ function renderPicture(over: Partial<StagePictureProps> = {}) {
     big,
     main: big.screen ?? big.camera!,
     sound: { volume: 1, muted: false },
-    facecam: { place: { x: 0.7, y: 0.1 }, collapsed: false },
+    facecamPlace: { x: 0.7, y: 0.1 },
     onFacecamMove: vi.fn(),
-    onFacecamCollapse: vi.fn(),
+    fold: aFold(),
     onSwap: vi.fn(),
     onVideo: vi.fn(),
     ...over,

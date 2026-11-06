@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent, type RefObject } from "react";
 import { useKeyboardLast } from "../../../hooks/use-keyboard-last.hook";
-import { CHROME_IDLE_MS } from "../constants/stage-player.constants";
+import { CHROME_IDLE_MS, HOLD_MENU } from "../constants/stage-player.constants";
 import type { StageChrome } from "../types/stage-chrome.types";
 import { pointerInside } from "../utils/pointer-inside.util";
 
@@ -54,6 +54,9 @@ export function useStageChrome(frame: RefObject<HTMLElement | null>): StageChrom
     [show],
   );
 
+  /** One of my buttons' menus opened or closed: it holds the controls up while open. */
+  const onMenuChange = useCallback((open: boolean) => hold(HOLD_MENU, open), [hold]);
+
   useEffect(() => () => window.clearTimeout(idle.current), []);
   return useMemo(
     () => ({
@@ -61,8 +64,9 @@ export function useStageChrome(frame: RefObject<HTMLElement | null>): StageChrom
       show,
       leave,
       hold,
+      onMenuChange,
       handlers: { onPointerMove: show, onPointerDown: show, onFocus: show, onPointerLeave: leave },
     }),
-    [shown, show, leave, hold],
+    [shown, show, leave, hold, onMenuChange],
   );
 }

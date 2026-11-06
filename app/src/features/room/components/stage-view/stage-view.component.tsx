@@ -11,13 +11,12 @@ import type { StageViewProps } from "./types/stage-view.types";
 
 /**
  * The picture in its own shape, centred, with its light behind it, stretched past it; or, with
- * nobody live, the TV on standby, its corners and static lighting the wall. The facecam keeps its
+ * nobody live, the TV on standby, its corners and static lighting the wall. The small view keeps its
  * place for the visit, and the TV turns on only the first time it stands by.
  */
 export function StageView(props: StageViewProps) {
   const { big, main, small, sound, ambilight, shape, lightKey, video, onVideo, onSwap } = props;
   const [place, setPlace] = useState<FacecamPlace>(FACECAM_START);
-  const [collapsed, setCollapsed] = useState(false);
   // Whether the TV has turned on in this visit: only the first time the stage stands by.
   const [tvOn, setTvOn] = useState(false);
   const turnTvOn = useCallback(() => setTvOn(true), []);
@@ -35,9 +34,9 @@ export function StageView(props: StageViewProps) {
             main={main}
             small={small}
             sound={sound}
-            facecam={{ place, collapsed }}
+            facecamPlace={place}
             onFacecamMove={setPlace}
-            onFacecamCollapse={setCollapsed}
+            fold={props.fold}
             onSwap={onSwap}
             onVideo={onVideo}
           />

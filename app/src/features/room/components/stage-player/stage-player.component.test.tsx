@@ -187,3 +187,32 @@ describe("the settings over the player", () => {
     expect(placed(container.firstElementChild as HTMLElement)).toEqual(["920px", "70px"]);
   });
 });
+
+describe("the small view's fold", () => {
+  it("Hide folds it into the corner button, the focus going there; the corner button opens it again", () => {
+    const view = render(<Player sharers={[aSharer({ kinds: ["screen", "camera"] })]} />);
+    const corner = () => screen.queryByRole("button", { name: "Show the small view" });
+    expect(corner()).not.toBeInTheDocument();
+    const before = within(view.container)
+      .getAllByRole("button")
+      .map((b) => b.getAttribute("aria-label"));
+
+    fireEvent.click(screen.getByRole("button", { name: "Hide the small view" }));
+    expect(screen.queryByRole("application", { name: /drag or use the arrow keys/ })).not.toBeInTheDocument();
+    expect(document.activeElement).toBe(corner());
+    // Nothing else came or went: only the small view folded into its button.
+    const after = within(view.container)
+      .getAllByRole("button")
+      .map((b) => b.getAttribute("aria-label"));
+    expect(after).toEqual([...before.filter((l) => !/small view|Swap views/.test(l ?? "")), "Show the small view"]);
+
+    fireEvent.click(screen.getByRole("button", { name: "Show the small view" }));
+    expect(screen.getByRole("application", { name: /drag or use the arrow keys/ })).toBeInTheDocument();
+    expect(document.activeElement).toBe(screen.getByRole("button", { name: "Hide the small view" }));
+  });
+
+  it("has no corner button for someone sharing only one stream", () => {
+    render(<Player sharers={[aSharer({ kinds: ["screen"] })]} />);
+    expect(screen.queryByRole("button", { name: "Show the small view", hidden: true })).not.toBeInTheDocument();
+  });
+});

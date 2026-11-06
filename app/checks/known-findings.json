@@ -106,13 +106,6 @@
   },
   {
     "tool": "code",
-    "rule": "history",
-    "file": "src/testing/setup.ts",
-    "count": 1,
-    "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
     "rule": "lineLength",
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 1,

@@ -1,0 +1,13 @@
+/* In the stage's top-right corner, 12 px in, like the fullscreen button in the bottom one. */
+.corner {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  display: flex;
+  pointer-events: auto;
+}
+
+/* Unseen while the small view is open: still laid out, so the fold can find its place. */
+.corner:not([data-shown]) {
+  visibility: hidden;
+}

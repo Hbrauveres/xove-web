@@ -23,6 +23,7 @@ const meta = {
   title: "Room/Stage controls",
   component: Bar,
   args: {
+    anchor: null,
     big: null,
     controls: {
       mine: { screen: false, camera: false },

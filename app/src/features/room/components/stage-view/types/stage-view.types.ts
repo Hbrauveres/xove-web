@@ -1,6 +1,7 @@
 import type { AmbilightPrefs } from "@services/preferences-service";
 import type { StreamKind } from "@services/xove-api-service";
 import type { Playback } from "../../../types/played-track.types";
+import type { SmallViewFold } from "../../../types/small-view.types";
 import type { LiveFeed, Sharer } from "../../../types/room-view.types";
 
 export interface StageViewProps {
@@ -19,6 +20,8 @@ export interface StageViewProps {
   video: HTMLVideoElement | null;
   onVideo: (el: HTMLVideoElement | null) => void;
   onSwap: () => void;
+  /** The small view's fold, kept by the player. */
+  fold: SmallViewFold;
   /** For the empty stage. */
   canShareScreen: boolean;
   onStart: (kind: StreamKind) => void;

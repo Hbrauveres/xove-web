@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { aSharer } from "../../../../testing/factories/sharer.factory";
+import { aSharer } from "@testing/factories/sharer.factory";
+import { aFold } from "@testing/factories/small-view-fold.factory";
 import type { StageViewProps } from "./types/stage-view.types";
 import { StageView } from "./stage-view.component";
 
@@ -15,6 +16,7 @@ function renderView(over: Partial<StageViewProps> = {}) {
     video: null,
     onVideo: vi.fn(),
     onSwap: vi.fn(),
+    fold: aFold(),
     canShareScreen: true,
     onStart: vi.fn(),
     ...over,
@@ -67,16 +69,14 @@ describe("the stage's view", () => {
     expect(container.firstElementChild?.contains(facecam)).toBe(true);
   });
 
-  it("folds the facecam to a tab, and opens it again", () => {
+  it("draws no small view while it's folded", () => {
     const big = aSharer({ kinds: ["screen", "camera"] });
-    renderView({ big, main: big.screen ?? null, small: big.camera });
-    fireEvent.click(screen.getByRole("button", { name: "Hide facecam" }));
+    renderView({ big, main: big.screen ?? null, small: big.camera, fold: aFold({ folded: true }) });
     expect(screen.queryByLabelText("Bruno's camera")).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Show facecam" }));
-    expect(screen.getByLabelText("Bruno's camera")).toBeInTheDocument();
+    expect(screen.getByLabelText("Bruno's shared screen")).toBeInTheDocument();
   });
 
-  it("drops the facecam when the camera stops, the screen still big", () => {
+  it("drops the small view when the camera stops, the screen still big", () => {
     const big = aSharer({ kinds: ["screen", "camera"] });
     const { props, rerender } = renderView({ big, main: big.screen ?? null, small: big.camera });
     rerender(<StageView {...props} small={undefined} />);

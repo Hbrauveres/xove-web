@@ -5,12 +5,13 @@ import { describe, expect, it, vi } from "vitest";
 import type { MediaTrack } from "@services/livekit-service";
 import { FakeTrack } from "../../../../testing/fakeLiveKit";
 import type { StageFacecamProps } from "./types/stage-facecam.types";
+import { aFold } from "@testing/factories/small-view-fold.factory";
 import { StageFacecam } from "./stage-facecam.component";
 
 /** The player is 1000×500 px; the facecam 240×135 px (24% of its width). */
 function sizes() {
   vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
-    const facecam = this.getAttribute("aria-roledescription") === "facecam";
+    const facecam = this.getAttribute("aria-roledescription") === "small view";
     const width = facecam ? 240 : 1000;
     const height = facecam ? 135 : 500;
     return DOMRect.fromRect({ x: 0, y: 0, width, height });
@@ -32,10 +33,9 @@ function renderFacecam(overrides: Partial<Omit<StageFacecamProps, "player">> = {
     video: new FakeTrack() as unknown as MediaTrack,
     label: "Bruno's camera",
     place: { x: 0.7, y: 0.6 },
-    collapsed: false,
+    fold: aFold(),
     onSwap: vi.fn(),
     onMove: vi.fn(),
-    onCollapse: vi.fn(),
     ...overrides,
   };
   render(<InPlayer {...props} />);
@@ -108,16 +108,16 @@ describe("the facecam", () => {
     expect(props.onMove).toHaveBeenLastCalledWith({ x: 0.5, y: 0.55 });
   });
 
-  it("collapses to a tab, and the tab expands it", async () => {
+  it("is called the small view, and Hide folds it", async () => {
     const props = renderFacecam();
-    await userEvent.setup().click(screen.getByRole("button", { name: "Hide facecam" }));
-    expect(props.onCollapse).toHaveBeenLastCalledWith(true);
+    expect(facecam()).toHaveAttribute("aria-roledescription", "small view");
+    await userEvent.setup().click(screen.getByRole("button", { name: "Hide the small view" }));
+    expect(props.fold.hide).toHaveBeenCalledOnce();
   });
 
-  it("shows only the tab while collapsed", async () => {
-    const props = renderFacecam({ collapsed: true });
-    expect(screen.queryByLabelText("Bruno's camera")).not.toBeInTheDocument();
-    await userEvent.setup().click(screen.getByRole("button", { name: "Show facecam" }));
-    expect(props.onCollapse).toHaveBeenLastCalledWith(false);
+  it("hands the fold its box and its Hide button", () => {
+    const props = renderFacecam();
+    expect(props.fold.setBox).toHaveBeenCalledWith(facecam());
+    expect(props.fold.setHide).toHaveBeenCalledWith(screen.getByRole("button", { name: "Hide the small view" }));
   });
 });

@@ -886,7 +886,7 @@ describe("room: several people sharing", () => {
   });
 });
 
-// ---- screen and camera together: the facecam ----
+// ---- screen and camera together: the small view ----
 
 // ---- sound and settings for each stream ----
 
@@ -932,10 +932,10 @@ describe("room: theater mode", () => {
     await user.click(screen.getByRole("button", { name: /^Activity/ }));
     await user.click(screen.getByRole("button", { name: "Bruno turned on their camera, now: watch" }));
 
-    // Camera big, screen in the facecam.
-    await waitFor(() => expect(stage().querySelector("[aria-roledescription='facecam']")).not.toBeNull());
+    // Camera big, screen in the small view.
+    await waitFor(() => expect(stage().querySelector("[aria-roledescription='small view']")).not.toBeNull());
     expect(
-      within(stage().querySelector("[aria-roledescription='facecam']") as HTMLElement).getByLabelText(
+      within(stage().querySelector("[aria-roledescription='small view']") as HTMLElement).getByLabelText(
         "Bruno's shared screen",
       ),
     ).toBeInTheDocument();

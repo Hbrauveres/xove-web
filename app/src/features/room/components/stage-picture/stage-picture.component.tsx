@@ -7,12 +7,12 @@ import styles from "./stage-picture.component.module.css";
 import type { StagePictureProps } from "./types/stage-picture.types";
 
 /**
- * What plays on the stage: the big stream, or a notice while it's on its way, and the facecam over
+ * What plays on the stage: the big stream, or a notice while it's on its way, and the small view over
  * it. My own stream plays without its sound (it would echo); sharing the whole screen shows the
  * page inside itself, which sharing a tab or a window avoids.
  */
 export function StagePicture(props: StagePictureProps) {
-  const { big, main, small, sound, facecam, onSwap, onVideo } = props;
+  const { big, main, small, sound, facecamPlace, fold, onSwap, onVideo } = props;
   const slide = useRef<HTMLDivElement>(null);
   const label = streamLabel(big, main);
   const name = big.person.name;
@@ -34,16 +34,15 @@ export function StagePicture(props: StagePictureProps) {
   return (
     <div ref={slide} className={styles.slide}>
       {content}
-      {small && (
+      {small && !fold.folded && (
         <StageFacecam
           video={big.isMe ? small.local : small.remote?.video}
           player={slide}
           label={streamLabel(big, small)}
-          place={facecam.place}
-          collapsed={facecam.collapsed}
+          place={facecamPlace}
+          fold={fold}
           onSwap={onSwap}
           onMove={props.onFacecamMove}
-          onCollapse={props.onFacecamCollapse}
         />
       )}
     </div>

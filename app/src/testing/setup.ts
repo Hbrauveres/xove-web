@@ -41,7 +41,7 @@ afterEach(() => {
 
 // jsdom lacks these browser APIs.
 // No canvas: drawing is the browser's to prove. Without this jsdom warns on every render of the
-// standby screen's static (spec 0136); a test that draws stubs its own context.
+// standby screen's static; a test that draws stubs its own context.
 HTMLCanvasElement.prototype.getContext = (() => null) as never;
 // The screen picker: the last fake room plays it (`nextPicker`, `nextPickerAudio`).
 Object.defineProperty(navigator, "mediaDevices", {
@@ -71,9 +71,10 @@ const desktopMatchMedia = (query: string) => ({
 Object.defineProperty(window, "matchMedia", { writable: true, value: desktopMatchMedia });
 
 /** The browser stand-ins a test may replace, back as setup made them: the media queries, and none of
- * what jsdom lacks and a test defines for itself (fullscreen). */
+ * what jsdom lacks and a test defines for itself (fullscreen, an element's animations). */
 function resetBrowserStandIns() {
   window.matchMedia = desktopMatchMedia as never;
   for (const own of ["fullscreenElement", "exitFullscreen"])
     delete (document as unknown as Record<string, unknown>)[own];
+  delete (HTMLElement.prototype as unknown as Record<string, unknown>).animate;
 }
