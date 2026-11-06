@@ -29,11 +29,11 @@ The same goes for the stream presets (`services/media-devices-service/constants/
 
 ## Components
 
-A component rendered alone, checked by what a person sees and hears from a screen reader. From `components/stage/NowWatching.test.tsx`:
+A component rendered alone, checked by what a person sees and hears from a screen reader. From `features/room/components/stage-now-watching/stage-now-watching.component.test.tsx`:
 
 ```tsx
 it("names who is on the stage, live, what they share and for how long", () => {
-  render(<NowWatching sharer={bruno(true)} />);
+  render(<StageNowWatching sharer={bruno(true)} />);
 
   expect(screen.getByRole("heading", { name: "Bruno" })).toBeInTheDocument();
   expect(screen.getByText("LIVE")).toBeInTheDocument();
@@ -56,7 +56,9 @@ Most tests render a real page, or the whole app at a URL (`testing/renderApp.tsx
 
 - **`testing/fakeApi.ts`** replaces `fetch` with a small in-memory API. A test sets its state (who I am, who's sharing, a forced failure), and checks the requests the app sent (`server.calls`), headers included, so the CSRF token is tested too.
 - **`testing/fakeLiveKit.ts`** replaces `livekit-client` (jsdom has no WebRTC). A test plays the other people: someone joins (`lastRoom().join(...)`), starts a screen (`publishScreen(...)`), or the browser's own "Stop sharing" bar is used (`browserStopsMyShare()`). What the next screen pick is (a window, a tab or the whole screen) is `nextSurface`. Voices too: someone's mic (`publishVoice`, `muteVoice`), who's speaking (`setSpeaking`), and my own mic, allowed, blocked or missing (`nextMic`), with the gate set on it (`setProcessor`).
-- **Factories** (`testing/factories/`) make each test's own data, fresh on every call: `aSharer()` (someone sharing, with new tracks), `aStreamControls()` (my screen, camera and voice controls, every action a spy), `aTrack()`, `aLiveStream()` and `anAnswer()` (the API's streams answer, for the room's model), and `onFakeClock()` (fake timers on a fixed clock, with a `userEvent` that moves them along).
+- **Factories** (`testing/factories/`) make each test's own data, fresh on every call: `aSharer()` (someone sharing, with new tracks), `aStreamControls()` (my screen, camera and voice controls, every action a spy), `aTrack()`, `aLiveStream()` and `anAnswer()` (the API's streams answer, for the room's model), `aFold()` (the small view's fold, every action a spy), and `onFakeClock()` (fake timers on a fixed clock, with a `userEvent` that moves them along).
+- **No animations:** jsdom has no `element.animate`, so `testing/setup.ts` takes away any a test gave it; where the browser can't animate, the small view just folds. A test of the move defines its own `animate`.
+- **The app's settings:** `testing/setup.ts` resets what `/config.json` gave (`appConfig.reset()`) after each test; a test that needs a number of places loads its own.
 - **No canvas:** jsdom has none, so `testing/setup.ts` makes every canvas give no drawing context; what draws (the ambilight, the standby screen's static) does nothing in tests. A test of the drawing stubs its own context: `recordCanvases()` (`testing/factories/canvas.factory.ts`) records what the stage light asks of it (videos drawn, blurs, cuts, never a pixel read), with `playingVideo()`; how it looks is checked in a real browser.
 
 The room page's tests check only the wiring: that a click on the page reaches the store, LiveKit and the API, and the screen shows the result. What decides (the model, the hooks, the services) is tested in its own unit. They run on a fixed fake clock (`onFakeClock()` in a `beforeEach`, and `clockUser()`, a `userEvent` that moves it); a delay is passed with `pass(<the app's constant>)`, never waited out. From `pages/RoomPage.test.tsx`: Ana and Bruno share, and once my stage has been still for a second, the page tells the API whom I watch.
