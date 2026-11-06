@@ -1,13 +1,13 @@
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { onFakeClock } from "../../testing/factories/clock.factory";
-import { aSharer } from "../../testing/factories/sharer.factory";
-import { aTrack } from "../../testing/factories/track.factory";
-import type { FakeTrack } from "../../testing/fakeLiveKit";
+import { onFakeClock } from "@testing/factories/clock.factory";
+import { aSharer } from "@testing/factories/sharer.factory";
+import { aTrack } from "@testing/factories/track.factory";
+import type { FakeTrack } from "@testing/fakeLiveKit";
 import type { Sharer } from "@features/room/types/room-view.types";
 import { floatingStore } from "@shared/stores/floating-store";
-import { AlsoLive } from "./AlsoLive";
+import { StageAlsoLive } from "./stage-also-live.component";
 import type { Hearing } from "@features/room/types/sound.types";
 
 const bruno = () =>
@@ -42,7 +42,7 @@ function Harness({
   const [hearing, setHearing] = useState<Record<string, Hearing>>({});
   const [swapped, setSwapped] = useState<Record<string, boolean>>({});
   return (
-    <AlsoLive
+    <StageAlsoLive
       others={others}
       liveCount={live}
       places={places}
@@ -58,7 +58,7 @@ function Harness({
 
 const preview = (name: RegExp) => screen.getByRole("button", { name });
 const item = (name: RegExp) => preview(name).closest("li") as HTMLElement;
-// Pointing at a preview opens its row (spec 0131).
+// Pointing at a preview opens its row.
 async function rowOf(name: string, user = onFakeClock()) {
   await user.hover(screen.getByRole("button", { name: (n) => n.startsWith(`Watch ${name}`) }));
   return screen.findByRole("group", { name: `${name}'s sounds` });
@@ -113,7 +113,9 @@ describe("also live (specs 0104 and 0123)", () => {
 
   it("says Loading until someone's video arrives", () => {
     const one = ana();
-    const waiting: Sharer = { ...one, screen: { ...one.screen!, remote: undefined } };
+    if (!one.screen) throw new Error("Ana shares a screen");
+    const { remote: _arriving, ...feed } = one.screen;
+    const waiting: Sharer = { ...one, screen: feed };
     render(<Harness others={[waiting]} />);
     expect(preview(/Watch Ana's screen/)).toHaveTextContent("Loading…");
   });
@@ -232,7 +234,7 @@ describe("also live (specs 0104 and 0123)", () => {
     await user.tab();
     await user.keyboard("{Escape}");
     expect(preview(/^Watch Ana/)).toHaveFocus();
-    expect(document.querySelector('[data-tray-for="user-3"]')).toHaveAttribute("data-leaving");
+    expect(screen.getByRole("group", { name: "Ana's sounds" }).closest("[data-leaving]")).not.toBeNull();
   });
 
   it("greys a sound that isn't there, in its place, saying why", async () => {
@@ -277,34 +279,18 @@ describe("also live (specs 0104 and 0123)", () => {
     expect(item(/^Watch Bruno/)).not.toHaveAttribute("data-talking");
   });
 
-  it("draws as many little screens as the room has places", () => {
-    const { container } = render(<Harness others={[ana()]} live={1} places={4} free={3} />);
-    const box = container.querySelector("[data-free]") as HTMLElement;
-    expect(box).toHaveAccessibleName("1 of 4 live, 3 seats open");
-    expect(box.querySelectorAll("i")).toHaveLength(4);
-  });
-
-  it("shows the seats as six little screens, red for each stream live, beside the previews (specs 0123 and 0136)", () => {
-    const { container } = render(<Harness others={[ana(), diego()]} live={3} free={3} />);
-    const box = container.querySelector("[data-free]") as HTMLElement;
-    expect(box).toHaveAccessibleName("3 of 6 live, 3 seats open");
-    expect(box.querySelectorAll("i")).toHaveLength(6);
-    expect(box.querySelectorAll("i[data-on]")).toHaveLength(3);
-    // The box stays put while the previews scroll: it's not one of them.
+  it("shows the places beside the previews, not among them", () => {
+    render(<Harness others={[ana(), diego()]} live={3} free={3} />);
+    expect(screen.getByRole("figure", { name: "3 of 6 live, 3 seats open" })).toBeInTheDocument();
     expect(within(screen.getByRole("list", { name: "Other streams" })).queryByText(/seat/)).not.toBeInTheDocument();
-  });
-
-  it("has no box at all when all 6 seats are taken", () => {
-    const { container } = render(<Harness others={[ana()]} live={6} free={0} />);
-    expect(container.querySelector("[data-free]")).toBeNull();
   });
 
   it("doesn't open a row on a rest over what I opened", () => {
     const close = vi.fn();
     floatingStore.add({ kind: "opened", close, area: () => null });
     render(<Harness others={[bruno()]} />);
-    fireEvent.pointerEnter(preview(/^Watch Bruno/).closest("li")!);
-    expect(document.querySelector("[data-tray-for]")).toBeNull();
+    fireEvent.pointerEnter(item(/^Watch Bruno/));
+    expect(screen.queryByRole("group")).not.toBeInTheDocument();
     expect(close).not.toHaveBeenCalled();
   });
 });

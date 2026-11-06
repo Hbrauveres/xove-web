@@ -1,4 +1,4 @@
-/* A small preview's row (spec 0131), floating over the page at the preview's width. */
+/* A small preview's row, floating over the page at the preview's width. */
 /* It unrolls from the preview's edge and rolls back into it, as the stage's own sliders do: rolled
    up, it is clipped to its edge next to the preview. The open clip reaches past the box, so the
    shadow shows. */
@@ -30,13 +30,10 @@
 }
 
 /* Above the preview, the slider opens above the buttons: the buttons stay next to the preview,
-   where the pointer is, and never move under it. */
-.tray[data-up] :global([data-drawer]) {
-  order: -1;
-}
-
-.tray[data-up] :global([data-slider]) {
-  padding-block: var(--space-1) var(--space-2);
+   where the pointer is, and never move under it. The row reads these. */
+.tray[data-up] {
+  --row-direction: column-reverse;
+  --slider-padding-block: var(--space-1) var(--space-2);
 }
 
 .tray[data-shown] {

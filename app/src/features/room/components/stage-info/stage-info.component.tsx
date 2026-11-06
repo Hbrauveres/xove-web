@@ -1,4 +1,4 @@
-import { AlsoLive } from "../../../../components/stage/AlsoLive";
+import { StageAlsoLive } from "../stage-also-live";
 import { StageNowWatching } from "../stage-now-watching";
 import styles from "./stage-info.component.module.css";
 import type { StageInfoProps } from "./types/stage-info.types";
@@ -9,7 +9,7 @@ export function StageInfo({ sharers, stage, hearing, places, free, watchers, her
   return (
     <div className={styles.info}>
       <StageNowWatching sharer={big} {...(watchers ? { watchers } : {})} {...(here ? { others: here } : {})} />
-      <AlsoLive
+      <StageAlsoLive
         others={sharers.filter((s) => s !== big)}
         liveCount={places - free}
         places={places}

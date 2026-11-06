@@ -1,4 +1,5 @@
-import type { Choices, Heard } from "../types/hearing.types";
+import type { Choices } from "../types/hearing.types";
+import type { Hearing } from "../types/sound.types";
 
 /**
  * What I hear from a person: one switch per sound that follows them everywhere
@@ -9,7 +10,7 @@ export function hearingOf(
   mine: Choices | undefined,
   onStage: boolean,
   defaults: { sound: number; voice: number },
-): Heard {
+): Hearing {
   return {
     sound: { volume: mine?.sound.volume ?? defaults.sound, muted: mine?.sound.muted ?? !onStage },
     voice: { volume: mine?.voice.volume ?? defaults.voice, muted: mine?.voice.muted ?? !onStage },
@@ -17,7 +18,7 @@ export function hearingOf(
 }
 
 /** My choices after a change: only a switch that changed becomes mine; the other stays untouched. */
-export function choose(mine: Choices | undefined, was: Heard, next: Heard): Choices {
+export function choose(mine: Choices | undefined, was: Hearing, next: Hearing): Choices {
   const pick = (kind: "sound" | "voice") => {
     const muted = next[kind].muted !== was[kind].muted ? next[kind].muted : mine?.[kind].muted;
     return { volume: next[kind].volume, ...(muted === undefined ? {} : { muted }) };
