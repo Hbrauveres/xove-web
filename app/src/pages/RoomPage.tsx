@@ -5,7 +5,7 @@ import { ErrorNotice } from "@shared/components/error-notice";
 import { useAuth } from "@shared/stores/auth-store";
 import { AccountButton } from "../components/room/AccountButton";
 import { HeaderActivityPill } from "@features/room/components/header-activity-pill";
-import { PeopleButton } from "../components/room/PeopleButton";
+import { HeaderPeopleButton } from "@features/room/components/header-people-button";
 import { RoomFooter } from "../components/room/RoomFooter";
 import { Header } from "@features/room/components/header";
 import { WaitingRoom } from "../components/room/WaitingRoom";
@@ -187,7 +187,7 @@ function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
   // People, then me at the far right.
   const myButtons = (
     <>
-      <PeopleButton
+      <HeaderPeopleButton
         people={session.people}
         meId={session.me.id}
         sharing={sharing}

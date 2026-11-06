@@ -51,20 +51,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/room/PeopleButton.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/room/PeopleButton.tsx",
-    "count": 2,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/room/RoomFooter.module.css",
     "count": 2,
     "owner": "#192 room: queue, footer, page"
@@ -465,27 +451,6 @@
     "tool": "code",
     "rule": "naming",
     "file": "src/components/room/AccountButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/PeopleButton.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/PeopleButton.test.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/room/PeopleButton.tsx",
     "count": 1,
     "owner": "#189 room: header"
   },
@@ -1136,13 +1101,6 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/components/room/PeopleButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
     "file": "src/components/room/SeatOffer.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
@@ -1382,27 +1340,6 @@
     "tool": "code",
     "rule": "structure",
     "file": "src/components/room/AccountButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/PeopleButton.module.css",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/PeopleButton.test.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/room/PeopleButton.tsx",
     "count": 1,
     "owner": "#189 room: header"
   },
@@ -2032,13 +1969,6 @@
   {
     "tool": "lint",
     "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/room/PeopleButton.tsx",
-    "count": 1,
-    "owner": "#189 room: header"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
     "file": "src/components/room/SeatOffer.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
@@ -2147,13 +2077,6 @@
     "file": "src/pages/RoomPage.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/room/PeopleButton.tsx",
-    "count": 2,
-    "owner": "#189 room: header"
   },
   {
     "tool": "lint",
@@ -2301,13 +2224,6 @@
     "file": "src/components/stage/PreviewTray.tsx",
     "count": 1,
     "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/components/room/PeopleButton.tsx",
-    "count": 2,
-    "owner": "#189 room: header"
   },
   {
     "tool": "lint",

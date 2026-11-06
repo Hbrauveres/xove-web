@@ -1,4 +1,4 @@
-/* People (spec 0104): see specs/0104-room-theater/design.html. */
+/* Who's here: the people button and its panel. */
 .wrap {
   position: relative;
 }
@@ -29,33 +29,6 @@
   padding: var(--space-3-5) var(--space-4) var(--space-3);
 }
 
-.line {
-  display: flex;
-  justify-content: space-between;
-  font-size: var(--text-xs);
-  font-weight: 500;
-  color: var(--grey-202);
-}
-
-.line b {
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-}
-
-.bar {
-  height: var(--size-1-5);
-  border-radius: var(--radius-pill);
-  background: var(--white-10);
-  overflow: hidden;
-}
-
-.bar i {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--ok);
-}
-
 .people {
   list-style: none;
   margin: 0;
@@ -73,10 +46,6 @@
   border-radius: var(--radius-2-5);
 }
 
-.person:hover {
-  background: var(--white-06);
-}
-
 .who {
   min-width: 0;
 }
@@ -86,7 +55,7 @@
 }
 
 .you {
-  color: var(--grey-164);
+  color: var(--text-muted);
   font-weight: 500;
 }
 
@@ -95,7 +64,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  color: var(--grey-179);
+  color: var(--text-muted);
   font-size: var(--text-xs);
   font-weight: 500;
 }
@@ -117,7 +86,7 @@
 
 .foot {
   padding: var(--space-2-5) var(--space-4) var(--space-3);
-  color: var(--grey-179);
+  color: var(--text-muted);
   font-size: var(--text-xs);
   font-weight: 500;
 }

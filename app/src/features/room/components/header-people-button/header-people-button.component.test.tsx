@@ -1,8 +1,8 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import type { Friend } from "@features/room/types/room-view.types";
-import { PeopleButton } from "./PeopleButton";
+import type { Friend } from "../../types/room-view.types";
+import { HeaderPeopleButton } from "./header-people-button.component";
 
 const people = (): Friend[] => [
   { id: "user-99", name: "Henrique", hue: 210, online: true },
@@ -11,9 +11,9 @@ const people = (): Friend[] => [
   { id: "user-9", name: "Diego", hue: 90, online: true },
 ];
 
-function setup(props: Partial<Parameters<typeof PeopleButton>[0]> = {}) {
+function setup(props: Partial<Parameters<typeof HeaderPeopleButton>[0]> = {}) {
   render(
-    <PeopleButton
+    <HeaderPeopleButton
       people={people()}
       meId="user-99"
       sharing={{ "user-7": { screen: true, camera: true }, "user-3": { screen: true, camera: false } }}
@@ -32,9 +32,9 @@ function setup(props: Partial<Parameters<typeof PeopleButton>[0]> = {}) {
 const row = (name: RegExp) =>
   within(screen.getByRole("dialog", { name: "Here now" }))
     .getAllByRole("listitem")
-    .find((li) => name.test(li.querySelector("b")?.textContent ?? ""))!;
+    .find((li) => name.test(li.querySelector("b")?.textContent ?? "")) ?? document.body;
 
-describe("people button (spec 0104)", () => {
+describe("the people button", () => {
   it("shows a people icon and the number, named for screen readers", () => {
     setup();
     expect(screen.getByRole("button", { name: "4 people here" })).toHaveTextContent(/^4$/);
@@ -46,10 +46,8 @@ describe("people button (spec 0104)", () => {
 
     const panel = screen.getByRole("dialog", { name: "Here now" });
     expect(within(panel).getByText((_, el) => el?.textContent === "4 of 20 · 16 free")).toBeInTheDocument();
-    expect(within(panel).getByRole("progressbar", { name: "Seats taken" })).toHaveAttribute("aria-valuenow", "4");
+    expect(within(panel).getByRole("progressbar", { name: "Seats taken" })).toHaveAttribute("value", "4");
     expect(row(/Bruno/)).toHaveTextContent("Sharing screen and camera");
-    expect(within(row(/Bruno/)).getByLabelText("Screen")).toBeInTheDocument();
-    expect(within(row(/Bruno/)).getByLabelText("Camera")).toBeInTheDocument();
     expect(row(/Ana/)).toHaveTextContent("Sharing their screen");
     expect(row(/Henrique/)).toHaveTextContent("(you)");
     expect(row(/Henrique/)).toHaveTextContent("Watching Bruno");
@@ -81,5 +79,15 @@ describe("people button (spec 0104)", () => {
 
     expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
     expect(screen.queryByText(/waiting for a seat/)).not.toBeInTheDocument();
+  });
+
+  it("draws the streams' icons only for the eye: the line under the name already says them", async () => {
+    const user = setup();
+    await user.click(screen.getByRole("button", { name: "4 people here" }));
+
+    // Two icons for Bruno, one for Ana, and none of them read aloud.
+    expect(row(/Bruno/).querySelectorAll('[aria-hidden="true"] > span > svg')).toHaveLength(2);
+    expect(row(/Ana/).querySelectorAll('[aria-hidden="true"] > span > svg')).toHaveLength(1);
+    expect(within(row(/Bruno/)).queryAllByRole("img")).toHaveLength(0);
   });
 });
