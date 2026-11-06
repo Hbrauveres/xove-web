@@ -4,6 +4,7 @@ import { MenuRow } from "@shared/components/menu-row";
 import { PanelSection } from "@shared/components/panel-section";
 import { Slider } from "@shared/components/slider";
 import { Switch } from "@shared/components/switch";
+import { BRIGHTNESS_MAX, BRIGHTNESS_MIN, BRIGHTNESS_STEP } from "./constants/ambilight-slider.constants";
 import { CONNECTION_WORDS } from "./constants/connection-words.constants";
 import styles from "./header-my-menu.component.module.css";
 import type { HeaderMyMenuProps } from "./types/header-my-menu.types";
@@ -36,9 +37,9 @@ export function HeaderMyMenu(props: HeaderMyMenuProps) {
         />
         <Slider
           className={styles.slider}
-          min={0.2}
-          max={1}
-          step={0.05}
+          min={BRIGHTNESS_MIN}
+          max={BRIGHTNESS_MAX}
+          step={BRIGHTNESS_STEP}
           aria-label="Ambilight brightness"
           value={ambilight.brightness}
           disabled={!ambilight.on}

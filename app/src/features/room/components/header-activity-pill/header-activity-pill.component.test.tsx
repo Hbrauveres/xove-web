@@ -1,6 +1,6 @@
 import { act, render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { clockUser, onFakeClock } from "../../../../testing/factories/clock.factory";
 import type { ConnectionState } from "@services/livekit-service";
 import type { ActivityEvent, Friend } from "../../types/room-view.types";
 import { HeaderActivityPill } from "./header-activity-pill.component";
@@ -33,11 +33,16 @@ function Pill({ events, connection = "connected" }: { events: ActivityEvent[]; c
   );
 }
 
+// A fixed clock: "now" is the same whenever the tests run.
+beforeEach(() => {
+  onFakeClock();
+});
+
 const pill = () => screen.getByRole("button", { name: /^Activity|Connection/ });
 
 describe("the activity pill", () => {
   it("counts events that came in while the list was open as seen once it closes", async () => {
-    const user = userEvent.setup();
+    const user = clockUser();
     const first = [ev("joined", "user-9")];
     const { rerender } = render(<Pill events={first} />);
     await user.click(pill());
@@ -62,7 +67,7 @@ describe("the activity pill", () => {
   });
 
   it("opens the list on a click, and the new ones count as seen", async () => {
-    const user = userEvent.setup();
+    const user = clockUser();
     render(<Pill events={[ev("joined", "user-9"), ev("started", "user-3", "screen")]} />);
 
     await user.click(pill());

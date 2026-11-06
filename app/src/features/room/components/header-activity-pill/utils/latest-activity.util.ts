@@ -2,6 +2,7 @@ import { shortAgo } from "@shared/utils/time-ago.util";
 import type { LatestActivity } from "../../../types/activity.types";
 import type { ActivityEvent, Friend } from "../../../types/room-view.types";
 import { describeEvent } from "../../../utils/activity-text.util";
+import { personName } from "../../../utils/person-name.util";
 
 /** The newest event, in words, with how long ago and who did it; null before anything happened. */
 export function latestActivity(
@@ -12,7 +13,7 @@ export function latestActivity(
 ): LatestActivity | null {
   const event = events.at(-1);
   if (!event) return null;
-  const nameOf = (id: string) => people.find((p) => p.id === id)?.name ?? "Someone";
+  const nameOf = (id: string) => personName(people, id);
   return {
     id: event.id,
     text: describeEvent(event, nameOf, meId),

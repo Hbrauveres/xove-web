@@ -6,15 +6,17 @@ import styles from "./menu-row.component.module.css";
 import type { MenuRowProps } from "./types/menu-row.types";
 
 /** One action in a menu: its icon and its words. A link when it goes to a page, a button otherwise. */
-export function MenuRow({ icon, label, to, onPick, unavailable, role }: MenuRowProps) {
-  if (to !== undefined) {
+export function MenuRow(props: MenuRowProps) {
+  const { icon, label, role } = props;
+  if (props.to !== undefined) {
     return (
-      <Link to={to} role={role} className={styles.row}>
+      <Link to={props.to} role={role} className={styles.row}>
         <Icon name={icon} />
         {label}
       </Link>
     );
   }
+  const { onPick, unavailable } = props;
   return (
     <Tooltip text={unavailable}>
       <button
@@ -22,7 +24,7 @@ export function MenuRow({ icon, label, to, onPick, unavailable, role }: MenuRowP
         role={role}
         className={styles.row}
         aria-disabled={unavailable ? true : undefined}
-        onClick={() => (unavailable ? toastStore.show(unavailable, <Icon name={icon} size={20} />) : onPick?.())}
+        onClick={() => (unavailable ? toastStore.show(unavailable, <Icon name={icon} size={20} />) : onPick())}
       >
         <Icon name={icon} />
         {label}

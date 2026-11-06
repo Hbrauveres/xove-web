@@ -2,6 +2,7 @@ import { Icon } from "@shared/components/icon";
 import { shortAgo } from "@shared/utils/time-ago.util";
 import { ACTIVITY_TICK_MS } from "../../constants/activity.constants";
 import { useNow } from "../../hooks/use-now.hook";
+import { personName } from "../../utils/person-name.util";
 import styles from "./header-activity-list.component.module.css";
 import type { HeaderActivityListProps } from "./types/header-activity-list.types";
 import { activityIconOf } from "./utils/activity-icon.util";
@@ -21,7 +22,7 @@ export function HeaderActivityList({
   onWatch,
 }: HeaderActivityListProps) {
   const now = useNow(ACTIVITY_TICK_MS);
-  const nameOf = (id: string) => people.find((p) => p.id === id)?.name ?? "Someone";
+  const nameOf = (id: string) => personName(people, id);
 
   return (
     <ul className={styles.list}>

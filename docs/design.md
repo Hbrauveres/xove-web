@@ -385,7 +385,7 @@ Two sizes: **md** (10 × 18 px padding, 15 px text) and **sm** (6 × 12 px, 13 p
 
 ### Switch
 
-A slim grey track (**36 × 12 px**, `#3a3a3d`) that looks the same off and on, and a **16 px knob** over its height but never past its ends: `#bdbdc0` when off, red when on, sliding in 180 ms. The ambilight's on/off in the account menu, the Voice tab's processing.
+A slim grey track (**36 × 12 px**, `#3a3a3d`) that looks the same off and on, and a **16 px knob** over its height but never past its ends: `#bdbdc0` when off, red when on, sliding in 180 ms. The ambilight's on/off in my menu, the Voice tab's processing.
 
 **Settings rows** (every settings list): the label on the panel's type scale (12 px, regular, white at 82%), never heavier or bigger than the panel's title; what a row does in its tooltip, not under it; the label 3 px inside its heading; the switch ending 12 px in from the column's edge, where a picker's arrow does.
 
@@ -395,7 +395,7 @@ The sliders' rules stay one browser per rule, checked by `npm run check:styles` 
 
 ![The activity list](images/design/panel-activity.png)
 
-![The people panel](images/design/panel-people.png) ![The account menu, with the switch and a slider](images/design/panel-account.png)
+![The people panel](images/design/panel-people.png) ![My menu, with the switch and a slider](images/design/panel-account.png)
 
 - On the [Panel](#the-panel) with cuts: its sections stacked with 2 px clear cuts, each its own glass. 340 px wide (the activity list: up to 440 px, centred under the pill).
 - Open 8 px under their button; **one thing on screen at a time** (the [floating rule](#drop-ups)); they unroll by their height (260 ms).

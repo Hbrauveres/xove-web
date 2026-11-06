@@ -30,4 +30,12 @@ describe("what's new in the activity", () => {
     hook.rerender({ events: [ev("a"), ev("b")] });
     expect(hook.result.current.fresh).toBe(0);
   });
+
+  it("gives the same answer while nothing changes", () => {
+    const events = [ev("a")];
+    const hook = renderHook(() => useActivitySeen(events));
+    const first = hook.result.current;
+    hook.rerender();
+    expect(hook.result.current).toBe(first);
+  });
 });

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { ActivityEvent } from "../../../types/room-view.types";
 import type { ActivitySeen } from "../types/header-activity-pill.types";
 import { unseenCount } from "../utils/unseen-count.util";
@@ -10,21 +10,24 @@ export function useActivitySeen(events: ActivityEvent[]): ActivitySeen {
   const [seenId, setSeenId] = useState<string | null>(null);
   const [newWhenOpened, setNewWhenOpened] = useState<ReadonlySet<string>>(new Set());
   const unseen = unseenCount(events, seenId);
-  const markAllSeen = () => setSeenId(events.at(-1)?.id ?? null);
+  const latestId = events.at(-1)?.id ?? null;
 
-  const close = () => {
-    markAllSeen();
+  const close = useCallback(() => {
+    setSeenId(latestId);
     setOpen(false);
-  };
-  const toggle = () => {
+  }, [latestId]);
+  const toggle = useCallback(() => {
     if (open) {
       close();
       return;
     }
     setNewWhenOpened(new Set(unseen > 0 ? events.slice(-unseen).map((e) => e.id) : []));
-    markAllSeen();
+    setSeenId(latestId);
     setOpen(true);
-  };
+  }, [open, close, unseen, events, latestId]);
 
-  return { open, fresh: open ? 0 : unseen, newWhenOpened, toggle, close };
+  return useMemo(
+    () => ({ open, fresh: open ? 0 : unseen, newWhenOpened, toggle, close }),
+    [open, unseen, newWhenOpened, toggle, close],
+  );
 }

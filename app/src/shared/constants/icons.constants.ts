@@ -1,8 +1,8 @@
 import type { IconDrawing } from "../types/icon.types";
 
-/** A line drawn round at its ends and corners, in the text's colour. */
-/** A line with round ends. */
+/** A line with round ends, in the text's colour. */
 const ROUND_ENDS = { fill: "none", stroke: "currentColor", strokeLinecap: "round" } as const;
+/** A line drawn round at its ends and corners, in the text's colour. */
 const LINE = { ...ROUND_ENDS, strokeLinejoin: "round" } as const;
 /** The round buttons' set: a 20 × 20 grid, lines 1.75 px wide with round ends, set on the whole drawing. */
 const BUTTON = { ...LINE, strokeWidth: 1.75 } as const;

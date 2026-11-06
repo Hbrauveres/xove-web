@@ -29,3 +29,5 @@ type Story = StoryObj<typeof meta>;
 export const Connected: Story = {};
 /** Reconnecting: a yellow dot. */
 export const Reconnecting: Story = { args: { connection: "reconnecting" } };
+/** No video: a red dot. */
+export const Disconnected: Story = { args: { connection: "disconnected" } };

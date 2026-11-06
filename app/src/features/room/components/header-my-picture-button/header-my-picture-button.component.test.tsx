@@ -22,6 +22,11 @@ function setup(connection: ConnectionState = "connected") {
 
 describe("my picture button", () => {
   it("is my picture, named with the connection", () => {
+    setup("connected");
+    expect(screen.getByRole("button", { name: "Henrique: account, connected" })).toBeInTheDocument();
+  });
+
+  it("says when the connection is down", () => {
     setup("reconnecting");
     expect(screen.getByRole("button", { name: "Henrique: account, reconnecting" })).toBeInTheDocument();
   });

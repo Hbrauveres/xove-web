@@ -68,7 +68,7 @@ How many people are here; it opens the seats and the list of people with what ea
 | --- | --- | --- |
 | `features/room/components/header-people-button/` (the order, the line under each name and the queue in its `utils/`), the seats `header-seats/` | Here | Done (#189); the next version's people column replaces it |
 
-### Account button and menu
+### My picture button and my menu
 
 <table><tr>
 <td><img src="img/today/account-button.webp" width="54" alt="My picture"><br><sub>My picture</sub></td>
@@ -126,14 +126,14 @@ Over someone else's stream: each sound I hear from them (screen sound, voice) as
 ### Go live menu
 
 <table><tr>
-<td><img src="img/today/go-live-menu.webp" width="363" alt="Share my screen, turn on my camera, settings"><br><sub>Share my screen, turn on my camera, settings</sub></td>
+<td><img src="img/today/go-live-menu.webp" width="260" alt="Share my screen, turn on my camera, settings"><br><sub>Share my screen, turn on my camera, settings</sub></td>
 </tr></table>
 
 Starts what I share, from a drop-up over the stage.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| In `ViewerBar.tsx`, on the floating layer | On the floating layer | Kept; the next version's send buttons replace it |
+| In `ViewerBar.tsx`, on the floating layer, its rows the shared Menu row (#189) | On the floating layer | Kept; the next version's send buttons replace it |
 
 ### Player buttons
 
@@ -321,6 +321,7 @@ The shared controls today, and the copies that become one component each.
 | Page shell | `shared/components/page-shell/`: home, request access, the waiting room, the loading line | Here | Done (#188) |
 | Panel | `shared/components/panel/`, `panel-section/`: the settings, the menus, the waiting room's card | Here | Done (#188) |
 | Field, Stat pill, Count chip, Control label, Section heading | `shared/components/field/`, `stat-pill/`, `count-chip/`, `control-label/`, `section-heading/` | Here | Done (#188) |
+| Menu row | `shared/components/menu-row/`: one action in a menu, its icon and words; my menu's Admin and Sign out, the Go live menu's three (they were two looks) | Here | Done (#189) |
 | Error notice | `shared/components/error-notice/`: the red-tinted box a problem is told in, on the home page and over the room (it was a copied `.error` rule in both pages) | Already there | Merged |
 
 ## Removed

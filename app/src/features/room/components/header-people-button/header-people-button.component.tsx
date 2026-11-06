@@ -4,6 +4,7 @@ import { Face } from "@shared/components/face";
 import { Icon } from "@shared/components/icon";
 import { IconButton } from "@shared/components/icon-button";
 import { PanelSection } from "@shared/components/panel-section";
+import { personName } from "../../utils/person-name.util";
 import { HeaderSeats } from "../header-seats";
 import styles from "./header-people-button.component.module.css";
 import { STREAMS } from "./constants/people-button.constants";
@@ -21,7 +22,7 @@ export function HeaderPeopleButton({ people, meId, sharing, watchingOf, seats }:
   const [open, setOpen] = useState(false);
   const anchor = useRef<HTMLDivElement>(null);
   const count = people.length;
-  const nameOf = (id: string) => (id === meId ? "you" : (people.find((p) => p.id === id)?.name ?? "someone"));
+  const nameOf = (id: string) => (id === meId ? "you" : personName(people, id, "someone"));
 
   return (
     <div ref={anchor} className={styles.wrap}>

@@ -15,4 +15,11 @@ describe("the ambilight's settings", () => {
     expect(hook.result.current[0]).toEqual({ on: true, brightness: 0.85 });
     expect(loadAmbilight()).toEqual({ on: true, brightness: 0.85 });
   });
+
+  it("keeps the same change from render to render", () => {
+    const hook = renderHook(() => useAmbilight());
+    const first = hook.result.current[1];
+    hook.rerender();
+    expect(hook.result.current[1]).toBe(first);
+  });
 });
