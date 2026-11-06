@@ -12,7 +12,6 @@
   ["src/pages/RoomPage.test", "#192 room: queue, footer, page"],
   ["src/shared/styles/", "#185 shared: tokens"],
   ["src/components/room/RoomFooter", "#192 room: queue, footer, page"],
-  ["src/components/room/", "#189 room: header"],
   ["src/components/stage/SettingsPanel", "#193 settings"],
   ["src/components/stage/MicTest", "#193 settings"],
   ["src/components/stage/AlsoLive", "#191 today's stage pieces"],
