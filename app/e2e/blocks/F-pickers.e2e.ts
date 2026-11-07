@@ -82,6 +82,17 @@ test("F-pickers.5 the arrow keys open it and move through it; Escape closes it",
     await page.waitForTimeout(300);
   });
   await expect.soft(list.getByRole("menuitemradio", { name: OTHERS[0] })).toBeFocused();
+  // No tooltip over the pill: its chosen camera stays readable, and the focused option isn't said twice.
+  const tip = await page.locator('[role="tooltip"][data-shown]').boundingBox();
+  const p = await pill.boundingBox();
+  const covers =
+    !!tip &&
+    !!p &&
+    tip.y < p.y + p.height &&
+    tip.y + tip.height > p.y &&
+    tip.x < p.x + p.width &&
+    tip.x + tip.width > p.x;
+  expect.soft(covers).toBe(false);
   await page.keyboard.press("ArrowDown");
   await expect.soft(list.getByRole("menuitemradio", { name: OTHERS[1] })).toBeFocused();
   await page.keyboard.press("Escape");

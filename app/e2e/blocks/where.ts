@@ -23,10 +23,15 @@ export async function pointAt(page: Page, target: Locator): Promise<void> {
 }
 
 /** The pointer over the picture's upper part, waking its controls without touching one (a fixed
- * point like (400, 300) lands on a button at 854 × 480). */
+ * point lands on a button at one size and above the picture on a monitor on its side). */
 export async function overPicture(page: Page): Promise<void> {
-  const v = page.viewportSize() ?? { width: 1280, height: 720 };
-  await page.mouse.move(v.width / 2, v.height / 4);
+  const fullscreen = await page.getByRole("button", { name: "Fullscreen" }).boundingBox();
+  const stage = await page.getByRole("region", { name: "Shared screen" }).boundingBox();
+  if (!stage) return;
+  // Level with the picture's middle, a third of the way down from the stage's top; the picture
+  // ends above Fullscreen, so the third is kept above that.
+  const bottom = fullscreen ? fullscreen.y : stage.y + stage.height;
+  await page.mouse.move(stage.x + stage.width / 2, stage.y + (bottom - stage.y) / 3);
 }
 
 /** The pointer somewhere neutral, out of the stage's buttons' way (the page's top-left corner). */

@@ -74,6 +74,10 @@ test("F-preview-row.3 a greyed sound says why on a click, and changes nothing", 
   expect.soft(said).toBe(true);
   await expect.soft(mic).toHaveAttribute("aria-disabled", "true");
   await expect.soft(mic).not.toHaveAttribute("aria-pressed");
+  // Nothing to set for a mic that's off: no slider unrolls for it, or only a greyed one.
+  const slider = page.getByRole("slider", { name: /Rafa/ });
+  if ((await slider.count()) > 0 && (await slider.first().isVisible()))
+    await expect.soft(slider.first()).toBeDisabled();
   await expect.soft(page.getByRole("heading", { name: "Marina", level: 2 })).toBeVisible();
 });
 

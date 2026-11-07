@@ -20,6 +20,9 @@ async function goFullscreen(page: Page): Promise<void> {
   await wakeStage(page);
 }
 
+/** How near its button a tooltip sits (px): centred over it, a small gap above (more if kept in the window). */
+const TIP_NEAR = 40;
+
 test("F-fullscreen.1 pointing at the fullscreen button says Fullscreen, and nothing moves", async ({ page }, info) => {
   await openScene(page, "s=live");
   await wakeStage(page);
@@ -119,7 +122,18 @@ test("F-fullscreen.6 with the keyboard, Enter on the focused button goes fullscr
   });
   expect.soft(await fullscreenIsStage(page)).toBe(true);
   // The focus stays on the button, now Exit fullscreen.
-  await expect.soft(page.getByRole("button", { name: "Exit fullscreen" })).toBeFocused();
+  const exit = page.getByRole("button", { name: "Exit fullscreen" });
+  await expect.soft(exit).toBeFocused();
+  // Its tooltip, focused, sits just above it: not left where the button was before fullscreen.
+  const tip = page.locator('[role="tooltip"][data-shown]').filter({ hasText: "Exit fullscreen" });
+  await expect.soft(tip).toBeVisible();
+  const b = await exit.boundingBox();
+  const t = await tip.boundingBox();
+  if (b && t) {
+    expect.soft(Math.abs(t.x + t.width / 2 - (b.x + b.width / 2))).toBeLessThan(TIP_NEAR);
+    expect.soft(b.y - (t.y + t.height)).toBeGreaterThanOrEqual(0);
+    expect.soft(b.y - (t.y + t.height)).toBeLessThan(TIP_NEAR);
+  }
 });
 
 test("F-fullscreen.7 when everyone stops in fullscreen, the empty stage shows there with its way out", async ({

@@ -189,7 +189,9 @@ test("F-empty-stage.10 with reduced motion, the static is still and the TV doesn
   await countTurnOns(page);
   await observe(page, info, { view: stageOf(page).view }, async () => {
     await everyoneStops(page);
-    await page.waitForTimeout(900);
+    // The empty stage standing: only then is "no turning on" a real check.
+    await page.getByRole("heading", { name: "Go live" }).waitFor();
+    await page.waitForTimeout(600);
   });
   expect.soft(await turnOns(page)).toBe(0);
   const first = await staticPicture(page);
