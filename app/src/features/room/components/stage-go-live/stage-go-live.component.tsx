@@ -1,9 +1,9 @@
 import { useRef, useState } from "react";
 import { ActionPill } from "@shared/components/action-pill";
-import { MenuRow } from "@shared/components/menu-row";
 import { useFloating } from "@shared/stores/floating-store";
-import { NO_SCREEN } from "../../constants/stream-words.constants";
 import { useSettingsAnchor } from "../../hooks/use-settings-anchor.hook";
+import { StageBarMenu } from "../stage-bar-menu";
+import { StageGoLiveRows } from "../stage-go-live-rows";
 import styles from "./stage-go-live.component.module.css";
 import type { StageGoLiveProps } from "./types/stage-go-live.types";
 
@@ -23,12 +23,8 @@ export function StageGoLive({ canShareScreen, full, onStart, onSettings }: Stage
     area: () => box.current,
     anchor: () => box.current,
   });
-  const pick = (then: () => void) => () => {
-    setMenu(false);
-    then();
-  };
   return (
-    <span ref={box} className={styles.anchor}>
+    <span ref={box} className={styles.anchor} data-fold-key="go-live">
       <ActionPill
         size="m"
         fill="glass"
@@ -41,24 +37,16 @@ export function StageGoLive({ canShareScreen, full, onStart, onSettings }: Stage
         Go live
       </ActionPill>
       {menu && (
-        <div className={styles.menu} role="menu">
-          <MenuRow
+        <StageBarMenu role="menu">
+          <StageGoLiveRows
             role="menuitem"
-            icon={canShareScreen ? "screen-on" : "screen-off"}
-            label="Share your screen"
-            unavailable={canShareScreen ? full : NO_SCREEN}
-            onPick={pick(() => onStart("screen"))}
+            canShareScreen={canShareScreen}
+            full={full}
+            onStart={onStart}
+            onSettings={onSettings}
+            onPicked={() => setMenu(false)}
           />
-          <MenuRow
-            role="menuitem"
-            icon={full ? "camera-off" : "camera-on"}
-            label="Turn on your camera"
-            unavailable={full}
-            onPick={pick(() => onStart("camera"))}
-          />
-          <span className={styles.sep} />
-          <MenuRow role="menuitem" icon="cog" label="Settings" onPick={pick(onSettings)} />
-        </div>
+        </StageBarMenu>
       )}
     </span>
   );

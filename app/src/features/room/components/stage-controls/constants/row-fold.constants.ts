@@ -1,4 +1,4 @@
-import type { FoldKey } from "../types/row-fold.types";
+import type { FoldKey } from "../../../types/fold-key.types";
 
 /**
  * The order the bar's buttons fold into "…" when the picture is too narrow for them. Fullscreen, my

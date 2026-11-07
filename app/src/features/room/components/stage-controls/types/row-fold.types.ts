@@ -1,5 +1,4 @@
-/** A button over someone else's stream that can fold into "…". */
-export type FoldKey = "settings" | "go-live" | "sound" | "voice";
+import type { FoldKey } from "../../../types/fold-key.types";
 
 /** One button in the bar over someone else's stream, in the bar's order, with its width in px. */
 export interface RowButton {

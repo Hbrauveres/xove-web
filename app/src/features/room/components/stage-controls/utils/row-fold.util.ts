@@ -9,7 +9,8 @@ import {
   OWN_GAP_M,
   OWN_TO_FULLSCREEN,
 } from "../constants/row-fold.constants";
-import type { FoldKey, RowButton, RowFit, RowItems } from "../types/row-fold.types";
+import type { FoldKey } from "../../../types/fold-key.types";
+import type { RowButton, RowFit, RowItems } from "../types/row-fold.types";
 
 /** A row of buttons, end to end with a gap between each. */
 const rowWidth = (widths: number[], gap: number) =>

@@ -2,7 +2,7 @@ import { Slider } from "@shared/components/slider";
 import { StageSoundButton } from "../stage-sound-button";
 import { useViewerSound } from "./hooks/use-viewer-sound.hook";
 import styles from "./stage-viewer-sound.component.module.css";
-import { viewerSoundWords } from "./utils/viewer-sound-words.util";
+import { viewerSoundWords } from "../../utils/viewer-sound-words.util";
 import type { StageViewerSoundProps } from "./types/stage-viewer-sound.types";
 
 /**

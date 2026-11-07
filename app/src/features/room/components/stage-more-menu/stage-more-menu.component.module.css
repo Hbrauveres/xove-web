@@ -1,0 +1,5 @@
+/* "…" and its menu (StageBarMenu), which opens above it. */
+.anchor {
+  position: relative;
+  display: inline-grid;
+}

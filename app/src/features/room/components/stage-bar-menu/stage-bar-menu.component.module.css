@@ -1,0 +1,24 @@
+/* A menu over the stage's bar, above its button: Go live's and "…"'s. */
+.menu {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + var(--space-2-5));
+  z-index: var(--layer-menu);
+  display: grid;
+  gap: var(--space-0-5);
+  min-width: var(--viewer-menu-width);
+  padding: var(--space-1-5);
+  border: var(--hairline) solid var(--panel-line);
+  border-radius: var(--radius-3-5);
+  background: var(--panel);
+  backdrop-filter: blur(var(--blur-5-5));
+  box-shadow: 0 var(--space-2-5) var(--space-7-5) var(--black-50);
+}
+
+/* Between its groups. */
+.menu hr {
+  height: var(--hairline);
+  margin: var(--space-1);
+  border: 0;
+  background: var(--line);
+}

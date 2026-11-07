@@ -1,0 +1,12 @@
+/* One sound in "…": its round button, then its slider filling the row. */
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1);
+}
+
+.range {
+  flex: 1;
+  min-width: 0;
+}
