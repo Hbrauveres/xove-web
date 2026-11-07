@@ -1,0 +1,51 @@
+/*
+ * The bar over someone else's stream: what you hear at the left, you at the
+ * right, next to the fullscreen button; all as small as it (34 px), so the picture stays the subject.
+ * Level with the fullscreen button: 12 px in, centred on the round buttons' row.
+ */
+.bar {
+  position: absolute;
+  left: var(--space-3);
+  right: calc(var(--space-3) + var(--space-8-5) + var(--space-2-5));
+  bottom: calc(var(--space-3) + (var(--btn, var(--space-12)) - var(--space-8-5)) / 2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: var(--layer-over);
+}
+
+.left,
+.right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  pointer-events: auto;
+}
+
+/* Fading with the controls, part by part: a heard voice stays for its speaking cue,
+   alone in the corner, the sound beside it folding away. */
+.left > *,
+.right > * {
+  transition:
+    opacity var(--duration-250) ease,
+    margin var(--duration-250) ease,
+    background-color var(--duration-120) ease,
+    color var(--duration-120) ease;
+}
+
+:global([data-chrome="hidden"]:not(:has(:focus-visible))) :is(.left, .right) > :not([data-stays]) {
+  opacity: 0;
+}
+
+:global([data-chrome="hidden"]:not(:has(:focus-visible))) .left > :not([data-stays]):has(~ [data-stays]) {
+  /* One button (34 px) and the gap after it (8 px): the voice takes its place. */
+  margin-right: calc(calc(var(--space-8-5) * -1) - var(--space-2));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .left > *,
+  .right > * {
+    transition: none;
+  }
+}

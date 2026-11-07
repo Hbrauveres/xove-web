@@ -1,0 +1,54 @@
+.overlay {
+  /* The translate: it rises with the round buttons above the settings sheet, together. */
+  transition:
+    opacity var(--duration-250) ease,
+    translate var(--unroll),
+    bottom var(--duration-280) ease;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  /*
+   * The fullscreen button has one place on every layout: the bottom right, its
+   * centre level with the round buttons' row (12 px from the bottom, buttons --btn tall).
+   */
+  justify-content: flex-end;
+  pointer-events: none;
+  padding: var(--space-3);
+  padding-bottom: calc(var(--space-3) + (var(--btn, var(--space-12)) - var(--space-8-5)) / 2);
+}
+
+/* The fullscreen button, at the right. */
+.top {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* The layer lets the stream take the pointer; its buttons take it back. */
+.top button {
+  pointer-events: auto;
+}
+
+/* Hidden with the player's bars when the mouse stops (see Stage). */
+:global([data-chrome="hidden"]) .overlay {
+  opacity: 0;
+}
+
+:global([data-chrome="hidden"]) .overlay button {
+  pointer-events: none;
+}
+
+/* A control with the keyboard focus keeps everything visible. */
+:global([data-chrome="hidden"]:focus-within) .overlay {
+  opacity: 1;
+}
+
+:global([data-chrome="hidden"]:focus-within) .overlay button {
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    transition: none;
+  }
+}

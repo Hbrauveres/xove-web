@@ -17,6 +17,7 @@ function renderControls(over: Partial<StageControlsProps> = {}) {
       onStart={vi.fn()}
       onSettings={vi.fn()}
       onMenuChange={vi.fn()}
+      anchor={null}
       {...over}
     />,
   );

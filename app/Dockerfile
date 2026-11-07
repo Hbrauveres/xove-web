@@ -37,5 +37,6 @@ RUN echo "refresh: $REFRESH" \
  && chown -R web /config /data
 COPY --from=caddy /caddy /usr/bin/caddy
 COPY Caddyfile /etc/caddy/Caddyfile
+COPY config/config.json /etc/caddy/xove/config.json
 COPY --from=build /app/dist /srv
 USER web

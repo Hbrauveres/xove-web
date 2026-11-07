@@ -1,0 +1,35 @@
+/* How many of the 6 are live, and the places left: fixed at the right edge. */
+.free {
+  flex: none;
+  display: grid;
+  place-content: center;
+  gap: var(--space-0-75);
+  width: var(--strip-item);
+  aspect-ratio: 16 / 9;
+  margin: 0;
+  padding: var(--space-1-5);
+  border: var(--hairline) dashed var(--line);
+  border-radius: var(--radius-2);
+  text-align: center;
+}
+
+/* The seats: six little screens, three over three, red for each stream live,
+   which casts a soft, steady red light under it, as a TV's on a wall. */
+.free {
+  grid-template-columns: repeat(3, var(--size-4));
+  gap: var(--space-2-5) var(--space-2-5);
+}
+
+.free i {
+  width: var(--size-4);
+  height: var(--size-2-5);
+  border-radius: var(--radius-0-5);
+  background: var(--text-shade-14);
+}
+
+.free i[data-on] {
+  background: var(--accent);
+  box-shadow:
+    0 0 var(--space-1-5) var(--accent-45),
+    0 var(--space-1) var(--space-3) var(--accent-35);
+}

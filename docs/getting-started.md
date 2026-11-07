@@ -53,8 +53,11 @@ There's no reverse proxy and no API in front of it locally, so this only shows t
 | --- | --- | --- |
 | `APP_ENV` | Compose | The environment's name; anything locally. It goes into the container's name |
 | `IMAGE_TAG` | Compose | Which published image to run. Unset means "build it locally" |
+| `XOVE_STREAM_PLACES` | The container (and `npm run dev`) | How many streams can be live at once, 1 to 6; 6 when unset in Compose, the API's answer decides when unset in dev. Served to the app as `/config.json` ([Architecture](architecture.md#the-rooms-state)) |
 
-The web app reads no other setting and holds no secret: everything else comes from the API at run time.
+The web app holds no secret: everything else comes from the API at run time.
+
+To try another number of places: `XOVE_STREAM_PLACES=4 npm run dev`, or the same in front of `docker compose`; `curl localhost:5173/config.json` shows what the app reads.
 
 ## Next
 

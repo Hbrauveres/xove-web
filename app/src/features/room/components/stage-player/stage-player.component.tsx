@@ -1,12 +1,12 @@
-import { useCallback, useRef } from "react";
+import { useRef } from "react";
 import { Toast } from "@shared/components/toast";
-import { StageOverlay } from "../../../../components/stage/StageOverlay";
-import { SettingsAnchorContext } from "../../hooks/use-settings-anchor.hook";
+import { StageStageOverlay } from "../stage-stage-overlay";
 import { StageControls } from "../stage-controls";
 import { StageSounds } from "../stage-sounds";
 import { StageView } from "../stage-view";
-import { HOLD_MENU } from "./constants/stage-player.constants";
+import { StageSmallViewButton } from "../stage-small-view-button";
 import { useBigQuality } from "./hooks/use-big-quality.hook";
+import { useFold } from "./hooks/use-fold.hook";
 import { useGoToMine } from "./hooks/use-go-to-mine.hook";
 import { useStageChrome } from "./hooks/use-stage-chrome.hook";
 import { useStageFullscreen } from "./hooks/use-stage-fullscreen.hook";
@@ -36,9 +36,8 @@ export function StagePlayer(props: StagePlayerProps) {
     hold: chrome.hold,
   });
   const startMine = useGoToMine(controls.onStart, stage.pick, sharers);
-  const { hold } = chrome;
-  const onMenuChange = useCallback((open: boolean) => hold(HOLD_MENU, open), [hold]);
   useBigQuality(main, Boolean(stage.big?.isMe));
+  const fold = useFold();
 
   return (
     <div
@@ -58,22 +57,23 @@ export function StagePlayer(props: StagePlayerProps) {
         video={video}
         onVideo={onVideo}
         onSwap={() => bigId && stage.toggleSwap(bigId)}
+        fold={fold}
         canShareScreen={controls.canShareScreen}
         onStart={startMine}
       />
       {/* Over a stream and the empty stage alike: stopping the last stream never strands you in fullscreen. */}
-      <StageOverlay fullscreen={fullscreen.fullscreen} onFullscreen={fullscreen.toggle} />
+      <StageStageOverlay fullscreen={fullscreen.fullscreen} onFullscreen={fullscreen.toggle} />
       <div className={styles.controls}>
-        <SettingsAnchorContext value={settings.anchor}>
-          <StageControls
-            big={stage.big}
-            controls={controls}
-            hearing={hearing}
-            onStart={startMine}
-            onSettings={settings.toggle}
-            onMenuChange={onMenuChange}
-          />
-        </SettingsAnchorContext>
+        <StageControls
+          big={stage.big}
+          controls={controls}
+          hearing={hearing}
+          anchor={settings.anchor}
+          onStart={startMine}
+          onSettings={settings.toggle}
+          onMenuChange={chrome.onMenuChange}
+        />
+        {small && <StageSmallViewButton fold={fold} />}
       </div>
       {settingsPanel}
       <StageSounds voices={hearing.voices} previewSounds={hearing.previewSounds} />

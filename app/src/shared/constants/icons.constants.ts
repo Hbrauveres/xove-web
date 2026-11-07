@@ -216,23 +216,12 @@ export const ICONS = {
       ],
     ],
   },
-  /** The facecam: a camera with a filled lens. */
-  facecam: {
+  /** The small view, folded: a picture with a smaller one in its top-right corner, both outlined. */
+  pip: {
+    svg: BUTTON,
     parts: [
-      [
-        "rect",
-        {
-          x: "3",
-          y: "5",
-          width: "10",
-          height: "10",
-          rx: "2",
-          fill: "none",
-          stroke: "currentColor",
-          strokeWidth: "1.8",
-        },
-      ],
-      ["path", { d: "M13 9l4-2v6l-4-2z", fill: "currentColor" }],
+      ["rect", { x: "2", y: "3.5", width: "16", height: "13", rx: "2" }],
+      ["rect", { x: "9.5", y: "6", width: "6", height: "4.5", rx: "1" }],
     ],
   },
   /** Make small: one line. */

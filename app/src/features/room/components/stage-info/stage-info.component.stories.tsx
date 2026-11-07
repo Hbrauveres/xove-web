@@ -29,6 +29,7 @@ function Row({ sharers }: { sharers: Sharer[] }) {
         sharers={[]}
         stage={stage}
         hearing={hearing}
+        places={6}
         free={6}
         here={[{ id: "ana", name: "Ana", hue: 300, online: true }]}
       />

@@ -1,28 +1,36 @@
-import type { ButtonHTMLAttributes, ReactElement, ReactNode, Ref } from "react";
+import type { ButtonHTMLAttributes, ReactNode, Ref } from "react";
+
+/** One of the app's two round sizes: l (48 px) for my own buttons, m (34 px) for every other. */
+type RoundSize = "l" | "m";
 
 /**
- * Where the button sits, each with its own look:
- * - player: the player's round buttons (screen, camera, mic, settings), each in a glass pill
- * - stage: the round glass buttons over a stream
- * - overlay: the fullscreen corner, over the empty stage
- * - toggle: a sound's small round toggle
+ * Every round button, on one base: glass with a soft shadow, lighter when pointed at, a red ring
+ * for the keyboard, faded when unavailable, red when on. Only its icon changes.
+ */
+interface RoundProps {
+  variant: "round";
+  size: RoundSize;
+  /** On: red, for a stream that's live or a mic that's on. */
+  live?: boolean | undefined;
+  /** Can't be used now (it says why in its tooltip): faded, and disabled for assistive tech. */
+  unavailable?: boolean | undefined;
+}
+
+/**
+ * The buttons that aren't round, each for another purpose:
  * - header: the header's clear pill buttons
  * - words: a small pill with words, in the settings' own style (Change, Test)
- * - mini: a small round glass button on a small picture (the facecam's)
  * - close: a panel's close, clear until pointed at
  */
-type IconButtonVariant = "player" | "stage" | "overlay" | "toggle" | "header" | "words" | "mini" | "close";
-
-export interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant: IconButtonVariant;
-  ref?: Ref<HTMLButtonElement> | undefined;
-  /** The player's pill: lit, for a stream that's live. */
-  live?: boolean | undefined;
-  /** The player's pill: faded, for a button that can't be used now (it says why in its tooltip). */
-  unavailable?: boolean | undefined;
-  /** The player's pill: what it opens is open. */
-  open?: boolean | undefined;
-  /** The player's pill: what wraps the button inside it (its tooltip). */
-  around?: ((button: ReactElement<object>) => ReactNode) | undefined;
-  children: ReactNode;
+interface OtherProps {
+  variant: "header" | "words" | "close";
+  size?: never;
+  live?: never;
+  unavailable?: never;
 }
+
+export type IconButtonProps = (RoundProps | OtherProps) &
+  ButtonHTMLAttributes<HTMLButtonElement> & {
+    ref?: Ref<HTMLButtonElement> | undefined;
+    children: ReactNode;
+  };

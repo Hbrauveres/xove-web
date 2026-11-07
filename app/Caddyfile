@@ -16,6 +16,17 @@
 		file_server
 	}
 
+	# The settings this app shares with the API, from the container's environment:
+	# config/config.json filled in as it's served, never cached, so a new deploy's value shows on reload.
+	handle /config.json {
+		root * /etc/caddy/xove
+		header Cache-Control "no-store"
+		templates {
+			mime application/json
+		}
+		file_server
+	}
+
 	# Every other path is a React Router route: serve index.html, never cache it.
 	handle {
 		header Cache-Control "no-cache"

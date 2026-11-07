@@ -1,0 +1,21 @@
+/* What's shared: a muted window icon, then its words, cut short when they don't fit. */
+.source {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  min-width: 0;
+  font-size: var(--text-xs);
+}
+
+.source span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.source svg {
+  flex: none;
+  width: var(--size-3-5);
+  height: var(--size-3-5);
+  color: var(--text-muted);
+}

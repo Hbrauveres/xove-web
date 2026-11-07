@@ -33,6 +33,8 @@ export function installFakeApi(
     members: initial.members ?? [],
     /** The live streams, oldest first. Tests set them directly to play other people sharing. */
     streams: [] as FakeStream[],
+    /** How many streams can be live at once; undefined plays an older API, with 6. */
+    places: 6 as number | undefined,
     /** False plays an API that restarted and forgot this person's seat. */
     seated: true,
     /** The room's seats (spec 0104); undefined plays an older API. */
@@ -69,7 +71,8 @@ export function installFakeApi(
       status: 200,
       body: {
         streams: server.streams.map((st) => ({ ...st, mine: st.userId === MY_USER_ID })),
-        free: 6 - server.streams.length,
+        free: (server.places ?? 6) - server.streams.length,
+        places: server.places,
         seated: server.seated,
         seats: server.seatsInfo,
         here: server.here,
@@ -107,7 +110,8 @@ export function installFakeApi(
         own.settings = settings;
         return streamsState();
       }
-      if (server.streams.length >= 6) return conflict("The room already has 6 streams.", "full");
+      const places = server.places ?? 6;
+      if (server.streams.length >= places) return conflict(`The room already has ${places} streams.`, "full");
       server.streams = [...server.streams, myStream(wanted.kind, server.me?.name ?? null, settings)];
       return streamsState();
     }

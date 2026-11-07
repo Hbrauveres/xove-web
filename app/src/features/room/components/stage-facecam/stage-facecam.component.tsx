@@ -9,55 +9,41 @@ import type { StageFacecamProps } from "./types/stage-facecam.types";
 import { placeStyle } from "./utils/place-style.util";
 
 /**
- * The small window over the big player when someone shares their screen and their camera
- * together: their camera over the screen, or the other way round. Drag it (or move it with the
- * arrow keys) wherever it bothers least, collapse it to a tab, or swap it with the big video.
+ * The small view: the small window over the big player when someone shares their screen and their
+ * camera together, their camera over the screen or the other way round. Drag it (or move it with the
+ * arrow keys) wherever it bothers least, swap it with the big video, or hide it: it folds into the
+ * corner button, which opens it again.
  */
-export function StageFacecam({
-  video,
-  player,
-  label,
-  place,
-  collapsed,
-  onSwap,
-  onMove,
-  onCollapse,
-}: StageFacecamProps) {
+export function StageFacecam({ video, player, label, place, fold, onSwap, onMove }: StageFacecamProps) {
   const box = useRef<HTMLDivElement>(null);
   const buttons = useRef<HTMLDivElement>(null);
   const move = useFacecamMove({ box, buttons, player, place, onMove });
-
-  if (collapsed) {
-    return (
-      <Tooltip text="Show facecam">
-        <button type="button" className={styles.tab} onClick={() => onCollapse(false)} aria-label="Show facecam">
-          <Icon name="facecam" size={14} />
-        </button>
-      </Tooltip>
-    );
-  }
+  const { setBox, setHide, hide } = fold;
 
   return (
     <div
-      ref={box}
+      ref={(el) => {
+        box.current = el;
+        setBox(el);
+      }}
       className={styles.facecam}
       style={placeStyle(place)}
       role="application"
       tabIndex={0}
-      aria-roledescription="facecam"
+      aria-roledescription="small view"
       aria-label={`${label}: drag or use the arrow keys to move it`}
       {...move}
     >
       <StageScreenVideo video={video} label={label} />
       <div ref={buttons} className={styles.controls}>
         <Tooltip text="Swap views">
-          <IconButton variant="mini" onClick={onSwap} aria-label="Swap views">
-            <Icon name="swap" size={16} />
+          <IconButton variant="round" size="m" onClick={onSwap} aria-label="Swap views">
+            <Icon name="swap" />
           </IconButton>
         </Tooltip>
-        <Tooltip text="Hide facecam">
-          <IconButton variant="mini" onClick={() => onCollapse(true)} aria-label="Hide facecam">
-            <Icon name="minimize" size={16} />
+        <Tooltip text="Hide the small view">
+          <IconButton ref={setHide} variant="round" size="m" onClick={hide} aria-label="Hide the small view">
+            <Icon name="minimize" />
           </IconButton>
         </Tooltip>
       </div>

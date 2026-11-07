@@ -32,7 +32,11 @@ export type RoomModel = {
   polledAt: number;
   /** The live streams, oldest first; null until the API's first answer. */
   streams: RoomStream[] | null;
-  /** Stream places left of the 6. */
+  /** The app's own setting for the stream places (`/config.json`); null when it didn't say. */
+  placesSetting: number | null;
+  /** How many streams can be live at once: the setting, else what the API says (see `placesOf`). */
+  places: number;
+  /** Stream places left. */
   free: number;
   /** How full the room is; null from an older API. */
   seats: RoomSeatsState | null;

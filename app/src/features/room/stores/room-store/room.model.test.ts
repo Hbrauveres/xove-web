@@ -24,6 +24,12 @@ describe("the room's model", () => {
     expect(room.me).toBe("user-7");
   });
 
+  it("counts the places from the app's setting first, else from the API's answer", () => {
+    expect(initialRoom(4)).toMatchObject({ places: 4, free: 4 });
+    expect(withStreams(initialRoom(4), anAnswer({ places: 6, free: 6 }), AT).places).toBe(4);
+    expect(withStreams(initialRoom(), anAnswer({ places: 4, free: 4 }), AT).places).toBe(4);
+  });
+
   it("takes the streams by person, and starts the activity from the first answer without events", () => {
     const room = withStreams(initialRoom(), anAnswer({ streams: [marinaScreen()], free: 5 }), AT);
     expect(room.streams).toEqual([

@@ -30,6 +30,7 @@ function Room({ sharers }: { sharers: Sharer[] }) {
         ambilight={{ on: true, brightness: 0.9 }}
         controls={{
           mine: { screen: false, camera: false },
+          places: 6,
           free: 6 - sharers.length,
           cameras: [],
           camera: null,

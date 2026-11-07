@@ -1,0 +1,57 @@
+/* One sound over the stream: its button, and its own slider above it. */
+.anchor {
+  position: relative;
+  display: inline-grid;
+}
+
+/* Each sound's own slider, unrolling over its button. */
+.slider {
+  position: absolute;
+  bottom: calc(100% + var(--space-2-5));
+  left: 50%;
+  width: var(--control-sm);
+  height: var(--volume-height);
+  margin-left: calc(var(--space-4-25) * -1);
+  border: var(--hairline) solid var(--panel-line);
+  border-radius: var(--radius-pill);
+  background: var(--panel);
+  backdrop-filter: blur(var(--blur-5-5));
+  box-shadow: 0 var(--space-2) var(--space-7) var(--black-45);
+  clip-path: inset(100% 0 0 0 round var(--radius-pill));
+  transition: clip-path var(--unroll);
+  pointer-events: none;
+}
+
+.slider[data-open] {
+  clip-path: inset(0 round var(--radius-pill));
+  pointer-events: auto;
+}
+
+/* Bridges the gap to the button, so the pointer can travel. */
+.slider::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: var(--size-3);
+}
+
+.range {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--volume-width);
+  margin: 0;
+  transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+.slider[data-muted] .range {
+  opacity: 0.35;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slider {
+    transition: none;
+  }
+}

@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { loadHearing, saveHearing } from "@services/preferences-service";
 import type { HearingPrefs } from "@services/preferences-service";
 import type { PersonId } from "../types/room.types";
-import type { Choices, Heard } from "../types/hearing.types";
+import type { Choices } from "../types/hearing.types";
+import type { Hearing } from "../types/sound.types";
 import type { Sharer } from "../types/room-view.types";
 import { choose, downloads, hearingOf } from "../utils/hearing.util";
 
@@ -18,13 +19,13 @@ export function useHearing(sharers: Sharer[], bigId: PersonId | null) {
   const [choices, setChoices] = useState<Record<PersonId, Choices>>({});
 
   const hearOf = useCallback(
-    (id: PersonId): Heard =>
+    (id: PersonId): Hearing =>
       hearingOf(choices[id], id === bigId, { sound: stageSound.volume, voice: stageVoice.volume }),
     [choices, bigId, stageSound.volume, stageVoice.volume],
   );
 
   const setHear = useCallback(
-    (id: PersonId, next: Heard) => {
+    (id: PersonId, next: Hearing) => {
       const was = hearOf(id);
       setChoices((prev) => ({ ...prev, [id]: choose(prev[id], was, next) }));
       // Only a change to whoever is on the stage moves where the next person starts.

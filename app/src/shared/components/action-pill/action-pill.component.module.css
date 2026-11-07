@@ -1,0 +1,104 @@
+/* A button with words, round at both ends: one base, two sizes, three fills. Only its icon and
+   words change. */
+.pill {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-pill);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--duration-120) ease;
+}
+
+.pill:focus-visible {
+  outline: var(--border-0-5) solid var(--accent);
+  outline-offset: var(--border-0-5);
+}
+
+/* m: over a stream (Go live). */
+.m {
+  height: var(--control-sm);
+  padding: 0 var(--space-3-5) 0 var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.m svg {
+  width: var(--size-4);
+  height: var(--size-4);
+}
+
+/* l: the main thing to do (the ways to start, on the empty stage). */
+.l {
+  height: var(--control-2xl);
+  padding: 0 var(--space-5);
+  font-size: var(--text-14-5);
+}
+
+.l svg {
+  width: var(--size-4-5);
+  height: var(--size-4-5);
+}
+
+/* Glass, over a stream: the round buttons' own glass and shadow. */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(var(--blur-2));
+  box-shadow: 0 var(--space-1) var(--space-4) var(--black-35);
+}
+
+/* Red: the first way. */
+.red {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* Soft: the second way, a light fill with no outline. */
+.soft {
+  background: var(--text-shade-08);
+}
+
+@media (hover: hover) {
+  .glass:not([aria-disabled="true"]):hover {
+    background: var(--grey-40-85);
+  }
+
+  .red:not([aria-disabled="true"]):hover {
+    background: var(--accent-light);
+  }
+
+  .soft:not([aria-disabled="true"]):hover {
+    background: var(--text-shade-14);
+  }
+}
+
+.pill[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+/* Can't be used now: faded in place, a soft fill whatever its own; its tooltip says why. */
+.unavailable {
+  background: var(--text-shade-06);
+  color: var(--text);
+  opacity: 0.45;
+}
+
+/* The live dot: red, glowing a little. */
+.dot {
+  width: var(--size-2);
+  height: var(--size-2);
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 var(--space-2) var(--accent-70);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill {
+    transition: none;
+  }
+}

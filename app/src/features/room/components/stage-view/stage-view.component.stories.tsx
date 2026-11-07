@@ -25,6 +25,7 @@ const meta = {
     video: null,
     onVideo: noop,
     onSwap: noop,
+    fold: { folded: false, hide: noop, show: noop, setBox: noop, setHide: noop, setCorner: noop },
     canShareScreen: true,
     onStart: noop,
   },

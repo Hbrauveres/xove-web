@@ -1,107 +1,23 @@
-/* The ways to start: two pills of one width, side by side, alone in the row, centred. */
-/* Two pills of one width, side by side, alone in the row, centred. */
+/* The ways to start: two action pills of one width, side by side, alone in the row, centred. */
 .go {
-  --h: var(--control-2xl);
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-2-5);
   margin-top: var(--space-3);
 }
-.go button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  height: var(--h);
-  padding: 0 var(--space-5);
-  border: 0;
-  border-radius: var(--radius-pill);
-  font: inherit;
-  font-size: var(--text-14-5);
-  font-weight: 600;
-  cursor: pointer;
-}
-.go svg {
-  width: var(--size-4-5);
-  height: var(--size-4-5);
-}
-.primary {
-  background: var(--accent);
-  color: var(--accent-ink);
-}
-/* The second way: a soft fill, no outline. */
-.ghost {
-  background: var(--text-shade-08);
-  color: var(--text);
-}
-/* Can't be used in this browser: the same pill, greyed in place; its tooltip says why. */
-.unavailable {
-  background: var(--text-shade-06);
-  color: var(--text);
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-@media (hover: hover) {
-  .primary:hover {
-    background: var(--accent-light);
-  }
 
-  .ghost:hover {
-    background: var(--text-shade-14);
-  }
-}
-/* A small stage (a narrow window): finer corners, no "Standby", a smaller heading, compact buttons. */
-@container (--compact) {
-  .go {
-    --h: var(--control-xl);
-  }
-
-  .go button {
-    padding: 0 var(--space-4);
-    font-size: var(--text-14);
-  }
-}
-/* A short stage: finer corners, no line, and the way to start
-   in its middle both ways, the stage's own buttons in their corner. */
+/* A short stage: the way to start in its middle both ways, the stage's own buttons in their corner. */
 @container (--short) {
   .go {
     gap: var(--space-2);
     margin-top: var(--space-4);
   }
-
-  .go {
-    --h: var(--control-lg);
-  }
-
-  .go button {
-    padding: 0 var(--space-4);
-    font-size: var(--text-13-5);
-  }
-
-  .go svg {
-    width: var(--size-4-25);
-    height: var(--size-4-25);
-  }
 }
-/* The narrowest stages (under 360 px): smaller still, so the stage's own buttons stay clear. */
+
+/* The narrowest stages (under 360 px): closer still, so the stage's own buttons stay clear. */
 @container (--tiny) {
   .go {
     gap: var(--space-1-5);
     margin-top: var(--space-2-5);
-  }
-
-  .go {
-    --h: var(--control-sm);
-  }
-
-  .go button {
-    gap: var(--space-1-5);
-    padding: 0 var(--space-3-25);
-    font-size: var(--text-sm);
-  }
-
-  .go svg {
-    width: var(--size-4);
-    height: var(--size-4);
   }
 }

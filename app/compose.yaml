@@ -1,6 +1,7 @@
 # The web app on its own: what the server deploys as the app xove-web (spec 0063).
 # Locally and in the checks: docker compose -f app/compose.yaml up -d --build
-# It needs only APP_ENV (and IMAGE_TAG, set by the deploy) (ADR-0062).
+# It needs APP_ENV (and IMAGE_TAG, set by the deploy) (ADR-0062), and the settings it shares with
+# the API, served to the browser as /config.json.
 
 services:
   web:
@@ -8,6 +9,9 @@ services:
     build: .
     container_name: xove-${APP_ENV:-prod}-web
     restart: unless-stopped
+    environment:
+      # Streams (screens and cameras) live at once, 1 to 6: a setting both apps share.
+      XOVE_STREAM_PLACES: ${XOVE_STREAM_PLACES:-6}
     # "Healthy" is defined here, with the app: the server's deploy and CI both wait for it.
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost/ | grep -q '<div id=\"root\">'"]

@@ -1,11 +1,23 @@
 /// <reference types="vitest/config" />
 import react from "@vitejs/plugin-react";
 import { fileURLToPath } from "node:url";
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
+
+/** In dev, /config.json as the container's Caddy serves it (Caddyfile), from the same variable. */
+const appConfig = (): Plugin => ({
+  name: "xove-app-config",
+  configureServer(server) {
+    server.middlewares.use("/config.json", (_req, res) => {
+      res.setHeader("Content-Type", "application/json");
+      res.setHeader("Cache-Control", "no-store");
+      res.end(`{"streamPlaces": ${process.env.XOVE_STREAM_PLACES ?? "null"}}`);
+    });
+  },
+});
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), appConfig()],
   // The structure's short names, as in tsconfig.app.json's paths.
   resolve: {
     alias: Object.fromEntries(

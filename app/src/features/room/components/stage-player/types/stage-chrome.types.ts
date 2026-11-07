@@ -9,6 +9,8 @@ export interface StageChrome {
   leave: (e: PointerEvent) => void;
   /** Something open holds them up (a menu, the settings) until it closes. */
   hold: (what: string, open: boolean) => void;
+  /** One of my buttons' menus opened or closed: it holds them up while open. */
+  onMenuChange: (open: boolean) => void;
   /** The player's own: a move, a press or a focus shows them; leaving hides them. */
   handlers: {
     onPointerMove: () => void;

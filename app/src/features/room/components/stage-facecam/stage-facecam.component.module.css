@@ -44,20 +44,3 @@
   opacity: 1;
   pointer-events: auto;
 }
-
-/* Collapsed: a small tab at the player's right edge. */
-.tab {
-  position: absolute;
-  z-index: var(--layer-over);
-  right: 0;
-  top: 50%;
-  display: grid;
-  place-items: center;
-  width: var(--size-7);
-  height: var(--control-2xl);
-  border: none;
-  border-radius: var(--radius-1-5) 0 0 var(--radius-1-5);
-  background: var(--glass);
-  color: var(--text);
-  cursor: pointer;
-}

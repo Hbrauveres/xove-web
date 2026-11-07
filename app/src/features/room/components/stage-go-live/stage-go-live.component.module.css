@@ -1,0 +1,27 @@
+/* Go live and its menu, which opens above it. */
+.anchor {
+  position: relative;
+  display: inline-grid;
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + var(--space-2-5));
+  z-index: var(--layer-menu);
+  display: grid;
+  gap: var(--space-0-5);
+  min-width: var(--viewer-menu-width);
+  padding: var(--space-1-5);
+  border: var(--hairline) solid var(--panel-line);
+  border-radius: var(--radius-3-5);
+  background: var(--panel);
+  backdrop-filter: blur(var(--blur-5-5));
+  box-shadow: 0 var(--space-2-5) var(--space-7-5) var(--black-50);
+}
+
+.sep {
+  height: var(--hairline);
+  margin: var(--space-1);
+  background: var(--line);
+}

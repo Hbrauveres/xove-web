@@ -7,6 +7,7 @@ import type {
   WatchingTarget,
 } from "@services/xove-api-service";
 import { LiveKitAdapter, CANT_CONNECT } from "@services/livekit-service";
+import { appConfig } from "@services/app-config-service";
 import { POLL_MS, SEAT_FAILED } from "../../constants/room.constants";
 import { initialRoom, withMe, withSeat, withStreams, withStreamsCall, withVideo } from "./room.model";
 import type { CallOutcome, RoomModel, RoomSnapshot, SeatState } from "../../types/room.types";
@@ -22,7 +23,7 @@ export class RoomStore {
   /** My name as my account has it, until the room names me. */
   readonly myName: string;
   private readonly pollMs: number;
-  private model = initialRoom();
+  private model = initialRoom(appConfig.read().streamPlaces);
   private snapshot: RoomSnapshot;
   private readonly listeners = new Set<() => void>();
   private readonly timers = new Map<"seat" | "streams" | "reenter", number>();
@@ -164,7 +165,7 @@ export class RoomStore {
   /** Back to the queue: the room starts afresh when I'm in again, as a new page would. */
   private leaveRoom() {
     this.inRoom = false;
-    this.setModel({ ...initialRoom(), seat: this.model.seat, seatError: this.model.seatError });
+    this.setModel({ ...initialRoom(this.model.placesSetting), seat: this.model.seat, seatError: this.model.seatError });
     this.every("streams", false, () => {});
     this.every("reenter", false, () => {});
     this.video.disconnect();

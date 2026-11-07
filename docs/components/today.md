@@ -113,27 +113,27 @@ The stream's own colours glowing around the stage, drawn from its edges on a sma
 ### Viewer bar
 
 <table><tr>
-<td><img src="img/today/viewer-bar.webp" width="174" alt="What I hear from the person I watch"><br><sub>What I hear from the person I watch</sub></td>
-<td><img src="img/today/viewer-bar-tooltip.webp" width="114" alt="A sound&#x27;s button, with its tooltip"><br><sub>A sound&#x27;s button, with its tooltip</sub></td>
+<td><img src="img/today/viewer-bar.webp" width="96" alt="What I hear from the person I watch"><br><sub>What I hear from the person I watch</sub></td>
+<td><img src="img/today/viewer-bar-tooltip.webp" width="166" alt="A sound&#x27;s button, with its tooltip"><br><sub>A sound&#x27;s button, with its tooltip</sub></td>
 </tr></table>
 
-Over someone else's stream: each sound I hear from them (screen sound, voice) as its own button with a slider; my mic or Go live at the right.
+Over someone else's stream: each sound I hear from them (screen sound, voice) as its own round button (M 34) with a slider; a greyed one says why; my mic or Go live (an action pill) at the right.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/ViewerBar.tsx` | `features/room/components/stage-viewer-bar/` (on the shared Icon button, Slider and a hold-or-rest hook) | Kept; the next version's stage controls replace it |
+| `features/room/components/stage-viewer-bar/`, each sound `stage-viewer-sound/` on the one sound button `stage-sound-button/`, me `stage-viewer-me/`; the slider's rest in `features/room/hooks/use-hold-or-rest.hook.ts` | Here | Done (#191); the next version's stage controls replace it |
 
 ### Go live menu
 
 <table><tr>
-<td><img src="img/today/go-live-menu.webp" width="260" alt="Share my screen, turn on my camera, settings"><br><sub>Share my screen, turn on my camera, settings</sub></td>
+<td><img src="img/today/go-live-menu.webp" width="240" alt="Share my screen, turn on my camera, settings"><br><sub>Share my screen, turn on my camera, settings</sub></td>
 </tr></table>
 
 Starts what I share, from a drop-up over the stage.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| In `ViewerBar.tsx`, on the floating layer, its rows the shared Menu row (#189) | On the floating layer | Kept; the next version's send buttons replace it |
+| `features/room/components/stage-go-live/`, an action pill, its drop-up on the floating layer, its rows the shared Menu row | Here | Done (#191); the next version's send buttons replace it |
 
 ### Player buttons
 
@@ -141,11 +141,11 @@ Starts what I share, from a drop-up over the stage.
 <td><img src="img/today/player-buttons.webp" width="242" alt="My stream&#x27;s round buttons: screen, camera, mic, settings"><br><sub>My stream&#x27;s round buttons: screen, camera, mic, settings</sub></td>
 </tr></table>
 
-Over my own stream: my screen, camera and mic, on or off, and the settings.
+Over my own stream: my screen, camera and mic, on or off, and the settings: round buttons, L 48, red while on.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/PlayerButtons.tsx`, on the shared Icon and Icon button | `features/room/components/stage-player-buttons/` (on the shared Icon button and icons) | Kept; the next version's send buttons replace it |
+| `features/room/components/stage-player-buttons/`, each stream `stage-stream-button/`, a live one's drop-up `stage-stream-quick/` with `stage-screen-source/` (the settings use it too) | Here | Done (#191); the next version's send buttons replace it |
 
 ### Stage overlay
 
@@ -153,24 +153,25 @@ Over my own stream: my screen, camera and mic, on or off, and the settings.
 <td><img src="img/today/stage-overlay-fullscreen.webp" width="54" alt="Fullscreen"><br><sub>Fullscreen</sub></td>
 </tr></table>
 
-The stage's fullscreen button.
+The stage's fullscreen button, round, M 34.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/StageOverlay.tsx` | `features/room/components/stage-overlay/` | Kept; the next version's stage controls replace it |
+| `features/room/components/stage-stage-overlay/` | Here | Done (#191); the next version's stage controls replace it |
 
-### Facecam
+### Small view
 
 <table><tr>
 <td><img src="img/today/facecam.webp" width="387" alt="The camera over the screen"><br><sub>The camera over the screen</sub></td>
 <td><img src="img/today/room-facecam.webp" width="720" alt="In the room"><br><sub>In the room</sub></td>
+<td><img src="img/today/small-view-folded.webp" width="420" alt="Folded into its corner button"><br><sub>Folded into its corner button</sub></td>
 </tr></table>
 
-When someone shares their screen and their camera, the camera sits over the screen; it can be swapped, minimised and dragged.
+When someone shares their screen and their camera, the camera sits over the screen; it can be swapped and dragged. Hide folds it, in one move, into a round button in the stage's top-right corner, which opens it again where it was.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage-facecam/` (its move a hook) | Here | Done (#190) |
+| `features/room/components/stage-facecam/` (its move a hook), the corner button `stage-small-view-button/`, the fold `stage-player/`'s `use-fold` | Here | Done (#190, the fold #191) |
 
 ### Empty stage
 
@@ -194,20 +195,20 @@ Under the stage: whose stream it is, what it is, how long it's been live and who
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/NowWatching.tsx` | `features/room/components/stage-now-watching/` | Kept; the next version shows it in the people column |
+| `features/room/components/stage-now-watching/` | Here | Done (#191); the next version shows it in the people column |
 
 ### Also live, preview tray and hear toggles
 
 <table><tr>
-<td><img src="img/today/also-live.webp" width="420" alt="The other streams, and the free seats"><br><sub>The other streams, and the free seats</sub></td>
-<td><img src="img/today/preview-tray.webp" width="684" alt="Pointing at a preview: its sound buttons"><br><sub>Pointing at a preview: its sound buttons</sub></td>
+<td><img src="img/today/also-live.webp" width="404" alt="The other streams, and the free seats"><br><sub>The other streams, and the free seats</sub></td>
+<td><img src="img/today/preview-tray.webp" width="452" alt="Pointing at a preview: its sound buttons"><br><sub>Pointing at a preview: its sound buttons</sub></td>
 </tr></table>
 
-The other live streams as small previews, the seats still free, and, over a preview, its own sound buttons.
+The other live streams as small previews, their names on label pills, the places still free, and, over a preview, its own row of round buttons (M 34).
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/AlsoLive.tsx`, `PreviewTray.tsx`, `usePreviewTray.ts`, `HearToggles.tsx`, `stack.ts` | `features/room/components/stage-also-live/`, `preview-tray/`, `hear-toggles/`, on one shared live preview | Kept; the next version's people column and live preview replace them |
+| `features/room/components/stage-also-live/`, `stage-live-preview/`, `stage-places/`, `stage-preview-tray/`, `stage-preview-tray-row/`, `stage-hear-toggles/`, `stage-sound-drawer/`, `stage-sound-slider/`; the layer's state in `features/room/hooks/use-preview-tray.hook.ts` | Here | Done (#191); the next version's people column and live preview replace them |
 
 ### My stream
 
@@ -219,7 +220,7 @@ The room while I share: my stream on the stage with my own buttons.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage*/`, `PlayerButtons.tsx` | As above | The stage done (#190); my buttons kept |
+| `features/room/components/stage*/` | As above | Done (#190, my buttons #191) |
 
 ## Around the room
 
@@ -235,7 +236,7 @@ What I send: the screen, the camera and the voice, each a tab, with its quality 
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/SettingsPanel.tsx` (four jobs in 527 lines), `MicTest.tsx` | `features/settings/` (a shell on the shared Panel, one folder per tab, `mic-test/`) | Kept |
+| `components/stage/SettingsPanel.tsx` (four jobs), `MicTest.tsx` | `features/settings/` (a shell on the shared Panel, one folder per tab, `mic-test/`) | Kept |
 
 ### Room footer
 
@@ -312,7 +313,9 @@ The shared controls today, and the copies that become one component each.
 | Cue | `shared/components/cue/` | Here | Done (#187) |
 | Tooltip | `shared/components/tooltip/` | Here, on the floating layer | Done (#187) |
 | Avatar | `shared/components/face/` (was `ui/Avatar.tsx`, `PersonAvatar.tsx`): the room's colour and initial with its rings, the account's photo | Already there | Merged |
-| Round button | `shared/components/icon-button/` (was `RoundButton.module.css` and its copies): the player's pills, the stage's glass, the fullscreen corner, a sound's toggle, the header's, the small pill with words | Already there | Merged |
+| Round button | `shared/components/icon-button/`, `variant="round"`: one base (glass, a soft shadow, lighter when pointed at, a red keyboard ring, 45% when unavailable, red when on) in two sizes, L 48 for my own buttons and M 34 for every other; its other purposes the header's, words' and close | Here | Done (#191): the player's, the stage's, the overlay's, the mini and the toggle variants are one |
+| Action pill | `shared/components/action-pill/`: a button with words, M 34 or L 44, glass, red or soft, an icon or the live dot first; Go live and the empty stage's ways to start | Here | Done (#191) |
+| Label pill | `shared/components/label-pill/`: a name over a picture, 22 px glass, a face or an icon first; the previews' names | Here | Done (#191) |
 | Switch | `shared/components/switch/`: a setting's line, its words and the switch | Already there | Merged |
 | Icons | `shared/components/icon/` and its drawings in `shared/constants/icons.constants.ts` (was `stage/icons.tsx`, `room/ActivityIcon.tsx` and inline drawings) | Already there | Merged |
 | LIVE badge | `shared/components/live-badge/`: beside who's on the stage, and over my preview | Already there | Merged |

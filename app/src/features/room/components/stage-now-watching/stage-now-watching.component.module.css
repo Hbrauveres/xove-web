@@ -1,0 +1,131 @@
+/* Who is on the stage. */
+.now {
+  /* The left grows and gives way first. */
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3-5);
+  min-width: 0;
+}
+
+.text {
+  min-width: 0;
+}
+
+.name {
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-23-2);
+  line-height: 1.1;
+  letter-spacing: calc(var(--tracking-1) * -1);
+}
+
+.yours {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.meta {
+  /* Past its room the line is cut, never spilling under the previews. */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2-5);
+  margin: var(--space-1-5) 0 0;
+  white-space: nowrap;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.meta > * {
+  flex: none;
+}
+
+.elapsed {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Who's watching: a small dot apart, then the avatars side by side, never overlapping. */
+.watchers {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.watchers::before {
+  content: "";
+  width: var(--size-0-75);
+  height: var(--size-0-75);
+  margin-right: var(--space-0-5);
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.row {
+  display: inline-flex;
+  gap: var(--space-1);
+}
+
+.face {
+  display: inline-flex;
+}
+
+/* An empty stage: who's here, in a sentence that may shorten. */
+.here {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meta > .here {
+  flex: 0 1 auto;
+}
+
+/* Short of room, the left gives way first: the words go, then the avatars. */
+@container (--medium) {
+  /* Hidden to the eye only: screen readers still hear "N watching". */
+  .count {
+    position: absolute;
+    width: var(--hairline);
+    height: var(--hairline);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+@container (--narrow) {
+  .row,
+  .watchers::before {
+    display: none;
+  }
+
+  .watchers .count {
+    position: absolute;
+    width: var(--hairline);
+    height: var(--hairline);
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+}
+
+/* Nobody live: a quiet circle where the avatar goes. */
+.nobody {
+  flex: none;
+  width: var(--size-7-5);
+  height: var(--size-7-5);
+  border-radius: 50%;
+  background: var(--surface-raised);
+}
+
+/* On a wide screen, the size of the live person's photo. */
+.nobodyBig {
+  width: var(--avatar-big);
+  height: var(--avatar-big);
+}

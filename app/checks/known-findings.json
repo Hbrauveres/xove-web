@@ -2,20 +2,6 @@
   {
     "tool": "code",
     "rule": "domQuery",
-    "file": "src/components/stage/AlsoLive.tsx",
-    "count": 2,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "domQuery",
-    "file": "src/components/stage/PreviewTray.tsx",
-    "count": 2,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "domQuery",
     "file": "src/main.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
@@ -44,41 +30,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/stage/AlsoLive.module.css",
-    "count": 9,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/AlsoLive.test.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/AlsoLive.tsx",
-    "count": 9,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/HearToggles.module.css",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/HearToggles.tsx",
-    "count": 5,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/stage/MicTest.module.css",
     "count": 1,
     "owner": "#193 settings"
@@ -93,55 +44,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/stage/NowWatching.module.css",
-    "count": 4,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/NowWatching.tsx",
-    "count": 4,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/PlayerButtons.module.css",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/PlayerButtons.test.tsx",
-    "count": 2,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/PlayerButtons.tsx",
-    "count": 7,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/PreviewTray.module.css",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/PreviewTray.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/components/stage/SettingsPanel.module.css",
     "count": 3,
     "owner": "#193 settings"
@@ -152,41 +54,6 @@
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 13,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/stack.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/StageOverlay.module.css",
-    "count": 2,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/StageOverlay.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/ViewerBar.module.css",
-    "count": 4,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/ViewerBar.tsx",
-    "count": 6,
-    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
@@ -236,20 +103,6 @@
     "file": "src/testing/fakeLiveKit.ts",
     "count": 7,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/testing/setup.ts",
-    "count": 1,
-    "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "lineLength",
-    "file": "src/components/stage/AlsoLive.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
@@ -317,48 +170,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/stage/AlsoLive.module.css",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/AlsoLive.test.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/AlsoLive.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/HearToggles.module.css",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/HearToggles.test.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/HearToggles.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/components/stage/MicTest.module.css",
     "count": 1,
     "owner": "#193 settings"
@@ -380,62 +191,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/components/stage/NowWatching.module.css",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/NowWatching.test.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/NowWatching.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/PlayerButtons.module.css",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/PlayerButtons.test.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/PlayerButtons.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/PreviewTray.module.css",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/PreviewTray.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/components/stage/SettingsPanel.module.css",
     "count": 1,
     "owner": "#193 settings"
@@ -453,55 +208,6 @@
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 1,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/stack.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/StageOverlay.module.css",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/StageOverlay.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/usePreviewTray.ts",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/ViewerBar.module.css",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/ViewerBar.test.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/ViewerBar.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
@@ -646,34 +352,6 @@
   {
     "tool": "code",
     "rule": "noTest",
-    "file": "src/components/stage/PreviewTray.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/components/stage/stack.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/components/stage/StageOverlay.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
-    "file": "src/components/stage/usePreviewTray.ts",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "noTest",
     "file": "src/main.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
@@ -695,20 +373,6 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/components/stage/AlsoLive.tsx",
-    "count": 2,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/HearToggles.tsx",
-    "count": 7,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
     "file": "src/components/stage/MicTest.tsx",
     "count": 2,
     "owner": "#193 settings"
@@ -716,58 +380,9 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/components/stage/NowWatching.tsx",
-    "count": 3,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/PlayerButtons.tsx",
-    "count": 9,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/PreviewTray.tsx",
-    "count": 10,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
     "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 14,
+    "count": 13,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/stack.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/StageOverlay.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/usePreviewTray.ts",
-    "count": 2,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/ViewerBar.tsx",
-    "count": 7,
-    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
@@ -856,48 +471,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/stage/AlsoLive.module.css",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/AlsoLive.test.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/AlsoLive.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/HearToggles.module.css",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/HearToggles.test.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/HearToggles.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/components/stage/MicTest.module.css",
     "count": 1,
     "owner": "#193 settings"
@@ -919,62 +492,6 @@
   {
     "tool": "code",
     "rule": "structure",
-    "file": "src/components/stage/NowWatching.module.css",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/NowWatching.test.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/NowWatching.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/PlayerButtons.module.css",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/PlayerButtons.test.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/PlayerButtons.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/PreviewTray.module.css",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/PreviewTray.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
     "file": "src/components/stage/SettingsPanel.module.css",
     "count": 1,
     "owner": "#193 settings"
@@ -992,55 +509,6 @@
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 1,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/stack.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/StageOverlay.module.css",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/StageOverlay.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/usePreviewTray.ts",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/ViewerBar.module.css",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/ViewerBar.test.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/ViewerBar.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "code",
@@ -1127,20 +595,6 @@
     "owner": "#192 room: queue, footer, page"
   },
   {
-    "tool": "copies",
-    "rule": "copied-block",
-    "file": "src/components/stage/PlayerButtons.module.css",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "copies",
-    "rule": "copied-block",
-    "file": "src/components/stage/SettingsPanel.module.css",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
     "tool": "lint",
     "rule": "eslint(complexity)",
     "file": "src/components/room/SeatOffer.tsx",
@@ -1150,44 +604,9 @@
   {
     "tool": "lint",
     "rule": "eslint(complexity)",
-    "file": "src/components/stage/AlsoLive.tsx",
-    "count": 2,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
-    "file": "src/components/stage/HearToggles.tsx",
-    "count": 2,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
-    "file": "src/components/stage/PlayerButtons.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 3,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
-    "file": "src/components/stage/stack.ts",
-    "count": 1,
-    "owner": "#190 room: stage, Stage split"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
-    "file": "src/components/stage/ViewerBar.tsx",
-    "count": 2,
-    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "lint",
@@ -1206,20 +625,6 @@
   {
     "tool": "lint",
     "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/stage/AlsoLive.tsx",
-    "count": 2,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/stage/HearToggles.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
     "file": "src/components/stage/MicTest.tsx",
     "count": 1,
     "owner": "#193 settings"
@@ -1227,30 +632,9 @@
   {
     "tool": "lint",
     "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/stage/PlayerButtons.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/stage/PreviewTray.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 2,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/stage/ViewerBar.tsx",
-    "count": 2,
-    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "lint",
@@ -1283,30 +667,9 @@
   {
     "tool": "lint",
     "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/stage/PlayerButtons.tsx",
-    "count": 2,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 1,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/stage/ViewerBar.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(click-events-have-key-events)",
-    "file": "src/components/stage/HearToggles.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "lint",
@@ -1317,24 +680,10 @@
   },
   {
     "tool": "lint",
-    "rule": "jsx-a11y(no-noninteractive-element-interactions)",
-    "file": "src/components/stage/HearToggles.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
     "rule": "jsx-a11y(no-static-element-interactions)",
     "file": "src/components/room/SeatOffer.tsx",
     "count": 1,
     "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(no-static-element-interactions)",
-    "file": "src/components/stage/PreviewTray.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "lint",
@@ -1353,20 +702,6 @@
   {
     "tool": "lint",
     "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/components/stage/AlsoLive.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/components/stage/HearToggles.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(prefer-tag-over-role)",
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 2,
     "owner": "#193 settings"
@@ -1380,24 +715,10 @@
   },
   {
     "tool": "lint",
-    "rule": "react(only-export-components)",
-    "file": "src/components/stage/NowWatching.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
     "rule": "react(set-state-in-effect)",
     "file": "src/pages/AdminPage.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/components/stage/AlsoLive.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "lint",
@@ -1409,23 +730,9 @@
   {
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
-    "file": "src/components/stage/PreviewTray.tsx",
-    "count": 3,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 5,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(no-non-null-assertion)",
-    "file": "src/components/stage/AlsoLive.tsx",
-    "count": 2,
-    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "lint",
@@ -1451,44 +758,9 @@
   {
     "tool": "tsc",
     "rule": "TS2375",
-    "file": "src/components/stage/AlsoLive.test.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
-    "file": "src/components/stage/AlsoLive.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
-    "file": "src/components/stage/NowWatching.test.tsx",
-    "count": 2,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 7,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
-    "file": "src/components/stage/ViewerBar.test.tsx",
-    "count": 2,
-    "owner": "#191 today's stage pieces"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
-    "file": "src/components/stage/ViewerBar.tsx",
-    "count": 1,
-    "owner": "#191 today's stage pieces"
   },
   {
     "tool": "tsc",

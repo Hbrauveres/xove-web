@@ -211,27 +211,6 @@
   background: var(--seg-track, var(--white-05));
 }
 
-.source {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1-5);
-  min-width: 0;
-  font-size: var(--text-xs);
-}
-
-.source span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.source svg {
-  flex: none;
-  width: var(--size-3-5);
-  height: var(--size-3-5);
-  color: var(--text-muted);
-}
-
 /* A button in a row: the dark pill, like a chosen segment. */
 .button {
   position: relative;

@@ -1,0 +1,27 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { aSharer } from "@testing/factories/sharer.factory";
+import { StageAlsoLive } from "./stage-also-live.component";
+
+const heard = { volume: 1, muted: false };
+
+const meta = {
+  title: "Room/Stage also live",
+  component: StageAlsoLive,
+  args: {
+    others: [aSharer({ id: "user-3", name: "Ana" }), aSharer({ id: "user-9", name: "Diego", kinds: ["camera"] })],
+    liveCount: 3,
+    places: 6,
+    free: 3,
+    onPick: () => undefined,
+    hearOf: () => ({ sound: heard, voice: heard }),
+    onHear: () => undefined,
+  },
+} satisfies Meta<typeof StageAlsoLive>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+/** Two other streams, then the places: three of six live. */
+export const TwoOthers: Story = {};
+/** A room set to four places. */
+export const FourPlaces: Story = { args: { places: 4, free: 1 } };

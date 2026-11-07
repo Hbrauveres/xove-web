@@ -9,6 +9,7 @@ import { clockUser, onFakeClock } from "../testing/factories/clock.factory";
 import { CHROME_IDLE_MS } from "@features/room/components/stage-player/constants/stage-player.constants";
 import { REPORT_RETRY_MS, REPORT_STILL_MS } from "@features/room/constants/watch-report.constants";
 import { loadAmbilight } from "@services/preferences-service";
+import { appConfig } from "@services/app-config-service";
 import { RoomPage } from "./RoomPage";
 
 const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
@@ -274,7 +275,27 @@ describe("room: sharing", () => {
     expect(await screen.findByLabelText("0 of 6 live, 6 seats open")).toBeInTheDocument();
   });
 
-  // Six streams at once; a seventh can't start, and the buttons say why.
+  it("counts the places from the app's setting: a room set to 4 is full at 4", async () => {
+    vi.stubGlobal("fetch", async () => Response.json({ streamPlaces: 4 }));
+    await appConfig.load();
+    const server = installFakeApi({ me: member() });
+    server.places = 4;
+    server.streams = [someoneSharing("P1", 1, "screen")];
+    renderRoom();
+    await connected();
+    expect(await screen.findByLabelText("1 of 4 live, 3 seats open")).toBeInTheDocument();
+
+    server.streams = [1, 2].flatMap((id) => [
+      someoneSharing(`P${id}`, id, "screen"),
+      someoneSharing(`P${id}`, id, "camera"),
+    ]);
+    const user = clockUser();
+    await user.click(await within(stage()).findByRole("button", { name: "Go live" }));
+    const share = () => within(stage()).getByRole("menuitem", { name: /share your screen/i });
+    await waitFor(() => expect(share()).toHaveAttribute("aria-disabled", "true"));
+    expect(share()).toHaveAccessibleDescription(expect.stringMatching(/^4 streams are live/));
+  });
+
   it("says the room is full of streams, and waits for a free place", async () => {
     const server = installFakeApi({ me: member() });
     server.streams = [1, 2, 3].flatMap((id) => [
@@ -408,15 +429,18 @@ describe("room: the viewer's quality and volume", () => {
     });
     const button = await within(stage()).findByRole("button", { name: "Mute Bruno's voice" });
     await waitFor(() => expect(voice.attached).toHaveLength(1));
-    expect(button).not.toHaveAttribute("data-talking");
+    expect(button).not.toHaveAttribute("data-cue", "talking");
     act(() => {
       lastRoom().setSpeaking("user-7", true);
     });
-    await waitFor(() => expect(button).toHaveAttribute("data-talking"));
+    await waitFor(() => expect(button).toHaveAttribute("data-cue", "talking"));
 
     await user.click(button);
     expect((voice.attached[0] as HTMLAudioElement).muted).toBe(true);
-    expect(within(stage()).getByRole("button", { name: "Unmute Bruno's voice" })).not.toHaveAttribute("data-talking");
+    expect(within(stage()).getByRole("button", { name: "Unmute Bruno's voice" })).not.toHaveAttribute(
+      "data-cue",
+      "talking",
+    );
   });
 
   it("closes the settings when another stream takes the stage", async () => {
@@ -430,7 +454,7 @@ describe("room: the viewer's quality and volume", () => {
     await user.click(within(stage()).getByRole("menuitem", { name: "Settings" }));
     expect(screen.getByRole("dialog", { name: "Settings" })).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Watch Ana's screen/ }));
+    await user.click(screen.getByRole("button", { name: /Watch Ana · screen/ }));
     await waitFor(() => expect(screen.queryByRole("dialog", { name: "Settings" })).not.toBeInTheDocument());
   });
 });
@@ -507,7 +531,7 @@ describe("room: my screen and camera buttons on the player", () => {
     expect(row()).not.toContain("Mute the screen's sound");
 
     // Watching someone while live: what I hear at the left, my mic at the right.
-    await user.click(screen.getByRole("button", { name: /Watch Bruno's screen/ }));
+    await user.click(screen.getByRole("button", { name: /Watch Bruno · screen/ }));
     await screen.findByLabelText("Bruno's shared screen");
     expect(row()).toEqual(["Mute the screen's sound", "Bruno's mic is off", "Share your voice"]);
   });
@@ -845,7 +869,7 @@ describe("room: several people sharing", () => {
     const names = within(thumbnails())
       .getAllByRole("button", { name: /watch/i })
       .map((b) => b.getAttribute("aria-label"));
-    expect(names).toEqual(["Watch Ana's screen", "Watch Caio's camera"]);
+    expect(names).toEqual(["Watch Ana · screen", "Watch Caio · camera"]);
   });
 
   it("asks for Auto for the big player, and keeps a stream on Auto when it leaves it", async () => {
@@ -861,7 +885,7 @@ describe("room: several people sharing", () => {
   });
 });
 
-// ---- screen and camera together: the facecam ----
+// ---- screen and camera together: the small view ----
 
 // ---- sound and settings for each stream ----
 
@@ -907,10 +931,10 @@ describe("room: theater mode", () => {
     await user.click(screen.getByRole("button", { name: /^Activity/ }));
     await user.click(screen.getByRole("button", { name: "Bruno turned on their camera, now: watch" }));
 
-    // Camera big, screen in the facecam.
-    await waitFor(() => expect(stage().querySelector("[aria-roledescription='facecam']")).not.toBeNull());
+    // Camera big, screen in the small view.
+    await waitFor(() => expect(stage().querySelector("[aria-roledescription='small view']")).not.toBeNull());
     expect(
-      within(stage().querySelector("[aria-roledescription='facecam']") as HTMLElement).getByLabelText(
+      within(stage().querySelector("[aria-roledescription='small view']") as HTMLElement).getByLabelText(
         "Bruno's shared screen",
       ),
     ).toBeInTheDocument();

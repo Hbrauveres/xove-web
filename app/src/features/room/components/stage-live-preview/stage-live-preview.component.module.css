@@ -1,0 +1,140 @@
+/* One small preview: its picture, the other one peeking behind, its name, and its ring. */
+.item {
+  position: relative;
+  flex: none;
+  width: var(--strip-item);
+}
+
+/* A stacked preview's peek takes its own room, so the gap to the next one stays 10 px. */
+.item[data-stacked] {
+  margin-right: var(--space-1-5);
+}
+
+.preview {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-2);
+  background: none;
+  cursor: pointer;
+}
+
+.preview:focus-visible {
+  outline: none;
+}
+
+.video {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius-2);
+  background: var(--black);
+}
+
+/* The ring is drawn inside, so nothing clips it. */
+.video::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 var(--hairline) var(--panel-line);
+  pointer-events: none;
+}
+
+/* Their voice heard while they speak, the row closed: the speaking cue around the picture, as on
+   their voice button. */
+.video {
+  transition: box-shadow var(--duration-120) ease;
+}
+
+.video::after {
+  transition: box-shadow var(--duration-120) ease;
+}
+
+.item[data-talking] .video {
+  box-shadow: 0 0 var(--space-1-5) 0 var(--green-35);
+}
+
+.item[data-talking] .video::after {
+  box-shadow:
+    inset 0 0 0 var(--hairline) var(--green-light-85),
+    inset 0 0 var(--space-1) var(--green-45);
+}
+
+/* Hover and keyboard focus: drawn inside, so the scrolling strip never cuts it. */
+.preview:hover .video::after,
+.preview:focus-visible .video::after {
+  box-shadow: inset 0 0 0 var(--space-0-5) var(--accent);
+}
+
+.loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+/* The name, a label pill, in the picture's bottom-left corner. */
+.chip {
+  position: absolute;
+  left: var(--space-1-25);
+  bottom: var(--space-1-25);
+}
+
+/* The preview whose row is open keeps its hover ring, drawn inside so nothing clips it: one ring,
+   so you see which preview the row belongs to. */
+.item[data-open] .video::after {
+  box-shadow: inset 0 0 0 var(--space-0-5) var(--accent);
+}
+
+/* A person with a screen and a camera: their second picture peeks out behind, like a deck. */
+.behind {
+  position: absolute;
+  top: calc(var(--space-1-25) * -1);
+  left: var(--space-1-5);
+  right: calc(var(--space-1-5) * -1);
+  height: calc(var(--strip-item) * 9 / 16);
+  border: var(--hairline) solid var(--text-shade-28);
+  border-radius: var(--radius-2);
+  overflow: hidden;
+  background: var(--grey-22-90);
+  pointer-events: none;
+}
+
+/* The other picture, faded behind, filling its box (a peek, not the whole picture: no black bar). */
+.behind video {
+  object-fit: cover;
+  background: transparent;
+  opacity: 0.5;
+}
+
+/* A swap: the front picture comes forward from behind, the back one drops behind. */
+@keyframes swap-front {
+  from {
+    transform: translate(var(--space-1-5), calc(var(--space-1-25) * -1)) scale(0.96);
+    opacity: 0.5;
+  }
+}
+
+@keyframes swap-back {
+  from {
+    transform: translate(calc(var(--space-1-5) * -1), var(--space-1-25)) scale(1.04);
+    opacity: 1;
+  }
+}
+
+.item[data-swapping] .preview {
+  animation: swap-front var(--duration-360) var(--ease-out);
+}
+
+.item[data-swapping] .behind {
+  animation: swap-back var(--duration-360) var(--ease-out);
+}
+
+.item[data-stacked] .preview {
+  position: relative;
+}
