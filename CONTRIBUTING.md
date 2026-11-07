@@ -4,7 +4,7 @@
 
 1. Every change starts as an issue and a written spec (numbered requirements and testable acceptance criteria), then a plan and small tasks. Code comes after they're approved.
 2. Branch from an up-to-date `main`: `feat/…`, `fix/…`, `docs/…`, `ci/…`, `chore/…`.
-3. Make the change **with its tests**, and run them and the checks locally: `npm test`, `npm run guard`, `npm run format` ([Testing](docs/testing.md), [the checks](docs/architecture.md#the-checks)).
+3. Make the change **with its tests**, and run them and the checks locally: `npm test`, `npm run e2e` for anything a person sees, `npm run guard`, `npm run format` ([Testing](docs/testing.md), [the checks](docs/architecture.md#the-checks)).
 4. Commit with [Conventional Commits](https://www.conventionalcommits.org/) and the area in parentheses: `feat(web): keep the stage when the sharer reloads`.
 5. Push. **Every push runs the commit checks** (build, validate the image, tests and the style check, the code checks, vulnerability scan, SAST), even before a pull request exists.
 6. Open the pull request when the branch is green. It's **squash-merged**: its title becomes the one commit on `main`, so it must be a conventional commit too. Merging deploys to staging; a version tag releases to production.

@@ -10,9 +10,10 @@ How the web app is tested, with a real example of each kind, and how to run the 
 | [Components](#components) | One component's output for given props | `components/**/*.test.tsx` |
 | [Pages, used like a person](#pages-used-like-a-person) | Whole flows: a page at a URL, with a fake API and a fake LiveKit | `pages/*.test.tsx`, `routes/app-routes/app-routes.component.test.tsx`, `features/room/hooks/*.test.ts` |
 | [The style check](#the-style-check) | What the stylesheets promise: text readable on every surface, rules no browser drops, motion off when asked | `scripts/check-styles.ts` |
+| [End-to-end, every feature at every size](#end-to-end-every-feature-at-every-size) | Each feature case, in a real browser, on the whole app with its fakes, at every size: what a person sees at rest, pointed at, focused and pressed, and the frames in between (no blink, no move) | `e2e/**/*.e2e.ts` |
 | [Pictures and sizes](#pictures-and-sizes) | Each screen on every device size | The design sheet's pictures |
 
-All of it runs with Vitest, Testing Library and jsdom (a browser's page model in Node, without WebRTC or real layout).
+All of it but the end-to-end tests runs with Vitest, Testing Library and jsdom (a browser's page model in Node, without WebRTC or real layout); those run with Playwright Test in Chromium.
 
 ## Rules as plain functions
 
@@ -85,6 +86,24 @@ Tests never read CSS: a stylesheet's text says nothing about what a person sees,
 
 Its own test (`scripts/check-styles.test.ts`) feeds it small stylesheets that pass and fail. How the look comes out on screen is checked in a real browser, below.
 
+## End-to-end, every feature at every size
+
+Every feature of the app has numbered test cases, each written as given / when / then / must not, and **one Playwright test per case** in `e2e/`, titled by the case's id (`F-my-buttons.3 …`). They drive the whole app on its **harness** (`e2e/harness/`: the real app, the tests' fake API and LiveKit, fake people with drawn pictures; `npm run harness` serves it on http://localhost:5199, `&still=1` holds the pictures still), and run at every size of a selection, each with its pixel density:
+
+| Size | Viewport | Density |
+| --- | --- | --- |
+| A small window | 854 × 480 | 1× |
+| HD | 1280 × 720 | 1× |
+| Full HD | 1920 × 1080 | 1× |
+| A 4K monitor at 150% | 2560 × 1440 | 1.5× |
+| A 4K monitor at 100% | 3840 × 2160 | 1× |
+| Galaxy S23 Ultra | 384 × 824 | 3.75× |
+| iPhone 15 | 393 × 852 | 3× |
+
+Phones get only the phone notice, so their sizes run the tests tagged `@phone`.
+
+Each test opens a scene (`e2e/support/open.ts`: the clock fixed, the pictures still), and records its action with `observe` (`e2e/support/observe.ts`): the named elements' state before and after (shown, where, how they look, what a screen reader hears), a screenshot of each, every animation frame while it happens, and a strip of screenshots through it. `blinks` and `drift` (`e2e/support/frames.ts`) turn the frames into "must not" checks: an element that must stay never dims or disappears, never moves. The checks are `expect.soft`, so a test records everything and reports every failure. `E2E_OUT` says where the records go; `E2E_BASE_URL` runs the same tests against another copy of the app.
+
 ## Pictures and sizes
 
 jsdom has no real layout, so how each screen looks is checked in a real headless browser: the [design sheet](design.md)'s pictures are shot from the running app, with fake people and moving pictures, at every size the design sheet lists (desktops, vertical monitors, a narrow window, and the screen phones and tablets see). A visual change retakes them in the same pull request, and compares them with the design it was drawn from. What a headless browser can't do (Safari, real fullscreen) is checked by hand.
@@ -117,6 +136,8 @@ npm run test:alone       # every file, then every test, run alone (slow; before 
 npm run test:storybook   # every story in headless Chromium, with the accessibility checks
 npm run storybook        # Storybook on http://localhost:6006
 npm run build            # type check, then the production build
+npm run e2e              # every feature case at every size (starts the harness if it isn't running)
+npm run e2e -- --project desktop-1080 e2e/pages/   # one size, one folder
 ```
 
 ## What a good test here looks like
