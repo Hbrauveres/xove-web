@@ -33,16 +33,14 @@ export async function openWithVoice(page: Page, extra = ""): Promise<void> {
   await wakeStage(page);
 }
 
-/** The picture in this shape (width ÷ height), as a stream that shape would make it. */
-export async function shapePicture(page: Page, shape: number): Promise<void> {
-  await page.evaluate(
-    (s) =>
-      (document.querySelector('section[aria-label="Shared screen"] > div') as HTMLElement).style.setProperty(
-        "--shape",
-        String(s),
-      ),
-    shape,
-  );
+/** The picture this wide (CSS px), as a stream that narrow would make it. */
+export async function shapePicture(page: Page, width: number): Promise<void> {
+  // A width in CSS px, the same at every size (the controls fold by the picture's px, not its ratio):
+  // the stream's shape is that width over the picture's full height.
+  await page.evaluate((w) => {
+    const picture = document.querySelector('section[aria-label="Shared screen"] > div') as HTMLElement;
+    picture.style.setProperty("--shape", String(w / picture.getBoundingClientRect().height));
+  }, width);
   await page.waitForTimeout(700);
   await wakeStage(page);
 }

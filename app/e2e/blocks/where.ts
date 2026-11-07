@@ -14,10 +14,19 @@ export const COLOR = {
   glassLit: "rgba(40, 40, 44, 0.85)",
 };
 
-/** Points at the middle of an element, as a mouse would, in a few steps. */
+/** Points at the middle of an element, as a mouse would, in a few steps (scrolled into view first,
+ * as a person would on a short window). */
 export async function pointAt(page: Page, target: Locator): Promise<void> {
+  await target.evaluate((el) => el.scrollIntoView({ block: "nearest", inline: "nearest" }));
   const b = await target.boundingBox();
   if (b) await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 4 });
+}
+
+/** The pointer over the picture's upper part, waking its controls without touching one (a fixed
+ * point like (400, 300) lands on a button at 854 × 480). */
+export async function overPicture(page: Page): Promise<void> {
+  const v = page.viewportSize() ?? { width: 1280, height: 720 };
+  await page.mouse.move(v.width / 2, v.height / 4);
 }
 
 /** The pointer somewhere neutral, out of the stage's buttons' way (the page's top-left corner). */

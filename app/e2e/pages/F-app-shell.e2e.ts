@@ -46,9 +46,10 @@ test("F-app-shell.4 the fonts load: Bricolage Grotesque for headings, IBM Plex S
   await observe(page, info, { heading }, async () => {
     await page.mouse.move(1, 1);
   });
-  const loaded = await page.evaluate(() =>
-    [...document.fonts].filter((f) => f.status === "loaded").map((f) => f.family.replace(/"/g, "")),
-  );
+  const loaded = await page.evaluate(async () => {
+    await document.fonts.ready;
+    return [...document.fonts].filter((f) => f.status === "loaded").map((f) => f.family.replace(/"/g, ""));
+  });
   for (const family of ["Bricolage Grotesque", "IBM Plex Sans", "IBM Plex Mono"]) expect.soft(loaded).toContain(family);
   await expect.soft(heading).toHaveCSS("font-family", /^"Bricolage Grotesque"/);
   await expect.soft(page.locator("body")).toHaveCSS("font-family", /^"IBM Plex Sans"/);

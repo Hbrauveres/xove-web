@@ -105,6 +105,9 @@ test("F-settings-screen.5 the qualities are 1080p, 720p and 480p; a click picks 
   await expect.soft(group.getByRole("radio")).toHaveCount(3);
   await expect.soft(group.getByRole("radio", { name: "1080p" })).toBeChecked();
   const option = optionOf(page, "Screen quality", "720p");
+  // On a short window the panel scrolls: brought into view first, as a person would, so the drift
+  // measured is the action's alone.
+  await option.scrollIntoViewIfNeeded();
   const seen = await observe(page, info, { option }, async () => {
     await option.click();
   });

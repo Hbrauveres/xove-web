@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { transitioned } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
 import { openScene, wakeStage } from "../support/open.ts";
 import { boxOf, centreX, inside, windowBox } from "./room.ts";
@@ -45,8 +46,9 @@ test("F-toast.2 it comes in with a fade and a small drop, without a jump", async
     await press(page, "No sound in this stream");
   });
   const opacities = seen.frames.map((f) => f.seen.toast?.opacity ?? 0);
-  // Some frames in between: a fade, not a pop.
-  expect.soft(opacities.filter((o) => o > 0.05 && o < 0.95).length).toBeGreaterThanOrEqual(2);
+  // A fade, not a pop: its opacity transition ran. (A screenshot of a big screen can hold the page
+  // past the in-between frames, so the transition itself is the proof, not counted frames.)
+  expect.soft(transitioned(seen.frames, "toast", "opacity")).toBeGreaterThanOrEqual(100);
   expect.soft(opacities.at(-1)).toBeGreaterThan(0.95);
   // Once it has words (the empty live region is a dot at the centre): it drops 6 px at most, and
   // stays centred across the player.

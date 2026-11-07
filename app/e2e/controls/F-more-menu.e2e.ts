@@ -4,11 +4,16 @@ import { observe } from "../support/observe.ts";
 import { openScene, wakeStage } from "../support/open.ts";
 import { boxOf, clickAt, control, inside, pictureOf, pointAt, shapePicture, shownTip } from "./controls.ts";
 
+/** Picture widths (CSS px): too narrow for the whole bar, narrower still, and wide enough for it. */
+const NARROW = 172;
+const NARROWEST = 104;
+const WIDE = 260;
+
 /** Someone else's stream on a picture too narrow for the whole bar. */
-async function openNarrow(page: Page, query = "s=live", shape = 0.2) {
+async function openNarrow(page: Page, query = "s=live", width = NARROW) {
   await openScene(page, query);
   await wakeStage(page);
-  await shapePicture(page, shape);
+  await shapePicture(page, width);
 }
 const group = (page: Page) => page.getByRole("group", { name: "More controls" });
 
@@ -19,7 +24,7 @@ test("F-more-menu.1 on a narrow picture Go live and both sounds fold into …, f
   await wakeStage(page);
   const more = control(page, "More controls");
   const full = control(page, "Fullscreen");
-  const seen = await observe(page, info, { more, full }, () => shapePicture(page, 0.2));
+  const seen = await observe(page, info, { more, full }, () => shapePicture(page, NARROW));
   await expect.soft(more).toBeVisible();
   await expect.soft(full).toBeVisible();
   await expect.soft(control(page, "Go live")).toHaveCount(0);
@@ -38,7 +43,7 @@ test("F-more-menu.2 a wider picture folds nothing", async ({ page }, info) => {
   await openScene(page, "s=live");
   await wakeStage(page);
   const goLive = control(page, "Go live");
-  await observe(page, info, { goLive }, () => shapePicture(page, 0.3));
+  await observe(page, info, { goLive }, () => shapePicture(page, WIDE));
   await expect.soft(goLive).toBeVisible();
   await expect.soft(control(page, "More controls")).toHaveCount(0);
   expect.soft(await inside(goLive, pictureOf(page))).toBe(true);
@@ -75,7 +80,7 @@ test("F-more-menu.3 … opens its menu centred on the picture, holding what fold
 });
 
 test("F-more-menu.4 a folded sound mutes from …, its slider disabled while muted", async ({ page }, info) => {
-  await openNarrow(page, "s=live&sound=1", 0.12);
+  await openNarrow(page, "s=live&sound=1", NARROWEST);
   await control(page, "More controls").click();
   const menu = group(page);
   const sound = menu.getByRole("button", { name: /the screen's sound/ });

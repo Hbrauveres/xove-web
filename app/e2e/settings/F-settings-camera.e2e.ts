@@ -53,6 +53,9 @@ test("F-settings-camera.3 the camera picker lists my cameras and picks one", asy
   const pill = pane.getByRole("button", { name: /^Camera: / });
   await expect.soft(pill).toHaveAccessibleName("Camera: Webcam C920");
   const quality = optionOf(page, "Camera quality", "720p");
+  // On a short window the panel scrolls: brought into view first, as a person would, so the drift
+  // measured is the action's alone.
+  await pill.scrollIntoViewIfNeeded();
   const seen = await observe(page, info, { pill, quality }, async () => {
     await pill.click();
     await page.waitForTimeout(400);
@@ -80,6 +83,9 @@ test("F-settings-camera.4 long camera names keep to one line and never widen the
   const pane = await cameraTab(page, "s=empty&cams=emeet");
   const pill = pane.getByRole("button", { name: /^Camera: / });
   await expect.soft(pill).toHaveAccessibleName("Camera: EMEET STUDIO Virtual Camera");
+  // On a short window the panel scrolls: brought into view first, as a person would, so the drift
+  // measured is the action's alone.
+  await pill.scrollIntoViewIfNeeded();
   const before = await boxOf(pill);
   const seen = await observe(page, info, { pill }, async () => {
     await pill.click();

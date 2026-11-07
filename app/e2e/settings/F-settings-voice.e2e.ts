@@ -134,6 +134,9 @@ test("F-settings-voice.6 a processing switch turns off with a click, remembered"
   const pane = await voiceTab(page);
   const noise = pane.getByRole("switch", { name: "Noise suppression" });
   const echo = pane.getByRole("switch", { name: "Echo cancellation" });
+  // On a short window the panel scrolls: brought into view first, as a person would, so the drift
+  // measured is the action's alone.
+  await noise.scrollIntoViewIfNeeded();
   const seen = await observe(page, info, { noise, echo }, async () => {
     await noise.click();
   });

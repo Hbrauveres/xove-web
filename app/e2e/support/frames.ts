@@ -8,6 +8,8 @@ export interface Seen {
   /** Its opacity times its ancestors': what reaches the screen, 0 to 1. */
   opacity: number;
   box: { x: number; y: number; w: number; h: number } | null;
+  /** The CSS transitions running on it, by property, with their length in ms. */
+  transitions?: Record<string, number>;
 }
 
 /** Every tracked element on one animation frame, by name, with the frame's time in ms. */
@@ -45,4 +47,9 @@ export function drift(frames: readonly Frame[], name: string): number {
       return b ? Math.hypot(b.x - start.x, b.y - start.y) : 0;
     }),
   );
+}
+
+/** The longest transition of `property` that ran on an element through the frames, in ms (0: none). */
+export function transitioned(frames: readonly Frame[], name: string, property: string): number {
+  return Math.max(0, ...frames.map((f) => f.seen[name]?.transitions?.[property] ?? 0));
 }

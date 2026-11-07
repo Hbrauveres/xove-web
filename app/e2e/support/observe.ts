@@ -8,6 +8,9 @@ import type { Frame } from "./frames.ts";
 import { stateOf, type ElementState } from "./state.ts";
 import { startTracking } from "./track.ts";
 
+/** How much longer than strip × gap the strip may take before it stops (ms). */
+const STRIP_SLACK_MS = 400;
+
 export interface Observation {
   before: Record<string, ElementState>;
   after: Record<string, ElementState>;
@@ -38,9 +41,17 @@ export async function observe(
   const before = await stateOf(targets);
   await page.screenshot({ path: join(dir, "before.png") });
   const stop = await startTracking(page, targets);
+  // The strip is for the eye: small shots (CSS pixels, JPEG) and a time limit, so on a big screen it
+  // doesn't outlast what it watches (the controls fade ~2.5 s after the last move).
+  const until = Date.now() + strip * gap + STRIP_SLACK_MS;
   const shoot = async () => {
-    for (let i = 0; i < strip; i++) {
-      await page.screenshot({ path: join(dir, `strip-${String(i).padStart(2, "0")}.png`) });
+    for (let i = 0; i < strip && Date.now() < until; i++) {
+      await page.screenshot({
+        path: join(dir, `strip-${String(i).padStart(2, "0")}.jpg`),
+        scale: "css",
+        type: "jpeg",
+        quality: 70,
+      });
       await page.waitForTimeout(gap);
     }
   };

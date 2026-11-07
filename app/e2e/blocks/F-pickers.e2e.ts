@@ -97,6 +97,9 @@ test("F-pickers.6 opening it in a panel moves nothing: the controls under it sta
   const pill = panel.getByRole("button", { name: "Camera: Webcam C920" });
   const quality = panel.getByRole("radiogroup", { name: "Camera quality" });
   const tabs = panel.getByRole("tablist");
+  // On a short window the panel scrolls: brought into view first, as a person would, so the drift
+  // measured is the action's alone.
+  await pill.scrollIntoViewIfNeeded();
   const seen = await observe(page, info, { pill, quality, tabs }, async () => {
     await pill.click();
     await page.waitForTimeout(300);

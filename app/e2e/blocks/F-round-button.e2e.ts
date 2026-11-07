@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
-import { COLOR, pointAt, sharingMyScreen, tabTo, watching } from "./where.ts";
+import { COLOR, overPicture, pointAt, sharingMyScreen, tabTo, watching } from "./where.ts";
 
 test("F-round-button.1 at rest: a round of dark frosted glass with a soft shadow, its icon in white", async ({
   page,
@@ -9,7 +9,7 @@ test("F-round-button.1 at rest: a round of dark frosted glass with a soft shadow
   await watching(page);
   const full = page.getByRole("button", { name: "Fullscreen" });
   await observe(page, info, { full }, async () => {
-    await page.mouse.move(400, 300);
+    await overPicture(page);
   });
   await expect.soft(full).toHaveCSS("background-color", COLOR.glass);
   await expect.soft(full).toHaveCSS("backdrop-filter", "blur(8px)");
@@ -28,7 +28,7 @@ test("F-round-button.2 M is 34 px with a 16 px icon, for every round button that
   const full = page.getByRole("button", { name: "Fullscreen" });
   const sound = page.getByRole("button", { name: "No sound in this stream" });
   await observe(page, info, { full, sound }, async () => {
-    await page.mouse.move(400, 300);
+    await overPicture(page);
   });
   for (const b of [full, sound]) {
     const box = await b.boundingBox();
@@ -96,7 +96,7 @@ test("F-round-button.6 my own are L, 48 px with a 20 px icon, and red with a dee
   const screen = page.getByRole("button", { name: "Stop sharing your screen" });
   const camera = page.getByRole("button", { name: "Turn on your camera" });
   await observe(page, info, { screen, camera }, async () => {
-    await page.mouse.move(400, 300);
+    await overPicture(page);
   });
   for (const b of [screen, camera]) {
     const box = await b.boundingBox();

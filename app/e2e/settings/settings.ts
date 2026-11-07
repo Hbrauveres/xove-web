@@ -49,8 +49,10 @@ export async function openSettings(page: Page): Promise<void> {
   await page.waitForTimeout(400);
 }
 
-/** The pointer resting on an element's middle, as a person moving to it, for `ms` after. */
+/** The pointer resting on an element's middle, as a person moving to it, for `ms` after (scrolled
+ * into view first, as a person would on a short window). */
 export async function restOn(page: Page, target: Locator, ms = 450): Promise<void> {
+  await target.first().evaluate((el) => el.scrollIntoView({ block: "nearest", inline: "nearest" }));
   const b = await target.first().boundingBox();
   if (!b) throw new Error("Nothing to rest on: the element isn't on the screen");
   await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 6 });

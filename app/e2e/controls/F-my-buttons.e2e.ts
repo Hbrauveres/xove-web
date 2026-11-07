@@ -169,7 +169,12 @@ test("F-my-buttons.8 the cog opens the settings just above my row", async ({ pag
   const d = await boxOf(dialog);
   const c = await boxOf(cog);
   expect.soft(d.y + d.height).toBeLessThanOrEqual(c.y);
-  expect.soft(Math.abs(d.x + d.width / 2 - (c.x + c.width / 2))).toBeLessThan(2);
+  // Centred on the cog, unless that would take it past the picture's edge: then kept inside.
+  const pic = await boxOf(pictureOf(page));
+  const centred = Math.abs(d.x + d.width / 2 - (c.x + c.width / 2)) < 2;
+  const heldIn =
+    d.x >= pic.x && d.x + d.width <= pic.x + pic.width && (d.x - pic.x < 16 || pic.x + pic.width - d.x - d.width < 16);
+  expect.soft(centred || heldIn).toBe(true);
   await expect.soft(dialog).toBeInViewport({ ratio: 1 });
   expect.soft(drift(seen.frames, "cog")).toBeLessThan(1);
   expect.soft(blinks(seen.frames, "cog")).toEqual([]);

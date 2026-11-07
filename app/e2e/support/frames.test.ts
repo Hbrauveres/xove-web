@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { blinks, drift, type Frame, type Seen } from "./frames.ts";
+import { blinks, drift, transitioned, type Frame, type Seen } from "./frames.ts";
 
 /** An element on a frame: shown at this opacity (0: gone), at this place. */
 const seen = (opacity: number, x = 0): Seen => ({
@@ -39,5 +39,21 @@ describe("a move", () => {
 
   it("is nothing for an element never seen", () => {
     expect(drift([{ t: 0, seen: {} }], "icon")).toBe(0);
+  });
+});
+
+describe("a transition", () => {
+  it("is the longest one of that property seen on the element", () => {
+    const runs: Record<string, number>[] = [{}, { opacity: 160 }, { opacity: 160, transform: 200 }];
+    const frames: Frame[] = runs.map((transitions, t) => ({
+      t,
+      seen: { toast: { ...seen(1), transitions } },
+    }));
+    expect(transitioned(frames, "toast", "opacity")).toBe(160);
+    expect(transitioned(frames, "toast", "transform")).toBe(200);
+  });
+
+  it("is nothing when none ran", () => {
+    expect(transitioned(strip(0, 1), "icon", "opacity")).toBe(0);
   });
 });
