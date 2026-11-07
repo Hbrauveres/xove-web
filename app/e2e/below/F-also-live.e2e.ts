@@ -1,0 +1,126 @@
+import { expect, test, type Locator, type Page } from "@playwright/test";
+import { blinks, drift } from "../support/frames.ts";
+import { observe } from "../support/observe.ts";
+import { openScene } from "../support/open.ts";
+import { boxOf, pictureOf, pointAt } from "./below.ts";
+
+const previewsOf = (page: Page) => page.getByRole("list", { name: "Other streams" }).getByRole("button");
+const placesOf = (page: Page) => page.getByRole("figure");
+/** The ring drawn inside a preview's picture. */
+const ringOf = (preview: Locator) =>
+  preview
+    .locator("span")
+    .first()
+    .evaluate((el) => getComputedStyle(el, "::after").boxShadow);
+
+test("F-also-live.1 the other streams are previews beside the places, the one on the stage left out", async ({
+  page,
+}, info) => {
+  await openScene(page, "s=live");
+  const previews = previewsOf(page);
+  const places = placesOf(page);
+  await observe(page, info, { previews, places }, async () => {
+    await page.mouse.move(10, 10);
+  });
+  await expect.soft(page.getByRole("region", { name: "Also live" })).toBeVisible();
+  await expect.soft(previews).toHaveText(["Rafa · screen", "Ana · camera"]);
+  await expect.soft(page.getByRole("button", { name: "Watch Rafa · screen" })).toBeVisible();
+  await expect.soft(page.getByRole("button", { name: "Watch Ana · camera" })).toBeVisible();
+  await expect.soft(page.getByRole("button", { name: /Watch Marina/ })).toHaveCount(0);
+  // Under the picture, one row: the previews (scrolling where room runs short), then the places,
+  // level with them and always whole in the window. Each preview can be scrolled to.
+  const pic = await boxOf(pictureOf(page));
+  const rafa = await boxOf(previews.nth(0));
+  const ana = await boxOf(previews.nth(1));
+  const box = await boxOf(places);
+  expect.soft(rafa.y).toBeGreaterThanOrEqual(pic.y + pic.height);
+  expect.soft(ana.x).toBeGreaterThan(rafa.x + rafa.width);
+  expect.soft(box.x).toBeGreaterThan(rafa.x);
+  expect.soft(Math.abs(rafa.y - box.y)).toBeLessThan(1);
+  await expect.soft(places).toBeInViewport({ ratio: 1 });
+  for (const l of [previews.nth(0), previews.nth(1)]) {
+    await l.scrollIntoViewIfNeeded();
+    await expect.soft(l).toBeInViewport({ ratio: 1 });
+  }
+});
+
+test("F-also-live.2 pointing at a preview rings it in red, nothing moving", async ({ page }, info) => {
+  await openScene(page, "s=live");
+  const rafa = page.getByRole("button", { name: "Watch Rafa · screen" });
+  const ana = page.getByRole("button", { name: "Watch Ana · camera" });
+  const pill = rafa.getByText("Rafa · screen");
+  const atRest = await ringOf(rafa);
+  const seen = await observe(page, info, { rafa, ana, pill }, async () => {
+    await pointAt(page, rafa);
+    await page.waitForTimeout(300);
+  });
+  const pointed = await ringOf(rafa);
+  expect.soft(pointed).not.toEqual(atRest);
+  expect.soft(pointed).toContain("inset");
+  expect.soft(await ringOf(ana)).toEqual(atRest);
+  await expect.soft(rafa).toHaveCSS("cursor", "pointer");
+  for (const n of ["rafa", "ana", "pill"]) {
+    expect.soft(drift(seen.frames, n)).toBeLessThan(1);
+    expect.soft(blinks(seen.frames, n)).toEqual([]);
+  }
+});
+
+test("F-also-live.3 a click puts that stream on the stage, the one there becomes a preview", async ({ page }, info) => {
+  await openScene(page, "s=live");
+  const places = placesOf(page);
+  const seen = await observe(page, info, { places, previews: previewsOf(page) }, async () => {
+    await page.getByRole("button", { name: "Watch Rafa · screen" }).click();
+    await page.waitForTimeout(1500);
+  });
+  await expect.soft(page.getByRole("heading", { name: "Rafa", level: 2 })).toBeVisible();
+  await expect
+    .soft(page.getByRole("region", { name: "Shared screen" }).getByLabel("Rafa's shared screen"))
+    .toHaveCount(1);
+  await expect.soft(previewsOf(page)).toHaveText(["Marina · screen", "Ana · camera"]);
+  await expect.soft(places).toHaveAccessibleName("3 of 6 live, 3 seats open");
+  expect.soft(drift(seen.frames, "places")).toBeLessThan(1);
+  expect.soft(blinks(seen.frames, "places")).toEqual([]);
+});
+
+test("F-also-live.4 with the keyboard, Enter on a preview puts it on the stage", async ({ page }, info) => {
+  await openScene(page, "s=live");
+  const ana = page.getByRole("button", { name: "Watch Ana · camera" });
+  await ana.focus();
+  await observe(page, info, { ana }, async () => {
+    await page.keyboard.press("Enter");
+    await page.waitForTimeout(1500);
+  });
+  await expect.soft(page.getByRole("heading", { name: "Ana", level: 2 })).toBeVisible();
+  await expect.soft(previewsOf(page)).toHaveText(["Marina · screen", "Rafa · screen"]);
+});
+
+test("F-also-live.5 the places show how many are live, and say it when pointed at", async ({ page }, info) => {
+  await openScene(page, "s=live");
+  const places = placesOf(page);
+  const tip = page.getByRole("tooltip");
+  await expect.soft(places).toHaveAccessibleName("3 of 6 live, 3 seats open");
+  // Six little screens, one lit for each stream live.
+  await expect.soft(places.locator("i")).toHaveCount(6);
+  await expect.soft(places.locator("i[data-on]")).toHaveCount(3);
+  const seen = await observe(page, info, { places, tip }, async () => {
+    await pointAt(page, places);
+    await page.waitForTimeout(400);
+  });
+  await expect.soft(tip).toHaveText("3 of 6 live · 3 seats open");
+  expect.soft(drift(seen.frames, "places")).toBeLessThan(1);
+});
+
+test("F-also-live.6 with nobody live there are no previews, every place open, the box in its place", async ({
+  page,
+}, info) => {
+  await openScene(page, "s=live");
+  const places = placesOf(page);
+  const seen = await observe(page, info, { places }, async () => {
+    await page.evaluate(() => (window as unknown as { __xove: { everyoneStops: () => void } }).__xove.everyoneStops());
+    await page.waitForTimeout(2500);
+  });
+  await expect.soft(previewsOf(page)).toHaveCount(0);
+  await expect.soft(places).toHaveAccessibleName("0 of 6 live, 6 seats open");
+  await expect.soft(places.locator("i[data-on]")).toHaveCount(0);
+  expect.soft(drift(seen.frames, "places")).toBeLessThan(1);
+});
