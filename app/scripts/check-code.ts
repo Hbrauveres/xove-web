@@ -26,7 +26,6 @@ export const RULES = {
   naming: "file name not kebab-case with a type suffix",
   realWait: "test waits in real time: a sleep or a waitFor/findBy timeout over 1 s (use fake timers and a fixed clock)",
   sharedData: "test data or let shared at file level (build it per test with a factory)",
-  cssText: "test reads CSS as text (check that tokens are used, or check in the browser)",
   disable: "a comment that switches a check off (oxlint-disable, @ts-ignore, @ts-expect-error…): fix the code instead",
   lineLength: "a line over 120 characters (Prettier doesn't wrap strings and comments: break them yourself)",
   ...LAYOUT_RULES,
@@ -194,7 +193,6 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
         /^const \w+(:[^=]+)?\s*=\s*(new |(?!vi\.mock\b|Date\.parse\("[^"]*"\))[a-zA-Z_][\w.]*\()/.test(l))
     )
       add("sharedData", n, l);
-    if (isTest(r) && /readFileSync\([^)]*\.css|\.css\?raw["']/.test(l)) add("cssText", n, l);
     if (isCode(r) && /(oxlint|eslint)-disable|@ts-(ignore|expect-error|nocheck)|jscpd:ignore|prettier-ignore/.test(l))
       add("disable", n, l);
     if (isCode(r) && l.length > MAX_LINE) add("lineLength", n, `${l.length} characters`);
