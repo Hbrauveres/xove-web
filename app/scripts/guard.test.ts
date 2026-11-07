@@ -38,7 +38,12 @@ describe("the guard: reading each tool", () => {
     expect(fromJscpd(copy).map((f) => f.file)).toEqual(["src/a.ts", "src/b.ts"]);
     // jscpd 5 names files from the scanned folder: the same findings, at the same paths.
     const five = '{"duplicates":[{"firstFile":{"name":"a.ts"},"secondFile":{"name":"components/b.ts"}}]}';
-    expect(fromJscpd(five).map((f) => f.file)).toEqual(["src/a.ts", "src/components/b.ts"]);
+    expect(fromJscpd(five, () => false).map((f) => f.file)).toEqual(["src/a.ts", "src/components/b.ts"]);
+    // A copy in the end-to-end tests (also scanned) is named under e2e/.
+    const e2e =
+      '{"duplicates":[{"firstFile":{"name":"blocks/F-a.e2e.ts"},"secondFile":{"name":"e2e/blocks/F-b.e2e.ts"}}]}';
+    const inE2e = (path: string) => path.startsWith("e2e/");
+    expect(fromJscpd(e2e, inE2e).map((f) => f.file)).toEqual(["e2e/blocks/F-a.e2e.ts", "e2e/blocks/F-b.e2e.ts"]);
     const knip = '{"issues":[{"file":"src/a.ts","files":[{}],"exports":[{},{}],"types":[{}]}]}';
     expect(fromKnip(knip).map((f) => f.rule)).toEqual(["files", "exports", "exports", "types"]);
   });

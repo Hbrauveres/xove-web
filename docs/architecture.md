@@ -225,7 +225,7 @@ Every rule a tool can measure runs in the commit checks as `3 · Code checks`, o
 
 **What's exempt, and why:**
 - **Tests and stories** (`*.test.ts(x)`, `*.stories.tsx`, `src/testing/`, its fakes and factories) are exempt from the size, number and escape-hatch limits. A `describe` block is long by nature, and expected values belong in the test. They keep their own rules ([Testing](testing.md#test-rules)).
-- **`scripts/`** (the checks themselves) is exempt from the same limits. It's tooling run with Node, not part of the app.
+- **`scripts/`** (the checks themselves) and **`e2e/`** (the end-to-end tests and their harness) are exempt from the same limits. They're tooling, not part of the app.
 - **The copy check skips tests.** Tests repeat their arrange steps on purpose, so each one reads on its own.
 - **No exemption from the escape hatches' own back door.** A comment that switches a check off (`oxlint-disable`, `@ts-ignore`, `@ts-expect-error`, `@ts-nocheck`, `jscpd:ignore`, `prettier-ignore`) is a finding in app code. Fix the code instead.
 
@@ -284,6 +284,7 @@ app/                  the web app: everything its image is built from
   config/             config.json, the settings the server fills in from its environment (`/config.json`)
   compose.yaml        runs the image (locally and in the checks)
   scripts/            the checks (guard, check-code, check-styles, check-size), test-alone, brand-icons.mjs (the favicon from the mark's geometry)
+  e2e/                the end-to-end tests, one per feature case at every size, and their harness (harness/: the app on its fakes; support/: open, observe, frames) ([Testing](testing.md#end-to-end-every-feature-at-every-size))
   checks/             the guard's list of known findings, who owns them, the size budget
   tsconfig.strict.json, .oxlintrc.json, .jscpd.json, knip.json, .prettierrc.json   the checks' settings
 docs/                 these pages, and the design sheet's pictures

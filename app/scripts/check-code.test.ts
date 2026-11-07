@@ -141,11 +141,9 @@ describe("the code check", () => {
     ).toContain("sharedData");
   });
 
-  it("names a test that reads CSS as text, not one that reads another file", () => {
+  it("lets a test read a stylesheet (ADR-0102)", () => {
     const test = (text: string) => rules("shared/utils/f.util.test.ts", text, ["shared/utils/f.util.ts"]);
-    expect(test('import css from "./f.module.css?raw";\n')).toContain("cssText");
-    expect(test('const css = readFileSync("tokens.css", "utf8");\n')).toContain("cssText");
-    expect(test('import page from "../../index.html?raw";\n')).not.toContain("cssText");
+    expect(test('import css from "./f.module.css?raw";\n')).toEqual([]);
   });
 
   it("names a comment that switches a check off, and a line past Prettier's width, outside tests", () => {

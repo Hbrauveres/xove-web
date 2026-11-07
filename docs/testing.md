@@ -4,15 +4,16 @@ How the web app is tested, with a real example of each kind, and how to run the 
 
 ## At a glance
 
-| Kind | What it proves | Example |
-| --- | --- | --- |
-| [Rules as plain functions](#rules-as-plain-functions) | The decisions, with no browser: which device, which quality, how the ambilight is laid out, who is big; the room as data and what it shows (`features/room/stores/room-store/room.model`, `room.selectors`), in milliseconds | `services/media-devices-service/utils/is-handheld.util.test.ts`, `features/room/stores/room-store/*.test.ts`, `**/utils/*.test.ts` |
-| [Components](#components) | One component's output for given props | `components/**/*.test.tsx` |
-| [Pages, used like a person](#pages-used-like-a-person) | Whole flows: a page at a URL, with a fake API and a fake LiveKit | `pages/*.test.tsx`, `routes/app-routes/app-routes.component.test.tsx`, `features/room/hooks/*.test.ts` |
-| [The style check](#the-style-check) | What the stylesheets promise: text readable on every surface, rules no browser drops, motion off when asked | `scripts/check-styles.ts` |
-| [Pictures and sizes](#pictures-and-sizes) | Each screen on every device size | The design sheet's pictures |
+| Kind                                                                               | What it proves                                                                                                                                                                                                               | Example                                                                                                                            |
+| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| [Rules as plain functions](#rules-as-plain-functions)                              | The decisions, with no browser: which device, which quality, how the ambilight is laid out, who is big; the room as data and what it shows (`features/room/stores/room-store/room.model`, `room.selectors`), in milliseconds | `services/media-devices-service/utils/is-handheld.util.test.ts`, `features/room/stores/room-store/*.test.ts`, `**/utils/*.test.ts` |
+| [Components](#components)                                                          | One component's output for given props                                                                                                                                                                                       | `components/**/*.test.tsx`                                                                                                         |
+| [Pages, used like a person](#pages-used-like-a-person)                             | Whole flows: a page at a URL, with a fake API and a fake LiveKit                                                                                                                                                             | `pages/*.test.tsx`, `routes/app-routes/app-routes.component.test.tsx`, `features/room/hooks/*.test.ts`                             |
+| [The style check](#the-style-check)                                                | What the stylesheets promise: text readable on every surface, rules no browser drops, motion off when asked                                                                                                                  | `scripts/check-styles.ts`                                                                                                          |
+| [End-to-end, every feature at every size](#end-to-end-every-feature-at-every-size) | Each feature case, in a real browser, on the whole app with its fakes, at every size: what a person sees at rest, pointed at, focused and pressed, and the frames in between (no blink, no move)                             | `e2e/**/*.e2e.ts`                                                                                                                  |
+| [Pictures and sizes](#pictures-and-sizes)                                          | Each screen on every device size                                                                                                                                                                                             | The design sheet's pictures                                                                                                        |
 
-All of it runs with Vitest, Testing Library and jsdom (a browser's page model in Node, without WebRTC or real layout).
+All of it but the end-to-end tests runs with Vitest, Testing Library and jsdom (a browser's page model in Node, without WebRTC or real layout); those run with Playwright Test in Chromium.
 
 ## Rules as plain functions
 
@@ -68,7 +69,9 @@ it("reports whose stream is on my stage, once it settles", async () => {
   const server = await anaAndBruno();
 
   await pass(REPORT_STILL_MS);
-  await waitFor(() => expect(server.myWatch).toEqual({ sharerId: 3, kind: "screen" }));
+  await waitFor(() =>
+    expect(server.myWatch).toEqual({ sharerId: 3, kind: "screen" }),
+  );
   expect(watchCalls(server)).toHaveLength(1);
 });
 ```
@@ -77,13 +80,40 @@ The page, the hooks, the client and the room's logic all run for real; only the 
 
 ## The style check
 
-Tests never read CSS: a stylesheet's text says nothing about what a person sees, and checking literal values (`#ffffff`, `44px`) only blocks moving the look to tokens. What the stylesheets must promise is checked by `npm run check:styles` (`scripts/check-styles.ts`), which parses them with PostCSS and runs in the commit checks after the tests:
+A test may read a stylesheet (ADR-0102), but in jsdom its text says little about what a person sees, and a literal value (`#ffffff`, `44px`) repeated in tests only blocks moving the look to tokens: look values are named. What the stylesheets must promise is checked by `npm run check:styles` (`scripts/check-styles.ts`), which parses them with PostCSS and runs in the commit checks after the tests:
 
 - **Contrast:** every text colour on every surface meets its ratio (4.5:1; faint labels 3:1), and the ink on red too.
 - **One browser per rule:** no rule mixes `::-webkit-` and `::-moz-` selectors, since a browser drops a whole rule with a selector it doesn't know.
 - **Reduced motion:** `global.css` keeps the rule that stops every animation and transition for anyone who asks.
 
 Its own test (`scripts/check-styles.test.ts`) feeds it small stylesheets that pass and fail. How the look comes out on screen is checked in a real browser, below.
+
+## End-to-end, every feature at every size
+
+Every feature of the app has numbered test cases, each written as given / when / then / must not, and **one Playwright test per case** in `e2e/`, titled by the case's id (`F-my-buttons.3 …`). They drive the whole app on its **harness** (`e2e/harness/`: the real app, the tests' fake API and LiveKit, fake people with drawn pictures; `npm run harness` serves it on http://localhost:5199, `&still=1` holds the pictures still), and run at every size of a selection, each with its pixel density:
+
+| Size                        | Viewport    | Density |
+| --------------------------- | ----------- | ------- |
+| HD                          | 1280 × 720  | 1×      |
+| Full HD                     | 1920 × 1080 | 1×      |
+| A 1080p monitor on its side | 1080 × 1920 | 1×      |
+| Galaxy S23 Ultra            | 384 × 824   | 3.75×   |
+
+Phones get only the phone notice, so their sizes run the tests tagged `@phone`.
+
+What the tests share lives once in `e2e/support/`, one module per concern; an area's own file (`e2e/stage/stage.ts`, `e2e/settings/settings.ts`, …) keeps only what's specific to it:
+
+- `open.ts`: opening a scene, settled on conditions (the room up, its picture playing, nothing moving), and waking the stage's controls.
+- `geometry.ts`: an element's box (`boxOf` fails when it isn't on the screen), boxes compared (`inside(inner, outer)`, `overlap`), their centres, the window.
+- `pointer.ts`: the mouse and keyboard as a person uses them: `pointAt` (scrolled to first), `clickAt`, `restOn`, `pointAway`, `overPicture`, `tabTo`.
+- `screen.ts`: what reaches the screen: `shownOpacity` (times its ancestors'), `onTop`, and `patchOf`, a patch of a screenshot measured.
+- `harness.ts`: the harness's knobs: people starting and stopping, the room's sound unlocks counted, a stream of another shape or width, a voice turned on.
+- `stage.ts`: the stage, its picture, its buttons, whether its controls are shown, the tooltip on show.
+- `timing.ts`: the times a case may spend, named once (the app's own constants), and `untilStill`, waiting until nothing finite is moving.
+- `looks.ts`: the looks a case checks, by the app's token names, resolved by the page into computed values.
+- `observe.ts`, `track.ts`, `frames.ts`, `state.ts`: recording an action, frame by frame, and reading the frames.
+
+Each test opens a scene (`e2e/support/open.ts`: the clock fixed, the pictures still), and records its action with `observe` (`e2e/support/observe.ts`): the named elements' state before and after (shown, where, how they look, what a screen reader hears), a screenshot of each, every animation frame while it happens, and a strip of screenshots through it. `blinks`, `drift` and `transitioned` (`e2e/support/frames.ts`) turn the frames into "must not" checks: an element that must stay never dims or disappears, never moves. The checks are `expect.soft`, so a test records everything and reports every failure. Eight browsers run at once (`E2E_WORKERS` sets another number). `E2E_OUT` says where the records go; `E2E_BASE_URL` runs the same tests against another copy of the app.
 
 ## Pictures and sizes
 
@@ -93,13 +123,13 @@ jsdom has no real layout, so how each screen looks is checked in a real headless
 
 Every test earns its place, and runs alone, in any order, fast.
 
-- **Useful:** a test protects a behaviour that matters and could break; a failure means a real bug. No CSS text or literal values (`#ffffff`, `44px`), no props echoed back, no tests of the fakes rather than the app, no "renders without crashing", no two tests for the same behaviour. A test of removed code leaves with it.
+- **Useful:** a test protects a behaviour that matters and could break; a failure means a real bug. Where what a person sees is the behaviour, it's checked (the stylesheet, a class name or the computed style may be read) against a named value, never a literal (`#ffffff`, `44px`) repeated across tests (ADR-0102); no props echoed back, no tests of the fakes rather than the app, no "renders without crashing", no two tests for the same behaviour. A test of removed code leaves with it.
 - **One test file per file with logic**, beside it, named the same. A test keeps its own code and values, and uses the app's constants, types and enums where a value already has a name. Logic is tested where it lives, as plain functions; a page's tests check only the wiring, split by feature.
-- **Read the page as a person does:** roles, names, labels, `aria-pressed`, `aria-expanded`, `aria-disabled`, `userEvent`; never markup details or class names. A `data-*` attribute only when it's the only sign of a state.
+- **Read the page as a person does:** roles, names, labels, `aria-pressed`, `aria-expanded`, `aria-disabled`, `userEvent`; and where that isn't enough, class names, markup structure or a `data-*` attribute (ADR-0102).
 - **Its own data and its own setup, the most important rule:** each test builds what it needs (people from factories, its own fakes, its clock, its storage) in the test, or in a `beforeEach` that builds it fresh; never once for a whole file, never in a `beforeAll`. Every test passes alone, first, last, or alongside any other.
 - **Clean after every test, by the setup, not the test:** `testing/setup.ts` clears the page, storage and cookies, puts back real timers, the media queries and the fake LiveKit, removes the stand-ins a test defined for what jsdom lacks (fullscreen, touch points), and calls the reset of every piece of the app that keeps state between renders (the toast's store, the floating store with the tooltip's warmth, the install prompt, the TV); Vitest itself puts back every spy, stubbed global and variable (`restoreMocks`, `unstubGlobals`, `unstubEnvs`). Nothing is restored inside a test's body, where a failure would skip it. A new piece of shared state gets a reset beside it, called there, and a pair of tests in `testing/setup.test.tsx`.
 - **A new order every run:** the tests in each file are shuffled on every run, so a test that leans on another fails at once. The run prints its seed (`Running tests with seed "…"`); `npm test -- --sequence.seed=<seed>` replays that order. Each file runs in its own environment, so files can't lean on each other.
-- **No real waiting:** every delay (debounce, retry, hover, hold, idle, animation) on fake timers, and a fixed clock for anything that shows a time (`onFakeClock()`). `findBy` and `waitFor` give up after 1 s, and move fake timers along by themselves: a test that needs longer is waiting in real time.
+- **No waiting by guess:** a test waits for a condition (`findBy`, `waitFor`, `expect.poll`, auto-waiting), never a sleep "to be safe". Where the behaviour is a time (a debounce, a hover rest, a hold, an idle fade), the test spends exactly that time, named by its constant: on fake timers wherever the timer can be faked (every unit and page test; `onFakeClock()` for anything that shows a time), in real time only for what a real browser animates on its own clock (ADR-0102). `findBy` and `waitFor` give up after 1 s in jsdom, and move fake timers along by themselves: a test that needs longer is waiting in real time.
 - **Fast:** a test under about 100 ms, a file under about 1.5 s, the whole suite in about 10 s; a file that grows past that splits by feature, so the workers share the load.
 - **A flaky test is a bug:** fix its cause (usually time or shared state); never re-run it to pass.
 
@@ -117,6 +147,8 @@ npm run test:alone       # every file, then every test, run alone (slow; before 
 npm run test:storybook   # every story in headless Chromium, with the accessibility checks
 npm run storybook        # Storybook on http://localhost:6006
 npm run build            # type check, then the production build
+npm run e2e              # every feature case at every size (starts the harness if it isn't running)
+npm run e2e -- --project desktop-1080 e2e/pages/   # one size, one folder
 ```
 
 ## What a good test here looks like

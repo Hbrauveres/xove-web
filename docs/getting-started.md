@@ -29,7 +29,7 @@ Vite forwards every `/api` request to `http://localhost:8080`, so the web app ta
 
 Storybook, every component alone in each of its states: `npm run storybook` (http://localhost:6006); its stories' checks run in a real browser, so the first time, `npx playwright install chromium` ([Testing](testing.md#storybook)).
 
-The tests, the style check and running every test alone: [Testing](testing.md#running-them). The code checks (`npm run guard`, `npm run format`, the size budget): [Architecture](architecture.md#the-checks).
+The tests, the style check and running every test alone: [Testing](testing.md#running-them). The app on its fakes, every screen and state: `npm run harness` (http://localhost:5199); every feature case at every size: `npm run e2e` ([Testing](testing.md#end-to-end-every-feature-at-every-size)). The code checks (`npm run guard`, `npm run format`, the size budget): [Architecture](architecture.md#the-checks).
 
 ## Run the API next to it
 

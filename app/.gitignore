@@ -25,3 +25,7 @@ dist-ssr
 
 # Storybook, built (npm run build-storybook)
 storybook-static
+
+# The end-to-end tests' results (npm run e2e)
+test-results
+playwright-report
