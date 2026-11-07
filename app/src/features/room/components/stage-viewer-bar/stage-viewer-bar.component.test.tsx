@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { onFakeClock } from "@testing/factories/clock.factory";
 import { TIP_REST_MS } from "@shared/constants/floating.constants";
 import { fullRoom } from "@features/room/utils/full-room.util";
+import type { FoldKey } from "@features/room/types/fold-key.types";
 import type { Sound } from "@features/room/types/sound.types";
 import { StageViewerBar } from "./stage-viewer-bar.component";
 
@@ -12,12 +13,26 @@ import { StageViewerBar } from "./stage-viewer-bar.component";
 const base = () => ({ live: false, canShareScreen: true, onStart: vi.fn(), onSettings: vi.fn() });
 
 /** The bar over Bruno's stream, with his screen's sound and voice held like the stage holds them. */
-function Bruno({ voiceOff = false, noSound = false, talking = false }) {
+function Bruno({
+  voiceOff = false,
+  noSound = false,
+  talking = false,
+  folded = [],
+  live = false,
+}: {
+  voiceOff?: boolean;
+  noSound?: boolean;
+  talking?: boolean;
+  folded?: FoldKey[];
+  live?: boolean;
+}) {
   const [sound, setSound] = useState<Sound>({ volume: 0.8, muted: false });
   const [voice, setVoice] = useState<Sound>({ volume: 1, muted: false });
   return (
     <StageViewerBar
       {...base()}
+      live={live}
+      folded={folded}
       sound={{ ...sound, onChange: setSound, unavailable: noSound ? "No sound in this stream" : undefined }}
       voice={{
         ...voice,
@@ -264,5 +279,35 @@ describe("the bar on the floating layer (#187)", () => {
     await user.tab({ shift: true });
     expect(sliderOpen()).toBe(false);
     expect(screen.getByRole("menu")).toBeInTheDocument();
+  });
+});
+
+describe("the bar over someone else's stream, on a narrow picture", () => {
+  it("shows Go live in '…' once it folded, with its rows working from there", async () => {
+    const user = userEvent.setup();
+    render(<Bruno folded={["go-live"]} />);
+    expect(screen.queryByRole("button", { name: "Go live" })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "More controls" }));
+    expect(screen.getByRole("button", { name: "Share your screen" })).toBeInTheDocument();
+  });
+
+  it("moves the folded sounds into '…', where they still mute and set the volume", async () => {
+    const user = userEvent.setup();
+    render(<Bruno folded={["go-live", "sound", "voice"]} />);
+    expect(screen.queryByRole("button", { name: "Mute Bruno's voice" })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "More controls" }));
+    await user.click(screen.getByRole("button", { name: "Mute Bruno's voice" }));
+    expect(screen.getByRole("button", { name: "Unmute Bruno's voice" })).toBeInTheDocument();
+  });
+
+  it("keeps my mic while I'm live, with '…' beside it", () => {
+    render(<Bruno live folded={["sound", "voice"]} />);
+    expect(screen.getByRole("button", { name: "Share your voice" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "More controls" })).toBeInTheDocument();
+  });
+
+  it("has no '…' while nothing folded", () => {
+    render(<Bruno />);
+    expect(screen.queryByRole("button", { name: "More controls" })).not.toBeInTheDocument();
   });
 });

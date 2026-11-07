@@ -1,4 +1,4 @@
-/* The view: the picture in its own shape, as big as the controls' layer allows,
+/* The view: the picture in its own shape, as big as the stage's box allows,
    centred; its light behind it, stretched past it. */
 .view {
   position: absolute;

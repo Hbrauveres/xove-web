@@ -1,5 +1,6 @@
-/* The controls' layer: the stage's whole box, see-through. Its own size decides where
-   the buttons go and how tall a menu can be, not the window's or the picture's. */
+/* The frame: the stage's whole box, see-through, taking the moves and presses (the dark sides
+   included) and holding the settings and the menus; its own size decides how tall a menu can be.
+   The controls sit on the picture's layer inside it (StagePictureLayer). */
 .frame {
   position: relative;
   container-type: size;
@@ -14,49 +15,4 @@
 
 .frame[data-chrome="hidden"] {
   cursor: none;
-}
-
-/* The round buttons: over the bottom centre, fading with the labels. */
-.controls {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  transition:
-    opacity var(--duration-250) ease,
-    translate var(--unroll),
-    bottom var(--duration-280) ease;
-}
-
-/* Fading, part by part: a heard voice stays, for its speaking cue. */
-.controls > * {
-  transition: opacity var(--duration-250) ease;
-}
-
-.frame[data-chrome="hidden"] .controls > :not(:has([data-stays])) {
-  opacity: 0;
-}
-
-.frame[data-chrome="hidden"] .controls :is(button, input) {
-  pointer-events: none;
-}
-
-.frame[data-chrome="hidden"]:has(:focus-visible) .controls > * {
-  opacity: 1;
-}
-
-.frame[data-chrome="hidden"]:has(:focus-visible) .controls :is(button, input) {
-  pointer-events: auto;
-}
-
-/* A narrow stage's compact buttons (M): the round buttons stay level with the fullscreen button. */
-@container (--tiny) {
-  .controls {
-    --btn: var(--control-sm);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .controls {
-    transition: none;
-  }
 }

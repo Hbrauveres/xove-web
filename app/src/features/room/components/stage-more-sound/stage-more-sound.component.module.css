@@ -1,0 +1,38 @@
+/*
+ * One sound in "…", on the menu rows' grid: its button is a menu icon (the rows' icon column, muted,
+ * lit when pointed at, faded when the sound can't be heard), and its slider starts where the rows'
+ * words do.
+ */
+.row {
+  --icon-pad: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-0-5);
+  padding: var(--space-0-5) var(--space-2-75) var(--space-0-5) calc(var(--space-2-75) - var(--icon-pad));
+}
+
+.row button {
+  width: calc(var(--size-4-25) + 2 * var(--icon-pad));
+  height: calc(var(--size-4-25) + 2 * var(--icon-pad));
+  border-radius: var(--radius-2-25);
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  color: var(--text-muted);
+}
+
+.row button svg {
+  width: var(--size-4-25);
+  height: var(--size-4-25);
+}
+
+.row button:hover,
+.row button:focus-visible {
+  background: var(--white-06);
+  color: var(--text);
+}
+
+.range {
+  flex: 1;
+  min-width: 0;
+}

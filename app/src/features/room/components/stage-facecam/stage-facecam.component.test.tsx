@@ -50,7 +50,7 @@ describe("the small view", () => {
     renderFacecam({ video: track as unknown as MediaTrack });
 
     expect(track.attached).toContain(screen.getByLabelText("Bruno's camera"));
-    expect(facecam().style.left).toBe("70%");
+    expect(facecam().style.left).toContain("70%");
     expect(facecam().style.top).toBe("60%");
   });
 

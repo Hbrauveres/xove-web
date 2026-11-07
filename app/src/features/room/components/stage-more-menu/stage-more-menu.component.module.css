@@ -1,0 +1,4 @@
+/* "…": not positioned, so its menu (StageBarMenu, centred) is placed in the bar, on the picture's centre. */
+.anchor {
+  display: inline-grid;
+}

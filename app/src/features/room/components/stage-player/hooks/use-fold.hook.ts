@@ -9,9 +9,16 @@ import { foldFrames } from "../utils/fold-frames.util";
  * it; the focus goes to the corner button. The corner button opens it again: it grows back out of the
  * corner, and the focus goes back to Hide. With less motion asked for (or a browser that can't
  * animate an element), it just folds and opens.
+ *
+ * On a picture too narrow for it (`fits` false) it folds by itself, quietly: no move, no focus. Opened
+ * from the corner there, it stays open for that picture (`picture`: the stream on the stage); another
+ * one folds it by itself again.
  */
-export function useFold(): SmallViewFold {
-  const [folded, setFolded] = useState(false);
+export function useFold(fits = true, picture = ""): SmallViewFold {
+  const [hidden, setHidden] = useState(false);
+  // The picture it was opened on while too narrow for it, if it was.
+  const [openedOn, setOpenedOn] = useState<string | null>(null);
+  const folded = hidden || (!fits && openedOn !== picture);
   const box = useRef<HTMLElement | null>(null);
   const hideButton = useRef<HTMLElement | null>(null);
   const corner = useRef<HTMLElement | null>(null);
@@ -22,7 +29,8 @@ export function useFold(): SmallViewFold {
     const to = corner.current;
     const fold = () => {
       changed.current = "hid";
-      setFolded(true);
+      setHidden(true);
+      setOpenedOn(null);
     };
     if (!from || !to || typeof from.animate !== "function" || reducedMotion()) return fold();
     const move = from.animate(foldFrames(from.getBoundingClientRect(), to.getBoundingClientRect()), {
@@ -34,8 +42,9 @@ export function useFold(): SmallViewFold {
   }, []);
   const show = useCallback(() => {
     changed.current = "showed";
-    setFolded(false);
-  }, []);
+    setHidden(false);
+    if (!fits) setOpenedOn(picture);
+  }, [fits, picture]);
   useLayoutEffect(() => {
     const was = changed.current;
     changed.current = null;

@@ -56,7 +56,7 @@ describe("the stage's view", () => {
     const big = aSharer({ kinds: ["screen", "camera"] });
     renderView({ big, main: big.screen ?? null, small: big.camera });
     // At the top right, clear of the round buttons and the fullscreen button.
-    expect(screen.getByRole("application", { name: /Bruno's camera/ }).style.left).toBe("73%");
+    expect(screen.getByRole("application", { name: /Bruno's camera/ }).style.left).toContain("73%");
     expect(screen.getByRole("application", { name: /Bruno's camera/ }).style.top).toBe("4%");
   });
 

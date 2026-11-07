@@ -1,4 +1,4 @@
-import type { HearSound, SoundKind } from "../../../types/sound.types";
+import type { HearSound, SoundKind } from "../types/sound.types";
 
 /** One sound over the stream in words: its tooltip, its spoken name (what a click does, or why not), its slider's. */
 export function viewerSoundWords(kind: SoundKind, s: HearSound, name = "") {

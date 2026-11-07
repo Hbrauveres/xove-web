@@ -2,12 +2,14 @@ import { useRef } from "react";
 import { Toast } from "@shared/components/toast";
 import { StageStageOverlay } from "../stage-stage-overlay";
 import { StageControls } from "../stage-controls";
+import { StagePictureLayer } from "../stage-picture-layer";
 import { StageSounds } from "../stage-sounds";
 import { StageView } from "../stage-view";
 import { StageSmallViewButton } from "../stage-small-view-button";
 import { useBigQuality } from "./hooks/use-big-quality.hook";
 import { useFold } from "./hooks/use-fold.hook";
 import { useGoToMine } from "./hooks/use-go-to-mine.hook";
+import { usePictureFit } from "./hooks/use-picture-fit.hook";
 import { useStageChrome } from "./hooks/use-stage-chrome.hook";
 import { useStageFullscreen } from "./hooks/use-stage-fullscreen.hook";
 import { useStageSettings } from "./hooks/use-stage-settings.hook";
@@ -28,16 +30,12 @@ export function StagePlayer(props: StagePlayerProps) {
   const { main, small } = bigStreams(stage.big, Boolean(bigId && stage.swappedFor[bigId]));
   const chrome = useStageChrome(frame);
   const fullscreen = useStageFullscreen(frame);
-  const settings = useStageSettings({
-    frame,
-    open: controls.settingsOpen,
-    onToggle: controls.onSettings,
-    bigId,
-    hold: chrome.hold,
-  });
+  const { settingsOpen: open, onSettings: onToggle } = controls;
+  const settings = useStageSettings({ frame, open, onToggle, bigId, hold: chrome.hold });
   const startMine = useGoToMine(controls.onStart, stage.pick, sharers);
   useBigQuality(main, Boolean(stage.big?.isMe));
-  const fold = useFold();
+  const picture = usePictureFit(stage.big, controls);
+  const fold = useFold(picture.smallView, `${bigId}/${stage.mainKind}`);
 
   return (
     <div
@@ -61,9 +59,12 @@ export function StagePlayer(props: StagePlayerProps) {
         canShareScreen={controls.canShareScreen}
         onStart={startMine}
       />
-      {/* Over a stream and the empty stage alike: stopping the last stream never strands you in fullscreen. */}
-      <StageStageOverlay fullscreen={fullscreen.fullscreen} onFullscreen={fullscreen.toggle} />
-      <div className={styles.controls}>
+      {/* The controls sit on the picture, never on the dark around it. */}
+      <StagePictureLayer
+        picture={picture}
+        // Over a stream and the empty stage alike: stopping the last stream never strands you in fullscreen.
+        fullscreen={<StageStageOverlay fullscreen={fullscreen.fullscreen} onFullscreen={fullscreen.toggle} />}
+      >
         <StageControls
           big={stage.big}
           controls={controls}
@@ -72,9 +73,10 @@ export function StagePlayer(props: StagePlayerProps) {
           onStart={startMine}
           onSettings={settings.toggle}
           onMenuChange={chrome.onMenuChange}
+          fit={picture.fit}
         />
         {small && <StageSmallViewButton fold={fold} />}
-      </div>
+      </StagePictureLayer>
       {settingsPanel}
       <StageSounds voices={hearing.voices} previewSounds={hearing.previewSounds} />
       {/* A short message to the user, at the top centre of the player. */}
