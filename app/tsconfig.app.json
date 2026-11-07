@@ -34,5 +34,6 @@
       "@testing/*": ["./src/testing/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "e2e/harness"],
+  "exclude": ["e2e/harness/vite.config.ts"]
 }

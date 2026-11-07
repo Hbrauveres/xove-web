@@ -102,7 +102,7 @@
       }
     },
     {
-      "files": ["**/*.test.ts", "**/*.test.tsx", "**/*.stories.tsx", "src/testing/**", "scripts/**"],
+      "files": ["**/*.test.ts", "**/*.test.tsx", "**/*.stories.tsx", "src/testing/**", "scripts/**", "e2e/**"],
       "rules": {
         "max-lines-per-function": "off",
         "complexity": "off",

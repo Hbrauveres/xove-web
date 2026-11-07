@@ -21,7 +21,8 @@
     "check:size": "node scripts/check-size.ts",
     "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build -o storybook-static --quiet",
-    "test:storybook": "vitest run --config .storybook/vitest.config.ts"
+    "test:storybook": "vitest run --config .storybook/vitest.config.ts",
+    "harness": "vite --config e2e/harness/vite.config.ts"
   },
   "dependencies": {
     "livekit-client": "^2.23.0",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@csstools/postcss-global-data": "^4.0.0",
+    "@playwright/test": "1.64.1",
     "@storybook/addon-a11y": "10.6.3",
     "@storybook/addon-vitest": "10.6.3",
     "@storybook/react-vite": "10.6.3",
