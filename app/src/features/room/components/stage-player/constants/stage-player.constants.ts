@@ -12,7 +12,7 @@ export const FOLD_MS = 220;
 export const FOLD_EASE = "cubic-bezier(0.2, 0.8, 0.2, 1)";
 
 /**
- * The small view's narrowest, in px: room for its Swap and Hide (two M buttons, 4 px apart, 6 px in),
- * as its stylesheet's minimum width. On a picture narrower than twice that, it folds by itself.
+ * The narrowest picture the small view fits on, in px: room for its Swap and Hide (two M buttons,
+ * 4 px apart, 6 px in) at the picture's whole width. On a narrower one, it folds by itself.
  */
 export const SMALL_VIEW_MIN = 84;
