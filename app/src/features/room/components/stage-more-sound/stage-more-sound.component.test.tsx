@@ -6,9 +6,14 @@ import { StageMoreSound } from "./stage-more-sound.component";
 const heard = (over = {}) => ({ volume: 0.6, muted: false, onChange: vi.fn(), ...over });
 
 describe("a sound folded into '…'", () => {
+  it("shows nothing when there's no such sound", () => {
+    const { container } = render(<StageMoreSound kind="sound" />);
+    expect(container).toBeEmptyDOMElement();
+  });
+
   it("mutes and unmutes with its own button, keeping its volume", async () => {
     const sound = heard();
-    render(<StageMoreSound kind="voice" sound={sound} name="Bruno" />);
+    render(<StageMoreSound kind="voice" sound={{ ...sound, name: "Bruno" }} />);
     await userEvent.click(screen.getByRole("button", { name: "Mute Bruno's voice" }));
     expect(sound.onChange).toHaveBeenCalledWith({ volume: 0.6, muted: true });
   });

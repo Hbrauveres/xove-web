@@ -1,8 +1,8 @@
-/** The picture layer, its width, and the ref that watches it. */
+/** The picture layer's width, Go live's as last shown on it, and the ref that watches them. */
 export interface PictureWidth {
-  ref: (el: HTMLElement | null) => void;
-  /** The layer, once it's laid out. */
-  el: HTMLElement | null;
+  setLayer: (layer: HTMLElement | null) => void;
   /** In px; null until the layer is laid out. */
   width: number | null;
+  /** Go live's pill, in px, as last shown on the layer; null before. */
+  goLive: number | null;
 }

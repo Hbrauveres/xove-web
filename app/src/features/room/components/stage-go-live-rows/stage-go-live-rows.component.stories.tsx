@@ -7,7 +7,14 @@ const meta = {
   args: { canShareScreen: true, onStart: () => undefined, onSettings: () => undefined, onPicked: () => undefined },
   decorators: [
     (Story) => (
-      <div style={{ display: "grid", width: "var(--viewer-menu-width)", padding: "var(--space-1-5)", background: "var(--panel)" }}>
+      <div
+        style={{
+          display: "grid",
+          width: "var(--viewer-menu-width)",
+          padding: "var(--space-1-5)",
+          background: "var(--panel)",
+        }}
+      >
         <Story />
       </div>
     ),
@@ -20,4 +27,6 @@ type Story = StoryObj<typeof meta>;
 /** Go live's rows: the ways to start, then the settings. */
 export const Rows: Story = {};
 /** A full room: the ways to start greyed. */
-export const Full: Story = { args: { full: "6 streams are live, the most at once. You can start yours when one stops." } };
+export const Full: Story = {
+  args: { full: "6 streams are live, the most at once. You can start yours when one stops." },
+};

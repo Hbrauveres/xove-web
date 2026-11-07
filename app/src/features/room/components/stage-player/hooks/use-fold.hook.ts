@@ -2,6 +2,7 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { reducedMotion } from "@shared/utils/reduced-motion.util";
 import type { SmallViewFold } from "../../../types/small-view.types";
 import { FOLD_EASE, FOLD_MS } from "../constants/stage-player.constants";
+import { useOpenAnyway } from "./use-open-anyway.hook";
 import { foldFrames } from "../utils/fold-frames.util";
 
 /**
@@ -15,13 +16,7 @@ import { foldFrames } from "../utils/fold-frames.util";
  */
 export function useFold(fits = true): SmallViewFold {
   const [hidden, setHidden] = useState(false);
-  const [openAnyway, setOpenAnyway] = useState(false);
-  // A picture wide enough again forgets "open anyway": the next narrow one folds it again.
-  const [fitted, setFitted] = useState(fits);
-  if (fitted !== fits) {
-    setFitted(fits);
-    if (fits) setOpenAnyway(false);
-  }
+  const [openAnyway, setOpenAnyway] = useOpenAnyway(fits);
   const folded = hidden || (!fits && !openAnyway);
   const box = useRef<HTMLElement | null>(null);
   const hideButton = useRef<HTMLElement | null>(null);
@@ -43,12 +38,12 @@ export function useFold(fits = true): SmallViewFold {
       fill: "forwards",
     });
     move.onfinish = fold;
-  }, []);
+  }, [setOpenAnyway]);
   const show = useCallback(() => {
     changed.current = "showed";
     setHidden(false);
     if (!fits) setOpenAnyway(true);
-  }, [fits]);
+  }, [fits, setOpenAnyway]);
   useLayoutEffect(() => {
     const was = changed.current;
     changed.current = null;

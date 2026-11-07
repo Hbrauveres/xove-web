@@ -9,6 +9,7 @@ import { StageBarMenu } from "../stage-bar-menu";
 import { StageGoLiveRows } from "../stage-go-live-rows";
 import { StageMoreSound } from "../stage-more-sound";
 import styles from "./stage-more-menu.component.module.css";
+import { moreSections } from "./utils/more-sections.util";
 import type { StageMoreMenuProps } from "./types/stage-more-menu.types";
 
 /**
@@ -23,27 +24,25 @@ export function StageMoreMenu({ folded, sound, voice, ...goLive }: StageMoreMenu
   const id = useId();
   const close = () => setOpen(false);
   useFloating({ open, kind: "opened", close, area: () => box.current, anchor: () => box.current });
-  const has = (key: (typeof folded)[number]) => folded.includes(key);
-  const holdsSettings = has("settings") || has("go-live");
-  const sounds = (has("sound") && sound) || (has("voice") && voice);
+  const show = moreSections(folded);
   return (
     <span ref={box} className={styles.anchor}>
       <Tooltip text="More" hidden={open}>
         <IconButton
           variant="round"
           size="m"
-          ref={holdsSettings ? anchor?.cog : undefined}
+          ref={show.holdsSettings ? anchor?.cog : undefined}
           aria-label="More controls"
           aria-expanded={open}
-          aria-controls={open ? id : undefined}
+          aria-controls={id}
           onClick={() => setOpen((o) => !o)}
         >
           <Icon name="more" />
         </IconButton>
       </Tooltip>
       {open && (
-        <StageBarMenu id={id} role="group" aria-label="More controls" centred>
-          {has("settings") && (
+        <StageBarMenu id={id} kind="group" aria-label="More controls" centred>
+          {show.settings && (
             <MenuRow
               icon="cog"
               label="Settings"
@@ -53,10 +52,10 @@ export function StageMoreMenu({ folded, sound, voice, ...goLive }: StageMoreMenu
               }}
             />
           )}
-          {has("go-live") && <StageGoLiveRows {...goLive} onPicked={close} />}
-          {holdsSettings && sounds && <hr />}
-          {has("sound") && sound && <StageMoreSound kind="sound" sound={sound} />}
-          {has("voice") && voice && <StageMoreSound kind="voice" sound={voice} name={voice.name} />}
+          {show.goLive && <StageGoLiveRows {...goLive} onPicked={close} />}
+          {show.line && <hr />}
+          {show.sound && <StageMoreSound kind="sound" sound={sound} />}
+          {show.voice && <StageMoreSound kind="voice" sound={voice} />}
         </StageBarMenu>
       )}
     </span>

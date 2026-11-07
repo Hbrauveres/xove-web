@@ -9,8 +9,9 @@ import type { StageMoreSoundProps } from "./types/stage-more-sound.types";
  * unmutes) and its slider beside it, lying down since the menu is a list of rows. The slider is
  * always there, disabled while the sound is muted or can't be heard (no sound shared, their mic off).
  */
-export function StageMoreSound({ kind, sound, name }: StageMoreSoundProps) {
-  const words = viewerSoundWords(kind, sound, name);
+export function StageMoreSound({ kind, sound }: StageMoreSoundProps) {
+  if (!sound) return null;
+  const words = viewerSoundWords(kind, sound, sound.name);
   return (
     <span className={styles.row}>
       <StageSoundButton

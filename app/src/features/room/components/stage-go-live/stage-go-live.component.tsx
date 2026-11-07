@@ -37,7 +37,7 @@ export function StageGoLive({ canShareScreen, full, onStart, onSettings }: Stage
         Go live
       </ActionPill>
       {menu && (
-        <StageBarMenu role="menu">
+        <StageBarMenu kind="menu">
           <StageGoLiveRows
             role="menuitem"
             canShareScreen={canShareScreen}

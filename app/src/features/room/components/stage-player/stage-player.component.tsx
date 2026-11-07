@@ -2,14 +2,14 @@ import { useRef } from "react";
 import { Toast } from "@shared/components/toast";
 import { StageStageOverlay } from "../stage-stage-overlay";
 import { StageControls } from "../stage-controls";
+import { StagePictureLayer } from "../stage-picture-layer";
 import { StageSounds } from "../stage-sounds";
 import { StageView } from "../stage-view";
 import { StageSmallViewButton } from "../stage-small-view-button";
 import { useBigQuality } from "./hooks/use-big-quality.hook";
 import { useFold } from "./hooks/use-fold.hook";
 import { useGoToMine } from "./hooks/use-go-to-mine.hook";
-import { usePictureWidth } from "./hooks/use-picture-width.hook";
-import { useRowFold } from "./hooks/use-row-fold.hook";
+import { usePictureFit } from "./hooks/use-picture-fit.hook";
 import { useStageChrome } from "./hooks/use-stage-chrome.hook";
 import { useStageFullscreen } from "./hooks/use-stage-fullscreen.hook";
 import { useStageSettings } from "./hooks/use-stage-settings.hook";
@@ -17,8 +17,6 @@ import styles from "./stage-player.component.module.css";
 import type { StagePlayerProps } from "./types/stage-player.types";
 import { bigStreams } from "./utils/big-streams.util";
 import { chromeState, lightKey } from "./utils/player-look.util";
-import { rowShape } from "./utils/row-shape.util";
-import { smallViewFits } from "./utils/small-view-fits.util";
 
 /**
  * The player: the stage's whole box, holding the view and every control over it. The controls fade
@@ -32,18 +30,12 @@ export function StagePlayer(props: StagePlayerProps) {
   const { main, small } = bigStreams(stage.big, Boolean(bigId && stage.swappedFor[bigId]));
   const chrome = useStageChrome(frame);
   const fullscreen = useStageFullscreen(frame);
-  const settings = useStageSettings({
-    frame,
-    open: controls.settingsOpen,
-    onToggle: controls.onSettings,
-    bigId,
-    hold: chrome.hold,
-  });
+  const { settingsOpen: open, onSettings: onToggle } = controls;
+  const settings = useStageSettings({ frame, open, onToggle, bigId, hold: chrome.hold });
   const startMine = useGoToMine(controls.onStart, stage.pick, sharers);
   useBigQuality(main, Boolean(stage.big?.isMe));
-  const picture = usePictureWidth();
-  const fold = useFold(smallViewFits(picture.width));
-  const fit = useRowFold(picture.el, picture.width, rowShape(stage.big, controls));
+  const picture = usePictureFit(stage.big, controls);
+  const fold = useFold(picture.smallView);
 
   return (
     <div
@@ -67,29 +59,25 @@ export function StagePlayer(props: StagePlayerProps) {
         canShareScreen={controls.canShareScreen}
         onStart={startMine}
       />
-      {/* The controls sit on the picture, never on the dark around it: a layer with the view's size and place. */}
-      <div
-        ref={picture.ref}
-        className={styles.onPicture}
-        data-on-picture
-        data-compact={fit.size === "m" || undefined}
+      {/* The controls sit on the picture, never on the dark around it. */}
+      <StagePictureLayer
+        setLayer={picture.setLayer}
+        compact={picture.fit.size === "m"}
+        // Over a stream and the empty stage alike: stopping the last stream never strands you in fullscreen.
+        fullscreen={<StageStageOverlay fullscreen={fullscreen.fullscreen} onFullscreen={fullscreen.toggle} />}
       >
-        {/* Over a stream and the empty stage alike: stopping the last stream never strands you in fullscreen. */}
-        <StageStageOverlay fullscreen={fullscreen.fullscreen} onFullscreen={fullscreen.toggle} />
-        <div className={styles.controls}>
-          <StageControls
-            big={stage.big}
-            controls={controls}
-            hearing={hearing}
-            anchor={settings.anchor}
-            onStart={startMine}
-            onSettings={settings.toggle}
-            onMenuChange={chrome.onMenuChange}
-            fit={fit}
-          />
-          {small && <StageSmallViewButton fold={fold} />}
-        </div>
-      </div>
+        <StageControls
+          big={stage.big}
+          controls={controls}
+          hearing={hearing}
+          anchor={settings.anchor}
+          onStart={startMine}
+          onSettings={settings.toggle}
+          onMenuChange={chrome.onMenuChange}
+          fit={picture.fit}
+        />
+        {small && <StageSmallViewButton fold={fold} />}
+      </StagePictureLayer>
       {settingsPanel}
       <StageSounds voices={hearing.voices} previewSounds={hearing.previewSounds} />
       {/* A short message to the user, at the top centre of the player. */}

@@ -9,7 +9,8 @@ import {
   OWN_GAP_M,
 } from "../constants/row-fold.constants";
 import type { FoldKey } from "../../../types/fold-key.types";
-import type { RowButton, RowFit, RowItems } from "../types/row-fold.types";
+import type { RowFit } from "../../../types/row-fit.types";
+import type { RowButton, RowItems } from "../types/row-fold.types";
 
 /** A row of buttons, end to end with a gap between each. */
 const rowWidth = (widths: number[], gap: number) =>
@@ -47,7 +48,7 @@ function fitOwn(picture: number, count: number): RowFit {
     const row = rowWidth(Array<number>(count).fill(button), gap);
     // The fullscreen button and the room either side of it: as far from my row as its buttons are apart.
     const corner = gap + M + EDGE;
-    if (row + 2 * corner <= picture) return { folded: [], size, beside: false };
+    if (corner + row + corner <= picture) return { folded: [], size, beside: false };
     if (EDGE + row + corner <= picture) return { folded: [], size, beside: true };
   }
   // Too narrow even for M beside it: still beside it, reaching past the picture's left edge, so no

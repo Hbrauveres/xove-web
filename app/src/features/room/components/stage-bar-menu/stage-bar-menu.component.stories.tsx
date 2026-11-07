@@ -6,7 +6,7 @@ const meta = {
   title: "Room/Stage bar menu",
   component: StageBarMenu,
   args: {
-    role: "menu",
+    kind: "menu",
     children: (
       <>
         <MenuRow role="menuitem" icon="screen-on" label="Share your screen" onPick={() => undefined} />
@@ -17,7 +17,14 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <div style={{ position: "relative", display: "flex", justifyContent: "flex-end", padding: "10rem var(--space-6) var(--space-6)" }}>
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          justifyContent: "flex-end",
+          padding: "10rem var(--space-6) var(--space-6)",
+        }}
+      >
         <span style={{ position: "relative", width: "var(--control-sm)", height: "var(--control-sm)" }}>
           <Story />
         </span>

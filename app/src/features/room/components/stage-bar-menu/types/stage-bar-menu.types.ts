@@ -1,8 +1,8 @@
-import type { AriaRole, ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export interface StageBarMenuProps {
-  /** `menu` for a list of actions (Go live's); `group` where it also holds sliders ("…"). */
-  role: AriaRole;
+  /** `menu` for a list of actions (Go live's); `group` where it also holds sliders ("…"), a fieldset. */
+  kind: "menu" | "group";
   id?: string | undefined;
   "aria-label"?: string | undefined;
   /**

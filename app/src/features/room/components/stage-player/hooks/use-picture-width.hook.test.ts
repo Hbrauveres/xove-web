@@ -31,9 +31,8 @@ describe("the picture's width", () => {
     const sizes = watchSizes();
     const el = layer(480);
     const hook = renderHook(() => usePictureWidth());
-    act(() => hook.result.current.ref(el));
+    act(() => hook.result.current.setLayer(el));
     expect(hook.result.current.width).toBe(480);
-    expect(hook.result.current.el).toBe(el);
     el.getBoundingClientRect = () => ({ width: 190 }) as DOMRect;
     sizes.resize();
     expect(hook.result.current.width).toBe(190);
@@ -42,16 +41,31 @@ describe("the picture's width", () => {
   it("stops watching when the layer goes", () => {
     const sizes = watchSizes();
     const hook = renderHook(() => usePictureWidth());
-    act(() => hook.result.current.ref(layer(480)));
-    act(() => hook.result.current.ref(null));
+    act(() => hook.result.current.setLayer(layer(480)));
+    act(() => hook.result.current.setLayer(null));
     expect(sizes.disconnect).toHaveBeenCalled();
   });
 
   it("is unknown while the layer isn't laid out", () => {
     watchSizes();
     const hook = renderHook(() => usePictureWidth());
-    act(() => hook.result.current.ref(layer(0)));
+    act(() => hook.result.current.setLayer(layer(0)));
     expect(hook.result.current.width).toBeNull();
+  });
+
+  it("remembers Go live's width as last shown on the layer", () => {
+    const sizes = watchSizes();
+    const el = layer(480);
+    const pill = document.createElement("span");
+    pill.dataset.foldKey = "go-live";
+    pill.getBoundingClientRect = () => ({ width: 82.4 }) as DOMRect;
+    el.append(pill);
+    const hook = renderHook(() => usePictureWidth());
+    act(() => hook.result.current.setLayer(el));
+    expect(hook.result.current.goLive).toBe(83);
+    pill.remove();
+    sizes.resize();
+    expect(hook.result.current.goLive).toBe(83);
   });
 
   it("is unknown until there's a layer", () => {

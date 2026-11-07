@@ -2,7 +2,7 @@ import type { StreamKind } from "@services/xove-api-service";
 import type { StreamControls } from "@features/room/types/stream-controls.types";
 import type { RoomHearing } from "../../../types/room-hearing.types";
 import type { SettingsAnchor } from "../../../types/settings-anchor.types";
-import type { RowFit } from "../../stage-player/types/row-fold.types";
+import type { RowFit } from "../../../types/row-fit.types";
 import type { Sharer } from "../../../types/room-view.types";
 
 export interface StageControlsProps {

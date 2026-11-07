@@ -15,6 +15,12 @@
   box-shadow: 0 var(--space-2-5) var(--space-7-5) var(--black-50);
 }
 
+/* A fieldset ("…"'s group): none of its own frame or spacing. */
+fieldset.menu {
+  min-inline-size: var(--viewer-menu-width);
+  margin: 0;
+}
+
 /*
  * Centred on the picture: placed in the bar over someone else's stream, which starts 12 px in and
  * ends clear of the fullscreen button (12 + 34 + 10 px in), so the picture's centre is half that
