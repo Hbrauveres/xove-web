@@ -11,7 +11,7 @@ export default defineConfig({
   testMatch: "**/*.e2e.ts",
   // Every case records its own files; a case runs alone, so they run side by side.
   fullyParallel: true,
-  workers: process.env.E2E_WORKERS ? Number(process.env.E2E_WORKERS) : 4,
+  workers: process.env.E2E_WORKERS ? Number(process.env.E2E_WORKERS) : 10,
   retries: 0,
   timeout: 60_000,
   reporter: [["list"], ["json", { outputFile: `${process.env.E2E_OUT ?? "test-results"}/results.json` }]],
