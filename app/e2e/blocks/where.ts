@@ -2,40 +2,9 @@
 // blocks' tests.
 import type { Locator, Page } from "@playwright/test";
 import { openScene, wakeStage } from "../support/open.ts";
-
-/** The colours the blocks are checked against (tokens.css). */
-export const COLOR = {
-  accent: "rgb(239, 75, 75)",
-  accentLight: "rgb(243, 106, 106)",
-  accentInk: "rgb(58, 8, 8)",
-  text: "rgb(235, 235, 236)",
-  muted: "rgb(154, 154, 159)",
-  glass: "rgba(10, 10, 11, 0.72)",
-  glassLit: "rgba(40, 40, 44, 0.85)",
-};
-
-/** Points at the middle of an element, as a mouse would, in a few steps (scrolled into view first,
- * as a person would on a short window). */
-export async function pointAt(page: Page, target: Locator): Promise<void> {
-  await target.evaluate((el) => el.scrollIntoView({ block: "nearest", inline: "nearest" }));
-  const b = await target.boundingBox();
-  if (b) await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 4 });
-}
-
-/** The pointer over the picture's upper part, waking its controls without touching one (a fixed
- * point lands on a button at one size and above the picture on a monitor on its side). */
-export async function overPicture(page: Page): Promise<void> {
-  const fullscreen = await page.getByRole("button", { name: "Fullscreen" }).boundingBox();
-  const stage = await page.getByRole("region", { name: "Shared screen" }).boundingBox();
-  if (!stage) return;
-  // Level with the picture's middle, a third of the way down from the stage's top; the picture
-  // ends above Fullscreen, so the third is kept above that.
-  const bottom = fullscreen ? fullscreen.y : stage.y + stage.height;
-  await page.mouse.move(stage.x + stage.width / 2, stage.y + (bottom - stage.y) / 3);
-}
-
-/** The pointer somewhere neutral, out of the stage's buttons' way (the page's top-left corner). */
-export const pointAway = (page: Page) => page.mouse.move(2, 2, { steps: 2 });
+import { stageOf } from "../support/stage.ts";
+import { untilStill } from "../support/timing.ts";
+import { myMenu } from "../header/header.ts";
 
 /** Someone else's stream on the stage (Marina's), its controls awake. */
 export async function watching(page: Page, extra = ""): Promise<void> {
@@ -48,7 +17,7 @@ export async function sharingMyScreen(page: Page): Promise<void> {
   await openScene(page, "s=empty");
   await page.getByRole("button", { name: "Share your screen" }).click();
   await page.getByRole("button", { name: "Stop sharing your screen" }).waitFor();
-  await page.waitForTimeout(600);
+  await stageOf(page).locator(`video[aria-label="Your shared screen"]`).waitFor();
   await wakeStage(page);
 }
 
@@ -57,38 +26,32 @@ export async function myCameraOn(page: Page): Promise<void> {
   await openScene(page, "s=empty");
   await page.getByRole("button", { name: "Turn on your camera" }).click();
   await page.getByRole("button", { name: "Turn off your camera" }).waitFor();
-  await page.waitForTimeout(600);
+  await stageOf(page).locator(`video[aria-label="Your camera"]`).waitFor();
   await wakeStage(page);
 }
 
-/** The settings, opened from the empty stage's cog, on a tab. */
+/** The settings, opened from the empty stage's cog, on a tab, settled. */
 export async function settingsOn(page: Page, tab: "Screen" | "Camera" | "Voice"): Promise<Locator> {
   await openScene(page, "s=empty");
   await page.getByRole("button", { name: "Settings" }).click();
   const panel = page.getByRole("dialog", { name: "Settings" });
-  await panel.getByRole("tab", { name: tab }).click();
-  await page.waitForTimeout(tab === "Camera" ? 1200 : 400);
+  const its = panel.getByRole("tab", { name: tab });
+  await its.click();
+  await panel.getByRole("tabpanel", { name: tab }).waitFor();
+  await untilStill(panel);
   return panel;
 }
 
-/** My menu, opened from my account button in the header. */
-export async function myMenu(page: Page, extra = ""): Promise<Locator> {
+/** My menu, opened from my account button in the header, settled. */
+export async function openMyMenu(page: Page, extra = ""): Promise<Locator> {
   await openScene(page, `s=live${extra}`);
   await page.getByRole("button", { name: /: account/ }).click();
-  const menu = page.getByRole("dialog", { name: "Account" });
+  const menu = myMenu(page);
   await menu.waitFor();
-  await page.waitForTimeout(400);
+  await untilStill(menu);
   return menu;
-}
-
-/** Presses Tab until `target` has the focus (at most `max` times). */
-export async function tabTo(page: Page, target: Locator, max = 12): Promise<void> {
-  for (let i = 0; i < max; i++) {
-    if (await target.evaluate((e) => e === document.activeElement)) return;
-    await page.keyboard.press("Tab");
-  }
 }
 
 /** A computed style of an element's pseudo-element (`::before`, `::after`). */
 export const pseudo = (l: Locator, which: string, prop: string) =>
-  l.evaluate((e, [w, p]) => getComputedStyle(e, w).getPropertyValue(p!), [which, prop] as const);
+  l.evaluate((e, [w, p]) => getComputedStyle(e, w).getPropertyValue(p), [which, prop] as const);

@@ -1,11 +1,18 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
+import { boxOf } from "../support/geometry.ts";
+import { everyoneStops } from "../support/harness.ts";
 import { FIXED_TIME, openScene } from "../support/open.ts";
-import { boxOf, pictureOf, pointAt } from "./below.ts";
+import { pointAt } from "../support/pointer.ts";
+import { pictureOf } from "../support/stage.ts";
+import { stageUpFor, watch } from "./below.ts";
+
+/** How far the clock moves on while the duration is watched (ms): from 1:12:40 to 1:13:45. */
+const LATER_MS = 65_000;
 
 /** The line under the name: LIVE, what, how long, who's watching. */
-const metaOf = (page: import("@playwright/test").Page) => page.getByRole("paragraph").filter({ hasText: "LIVE" });
+const metaOf = (page: Page) => page.getByRole("paragraph").filter({ hasText: "LIVE" });
 
 test("F-now-watching.1 who's on the stage: name, LIVE, what, how long and how many watch", async ({ page }, info) => {
   await openScene(page, "s=live");
@@ -33,8 +40,8 @@ test("F-now-watching.2 the duration counts up, nothing beside it moving", async 
   const meta = metaOf(page);
   const live = meta.getByText("LIVE", { exact: true });
   const seen = await observe(page, info, { name, live, meta }, async () => {
-    await page.clock.setFixedTime(new Date(FIXED_TIME.getTime() + 65_000));
-    await page.waitForTimeout(1200);
+    await page.clock.setFixedTime(new Date(FIXED_TIME.getTime() + LATER_MS));
+    await expect(meta).toContainText("1:13:45");
   });
   await expect.soft(meta).toContainText("1:13:45");
   expect.soft(drift(seen.frames, "name")).toBeLessThan(1);
@@ -48,7 +55,7 @@ test("F-now-watching.3 pointing at who's watching names them", async ({ page }, 
   const tip = page.getByRole("tooltip");
   await observe(page, info, { watching, tip }, async () => {
     await pointAt(page, watching);
-    await page.waitForTimeout(400);
+    await expect(tip).toBeVisible();
   });
   await expect.soft(tip).toHaveText("Henrique, Rafa, Ana");
   // The sharer isn't among them.
@@ -63,9 +70,7 @@ test("F-now-watching.4 what they share, in words", async ({ page }, info) => {
   });
   await expect.soft(meta).toContainText("Screen with camera");
   await openScene(page, "s=live");
-  await page.getByRole("button", { name: "Watch Ana · camera" }).click();
-  await page.waitForTimeout(1500);
-  await expect.soft(page.getByRole("heading", { name: "Ana", level: 2 })).toBeVisible();
+  await watch(page, "Ana · camera");
   await expect.soft(metaOf(page)).toContainText(/^LIVECamera1:35/);
 });
 
@@ -74,7 +79,7 @@ test("F-now-watching.5 another stream on the stage changes the row to its sharer
   const meta = metaOf(page);
   const seen = await observe(page, info, { meta, heading: page.getByRole("heading", { level: 2 }) }, async () => {
     await page.getByRole("button", { name: "Watch Rafa · screen" }).click();
-    await page.waitForTimeout(1500);
+    await stageUpFor(page, "Rafa");
   });
   await expect.soft(page.getByRole("heading", { name: "Rafa", level: 2 })).toBeVisible();
   await expect.soft(page.getByRole("heading", { name: "Marina", level: 2 })).toHaveCount(0);
@@ -86,8 +91,8 @@ test("F-now-watching.6 with nobody live it says so, and who's here", async ({ pa
   await openScene(page, "s=live");
   const empty = page.getByRole("heading", { name: "Nobody is sharing yet", level: 2 });
   await observe(page, info, { empty }, async () => {
-    await page.evaluate(() => (window as unknown as { __xove: { everyoneStops: () => void } }).__xove.everyoneStops());
-    await page.waitForTimeout(2500);
+    await everyoneStops(page);
+    await expect(empty).toBeVisible();
   });
   await expect.soft(empty).toBeVisible();
   await expect.soft(page.getByText("Marina, Rafa and Ana are here.")).toBeVisible();

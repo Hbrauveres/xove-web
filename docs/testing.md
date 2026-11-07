@@ -101,6 +101,18 @@ Every feature of the app has numbered test cases, each written as given / when /
 
 Phones get only the phone notice, so their sizes run the tests tagged `@phone`.
 
+What the tests share lives once in `e2e/support/`, one module per concern; an area's own file (`e2e/stage/stage.ts`, `e2e/settings/settings.ts`, …) keeps only what's specific to it:
+
+- `open.ts`: opening a scene, settled on conditions (the room up, its picture playing, nothing moving), and waking the stage's controls.
+- `geometry.ts`: an element's box (`boxOf` fails when it isn't on the screen), boxes compared (`inside(inner, outer)`, `overlap`), their centres, the window.
+- `pointer.ts`: the mouse and keyboard as a person uses them: `pointAt` (scrolled to first), `clickAt`, `restOn`, `pointAway`, `overPicture`, `tabTo`.
+- `screen.ts`: what reaches the screen: `shownOpacity` (times its ancestors'), `onTop`, and `patchOf`, a patch of a screenshot measured.
+- `harness.ts`: the harness's knobs: people starting and stopping, the room's sound unlocks counted, a stream of another shape or width, a voice turned on.
+- `stage.ts`: the stage, its picture, its buttons, whether its controls are shown, the tooltip on show.
+- `timing.ts`: the times a case may spend, named once (the app's own constants), and `untilStill`, waiting until nothing finite is moving.
+- `looks.ts`: the looks a case checks, by the app's token names, resolved by the page into computed values.
+- `observe.ts`, `track.ts`, `frames.ts`, `state.ts`: recording an action, frame by frame, and reading the frames.
+
 Each test opens a scene (`e2e/support/open.ts`: the clock fixed, the pictures still), and records its action with `observe` (`e2e/support/observe.ts`): the named elements' state before and after (shown, where, how they look, what a screen reader hears), a screenshot of each, every animation frame while it happens, and a strip of screenshots through it. `blinks`, `drift` and `transitioned` (`e2e/support/frames.ts`) turn the frames into "must not" checks: an element that must stay never dims or disappears, never moves. The checks are `expect.soft`, so a test records everything and reports every failure. Eight browsers run at once (`E2E_WORKERS` sets another number). `E2E_OUT` says where the records go; `E2E_BASE_URL` runs the same tests against another copy of the app.
 
 ## Pictures and sizes

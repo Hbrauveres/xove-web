@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { blinks } from "../support/frames.ts";
+import { computed } from "../support/looks.ts";
 import { openScene } from "../support/open.ts";
 import { observe } from "../support/observe.ts";
 
@@ -74,7 +75,9 @@ test("F-request-access.4 a request already sent shows Request sent, its dot puls
   await expect.soft(status).toHaveText("Waiting for approval");
   const dot = status.locator("span[aria-hidden]");
   await expect.soft(dot).toHaveCSS("animation-name", /pulse/);
-  await expect.soft(dot).toHaveCSS("animation-duration", "1.6s");
+  await expect
+    .soft(dot)
+    .toHaveCSS("animation-duration", await computed(page, "animation-duration", "var(--duration-1600)"));
   await expect.soft(page.getByRole("textbox")).toHaveCount(0);
   await expect.soft(page.getByRole("button", { name: "Request access" })).toHaveCount(0);
   await expect.soft(page.getByRole("button", { name: "Use another account" })).toBeVisible();

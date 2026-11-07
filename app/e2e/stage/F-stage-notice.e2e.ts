@@ -1,7 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
 import { observe } from "../support/observe.ts";
 import { openScene } from "../support/open.ts";
-import { everyoneStops, marinaGoesLive, stageOf, type Box } from "./stage.ts";
+import type { Box } from "../support/geometry.ts";
+import { everyoneStops, marinaGoesLive } from "../support/harness.ts";
+import { stageParts } from "./stage.ts";
 
 // The harness's loading notice lasts a moment: the stream's video goes before the room's list says
 // it stopped. Each moment it's on the stage is recorded from inside the page as it happens.
@@ -51,9 +53,10 @@ const notices = (page: Page) => page.evaluate(() => (window as unknown as { __no
 async function loadingMoment(page: Page, info: Parameters<typeof observe>[1]): Promise<NoticeSeen[]> {
   await openScene(page, "s=live");
   await recordNotices(page);
-  await observe(page, info, { view: stageOf(page).view }, async () => {
+  await observe(page, info, { view: stageParts(page).view }, async () => {
     await everyoneStops(page);
-    await page.waitForTimeout(900);
+    // Until the stage stands empty: the notice has come and gone.
+    await page.getByRole("heading", { name: "Go live" }).waitFor();
   });
   return notices(page);
 }
@@ -93,7 +96,7 @@ test("F-stage-notice.3 a notice never fades with the controls, and a screen read
 
 test("F-stage-notice.4 once the stream is gone, the notice gives way to the empty stage", async ({ page }, info) => {
   await loadingMoment(page, info);
-  await expect.soft(stageOf(page).view.locator("output")).toHaveCount(0);
+  await expect.soft(stageParts(page).view.locator("output")).toHaveCount(0);
   await expect.soft(page.getByText("Loading Marina's screen…")).toHaveCount(0);
   await expect.soft(page.getByRole("heading", { name: "Go live" })).toBeVisible();
 });
@@ -101,11 +104,11 @@ test("F-stage-notice.4 once the stream is gone, the notice gives way to the empt
 test("F-stage-notice.5 a stream that starts plays without a notice once its video is there", async ({ page }, info) => {
   await openScene(page, "s=empty");
   await recordNotices(page);
-  const marina = stageOf(page).box.getByLabel("Marina's shared screen");
-  await observe(page, info, { view: stageOf(page).view }, async () => {
+  const marina = stageParts(page).box.getByLabel("Marina's shared screen");
+  await observe(page, info, { view: stageParts(page).view }, async () => {
     await marinaGoesLive(page);
-    await page.waitForTimeout(2600);
+    await marina.waitFor();
   });
   await expect.soft(marina).toBeVisible();
-  await expect.soft(stageOf(page).view.locator("output")).toHaveCount(0);
+  await expect.soft(stageParts(page).view.locator("output")).toHaveCount(0);
 });

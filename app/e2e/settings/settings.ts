@@ -1,15 +1,11 @@
 // What the settings' cases share: my own stream with the settings open over it, the panel and its
-// parts, resting the pointer on something, a record of controls greyed even for a moment, and how the
-// glass measures over a busy picture.
-import type { Locator, Page } from "@playwright/test";
+// parts, moving the pointer off to a calm spot, a record of controls greyed even for a moment, and
+// parts of the page hidden while the glass is measured.
+import { expect, type Locator, type Page } from "@playwright/test";
 import { openScene, wakeStage } from "../support/open.ts";
-
-export interface Box {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
+import { boxOf } from "../support/geometry.ts";
+import { pictureOf, stageOf } from "../support/stage.ts";
+import { LEAVE_GRACE_MS, spend, untilStill } from "../support/timing.ts";
 
 /** The settings panel. */
 export const panelOf = (page: Page) => page.getByRole("dialog", { name: "Settings" });
@@ -37,39 +33,29 @@ export async function myStream(page: Page, query = "s=empty", { camera = false }
     await page.getByRole("button", { name: "Turn on your camera" }).first().click();
     await page.getByRole("button", { name: "Turn off your camera" }).waitFor();
   }
-  await page.waitForTimeout(500);
+  // My picture on the stage, its controls' layer in place.
+  await stageOf(page).getByLabel("Your shared screen").waitFor();
+  await pictureOf(page).waitFor();
   await wakeStage(page);
 }
 
-/** The settings opened from my stream's cog, settled (in, 260 ms). */
+/** The settings opened from my stream's cog, its unrolling over. */
 export async function openSettings(page: Page): Promise<void> {
   await wakeStage(page);
   await myButtons(page).cog.click();
   await panelOf(page).waitFor();
-  await page.waitForTimeout(400);
+  await untilStill(panelOf(page));
 }
 
-/** The pointer resting on an element's middle, as a person moving to it, for `ms` after (scrolled
- * into view first, as a person would on a short window). */
-export async function restOn(page: Page, target: Locator, ms = 450): Promise<void> {
-  await target.first().evaluate((el) => el.scrollIntoView({ block: "nearest", inline: "nearest" }));
-  const b = await target.first().boundingBox();
-  if (!b) throw new Error("Nothing to rest on: the element isn't on the screen");
-  await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 6 });
-  await page.waitForTimeout(ms);
-}
-
-/** The pointer moved off to a calm spot of the stage, above the buttons and away from the panel. */
-export async function moveAway(page: Page, ms = 450): Promise<void> {
-  const stage = await page.getByRole("region", { name: "Shared screen" }).boundingBox();
-  if (!stage) return;
+/**
+ * The pointer moved off to a calm spot of the stage, above the buttons and away from the panel,
+ * past the leave grace: what it rested on counts as left.
+ */
+export async function moveAway(page: Page): Promise<void> {
+  const stage = await boxOf(stageOf(page));
   await page.mouse.move(stage.x + stage.width * 0.15, stage.y + stage.height * 0.3, { steps: 4 });
-  await page.waitForTimeout(ms);
-}
-
-/** A locator's box, or a zero box where it isn't. */
-export async function boxOf(locator: Locator): Promise<Box> {
-  return (await locator.first().boundingBox()) ?? { x: 0, y: 0, width: 0, height: 0 };
+  await spend(page, LEAVE_GRACE_MS);
+  await untilStill(page);
 }
 
 /** Clicks an option of a segmented control (its words), as a person does. */
@@ -111,44 +97,17 @@ export async function startGreyWatch(page: Page): Promise<() => Promise<string[]
     });
 }
 
-/** What a patch of the screen holds: its mean brightness (0–255), its spread (5th to 95th percentile), its sharpest step between neighbours. */
-export interface Patch {
-  mean: number;
-  spread: number;
-  step: number;
-}
-
-/** Measures a patch of the screen, as a person sees it. */
-export async function measure(page: Page, clip: Box): Promise<Patch> {
-  const png = await page.screenshot({ clip, scale: "css" });
-  return page.evaluate(async (data) => {
-    const bytes = Uint8Array.from(atob(data), (c) => c.charCodeAt(0));
-    const bitmap = await createImageBitmap(new Blob([bytes], { type: "image/png" }));
-    const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
-    const ctx = canvas.getContext("2d")!;
-    ctx.drawImage(bitmap, 0, 0);
-    const { data: px, width, height } = ctx.getImageData(0, 0, bitmap.width, bitmap.height);
-    const lum = new Float32Array(width * height);
-    for (let i = 0; i < width * height; i++)
-      lum[i] = 0.2126 * px[i * 4]! + 0.7152 * px[i * 4 + 1]! + 0.0722 * px[i * 4 + 2]!;
-    const sorted = [...lum].sort((a, b) => a - b);
-    const at = (q: number) => sorted[Math.min(sorted.length - 1, Math.floor(q * sorted.length))]!;
-    let step = 0;
-    for (let y = 0; y < height; y++)
-      for (let x = 1; x < width; x++) step = Math.max(step, Math.abs(lum[y * width + x]! - lum[y * width + x - 1]!));
-    for (let y = 1; y < height; y++)
-      for (let x = 0; x < width; x++) step = Math.max(step, Math.abs(lum[y * width + x]! - lum[(y - 1) * width + x]!));
-    const mean = lum.reduce((a, b) => a + b, 0) / lum.length;
-    return { mean, spread: at(0.95) - at(0.05), step };
-  }, png.toString("base64"));
-}
-
-/** Hides parts of the page while measuring, by a CSS rule; the returned function puts them back. */
+/**
+ * Hides what `selector` finds while measuring, by a CSS rule, once it's hidden; the returned
+ * function puts it back and waits until it shows again.
+ */
 export async function hide(page: Page, selector: string): Promise<() => Promise<void>> {
+  const target: Locator = page.locator(selector).first();
+  const shown = await target.isVisible();
   const tag = await page.addStyleTag({ content: `${selector} { visibility: hidden !important; }` });
-  await page.waitForTimeout(100);
+  await expect(target).toBeHidden();
   return async () => {
     await tag.evaluate((el) => (el as Element).remove());
-    await page.waitForTimeout(100);
+    if (shown) await expect(target).toBeVisible();
   };
 }

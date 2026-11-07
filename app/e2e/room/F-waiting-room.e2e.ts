@@ -1,8 +1,10 @@
 import { expect, test } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
+import { boxOf, centreX, inside, windowBox } from "../support/geometry.ts";
 import { openScene } from "../support/open.ts";
-import { OFFER, answerSeat, boxOf, centreX, inside, pointAt, windowBox } from "./room.ts";
+import { pointAt } from "../support/pointer.ts";
+import { AFTER_POLL, OFFER, answerSeat } from "./room.ts";
 
 const QUEUE = "s=live&page=waiting";
 
@@ -19,7 +21,7 @@ test("F-waiting-room.1 the room full: my place in plain words, on a card in the 
     .toContainText("You're number 2 in line. Keep this page open: when a seat frees, a popup asks you to enter.");
   await expect.soft(card).toHaveAttribute("aria-live", "polite");
   const box = await boxOf(card);
-  expect.soft(inside(windowBox(page), box)).toBe(true);
+  expect.soft(inside(box, windowBox(page))).toBe(true);
   expect.soft(Math.abs(centreX(box) - windowBox(page).width / 2)).toBeLessThan(1);
   // Nothing of the room while waiting: no stage, no header, no footer.
   await expect.soft(page.getByRole("region", { name: "Shared screen" })).toHaveCount(0);
@@ -33,7 +35,7 @@ test("F-waiting-room.2 moving up to first: the words change by themselves, the c
   const heading = page.getByRole("heading", { name: "The room is full" });
   const seen = await observe(page, info, { card, heading }, async () => {
     await answerSeat(page, { status: "waiting", place: 1 });
-    await expect(card).toContainText("You're next in line.", { timeout: 4000 });
+    await expect(card).toContainText("You're next in line.", AFTER_POLL);
   });
   await expect
     .soft(card)
@@ -49,19 +51,19 @@ test("F-waiting-room.3 the API out of reach: it says so and keeps trying, my pla
   const error = page.getByText("Couldn't reach the room. Trying again…");
   await observe(page, info, { card, error }, async () => {
     await answerSeat(page, "down");
-    await expect(error).toBeVisible({ timeout: 4000 });
+    await expect(error).toBeVisible(AFTER_POLL);
   });
   await expect.soft(error).toBeVisible();
   await expect.soft(card).toContainText("You're number 2 in line.");
   // Back on its feet: the next poll clears the message.
   await answerSeat(page, { status: "waiting", place: 2 });
-  await expect.soft(error).toHaveCount(0, { timeout: 4000 });
+  await expect.soft(error).toHaveCount(0, AFTER_POLL);
 });
 
 test("F-waiting-room.4 after leaving the queue, one button joins it again", async ({ page }, info) => {
   await openScene(page, QUEUE);
   await answerSeat(page, OFFER);
-  await page.getByRole("dialog", { name: "It's your turn" }).waitFor({ timeout: 4000 });
+  await page.getByRole("dialog", { name: "It's your turn" }).waitFor(AFTER_POLL);
   await page.getByRole("button", { name: "Cancel" }).click();
   await answerSeat(page, { status: "waiting", place: 4 });
   const left = page.getByRole("heading", { name: "You left the queue" });
@@ -71,7 +73,7 @@ test("F-waiting-room.4 after leaving the queue, one button joins it again", asyn
   await observe(page, info, { left, again }, async () => {
     await again.click();
   });
-  await expect.soft(page.getByRole("heading", { name: "The room is full" })).toBeVisible({ timeout: 4000 });
+  await expect.soft(page.getByRole("heading", { name: "The room is full" })).toBeVisible(AFTER_POLL);
   await expect.soft(page.getByText("You're number 4 in line.", { exact: false })).toBeVisible();
   await expect.soft(left).toHaveCount(0);
 });
@@ -88,6 +90,6 @@ test("F-waiting-room.5 Sign out, under the card, takes me to the sign-in page", 
     await pointAt(page, signOut);
     await signOut.click();
   });
-  await expect.soft(page.getByRole("link", { name: "Continue with Google" })).toBeVisible({ timeout: 4000 });
+  await expect.soft(page.getByRole("link", { name: "Continue with Google" })).toBeVisible(AFTER_POLL);
   await expect.soft(page.getByRole("heading", { name: "The room is full" })).toHaveCount(0);
 });

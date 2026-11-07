@@ -1,8 +1,12 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
+import { boxOf } from "../support/geometry.ts";
+import { everyoneStops } from "../support/harness.ts";
 import { openScene } from "../support/open.ts";
-import { boxOf, pictureOf, pointAt } from "./below.ts";
+import { pointAt } from "../support/pointer.ts";
+import { pictureOf } from "../support/stage.ts";
+import { stageUpFor } from "./below.ts";
 
 const previewsOf = (page: Page) => page.getByRole("list", { name: "Other streams" }).getByRole("button");
 const placesOf = (page: Page) => page.getByRole("figure");
@@ -52,7 +56,6 @@ test("F-also-live.2 pointing at a preview rings it in red, nothing moving", asyn
   const atRest = await ringOf(rafa);
   const seen = await observe(page, info, { rafa, ana, pill }, async () => {
     await pointAt(page, rafa);
-    await page.waitForTimeout(300);
   });
   const pointed = await ringOf(rafa);
   expect.soft(pointed).not.toEqual(atRest);
@@ -70,7 +73,7 @@ test("F-also-live.3 a click puts that stream on the stage, the one there becomes
   const places = placesOf(page);
   const seen = await observe(page, info, { places, previews: previewsOf(page) }, async () => {
     await page.getByRole("button", { name: "Watch Rafa · screen" }).click();
-    await page.waitForTimeout(1500);
+    await stageUpFor(page, "Rafa");
   });
   await expect.soft(page.getByRole("heading", { name: "Rafa", level: 2 })).toBeVisible();
   await expect
@@ -88,7 +91,7 @@ test("F-also-live.4 with the keyboard, Enter on a preview puts it on the stage",
   await ana.focus();
   await observe(page, info, { ana }, async () => {
     await page.keyboard.press("Enter");
-    await page.waitForTimeout(1500);
+    await stageUpFor(page, "Ana");
   });
   await expect.soft(page.getByRole("heading", { name: "Ana", level: 2 })).toBeVisible();
   await expect.soft(previewsOf(page)).toHaveText(["Marina · screen", "Rafa · screen"]);
@@ -104,7 +107,7 @@ test("F-also-live.5 the places show how many are live, and say it when pointed a
   await expect.soft(places.locator("i[data-on]")).toHaveCount(3);
   const seen = await observe(page, info, { places, tip }, async () => {
     await pointAt(page, places);
-    await page.waitForTimeout(400);
+    await expect(tip).toBeVisible();
   });
   await expect.soft(tip).toHaveText("3 of 6 live · 3 seats open");
   expect.soft(drift(seen.frames, "places")).toBeLessThan(1);
@@ -116,8 +119,9 @@ test("F-also-live.6 with nobody live there are no previews, every place open, th
   await openScene(page, "s=live");
   const places = placesOf(page);
   const seen = await observe(page, info, { places }, async () => {
-    await page.evaluate(() => (window as unknown as { __xove: { everyoneStops: () => void } }).__xove.everyoneStops());
-    await page.waitForTimeout(2500);
+    await everyoneStops(page);
+    // The room's next poll brings it: the places say it.
+    await expect(places).toHaveAccessibleName("0 of 6 live, 6 seats open");
   });
   await expect.soft(previewsOf(page)).toHaveCount(0);
   await expect.soft(places).toHaveAccessibleName("0 of 6 live, 6 seats open");

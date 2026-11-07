@@ -2,7 +2,17 @@ import { expect, test, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
 import { openScene, wakeStage } from "../support/open.ts";
-import { boxOf, clickAt, control, inside, pictureOf, pointAt, shapePicture, shownTip } from "./controls.ts";
+import { boxOf, inside } from "../support/geometry.ts";
+import { pictureWidth } from "../support/harness.ts";
+import { clickAt, restOn } from "../support/pointer.ts";
+import { control, pictureOf, shownTip } from "../support/stage.ts";
+import { TIP_REST_MS } from "../support/timing.ts";
+
+/** The picture made `width` px wide, as a stream that narrow would make it; then the controls woken. */
+async function shapePicture(page: Page, width: number) {
+  await pictureWidth(page, width);
+  await wakeStage(page);
+}
 
 /** Picture widths (CSS px): too narrow for the whole bar, narrower still, and wide enough for it. */
 const NARROW = 172;
@@ -30,8 +40,8 @@ test("F-more-menu.1 on a narrow picture Go live and both sounds fold into …, f
   await expect.soft(control(page, "Go live")).toHaveCount(0);
   await expect.soft(control(page, "No sound in this stream")).toHaveCount(0);
   await expect.soft(control(page, "Marina's mic is off")).toHaveCount(0);
-  expect.soft(await inside(more, pictureOf(page))).toBe(true);
-  expect.soft(await inside(full, pictureOf(page))).toBe(true);
+  expect.soft(inside(await boxOf(more), await boxOf(pictureOf(page)))).toBe(true);
+  expect.soft(inside(await boxOf(full), await boxOf(pictureOf(page)))).toBe(true);
   const m = await boxOf(more);
   const f = await boxOf(full);
   expect.soft(m.x + m.width).toBeLessThanOrEqual(f.x);
@@ -46,7 +56,7 @@ test("F-more-menu.2 a wider picture folds nothing", async ({ page }, info) => {
   await observe(page, info, { goLive }, () => shapePicture(page, WIDE));
   await expect.soft(goLive).toBeVisible();
   await expect.soft(control(page, "More controls")).toHaveCount(0);
-  expect.soft(await inside(goLive, pictureOf(page))).toBe(true);
+  expect.soft(inside(await boxOf(goLive), await boxOf(pictureOf(page)))).toBe(true);
 });
 
 test("F-more-menu.3 … opens its menu centred on the picture, holding what folded", async ({ page }, info) => {
@@ -54,8 +64,7 @@ test("F-more-menu.3 … opens its menu centred on the picture, holding what fold
   const more = control(page, "More controls");
   const menu = group(page);
   // Pointed at, it says what it is.
-  await pointAt(page, more);
-  await page.waitForTimeout(400);
+  await restOn(page, more, TIP_REST_MS);
   await expect.soft(shownTip(page)).toHaveText("More");
   const seen = await observe(page, info, { more, menu }, async () => {
     await more.click();
@@ -125,7 +134,7 @@ test("F-more-menu.6 Settings from … opens the settings, and … closes", async
   const dialog = page.getByRole("dialog", { name: "Settings" });
   await observe(page, info, { item, dialog }, async () => {
     await item.click();
-    await page.waitForTimeout(400);
+    await dialog.waitFor();
   });
   await expect.soft(dialog).toBeVisible();
   await expect.soft(group(page)).toHaveCount(0);

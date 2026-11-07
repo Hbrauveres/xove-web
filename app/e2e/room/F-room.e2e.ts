@@ -1,8 +1,11 @@
 import { expect, test } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
+import { boxOf, inside, overlap, windowBox } from "../support/geometry.ts";
+import { everyoneStops, marinaGoesLive } from "../support/harness.ts";
 import { openScene, wakeStage } from "../support/open.ts";
-import { boxOf, everyoneStops, inside, marinaGoesLive, overlap, roomOf, windowBox } from "./room.ts";
+import { REPORT_STILL_MS } from "../../src/features/room/constants/watch-report.constants.ts";
+import { AFTER_POLL, roomOf } from "./room.ts";
 
 test("F-room.1 the room fills the window: header, stage and footer, nothing to scroll", async ({ page }, info) => {
   await openScene(page, "s=live");
@@ -14,7 +17,7 @@ test("F-room.1 the room fills the window: header, stage and footer, nothing to s
   expect.soft(Math.abs(f.y + f.height - win.height)).toBeLessThan(1);
   expect.soft(h.y + h.height).toBeLessThanOrEqual(m.y + 0.5);
   expect.soft(m.y + m.height).toBeLessThanOrEqual(f.y + 0.5);
-  expect.soft(inside(m, s)).toBe(true);
+  expect.soft(inside(s, m)).toBe(true);
   expect.soft(overlap(h, f)).toBe(false);
   const scroll = await page.evaluate(() => ({
     down: document.documentElement.scrollHeight - window.innerHeight,
@@ -43,7 +46,7 @@ test("F-room.3 someone going live appears on the stage by itself, the page aroun
   const video = stage.getByLabel("Marina's shared screen");
   const seen = await observe(page, info, { header, footer, video }, async () => {
     await marinaGoesLive(page);
-    await expect(video).toBeVisible({ timeout: 4000 });
+    await expect(video).toBeVisible(AFTER_POLL);
   });
   await expect.soft(video).toBeVisible();
   await expect.soft(stage.getByRole("heading", { name: "Marina", level: 2 })).toBeVisible();
@@ -62,7 +65,7 @@ test("F-room.4 everyone stopping empties the stage by itself, the page around it
   const nobody = page.getByRole("heading", { name: "Nobody is sharing yet" });
   const seen = await observe(page, info, { header, footer, nobody }, async () => {
     await everyoneStops(page);
-    await expect(nobody).toBeVisible({ timeout: 4000 });
+    await expect(nobody).toBeVisible(AFTER_POLL);
   });
   await expect.soft(nobody).toBeVisible();
   await expect.soft(stage.locator("video")).toHaveCount(0);
@@ -85,7 +88,7 @@ test("F-room.5 what I watch is told to the room: my face joins its watchers", as
   });
   await expect.soft(stage.getByRole("heading", { name: "Rafa", level: 2 })).toBeVisible();
   // Reported after a second of stillness, then back with the next poll (2 s): I'm Rafa's one watcher.
-  await expect.soft(row).toContainText("1 watching", { timeout: 4500 });
+  await expect.soft(row).toContainText("1 watching", { timeout: AFTER_POLL.timeout + REPORT_STILL_MS });
   await expect.soft(row.getByText("3 watching")).toHaveCount(0);
 });
 
@@ -96,13 +99,13 @@ test("F-room.6 my own screen goes live and is counted by the room, and stops the
   const mine = stage.getByLabel("Your shared screen");
   await observe(page, info, { share, mine }, async () => {
     await share.click();
-    await expect(mine).toBeVisible({ timeout: 4000 });
+    await expect(mine).toBeVisible(AFTER_POLL);
   });
   await expect.soft(mine).toBeVisible();
-  await expect.soft(page.getByRole("figure", { name: "1 of 6 live, 5 seats open" })).toBeVisible({ timeout: 4000 });
+  await expect.soft(page.getByRole("figure", { name: "1 of 6 live, 5 seats open" })).toBeVisible(AFTER_POLL);
   await wakeStage(page);
   await page.getByRole("button", { name: "Stop sharing your screen" }).click();
-  await expect.soft(mine).toHaveCount(0, { timeout: 4000 });
-  await expect.soft(page.getByRole("figure", { name: "0 of 6 live, 6 seats open" })).toBeVisible({ timeout: 4000 });
+  await expect.soft(mine).toHaveCount(0, AFTER_POLL);
+  await expect.soft(page.getByRole("figure", { name: "0 of 6 live, 6 seats open" })).toBeVisible(AFTER_POLL);
   await expect.soft(page.getByRole("heading", { name: "Nobody is sharing yet" })).toBeVisible();
 });

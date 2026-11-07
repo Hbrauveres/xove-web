@@ -28,6 +28,10 @@ async function settled(page: Page, query: string): Promise<void> {
   if (other !== null && other !== "room") {
     await page.getByRole("heading").first().waitFor();
   } else {
+    // A phone or a tablet gets only the phone notice: no room to wait for.
+    const notice = page.getByRole("heading", { name: "See you on the big screen." });
+    await stageOf(page).or(notice).first().waitFor();
+    if (await notice.isVisible()) return untilStill(page);
     await hooksReady(page);
     await stageOf(page).waitFor();
     if (LIVE_SCENES.has(params.get("s") ?? "")) {

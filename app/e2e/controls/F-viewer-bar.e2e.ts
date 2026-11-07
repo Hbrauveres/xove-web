@@ -1,22 +1,16 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
 import { openScene, wakeStage } from "../support/open.ts";
-import {
-  boxOf,
-  clickAt,
-  control,
-  inside,
-  middleY,
-  opacityOf,
-  openWithVoice,
-  pictureOf,
-  pointAt,
-  shownIcons,
-  shownTip,
-  sliderOpen,
-  tabTo,
-} from "./controls.ts";
+import { boxOf, inside } from "../support/geometry.ts";
+import { clickAt, restOn, tabTo } from "../support/pointer.ts";
+import { shownOpacity } from "../support/screen.ts";
+import { chromeOf, control, pictureOf, shownTip, stageOf } from "../support/stage.ts";
+import { HOVER_REST_MS, REST_MS, untilStill } from "../support/timing.ts";
+import { middleY, openWithVoice, shownIcons, sliderOpen } from "./controls.ts";
+
+/** Whether the picture's box holds the control's whole box. */
+const onPicture = async (page: Page, target: Locator) => inside(await boxOf(target), await boxOf(pictureOf(page)));
 
 test("F-viewer-bar.1 over someone else's stream, their sounds at the left and Go live at the right, level with fullscreen", async ({
   page,
@@ -29,7 +23,7 @@ test("F-viewer-bar.1 over someone else's stream, their sounds at the left and Go
   const seen = await observe(page, info, { sound, voice, goLive, full }, () => wakeStage(page));
   for (const c of [sound, voice, goLive, full]) {
     await expect.soft(c).toBeVisible();
-    expect.soft(await inside(c, pictureOf(page))).toBe(true);
+    expect.soft(await onPicture(page, c)).toBe(true);
     expect.soft(Math.abs((await middleY(c)) - (await middleY(full)))).toBeLessThan(1);
   }
   await expect.soft(sound).toHaveAttribute("aria-pressed", "false");
@@ -71,8 +65,8 @@ test("F-viewer-bar.3 resting on a sound unrolls its own slider over it, and leav
   const slider = page.getByLabel("Screen sound volume");
   expect.soft(await sliderOpen(slider)).toBe(false);
   const seen = await observe(page, info, { sound, slider }, async () => {
-    await pointAt(page, sound);
-    await page.waitForTimeout(500);
+    await restOn(page, sound, REST_MS);
+    await expect.poll(() => sliderOpen(slider)).toBe(true);
   });
   expect.soft(await sliderOpen(slider)).toBe(true);
   const s = await boxOf(sound);
@@ -85,7 +79,8 @@ test("F-viewer-bar.3 resting on a sound unrolls its own slider over it, and leav
   // The mouse leaves: a moment later (300 ms) the slider rolls back.
   const stage = await boxOf(pictureOf(page));
   await page.mouse.move(stage.x + stage.width / 2, stage.y + stage.height / 3, { steps: 4 });
-  await page.waitForTimeout(800);
+  await expect.poll(() => sliderOpen(slider)).toBe(false);
+  await untilStill(stageOf(page), { property: "opacity" });
   expect.soft(await sliderOpen(slider)).toBe(false);
 });
 
@@ -94,15 +89,13 @@ test("F-viewer-bar.4 the keyboard's focus opens a sound's slider and Enter mutes
   await wakeStage(page);
   const sound = control(page, /the screen's sound/);
   const slider = page.getByLabel("Screen sound volume");
-  let reached = false;
   const seen = await observe(page, info, { sound }, async () => {
-    reached = await tabTo(page, sound);
-    await page.waitForTimeout(300);
+    await tabTo(page, sound);
+    await expect.poll(() => sliderOpen(slider)).toBe(true);
   });
-  expect.soft(reached).toBe(true);
   expect.soft(await sliderOpen(slider)).toBe(true);
   // Focus from the keyboard shows the red ring: the controls don't fade while it's there.
-  expect.soft(await opacityOf(sound)).toBeGreaterThan(0.9);
+  expect.soft(await shownOpacity(sound)).toBeGreaterThan(0.9);
   await page.keyboard.press("Enter");
   await expect.soft(sound).toHaveAccessibleName("Unmute the screen's sound");
   await expect.soft(sound).toHaveAttribute("aria-pressed", "true");
@@ -120,10 +113,10 @@ test("F-viewer-bar.5 a sound that can't be heard is greyed and says why", async 
   await expect.soft(voice).toHaveAttribute("aria-disabled", "true");
   expect.soft(await shownIcons(sound)).toEqual(["volume-off"]);
   expect.soft(await shownIcons(voice)).toEqual(["voice-off"]);
-  expect.soft(await opacityOf(voice)).toBeLessThan(0.6);
+  expect.soft(await shownOpacity(voice)).toBeLessThan(0.6);
   const seen = await observe(page, info, { voice }, async () => {
-    await pointAt(page, voice);
-    await page.waitForTimeout(500);
+    await restOn(page, voice, HOVER_REST_MS);
+    await shownTip(page).waitFor();
   });
   // Pointed at, its tooltip says why; no slider unrolls.
   await expect.soft(shownTip(page)).toHaveText("Marina's mic is off");
@@ -147,17 +140,18 @@ test("F-viewer-bar.6 a heard voice stays when the controls fade, the rest fade a
     info,
     { voice, sound, goLive },
     async () => {
-      // Out of the stage, still: about 2.5 s later the controls fade.
+      // Out of the stage: the controls fade.
       await page.mouse.move(2, 2);
-      await page.waitForTimeout(3500);
+      await expect(chromeOf(page)).toHaveAttribute("data-chrome", "hidden");
+      await untilStill(stageOf(page), { property: "opacity" });
     },
     { strip: 10, gap: 350 },
   );
-  await expect.soft(page.locator('[data-chrome="hidden"]')).toHaveCount(1);
-  expect.soft(await opacityOf(voice)).toBeGreaterThan(0.9);
-  expect.soft(await opacityOf(sound)).toBeLessThan(0.05);
-  expect.soft(await opacityOf(goLive)).toBeLessThan(0.05);
+  await expect.soft(chromeOf(page)).toHaveAttribute("data-chrome", "hidden");
+  expect.soft(await shownOpacity(voice)).toBeGreaterThan(0.9);
+  expect.soft(await shownOpacity(sound)).toBeLessThan(0.05);
+  expect.soft(await shownOpacity(goLive)).toBeLessThan(0.05);
   // The voice takes the sound's place, alone in the corner: still inside the picture.
-  expect.soft(await inside(voice, pictureOf(page))).toBe(true);
+  expect.soft(await onPicture(page, voice)).toBe(true);
   expect.soft(blinks(seen.frames, "voice")).toEqual([]);
 });

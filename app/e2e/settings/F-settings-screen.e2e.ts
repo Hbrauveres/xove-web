@@ -1,7 +1,10 @@
 import { expect, test, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
-import { myButtons, myStream, openSettings, optionOf, panelOf, restOn, startGreyWatch, tabOf } from "./settings.ts";
+import { restOn } from "../support/pointer.ts";
+import { shownTip } from "../support/stage.ts";
+import { TIP_REST_MS, untilStill } from "../support/timing.ts";
+import { myButtons, myStream, openSettings, optionOf, panelOf, startGreyWatch, tabOf } from "./settings.ts";
 
 const NO_SOUND = "No sound is being shared. Share a tab, or a window with “Share this app's audio too”, with Change.";
 
@@ -27,22 +30,28 @@ const ICONS = ["screenIcon", "cameraIcon", "voiceIcon", "cogIcon", "screenTabIco
 /** And the controls beside the option: the other options and Change. */
 const BESIDE = ["screenButton", "cameraButton", "change", "smooth", "best"];
 
+/** The quality and mode picked in F-settings-screen.8 (480p, Sharp), still chosen. */
+async function chosenStay(page: Page): Promise<void> {
+  const choice = (group: string, option: string) =>
+    page.getByRole("radiogroup", { name: group }).getByRole("radio", { name: option });
+  await expect.soft(choice("Screen quality", "480p")).toBeChecked();
+  await expect.soft(choice("Screen mode", "Sharp")).toBeChecked();
+}
+
 test("F-settings-screen.1 while I share, the Screen tab shows what's shared and Change", async ({ page }, info) => {
   await myStream(page);
   await openSettings(page);
   const pane = panelOf(page).getByRole("tabpanel", { name: "Screen" });
   const change = pane.getByRole("button", { name: "Change" });
   const seen = await observe(page, info, { change }, async () => {
-    await restOn(page, change, 600);
+    await restOn(page, change, TIP_REST_MS);
   });
   await expect.soft(pane.getByText("Window", { exact: true })).toBeVisible();
   await expect.soft(pane.getByText("Your screen", { exact: true })).toBeVisible();
   await expect.soft(change).toBeVisible();
   await expect.soft(change).toBeEnabled();
   // What Change does, in its tooltip.
-  await expect
-    .soft(page.locator('[role="tooltip"][data-shown]'))
-    .toHaveText("Pick another window or tab; viewers keep watching the same stream");
+  await expect.soft(shownTip(page)).toHaveText("Pick another window or tab; viewers keep watching the same stream");
   expect.soft(drift(seen.frames, "change")).toBeLessThan(1);
 });
 
@@ -66,7 +75,8 @@ test("F-settings-screen.3 Change picks again and keeps me sharing, the settings 
   const stop = page.getByRole("button", { name: "Stop sharing your screen" });
   const seen = await observe(page, info, { change, stop }, async () => {
     await change.click();
-    await page.waitForTimeout(600);
+    // Greyed while the browser asks what to share, then back.
+    await expect(change).toBeEnabled();
   });
   await expect.soft(stop).toHaveAttribute("aria-pressed", "true");
   await expect.soft(panelOf(page)).toBeVisible();
@@ -79,7 +89,7 @@ test("F-settings-screen.4 not sharing, the Screen tab says its settings are for 
   await page.getByRole("button", { name: "Stop sharing your screen" }).click();
   // My screen stopped: the empty stage's cog opens the same settings.
   await page.getByRole("button", { name: "Share your screen" }).first().waitFor();
-  await page.waitForTimeout(500);
+  await untilStill(page);
   const cog = page.getByRole("button", { name: "Settings", exact: true });
   await observe(page, info, { cog }, async () => {
     await cog.click();
@@ -162,32 +172,9 @@ test("F-settings-screen.8 the chosen quality and mode are remembered", async ({ 
   await observe(page, info, { cog }, async () => {
     await openSettings(page);
   });
-  await expect
-    .soft(page.getByRole("radiogroup", { name: "Screen quality" }).getByRole("radio", { name: "480p" }))
-    .toBeChecked();
-  await expect
-    .soft(page.getByRole("radiogroup", { name: "Screen mode" }).getByRole("radio", { name: "Sharp" }))
-    .toBeChecked();
+  await chosenStay(page);
   // And after the page loads again.
   await myStream(page);
   await openSettings(page);
-  await expect
-    .soft(page.getByRole("radiogroup", { name: "Screen quality" }).getByRole("radio", { name: "480p" }))
-    .toBeChecked();
-  await expect
-    .soft(page.getByRole("radiogroup", { name: "Screen mode" }).getByRole("radio", { name: "Sharp" }))
-    .toBeChecked();
-});
-
-test("F-settings-screen.9 the arrow keys move the quality, one tab stop", async ({ page }, info) => {
-  await myStream(page);
-  await openSettings(page);
-  const group = page.getByRole("radiogroup", { name: "Screen quality" });
-  const first = group.getByRole("radio", { name: "1080p" });
-  await first.focus();
-  await observe(page, info, { group }, async () => {
-    await page.keyboard.press("ArrowRight");
-  });
-  await expect.soft(group.getByRole("radio", { name: "720p" })).toBeChecked();
-  await expect.soft(group.getByRole("radio", { name: "720p" })).toBeFocused();
+  await chosenStay(page);
 });

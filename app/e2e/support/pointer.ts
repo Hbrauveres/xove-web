@@ -56,8 +56,7 @@ export async function overPicture(page: Page): Promise<void> {
 }
 
 /** Whether `target` has the keyboard's focus. */
-export const focused = (target: Locator): Promise<boolean> =>
-  target.first().evaluate((el) => el === document.activeElement);
+const focused = (target: Locator): Promise<boolean> => target.first().evaluate((el) => el === document.activeElement);
 
 /** Presses Tab until `target` has the focus; fails after `max` presses. */
 export async function tabTo(page: Page, target: Locator, max = 40): Promise<void> {

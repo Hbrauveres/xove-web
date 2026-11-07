@@ -30,7 +30,7 @@ export interface ObserveOptions {
 }
 
 /** The case id from a test's title: "F-stage-controls.3 the icon stays" → "F-stage-controls.3". */
-export const caseOf = (info: TestInfo) => info.title.split(" ")[0] ?? info.title;
+const caseOf = (info: TestInfo) => info.title.split(" ")[0] ?? info.title;
 
 /** Records `action` on `page`, watching `targets`; returns what it saw. */
 export async function observe(

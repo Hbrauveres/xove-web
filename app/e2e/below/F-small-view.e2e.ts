@@ -1,18 +1,14 @@
 import { expect, test, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
+import { boxOf, inside, overlap } from "../support/geometry.ts";
+import { pictureWidth } from "../support/harness.ts";
 import { openScene, wakeStage } from "../support/open.ts";
-import {
-  boxOf,
-  focusedName,
-  inside,
-  narrowPicture,
-  overlap,
-  pictureOf,
-  pointAt,
-  shownOpacity,
-  smallViewOf,
-} from "./below.ts";
+import { focusedName, pointAt } from "../support/pointer.ts";
+import { shownOpacity } from "../support/screen.ts";
+import { chromeOf, pictureOf, stageOf } from "../support/stage.ts";
+import { untilStill } from "../support/timing.ts";
+import { smallViewOf } from "./below.ts";
 
 /** The small view's width on a picture this wide: a quarter, else 200 px, else the whole picture. */
 const widthOn = (picture: number) => Math.max(0.24 * picture, Math.min(200, picture));
@@ -21,6 +17,12 @@ const opened = async (page: Page) => {
   await openScene(page, "s=facecam");
   await wakeStage(page);
 };
+
+/** The picture made `width` px wide, as a stream that narrow would make it; then the controls woken. */
+async function narrowPicture(page: Page, width: number) {
+  await pictureWidth(page, width);
+  await wakeStage(page);
+}
 
 test("F-small-view.1 it starts at the picture's top right, sized by the picture", async ({ page }, info) => {
   await openScene(page, "s=facecam");
@@ -34,7 +36,7 @@ test("F-small-view.1 it starts at the picture's top right, sized by the picture"
   await expect.soft(view).toHaveAttribute("aria-roledescription", "small view");
   const pic = await boxOf(pictureOf(page));
   const sv = await boxOf(view);
-  expect.soft(inside(pic, sv)).toBe(true);
+  expect.soft(inside(sv, pic)).toBe(true);
   expect.soft(Math.abs(sv.width - widthOn(pic.width))).toBeLessThan(1.5);
   expect.soft(Math.abs(sv.width / sv.height - 16 / 9)).toBeLessThan(0.02);
   // In the top right: its middle right of the picture's middle, its top in the picture's top tenth.
@@ -56,12 +58,12 @@ test("F-small-view.2 on a narrower picture it keeps 200 px, then the picture's w
   const p1 = await boxOf(pictureOf(page));
   const s1 = await boxOf(view);
   expect.soft(Math.abs(s1.width - widthOn(p1.width))).toBeLessThan(1.5);
-  expect.soft(inside(p1, s1)).toBe(true);
+  expect.soft(inside(s1, p1)).toBe(true);
   await narrowPicture(page, 150);
   const p2 = await boxOf(pictureOf(page));
   const s2 = await boxOf(view);
   expect.soft(Math.abs(s2.width - p2.width)).toBeLessThan(1.5);
-  expect.soft(inside(p2, s2)).toBe(true);
+  expect.soft(inside(s2, p2)).toBe(true);
   await expect.soft(page.getByRole("button", { name: "Swap views" })).toBeVisible();
   await expect.soft(page.getByRole("button", { name: "Hide the small view" })).toBeVisible();
 });
@@ -91,7 +93,7 @@ test("F-small-view.3 dragging moves it with the pointer, kept whole inside the p
   const far = await boxOf(view);
   expect.soft(Math.abs(far.x - pic.x)).toBeLessThan(1);
   expect.soft(Math.abs(far.y + far.height - (pic.y + pic.height))).toBeLessThan(1);
-  expect.soft(inside(pic, far)).toBe(true);
+  expect.soft(inside(far, pic)).toBe(true);
 });
 
 test("F-small-view.4 the arrow keys move it a twentieth of the picture, never past its edge", async ({
@@ -116,8 +118,10 @@ test("F-small-view.4 the arrow keys move it a twentieth of the picture, never pa
   for (let i = 0; i < 4; i++) await page.keyboard.press("ArrowRight");
   const right = await boxOf(view);
   expect.soft(Math.abs(right.x + right.width - (pic.x + pic.width))).toBeLessThan(1);
-  expect.soft(inside(pic, right)).toBe(true);
-  expect.soft(await focusedName(page)).toBe("Marina's camera: drag or use the arrow keys to move it");
+  expect.soft(inside(right, pic)).toBe(true);
+  await expect
+    .soft(page.getByRole("application", { name: "Marina's camera: drag or use the arrow keys to move it" }))
+    .toBeFocused();
 });
 
 test("F-small-view.5 Swap views trades the camera and the screen, the small view staying put", async ({
@@ -154,10 +158,10 @@ test("F-small-view.6 Hide folds it into the corner button, which takes the focus
   await expect.soft(corner).toBeVisible();
   const pic = await boxOf(pictureOf(page));
   const c = await boxOf(corner);
-  expect.soft(inside(pic, c)).toBe(true);
+  expect.soft(inside(c, pic)).toBe(true);
   // In the picture's top-right corner: its right edge as far in as its top edge.
   expect.soft(Math.abs(pic.x + pic.width - (c.x + c.width) - (c.y - pic.y))).toBeLessThan(1);
-  expect.soft(await focusedName(page)).toBe("Show the small view");
+  await expect.soft(corner).toBeFocused();
   expect.soft(drift(seen.frames, "fullscreen")).toBeLessThan(1);
   expect.soft(drift(seen.frames, "golive")).toBeLessThan(1);
   expect.soft(blinks(seen.frames, "fullscreen")).toEqual([]);
@@ -170,15 +174,16 @@ test("F-small-view.7 the corner button opens it where it was, the focus back on 
   await page.keyboard.press("ArrowLeft");
   const was = await boxOf(view);
   await page.getByRole("button", { name: "Hide the small view" }).click();
-  await page.waitForTimeout(400);
   const corner = page.getByRole("button", { name: "Show the small view" });
+  await expect(corner).toBeVisible();
+  await untilStill(stageOf(page));
   await observe(page, info, { view, corner }, async () => {
     await corner.click();
   });
   await expect.soft(view).toBeVisible();
   const now = await boxOf(view);
   expect.soft(Math.abs(now.x - was.x) + Math.abs(now.y - was.y)).toBeLessThan(1);
-  expect.soft(await focusedName(page)).toBe("Hide the small view");
+  await expect.soft(page.getByRole("button", { name: "Hide the small view" })).toBeFocused();
   await expect.soft(corner).toBeHidden();
 });
 
@@ -194,9 +199,10 @@ test("F-small-view.8 its buttons fade with the stage's controls, the picture sta
     info,
     { view, swap, hide, fullscreen },
     async () => {
-      // The mouse leaves the stage and rests: the controls fade after their idle time.
+      // The mouse leaves the stage (to the window's bottom-left corner): the controls fade.
       await page.mouse.move(5, (await boxOf(page.locator("body"))).height - 5, { steps: 4 });
-      await page.waitForTimeout(3200);
+      await expect(chromeOf(page)).toHaveAttribute("data-chrome", "hidden");
+      await untilStill(stageOf(page), { property: "opacity" });
     },
     { strip: 4, gap: 200 },
   );
@@ -222,12 +228,12 @@ test("F-small-view.9 on a picture too narrow for its buttons it folds by itself,
   });
   await expect.soft(view).toHaveCount(0);
   await expect.soft(corner).toBeVisible();
-  expect.soft(inside(await boxOf(pictureOf(page)), await boxOf(corner))).toBe(true);
+  expect.soft(inside(await boxOf(corner), await boxOf(pictureOf(page)))).toBe(true);
   expect.soft(await focusedName(page)).toBe("");
   // Opened from its corner there, it stays open for this picture.
   await corner.click();
-  await page.waitForTimeout(500);
   await expect.soft(view).toBeVisible();
-  await page.waitForTimeout(500);
+  // Nothing folds it again once its unfolding is over.
+  await untilStill(stageOf(page));
   await expect.soft(view).toBeVisible();
 });

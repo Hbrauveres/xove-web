@@ -1,18 +1,31 @@
 import { expect, test, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
-import { boxOf, myButtons, myStream, openSettings, panelOf, restOn, tabOf } from "./settings.ts";
+import { boxOf } from "../support/geometry.ts";
+import { restOn } from "../support/pointer.ts";
+import { shownTip } from "../support/stage.ts";
+import { HEAR_YOURSELF_MS, LOOK_EVERY_MS, METER_MS, TIP_REST_MS, untilStill } from "../support/timing.ts";
+import { myButtons, myStream, openSettings, panelOf, tabOf } from "./settings.ts";
+
+/** How long the countdown may take beyond its 5 s before the case fails (ms): a second's tick. */
+const COUNTDOWN_SLACK_MS = 1000;
+
+/** The Voice tab chosen and the panel still. */
+async function onVoiceTab(page: Page) {
+  await tabOf(page, "Voice").click();
+  await expect(tabOf(page, "Voice")).toHaveAttribute("aria-selected", "true");
+  await untilStill(panelOf(page));
+}
 
 /** The Voice tab of the settings, open over my stream; my voice turned on first if asked. */
 async function voiceTab(page: Page, { voice = false } = {}) {
   await myStream(page);
   if (voice) {
     await myButtons(page).voice.click();
-    await page.waitForTimeout(800);
+    await page.getByRole("button", { name: "Mute your voice" }).waitFor();
   }
   await openSettings(page);
-  await tabOf(page, "Voice").click();
-  await page.waitForTimeout(400);
+  await onVoiceTab(page);
   return panelOf(page).getByRole("tabpanel", { name: "Voice" });
 }
 
@@ -51,9 +64,9 @@ test("F-settings-voice.2 with my voice off, Test is greyed and says why", async 
   const test_ = pane.getByRole("button", { name: "Test: hear yourself" });
   await expect.soft(test_).toBeDisabled();
   await observe(page, info, { test: test_ }, async () => {
-    await restOn(page, test_, 600);
+    await restOn(page, test_, TIP_REST_MS);
   });
-  await expect.soft(page.locator('[role="tooltip"][data-shown]')).toHaveText("Turn your voice on to hear yourself");
+  await expect.soft(shownTip(page)).toHaveText("Turn your voice on to hear yourself");
   await expect.soft(meterOf(page)).not.toHaveAttribute("data-sent", "true");
   await expect.soft(tabOf(page, "Voice").locator("[data-live]")).toHaveCount(0);
 });
@@ -68,11 +81,17 @@ test("F-settings-voice.3 with my voice on, the level moves and goes green over t
     info,
     { meter },
     async () => {
-      for (let i = 0; i < 15; i++) {
-        levels.push(await levelOf(page));
-        sent.push((await meter.getAttribute("data-sent")) === "true");
-        await page.waitForTimeout(120);
-      }
+      // Read at the meter's own pace until it has moved and been sent at least once.
+      await expect
+        .poll(
+          async () => {
+            levels.push(await levelOf(page));
+            sent.push((await meter.getAttribute("data-sent")) === "true");
+            return Math.max(...levels) > Math.min(...levels) && sent.includes(true);
+          },
+          { intervals: [METER_MS] },
+        )
+        .toBe(true);
     },
     { strip: 4, gap: 200 },
   );
@@ -100,15 +119,19 @@ test("F-settings-voice.4 Test plays my voice back for 5 s, counting down", async
       await start.click();
       pressed = await button.getAttribute("aria-pressed");
       name = await button.getAttribute("aria-label");
-      // What it says, read every 100 ms until it's over (a little over 5 s).
-      for (let i = 0; i < 60; i++) {
-        const text = ((await button.textContent()) ?? "").trim();
-        if (said.at(-1) !== text) said.push(text);
-        if (text === "Test" && said.length > 1) break;
-        await page.waitForTimeout(100);
-      }
+      // What it says, read every frame until it's over (its 5 s).
+      await expect
+        .poll(
+          async () => {
+            const text = ((await button.textContent()) ?? "").trim();
+            if (said.at(-1) !== text) said.push(text);
+            return text === "Test" && said.length > 1;
+          },
+          { intervals: [LOOK_EVERY_MS], timeout: HEAR_YOURSELF_MS + COUNTDOWN_SLACK_MS },
+        )
+        .toBe(true);
     },
-    { strip: 3, gap: 100, settle: 100 },
+    { strip: 3, gap: 100 },
   );
   // While it plays, it's pressed and named for what a click does then.
   expect.soft(pressed).toBe("true");
@@ -117,7 +140,7 @@ test("F-settings-voice.4 Test plays my voice back for 5 s, counting down", async
   await expect.soft(start).toHaveAttribute("aria-pressed", "false");
   // It grows from its end: its right edge, at the column's end, stays put.
   const sizes = seen.frames.map((f) => f.seen.button?.box).filter((b) => b);
-  for (const b of sizes) expect.soft(Math.abs(b!.x + b!.w - (before.x + before.width))).toBeLessThan(1);
+  for (const b of sizes) if (b) expect.soft(Math.abs(b.x + b.w - (before.x + before.width))).toBeLessThan(1);
 });
 
 test("F-settings-voice.5 a click on Stop ends the test at once", async ({ page }, info) => {
@@ -146,7 +169,7 @@ test("F-settings-voice.6 a processing switch turns off with a click, remembered"
   expect.soft(drift(seen.frames, "noise")).toBeLessThan(1);
   await page.keyboard.press("Escape");
   await openSettings(page);
-  await tabOf(page, "Voice").click();
+  await onVoiceTab(page);
   await expect.soft(noise).not.toBeChecked();
 });
 
@@ -171,7 +194,7 @@ test("F-settings-voice.8 the microphone picker picks another mic", async ({ page
   const pill = pane.getByRole("button", { name: /^Microphone: / });
   await observe(page, info, { pill }, async () => {
     await pill.click();
-    await page.waitForTimeout(400);
+    await page.getByRole("menu", { name: "Microphone" }).waitFor();
   });
   const option = page
     .getByRole("menu", { name: "Microphone" })

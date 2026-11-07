@@ -1,8 +1,42 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { openScene, wakeStage } from "../support/open.ts";
 import { observe } from "../support/observe.ts";
-import { boxOf, hide, measure, myButtons, myStream, openSettings, panelOf, restOn, tabOf } from "./settings.ts";
+import { ROW_GAP } from "../../src/features/room/components/stage-player/constants/stage-player.constants.ts";
+import { boxOf, centreX } from "../support/geometry.ts";
+import { computed, LOOK, pxOf } from "../support/looks.ts";
+import { pointAt } from "../support/pointer.ts";
+import { patchOf } from "../support/screen.ts";
+import { stageOf } from "../support/stage.ts";
+import { untilStill } from "../support/timing.ts";
+import { hide, myButtons, myStream, openSettings, panelOf, tabOf } from "./settings.ts";
+
+/** Half a pixel of rounding, as the boxes allow. */
+const ROUNDING = 0.5;
+
+/**
+ * The panel's place and width against the stage: above `anchor`, ROW_GAP px clear of it, centred on
+ * it unless the stage's side holds it in (by its margin), a fifth of the player wide between the
+ * settings' two widths (less only where the stage itself is narrower).
+ */
+async function sitsOver(page: Page, anchor: Locator, { width = true } = {}) {
+  const p = await boxOf(panelOf(page));
+  const a = await boxOf(anchor);
+  const stage = await boxOf(stageOf(page));
+  const margin = await pxOf(page, "var(--space-2-5)");
+  expect.soft(a.y - (p.y + p.height)).toBeGreaterThanOrEqual(ROW_GAP - ROUNDING);
+  expect.soft(p.x).toBeGreaterThanOrEqual(stage.x);
+  expect.soft(p.x + p.width).toBeLessThanOrEqual(stage.x + stage.width + ROUNDING);
+  const centred = Math.abs(centreX(p) - centreX(a));
+  const heldIn = p.x - stage.x < margin + 1 || stage.x + stage.width - (p.x + p.width) < margin + 1;
+  expect.soft(centred < 1 || heldIn).toBe(true);
+  if (!width) return;
+  const narrowest = await pxOf(page, "var(--settings-width)");
+  const widest = await pxOf(page, "var(--settings-width-wide)");
+  const room = stage.width - (await pxOf(page, "var(--size-5)"));
+  expect.soft(p.width).toBeLessThanOrEqual(widest + ROUNDING);
+  expect.soft(p.width).toBeGreaterThanOrEqual(Math.min(narrowest - ROUNDING, room));
+}
 
 test("F-settings.1 the cog opens the settings over itself, above my buttons", async ({ page }, info) => {
   await myStream(page);
@@ -10,7 +44,7 @@ test("F-settings.1 the cog opens the settings over itself, above my buttons", as
   const seen = await observe(page, info, { cog, screen, camera, cogIcon: cog.locator("svg") }, async () => {
     await cog.click();
     await panelOf(page).waitFor();
-    await page.waitForTimeout(300);
+    await untilStill(panelOf(page));
   });
   const panel = panelOf(page);
   await expect.soft(panel).toBeVisible();
@@ -18,20 +52,9 @@ test("F-settings.1 the cog opens the settings over itself, above my buttons", as
   await expect.soft(panel.getByRole("tab")).toHaveText(["Screen", "Camera", "Voice"]);
   await expect.soft(tabOf(page, "Screen")).toHaveAttribute("aria-selected", "true");
   await expect.soft(tabOf(page, "Screen")).toBeFocused();
-  const p = await boxOf(panel);
-  const c = await boxOf(cog);
-  const stage = await boxOf(page.getByRole("region", { name: "Shared screen" }));
-  // Above the round buttons, 10 px clear of them, and inside the stage.
-  expect.soft(c.y - (p.y + p.height)).toBeGreaterThanOrEqual(9.5);
-  expect.soft(p.x).toBeGreaterThanOrEqual(stage.x);
-  expect.soft(p.x + p.width).toBeLessThanOrEqual(stage.x + stage.width + 0.5);
-  // Centred on the cog, unless the stage's side holds it in.
-  const centred = Math.abs(p.x + p.width / 2 - (c.x + c.width / 2));
-  const heldIn = p.x - stage.x < 11 || stage.x + stage.width - (p.x + p.width) < 11;
-  expect.soft(centred < 1 || heldIn).toBe(true);
-  // A fifth of the player wide, 280 to 320 px (less only where the stage itself is narrower).
-  expect.soft(p.width).toBeLessThanOrEqual(320.5);
-  expect.soft(p.width).toBeGreaterThanOrEqual(Math.min(279.5, stage.width - 20));
+  // Above the round buttons, 10 px clear of them, inside the stage, centred on the cog unless the
+  // stage's side holds it in; a fifth of the player wide, 280 to 320 px.
+  await sitsOver(page, cog);
   for (const name of ["cog", "screen", "camera"]) expect.soft(drift(seen.frames, name)).toBeLessThan(1);
   expect.soft(blinks(seen.frames, "cogIcon")).toEqual([]);
 });
@@ -48,19 +71,19 @@ test("F-settings.2 the glass hides the stream behind it, blurred and dimmed", as
     const s = getComputedStyle(el);
     return { filter: s.backdropFilter, background: s.backgroundColor, opacity: s.opacity };
   });
-  expect.soft(look.filter).toContain("blur(22px)");
-  expect.soft(look.filter).toContain("brightness(0.55)");
-  expect.soft(look.background).toBe("rgba(18, 18, 20, 0.74)");
+  // The panels' glass: blurred and dimmed (its filter), under a dark tint.
+  expect.soft(look.filter).toBe(await computed(page, "backdrop-filter", LOOK.panelFilter));
+  expect.soft(look.background).toBe(await computed(page, "background-color", LOOK.panel));
   expect.soft(look.opacity).toBe("1");
   // The same patch of the busy, still picture: without the panel, then through its glass alone.
   const p = await boxOf(panel);
   const inset = 24;
   const clip = { x: p.x + inset, y: p.y + inset, width: p.width - 2 * inset, height: p.height - 2 * inset };
   const showPanel = await hide(page, '[role="dialog"][aria-label="Settings"]');
-  const behind = await measure(page, clip);
+  const behind = await patchOf(page, clip);
   await showPanel();
   const showContents = await hide(page, '[role="dialog"][aria-label="Settings"] *');
-  const through = await measure(page, clip);
+  const through = await patchOf(page, clip);
   await showContents();
   info.annotations.push({ type: "glass", description: JSON.stringify({ behind, through }) });
   // The picture behind is busy (its stripes), so there's something to hide.
@@ -186,7 +209,7 @@ test("F-settings.8 from Go live's menu, over someone else's stream, the settings
   const seen = await observe(page, info, { goLive }, async () => {
     await item.click();
     await panelOf(page).waitFor();
-    await page.waitForTimeout(300);
+    await untilStill(panelOf(page));
   });
   const panel = panelOf(page);
   await expect.soft(panel).toBeVisible();
@@ -195,14 +218,7 @@ test("F-settings.8 from Go live's menu, over someone else's stream, the settings
     .soft(panel.getByText("You're not sharing. These are used the next time you do;", { exact: false }))
     .toBeVisible();
   await expect.soft(panel.locator("[data-live]")).toHaveCount(0);
-  const p = await boxOf(panel);
-  const g = await boxOf(goLive);
-  const stage = await boxOf(page.getByRole("region", { name: "Shared screen" }));
-  expect.soft(g.y - (p.y + p.height)).toBeGreaterThanOrEqual(9.5);
-  expect.soft(p.x + p.width).toBeLessThanOrEqual(stage.x + stage.width + 0.5);
-  const centred = Math.abs(p.x + p.width / 2 - (g.x + g.width / 2));
-  const heldIn = p.x - stage.x < 11 || stage.x + stage.width - (p.x + p.width) < 11;
-  expect.soft(centred < 1 || heldIn).toBe(true);
+  await sitsOver(page, goLive, { width: false });
   expect.soft(drift(seen.frames, "goLive")).toBeLessThan(1);
 });
 
@@ -216,7 +232,8 @@ test("F-settings.9 pointing at a tab lights its words; the chosen one stays lit"
   const chosen = await colour(screenTab);
   expect.soft(rest).not.toBe(chosen);
   const seen = await observe(page, info, { cameraTab, icon: cameraTab.locator("svg") }, async () => {
-    await restOn(page, cameraTab, 300);
+    await pointAt(page, cameraTab);
+    await untilStill(cameraTab);
   });
   expect.soft(await colour(cameraTab)).toBe(chosen);
   // Pointing isn't choosing.

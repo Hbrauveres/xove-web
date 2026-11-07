@@ -1,4 +1,6 @@
 import { expect, test } from "@playwright/test";
+import { boxOf, centreX, centreY, windowBox } from "../support/geometry.ts";
+import { computed, LOOK } from "../support/looks.ts";
 import { openScene } from "../support/open.ts";
 import { observe } from "../support/observe.ts";
 import { PHONE_TAG } from "../support/sizes.ts";
@@ -33,16 +35,14 @@ test(`F-phone-notice.2 the mark, the drawn computer, the headline with big scree
   });
   for (const l of [mark, art, heading, line]) await expect.soft(l).toBeInViewport({ ratio: 1 });
   await expect.soft(heading.locator("em")).toHaveText("big screen");
-  await expect.soft(heading.locator("em")).toHaveCSS("color", "rgb(239, 75, 75)");
+  await expect.soft(heading.locator("em")).toHaveCSS("color", await computed(page, "color", LOOK.accent));
   await expect.soft(line.locator("code")).toHaveText("xove.app");
-  await expect.soft(line.locator("code")).toHaveCSS("font-family", /IBM Plex Mono/);
+  await expect.soft(line.locator("code")).toHaveCSS("font-family", await computed(page, "font-family", LOOK.fontMono));
   // Top to bottom: the mark, the computer, the headline, the line.
-  const tops = await Promise.all([mark, art, heading, line].map(async (l) => (await l.boundingBox())?.y ?? 0));
+  const tops = await Promise.all([mark, art, heading, line].map(async (l) => (await boxOf(l)).y));
   expect.soft([...tops].sort((a, b) => a - b)).toEqual(tops);
   // Centred across the screen.
-  const box = await heading.boundingBox();
-  const width = page.viewportSize()?.width ?? 0;
-  expect.soft(Math.abs((box?.x ?? 0) + (box?.width ?? 0) / 2 - width / 2)).toBeLessThan(2);
+  expect.soft(Math.abs(centreX(await boxOf(heading)) - centreX(windowBox(page)))).toBeLessThan(2);
 });
 
 test(`F-phone-notice.3 nothing of the app: no button, no link, no room, no sign-in ${PHONE_TAG}`, async ({
@@ -81,8 +81,8 @@ test(`F-phone-notice.5 a touch on the notice changes nothing ${PHONE_TAG}`, asyn
   const heading = page.getByRole("heading", { name: "See you on the big screen." });
   const mark = page.getByRole("img", { name: "Xovê" });
   const seen = await observe(page, info, { heading, mark }, async () => {
-    const b = await heading.boundingBox();
-    if (b) await page.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2);
+    const b = await boxOf(heading);
+    await page.touchscreen.tap(centreX(b), centreY(b));
   });
   expect.soft(seen.after.heading?.box).toEqual(seen.before.heading?.box);
   expect.soft(seen.after.mark?.box).toEqual(seen.before.mark?.box);

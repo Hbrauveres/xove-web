@@ -1,14 +1,23 @@
 import { expect, test, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
+import { boxOf, centreX, inside, overlap, windowBox } from "../support/geometry.ts";
+import { pxOf } from "../support/looks.ts";
 import { openScene, wakeStage } from "../support/open.ts";
-import { boxOf, centreX, inside, overlap, pointAt, windowBox } from "./room.ts";
+import { pointAt, restOn, tabTo } from "../support/pointer.ts";
+import { shownTip, stageOf } from "../support/stage.ts";
+import { FRAME_MS, REST_MS, TIP_REST_MS, untilStill } from "../support/timing.ts";
+import { GAP } from "../../src/shared/components/tooltip/constants/tooltip.constants.ts";
+
+/** "At once": the tooltip gone by the next look, well before any rest. */
+const AT_ONCE = { timeout: 50 };
+/** Well under the tooltip's rest: a tooltip shown in this time didn't wait for one. */
+const UNDER_THE_REST = { timeout: (TIP_REST_MS * 2) / 3 };
 
 /** The tooltip that says `text`, shown or not. */
 // Hidden tooltips stay in the page (to describe their control): found by role, shown or not.
 const tipOf = (page: Page, text: string) =>
   page.locator('[role="tooltip"]').filter({ hasText: new RegExp(`^${text}$`) });
-const shownTips = (page: Page) => page.locator('[role="tooltip"][data-shown]');
 const button = (page: Page, name: string) => page.getByRole("button", { name, exact: true });
 
 test("F-floating.1 a tooltip shows after a short rest, above its control, inside the window", async ({
@@ -20,23 +29,23 @@ test("F-floating.1 a tooltip shows after a short rest, above its control, inside
   const tip = tipOf(page, "Fullscreen");
   const seen = await observe(page, info, { fullscreen, tip }, async () => {
     await pointAt(page, fullscreen);
-    await page.waitForTimeout(400);
+    await expect(tip).toBeVisible();
   });
   await expect.soft(tip).toHaveAttribute("data-shown", "true");
   await expect.soft(tip).toBeVisible();
-  await expect.soft(shownTips(page)).toHaveCount(1);
+  await expect.soft(shownTip(page)).toHaveCount(1);
   const t = await boxOf(tip);
   const b = await boxOf(fullscreen);
-  expect.soft(inside(windowBox(page), t)).toBe(true);
+  expect.soft(inside(t, windowBox(page))).toBe(true);
   expect.soft(overlap(t, b)).toBe(false);
-  // 10 px above its control, centred over it unless the window's edge is too close.
-  expect.soft(Math.abs(b.y - (t.y + t.height) - 10)).toBeLessThan(1);
-  expect.soft(t.width).toBeLessThanOrEqual(260.5);
-  // Not at once: the rest comes first (120 ms), so the first frames have no tooltip.
+  // Its gap above its control, centred over it unless the window's edge is too close.
+  expect.soft(Math.abs(b.y - (t.y + t.height) - GAP)).toBeLessThan(1);
+  expect.soft(t.width).toBeLessThanOrEqual((await pxOf(page, "var(--tooltip-width)")) + 0.5);
+  // Not at once: the rest comes first, so the first frames have no tooltip.
   const shownAt = seen.frames.findIndex((f) => (f.seen.tip?.opacity ?? 0) > 0.05);
   const firstT = seen.frames[0]?.t ?? 0;
   expect.soft(shownAt).toBeGreaterThan(0);
-  expect.soft((seen.frames[shownAt]?.t ?? 0) - firstT).toBeGreaterThanOrEqual(100);
+  expect.soft((seen.frames[shownAt]?.t ?? 0) - firstT).toBeGreaterThanOrEqual(TIP_REST_MS - FRAME_MS);
   expect.soft(drift(seen.frames, "fullscreen")).toBeLessThan(1);
 });
 
@@ -47,17 +56,17 @@ test("F-floating.2 the pointer leaving or pressing hides the tooltip at once", a
   const tip = tipOf(page, "Fullscreen");
   await pointAt(page, fullscreen);
   await expect(tip).toHaveAttribute("data-shown", "true");
-  const stage = await boxOf(page.getByRole("region", { name: "Shared screen" }));
+  const stage = await boxOf(stageOf(page));
   await observe(page, info, { fullscreen, tip }, async () => {
     await page.mouse.move(centreX(stage), stage.y + 200);
   });
-  await expect.soft(tip).not.toHaveAttribute("data-shown", { timeout: 50 });
-  await expect.soft(shownTips(page)).toHaveCount(0);
+  await expect.soft(tip).not.toHaveAttribute("data-shown", AT_ONCE);
+  await expect.soft(shownTip(page)).toHaveCount(0);
   // Back on it, then a press: gone as well, the button still there.
   await pointAt(page, fullscreen);
   await expect(tip).toHaveAttribute("data-shown", "true");
   await page.mouse.down();
-  await expect.soft(tip).not.toHaveAttribute("data-shown", { timeout: 50 });
+  await expect.soft(tip).not.toHaveAttribute("data-shown", AT_ONCE);
   await page.mouse.up();
   await expect.soft(fullscreen).toBeVisible();
 });
@@ -71,20 +80,14 @@ test("F-floating.3 along a row, the next tooltip shows at once and replaces the 
   const micTip = tipOf(page, "Marina's mic is off");
   await pointAt(page, sound);
   await expect(soundTip).toHaveAttribute("data-shown", "true");
-  const seen = await observe(
-    page,
-    info,
-    { sound, mic, soundTip, micTip },
-    async () => {
-      await pointAt(page, mic, 2);
-      // Well under the rest: shown already.
-      await expect(micTip).toHaveAttribute("data-shown", "true", { timeout: 80 });
-    },
-    { settle: 200 },
-  );
+  const seen = await observe(page, info, { sound, mic, soundTip, micTip }, async () => {
+    await pointAt(page, mic, { steps: 2 });
+    // Well under the rest: shown already.
+    await expect(micTip).toHaveAttribute("data-shown", "true", UNDER_THE_REST);
+  });
   await expect.soft(micTip).toHaveAttribute("data-shown", "true");
   await expect.soft(soundTip).not.toHaveAttribute("data-shown");
-  await expect.soft(shownTips(page)).toHaveCount(1);
+  await expect.soft(shownTip(page)).toHaveCount(1);
   expect.soft(drift(seen.frames, "sound")).toBeLessThan(1);
   expect.soft(drift(seen.frames, "mic")).toBeLessThan(1);
 });
@@ -94,12 +97,7 @@ test("F-floating.4 the keyboard's focus shows the tooltip, leaving it hides it",
   await wakeStage(page);
   const fullscreen = button(page, "Fullscreen");
   const tip = tipOf(page, "Fullscreen");
-  await observe(page, info, { fullscreen, tip }, async () => {
-    for (let i = 0; i < 30; i++) {
-      await page.keyboard.press("Tab");
-      if (await fullscreen.evaluate((el) => el === document.activeElement)) break;
-    }
-  });
+  await observe(page, info, { fullscreen, tip }, () => tabTo(page, fullscreen, 30));
   await expect.soft(fullscreen).toBeFocused();
   await expect.soft(tip).toHaveAttribute("data-shown", "true");
   await page.keyboard.press("Tab");
@@ -117,7 +115,7 @@ test("F-floating.5 what I opened stays when a tooltip shows elsewhere", async ({
   const tip = tipOf(page, "Fullscreen");
   const seen = await observe(page, info, { menu, tip, goLive }, async () => {
     await pointAt(page, fullscreen);
-    await page.waitForTimeout(400);
+    await expect(tip).toBeVisible();
   });
   await expect.soft(tip).toHaveAttribute("data-shown", "true");
   await expect.soft(menu).toBeVisible();
@@ -165,9 +163,10 @@ test("F-floating.8 a mouse rest never unrolls over what I opened", async ({ page
   await expect(panel).toBeVisible();
   const sound = button(page, "Mute the screen's sound");
   const slider = page.getByRole("slider", { name: "Screen sound volume" });
+  // A rest as long as the slider's, and what it would start over: then it'd be unrolling.
   const seen = await observe(page, info, { panel, sound, slider }, async () => {
-    await pointAt(page, sound);
-    await page.waitForTimeout(500);
+    await restOn(page, sound, REST_MS);
+    await untilStill(page);
   });
   await expect.soft(panel).toBeVisible();
   // The slider's drawer stays rolled up (it unrolls with data-open).
