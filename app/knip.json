@@ -1,6 +1,14 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "entry": ["src/main.tsx", "scripts/*.ts", "scripts/*.mjs"],
-  "project": ["src/**/*.{ts,tsx}", "scripts/**/*.{ts,mjs}"],
+  "entry": [
+    "src/main.tsx",
+    "scripts/*.ts",
+    "scripts/*.mjs",
+    "e2e/**/*.e2e.ts",
+    "e2e/support/*.test.ts",
+    "e2e/harness/livekit-client.ts",
+    "e2e/harness/vi.ts"
+  ],
+  "project": ["src/**/*.{ts,tsx}", "scripts/**/*.{ts,mjs}", "e2e/**/*.{ts,tsx}"],
   "ignoreDependencies": ["oxlint"]
 }

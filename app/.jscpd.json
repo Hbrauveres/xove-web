@@ -1,5 +1,5 @@
 {
-  "path": ["src"],
+  "path": ["src", "e2e"],
   "ignore": ["**/*.test.ts", "**/*.test.tsx", "**/*.stories.tsx", "**/test/**"],
   "minLines": 8,
   "minTokens": 60,
