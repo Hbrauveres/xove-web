@@ -10,13 +10,14 @@ import type { StagePlayerButtonsProps } from "./types/stage-player-buttons.types
 /**
  * My own buttons, L 48, centred over the bottom of my stream: my screen and camera, my mic, and the
  * cog for the settings, which open just above this row. A button that comes or goes never moves the
- * one under the pointer.
+ * one under the pointer. On a narrow picture it sits beside the fullscreen button, then gets smaller
+ * (the picture's layer says so); nothing in it folds.
  */
-export function StagePlayerButtons({ extra, ...props }: StagePlayerButtonsProps) {
+export function StagePlayerButtons({ extra, beside, ...props }: StagePlayerButtonsProps) {
   const anchor = useSettingsAnchor();
   const { ref } = usePinnedRow<HTMLDivElement>(anchor?.row);
   return (
-    <div className={styles.row}>
+    <div className={styles.row} data-beside={beside || undefined}>
       <div className={styles.buttons} ref={ref}>
         <StageStreamButton kind="screen" {...props} />
         <StageStreamButton kind="camera" {...props} />

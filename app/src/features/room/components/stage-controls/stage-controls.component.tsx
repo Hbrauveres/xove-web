@@ -13,11 +13,13 @@ import { hearProps } from "./utils/hear-props.util";
 /**
  * The stage's bar of controls. Over someone else's stream, what I hear at the left and me at the
  * right; over my own, my buttons in the middle with my mic; with nobody live, the settings in the
- * corner beside fullscreen, as over a stream. The settings open from what these controls hand over:
+ * corner beside fullscreen, as over a stream. On a narrow picture, what doesn't fit folds into "…"
+ * (`fit`), and my own row moves beside fullscreen. The settings open from what these controls hand over:
  * their cog and their row.
  */
 export function StageControls(props: StageControlsProps) {
-  const { big, controls, hearing, onStart, onSettings, onMenuChange } = props;
+  const { big, controls, hearing, onStart, onSettings, onMenuChange, fit } = props;
+  const folded = fit?.folded ?? [];
   const micOn = Boolean(controls.voice);
   const toggleMic = () => controls.onVoice?.();
   const mic = micState(micOn);
@@ -27,6 +29,7 @@ export function StageControls(props: StageControlsProps) {
       <StageViewerBar
         live={false}
         settingsOnly
+        folded={folded}
         canShareScreen={controls.canShareScreen}
         onStart={onStart}
         onSettings={onSettings}
@@ -39,6 +42,7 @@ export function StageControls(props: StageControlsProps) {
         live={controls.mine.screen || controls.mine.camera}
         micOn={micOn}
         onMic={toggleMic}
+        folded={folded}
         canShareScreen={controls.canShareScreen}
         {...(controls.free <= 0 ? { full: fullRoom(controls.places) } : {})}
         onStart={onStart}
@@ -52,6 +56,7 @@ export function StageControls(props: StageControlsProps) {
         onStart={onStart}
         onSettings={onSettings}
         onMenuChange={onMenuChange}
+        beside={fit?.beside}
         extra={
           <Tooltip text={mic.label}>
             <IconButton

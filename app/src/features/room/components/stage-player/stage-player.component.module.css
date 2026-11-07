@@ -34,6 +34,11 @@
     height var(--duration-350) ease;
 }
 
+/* My own row in M on a narrow picture: the fullscreen button stays level with it. */
+.onPicture[data-compact] {
+  --btn: var(--control-sm);
+}
+
 /* The round buttons: over the bottom centre, fading with the labels. */
 .controls {
   position: absolute;

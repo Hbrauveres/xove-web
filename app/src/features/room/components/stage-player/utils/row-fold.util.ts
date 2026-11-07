@@ -7,7 +7,6 @@ import {
   M,
   OWN_GAP_L,
   OWN_GAP_M,
-  OWN_TO_FULLSCREEN,
 } from "../constants/row-fold.constants";
 import type { FoldKey } from "../../../types/fold-key.types";
 import type { RowButton, RowFit, RowItems } from "../types/row-fold.types";
@@ -45,18 +44,20 @@ function fitOwn(picture: number, count: number): RowFit {
     ["m", M, OWN_GAP_M],
   ] as const) {
     const row = rowWidth(Array<number>(count).fill(button), gap);
-    const corner = OWN_TO_FULLSCREEN + M + EDGE;
+    // The fullscreen button and the room either side of it: as far from my row as its buttons are apart.
+    const corner = gap + M + EDGE;
     if (row + 2 * corner <= picture) return { folded: [], size, beside: false };
     if (EDGE + row + corner <= picture) return { folded: [], size, beside: true };
   }
-  // Too narrow even for M beside it: centred, reaching past the picture equally on both sides.
-  return { folded: [], size: "m", beside: false };
+  // Too narrow even for M beside it: still beside it, reaching past the picture's left edge, so no
+  // button ever lies over the fullscreen button.
+  return { folded: [], size: "m", beside: true };
 }
 
 /**
  * How the controls fit a picture this wide, in px: which buttons fold into "…", in the order of
  * `FOLD_ORDER`, and my own buttons' size and place. A row that still doesn't fit reaches past the
- * picture equally on both sides.
+ * picture, never over the fullscreen button.
  */
 export function rowFold(picture: number, items: RowItems): RowFit {
   return "viewer" in items ? foldBar(picture, items.viewer) : fitOwn(picture, items.own);

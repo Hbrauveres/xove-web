@@ -6,4 +6,6 @@ export type StagePlayerButtonsProps = StreamControls & {
   onMenuChange?: ((open: boolean) => void) | undefined;
   /** After my screen and camera, before the cog: my mic. */
   extra?: ReactNode;
+  /** No room to centre the row on the picture: it sits beside the fullscreen button. */
+  beside?: boolean | undefined;
 };

@@ -33,6 +33,7 @@ describe("the picture's width", () => {
     const hook = renderHook(() => usePictureWidth());
     act(() => hook.result.current.ref(el));
     expect(hook.result.current.width).toBe(480);
+    expect(hook.result.current.el).toBe(el);
     el.getBoundingClientRect = () => ({ width: 190 }) as DOMRect;
     sizes.resize();
     expect(hook.result.current.width).toBe(190);
@@ -44,6 +45,13 @@ describe("the picture's width", () => {
     act(() => hook.result.current.ref(layer(480)));
     act(() => hook.result.current.ref(null));
     expect(sizes.disconnect).toHaveBeenCalled();
+  });
+
+  it("is unknown while the layer isn't laid out", () => {
+    watchSizes();
+    const hook = renderHook(() => usePictureWidth());
+    act(() => hook.result.current.ref(layer(0)));
+    expect(hook.result.current.width).toBeNull();
   });
 
   it("is unknown until there's a layer", () => {

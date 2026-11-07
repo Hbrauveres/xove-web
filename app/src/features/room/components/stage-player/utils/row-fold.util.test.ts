@@ -49,7 +49,7 @@ describe("my own row", () => {
     expect(rowFold(225, { own: 3 })).toEqual({ folded: [], size: "m", beside: false });
   });
 
-  it("is centred, reaching past the picture on both sides, when even M doesn't fit", () => {
-    expect(rowFold(100, { own: 4 })).toEqual({ folded: [], size: "m", beside: false });
+  it("stays beside the fullscreen button, never over it, when even M doesn't fit", () => {
+    expect(rowFold(100, { own: 4 })).toEqual({ folded: [], size: "m", beside: true });
   });
 });

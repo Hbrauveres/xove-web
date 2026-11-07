@@ -85,6 +85,18 @@
   }
 }
 
+/* A row asking for the other size (my own row on a picture too narrow for L, see the stage's
+   player): the same as on a narrow stage. */
+:global([data-compact]) .l {
+  width: var(--control-sm);
+  height: var(--control-sm);
+}
+
+:global([data-compact]) .l svg {
+  width: var(--size-4);
+  height: var(--size-4);
+}
+
 /* A panel's close: clear, muted, lit when pointed at. */
 .close {
   display: grid;

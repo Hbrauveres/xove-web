@@ -23,8 +23,6 @@ export const BAR_TO_FULLSCREEN = 10;
 /** Between my own L buttons (--space-2-5), and my M ones (--space-1-5). */
 export const OWN_GAP_L = 10;
 export const OWN_GAP_M = 6;
-/** Between my own row and the fullscreen button beside it (--space-2). */
-export const OWN_TO_FULLSCREEN = 8;
 /** Go live's pill before it's been measured. */
 export const GO_LIVE_GUESS = 92;
 /** Go live's pill on the picture, measured while it's shown: its width depends on its words. */

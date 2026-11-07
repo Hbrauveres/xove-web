@@ -8,6 +8,8 @@ import { StageSmallViewButton } from "../stage-small-view-button";
 import { useBigQuality } from "./hooks/use-big-quality.hook";
 import { useFold } from "./hooks/use-fold.hook";
 import { useGoToMine } from "./hooks/use-go-to-mine.hook";
+import { usePictureWidth } from "./hooks/use-picture-width.hook";
+import { useRowFold } from "./hooks/use-row-fold.hook";
 import { useStageChrome } from "./hooks/use-stage-chrome.hook";
 import { useStageFullscreen } from "./hooks/use-stage-fullscreen.hook";
 import { useStageSettings } from "./hooks/use-stage-settings.hook";
@@ -15,6 +17,7 @@ import styles from "./stage-player.component.module.css";
 import type { StagePlayerProps } from "./types/stage-player.types";
 import { bigStreams } from "./utils/big-streams.util";
 import { chromeState, lightKey } from "./utils/player-look.util";
+import { rowShape } from "./utils/row-shape.util";
 
 /**
  * The player: the stage's whole box, holding the view and every control over it. The controls fade
@@ -38,6 +41,8 @@ export function StagePlayer(props: StagePlayerProps) {
   const startMine = useGoToMine(controls.onStart, stage.pick, sharers);
   useBigQuality(main, Boolean(stage.big?.isMe));
   const fold = useFold();
+  const picture = usePictureWidth();
+  const fit = useRowFold(picture.el, picture.width, rowShape(stage.big, controls));
 
   return (
     <div
@@ -62,7 +67,12 @@ export function StagePlayer(props: StagePlayerProps) {
         onStart={startMine}
       />
       {/* The controls sit on the picture, never on the dark around it: a layer with the view's size and place. */}
-      <div className={styles.onPicture} data-on-picture>
+      <div
+        ref={picture.ref}
+        className={styles.onPicture}
+        data-on-picture
+        data-compact={fit.size === "m" || undefined}
+      >
         {/* Over a stream and the empty stage alike: stopping the last stream never strands you in fullscreen. */}
         <StageStageOverlay fullscreen={fullscreen.fullscreen} onFullscreen={fullscreen.toggle} />
         <div className={styles.controls}>
@@ -74,6 +84,7 @@ export function StagePlayer(props: StagePlayerProps) {
             onStart={startMine}
             onSettings={settings.toggle}
             onMenuChange={chrome.onMenuChange}
+            fit={fit}
           />
           {small && <StageSmallViewButton fold={fold} />}
         </div>
