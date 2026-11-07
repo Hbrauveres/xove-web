@@ -175,6 +175,7 @@ Body line height is 1.5; headings balance their lines (`text-wrap: balance`). Fo
 | The mark's hover animation | about 3 s, once | — |
 
 - **Panels never clip, fade or filter** while they move: that would stop their blur. They unroll by their height.
+- **What's under the pointer stays put:** buttons may appear, fade and shift as controls come and go, but the one the pointer is on, and what belongs to it (its slider, its drop-up, its row), keeps its place until the pointer leaves that area; then the layout catches up. A click never lands on something that moved under it.
 - **With reduced motion**, every animation and transition is cut to nothing (a global rule), the mark doesn't play and the ambilight updates every 500 ms. A round button that comes or goes still never moves the one under the pointer.
 
 ## Tokens
