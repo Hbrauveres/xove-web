@@ -92,11 +92,11 @@ The stream and everything on and around it.
 <td><img src="img/today/stage-controls-showing.webp" width="720" alt="Its controls, shown while the pointer moves"><br><sub>Its controls, shown while the pointer moves</sub></td>
 </tr></table>
 
-The stream being watched, as large as the room allows, with its controls in the corners, and the info row and previews under it.
+The stream being watched, as large as the room allows, with its controls on the picture (a layer with the picture's size and place, so a tall picture keeps them on it, not on the dark around it), and the info row and previews under it.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage/` (the box), `stage-player/` (the frame, its controls fading, fullscreen, the settings' place, the quality, each a hook), `stage-view/`, `stage-picture/`, `stage-screen-video/`, `stage-notice/`, `stage-controls/`, `stage-info/`, `stage-sounds/`, `stage-voice-audio/` | Here | Done (#190): `Stage.tsx` split into its pieces |
+| `features/room/components/stage/` (the box), `stage-player/` (the frame and the picture's layer; its controls fading, fullscreen, the settings' place, the quality, the picture's width and what folds into "…", each a hook), `stage-view/`, `stage-picture/`, `stage-screen-video/`, `stage-notice/`, `stage-controls/`, `stage-info/`, `stage-sounds/`, `stage-voice-audio/` | Here | Done (#190): `Stage.tsx` split into its pieces; the controls on the picture (#247) |
 
 ### Stage light (ambilight)
 
@@ -117,7 +117,7 @@ The stream's own colours glowing around the stage, drawn from its edges on a sma
 <td><img src="img/today/viewer-bar-tooltip.webp" width="166" alt="A sound&#x27;s button, with its tooltip"><br><sub>A sound&#x27;s button, with its tooltip</sub></td>
 </tr></table>
 
-Over someone else's stream: each sound I hear from them (screen sound, voice) as its own round button (M 34) with a slider; a greyed one says why; my mic or Go live (an action pill) at the right.
+Over someone else's stream: each sound I hear from them (screen sound, voice) as its own round button (M 34) with a slider; a greyed one says why; my mic or Go live (an action pill) at the right. On a picture too narrow for all of it, Go live and then both sounds fold into "…".
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
@@ -133,7 +133,19 @@ Starts what I share, from a drop-up over the stage.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage-go-live/`, an action pill, its drop-up on the floating layer, its rows the shared Menu row | Here | Done (#191); the next version's send buttons replace it |
+| `features/room/components/stage-go-live/`, an action pill, its drop-up on the floating layer in the bar's one menu box `stage-bar-menu/`, its rows `stage-go-live-rows/` (on the shared Menu row) | Here | Done (#191; its rows and box shared with "…", #247); the next version's send buttons replace it |
+
+### More menu ("…")
+
+<table><tr>
+<td><img src="img/today/more-menu.webp" width="300" alt="'…' open on a narrow picture: Go live's rows, then both sounds with their sliders"><br><sub>"…" open on a narrow picture</sub></td>
+</tr></table>
+
+On a picture too narrow for the whole bar, an M round button holding what folded: the settings, Go live's rows, and the stream's sound and the streamer's voice together, each with its icon and its slider (disabled while muted or unheard) on the menu rows' grid. Its menu is centred on the picture. Fullscreen, my mic and my own buttons never fold.
+
+| Today | Goes to | What happens |
+| --- | --- | --- |
+| `features/room/components/stage-more-menu/`, a folded sound `stage-more-sound/`, Go live's rows `stage-go-live-rows/`, the box `stage-bar-menu/`; what folds `stage-player/`'s `use-row-fold` | Here | New (#247); the next version's stage controls replace it |
 
 ### Player buttons
 
@@ -141,7 +153,7 @@ Starts what I share, from a drop-up over the stage.
 <td><img src="img/today/player-buttons.webp" width="242" alt="My stream&#x27;s round buttons: screen, camera, mic, settings"><br><sub>My stream&#x27;s round buttons: screen, camera, mic, settings</sub></td>
 </tr></table>
 
-Over my own stream: my screen, camera and mic, on or off, and the settings: round buttons, L 48, red while on.
+Over my own stream: my screen, camera and mic, on or off, and the settings: round buttons, L 48, red while on. On a narrow picture they move beside fullscreen, then turn M 34; none of them folds.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
@@ -153,7 +165,7 @@ Over my own stream: my screen, camera and mic, on or off, and the settings: roun
 <td><img src="img/today/stage-overlay-fullscreen.webp" width="54" alt="Fullscreen"><br><sub>Fullscreen</sub></td>
 </tr></table>
 
-The stage's fullscreen button, round, M 34.
+The stage's fullscreen button, round, M 34, at the picture's bottom right; it never folds.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
@@ -167,11 +179,11 @@ The stage's fullscreen button, round, M 34.
 <td><img src="img/today/small-view-folded.webp" width="420" alt="Folded into its corner button"><br><sub>Folded into its corner button</sub></td>
 </tr></table>
 
-When someone shares their screen and their camera, the camera sits over the screen; it can be swapped and dragged. Hide folds it, in one move, into a round button in the stage's top-right corner, which opens it again where it was.
+When someone shares their screen and their camera, the camera sits over the screen; it can be swapped and dragged. It's a quarter of the picture, but at least 200 px, and the picture's whole width on a picture that narrow or narrower; under 84 px it folds by itself. Hide folds it, in one move, into a round button in the picture's top-right corner, which opens it again where it was.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage-facecam/` (its move a hook), the corner button `stage-small-view-button/`, the fold `stage-player/`'s `use-fold` | Here | Done (#190, the fold #191) |
+| `features/room/components/stage-facecam/` (its move a hook), the corner button `stage-small-view-button/`, the fold `stage-player/`'s `use-fold` | Here | Done (#190, the fold #191, its size on a narrow picture #247) |
 
 ### Empty stage
 
