@@ -37,12 +37,16 @@ export function fromOxlint(json: string): Finding[] {
 }
 
 /** jscpd's report: each copied block counts once in each file that holds it. */
-export function fromJscpd(json: string): Finding[] {
+export function fromJscpd(json: string, exists: (path: string) => boolean = existsSync): Finding[] {
   const { duplicates } = JSON.parse(json) as {
     duplicates: { firstFile: { name: string }; secondFile: { name: string } }[];
   };
-  // jscpd 5 names a file from the folder it scanned (components/…), jscpd 4 from app/ (src/components/…).
-  const fromApp = (name: string) => (name.startsWith("src/") ? name : `src/${name}`);
+  // jscpd 5 names a file from the folder it scanned (components/…, or blocks/… under e2e/), jscpd 4
+  // from app/ (src/components/…): a bare name goes under the scanned folder that holds it.
+  const fromApp = (name: string) => {
+    if (name.startsWith("src/") || name.startsWith("e2e/")) return name;
+    return !exists(`src/${name}`) && exists(`e2e/${name}`) ? `e2e/${name}` : `src/${name}`;
+  };
   return duplicates.flatMap((d) =>
     [d.firstFile.name, d.secondFile.name].map((file) => ({
       tool: "copies",
