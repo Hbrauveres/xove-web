@@ -35,7 +35,8 @@ test("F-stage.2 a tall picture keeps the box's width, the picture narrower and c
   await expect.soft(video).toBeVisible();
   expect.soft(Math.abs(box.width - column.width)).toBeLessThan(1);
   expect.soft(Math.abs(view.height - box.height)).toBeLessThan(1);
-  expect.soft(view.width).toBeLessThan(box.width / 2);
+  // Narrower than the box (on a monitor on its side, only a little).
+  expect.soft(view.width).toBeLessThan(box.width - 2);
   expect.soft(Math.abs(centreX(view) - centreX(box))).toBeLessThan(1);
   expect.soft(Math.abs(view.width / view.height - 9 / 16)).toBeLessThan(0.01);
 });
@@ -57,9 +58,15 @@ test("F-stage.3 a picture changing shape: the stage glides to it, without a jump
   });
   const end = await boxOf(stage.view);
   expect.soft(Math.abs(end.width / end.height - 1.2)).toBeLessThan(0.01);
-  expect.soft(end.width).toBeLessThan(start.width - 50);
-  const widths = seen.frames.map((f) => f.seen.view?.box?.w ?? 0);
-  const between = widths.filter((w) => w < start.width - 5 && w > end.width + 5).length;
+  // It narrows on a wide screen and grows taller on a monitor on its side: whichever changes, it
+  // passes through sizes in between.
+  const narrower = start.width - end.width;
+  const taller = end.height - start.height;
+  expect.soft(Math.max(narrower, taller)).toBeGreaterThan(50);
+  const [from, to, side] =
+    narrower > taller ? ([start.width, end.width, "w"] as const) : ([start.height, end.height, "h"] as const);
+  const sizes = seen.frames.map((f) => f.seen.view?.box?.[side] ?? 0);
+  const between = sizes.filter((v) => v > Math.min(from, to) + 5 && v < Math.max(from, to) - 5).length;
   expect.soft(between).toBeGreaterThanOrEqual(3);
   expect.soft(blinks(seen.frames, "view")).toEqual([]);
 });

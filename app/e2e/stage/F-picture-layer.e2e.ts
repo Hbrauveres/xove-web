@@ -42,7 +42,8 @@ test("F-picture-layer.2 over a tall picture, the controls sit on the picture, ne
   const view = await boxOf(stage.view);
   const layer = await boxOf(stage.layer);
   const box = await boxOf(stage.box);
-  expect.soft(view.width).toBeLessThan(box.width / 2);
+  // Narrower than the box (on a monitor on its side, only a little).
+  expect.soft(view.width).toBeLessThan(box.width - 2);
   expect.soft(Math.abs(layer.x - view.x) + Math.abs(layer.width - view.width)).toBeLessThan(1);
   expect.soft((await shownControls(page)).length).toBeGreaterThan(1);
   expect.soft(await outsideThePicture(page)).toEqual([]);

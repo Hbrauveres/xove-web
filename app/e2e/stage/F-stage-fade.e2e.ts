@@ -63,11 +63,13 @@ test("F-stage-fade.3 a move on the dark beside a tall picture brings them back t
   const fullscreen = page.getByRole("button", { name: "Fullscreen" });
   await expect.soft(stage.frame).toHaveAttribute("data-chrome", "hidden");
   const view = await boxOf(stage.view);
+  const box = await boxOf(stage.box);
   // Read right after the move: the controls fade again 2.5 s later.
   let chrome: string | null = null;
   let opacity = 0;
   await observe(page, info, { fullscreen }, async () => {
-    await page.mouse.move(view.x - 60, centreY(view), { steps: 3 });
+    // The middle of the dark beside the picture (wide on a wide screen, narrow on one on its side).
+    await page.mouse.move((box.x + view.x) / 2, centreY(view), { steps: 3 });
     await page.waitForTimeout(300);
     chrome = await stage.frame.getAttribute("data-chrome");
     opacity = await seenOpacity(fullscreen);

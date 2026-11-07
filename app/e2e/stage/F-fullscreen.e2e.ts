@@ -70,7 +70,9 @@ test("F-fullscreen.3 fullscreen, a tall picture fills the screen's height with i
   const view = await boxOf(stage.view);
   const screen = page.viewportSize()!;
   expect.soft(Math.abs(view.height - screen.height)).toBeLessThan(1);
-  expect.soft(view.width).toBeLessThan(screen.width * 0.6);
+  // Its own shape (9:16), as wide as the screen's height allows: on a monitor on its side, the
+  // whole width.
+  expect.soft(Math.abs(view.width - Math.min(screen.width, (screen.height * 9) / 16))).toBeLessThan(1);
   const controls = await shownControls(page);
   expect.soft(controls.length).toBeGreaterThan(1);
   expect.soft(controls.filter((c) => !inside(view, c.box)).map((c) => c.name)).toEqual([]);

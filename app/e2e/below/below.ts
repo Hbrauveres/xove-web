@@ -1,7 +1,6 @@
 // What the cases under the stage share: the picture's box, its shape made narrower as a narrow stream
 // would make it, pointing at an element as a person would, and boxes compared.
 import type { Locator, Page } from "@playwright/test";
-import { wakeStage } from "../support/open.ts";
 
 export type Box = { x: number; y: number; width: number; height: number };
 
@@ -37,16 +36,8 @@ export async function pointAt(page: Page, locator: Locator): Promise<void> {
   await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 4 });
 }
 
-/** The picture made `width` px wide at its height, as a stream of that shape would; then the controls woken. */
-export async function narrowPicture(page: Page, width: number): Promise<void> {
-  const { height } = await boxOf(pictureOf(page));
-  await page.evaluate((shape) => {
-    const box = document.querySelector<HTMLElement>('section[aria-label="Shared screen"] > div');
-    box?.style.setProperty("--shape", String(shape));
-  }, width / height);
-  await page.waitForTimeout(700);
-  await wakeStage(page);
-}
+/** The picture made `width` px wide, as a stream that narrow would make it; then the controls woken. */
+export { shapePicture as narrowPicture } from "../controls/controls.ts";
 
 /** What reaches the screen of an element: its opacity times its ancestors'. */
 export const shownOpacity = (locator: Locator) =>
