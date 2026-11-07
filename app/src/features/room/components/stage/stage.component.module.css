@@ -5,8 +5,8 @@
 }
 
 /*
- * The stage's box: the controls' layer, its column's whole width, holding
- * the buttons and a view with the picture and its light. Its height follows the picture : a wider picture makes it shorter, a taller one makes it as tall as the column allows;
+ * The stage's box: its column's whole width, holding
+ * the player: a view with the picture and its light, and the controls on the picture's layer. Its height follows the picture: a wider picture makes it shorter, a taller one makes it as tall as the column allows;
  * the view inside it takes the picture's own shape, centred, with no black bars.
  *
  * On a window taller than 16:9 (a vertical monitor), the box may also be as tall as the

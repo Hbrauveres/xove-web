@@ -5,7 +5,7 @@ import styles from "./stage-small-view-button.component.module.css";
 import type { StageSmallViewButtonProps } from "./types/stage-small-view-button.types";
 
 /**
- * The small view, folded: an M round button in the stage's top-right corner that opens it again
+ * The small view, folded: an M round button in the picture's top-right corner that opens it again
  * where it was. It shows only while the small view is folded, and fades with the other controls;
  * it's there unseen otherwise, so the fold knows where to go.
  */

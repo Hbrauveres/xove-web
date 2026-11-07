@@ -1,5 +1,6 @@
-/* The controls' layer: the stage's whole box, see-through. Its own size decides where
-   the buttons go and how tall a menu can be, not the window's or the picture's. */
+/* The frame: the stage's whole box, see-through, taking the moves and presses (the dark sides
+   included) and holding the settings and the menus; its own size decides how tall a menu can be.
+   The controls sit on the picture's layer inside it (StagePictureLayer). */
 .frame {
   position: relative;
   container-type: size;

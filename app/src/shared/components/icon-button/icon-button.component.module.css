@@ -72,7 +72,7 @@
 }
 
 /* A narrow stage: my own buttons take the other size, so a row of four and the fullscreen button
-   still fit. Measured on the controls' layer itself, not the window. */
+   still fit. Measured on the stage's own box, not the window. */
 @container (--tiny) {
   .l {
     width: var(--control-sm);
