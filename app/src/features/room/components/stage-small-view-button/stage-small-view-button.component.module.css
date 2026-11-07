@@ -1,4 +1,4 @@
-/* In the stage's top-right corner, 12 px in, like the fullscreen button in the bottom one. */
+/* In the picture's top-right corner, 12 px in, like the fullscreen button in the bottom one. */
 .corner {
   position: absolute;
   top: var(--space-3);

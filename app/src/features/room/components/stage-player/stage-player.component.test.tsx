@@ -138,6 +138,14 @@ describe("the player", () => {
     expect(within(frame).getByRole("button", { name: "Mute the screen's sound" })).toBeInTheDocument();
     expect(within(frame).getByRole("dialog", { name: "Settings" })).toBeInTheDocument();
   });
+
+  it("puts every control on the picture's layer, and leaves the settings on the box", () => {
+    const { frame } = watchBruno();
+    const onPicture = (el: HTMLElement) => el.closest("[data-on-picture]");
+    expect(onPicture(within(frame).getByRole("button", { name: "Fullscreen" }))).not.toBeNull();
+    expect(onPicture(within(frame).getByRole("button", { name: "Mute the screen's sound" }))).not.toBeNull();
+    expect(onPicture(within(frame).getByRole("dialog", { name: "Settings" }))).toBeNull();
+  });
 });
 
 describe("the settings over the player", () => {

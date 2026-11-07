@@ -61,19 +61,22 @@ export function StagePlayer(props: StagePlayerProps) {
         canShareScreen={controls.canShareScreen}
         onStart={startMine}
       />
-      {/* Over a stream and the empty stage alike: stopping the last stream never strands you in fullscreen. */}
-      <StageStageOverlay fullscreen={fullscreen.fullscreen} onFullscreen={fullscreen.toggle} />
-      <div className={styles.controls}>
-        <StageControls
-          big={stage.big}
-          controls={controls}
-          hearing={hearing}
-          anchor={settings.anchor}
-          onStart={startMine}
-          onSettings={settings.toggle}
-          onMenuChange={chrome.onMenuChange}
-        />
-        {small && <StageSmallViewButton fold={fold} />}
+      {/* The controls sit on the picture, never on the dark around it: a layer with the view's size and place. */}
+      <div className={styles.onPicture} data-on-picture>
+        {/* Over a stream and the empty stage alike: stopping the last stream never strands you in fullscreen. */}
+        <StageStageOverlay fullscreen={fullscreen.fullscreen} onFullscreen={fullscreen.toggle} />
+        <div className={styles.controls}>
+          <StageControls
+            big={stage.big}
+            controls={controls}
+            hearing={hearing}
+            anchor={settings.anchor}
+            onStart={startMine}
+            onSettings={settings.toggle}
+            onMenuChange={chrome.onMenuChange}
+          />
+          {small && <StageSmallViewButton fold={fold} />}
+        </div>
       </div>
       {settingsPanel}
       <StageSounds voices={hearing.voices} previewSounds={hearing.previewSounds} />
