@@ -27,3 +27,5 @@ export const OWN_GAP_M = 6;
 export const OWN_TO_FULLSCREEN = 8;
 /** Go live's pill before it's been measured. */
 export const GO_LIVE_GUESS = 92;
+/** Go live's pill on the picture, measured while it's shown: its width depends on its words. */
+export const GO_LIVE_PILL = '[data-fold-key="go-live"]';
