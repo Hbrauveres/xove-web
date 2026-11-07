@@ -246,7 +246,7 @@ void wait().then(() =>
       pictureOf.set(room.publishCamera("user-3"), "faceCam");
     }
     // For /validate: things that happen while the pointer rests on the page.
-    (window as unknown as { __xove: Record<string, () => void> }).__xove = {
+    (window as unknown as { __xove: Record<string, () => unknown> }).__xove = {
       // Everyone stops: the stage goes empty (fullscreen from the empty stage).
       everyoneStops: () => {
         for (const s of server.streams)
@@ -258,6 +258,8 @@ void wait().then(() =>
         server.streams = [...server.streams, someoneSharing("Marina", 2, "screen", undefined, new Date())];
         pictureOf.set(room.publishScreen("user-2"), "game");
       },
+      // How many times the room was asked to start its sound (LiveKit's startAudio, after a click).
+      soundStarts: () => room.startAudio.mock.calls.length,
     };
     // My mic: a real, quiet test tone that rises and falls like speech, so its level moves.
     const createTracks = room.localParticipant.createTracks;

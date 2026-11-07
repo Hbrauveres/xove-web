@@ -6,6 +6,7 @@ import { join } from "node:path";
 import type { Locator, Page, TestInfo } from "@playwright/test";
 import type { Frame } from "./frames.ts";
 import { stateOf, type ElementState } from "./state.ts";
+import { spend, untilStill } from "./timing.ts";
 import { startTracking } from "./track.ts";
 
 /** How much longer than strip × gap the strip may take before it stops (ms). */
@@ -18,10 +19,13 @@ export interface Observation {
 }
 
 export interface ObserveOptions {
-  /** How many screenshots the strip takes through the change, and how far apart (ms). */
+  /** How many screenshots the strip takes through the change, and how far apart (ms): its cadence. */
   strip?: number;
   gap?: number;
-  /** How long to keep recording after the action returns, for what follows it (ms). */
+  /**
+   * After the action, the recording runs until the page is still; `settle` keeps it running that
+   * much longer, for a behaviour that is a time (ms, a named constant from timing.ts).
+   */
   settle?: number;
 }
 
@@ -34,7 +38,7 @@ export async function observe(
   info: TestInfo,
   targets: Record<string, Locator>,
   action: () => Promise<void>,
-  { strip = 8, gap = 40, settle = 500 }: ObserveOptions = {},
+  { strip = 8, gap = 40, settle = 0 }: ObserveOptions = {},
 ): Promise<Observation> {
   const dir = join(process.env.E2E_OUT ?? "test-results", "observations", caseOf(info), info.project.name);
   mkdirSync(dir, { recursive: true });
@@ -52,11 +56,12 @@ export async function observe(
         type: "jpeg",
         quality: 70,
       });
-      await page.waitForTimeout(gap);
+      await spend(page, gap);
     }
   };
   await Promise.all([action(), shoot()]);
-  await page.waitForTimeout(settle);
+  await untilStill(page);
+  if (settle) await spend(page, settle);
   const frames = await stop();
   const after = await stateOf(targets);
   await page.screenshot({ path: join(dir, "after.png") });
