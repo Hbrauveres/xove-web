@@ -45,11 +45,11 @@ describe("'…'", () => {
     expect(p.sound.onChange).toHaveBeenCalledWith({ volume: 0.2, muted: false });
   });
 
-  it("holds only what folded: the sound alone while I'm live, no Go live or settings", async () => {
-    more(["sound"]);
+  it("holds only what folded: the sounds while I'm live, no Go live or settings", async () => {
+    more(["sound", "voice"]);
     await open();
     expect(screen.getByRole("slider", { name: "Screen sound volume" })).toBeInTheDocument();
-    expect(screen.queryByRole("slider", { name: "Bruno's voice volume" })).not.toBeInTheDocument();
+    expect(screen.getByRole("slider", { name: "Bruno's voice volume" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Settings" })).not.toBeInTheDocument();
   });
 
@@ -66,7 +66,7 @@ describe("'…'", () => {
   });
 
   it("isn't where the settings open from when only sounds folded", () => {
-    const p = more(["sound"]);
+    const p = more(["sound", "voice"]);
     expect(p.cog).not.toHaveBeenCalled();
   });
 });

@@ -6,8 +6,8 @@ import type { StageMoreSoundProps } from "./types/stage-more-sound.types";
 
 /**
  * A sound folded into "…": its own button (the same icon, crossed while muted; a click mutes or
- * unmutes) and its slider beside it, lying down since the menu is a list of rows. Moving the slider
- * also unmutes, as over the stream.
+ * unmutes) and its slider beside it, lying down since the menu is a list of rows. The slider is
+ * always there, disabled while the sound is muted or can't be heard (no sound shared, their mic off).
  */
 export function StageMoreSound({ kind, sound, name }: StageMoreSoundProps) {
   const words = viewerSoundWords(kind, sound, name);
@@ -22,17 +22,16 @@ export function StageMoreSound({ kind, sound, name }: StageMoreSoundProps) {
         tip={words.tip}
         onToggle={() => sound.onChange({ volume: sound.volume, muted: !sound.muted })}
       />
-      {!sound.unavailable && (
-        <Slider
-          className={styles.range}
-          min={0}
-          max={1}
-          step={0.05}
-          aria-label={words.volume}
-          value={sound.volume}
-          onChange={(e) => sound.onChange({ volume: Number(e.target.value), muted: false })}
-        />
-      )}
+      <Slider
+        className={styles.range}
+        min={0}
+        max={1}
+        step={0.05}
+        aria-label={words.volume}
+        value={sound.unavailable ? 0 : sound.volume}
+        disabled={sound.muted || Boolean(sound.unavailable)}
+        onChange={(e) => sound.onChange({ volume: Number(e.target.value), muted: false })}
+      />
     </span>
   );
 }

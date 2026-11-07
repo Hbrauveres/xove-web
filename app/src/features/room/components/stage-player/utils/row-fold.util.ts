@@ -21,17 +21,18 @@ function barWidth(buttons: RowButton[], folded: boolean) {
   return EDGE + rowWidth(folded ? [...widths, M] : widths, BAR_GAP) + BAR_TO_FULLSCREEN + M + EDGE;
 }
 
-/** Over someone else's stream: the bar's buttons fold into "…", one at a time, until the bar fits. */
+/** Over someone else's stream: the bar's buttons fold into "…", a step at a time, until the bar fits. */
 function foldBar(picture: number, buttons: RowButton[]): RowFit {
   const folded: FoldKey[] = [];
   let left = buttons;
-  for (const key of FOLD_ORDER) {
+  for (const step of FOLD_ORDER) {
     if (barWidth(left, folded.length > 0) <= picture) break;
-    if (!left.some((b) => b.key === key)) continue;
-    folded.push(key);
-    left = left.filter((b) => b.key !== key);
+    const here = step.filter((key) => left.some((b) => b.key === key));
+    folded.push(...here);
+    left = left.filter((b) => !here.some((key) => key === b.key));
   }
-  return { folded, size: "m", beside: false };
+  // The bar's buttons are M already: only what folds changes, never my own buttons' size.
+  return { folded, size: "l", beside: false };
 }
 
 /**

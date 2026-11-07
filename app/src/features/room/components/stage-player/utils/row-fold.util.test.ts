@@ -16,9 +16,8 @@ describe("the bar over someone else's stream", () => {
     expect(rowFold(190, { viewer: [sound, voice, goLive] }).folded).toEqual(["go-live"]);
   });
 
-  it("then the stream's sound and the streamer's voice, one at a time", () => {
-    expect(rowFold(150, { viewer: [sound, voice, goLive] }).folded).toEqual(["go-live", "sound"]);
-    expect(rowFold(130, { viewer: [sound, voice, goLive] }).folded).toEqual(["go-live", "sound", "voice"]);
+  it("then the stream's sound and the streamer's voice, together", () => {
+    expect(rowFold(150, { viewer: [sound, voice, goLive] }).folded).toEqual(["go-live", "sound", "voice"]);
   });
 
   it("folds the settings before anything else", () => {
@@ -26,12 +25,12 @@ describe("the bar over someone else's stream", () => {
   });
 
   it("never folds my mic, however narrow the picture", () => {
-    const fit = rowFold(100, { viewer: [sound, voice, mic] });
+    const fit = rowFold(60, { viewer: [sound, voice, mic] });
     expect(fit.folded).toEqual(["sound", "voice"]);
   });
 
-  it("keeps the bar's buttons M", () => {
-    expect(rowFold(130, { viewer: [sound, voice, goLive] }).size).toBe("m");
+  it("never asks for the smaller size: the bar's buttons are M already", () => {
+    expect(rowFold(130, { viewer: [sound, voice, goLive] }).size).toBe("l");
   });
 });
 

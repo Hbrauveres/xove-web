@@ -13,16 +13,22 @@ describe("a sound folded into '…'", () => {
     expect(sound.onChange).toHaveBeenCalledWith({ volume: 0.6, muted: true });
   });
 
-  it("sets the volume with its slider, which also unmutes", () => {
-    const sound = heard({ muted: true });
+  it("sets the volume with its slider", () => {
+    const sound = heard();
     render(<StageMoreSound kind="sound" sound={sound} />);
     fireEvent.change(screen.getByRole("slider", { name: "Screen sound volume" }), { target: { value: "0.3" } });
     expect(sound.onChange).toHaveBeenCalledWith({ volume: 0.3, muted: false });
   });
 
-  it("has no slider when it can't be heard, its button saying why", () => {
+  it("keeps its slider while muted, disabled", () => {
+    render(<StageMoreSound kind="sound" sound={heard({ muted: true })} />);
+    expect(screen.getByRole("slider", { name: "Screen sound volume" })).toBeDisabled();
+  });
+
+  it("keeps its slider when it can't be heard, disabled and empty, its button saying why", () => {
     render(<StageMoreSound kind="sound" sound={heard({ unavailable: "No sound in this stream" })} />);
-    expect(screen.queryByRole("slider")).not.toBeInTheDocument();
+    expect(screen.getByRole("slider", { name: "Screen sound volume" })).toBeDisabled();
+    expect(screen.getByRole("slider", { name: "Screen sound volume" })).toHaveValue("0");
     expect(screen.getByRole("button", { name: "No sound in this stream" })).toBeInTheDocument();
   });
 });

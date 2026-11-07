@@ -1,10 +1,11 @@
 import type { FoldKey } from "../../../types/fold-key.types";
 
 /**
- * The order the bar's buttons fold into "…" when the picture is too narrow for them. Fullscreen, my
- * mic and my own screen and camera never fold (ADR-0096).
+ * The order the bar's buttons fold into "…" when the picture is too narrow for them, a step at a time;
+ * the stream's sound and the streamer's voice fold together, never one left alone in the bar.
+ * Fullscreen, my mic and my own screen and camera never fold (ADR-0096).
  */
-export const FOLD_ORDER: readonly FoldKey[] = ["settings", "go-live", "sound", "voice"];
+export const FOLD_ORDER: readonly (readonly FoldKey[])[] = [["settings"], ["go-live"], ["sound", "voice"]];
 
 /*
  * The sizes the row is measured with: the stylesheet's tokens (the round buttons' two sizes,

@@ -226,11 +226,11 @@ export const ICONS = {
   },
   /** More, folded away: three dots in a row ("…"). */
   more: {
-    svg: { ...BUTTON, strokeWidth: 2.5 },
+    svg: { fill: "currentColor" },
     parts: [
-      ["circle", { cx: "4.5", cy: "10", r: "0.6" }],
-      ["circle", { cx: "10", cy: "10", r: "0.6" }],
-      ["circle", { cx: "15.5", cy: "10", r: "0.6" }],
+      ["circle", { cx: "4.5", cy: "10", r: "1.6" }],
+      ["circle", { cx: "10", cy: "10", r: "1.6" }],
+      ["circle", { cx: "15.5", cy: "10", r: "1.6" }],
     ],
   },
   /** Make small: one line. */
