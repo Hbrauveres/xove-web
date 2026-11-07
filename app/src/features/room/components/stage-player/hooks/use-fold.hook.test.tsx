@@ -3,8 +3,8 @@ import { describe, expect, it, vi } from "vitest";
 import { useFold } from "./use-fold.hook";
 
 /** The small view and its corner button, on the hook, as the player wires them. */
-function Stage() {
-  const { folded, hide, show, setBox, setHide, setCorner } = useFold();
+function Stage({ fits = true }: { fits?: boolean }) {
+  const { folded, hide, show, setBox, setHide, setCorner } = useFold(fits);
   return (
     <>
       {!folded && (
@@ -64,5 +64,34 @@ describe("useFold", () => {
     act(() => screen.getByRole("button", { name: "Hide the small view" }).click());
     expect(screen.queryByTestId("small view")).not.toBeInTheDocument();
     expect(moves).toHaveLength(0);
+  });
+
+  it("folds by itself on a picture too narrow for it, without taking the focus", () => {
+    const view = render(<Stage />);
+    view.rerender(<Stage fits={false} />);
+    expect(screen.queryByTestId("small view")).not.toBeInTheDocument();
+    expect(document.activeElement).toBe(document.body);
+    view.rerender(<Stage />);
+    expect(screen.getByTestId("small view")).toBeInTheDocument();
+  });
+
+  it("opened from the corner on a narrow picture, stays open for it, until it's wide enough again", () => {
+    animating();
+    const view = render(<Stage fits={false} />);
+    act(() => screen.getByRole("button", { name: "Show the small view" }).click());
+    expect(screen.getByTestId("small view")).toBeInTheDocument();
+    view.rerender(<Stage />);
+    view.rerender(<Stage fits={false} />);
+    expect(screen.queryByTestId("small view")).not.toBeInTheDocument();
+  });
+
+  it("stays folded where Hide folded it, however wide the picture", () => {
+    const { end } = animating();
+    const view = render(<Stage fits={false} />);
+    act(() => screen.getByRole("button", { name: "Show the small view" }).click());
+    act(() => screen.getByRole("button", { name: "Hide the small view" }).click());
+    act(() => end(1));
+    view.rerender(<Stage />);
+    expect(screen.queryByTestId("small view")).not.toBeInTheDocument();
   });
 });

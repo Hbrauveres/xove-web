@@ -18,6 +18,7 @@ import type { StagePlayerProps } from "./types/stage-player.types";
 import { bigStreams } from "./utils/big-streams.util";
 import { chromeState, lightKey } from "./utils/player-look.util";
 import { rowShape } from "./utils/row-shape.util";
+import { smallViewFits } from "./utils/small-view-fits.util";
 
 /**
  * The player: the stage's whole box, holding the view and every control over it. The controls fade
@@ -40,8 +41,8 @@ export function StagePlayer(props: StagePlayerProps) {
   });
   const startMine = useGoToMine(controls.onStart, stage.pick, sharers);
   useBigQuality(main, Boolean(stage.big?.isMe));
-  const fold = useFold();
   const picture = usePictureWidth();
+  const fold = useFold(smallViewFits(picture.width));
   const fit = useRowFold(picture.el, picture.width, rowShape(stage.big, controls));
 
   return (

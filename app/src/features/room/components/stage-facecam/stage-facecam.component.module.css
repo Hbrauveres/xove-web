@@ -2,7 +2,10 @@
 .facecam {
   position: absolute;
   z-index: var(--layer-over);
-  width: 24%;
+  /* A quarter of the picture, never too small for its Swap and Hide (two M buttons, 4 px apart, 6 px
+     in: SMALL_VIEW_MIN in the player); its place keeps it inside the picture (placeStyle). */
+  --small-view-width: max(24%, 2 * var(--control-sm) + var(--space-1) + 2 * var(--space-1-5));
+  width: var(--small-view-width);
   aspect-ratio: 16 / 9;
   background: var(--black);
   border-radius: var(--radius-1-5);
