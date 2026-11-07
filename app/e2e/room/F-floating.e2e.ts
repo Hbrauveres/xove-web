@@ -16,8 +16,7 @@ const UNDER_THE_REST = { timeout: (TIP_REST_MS * 2) / 3 };
 
 /** The tooltip that says `text`, shown or not. */
 // Hidden tooltips stay in the page (to describe their control): found by role, shown or not.
-const tipOf = (page: Page, text: string) =>
-  page.locator('[role="tooltip"]').filter({ hasText: new RegExp(`^${text}$`) });
+const tipOf = (page: Page, text: string) => page.getByRole("tooltip", { name: text, exact: true, includeHidden: true });
 const button = (page: Page, name: string) => page.getByRole("button", { name, exact: true });
 
 test("F-floating.1 a tooltip shows after a short rest, above its control, inside the window", async ({

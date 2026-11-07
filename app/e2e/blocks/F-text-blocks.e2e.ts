@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { openScene } from "../support/open.ts";
 import { observe } from "../support/observe.ts";
 import { boxOf } from "../support/geometry.ts";
-import { APP_PX, computed, LOOK, SIZE, within } from "../support/looks.ts";
+import { APP_PX, computed, LOOK, SIZE } from "../support/looks.ts";
 import { pointAt, pointAway } from "../support/pointer.ts";
 import { sharingMyScreen } from "./where.ts";
 
@@ -83,8 +83,8 @@ test("F-text-blocks.5 the face of who's live on the stage wears a red ring, apar
   const ring = await face.evaluate(
     (e) => getComputedStyle(e).boxShadow + " | " + getComputedStyle(e, "::after").boxShadow,
   );
-  expect.soft(ring).toMatch(within(await computed(page, "color", LOOK.accent)));
-  expect.soft(ring).toMatch(within(await computed(page, "color", LOOK.ground)));
+  expect.soft(ring).toContain(await computed(page, "color", LOOK.accent));
+  expect.soft(ring).toContain(await computed(page, "color", LOOK.ground));
 });
 
 test("F-text-blocks.6 with the settings open, resting on a live button cues its control: a red ring pulsing twice, then lit", async ({

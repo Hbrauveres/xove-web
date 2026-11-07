@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
 import { boxOf } from "../support/geometry.ts";
-import { computed, FADED, LOOK, pxOf, SIZE, within } from "../support/looks.ts";
+import { computed, FADED, LOOK, pxOf, SIZE, cssOf } from "../support/looks.ts";
 import { overPicture, pointAt, restOn, tabTo } from "../support/pointer.ts";
 import { OPEN_DELAY_MS, untilStill } from "../support/timing.ts";
 import { sharingMyScreen, watching } from "./where.ts";
@@ -17,7 +17,7 @@ test("F-round-button.1 at rest: a round of dark frosted glass with a soft shadow
   });
   await expect.soft(full).toHaveCSS("background-color", await computed(page, "background-color", LOOK.glass));
   await expect.soft(full).toHaveCSS("backdrop-filter", await computed(page, "backdrop-filter", LOOK.glassBlur));
-  await expect.soft(full).toHaveCSS("box-shadow", within(await computed(page, "box-shadow", LOOK.glassShadow)));
+  expect.soft(await cssOf(full, "box-shadow")).toContain(await computed(page, "box-shadow", LOOK.glassShadow));
   await expect.soft(full).toHaveCSS("border-radius", LOOK.round);
   await expect.soft(full).toHaveCSS("color", await computed(page, "color", LOOK.text));
   const icon = full.locator("svg[data-icon]");

@@ -1,7 +1,7 @@
 // The looks a case checks, by the app's own names (its tokens, tokens.css), never retyped: a value is
 // written here as the CSS the app uses (`var(--accent)`, `blur(var(--blur-2))`) and resolved by the
 // page into what a computed style reads, so a case compares like with like (ADR-0102).
-import type { Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
 
 /** The app's named looks the cases check against, as CSS. */
 export const LOOK = {
@@ -141,8 +141,9 @@ export const APP_PX = {
   adminFace: 36,
 } as const;
 
-/** A computed value as a pattern, to find it inside a longer one (a shadow, a gradient). */
-export const within = (value: string): RegExp => new RegExp(value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+/** An element's computed `property`, to find a computed value inside it (a shadow, a gradient). */
+export const cssOf = (target: Locator, property: string): Promise<string> =>
+  target.first().evaluate((el, p) => getComputedStyle(el).getPropertyValue(p), property);
 
 /** A duration with the app's tokens (`var(--duration-160)`), in ms. */
 export const msOf = async (page: Page, value: string): Promise<number> =>

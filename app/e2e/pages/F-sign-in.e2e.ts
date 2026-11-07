@@ -1,7 +1,7 @@
 import { expect, test, type Locator, type Page, type TestInfo } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { boxOf, centreX, windowBox } from "../support/geometry.ts";
-import { computed, LOOK, within } from "../support/looks.ts";
+import { computed, LOOK, cssOf } from "../support/looks.ts";
 import { openScene } from "../support/open.ts";
 import { observe } from "../support/observe.ts";
 import { pointAt } from "../support/pointer.ts";
@@ -53,7 +53,7 @@ test("F-sign-in.3 Continue with Google lights a soft red ring when pointed at an
   const seen = await observe(page, info, { google }, async () => {
     await google.hover();
   });
-  await expect.soft(google).toHaveCSS("box-shadow", within(await computed(page, "color", LOOK.accentSoft)));
+  expect.soft(await cssOf(google, "box-shadow")).toContain(await computed(page, "color", LOOK.accentSoft));
   expect.soft(blinks(seen.frames, "google")).toEqual([]);
   expect.soft(drift(seen.frames, "google")).toBeLessThan(1);
   await page.mouse.down();

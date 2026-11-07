@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { blinks } from "../support/frames.ts";
 import { boxOf, centreX, windowBox } from "../support/geometry.ts";
-import { computed, LOOK, pxOf, within } from "../support/looks.ts";
+import { computed, LOOK, pxOf, cssOf } from "../support/looks.ts";
 import { openScene } from "../support/open.ts";
 import { observe } from "../support/observe.ts";
 import { spend, WORDMARK_MS } from "../support/timing.ts";
@@ -89,7 +89,7 @@ test("F-app-shell.6 the page shell centres a page's column, the sign-in page wit
   });
   const glow = await computed(page, "color", LOOK.accentSoft);
   await expect.soft(shell).toHaveCSS("background-image", /radial-gradient\(/);
-  await expect.soft(shell).toHaveCSS("background-image", within(glow));
+  expect.soft(await cssOf(shell, "background-image")).toContain(glow);
   const box = await boxOf(column);
   expect.soft(Math.abs(centreX(box) - centreX(windowBox(page)))).toBeLessThan(1);
   expect.soft(box.width).toBeLessThanOrEqual(await pxOf(page, "var(--home-card-width)"));
