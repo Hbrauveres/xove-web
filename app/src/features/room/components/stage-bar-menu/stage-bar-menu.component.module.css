@@ -15,6 +15,17 @@
   box-shadow: 0 var(--space-2-5) var(--space-7-5) var(--black-50);
 }
 
+/*
+ * Centred on the picture: placed in the bar over someone else's stream, which starts 12 px in and
+ * ends clear of the fullscreen button (12 + 34 + 10 px in), so the picture's centre is half that
+ * difference right of the bar's.
+ */
+.menu[data-centred] {
+  right: auto;
+  left: calc(50% + (var(--space-8-5) + var(--space-2-5)) / 2);
+  translate: -50% 0;
+}
+
 /* Between its groups. */
 .menu hr {
   height: var(--hairline);

@@ -248,6 +248,8 @@
   --info-row-tall: 10.5rem;
   --mic-hear-width: 4rem;
   --preview-width: 12.5rem;
+  /* The small view on a narrow picture: never narrower than this while it's at most half the picture. */
+  --small-view-floor: 12.5rem;
   --seat-offer-width: 25rem;
   --settings-min-height: 15rem;
   --settings-width: 17.5rem;

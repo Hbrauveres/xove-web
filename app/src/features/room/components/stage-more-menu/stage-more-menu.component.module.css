@@ -1,5 +1,4 @@
-/* "…" and its menu (StageBarMenu), which opens above it. */
+/* "…": not positioned, so its menu (StageBarMenu, centred) is placed in the bar, on the picture's centre. */
 .anchor {
-  position: relative;
   display: inline-grid;
 }

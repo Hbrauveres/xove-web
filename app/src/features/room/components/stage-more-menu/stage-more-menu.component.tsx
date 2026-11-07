@@ -42,7 +42,7 @@ export function StageMoreMenu({ folded, sound, voice, ...goLive }: StageMoreMenu
         </IconButton>
       </Tooltip>
       {open && (
-        <StageBarMenu id={id} role="group" aria-label="More controls">
+        <StageBarMenu id={id} role="group" aria-label="More controls" centred>
           {has("settings") && (
             <MenuRow
               icon="cog"
