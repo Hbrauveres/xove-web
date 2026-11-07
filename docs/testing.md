@@ -101,7 +101,7 @@ Every feature of the app has numbered test cases, each written as given / when /
 
 Phones get only the phone notice, so their sizes run the tests tagged `@phone`.
 
-Each test opens a scene (`e2e/support/open.ts`: the clock fixed, the pictures still), and records its action with `observe` (`e2e/support/observe.ts`): the named elements' state before and after (shown, where, how they look, what a screen reader hears), a screenshot of each, every animation frame while it happens, and a strip of screenshots through it. `blinks`, `drift` and `transitioned` (`e2e/support/frames.ts`) turn the frames into "must not" checks: an element that must stay never dims or disappears, never moves. The checks are `expect.soft`, so a test records everything and reports every failure. Ten browsers run at once (`E2E_WORKERS` sets another number). `E2E_OUT` says where the records go; `E2E_BASE_URL` runs the same tests against another copy of the app.
+Each test opens a scene (`e2e/support/open.ts`: the clock fixed, the pictures still), and records its action with `observe` (`e2e/support/observe.ts`): the named elements' state before and after (shown, where, how they look, what a screen reader hears), a screenshot of each, every animation frame while it happens, and a strip of screenshots through it. `blinks`, `drift` and `transitioned` (`e2e/support/frames.ts`) turn the frames into "must not" checks: an element that must stay never dims or disappears, never moves. The checks are `expect.soft`, so a test records everything and reports every failure. Eight browsers run at once (`E2E_WORKERS` sets another number). `E2E_OUT` says where the records go; `E2E_BASE_URL` runs the same tests against another copy of the app.
 
 ## Pictures and sizes
 

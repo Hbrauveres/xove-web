@@ -9,9 +9,11 @@ export const stageOf = (page: Page) => page.getByRole("region", { name: "Shared 
 /** The picture's layer: the picture's own size and place, holding every control over it. */
 export const pictureOf = (page: Page) => page.locator("[data-on-picture]");
 
-/** The bar's buttons, found inside the picture's layer. */
+/** The stage's buttons, found as a person would: by role and name inside the stage (not by the
+ * picture layer's marker, which a version before it doesn't have). Where a case needs them on the
+ * picture, it checks that with `inside(…, pictureOf(page))`. */
 export const control = (page: Page, name: string | RegExp) =>
-  pictureOf(page).getByRole("button", { name, exact: typeof name === "string" });
+  stageOf(page).getByRole("button", { name, exact: typeof name === "string" });
 
 /** My own stream on the stage: from the empty stage, "Share your screen". */
 export async function openMyStream(page: Page): Promise<void> {
@@ -33,16 +35,38 @@ export async function openWithVoice(page: Page, extra = ""): Promise<void> {
   await wakeStage(page);
 }
 
+/** How many times the picture's shape is corrected to land on a width. */
+const SHAPE_TRIES = 4;
+/** How often, and how many times, the picture's width is read while it glides. */
+const SETTLE_POLL_MS = 150;
+const SETTLE_POLLS = 20;
+
 /** The picture this wide (CSS px), as a stream that narrow would make it. */
 export async function shapePicture(page: Page, width: number): Promise<void> {
-  // A width in CSS px, the same at every size (the controls fold by the picture's px, not its ratio):
-  // the stream's shape is that width over the picture's full height.
-  await page.evaluate((w) => {
-    const picture = document.querySelector('section[aria-label="Shared screen"] > div') as HTMLElement;
-    picture.style.setProperty("--shape", String(w / picture.getBoundingClientRect().height));
-  }, width);
-  await page.waitForTimeout(700);
+  // A width in CSS px, the same at every size (the controls fold by the picture's px, not its ratio).
+  // How tall a narrow picture gets depends on the stage (a portrait monitor's is far taller), so the
+  // stream's shape is set, the picture's width measured once its glide settles, and corrected.
+  const frame = page.locator('section[aria-label="Shared screen"] > div').first();
+  let shape = width / ((await pictureOf(page).boundingBox())?.height ?? width);
+  for (let i = 0; i < SHAPE_TRIES; i++) {
+    await frame.evaluate((el, s) => (el as HTMLElement).style.setProperty("--shape", String(s)), shape);
+    const now = await settledWidth(page);
+    if (Math.abs(now - width) < 1) break;
+    shape = (shape * width) / now;
+  }
   await wakeStage(page);
+}
+
+/** The picture's width once it stops changing (its glide over). */
+async function settledWidth(page: Page): Promise<number> {
+  let last = -1;
+  for (let i = 0; i < SETTLE_POLLS; i++) {
+    await page.waitForTimeout(SETTLE_POLL_MS);
+    const w = (await pictureOf(page).boundingBox())?.width ?? 0;
+    if (Math.abs(w - last) < 0.5) return w;
+    last = w;
+  }
+  return last;
 }
 
 /** Moves the mouse onto the middle of `target`, as a person would, in a few steps. */
