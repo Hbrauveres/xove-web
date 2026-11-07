@@ -37,3 +37,5 @@ type Story = StoryObj<typeof meta>;
 export const Folded: Story = {};
 /** While I'm live: only the sounds. */
 export const WhileLive: Story = { args: { folded: ["sound", "voice"] } };
+/** Nobody live: only the settings. */
+export const SettingsOnly: Story = { args: { folded: ["settings"] } };

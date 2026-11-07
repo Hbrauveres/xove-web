@@ -4,6 +4,7 @@ import { IconButton } from "@shared/components/icon-button";
 import { MenuRow } from "@shared/components/menu-row";
 import { Tooltip } from "@shared/components/tooltip";
 import { useFloating } from "@shared/stores/floating-store";
+import { MORE_CONTROLS, SETTINGS } from "../../constants/stream-words.constants";
 import { useSettingsAnchor } from "../../hooks/use-settings-anchor.hook";
 import { StageBarMenu } from "../stage-bar-menu";
 import { StageGoLiveRows } from "../stage-go-live-rows";
@@ -32,7 +33,7 @@ export function StageMoreMenu({ folded, sound, voice, ...goLive }: StageMoreMenu
           variant="round"
           size="m"
           ref={show.holdsSettings ? anchor?.cog : undefined}
-          aria-label="More controls"
+          aria-label={MORE_CONTROLS}
           aria-expanded={open}
           aria-controls={id}
           onClick={() => setOpen((o) => !o)}
@@ -41,11 +42,11 @@ export function StageMoreMenu({ folded, sound, voice, ...goLive }: StageMoreMenu
         </IconButton>
       </Tooltip>
       {open && (
-        <StageBarMenu id={id} kind="group" aria-label="More controls" centred>
+        <StageBarMenu id={id} kind="group" aria-label={MORE_CONTROLS} centred>
           {show.settings && (
             <MenuRow
               icon="cog"
-              label="Settings"
+              label={SETTINGS}
               onPick={() => {
                 close();
                 goLive.onSettings();

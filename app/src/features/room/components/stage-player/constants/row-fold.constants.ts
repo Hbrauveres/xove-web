@@ -12,9 +12,9 @@ export const FOLD_ORDER: readonly (readonly FoldKey[])[] = [["settings"], ["go-l
  * --control-sm and --control-3xl; the gaps, --space-*), in px at the app's 16 px root.
  */
 /** An M round button, "…" and the fullscreen button included (--control-sm). */
-export const M = 34;
+export const ROUND_M = 34;
 /** An L round button, my own (--control-3xl). */
-export const L = 48;
+export const ROUND_L = 48;
 /** From the picture's edge to the controls (--space-3). */
 export const EDGE = 12;
 /** Between the bar's buttons (--space-2). */
@@ -26,5 +26,3 @@ export const OWN_GAP_L = 10;
 export const OWN_GAP_M = 6;
 /** Go live's pill before it's been measured. */
 export const GO_LIVE_GUESS = 92;
-/** Go live's pill on the picture, measured while it's shown: its width depends on its words. */
-export const GO_LIVE_PILL = '[data-fold-key="go-live"]';

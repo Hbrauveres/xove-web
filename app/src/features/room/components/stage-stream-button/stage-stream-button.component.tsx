@@ -16,7 +16,7 @@ import { streamState } from "./utils/stream-state.util";
  * that gesture goes to its setting there instead.
  */
 export function StageStreamButton(props: StageStreamButtonProps) {
-  const { kind, cameras, busy = false, onStart, onStop, onMenuChange, settingsOpen, onGoTo } = props;
+  const { kind, cameras, busy = false, onStart, onStop, onMenuChange, settingsOpen, onGoTo, size = "l" } = props;
   const { live, unavailable, blocked, label, tip } = streamState(kind, props);
   const icon = streamIcon(kind, live);
   const up = useStreamUp(onMenuChange);
@@ -26,7 +26,7 @@ export function StageStreamButton(props: StageStreamButtonProps) {
       <Tooltip text={tip} hidden={live}>
         <IconButton
           variant="round"
-          size="l"
+          size={size}
           live={live}
           unavailable={unavailable}
           aria-label={label}

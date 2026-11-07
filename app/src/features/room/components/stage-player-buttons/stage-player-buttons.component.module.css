@@ -36,10 +36,10 @@
    buttons are from each other. */
 .row[data-beside] {
   justify-content: flex-end;
-  padding-right: calc(var(--space-3) + var(--space-8-5) + var(--gap));
+  padding-right: calc(var(--space-3) + var(--control-sm) + var(--gap));
 }
 
 /* A picture too narrow for my L buttons even beside fullscreen: M, closer together. */
-:global([data-compact]) .row {
+.row[data-compact] {
   --gap: var(--space-1-5);
 }

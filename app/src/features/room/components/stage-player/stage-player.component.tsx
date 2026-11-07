@@ -35,7 +35,7 @@ export function StagePlayer(props: StagePlayerProps) {
   const startMine = useGoToMine(controls.onStart, stage.pick, sharers);
   useBigQuality(main, Boolean(stage.big?.isMe));
   const picture = usePictureFit(stage.big, controls);
-  const fold = useFold(picture.smallView);
+  const fold = useFold(picture.smallView, `${bigId}/${stage.mainKind}`);
 
   return (
     <div
@@ -61,8 +61,7 @@ export function StagePlayer(props: StagePlayerProps) {
       />
       {/* The controls sit on the picture, never on the dark around it. */}
       <StagePictureLayer
-        setLayer={picture.setLayer}
-        compact={picture.fit.size === "m"}
+        picture={picture}
         // Over a stream and the empty stage alike: stopping the last stream never strands you in fullscreen.
         fullscreen={<StageStageOverlay fullscreen={fullscreen.fullscreen} onFullscreen={fullscreen.toggle} />}
       >

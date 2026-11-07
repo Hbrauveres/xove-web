@@ -8,6 +8,7 @@ import { micState } from "../../utils/mic-state.util";
 import { StagePlayerButtons } from "../stage-player-buttons";
 import { StageViewerBar } from "../stage-viewer-bar";
 import type { StageControlsProps } from "./types/stage-controls.types";
+import { NO_FOLD } from "./constants/stage-controls.constants";
 import { hearProps } from "./utils/hear-props.util";
 
 /**
@@ -18,8 +19,8 @@ import { hearProps } from "./utils/hear-props.util";
  * their cog and their row.
  */
 export function StageControls(props: StageControlsProps) {
-  const { big, controls, hearing, onStart, onSettings, onMenuChange, fit } = props;
-  const folded = fit?.folded ?? [];
+  const { big, controls, hearing, onStart, onSettings, onMenuChange, fit = NO_FOLD } = props;
+  const folded = fit.folded;
   const micOn = Boolean(controls.voice);
   const toggleMic = () => controls.onVoice?.();
   const mic = micState(micOn);
@@ -56,12 +57,13 @@ export function StageControls(props: StageControlsProps) {
         onStart={onStart}
         onSettings={onSettings}
         onMenuChange={onMenuChange}
-        beside={fit?.beside}
+        beside={fit.beside}
+        size={fit.size}
         extra={
           <Tooltip text={mic.label}>
             <IconButton
               variant="round"
-              size="l"
+              size={fit.size}
               live={micOn}
               aria-pressed={micOn}
               aria-label={mic.label}

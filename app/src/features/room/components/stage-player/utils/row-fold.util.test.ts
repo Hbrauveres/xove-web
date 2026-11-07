@@ -1,36 +1,37 @@
 import { describe, expect, it } from "vitest";
+import { GO_LIVE_GUESS, ROUND_M } from "../constants/row-fold.constants";
 import type { RowButton } from "../types/row-fold.types";
 import { rowFold } from "./row-fold.util";
 
-const sound: RowButton = { key: "sound", width: 34 };
-const voice: RowButton = { key: "voice", width: 34 };
-const goLive: RowButton = { key: "go-live", width: 92 };
-const mic: RowButton = { key: "mic", width: 34 };
+/** One of the bar's buttons, as wide as it's drawn. */
+const button = (key: RowButton["key"]): RowButton => ({ key, width: key === "go-live" ? GO_LIVE_GUESS : ROUND_M });
+/** The bar over someone else's stream while I'm not live: their sound, their voice, Go live. */
+const watching = () => [button("sound"), button("voice"), button("go-live")];
 
 describe("the bar over someone else's stream", () => {
   it("folds nothing on a picture wide enough, a tall one at 1920 × 1080 included", () => {
-    expect(rowFold(470, { viewer: [sound, voice, goLive] }).folded).toEqual([]);
+    expect(rowFold(470, { viewer: watching() }).folded).toEqual([]);
   });
 
   it("folds Go live first, into '…'", () => {
-    expect(rowFold(190, { viewer: [sound, voice, goLive] }).folded).toEqual(["go-live"]);
+    expect(rowFold(190, { viewer: watching() }).folded).toEqual(["go-live"]);
   });
 
   it("then the stream's sound and the streamer's voice, together", () => {
-    expect(rowFold(150, { viewer: [sound, voice, goLive] }).folded).toEqual(["go-live", "sound", "voice"]);
+    expect(rowFold(150, { viewer: watching() }).folded).toEqual(["go-live", "sound", "voice"]);
   });
 
   it("folds the settings before anything else", () => {
-    expect(rowFold(100, { viewer: [{ key: "settings", width: 34 }] }).folded).toEqual(["settings"]);
+    expect(rowFold(100, { viewer: [button("settings")] }).folded).toEqual(["settings"]);
   });
 
   it("never folds my mic, however narrow the picture", () => {
-    const fit = rowFold(60, { viewer: [sound, voice, mic] });
+    const fit = rowFold(60, { viewer: [button("sound"), button("voice"), button("mic")] });
     expect(fit.folded).toEqual(["sound", "voice"]);
   });
 
   it("never asks for the smaller size: the bar's buttons are M already", () => {
-    expect(rowFold(130, { viewer: [sound, voice, goLive] }).size).toBe("l");
+    expect(rowFold(130, { viewer: watching() }).size).toBe("l");
   });
 });
 

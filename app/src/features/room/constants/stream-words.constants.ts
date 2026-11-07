@@ -1,3 +1,7 @@
+/** The settings, named the same on every control that opens them. */
+export const SETTINGS = "Settings";
+/** "…", on a narrow picture: what folded into it. */
+export const MORE_CONTROLS = "More controls";
 /** Why the screen's ways to start are greyed, in a browser that can't share a screen. */
 export const NO_SCREEN = "This browser can't share a screen";
 /** My screen shared without its sound: how to give it some. */

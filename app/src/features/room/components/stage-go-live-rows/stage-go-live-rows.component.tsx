@@ -1,5 +1,5 @@
 import { MenuRow } from "@shared/components/menu-row";
-import { NO_SCREEN } from "../../constants/stream-words.constants";
+import { NO_SCREEN, SETTINGS } from "../../constants/stream-words.constants";
 import type { StageGoLiveRowsProps } from "./types/stage-go-live-rows.types";
 
 /**
@@ -28,7 +28,7 @@ export function StageGoLiveRows({ canShareScreen, full, onStart, onSettings, rol
         onPick={pick(() => onStart("camera"))}
       />
       <hr />
-      <MenuRow role={role} icon="cog" label="Settings" onPick={pick(onSettings)} />
+      <MenuRow role={role} icon="cog" label={SETTINGS} onPick={pick(onSettings)} />
     </>
   );
 }

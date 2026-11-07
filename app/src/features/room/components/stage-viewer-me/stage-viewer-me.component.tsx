@@ -2,6 +2,7 @@ import { Icon } from "@shared/components/icon";
 import { IconButton } from "@shared/components/icon-button";
 import { Tooltip } from "@shared/components/tooltip";
 import { useSettingsAnchor } from "../../hooks/use-settings-anchor.hook";
+import { SETTINGS } from "../../constants/stream-words.constants";
 import { micState } from "../../utils/mic-state.util";
 import { StageGoLive } from "../stage-go-live";
 import type { ViewerMe } from "../../types/viewer-me.types";
@@ -16,8 +17,8 @@ export function StageViewerMe(props: ViewerMe) {
   const mic = micState(on);
   if (props.settingsOnly)
     return (
-      <Tooltip text="Settings">
-        <IconButton ref={anchor?.cog} variant="round" size="m" aria-label="Settings" onClick={props.onSettings}>
+      <Tooltip text={SETTINGS}>
+        <IconButton ref={anchor?.cog} variant="round" size="m" aria-label={SETTINGS} onClick={props.onSettings}>
           <Icon name="cog" />
         </IconButton>
       </Tooltip>

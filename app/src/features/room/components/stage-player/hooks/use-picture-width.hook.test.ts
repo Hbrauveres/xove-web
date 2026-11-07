@@ -53,19 +53,19 @@ describe("the picture's width", () => {
     expect(hook.result.current.width).toBeNull();
   });
 
-  it("remembers Go live's width as last shown on the layer", () => {
-    const sizes = watchSizes();
-    const el = layer(480);
-    const pill = document.createElement("span");
-    pill.dataset.foldKey = "go-live";
-    pill.getBoundingClientRect = () => ({ width: 82.4 }) as DOMRect;
-    el.append(pill);
+  it("keeps Go live's width as it last reported it", () => {
     const hook = renderHook(() => usePictureWidth());
-    act(() => hook.result.current.setLayer(el));
+    act(() => hook.result.current.setGoLive(83));
     expect(hook.result.current.goLive).toBe(83);
-    pill.remove();
-    sizes.resize();
-    expect(hook.result.current.goLive).toBe(83);
+  });
+
+  it("gives the same answer while nothing changes", () => {
+    watchSizes();
+    const hook = renderHook(() => usePictureWidth());
+    act(() => hook.result.current.setLayer(layer(480)));
+    const first = hook.result.current;
+    hook.rerender();
+    expect(hook.result.current).toBe(first);
   });
 
   it("is unknown until there's a layer", () => {

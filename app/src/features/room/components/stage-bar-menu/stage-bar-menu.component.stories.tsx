@@ -38,3 +38,18 @@ type Story = StoryObj<typeof meta>;
 
 /** A menu over the stage's bar, above its button, its groups parted by a line. */
 export const Menu: Story = {};
+/** "…"'s: a named group holding sliders too, centred over its holder. */
+export const CentredGroup: Story = {
+  args: {
+    kind: "group",
+    "aria-label": "More controls",
+    centred: true,
+    children: (
+      <>
+        <MenuRow icon="cog" label="Settings" onPick={() => undefined} />
+        <hr />
+        <input type="range" aria-label="Screen sound volume" />
+      </>
+    ),
+  },
+};

@@ -8,4 +8,6 @@ export type StagePlayerButtonsProps = StreamControls & {
   extra?: ReactNode;
   /** No room to centre the row on the picture: it sits beside the fullscreen button. */
   beside?: boolean | undefined;
+  /** L 48, or M 34 on a picture too narrow for L even beside fullscreen. */
+  size?: "l" | "m" | undefined;
 };

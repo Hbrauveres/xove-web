@@ -6,6 +6,8 @@ export type StageStreamButtonProps = StreamControls & {
   kind: StreamKind;
   /** A drop-up's list opened or closed: the player keeps its controls shown while one is open. */
   onMenuChange?: ((open: boolean) => void) | undefined;
+  /** L 48 (my row's), or M 34 on a narrow picture. */
+  size?: "l" | "m" | undefined;
 };
 
 /** A stream button's icon: at rest, and where it differs, while pointed at or focused. */

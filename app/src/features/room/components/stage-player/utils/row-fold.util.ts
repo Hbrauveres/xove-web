@@ -3,8 +3,8 @@ import {
   BAR_TO_FULLSCREEN,
   EDGE,
   FOLD_ORDER,
-  L,
-  M,
+  ROUND_L,
+  ROUND_M,
   OWN_GAP_L,
   OWN_GAP_M,
 } from "../constants/row-fold.constants";
@@ -19,7 +19,7 @@ const rowWidth = (widths: number[], gap: number) =>
 /** The bar over someone else's stream, with these buttons left and "…" if any folded, and fullscreen. */
 function barWidth(buttons: RowButton[], folded: boolean) {
   const widths = buttons.map((b) => b.width);
-  return EDGE + rowWidth(folded ? [...widths, M] : widths, BAR_GAP) + BAR_TO_FULLSCREEN + M + EDGE;
+  return EDGE + rowWidth(folded ? [...widths, ROUND_M] : widths, BAR_GAP) + BAR_TO_FULLSCREEN + ROUND_M + EDGE;
 }
 
 /** Over someone else's stream: the bar's buttons fold into "…", a step at a time, until the bar fits. */
@@ -42,12 +42,12 @@ function foldBar(picture: number, buttons: RowButton[]): RowFit {
  */
 function fitOwn(picture: number, count: number): RowFit {
   for (const [size, button, gap] of [
-    ["l", L, OWN_GAP_L],
-    ["m", M, OWN_GAP_M],
+    ["l", ROUND_L, OWN_GAP_L],
+    ["m", ROUND_M, OWN_GAP_M],
   ] as const) {
     const row = rowWidth(Array<number>(count).fill(button), gap);
     // The fullscreen button and the room either side of it: as far from my row as its buttons are apart.
-    const corner = gap + M + EDGE;
+    const corner = gap + ROUND_M + EDGE;
     if (corner + row + corner <= picture) return { folded: [], size, beside: false };
     if (EDGE + row + corner <= picture) return { folded: [], size, beside: true };
   }

@@ -2,7 +2,6 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { reducedMotion } from "@shared/utils/reduced-motion.util";
 import type { SmallViewFold } from "../../../types/small-view.types";
 import { FOLD_EASE, FOLD_MS } from "../constants/stage-player.constants";
-import { useOpenAnyway } from "./use-open-anyway.hook";
 import { foldFrames } from "../utils/fold-frames.util";
 
 /**
@@ -12,12 +11,14 @@ import { foldFrames } from "../utils/fold-frames.util";
  * animate an element), it just folds and opens.
  *
  * On a picture too narrow for it (`fits` false) it folds by itself, quietly: no move, no focus. Opened
- * from the corner there, it stays open for that picture, until the picture is wide enough again.
+ * from the corner there, it stays open for that picture (`picture`: the stream on the stage); another
+ * one folds it by itself again.
  */
-export function useFold(fits = true): SmallViewFold {
+export function useFold(fits = true, picture = ""): SmallViewFold {
   const [hidden, setHidden] = useState(false);
-  const [openAnyway, setOpenAnyway] = useOpenAnyway(fits);
-  const folded = hidden || (!fits && !openAnyway);
+  // The picture it was opened on while too narrow for it, if it was.
+  const [openedOn, setOpenedOn] = useState<string | null>(null);
+  const folded = hidden || (!fits && openedOn !== picture);
   const box = useRef<HTMLElement | null>(null);
   const hideButton = useRef<HTMLElement | null>(null);
   const corner = useRef<HTMLElement | null>(null);
@@ -29,7 +30,7 @@ export function useFold(fits = true): SmallViewFold {
     const fold = () => {
       changed.current = "hid";
       setHidden(true);
-      setOpenAnyway(false);
+      setOpenedOn(null);
     };
     if (!from || !to || typeof from.animate !== "function" || reducedMotion()) return fold();
     const move = from.animate(foldFrames(from.getBoundingClientRect(), to.getBoundingClientRect()), {
@@ -38,12 +39,12 @@ export function useFold(fits = true): SmallViewFold {
       fill: "forwards",
     });
     move.onfinish = fold;
-  }, [setOpenAnyway]);
+  }, []);
   const show = useCallback(() => {
     changed.current = "showed";
     setHidden(false);
-    if (!fits) setOpenAnyway(true);
-  }, [fits, setOpenAnyway]);
+    if (!fits) setOpenedOn(picture);
+  }, [fits, picture]);
   useLayoutEffect(() => {
     const was = changed.current;
     changed.current = null;

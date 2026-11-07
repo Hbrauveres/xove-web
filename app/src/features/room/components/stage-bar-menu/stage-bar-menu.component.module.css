@@ -28,7 +28,7 @@ fieldset.menu {
  */
 .menu[data-centred] {
   right: auto;
-  left: calc(50% + (var(--space-8-5) + var(--space-2-5)) / 2);
+  left: calc(50% + (var(--control-sm) + var(--space-2-5)) / 2);
   translate: -50% 0;
 }
 

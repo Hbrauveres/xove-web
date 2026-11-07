@@ -1,12 +1,10 @@
-import { useCallback, useRef, useState } from "react";
-import { GO_LIVE_PILL } from "../constants/row-fold.constants";
+import { useCallback, useMemo, useRef, useState } from "react";
 import type { PictureWidth } from "../types/picture-width.types";
 
 /**
  * The picture layer's width in px, followed as the picture changes shape or the window its size:
- * what decides which controls fit on it. Null until the layer is laid out. Go live's pill is measured
- * at the same moments while it's shown (its width depends on its words), and remembered while it's
- * folded, so a wider picture brings it back at the right width.
+ * what decides which controls fit on it. Null until the layer is laid out. Go live reports its own
+ * width (it depends on its words), remembered while it's folded.
  */
 export function usePictureWidth(): PictureWidth {
   const [width, setWidth] = useState<number | null>(null);
@@ -16,16 +14,12 @@ export function usePictureWidth(): PictureWidth {
     watch.current?.disconnect();
     watch.current = null;
     if (!layer) return;
-    const measure = () => {
-      // Zero is a layer not laid out yet (hidden, or no layout at all): unknown, so nothing folds.
-      setWidth(Math.round(layer.getBoundingClientRect().width) || null);
-      const pill = Math.ceil(layer.querySelector(GO_LIVE_PILL)?.getBoundingClientRect().width ?? 0);
-      if (pill > 0) setGoLive(pill);
-    };
+    // Zero is a layer not laid out yet (hidden, or no layout at all): unknown, so nothing folds.
+    const measure = () => setWidth(Math.round(layer.getBoundingClientRect().width) || null);
     measure();
     if (typeof ResizeObserver === "undefined") return;
     watch.current = new ResizeObserver(measure);
     watch.current.observe(layer);
   }, []);
-  return { setLayer, width, goLive };
+  return useMemo(() => ({ setLayer, width, goLive, setGoLive }), [setLayer, width, goLive]);
 }

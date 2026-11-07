@@ -1,10 +1,9 @@
 import type { ReactNode } from "react";
+import type { PictureFit } from "../../../types/picture-fit.types";
 
 export interface StagePictureLayerProps {
-  /** Hands the layer to what measures it. */
-  setLayer: (layer: HTMLElement | null) => void;
-  /** My own row in M on a narrow picture: the fullscreen button stays level with it. */
-  compact: boolean;
+  /** What fits on the picture: the layer hands itself to it, and offers Go live's report inside. */
+  picture: PictureFit;
   /** The fullscreen button, always there. */
   fullscreen: ReactNode;
   /** The bar of controls, and the small view's corner button when there's one. */

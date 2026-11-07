@@ -1,6 +1,7 @@
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { ActionPill } from "@shared/components/action-pill";
 import { useFloating } from "@shared/stores/floating-store";
+import { useGoLiveWidth } from "../../hooks/use-go-live-width.hook";
 import { useSettingsAnchor } from "../../hooks/use-settings-anchor.hook";
 import { StageBarMenu } from "../stage-bar-menu";
 import { StageGoLiveRows } from "../stage-go-live-rows";
@@ -15,7 +16,17 @@ import type { StageGoLiveProps } from "./types/stage-go-live.types";
 export function StageGoLive({ canShareScreen, full, onStart, onSettings }: StageGoLiveProps) {
   const anchor = useSettingsAnchor();
   const [menu, setMenu] = useState(false);
-  const box = useRef<HTMLSpanElement>(null);
+  const box = useRef<HTMLSpanElement | null>(null);
+  const report = useGoLiveWidth();
+  // Its width, for the fold into "…" on a narrow picture: it's laid out once it's there.
+  const setBox = useCallback(
+    (el: HTMLSpanElement | null) => {
+      box.current = el;
+      const width = Math.ceil(el?.getBoundingClientRect().width ?? 0);
+      if (width > 0) report?.(width);
+    },
+    [report],
+  );
   useFloating({
     open: menu,
     kind: "opened",
@@ -24,7 +35,7 @@ export function StageGoLive({ canShareScreen, full, onStart, onSettings }: Stage
     anchor: () => box.current,
   });
   return (
-    <span ref={box} className={styles.anchor} data-fold-key="go-live">
+    <span ref={setBox} className={styles.anchor}>
       <ActionPill
         size="m"
         fill="glass"

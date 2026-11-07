@@ -1,4 +1,4 @@
-import { GO_LIVE_GUESS, M } from "../constants/row-fold.constants";
+import { GO_LIVE_GUESS, ROUND_M } from "../constants/row-fold.constants";
 import type { RowButton, RowItems, RowShape } from "../types/row-fold.types";
 
 /**
@@ -7,10 +7,10 @@ import type { RowButton, RowItems, RowShape } from "../types/row-fold.types";
  */
 export function rowItems(shape: RowShape, goLiveWidth: number | null): RowItems {
   if (shape.mine) return { own: 4 };
-  if (shape.settingsOnly) return { viewer: [{ key: "settings", width: M }] };
+  if (shape.settingsOnly) return { viewer: [{ key: "settings", width: ROUND_M }] };
   const buttons: RowButton[] = [];
-  if (shape.sound) buttons.push({ key: "sound", width: M });
-  if (shape.voice) buttons.push({ key: "voice", width: M });
-  buttons.push(shape.live ? { key: "mic", width: M } : { key: "go-live", width: goLiveWidth ?? GO_LIVE_GUESS });
+  if (shape.sound) buttons.push({ key: "sound", width: ROUND_M });
+  if (shape.voice) buttons.push({ key: "voice", width: ROUND_M });
+  buttons.push(shape.live ? { key: "mic", width: ROUND_M } : { key: "go-live", width: goLiveWidth ?? GO_LIVE_GUESS });
   return { viewer: buttons };
 }
