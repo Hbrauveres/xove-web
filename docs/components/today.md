@@ -96,7 +96,7 @@ The stream being watched, as large as the room allows, with its controls on the 
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage/` (the box), `stage-player/` (the frame and the picture's layer; its controls fading, fullscreen, the settings' place, the quality, the picture's width and what folds into "…", each a hook), `stage-view/`, `stage-picture/`, `stage-screen-video/`, `stage-notice/`, `stage-controls/`, `stage-info/`, `stage-sounds/`, `stage-voice-audio/` | Here | Done (#190): `Stage.tsx` split into its pieces; the controls on the picture (#247) |
+| `features/room/components/stage/` (the box), `stage-player/` (the frame; its controls fading, fullscreen, the settings' place, the quality, what fits the picture and folds into "…", each a hook), the picture's layer `stage-picture-layer/`, `stage-view/`, `stage-picture/`, `stage-screen-video/`, `stage-notice/`, `stage-controls/`, `stage-info/`, `stage-sounds/`, `stage-voice-audio/` | Here | Done (#190): `Stage.tsx` split into its pieces; the controls on the picture (#247) |
 
 ### Stage light (ambilight)
 
