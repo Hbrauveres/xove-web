@@ -87,7 +87,7 @@ Dark only: Xovê is a room for watching screens, so the chrome stays out of the 
 | `--warn` | `#e0b341` | Reconnecting |
 | `--glass` | `rgba(10, 10, 11, 0.72)` | The round buttons, drop-ups and pickers over the video (with an 8 px blur) |
 | `--panel` | `rgba(18, 18, 20, 0.87)` | The [Panel](#the-panel)'s glass, with `--panel-filter`: its colour does the dimming |
-| `--panel-filter` | blur 22 px, nothing else | The Panel's backdrop. Glass only blurs: a filter chain (brightness, saturate) makes Chrome on a graphics card drop the whole blur (#249); the style check refuses one |
+| `--panel-filter` | blur 22 px, nothing else | The Panel's backdrop. Glass only blurs; its colour does the dimming (#249). Write `backdrop-filter` only: the build adds `-webkit-backdrop-filter`, and a hand-written one makes it drop the unprefixed line, so Chrome gets no blur. The style check refuses both |
 | `--panel-line` | `rgba(255, 255, 255, 0.08)` | The panel's border and its tabs' line |
 | `--sel-bg` | `var(--surface-raised)` | The dark pill of a chosen option, and buttons in a row (Change) |
 | `--sel-shadow` | `0 1px 2px rgba(0, 0, 0, 0.4)` | Its shadow |
