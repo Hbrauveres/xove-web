@@ -12,6 +12,7 @@ import {
   headerOf,
   iShareMyScreen,
   marinaGoesLive,
+  openAsGlass,
   openFrom,
   rolledUp,
   styleOf,
@@ -182,4 +183,11 @@ test("F-activity.8 an event that can't be watched is only read: no button, no ho
   expect.soft(await styleOf(row, "cursor")).not.toBe("pointer");
   await expect.soft(list).toBeVisible();
   expect.soft(blinks(seen.frames, "row")).toEqual([]);
+});
+
+test("F-activity.9 it's one piece of glass, blurring on every frame of its unroll", async ({ page }) => {
+  await openScene(page, "s=live");
+  const { broken, pieces } = await openAsGlass(page, headerOf(page).pill, activityList(page));
+  expect.soft(pieces).toBe(1);
+  expect.soft(broken).toEqual([]);
 });

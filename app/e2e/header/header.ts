@@ -1,6 +1,7 @@
 // What the header's cases share: the bar and its three buttons, their panels, and the room's streams
 // stopping and starting (the harness's hooks) with the activity's news of it.
 import type { Locator, Page } from "@playwright/test";
+import { glassUnderBreakingParentsWhile } from "../support/glass.ts";
 import * as harness from "../support/harness.ts";
 import { wakeStage } from "../support/open.ts";
 import { stageOf } from "../support/stage.ts";
@@ -28,6 +29,20 @@ export async function openFrom(button: Locator, panel: Locator): Promise<void> {
   await button.click();
   await panel.waitFor();
   await untilStill(panel);
+}
+
+/**
+ * A panel opened from its button, checked as glass: what breaks a blur on any frame of its unroll
+ * (`broken`), and how many pieces of glass it is (`pieces`: glass not sitting on other glass of it).
+ */
+export async function openAsGlass(page: Page, button: Locator, panel: Locator) {
+  const broken = await glassUnderBreakingParentsWhile(page, () => openFrom(button, panel));
+  const pieces = await panel.evaluate((root) => {
+    const glass = (e: Element) => getComputedStyle(e).backdropFilter !== "none";
+    const all = [root, ...root.querySelectorAll("*")].filter(glass);
+    return all.filter((e) => !all.some((o) => o !== e && o.contains(e))).length;
+  });
+  return { broken, pieces };
 }
 
 /** A panel rolled back up: it leaves the page once it's rolled up. */

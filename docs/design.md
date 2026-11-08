@@ -135,7 +135,7 @@ Body line height is 1.5; headings balance their lines (`text-wrap: balance`). Fo
 - **Frosted glass** for things floating over the stage or the page: dark (72% for the round buttons, 87% for panels) with a plain blur (8 px for the round buttons, 22 px for panels), never a filter chain. Written as `backdrop-filter` only: the build adds the `-webkit-` line, and a hand-written one makes it drop the plain one (the style check refuses it).
 - **Glass fades itself, never its parent.** A blur only sees what's drawn in its own group: a parent with opacity below 1, a filter, a clip-path, a mask or `will-change` gives its glass an empty layer to blur, and the stream shows sharp through it. So no glass sits under such a parent, not even for the moment of a fade or an unroll: a group that fades sets `--chrome-fade` to 0 and each glass in it fades by its own opacity (the round buttons, the action pills, the sounds' sliders); a drop-up slides as a group and fades its rows; a preview's row clips and fades the glass row itself, not its holder. Glass on glass is fine (a button on a row blurs the row's own panel). The e2e check `glassUnderBreakingParents` holds every menu, drop-up, row and fade to it.
 - **An open menu keeps the controls up:** while a control in the player has its menu open (Go live's, "…"'s, a drop-up), nothing fades.
-- **Clear cuts:** stacked panel sections are separated by a 2 px gap that shows the page behind, never a drawn line.
+- **Every panel is one piece of glass:** its sections sit on it, parted by a hairline (`--hairline` in `--panel-line`), never cut into separate pieces of glass.
 - **Touch targets** are at least about 36 px (the switch keeps a 36 × 20 px target).
 
 ## Motion
@@ -415,7 +415,7 @@ The sliders' rules stay one browser per rule, checked by `npm run check:styles` 
 
 ![The people panel](images/design/panel-people.png) ![My menu, with the switch and a slider](images/design/panel-account.png)
 
-- On the [Panel](#the-panel) with cuts: its sections stacked with 2 px clear cuts, each its own glass. 340 px wide (the activity list: up to 440 px, centred under the pill).
+- On the [Panel](#the-panel): one piece of glass, its sections parted by a hairline. 340 px wide (the activity list: up to 440 px, centred under the pill).
 - Open 8 px under their button; **one thing on screen at a time** (the [floating rule](#drop-ups)); they unroll by their height (260 ms).
 - **Activity:** the latest events, each with its icon, what happened and when. **People:** the seats bar (green), who's here and what each is doing or watching, and the queue. **Account:** me and my connection, the ambilight's switch and brightness, Admin for admins, Sign out.
 
@@ -442,7 +442,7 @@ The sliders' rules stay one browser per rule, checked by `npm run check:styles` 
 `shared/components/panel` (`Panel`, and `PanelSection` for its sections): **the one surface** that holds content, for the settings, the menus and the waiting room's card. A rule for the whole app: a new panel is this one.
 
 - **Glass, 16 px corners:** the panel colour (`--panel`), a 1 px white border at 8%, and a backdrop **blurred 22 px** (`--panel-filter`, only a blur), and the colour at 87% does the dimming, so its text stays readable over the brightest stream. Over a white stream its muted text measures 4.6 : 1, its main text 10.9 : 1; the style check holds the glass to that.
-- **Cuts are optional:** a menu's sections are stacked with 2 px clear cuts, each section carrying the glass itself (a menu's unrolling clip would stop a blur on the outer box).
+- **One piece:** a menu's sections (`PanelSection`) sit on the one glass, a hairline before each but the first; they draw no glass of their own. A menu unrolls by its holder's height, which clips nothing the glass needs.
 - **On a plain page it's the same panel,** nearly solid there, with nothing behind it to blur.
 - What uses it places and moves it; the panel only draws itself.
 

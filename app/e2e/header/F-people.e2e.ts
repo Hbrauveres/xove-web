@@ -6,7 +6,7 @@ import { boxOf } from "../support/geometry.ts";
 import { pxOf, SIZE } from "../support/looks.ts";
 import { pointAt, pointAway } from "../support/pointer.ts";
 import { untilStill } from "../support/timing.ts";
-import { everyoneStops, headerOf, openFrom, peoplePanel, rolledUp, styleOf } from "./header.ts";
+import { everyoneStops, headerOf, openAsGlass, openFrom, peoplePanel, rolledUp, styleOf } from "./header.ts";
 
 test("F-people.1 the button says how many are here, and brightens when pointed at", async ({ page }, info) => {
   await openScene(page, "s=live");
@@ -105,4 +105,11 @@ test("F-people.6 Escape closes it and the focus goes back to the button", async 
   await expect.soft(people).toBeFocused();
   await expect.soft(people).toHaveAccessibleName("4 people here");
   expect.soft(drift(seen.frames, "people")).toBeLessThan(1);
+});
+
+test("F-people.7 it's one piece of glass, blurring on every frame of its unroll", async ({ page }) => {
+  await openScene(page, "s=live");
+  const { broken, pieces } = await openAsGlass(page, headerOf(page).people, peoplePanel(page));
+  expect.soft(pieces).toBe(1);
+  expect.soft(broken).toEqual([]);
 });
