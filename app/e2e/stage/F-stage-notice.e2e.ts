@@ -53,11 +53,18 @@ const notices = (page: Page) => page.evaluate(() => (window as unknown as { __no
 async function loadingMoment(page: Page, info: Parameters<typeof observe>[1]): Promise<NoticeSeen[]> {
   await openScene(page, "s=empty");
   await recordNotices(page);
-  await observe(page, info, { view: stageParts(page).view }, async () => {
-    await marinaGoesLiveSlowly(page);
-    // Until her picture plays: the notice has come and gone.
-    await stageParts(page).box.getByLabel("Marina's shared screen").waitFor();
-  });
+  // The strip spread over the whole start (the room's poll, then the video's wait), so the notice is pictured.
+  await observe(
+    page,
+    info,
+    { view: stageParts(page).view },
+    async () => {
+      await marinaGoesLiveSlowly(page);
+      // Until her picture plays: the notice has come and gone.
+      await stageParts(page).box.getByLabel("Marina's shared screen").waitFor();
+    },
+    { strip: 10, gap: 500 },
+  );
   return notices(page);
 }
 
