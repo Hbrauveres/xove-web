@@ -68,6 +68,22 @@ export async function voiceOn(page: Page, userId: number): Promise<void> {
   }, userId);
 }
 
+/**
+ * Someone starts or stops a stream from the harness's room panel (the scene opened with `panel=1`),
+ * the panel kept off the screen: Bruno is person 5.
+ */
+export async function togglesStream(page: Page, userId: number, kind: "screen" | "camera"): Promise<void> {
+  await page.addStyleTag({ content: "#xr-tab, #xr-panel { display: none !important; }" });
+  await page.evaluate(
+    ({ id, kind }) => {
+      const button = document.querySelector<HTMLButtonElement>(`#xr-panel [data-kind="${kind}"][data-id="${id}"]`);
+      if (!button) throw new Error(`The room panel has no ${kind} for person ${id}`);
+      button.click();
+    },
+    { id: userId, kind },
+  );
+}
+
 /** How many times the picture's shape is corrected to land on a width. */
 const SHAPE_TRIES = 4;
 
