@@ -20,8 +20,9 @@
   display: none;
 }
 
-.control button:not([aria-disabled="true"]):hover .iconRest,
-.control button:not([aria-disabled="true"]):focus-visible .iconRest {
+/* Swapped only where there is a hover icon: every other button keeps its icon while pointed at. */
+.control button:not([aria-disabled="true"]):hover .iconRest:has(+ .iconHover),
+.control button:not([aria-disabled="true"]):focus-visible .iconRest:has(+ .iconHover) {
   display: none;
 }
 
