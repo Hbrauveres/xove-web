@@ -15,6 +15,7 @@ import { isHandheld } from "@services/media-devices-service";
 import { PhoneNoticePage } from "@features/phone-notice";
 import { aUser, installFakeApi, MY_USER_ID, someoneSharing } from "@testing/fakeApi";
 import { FakeTrack, lastRoom, rooms } from "@testing/fakeLiveKit";
+import { POLL_MS } from "@features/room/constants/room.constants";
 import { installRoomPanel } from "./room";
 
 type Scene = { w: number; h: number; draw: (c: CanvasRenderingContext2D, t: number) => void };
@@ -231,8 +232,8 @@ if (scenario === "portrait")
     someoneSharing("Matheus", 2, "camera", undefined, new Date(Date.now() - 212_000)),
     someoneSharing("Ana", 3, "camera", undefined, new Date(Date.now() - 95_000)),
   ];
-/** How long a slow stream's video takes to arrive after the room lists it. */
-const SLOW_VIDEO_MS = 1500;
+/** How long a slow stream's video takes to arrive: two of the room's polls, so it has listed the stream first. */
+const SLOW_VIDEO_MS = POLL_MS * 2;
 const wait = () =>
   new Promise<void>((r) => {
     const go = () => (rooms.length ? r() : setTimeout(go, 50));

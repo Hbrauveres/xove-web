@@ -5,7 +5,8 @@ import { clampPlace } from "../utils/facecam-place.util";
 
 /**
  * Moving the facecam: dragged with the pointer anywhere but its buttons, or with the arrow keys
- * while it has the focus; always kept whole inside the player it sits in.
+ * while it has the focus; always kept whole inside the player it sits in, and moved from where it
+ * shows (a place made on a bigger player is kept inside this one first).
  */
 export function useFacecamMove({ box, buttons, player, place, onMove }: FacecamMoveInput) {
   const drag = useRef<FacecamDrag | null>(null);
@@ -23,10 +24,13 @@ export function useFacecamMove({ box, buttons, player, place, onMove }: FacecamM
       };
     };
 
+    // Where it shows: on a player smaller than it was placed on, its place kept inside this one.
+    const shown = (r: FacecamRoom | null) => (r ? clampPlace(place, r.maxX, r.maxY) : place);
+
     const onPointerDown = (e: PointerEvent) => {
       // Its buttons are buttons, not handles.
       if (e.target instanceof Node && buttons.current?.contains(e.target)) return;
-      drag.current = { pointerId: e.pointerId, x: e.clientX, y: e.clientY, from: place };
+      drag.current = { pointerId: e.pointerId, x: e.clientX, y: e.clientY, from: shown(room()) };
       box.current?.setPointerCapture?.(e.pointerId);
     };
     const onPointerMove = (e: PointerEvent) => {
@@ -49,7 +53,8 @@ export function useFacecamMove({ box, buttons, player, place, onMove }: FacecamM
       const r = room();
       if (e.target !== box.current || !arrow || !r) return;
       e.preventDefault();
-      onMove(clampPlace({ x: place.x + arrow.dx, y: place.y + arrow.dy }, r.maxX, r.maxY));
+      const from = shown(r);
+      onMove(clampPlace({ x: from.x + arrow.dx, y: from.y + arrow.dy }, r.maxX, r.maxY));
     };
 
     return { onPointerDown, onPointerMove, onPointerUp: endDrag, onPointerCancel: endDrag, onKeyDown };

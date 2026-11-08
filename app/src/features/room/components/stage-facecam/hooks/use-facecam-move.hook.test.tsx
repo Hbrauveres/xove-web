@@ -65,4 +65,20 @@ describe("moving the small view", () => {
     fireEvent.keyDown(screen.getByRole("button", { name: "Swap" }), { key: "ArrowUp" });
     expect(onMove).toHaveBeenCalledTimes(1);
   });
+
+  it("on a player too small for where it was, starts a drag or an arrow from where it shows", () => {
+    sizes();
+    const onMove = vi.fn();
+    // 0.95 across: past the 0.8 a 200 px box can go in a 1000 px player, so it shows at 0.8.
+    render(<Mover place={{ x: 0.95, y: 0.9 }} onMove={onMove} />);
+    const box = screen.getByTestId("box");
+    fireEvent.pointerDown(box, { clientX: 500, clientY: 250, pointerId: 3 });
+    fireEvent.pointerMove(box, { clientX: 400, clientY: 250, pointerId: 3 });
+    // 100 px left of where it shows, at once: no dead travel through where it can't be.
+    expect(onMove).toHaveBeenLastCalledWith({ x: 0.7, y: 0.8 });
+    fireEvent.pointerUp(box, { pointerId: 3 });
+    box.focus();
+    fireEvent.keyDown(box, { key: "ArrowUp" });
+    expect(onMove).toHaveBeenLastCalledWith({ x: 0.8, y: 0.75 });
+  });
 });
