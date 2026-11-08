@@ -4,7 +4,7 @@ import { glassUnderBreakingParentsWhile } from "../support/glass.ts";
 import { observe } from "../support/observe.ts";
 import { openScene, wakeStage } from "../support/open.ts";
 import { boxOf, centreX, centreY } from "../support/geometry.ts";
-import { pointAway } from "../support/pointer.ts";
+import { pointAt, pointAway } from "../support/pointer.ts";
 import { shownOpacity } from "../support/screen.ts";
 import { chromeOf, stageOf } from "../support/stage.ts";
 import { CHROME_IDLE_MS, LOOK_EVERY_MS, spend, TIMER_SLACK_MS, untilStill } from "../support/timing.ts";
@@ -183,4 +183,20 @@ test("F-stage-fade.8 every glass fades itself, so it blurs all the way out and b
     expect.soft(out, `${scene}, fading out`).toEqual([]);
     expect.soft(back, `${scene}, coming back`).toEqual([]);
   }
+});
+
+test("F-stage-fade.9 the controls never fade while the pointer rests on one of them", async ({ page }, info) => {
+  await openScene(page, "s=live&sound=1");
+  await wakeStage(page);
+  for (const name of ["Go live", "Mute the screen's sound", "Fullscreen"]) {
+    const rested = page.getByRole("button", { name });
+    await pointAt(page, rested);
+    // Twice the wait they'd fade after.
+    await observe(page, info, { rested }, () => spend(page, CHROME_IDLE_MS * 2), { strip: 4, gap: 600 });
+    await expect.soft(chromeOf(page), name).toHaveAttribute("data-chrome", "shown");
+    expect.soft(await shownOpacity(rested), name).toBe(1);
+  }
+  // Off the controls, on the picture: they fade as ever.
+  await restOnStage(page);
+  await controlsHidden(page);
 });

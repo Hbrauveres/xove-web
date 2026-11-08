@@ -16,3 +16,5 @@ export const FOLD_EASE = "cubic-bezier(0.2, 0.8, 0.2, 1)";
  * 4 px apart, 6 px in) at the picture's whole width. On a narrower one, it folds by itself.
  */
 export const SMALL_VIEW_MIN = 84;
+/** What the pointer may rest on in the player that keeps its controls up: a control, or a menu of one. */
+export const RESTS_ON = "button, input, [role='menu']";

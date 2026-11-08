@@ -10,13 +10,7 @@ function Player() {
   const frame = useRef<HTMLDivElement>(null);
   const chrome = useStageChrome(frame);
   return (
-    <div
-      ref={frame}
-      data-testid="player"
-      data-shown={chrome.shown}
-      onPointerMove={chrome.show}
-      onPointerLeave={chrome.leave}
-    >
+    <div ref={frame} data-testid="player" data-shown={chrome.shown} {...chrome.handlers}>
       <button type="button" onClick={() => chrome.hold("menu", true)}>
         Open menu
       </button>
@@ -109,6 +103,19 @@ describe("the player's labels and bars", () => {
     pass(CHROME_IDLE_MS * 3);
     expect(player).toHaveAttribute("data-shown", "true");
     fireEvent.click(goLive);
+    pass(CHROME_IDLE_MS);
+    expect(player).toHaveAttribute("data-shown", "false");
+  });
+
+  it("stay while the pointer rests on a control, and fade once it moves off it", () => {
+    const player = setup();
+    fireEvent.pointerMove(player);
+    const goLive = screen.getByRole("button", { name: "Go live" });
+    fireEvent.pointerOver(goLive);
+    pass(CHROME_IDLE_MS * 3);
+    expect(player).toHaveAttribute("data-shown", "true");
+    fireEvent.pointerOut(goLive, { relatedTarget: player });
+    fireEvent.pointerOver(player);
     pass(CHROME_IDLE_MS);
     expect(player).toHaveAttribute("data-shown", "false");
   });
