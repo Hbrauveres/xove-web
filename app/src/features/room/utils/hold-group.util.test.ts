@@ -89,4 +89,45 @@ describe("a group holds the part under the pointer when something pushes it", ()
     stop();
     group.remove();
   });
+
+  it("ignores a 'left' sent while the pointer is still where the held part is, until it moves off it", () => {
+    const resize = onResize();
+    const at = { x: 400, y: 0 };
+    const { group, button } = row(at);
+    const stop = holdGroup(group);
+    fireEvent.pointerOver(button);
+    at.x = 300;
+    resize.now();
+    expect(group.style.transform).toBe("translateX(100px)");
+    // The browser re-checks under a still pointer mid-glide and says it left: it's still on the part.
+    fireEvent.pointerLeave(group, { clientX: 420, clientY: 20 });
+    expect(group.style.transform).toBe("translateX(100px)");
+    // It really moves off: the group glides back.
+    fireEvent.pointerMove(document, { clientX: 900, clientY: 300 });
+    expect(group.style.transform).toBe("");
+    stop();
+    group.remove();
+  });
+
+  it("keeps its part when another slides under a pointer that didn't move", () => {
+    const resize = onResize();
+    const at = { x: 400, y: 0 };
+    const { group, button } = row(at);
+    const other = group.appendChild(document.createElement("button"));
+    other.getBoundingClientRect = () => DOMRect.fromRect({ x: 450, y: 0, width: 48, height: 48 });
+    const stop = holdGroup(group);
+    fireEvent.pointerOver(button, { clientX: 420, clientY: 20 });
+    fireEvent.pointerMove(document, { clientX: 420, clientY: 20 });
+    at.x = 380;
+    resize.now();
+    expect(group.style.transform).toBe("translateX(20px)");
+    // Mid-glide the browser re-checks under the still pointer and finds the other button there.
+    fireEvent.pointerOver(other, { clientX: 420, clientY: 20 });
+    // Its box, the hold's shift included, is pushed 40 px more: held 60 px in all.
+    at.x = 360;
+    resize.now();
+    expect(group.style.transform).toBe("translateX(60px)");
+    stop();
+    group.remove();
+  });
 });

@@ -134,7 +134,19 @@ test("F-stage-fade.5 a click where a faded control was only brings the controls 
   // Read right after the click: the controls fade again 2.5 s later.
   let chrome: string | null = null;
   await observe(page, info, { goLive }, async () => {
-    await page.mouse.click(centreX(g), centreY(g));
+    // A press landing on that spot while they're faded: played in the page at one instant, on what's
+    // there now. (A mouse click moves first, and on a busy machine that move can wake the controls
+    // and draw Go live before the press lands: a different case.)
+    await page.evaluate(
+      ({ x, y }) => {
+        const there = document.elementFromPoint(x, y);
+        const at = { bubbles: true, composed: true, clientX: x, clientY: y };
+        for (const type of ["pointerdown", "mousedown", "pointerup", "mouseup"])
+          there?.dispatchEvent(new PointerEvent(type, at));
+        there?.dispatchEvent(new MouseEvent("click", at));
+      },
+      { x: centreX(g), y: centreY(g) },
+    );
     await controlsShown(page);
     chrome = await chromeOf(page).getAttribute("data-chrome");
   });
