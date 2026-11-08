@@ -84,6 +84,7 @@ A test may read a stylesheet (ADR-0102), but in jsdom its text says little about
 
 - **Contrast:** every text colour on every surface meets its ratio (4.5:1; faint labels 3:1), and the ink on red too.
 - **One browser per rule:** no rule mixes `::-webkit-` and `::-moz-` selectors, since a browser drops a whole rule with a selector it doesn't know.
+- **Glass:** a `backdrop-filter` is written once (no hand-written `-webkit-backdrop-filter`: the build adds it, and a hand-written one after a `var()` makes the minifier drop the plain line, so Chrome gets no blur), and only blurs (`blur()`, through tokens or not): the glass's colour darkens it.
 - **Reduced motion:** `global.css` keeps the rule that stops every animation and transition for anyone who asks.
 
 Its own test (`scripts/check-styles.test.ts`) feeds it small stylesheets that pass and fail. How the look comes out on screen is checked in a real browser, below.
@@ -143,7 +144,7 @@ cd app
 npm test                 # once, as the checks do (shuffled; prints its seed)
 npm test -- --sequence.seed=<seed>   # the same order again
 npm run test:watch       # again on every save
-npm run check:styles     # contrast, per-browser rules, reduced motion
+npm run check:styles     # contrast, per-browser rules, glass, reduced motion
 npm run test:alone       # every file, then every test, run alone (slow; before a PR that changes tests)
 npm run test:storybook   # every story in headless Chromium, with the accessibility checks
 npm run storybook        # Storybook on http://localhost:6006
