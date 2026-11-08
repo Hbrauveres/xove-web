@@ -155,3 +155,22 @@ test("F-settings-follow.7 resting on a stream that's off moves nothing; its tool
   await expect.soft(panelOf(page).locator("[data-cue]")).toHaveCount(0);
   await expect.soft(shownTip(page)).toHaveText("Turn on your camera");
 });
+
+test("F-settings-follow.8 with the camera's list opened by a click, a rest on my screen closes it and follows", async ({
+  page,
+}, info) => {
+  await bothLive(page);
+  await tabOf(page, "Camera").click();
+  const picker = panelOf(page).getByRole("button", { name: /^Camera: / });
+  await picker.click();
+  await expect(picker).toHaveAttribute("aria-expanded", "true");
+  const { screen } = myButtons(page);
+  await observe(page, info, { screen, panel: panelOf(page) }, async () => {
+    await restOnButton(page, screen);
+  });
+  // The list closed: nothing in the panel is left open (the camera's tab, hidden now, included).
+  await expect.soft(panelOf(page).locator('[aria-expanded="true"]')).toHaveCount(0);
+  await expect.soft(tabOf(page, "Screen")).toHaveAttribute("aria-selected", "true");
+  await expect.soft(cueOn(page, "Screen")).toHaveCount(1);
+  await expect.soft(unrolled(page)).toHaveCount(0);
+});

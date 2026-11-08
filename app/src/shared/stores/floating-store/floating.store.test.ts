@@ -92,6 +92,19 @@ describe("one thing on screen at a time", () => {
   });
 });
 
+describe("following a rest", () => {
+  it("closes everything opened, and leaves what opened on a rest", () => {
+    const { store, thing } = setup();
+    const list = thing("opened");
+    const row = thing("rest");
+    store.add(list.f);
+    store.add(row.f);
+    store.closeOpened();
+    expect(list.f.close).toHaveBeenCalled();
+    expect(row.f.close).not.toHaveBeenCalled();
+  });
+});
+
 describe("closing", () => {
   const press = (el: Element) => el.dispatchEvent(new Event("pointerdown", { bubbles: true }));
   const escape = () => {
