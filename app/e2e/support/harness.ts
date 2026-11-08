@@ -10,6 +10,7 @@ import { untilStill } from "./timing.ts";
 interface Hooks {
   everyoneStops: () => void;
   marinaGoesLive: () => void;
+  marinaGoesLiveSlowly: () => void;
   soundStarts: () => number;
 }
 
@@ -26,6 +27,12 @@ export async function everyoneStops(page: Page): Promise<void> {
 export async function marinaGoesLive(page: Page): Promise<void> {
   await hooksReady(page);
   await page.evaluate(() => (window as unknown as { __xove: Hooks }).__xove.marinaGoesLive());
+}
+
+/** Marina starts sharing, her video arriving a moment after the room lists her stream. */
+export async function marinaGoesLiveSlowly(page: Page): Promise<void> {
+  await hooksReady(page);
+  await page.evaluate(() => (window as unknown as { __xove: Hooks }).__xove.marinaGoesLiveSlowly());
 }
 
 /** How many times the room has been asked to start its sound (LiveKit's `startAudio`). */

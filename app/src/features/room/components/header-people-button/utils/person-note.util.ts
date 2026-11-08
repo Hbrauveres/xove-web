@@ -1,6 +1,7 @@
+import { SHARING_NOTE } from "../constants/people-button.constants";
 import type { SharingOf, WatchingOf } from "../types/header-people-button.types";
 
-/** The line under a person's name: what they share, or whose stream they watch. */
+/** The line under a person's name: what they share, or whose live stream they watch. */
 export function personNote(
   id: string,
   sharing: SharingOf,
@@ -8,9 +9,10 @@ export function personNote(
   nameOf: (id: string) => string,
 ): string {
   const shares = sharing[id];
-  if (shares?.screen && shares.camera) return "Sharing screen and camera";
-  if (shares?.screen) return "Sharing their screen";
-  if (shares?.camera) return "Sharing their camera";
-  const watch = watchingOf[id];
-  return watch ? `Watching ${nameOf(watch.sharerId)}` : "In the room";
+  const note = shares && SHARING_NOTE[`${shares.screen}-${shares.camera}`];
+  if (note) return note;
+  // Only someone live is watched: after they stop, the watcher is just in the room.
+  const watched = watchingOf[id]?.sharerId;
+  const live = watched !== undefined && Object.values(sharing[watched] ?? {}).some(Boolean);
+  return live ? `Watching ${nameOf(watched)}` : "In the room";
 }

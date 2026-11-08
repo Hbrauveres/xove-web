@@ -33,9 +33,9 @@ test("F-people.2 a click opens Here now: the seats, their bar and the queue", as
   });
   await expect.soft(panel).toBeVisible();
   await expect.soft(panel.getByText("Seats", { exact: true })).toBeVisible();
-  await expect.soft(panel.getByText("3 of 20 · 17 free")).toBeVisible();
+  await expect.soft(panel.getByText("4 of 20 · 16 free")).toBeVisible();
   const bar = panel.getByRole("progressbar", { name: "Seats taken" });
-  await expect.soft(bar).toHaveAttribute("value", "3");
+  await expect.soft(bar).toHaveAttribute("value", "4");
   await expect.soft(bar).toHaveAttribute("max", "20");
   await expect.soft(panel.getByText("Nobody is waiting for a seat.")).toBeVisible();
   await expect.soft(people).toHaveAttribute("aria-expanded", "true");
@@ -84,6 +84,8 @@ test("F-people.5 when everyone stops, the lines say so", async ({ page }, info) 
   await everyoneStops(page);
   await observe(page, info, { people, panel }, () => openFrom(people, panel));
   await expect.soft(panel.getByText(/^Sharing /)).toHaveCount(0);
+  // Nobody is live, so nobody watches anyone: everyone is just in the room.
+  await expect.soft(panel.getByText(/^Watching /)).toHaveCount(0);
   await expect.soft(panel.getByRole("listitem").filter({ hasText: "(you)" })).toBeVisible();
   // My own row comes first once nobody shares.
   await expect.soft(panel.getByRole("listitem").first()).toContainText("Henrique");

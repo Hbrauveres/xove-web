@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
-import { openScene } from "../support/open.ts";
+import { FIXED_TIME, openScene } from "../support/open.ts";
 import { observe } from "../support/observe.ts";
 import { boxOf, centreX } from "../support/geometry.ts";
 import { pxOf, SIZE } from "../support/looks.ts";
@@ -17,6 +17,9 @@ import {
   rolledUp,
   styleOf,
 } from "./header.ts";
+
+/** How far past the scene's moment the clock goes: an hour and a half, which rounded to nearest would read 2 h. */
+const LATER_MS = 90 * 60_000;
 
 test("F-activity.1 at rest the pill shows the latest event, how long ago and how many are new", async ({
   page,
@@ -190,4 +193,14 @@ test("F-activity.9 it's one piece of glass, blurring on every frame of its unrol
   const { broken, pieces } = await openAsGlass(page, headerOf(page).pill, activityList(page));
   expect.soft(pieces).toBe(1);
   expect.soft(broken).toEqual([]);
+});
+
+test("F-activity.10 a time reads in whole units passed: 90 minutes ago is 1 h", async ({ page }, info) => {
+  await openScene(page, "s=live");
+  // The room's people joined at the scene's moment: 90 minutes on, the newest joined 90 minutes ago.
+  await page.clock.setFixedTime(new Date(FIXED_TIME.getTime() + LATER_MS));
+  const { pill } = headerOf(page);
+  const list = activityList(page);
+  await observe(page, info, { pill, list }, () => openFrom(pill, list));
+  await expect.soft(list.getByRole("listitem").first().locator("time")).toHaveText("1 h");
 });

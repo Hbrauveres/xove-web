@@ -206,6 +206,11 @@ server.here = [
   { userId: 3, since: ago(0.2), mine: false },
 ];
 server.seatsInfo = { total: 20, taken: 3, waiting: 0 };
+// Ana shares her camera there: she's here too, in a seat of her own.
+if (scenario === "live") {
+  server.here = [...server.here, { userId: 4, since: ago(2), mine: false }];
+  server.seatsInfo = { ...server.seatsInfo, taken: 4 };
+}
 if (scenario === "live")
   server.streams = [
     someoneSharing("Marina", 2, "screen", undefined, new Date(Date.now() - 4_360_000)),
@@ -226,6 +231,8 @@ if (scenario === "portrait")
     someoneSharing("Matheus", 2, "camera", undefined, new Date(Date.now() - 212_000)),
     someoneSharing("Ana", 3, "camera", undefined, new Date(Date.now() - 95_000)),
   ];
+/** How long a slow stream's video takes to arrive after the room lists it. */
+const SLOW_VIDEO_MS = 1500;
 const wait = () =>
   new Promise<void>((r) => {
     const go = () => (rooms.length ? r() : setTimeout(go, 50));
@@ -257,11 +264,17 @@ void wait().then(() =>
         for (const s of server.streams)
           room.unpublish(`user-${s.userId}`, s.kind === "camera" ? "camera" : "screen_share");
         server.streams = [];
+        // The watches stay a moment, as the API's may: the app says "Watching" only for someone live.
       },
       // Marina starts sharing her screen (the room then watches her).
       marinaGoesLive: () => {
         server.streams = [...server.streams, someoneSharing("Marina", 2, "screen", undefined, new Date())];
         pictureOf.set(room.publishScreen("user-2"), "game");
+      },
+      // Marina starts sharing, her video on its way for a moment (the stage's "Loading…" while it starts).
+      marinaGoesLiveSlowly: () => {
+        server.streams = [...server.streams, someoneSharing("Marina", 2, "screen", undefined, new Date())];
+        setTimeout(() => pictureOf.set(room.publishScreen("user-2"), "game"), SLOW_VIDEO_MS);
       },
       // How many times the room was asked to start its sound (LiveKit's startAudio, after a click).
       soundStarts: () => room.startAudio.mock.calls.length,
