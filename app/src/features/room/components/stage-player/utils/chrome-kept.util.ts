@@ -1,13 +1,4 @@
-/** What may keep the player's controls up, beside the player itself. */
-export interface ChromeReasons {
-  /** How many things hold them up (a menu, the settings). */
-  held: number;
-  /** The pointer rests on one of the controls. */
-  onControl: boolean;
-  /** The keyboard was used last (a click's focus doesn't count). */
-  keyboard: boolean;
-}
-
+import type { ChromeReasons } from "../types/stage-chrome.types";
 /**
  * Whether the controls stay up: something holds them, the pointer rests on one, a control's menu is
  * open in `frame` (Go live's, "…"'s), or a control in it has the keyboard's focus.

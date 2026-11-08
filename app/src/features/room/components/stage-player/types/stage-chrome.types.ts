@@ -24,3 +24,13 @@ export interface StageChrome {
     onPointerOver: (e: PointerEvent) => void;
   };
 }
+
+/** What may keep the player's controls up, beside the player itself. */
+export interface ChromeReasons {
+  /** How many things hold them up (a menu, the settings). */
+  held: number;
+  /** The pointer rests on one of the controls. */
+  onControl: boolean;
+  /** The keyboard was used last (a click's focus doesn't count). */
+  keyboard: boolean;
+}

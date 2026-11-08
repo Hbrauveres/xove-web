@@ -15,3 +15,24 @@ it("shows after a rest, goes when told to keep quiet", () => {
   rerender({ quiet: true });
   expect(result.current.shown).toBe(false);
 });
+
+it("with cutOnly, shows only when its control's text is cut", () => {
+  const control = document.createElement("button");
+  const name = control.appendChild(document.createElement("span"));
+  let needs = 120;
+  Object.defineProperty(name, "clientWidth", { value: 120 });
+  Object.defineProperty(name, "scrollWidth", { get: () => needs });
+  const opts = {
+    tip: { current: null },
+    anchor: { current: control },
+    quiet: false,
+    text: "OBS Virtual Camera",
+    cutOnly: true,
+  };
+  const { result } = renderHook(() => useTip(opts));
+  act(() => result.current.show());
+  expect(result.current.shown).toBe(false);
+  needs = 180;
+  act(() => result.current.show());
+  expect(result.current.shown).toBe(true);
+});

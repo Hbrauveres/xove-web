@@ -128,7 +128,7 @@ const resolved = (value: string, tokens: Map<string, string>, depth = 0): string
 /**
  * Glass blurs only, written once:
  * - backdrop-filter only: the build adds -webkit-backdrop-filter itself, and a hand-written one
- *   after a var() value makes it drop the unprefixed line, so Chrome gets no blur at all (#249);
+ *   after a var() value makes it drop the unprefixed line, so Chrome gets no blur at all;
  * - blur() only (brightness, saturate…): its colour darkens it, a lighter filter to draw.
  */
 export function glassFilterProblems(root: Root, file: string, tokens: Map<string, string>) {

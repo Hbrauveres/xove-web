@@ -1,4 +1,4 @@
-// The glass rule (#249, design sheet: "glass fades itself, never its parent"): a backdrop-filter blurs
+// The glass rule (the design sheet's "glass fades itself, never its parent"): a backdrop-filter blurs
 // only what is drawn in its own group. A parent with opacity below 1, a filter, a clip-path, a mask or
 // will-change paints its children into an empty layer first, and a glass inside it blurs nothing.
 import type { Page } from "@playwright/test";

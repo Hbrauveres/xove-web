@@ -119,7 +119,6 @@ export const SIZE = {
   dropdown: "var(--dropdown-width)",
   dropdownGap: "var(--space-2)",
   panelCorner: "var(--radius-4)",
-  /** The clear cut between a panel's sections. */
   /** A switch's target, and how far its knob travels. */
   switchWidth: "var(--control-md)",
   switchHeight: "var(--size-5)",
