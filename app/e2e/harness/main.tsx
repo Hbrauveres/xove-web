@@ -15,6 +15,7 @@ import { isHandheld } from "@services/media-devices-service";
 import { PhoneNoticePage } from "@features/phone-notice";
 import { aUser, installFakeApi, MY_USER_ID, someoneSharing } from "@testing/fakeApi";
 import { FakeTrack, lastRoom, rooms } from "@testing/fakeLiveKit";
+import { POLL_MS } from "@features/room/constants/room.constants";
 import { installRoomPanel } from "./room";
 
 type Scene = { w: number; h: number; draw: (c: CanvasRenderingContext2D, t: number) => void };
@@ -137,7 +138,11 @@ if (navigator.mediaDevices) {
   navigator.mediaDevices.getDisplayMedia = async () => stream("code").clone();
   // Nor cameras: six to pick from in the settings and the camera's drop-up, so a list scrolls.
   // &cams=emeet: Henrique's two cameras, with long names.
-  const emeet = new URLSearchParams(location.search).get("cams") === "emeet";
+  const cams = new URLSearchParams(location.search).get("cams");
+  const emeet = cams === "emeet";
+  // One name too long for a picker's option, cut there.
+  const long =
+    cams === "long" ? [{ deviceId: "cam-7", label: "Logitech BRIO Ultra HD Pro Business Webcam (046d:085e)" }] : [];
   navigator.mediaDevices.enumerateDevices = async () =>
     (emeet
       ? [
@@ -151,6 +156,7 @@ if (navigator.mediaDevices) {
           { deviceId: "cam-4", label: "Elgato Facecam" },
           { deviceId: "cam-5", label: "Iriun Webcam" },
           { deviceId: "cam-6", label: "Continuity Camera" },
+          ...long,
         ]
     )
       .map((c) => ({ ...c, kind: "videoinput", groupId: "", toJSON: () => c }))
@@ -201,6 +207,11 @@ server.here = [
   { userId: 3, since: ago(0.2), mine: false },
 ];
 server.seatsInfo = { total: 20, taken: 3, waiting: 0 };
+// Ana shares her camera there: she's here too, in a seat of her own.
+if (scenario === "live") {
+  server.here = [...server.here, { userId: 4, since: ago(2), mine: false }];
+  server.seatsInfo = { ...server.seatsInfo, taken: 4 };
+}
 if (scenario === "live")
   server.streams = [
     someoneSharing("Marina", 2, "screen", undefined, new Date(Date.now() - 4_360_000)),
@@ -221,6 +232,8 @@ if (scenario === "portrait")
     someoneSharing("Matheus", 2, "camera", undefined, new Date(Date.now() - 212_000)),
     someoneSharing("Ana", 3, "camera", undefined, new Date(Date.now() - 95_000)),
   ];
+/** How long a slow stream's video takes to arrive: two of the room's polls, so it has listed the stream first. */
+const SLOW_VIDEO_MS = POLL_MS * 2;
 const wait = () =>
   new Promise<void>((r) => {
     const go = () => (rooms.length ? r() : setTimeout(go, 50));
@@ -252,11 +265,17 @@ void wait().then(() =>
         for (const s of server.streams)
           room.unpublish(`user-${s.userId}`, s.kind === "camera" ? "camera" : "screen_share");
         server.streams = [];
+        // The watches stay a moment, as the API's may: the app says "Watching" only for someone live.
       },
       // Marina starts sharing her screen (the room then watches her).
       marinaGoesLive: () => {
         server.streams = [...server.streams, someoneSharing("Marina", 2, "screen", undefined, new Date())];
         pictureOf.set(room.publishScreen("user-2"), "game");
+      },
+      // Marina starts sharing, her video on its way for a moment (the stage's "Loading…" while it starts).
+      marinaGoesLiveSlowly: () => {
+        server.streams = [...server.streams, someoneSharing("Marina", 2, "screen", undefined, new Date())];
+        setTimeout(() => pictureOf.set(room.publishScreen("user-2"), "game"), SLOW_VIDEO_MS);
       },
       // How many times the room was asked to start its sound (LiveKit's startAudio, after a click).
       soundStarts: () => room.startAudio.mock.calls.length,

@@ -8,8 +8,8 @@ import { useRoll } from "./hooks/use-roll.hook";
 import { takeFocus } from "./utils/take-focus.util";
 
 /**
- * The room's floating panel: frosted sections with clear cuts between them, that
- * unroll downward and roll back up. It's one floating thing, opened by its button: a press outside,
+ * The room's floating panel: one piece of glass, its sections parted by a hairline, that
+ * unrolls downward and rolls back up. It's one floating thing, opened by its button: a press outside,
  * Escape or another opening closes it.
  */
 export function Dropdown({
@@ -45,11 +45,11 @@ export function Dropdown({
       aria-label={label}
       tabIndex={-1}
       className={[styles.panel, styles[align], className].filter(Boolean).join(" ")}
-      // The roll is the height only: a clip, fade or filter would stop the sections' blur.
+      // The roll is the height only: a clip, fade or filter here would stop the glass's blur.
       style={{ gridTemplateRows: rolledOut ? "1fr" : "0fr", width }}
       data-rolled={rolledOut ? "out" : "up"}
     >
-      <Panel cuts>{children}</Panel>
+      <Panel className={styles.glass}>{children}</Panel>
     </div>
   );
 }

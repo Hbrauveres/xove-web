@@ -21,7 +21,8 @@ test("F-admin.1 an admin sees who's waiting and who's in, under counted headings
   const request = requests(page).getByRole("listitem");
   await expect.soft(request).toContainText("Marina Costa");
   await expect.soft(request).toContainText("marina@example.com");
-  await expect.soft(request.locator("time")).toHaveText("2 h ago");
+  // 90 minutes ago: in whole hours passed, rounded down.
+  await expect.soft(request.locator("time")).toHaveText("1 h ago");
   await expect.soft(request).toContainText("“Hi, it's Marina from the Friday games.”");
   await expect.soft(request.getByRole("button", { name: "Approve" })).toBeEnabled();
   await expect.soft(request.getByRole("button", { name: "Decline" })).toBeEnabled();

@@ -162,7 +162,14 @@ test("F-my-buttons.7 turning on my camera keeps the button under the pointer sti
   const camera = control(page, /your camera/);
   await restOn(page, camera, HOVER_REST_MS);
   await untilStill(page);
-  const seen = await observe(page, info, { camera }, async () => {
+  // Every one of my buttons, watched: the row keeps its place by layout (nothing holds it).
+  const row = {
+    camera,
+    screen: control(page, /your screen/),
+    mic: control(page, /your voice|your mic/i),
+    cog: control(page, "Settings"),
+  };
+  const seen = await observe(page, info, row, async () => {
     await page.mouse.down();
     await page.mouse.up();
     await expect(camera).toHaveAccessibleName("Turn off your camera");
@@ -170,7 +177,7 @@ test("F-my-buttons.7 turning on my camera keeps the button under the pointer sti
   });
   await expect.soft(camera).toHaveAccessibleName("Turn off your camera");
   await expect.soft(camera).toHaveAttribute("aria-pressed", "true");
-  expect.soft(drift(seen.frames, "camera")).toBeLessThan(1);
+  for (const name of Object.keys(row)) expect.soft(drift(seen.frames, name), name).toBeLessThan(1);
   expect.soft(blinks(seen.frames, "camera")).toEqual([]);
 });
 

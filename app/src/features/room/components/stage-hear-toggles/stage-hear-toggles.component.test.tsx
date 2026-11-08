@@ -1,4 +1,5 @@
-import { render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { REST_MS } from "../../constants/sound-slider.constants";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { aSharer } from "@testing/factories/sharer.factory";
@@ -42,6 +43,18 @@ describe("a preview's two toggles", () => {
     await userEvent.setup().click(voice);
     expect(onChange).not.toHaveBeenCalled();
     expect(toastStore.current()?.text).toBe("Bruno's mic is off");
+  });
+
+  it("unrolls no slider for a greyed sound: a rest on it opens nothing, as one on a sound that's there does", () => {
+    vi.useFakeTimers();
+    render(<StageHearToggles sharer={bruno({ hasVoice: false })} hearing={HEARD} onChange={() => {}} />);
+    const row = screen.getByRole("group", { name: "Bruno's sounds" });
+    fireEvent.pointerEnter(screen.getByRole("button", { name: "Bruno: Bruno's mic is off" }));
+    act(() => vi.advanceTimersByTime(REST_MS));
+    expect(row).not.toHaveAttribute("data-open");
+    fireEvent.pointerEnter(screen.getByRole("button", { name: "Mute Bruno's screen sound" }));
+    act(() => vi.advanceTimersByTime(REST_MS));
+    expect(row).toHaveAttribute("data-open", "sound");
   });
 
   it("lights the voice while they speak, never once I've muted it (who's talking)", () => {

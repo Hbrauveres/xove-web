@@ -2,7 +2,7 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
 import { boxOf } from "../support/geometry.ts";
-import { everyoneStops } from "../support/harness.ts";
+import { everyoneStops, togglesStream } from "../support/harness.ts";
 import { openScene } from "../support/open.ts";
 import { pointAt } from "../support/pointer.ts";
 import { pictureOf } from "../support/stage.ts";
@@ -27,20 +27,21 @@ test("F-also-live.1 the other streams are previews beside the places, the one on
     await page.mouse.move(10, 10);
   });
   await expect.soft(page.getByRole("region", { name: "Also live" })).toBeVisible();
-  await expect.soft(previews).toHaveText(["Rafa · screen", "Ana · camera"]);
+  // The newest sharing first (Ana, 95 s), the longest beside the places (Rafa, 38 min).
+  await expect.soft(previews).toHaveText(["Ana · camera", "Rafa · screen"]);
   await expect.soft(page.getByRole("button", { name: "Watch Rafa · screen" })).toBeVisible();
   await expect.soft(page.getByRole("button", { name: "Watch Ana · camera" })).toBeVisible();
   await expect.soft(page.getByRole("button", { name: /Watch Marina/ })).toHaveCount(0);
   // Under the picture, one row: the previews (scrolling where room runs short), then the places,
   // level with them and always whole in the window. Each preview can be scrolled to.
   const pic = await boxOf(pictureOf(page));
-  const rafa = await boxOf(previews.nth(0));
-  const ana = await boxOf(previews.nth(1));
+  const first = await boxOf(previews.nth(0));
+  const second = await boxOf(previews.nth(1));
   const box = await boxOf(places);
-  expect.soft(rafa.y).toBeGreaterThanOrEqual(pic.y + pic.height);
-  expect.soft(ana.x).toBeGreaterThan(rafa.x + rafa.width);
-  expect.soft(box.x).toBeGreaterThan(rafa.x);
-  expect.soft(Math.abs(rafa.y - box.y)).toBeLessThan(1);
+  expect.soft(first.y).toBeGreaterThanOrEqual(pic.y + pic.height);
+  expect.soft(second.x).toBeGreaterThan(first.x + first.width);
+  expect.soft(box.x).toBeGreaterThan(second.x);
+  expect.soft(Math.abs(first.y - box.y)).toBeLessThan(1);
   await expect.soft(places).toBeInViewport({ ratio: 1 });
   for (const l of [previews.nth(0), previews.nth(1)]) {
     await l.scrollIntoViewIfNeeded();
@@ -79,7 +80,7 @@ test("F-also-live.3 a click puts that stream on the stage, the one there becomes
   await expect
     .soft(page.getByRole("region", { name: "Shared screen" }).getByLabel("Rafa's shared screen"))
     .toHaveCount(1);
-  await expect.soft(previewsOf(page)).toHaveText(["Marina · screen", "Ana · camera"]);
+  await expect.soft(previewsOf(page)).toHaveText(["Ana · camera", "Marina · screen"]);
   await expect.soft(places).toHaveAccessibleName("3 of 6 live, 3 seats open");
   expect.soft(drift(seen.frames, "places")).toBeLessThan(1);
   expect.soft(blinks(seen.frames, "places")).toEqual([]);
@@ -94,7 +95,7 @@ test("F-also-live.4 with the keyboard, Enter on a preview puts it on the stage",
     await stageUpFor(page, "Ana");
   });
   await expect.soft(page.getByRole("heading", { name: "Ana", level: 2 })).toBeVisible();
-  await expect.soft(previewsOf(page)).toHaveText(["Marina · screen", "Rafa · screen"]);
+  await expect.soft(previewsOf(page)).toHaveText(["Rafa · screen", "Marina · screen"]);
 });
 
 test("F-also-live.5 the places show how many are live, and say it when pointed at", async ({ page }, info) => {
@@ -127,4 +128,28 @@ test("F-also-live.6 with nobody live there are no previews, every place open, th
   await expect.soft(places).toHaveAccessibleName("0 of 6 live, 6 seats open");
   await expect.soft(places.locator("i[data-on]")).toHaveCount(0);
   expect.soft(drift(seen.frames, "places")).toBeLessThan(1);
+});
+
+test("F-also-live.7 a stream that starts enters at the far end: no preview moves under the pointer", async ({
+  page,
+}, info) => {
+  await openScene(page, "s=live&panel=1");
+  const rafa = page.getByRole("button", { name: "Watch Rafa · screen" });
+  const ana = page.getByRole("button", { name: "Watch Ana · camera" });
+  await pointAt(page, rafa);
+  const seen = await observe(page, info, { rafa, ana }, async () => {
+    // Bruno starts sharing his screen while the pointer rests on Rafa.
+    await togglesStream(page, 5, "screen");
+    await page.getByRole("button", { name: "Watch Bruno · screen" }).waitFor();
+  });
+  await expect.soft(previewsOf(page)).toHaveText(["Bruno · screen", "Ana · camera", "Rafa · screen"]);
+  expect.soft(drift(seen.frames, "rafa")).toBeLessThan(1);
+  expect.soft(drift(seen.frames, "ana")).toBeLessThan(1);
+  // Still Rafa under the pointer.
+  const r = await boxOf(rafa);
+  const under = await page.evaluate(
+    ({ x, y }) => document.elementFromPoint(x, y)?.closest("button")?.getAttribute("aria-label"),
+    { x: r.x + r.width / 2, y: r.y + r.height / 2 },
+  );
+  expect.soft(under).toBe("Watch Rafa · screen");
 });

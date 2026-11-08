@@ -18,6 +18,8 @@ export const LOOK = {
   accentSoft: "var(--accent-soft)",
   panel: "var(--panel)",
   panelFilter: "var(--panel-filter)",
+  /** The thin light line around a panel and between its sections. */
+  panelLine: "var(--panel-line)",
   fontDisplay: "var(--font-display)",
   fontBody: "var(--font-body)",
   fontMono: "var(--font-mono)",
@@ -117,8 +119,6 @@ export const SIZE = {
   dropdown: "var(--dropdown-width)",
   dropdownGap: "var(--space-2)",
   panelCorner: "var(--radius-4)",
-  /** The clear cut between a panel's sections. */
-  sectionCut: "var(--space-0-5)",
   /** A switch's target, and how far its knob travels. */
   switchWidth: "var(--control-md)",
   switchHeight: "var(--size-5)",

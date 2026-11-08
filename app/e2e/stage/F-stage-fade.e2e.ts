@@ -1,12 +1,14 @@
 import { expect, test, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
+import { glassUnderBreakingParentsWhile } from "../support/glass.ts";
 import { observe } from "../support/observe.ts";
 import { openScene, wakeStage } from "../support/open.ts";
 import { boxOf, centreX, centreY } from "../support/geometry.ts";
-import { pointAway } from "../support/pointer.ts";
+import { pointAt, pointAway } from "../support/pointer.ts";
 import { shownOpacity } from "../support/screen.ts";
 import { chromeOf, stageOf } from "../support/stage.ts";
 import { CHROME_IDLE_MS, LOOK_EVERY_MS, spend, TIMER_SLACK_MS, untilStill } from "../support/timing.ts";
+import { openMyStream } from "../controls/controls.ts";
 import { restOnStage, stageParts } from "./stage.ts";
 
 /** The controls shown and their fade over, or hidden and their fade over. */
@@ -132,7 +134,19 @@ test("F-stage-fade.5 a click where a faded control was only brings the controls 
   // Read right after the click: the controls fade again 2.5 s later.
   let chrome: string | null = null;
   await observe(page, info, { goLive }, async () => {
-    await page.mouse.click(centreX(g), centreY(g));
+    // A press landing on that spot while they're faded: played in the page at one instant, on what's
+    // there now. (A mouse click moves first, and on a busy machine that move can wake the controls
+    // and draw Go live before the press lands: a different case.)
+    await page.evaluate(
+      ({ x, y }) => {
+        const there = document.elementFromPoint(x, y);
+        const at = { bubbles: true, composed: true, clientX: x, clientY: y };
+        for (const type of ["pointerdown", "mousedown", "pointerup", "mouseup"])
+          there?.dispatchEvent(new PointerEvent(type, at));
+        there?.dispatchEvent(new MouseEvent("click", at));
+      },
+      { x: centreX(g), y: centreY(g) },
+    );
     await controlsShown(page);
     chrome = await chromeOf(page).getAttribute("data-chrome");
   });
@@ -163,4 +177,38 @@ test("F-stage-fade.7 the empty stage's controls never fade", async ({ page }, in
   await expect.soft(chromeOf(page)).toHaveCount(0);
   expect.soft(await shownOpacity(fullscreen)).toBe(1);
   expect.soft(await shownOpacity(settings)).toBe(1);
+});
+
+test("F-stage-fade.8 every glass fades itself, so it blurs all the way out and back in", async ({ page }) => {
+  const scenes: [string, () => Promise<void>][] = [
+    ["someone's screen, its sounds", () => openScene(page, "s=live&sound=1")],
+    ["the small view", () => openScene(page, "s=facecam")],
+    ["my own stream", () => openMyStream(page)],
+  ];
+  for (const [scene, open] of scenes) {
+    await open();
+    await wakeStage(page);
+    await controlsShown(page);
+    // Out: the mouse rests and every control fades; back in: a move wakes them.
+    const out = await glassUnderBreakingParentsWhile(page, () => restOnStage(page).then(() => controlsHidden(page)));
+    const back = await glassUnderBreakingParentsWhile(page, () => wakeStage(page).then(() => controlsShown(page)));
+    expect.soft(out, `${scene}, fading out`).toEqual([]);
+    expect.soft(back, `${scene}, coming back`).toEqual([]);
+  }
+});
+
+test("F-stage-fade.9 the controls never fade while the pointer rests on one of them", async ({ page }, info) => {
+  await openScene(page, "s=live&sound=1");
+  await wakeStage(page);
+  for (const name of ["Go live", "Mute the screen's sound", "Fullscreen"]) {
+    const rested = page.getByRole("button", { name });
+    await pointAt(page, rested);
+    // Twice the wait they'd fade after.
+    await observe(page, info, { rested }, () => spend(page, CHROME_IDLE_MS * 2), { strip: 4, gap: 600 });
+    await expect.soft(chromeOf(page), name).toHaveAttribute("data-chrome", "shown");
+    expect.soft(await shownOpacity(rested), name).toBe(1);
+  }
+  // Off the controls, on the picture: they fade as ever.
+  await restOnStage(page);
+  await controlsHidden(page);
 });

@@ -59,8 +59,10 @@ export class FakeTrack {
     this.attached.push(element);
     return element;
   }
+  /** As LiveKit's: the element lets go of the track's stream. */
   detach(element: HTMLMediaElement) {
     this.attached.splice(this.attached.indexOf(element), 1);
+    element.srcObject = null;
     return element;
   }
 }

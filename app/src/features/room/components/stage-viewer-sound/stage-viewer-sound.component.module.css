@@ -18,7 +18,11 @@
   backdrop-filter: blur(var(--blur-5-5));
   box-shadow: 0 var(--space-2) var(--space-7) var(--black-45);
   clip-path: inset(100% 0 0 0 round var(--radius-pill));
-  transition: clip-path var(--unroll);
+  /* Glass fades itself, never its parent: a group that fades sets --chrome-fade to 0. */
+  opacity: var(--chrome-fade, 1);
+  transition:
+    clip-path var(--unroll),
+    opacity var(--duration-250) ease;
   pointer-events: none;
 }
 

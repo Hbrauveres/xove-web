@@ -36,6 +36,11 @@ export class FloatingStore {
     this.closeWhere((f) => f.kind !== "opened" && f.close !== keep && !(anchor && f.area()?.contains(anchor)));
   }
 
+  /** A rest sent elsewhere (my button with the settings open) follows: what I opened closes first. */
+  closeOpened() {
+    this.closeWhere((f) => f.kind === "opened");
+  }
+
   /** Whether a tooltip just hid, so the next one shows at once. */
   isWarm() {
     return Date.now() < this.warmUntil;

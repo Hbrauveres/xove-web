@@ -5,7 +5,7 @@ import { observe } from "../support/observe.ts";
 import { boxOf, inside, windowBox } from "../support/geometry.ts";
 import { APP_PX } from "../support/looks.ts";
 import { pointAt } from "../support/pointer.ts";
-import { headerOf, myMenu, openFrom, rolledUp } from "./header.ts";
+import { headerOf, myMenu, openAsGlass, openFrom, rolledUp } from "./header.ts";
 
 test("F-my-menu.1 my picture says who I am and that I'm connected, with a green dot", async ({ page }, info) => {
   await openScene(page, "s=live");
@@ -115,4 +115,11 @@ test("F-my-menu.6 Escape closes it and the focus goes back to my picture", async
   await expect.soft(me).toHaveAccessibleName("Henrique: account, connected");
   expect.soft(drift(seen.frames, "me")).toBeLessThan(1);
   expect.soft(blinks(seen.frames, "me")).toEqual([]);
+});
+
+test("F-my-menu.7 it's one piece of glass, blurring on every frame of its unroll", async ({ page }) => {
+  await openScene(page, "s=live");
+  const { broken, pieces } = await openAsGlass(page, headerOf(page).me, myMenu(page));
+  expect.soft(pieces).toBe(1);
+  expect.soft(broken).toEqual([]);
 });

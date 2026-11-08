@@ -160,13 +160,16 @@ test("F-settings-camera.6 leaving the Camera tab ends the preview; my camera was
   const pane = await cameraTab(page);
   const preview = pane.getByLabel("Your camera");
   await expect.soft(preview).toBeVisible();
+  // The preview's own element, held on to: it shows my camera's stream now.
+  const element = await preview.elementHandle();
+  expect.soft(await element?.evaluate((v) => (v as HTMLVideoElement).srcObject !== null)).toBe(true);
   const seen = await observe(page, info, { screenTab: tabOf(page, "Screen"), preview }, async () => {
     await tabOf(page, "Screen").click();
     await expect(tabOf(page, "Screen")).toHaveAttribute("aria-selected", "true");
   });
-  // The preview is gone with the tab. (Whether the camera itself is released can't be read here: the
-  // test fake's detach leaves the element's picture in place, as a real track's wouldn't.)
+  // The preview is gone with the tab, and its element has let go of my camera's stream.
   await expect.soft(previewOf(page)).toBeHidden();
+  expect.soft(await element?.evaluate((v) => (v as HTMLVideoElement).srcObject)).toBeNull();
   await expect.soft(myButtons(page).camera).toHaveAccessibleName("Turn on your camera");
   await expect.soft(page.getByRole("figure", { name: /^1 of 6 live/ })).toBeVisible();
   expect.soft(blinks(seen.frames, "screenTab")).toEqual([]);

@@ -14,9 +14,9 @@ it("holds what it's given, as a region when asked, passing its own props on", ()
   expect(panel).toHaveAttribute("data-open");
 });
 
-it("with cuts, holds its sections", () => {
+it("holds its sections", () => {
   render(
-    <Panel cuts>
+    <Panel>
       <PanelSection>Activity</PanelSection>
       <PanelSection>Rafa joined</PanelSection>
     </Panel>,

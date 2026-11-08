@@ -28,8 +28,12 @@ export function useRowEvents(element: RefObject<HTMLElement | null>, open: OpenR
       e.preventDefault();
       to.focus();
     };
+    // The roll back is the row's own clip (on the glass inside this holder).
     const ended = (e: TransitionEvent) =>
-      e.target === el && e.propertyName === "clip-path" && latest.current.onRolledBack();
+      e.target instanceof Element &&
+      e.target.parentElement === el &&
+      e.propertyName === "clip-path" &&
+      latest.current.onRolledBack();
     const listening = new AbortController();
     const { signal } = listening;
     el.addEventListener("pointerenter", enter, { signal });

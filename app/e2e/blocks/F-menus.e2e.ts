@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
+import { glassUnderBreakingParents, glassUnderBreakingParentsWhile } from "../support/glass.ts";
 import { observe } from "../support/observe.ts";
 import { boxOf, centreX, centreY } from "../support/geometry.ts";
 import { APP_PX, computed, LOOK, pxOf, SIZE, WEIGHT } from "../support/looks.ts";
@@ -104,33 +105,46 @@ test("F-menus.6 a press outside closes a dropdown", async ({ page }, info) => {
   await expect.soft(menu).toHaveCount(0);
 });
 
-test("F-menus.7 a panel's sections: frosted glass each, 16 px outer corners, 2 px clear cuts between", async ({
+test("F-menus.7 a panel is one piece of glass, 16 px corners, its sections parted by a hairline", async ({
   page,
 }, info) => {
   const menu = await openMyMenu(page);
-  const sections = menu.locator(":scope > div > div");
+  const glass = menu.locator(":scope > div");
+  const sections = glass.locator(":scope > div");
   await observe(page, info, { menu }, async () => {
     await pointAway(page);
   });
   await expect.soft(sections).toHaveCount(3);
-  const looks = await sections.evaluateAll((all) =>
-    all.map((e) => {
+  const { whole, parts } = await glass.evaluate((panel) => {
+    const look = (e: Element) => {
       const r = e.getBoundingClientRect();
       const s = getComputedStyle(e);
-      return { top: r.top, bottom: r.bottom, filter: s.backdropFilter, bg: s.backgroundColor, radius: s.borderRadius };
-    }),
-  );
-  const filter = await computed(page, "backdrop-filter", LOOK.panelFilter);
-  const bg = await computed(page, "background-color", LOOK.panel);
-  for (const l of looks) {
-    expect.soft(l.filter).toBe(filter);
-    expect.soft(l.bg).toBe(bg);
+      return {
+        top: r.top,
+        bottom: r.bottom,
+        filter: s.backdropFilter,
+        bg: s.backgroundColor,
+        radius: s.borderRadius,
+        line: `${s.borderTopWidth} ${s.borderTopStyle} ${s.borderTopColor}`,
+      };
+    };
+    return { whole: look(panel), parts: [...panel.children].map(look) };
+  });
+  // One glass: the panel's colour and blur on the whole, 16 px corners all round.
+  expect.soft(whole.filter).toBe(await computed(page, "backdrop-filter", LOOK.panelFilter));
+  expect.soft(whole.bg).toBe(await computed(page, "background-color", LOOK.panel));
+  expect.soft(whole.radius).toBe(await computed(page, "border-radius", SIZE.panelCorner));
+  // Its sections draw no glass of their own, touch, and each after the first starts with a hairline.
+  const line = `${await pxOf(page, SIZE.hairline)}px solid ${await computed(page, "color", LOOK.panelLine)}`;
+  for (const [i, p] of parts.entries()) {
+    expect.soft(p.filter).toBe("none");
+    expect.soft(p.bg).toBe("rgba(0, 0, 0, 0)");
+    if (i > 0) {
+      expect.soft(p.top).toBe(parts[i - 1]?.bottom);
+      expect.soft(p.line).toBe(line);
+    }
   }
-  const cut = await pxOf(page, SIZE.sectionCut);
-  looks.slice(1).forEach((l, i) => expect.soft(l.top - (looks[i]?.bottom ?? l.top)).toBe(cut));
-  const corner = SIZE.panelCorner;
-  expect.soft(looks[0]?.radius).toBe(await computed(page, "border-radius", `${corner} ${corner} 0 0`));
-  expect.soft(looks.at(-1)?.radius).toBe(await computed(page, "border-radius", `0 0 ${corner} ${corner}`));
+  expect.soft(await glassUnderBreakingParents(page)).toEqual([]);
 });
 
 test("F-menus.8 resting on a live round button unrolls its drop-up above it, centred, a frosted 36 px pill", async ({
@@ -188,4 +202,16 @@ test("F-menus.9 moving up into the drop-up keeps it open; leaving closes it", as
   // Closed: out of reach (inert) and unseen.
   await expect.soft(dropUp).toHaveCount(0);
   await expect.soft(page.locator('fieldset[aria-label="What you share"]')).toHaveCSS("visibility", "hidden");
+});
+
+test("F-menus.10 a drop-up is glass over the stream on every frame of its opening", async ({ page }) => {
+  await sharingMyScreen(page);
+  const dropUp = page.getByRole("group", { name: "What you share" });
+  const found = await glassUnderBreakingParentsWhile(page, async () => {
+    await pointAt(page, page.getByRole("button", { name: "Stop sharing your screen" }));
+    await dropUp.waitFor();
+    await untilStill(dropUp);
+  });
+  expect.soft(found).toEqual([]);
+  expect.soft(await glassUnderBreakingParents(page)).toEqual([]);
 });

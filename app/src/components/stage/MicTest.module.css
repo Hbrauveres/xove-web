@@ -101,7 +101,8 @@
   background: var(--sel-hover);
 }
 
-.hear[data-on] {
+/* Playing: white with dark words. Inside its wrapper, so the button's own fill never wins over it. */
+.hearWrap .hear[data-on] {
   background: var(--text);
   color: var(--ground);
 }

@@ -43,10 +43,11 @@
   /* The player's controls: the frosted glass of the round buttons and drop-ups, the settings
      panel, and the dark pill of a chosen option. */
   --glass: rgba(10, 10, 11, 0.72);
-  --panel: rgba(18, 18, 20, 0.74);
+  --panel: rgba(18, 18, 20, 0.87);
   --panel-line: rgba(255, 255, 255, 0.08);
-  /* The glass dims what's behind it before blurring, so its text stays readable over a bright stream. */
-  --panel-filter: blur(var(--blur-5-5)) brightness(0.55) saturate(1.2);
+  /* The glass only blurs: its colour, --panel, does the dimming that keeps
+     its text readable. */
+  --panel-filter: blur(var(--blur-5-5));
   --sel-bg: var(--surface-raised);
   --sel-shadow: 0 var(--space-0-25) var(--space-0-5) var(--black-40);
   --sel-hover: #26262a;

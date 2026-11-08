@@ -30,7 +30,8 @@ export function PickerList<T extends string>({
       {options.map((o, i) => {
         const order: CssVars = { "--k": up ? options.length - 1 - i : i };
         return (
-          <Tooltip key={o.value} text={o.label}>
+          // Said only for a cut name, beside the list: never over the pill.
+          <Tooltip key={o.value} text={o.label} side="beside" cutOnly>
             <button
               type="button"
               role="menuitemradio"

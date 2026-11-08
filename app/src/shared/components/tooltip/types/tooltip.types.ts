@@ -11,11 +11,17 @@ export type TooltipTrigger = ReactElement<{
   "aria-label"?: string;
 }>;
 
+/** Where a tooltip sits: above its control, or beside it (a list's option). */
+export type TipSide = "above" | "beside";
+
 export interface TooltipProps {
   text?: string | undefined;
   children: TooltipTrigger;
   /** Told to keep quiet (a drop-up open over the control). */
   hidden?: boolean | undefined;
+  side?: TipSide | undefined;
+  /** Only when the control's own text is cut: then it says it whole. */
+  cutOnly?: boolean | undefined;
 }
 
 export interface TipOptions {
@@ -24,4 +30,6 @@ export interface TipOptions {
   /** Nothing to say, or told to keep quiet: gone. */
   quiet: boolean;
   text: string | undefined;
+  side?: TipSide | undefined;
+  cutOnly?: boolean | undefined;
 }

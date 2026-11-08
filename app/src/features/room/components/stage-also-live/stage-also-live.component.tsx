@@ -1,5 +1,6 @@
 import { usePreviewTray } from "../../hooks/use-preview-tray.hook";
 import { hasRow } from "../../utils/has-row.util";
+import { stripOrder } from "./utils/strip-order.util";
 import { swapOf } from "./utils/swap-of.util";
 import { talkingOf } from "./utils/talking-of.util";
 import { StageHearToggles } from "../stage-hear-toggles";
@@ -12,7 +13,8 @@ import type { StageAlsoLiveProps } from "./types/stage-also-live.types";
 
 /**
  * The right of the info row: the other live streams as small previews (a click puts one on the
- * stage), then the places as little screens, red for each stream live. Past their room the previews
+ * stage), the newest first so one that starts never moves the others, then the places as little
+ * screens, red for each stream live. Past their room the previews
  * scroll; the places stay put, and go when none is free. Pointing at a preview opens its row of
  * buttons, floating, to hear that person while they stay small and swap their screen and camera.
  */
@@ -40,7 +42,7 @@ export function StageAlsoLive(props: StageAlsoLiveProps) {
   return (
     <section className={styles.also} aria-label="Also live">
       <ul className={styles.strip} aria-label="Other streams">
-        {others.map((s) => (
+        {stripOrder(others).map((s) => (
           <StageLivePreview
             key={s.person.id}
             sharer={s}

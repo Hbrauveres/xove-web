@@ -11,10 +11,18 @@
   line-height: 1.25; /* the design's rows, tighter than the page's text */
   /*
    * Unrolls downward when it opens and rolls back up when it closes, by its height. Never a
-   * clip, a fade or a filter here or on an ancestor: those stop the sections' blur.
+   * clip, a fade or a filter here or on an ancestor: those stop the glass's blur.
    */
   display: grid; /* grid-template-rows: 0fr → 1fr, set by the component */
   transition: grid-template-rows var(--duration-260) var(--ease-out);
+}
+
+/* The glass: unrolled by its holder's height, its sections stacked inside. */
+.glass {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .end {

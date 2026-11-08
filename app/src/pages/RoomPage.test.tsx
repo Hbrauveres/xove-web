@@ -869,7 +869,8 @@ describe("room: several people sharing", () => {
     const names = within(thumbnails())
       .getAllByRole("button", { name: /watch/i })
       .map((b) => b.getAttribute("aria-label"));
-    expect(names).toEqual(["Watch Ana · screen", "Watch Caio · camera"]);
+    // The newest sharing first: Caio (a minute ago), then Ana (ten).
+    expect(names).toEqual(["Watch Caio · camera", "Watch Ana · screen"]);
   });
 
   it("asks for Auto for the big player, and keeps a stream on Auto when it leaves it", async () => {

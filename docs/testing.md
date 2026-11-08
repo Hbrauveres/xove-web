@@ -84,6 +84,7 @@ A test may read a stylesheet (ADR-0102), but in jsdom its text says little about
 
 - **Contrast:** every text colour on every surface meets its ratio (4.5:1; faint labels 3:1), and the ink on red too.
 - **One browser per rule:** no rule mixes `::-webkit-` and `::-moz-` selectors, since a browser drops a whole rule with a selector it doesn't know.
+- **Glass:** a `backdrop-filter` is written once (no hand-written `-webkit-backdrop-filter`: the build adds it, and a hand-written one after a `var()` makes the minifier drop the plain line, so Chrome gets no blur), and only blurs (`blur()`, through tokens or not): the glass's colour darkens it.
 - **Reduced motion:** `global.css` keeps the rule that stops every animation and transition for anyone who asks.
 
 Its own test (`scripts/check-styles.test.ts`) feeds it small stylesheets that pass and fail. How the look comes out on screen is checked in a real browser, below.
@@ -111,6 +112,7 @@ What the tests share lives once in `e2e/support/`, one module per concern; an ar
 - `stage.ts`: the stage, its picture, its buttons, whether its controls are shown, the tooltip on show.
 - `timing.ts`: the times a case may spend, named once (the app's own constants), and `untilStill`, waiting until nothing finite is moving.
 - `looks.ts`: the looks a case checks, by the app's token names, resolved by the page into computed values.
+- `glass.ts`: the glass rule (design sheet, "glass fades itself, never its parent"): every shown glass under a parent that would leave its blur nothing to blur, now or on every frame of an action (`glassUnderBreakingParentsWhile`).
 - `observe.ts`, `track.ts`, `frames.ts`, `state.ts`: recording an action, frame by frame, and reading the frames.
 
 Each test opens a scene (`e2e/support/open.ts`: the clock fixed, the pictures still), and records its action with `observe` (`e2e/support/observe.ts`): the named elements' state before and after (shown, where, how they look, what a screen reader hears), a screenshot of each, every animation frame while it happens, and a strip of screenshots through it. `blinks`, `drift` and `transitioned` (`e2e/support/frames.ts`) turn the frames into "must not" checks: an element that must stay never dims or disappears, never moves. The checks are `expect.soft`, so a test records everything and reports every failure. Eight browsers run at once (`E2E_WORKERS` sets another number). `E2E_OUT` says where the records go; `E2E_BASE_URL` runs the same tests against another copy of the app.
@@ -142,7 +144,7 @@ cd app
 npm test                 # once, as the checks do (shuffled; prints its seed)
 npm test -- --sequence.seed=<seed>   # the same order again
 npm run test:watch       # again on every save
-npm run check:styles     # contrast, per-browser rules, reduced motion
+npm run check:styles     # contrast, per-browser rules, glass, reduced motion
 npm run test:alone       # every file, then every test, run alone (slow; before a PR that changes tests)
 npm run test:storybook   # every story in headless Chromium, with the accessibility checks
 npm run storybook        # Storybook on http://localhost:6006

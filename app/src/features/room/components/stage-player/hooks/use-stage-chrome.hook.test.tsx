@@ -10,18 +10,24 @@ function Player() {
   const frame = useRef<HTMLDivElement>(null);
   const chrome = useStageChrome(frame);
   return (
-    <div
-      ref={frame}
-      data-testid="player"
-      data-shown={chrome.shown}
-      onPointerMove={chrome.show}
-      onPointerLeave={chrome.leave}
-    >
+    <div ref={frame} data-testid="player" data-shown={chrome.shown} {...chrome.handlers}>
       <button type="button" onClick={() => chrome.hold("menu", true)}>
         Open menu
       </button>
       <button type="button" onClick={() => chrome.hold("menu", false)}>
         Close menu
+      </button>
+      <button
+        type="button"
+        aria-expanded="false"
+        onClick={(e) =>
+          e.currentTarget.setAttribute(
+            "aria-expanded",
+            String(e.currentTarget.getAttribute("aria-expanded") !== "true"),
+          )
+        }
+      >
+        Go live
       </button>
     </div>
   );
@@ -86,6 +92,31 @@ describe("the player's labels and bars", () => {
     fireEvent.pointerLeave(player, { clientX: 500, clientY: 250 });
     expect(player).toHaveAttribute("data-shown", "true");
     fireEvent.pointerLeave(player, { clientX: 1200, clientY: 250 });
+    expect(player).toHaveAttribute("data-shown", "false");
+  });
+
+  it("stay while a control's menu is open in the player, and fade once it closes", () => {
+    const player = setup();
+    fireEvent.pointerMove(player);
+    const goLive = screen.getByRole("button", { name: "Go live" });
+    fireEvent.click(goLive);
+    pass(CHROME_IDLE_MS * 3);
+    expect(player).toHaveAttribute("data-shown", "true");
+    fireEvent.click(goLive);
+    pass(CHROME_IDLE_MS);
+    expect(player).toHaveAttribute("data-shown", "false");
+  });
+
+  it("stay while the pointer rests on a control, and fade once it moves off it", () => {
+    const player = setup();
+    fireEvent.pointerMove(player);
+    const goLive = screen.getByRole("button", { name: "Go live" });
+    fireEvent.pointerOver(goLive);
+    pass(CHROME_IDLE_MS * 3);
+    expect(player).toHaveAttribute("data-shown", "true");
+    fireEvent.pointerOut(goLive, { relatedTarget: player });
+    fireEvent.pointerOver(player);
+    pass(CHROME_IDLE_MS);
     expect(player).toHaveAttribute("data-shown", "false");
   });
 });

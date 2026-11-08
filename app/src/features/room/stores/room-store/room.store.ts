@@ -11,6 +11,7 @@ import { appConfig } from "@services/app-config-service";
 import { POLL_MS, SEAT_FAILED } from "../../constants/room.constants";
 import { initialRoom, withMe, withSeat, withStreams, withStreamsCall, withVideo } from "./room.model";
 import type { CallOutcome, RoomModel, RoomSnapshot, SeatState } from "../../types/room.types";
+import { endedNow, sentVideos, withoutEnded } from "./utils/ended-streams.util";
 import { waitingFor } from "./utils/seat.util";
 
 /**
@@ -30,6 +31,10 @@ export class RoomStore {
   private seatAsking: Promise<void> | null = null;
   private seatGeneration = 0;
   private streamsVersion = 0;
+  // What the video room showed others sending, and the streams it saw end before the API knows.
+  private sent = new Set<string>();
+  private ended = new Set<string>();
+  private lastStreams: StreamsState | null = null;
   private inRoom = false;
   /** Closed with its page: an answer still on its way changes nothing and starts nothing. */
   private closed = false;
@@ -94,8 +99,9 @@ export class RoomStore {
   startStream = (kind: StreamKind, connection: SharingConnection, settings: StreamSettings) =>
     this.call(() => api.streams.start(kind, connection, settings));
 
+  /** A quality or mode changed: the stream stays as it is meanwhile, so nothing reads as busy. */
   changeStreamSettings = async (kind: StreamKind, settings: StreamSettings) =>
-    (await this.call(() => api.streams.settings(kind, settings))) === "ok";
+    (await this.call(() => api.streams.settings(kind, settings), { busy: false })) === "ok";
 
   stopStream = async (kind: StreamKind) => (await this.call(() => api.streams.stop(kind))) === "ok";
 
@@ -120,7 +126,18 @@ export class RoomStore {
 
   private onVideo() {
     const video = this.video.getState();
+    const sent = sentVideos(video.remote);
+    // A stream whose video stops arriving while connected has ended: it leaves the stage now, not
+    // at the API's next answer (a dropped connection isn't a stop).
+    const ended = video.connection === "connected" ? endedNow(this.ended, this.sent, sent) : this.ended;
+    this.sent = sent;
     this.model = withVideo(this.model, video.others, video.connection, Date.now());
+    if (ended.size > this.ended.size && this.lastStreams) {
+      this.ended = ended;
+      this.onStreams(this.lastStreams, false);
+      return;
+    }
+    this.ended = ended;
     this.publish();
   }
 
@@ -196,15 +213,19 @@ export class RoomStore {
 
   /** The API forgot my seat (it restarted): enter again with my video connection until it knows. */
   private onStreams(answer: StreamsState, polled: boolean) {
-    const next = withStreams(this.model, answer, Date.now(), polled);
+    this.lastStreams = answer;
+    const kept = withoutEnded(answer, this.ended);
+    this.ended = kept.ended;
+    const next = withStreams(this.model, kept.answer, Date.now(), polled);
     // The API may name me before the video access does: I keep my account's name.
     this.setModel(next.me && !(next.me in next.names) ? withMe(next, next.me, this.myName) : next);
     this.every("reenter", answer.seated === false, () => void this.askSeat(this.video.participantSid()));
   }
 
-  private async call(request: () => Promise<StreamsState>): Promise<CallOutcome> {
+  /** A call about my streams; `busy` (a start or a stop) greys my controls until it answers. */
+  private async call(request: () => Promise<StreamsState>, { busy = true } = {}): Promise<CallOutcome> {
     this.streamsVersion += 1;
-    this.setModel(withStreamsCall(this.model, true, null));
+    this.setModel(withStreamsCall(this.model, busy, null));
     try {
       const answer = await request();
       this.onStreams(answer, false);

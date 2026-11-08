@@ -2,6 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
 import { boxOf } from "../support/geometry.ts";
+import { computed, cssOf, LOOK } from "../support/looks.ts";
 import { restOn } from "../support/pointer.ts";
 import { shownTip } from "../support/stage.ts";
 import { HEAR_YOURSELF_MS, LOOK_EVERY_MS, METER_MS, TIP_REST_MS, untilStill } from "../support/timing.ts";
@@ -111,6 +112,7 @@ test("F-settings-voice.4 Test plays my voice back for 5 s, counting down", async
   const said: string[] = [];
   let pressed: string | null = null;
   let name: string | null = null;
+  let look = { bg: "", color: "" };
   const seen = await observe(
     page,
     info,
@@ -119,6 +121,8 @@ test("F-settings-voice.4 Test plays my voice back for 5 s, counting down", async
       await start.click();
       pressed = await button.getAttribute("aria-pressed");
       name = await button.getAttribute("aria-label");
+      // Playing, it's white with dark words: readable.
+      look = { bg: await cssOf(button, "background-color"), color: await cssOf(button, "color") };
       // What it says, read every frame until it's over (its 5 s).
       await expect
         .poll(
@@ -141,6 +145,8 @@ test("F-settings-voice.4 Test plays my voice back for 5 s, counting down", async
   // It grows from its end: its right edge, at the column's end, stays put.
   const sizes = seen.frames.map((f) => f.seen.button?.box).filter((b) => b);
   for (const b of sizes) if (b) expect.soft(Math.abs(b.x + b.w - (before.x + before.width))).toBeLessThan(1);
+  expect.soft(look.bg).toBe(await computed(page, "background-color", LOOK.text));
+  expect.soft(look.color).toBe(await computed(page, "color", LOOK.ground));
 });
 
 test("F-settings-voice.5 a click on Stop ends the test at once", async ({ page }, info) => {

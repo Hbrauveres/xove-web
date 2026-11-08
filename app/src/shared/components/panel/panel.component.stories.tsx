@@ -27,10 +27,9 @@ type Story = StoryObj<typeof meta>;
 
 /** One box of glass. */
 export const Box: Story = {};
-/** Sections with cuts, as in a menu. */
-export const Cuts: Story = {
+/** Sections parted by a hairline, as in a menu. */
+export const Sections: Story = {
   args: {
-    cuts: true,
     children: [
       <PanelSection key="a">
         <p style={{ margin: 0, padding: "var(--space-3)", color: "var(--text)" }}>Activity</p>

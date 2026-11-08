@@ -10,6 +10,7 @@ import { untilStill } from "./timing.ts";
 interface Hooks {
   everyoneStops: () => void;
   marinaGoesLive: () => void;
+  marinaGoesLiveSlowly: () => void;
   soundStarts: () => number;
 }
 
@@ -26,6 +27,12 @@ export async function everyoneStops(page: Page): Promise<void> {
 export async function marinaGoesLive(page: Page): Promise<void> {
   await hooksReady(page);
   await page.evaluate(() => (window as unknown as { __xove: Hooks }).__xove.marinaGoesLive());
+}
+
+/** Marina starts sharing, her video arriving a moment after the room lists her stream. */
+export async function marinaGoesLiveSlowly(page: Page): Promise<void> {
+  await hooksReady(page);
+  await page.evaluate(() => (window as unknown as { __xove: Hooks }).__xove.marinaGoesLiveSlowly());
 }
 
 /** How many times the room has been asked to start its sound (LiveKit's `startAudio`). */
@@ -59,6 +66,22 @@ export async function voiceOn(page: Page, userId: number): Promise<void> {
     if (!button) throw new Error(`The room panel has no voice for person ${id}`);
     button.click();
   }, userId);
+}
+
+/**
+ * Someone starts or stops a stream from the harness's room panel (the scene opened with `panel=1`),
+ * the panel kept off the screen: Bruno is person 5.
+ */
+export async function togglesStream(page: Page, userId: number, kind: "screen" | "camera"): Promise<void> {
+  await page.addStyleTag({ content: "#xr-tab, #xr-panel { display: none !important; }" });
+  await page.evaluate(
+    ({ id, kind }) => {
+      const button = document.querySelector<HTMLButtonElement>(`#xr-panel [data-kind="${kind}"][data-id="${id}"]`);
+      if (!button) throw new Error(`The room panel has no ${kind} for person ${id}`);
+      button.click();
+    },
+    { id: userId, kind },
+  );
 }
 
 /** How many times the picture's shape is corrected to land on a width. */

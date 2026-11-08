@@ -43,11 +43,14 @@ export function useDropUp({ enabled, open: told, onOpenChange, redirect }: DropU
   const handlers = {
     onPointerEnter: () => {
       window.clearTimeout(leaving.current);
-      if (open || !free()) return;
+      // Sent elsewhere (the settings open), every rest follows, even over a list I opened there.
+      if (open || (!redirect && !free())) return;
       closeOthers();
       opening.current = window.setTimeout(() => {
-        if (redirect) redirect();
-        else if (free()) setOpen(true);
+        if (redirect) {
+          floatingStore.closeOpened();
+          redirect();
+        } else if (free()) setOpen(true);
       }, OPEN_DELAY_MS);
     },
     onPointerLeave: () => {

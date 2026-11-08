@@ -1,26 +1,12 @@
-/* A section of a Panel with cuts: the same glass as the Panel, so a menu's blur survives its unrolling clip. */
+/* A section of a Panel: no glass of its own (the Panel is one piece), a hairline before every one but
+   the first. */
 .section {
   /* Full size while the panel unrolls: only its edge reveals them, so no scrollbar flashes. */
   flex: none;
-  background: var(--panel);
-  backdrop-filter: var(--panel-filter);
-  -webkit-backdrop-filter: var(--panel-filter);
-  border: var(--hairline) solid var(--panel-line);
-  border-block-width: 0;
 }
 
-.section:first-child {
-  border-top-width: var(--hairline);
-  border-radius: var(--radius-4) var(--radius-4) 0 0;
-}
-
-.section:last-child {
-  border-bottom-width: var(--hairline);
-  border-radius: 0 0 var(--radius-4) var(--radius-4);
-}
-
-.section:only-child {
-  border-radius: var(--radius-4);
+.section + .section {
+  border-top: var(--hairline) solid var(--panel-line);
 }
 
 /* A long list scrolls inside its section, with a thin scrollbar that matches. */

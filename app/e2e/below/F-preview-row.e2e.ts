@@ -1,5 +1,6 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
+import { glassUnderBreakingParents, glassUnderBreakingParentsWhile } from "../support/glass.ts";
 import { observe } from "../support/observe.ts";
 import { boxOf, inside, overlap, windowBox, type Box } from "../support/geometry.ts";
 import { marinaGoesLive } from "../support/harness.ts";
@@ -76,10 +77,8 @@ test("F-preview-row.3 a greyed sound says why on a click, and changes nothing", 
   expect.soft(said).toBe(true);
   await expect.soft(mic).toHaveAttribute("aria-disabled", "true");
   await expect.soft(mic).not.toHaveAttribute("aria-pressed");
-  // Nothing to set for a mic that's off: no slider unrolls for it, or only a greyed one.
-  const slider = page.getByRole("slider", { name: /Rafa/ });
-  if ((await slider.count()) > 0 && (await slider.first().isVisible()))
-    await expect.soft(slider.first()).toBeDisabled();
+  // Nothing to set for a mic that's off: no slider unrolls for it.
+  await expect.soft(page.getByRole("group", { name: "Rafa's sounds" })).not.toHaveAttribute("data-open");
   await expect.soft(page.getByRole("heading", { name: "Marina", level: 2 })).toBeVisible();
 });
 
@@ -131,20 +130,22 @@ test("F-preview-row.6 by keyboard the row opens on the preview's focus and sits 
   page,
 }, info) => {
   await openScene(page, "s=live");
-  const rafa = page.getByRole("button", { name: "Watch Rafa · screen" });
-  const row = page.getByRole("group", { name: "Rafa's sounds" });
-  await observe(page, info, { rafa, row }, async () => {
-    await rafa.focus();
+  // Ana first (the newest sharing), then Rafa beside the places.
+  const ana = page.getByRole("button", { name: "Watch Ana · camera" });
+  const row = page.getByRole("group", { name: "Ana's sounds" });
+  await observe(page, info, { ana, row }, async () => {
+    await ana.focus();
     await expect(row).toBeVisible();
   });
   await expect.soft(row).toBeVisible();
+  const buttons = await row.getByRole("button").count();
+  for (let i = 0; i < buttons; i++) {
+    await page.keyboard.press("Tab");
+    await expect.soft(row.getByRole("button").nth(i)).toBeFocused();
+  }
   await page.keyboard.press("Tab");
-  await expect.soft(row.getByRole("button", { name: "Rafa: Rafa's mic is off" })).toBeFocused();
-  await page.keyboard.press("Tab");
-  await expect.soft(row.getByRole("button", { name: "Rafa: No screen sound" })).toBeFocused();
-  await page.keyboard.press("Tab");
-  await expect.soft(page.getByRole("button", { name: "Watch Ana · camera" })).toBeFocused();
-  await expect.soft(page.getByRole("group", { name: "Ana's sounds" })).toBeVisible();
+  await expect.soft(page.getByRole("button", { name: "Watch Rafa · screen" })).toBeFocused();
+  await expect.soft(page.getByRole("group", { name: "Rafa's sounds" })).toBeVisible();
   await expect.soft(row).toHaveCount(0);
 });
 
@@ -194,4 +195,13 @@ test("F-preview-row.8 my own preview, sharing both, has only the swap, which tra
   await expect.soft(page.getByRole("button", { name: "Watch You · camera" })).toBeVisible();
   expect.soft(drift(seen.frames, "swap")).toBeLessThan(1);
   expect.soft(blinks(seen.frames, "swap")).toEqual([]);
+});
+
+test("F-preview-row.9 the row is glass over the page on every frame of its unroll, and once open", async ({ page }) => {
+  await openScene(page, "s=live");
+  const rafa = page.getByRole("button", { name: "Watch Rafa · screen" });
+  const row = page.getByRole("group", { name: "Rafa's sounds" });
+  const found = await glassUnderBreakingParentsWhile(page, () => openRow(page, rafa, row));
+  expect.soft(found).toEqual([]);
+  expect.soft(await glassUnderBreakingParents(page)).toEqual([]);
 });

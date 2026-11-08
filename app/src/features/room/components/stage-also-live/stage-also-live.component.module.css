@@ -1,12 +1,12 @@
 /* The other live streams. */
-/* The right never runs past the box: it leaves the left room, and past that the previews scroll. */
+/* The right never runs past the box: it leaves the left room, and past that the previews scroll.
+   On a narrow row it keeps at least one whole preview beside the places; the left gives way. */
 .also {
   flex: 0 1 auto;
   display: flex;
   align-items: center;
   gap: var(--space-2-5);
-  min-width: 0;
-  max-width: calc(100% - var(--also-live-width));
+  max-width: max(calc(100% - var(--also-live-width)), calc(var(--strip-item) * 2 + var(--space-2-5)));
 }
 
 /*
@@ -23,6 +23,11 @@
   padding: var(--space-1-5) 0 var(--space-2);
   list-style: none;
   overflow-x: auto;
+}
+
+/* With a preview in it, never narrower than one whole preview. */
+.strip:has(> li) {
+  min-width: var(--strip-item);
 }
 
 .strip::-webkit-scrollbar {
