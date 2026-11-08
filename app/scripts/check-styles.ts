@@ -126,17 +126,25 @@ const resolved = (value: string, tokens: Map<string, string>, depth = 0): string
 };
 
 /**
- * Glass blurs only: a backdrop-filter with more than blur() (brightness, saturate…) is dropped whole
- * by Chrome drawing with a graphics card, and the glass turns see-through (#249). Darkening comes
- * from the glass's own colour.
+ * Glass blurs only, written once:
+ * - backdrop-filter only: the build adds -webkit-backdrop-filter itself, and a hand-written one
+ *   after a var() value makes it drop the unprefixed line, so Chrome gets no blur at all (#249);
+ * - blur() only (brightness, saturate…): its colour darkens it, a lighter filter to draw.
  */
 export function glassFilterProblems(root: Root, file: string, tokens: Map<string, string>) {
   const problems: string[] = [];
-  root.walkDecls(/^(-webkit-)?backdrop-filter$/, (d) => {
+  root.walkDecls("-webkit-backdrop-filter", (d) => {
+    problems.push(
+      `${file}:${d.source?.start?.line}: -webkit-backdrop-filter — write backdrop-filter only, the build adds it`,
+    );
+  });
+  root.walkDecls("backdrop-filter", (d) => {
     const value = resolved(d.value, tokens);
     const steps = value.match(/[a-z-]+\(/g) ?? [];
     if (steps.some((s) => s !== "blur(" && s !== "var("))
-      problems.push(`${file}:${d.source?.start?.line}: ${d.prop}: ${value} — glass blurs only (blur()), its colour darkens it`);
+      problems.push(
+        `${file}:${d.source?.start?.line}: ${d.prop}: ${value} — glass blurs only (blur()), its colour darkens it`,
+      );
   });
   return problems;
 }

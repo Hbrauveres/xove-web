@@ -4,7 +4,6 @@
   border-radius: var(--radius-4);
   background: var(--panel);
   backdrop-filter: var(--panel-filter);
-  -webkit-backdrop-filter: var(--panel-filter);
 }
 
 /* Sections stacked with a clear 2 px cut between them: the divider is the page behind, sharp. */

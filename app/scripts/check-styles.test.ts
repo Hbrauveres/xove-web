@@ -71,12 +71,20 @@ describe("the style check: glass blurs only", () => {
 
   it("passes a blur, through a token or written out", () => {
     expect(glass(".p { backdrop-filter: var(--f); }", ":root { --b: 22px; --f: blur(var(--b)); }")).toEqual([]);
-    expect(glass(".p { -webkit-backdrop-filter: blur(8px); }")).toEqual([]);
+    expect(glass(".p { backdrop-filter: blur(8px); }")).toEqual([]);
+  });
+
+  it("names a hand-written -webkit-backdrop-filter: the build then drops the unprefixed one", () => {
+    expect(glass(".p { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }")).toEqual([
+      expect.stringMatching(/^Panel\.module\.css:1: -webkit-backdrop-filter .*the build adds it/),
+    ]);
   });
 
   it("names a glass whose filter does more than blur, even through a token", () => {
     const chain = ":root { --b: 22px; --f: blur(var(--b)) brightness(0.55) saturate(1.2); }";
-    expect(glass(".p { backdrop-filter: var(--f); }", chain)).toEqual([expect.stringMatching(/^Panel\.module\.css:1: .*brightness/)]);
+    expect(glass(".p { backdrop-filter: var(--f); }", chain)).toEqual([
+      expect.stringMatching(/^Panel\.module\.css:1: .*brightness/),
+    ]);
   });
 });
 

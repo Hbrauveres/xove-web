@@ -4,7 +4,6 @@
   flex: none;
   background: var(--panel);
   backdrop-filter: var(--panel-filter);
-  -webkit-backdrop-filter: var(--panel-filter);
   border: var(--hairline) solid var(--panel-line);
   border-block-width: 0;
 }
