@@ -137,7 +137,11 @@ if (navigator.mediaDevices) {
   navigator.mediaDevices.getDisplayMedia = async () => stream("code").clone();
   // Nor cameras: six to pick from in the settings and the camera's drop-up, so a list scrolls.
   // &cams=emeet: Henrique's two cameras, with long names.
-  const emeet = new URLSearchParams(location.search).get("cams") === "emeet";
+  const cams = new URLSearchParams(location.search).get("cams");
+  const emeet = cams === "emeet";
+  // One name too long for a picker's option, cut there.
+  const long =
+    cams === "long" ? [{ deviceId: "cam-7", label: "Logitech BRIO Ultra HD Pro Business Webcam (046d:085e)" }] : [];
   navigator.mediaDevices.enumerateDevices = async () =>
     (emeet
       ? [
@@ -151,6 +155,7 @@ if (navigator.mediaDevices) {
           { deviceId: "cam-4", label: "Elgato Facecam" },
           { deviceId: "cam-5", label: "Iriun Webcam" },
           { deviceId: "cam-6", label: "Continuity Camera" },
+          ...long,
         ]
     )
       .map((c) => ({ ...c, kind: "videoinput", groupId: "", toJSON: () => c }))

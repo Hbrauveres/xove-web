@@ -31,8 +31,8 @@ export async function myCameraOn(page: Page): Promise<void> {
 }
 
 /** The settings, opened from the empty stage's cog, on a tab, settled. */
-export async function settingsOn(page: Page, tab: "Screen" | "Camera" | "Voice"): Promise<Locator> {
-  await openScene(page, "s=empty");
+export async function settingsOn(page: Page, tab: "Screen" | "Camera" | "Voice", query = "s=empty"): Promise<Locator> {
+  await openScene(page, query);
   await page.getByRole("button", { name: "Settings" }).click();
   const panel = page.getByRole("dialog", { name: "Settings" });
   const its = panel.getByRole("tab", { name: tab });

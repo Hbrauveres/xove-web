@@ -17,7 +17,7 @@ const UNDER_THE_REST = { timeout: (TIP_REST_MS * 2) / 3 };
 /** The tooltip that says `text`, shown or not. */
 // Hidden tooltips stay in the page (to describe their control): found by role, shown or not.
 const tipOf = (page: Page, text: string) => page.getByRole("tooltip", { name: text, exact: true, includeHidden: true });
-const button = (page: Page, name: string) => page.getByRole("button", { name, exact: true });
+const button = (page: Page, name: string | RegExp) => page.getByRole("button", { name, exact: true });
 
 test("F-floating.1 a tooltip shows after a short rest, above its control, inside the window", async ({
   page,
@@ -67,7 +67,9 @@ test("F-floating.2 the pointer leaving or pressing hides the tooltip at once", a
   await page.mouse.down();
   await expect.soft(tip).not.toHaveAttribute("data-shown", AT_ONCE);
   await page.mouse.up();
-  await expect.soft(fullscreen).toBeVisible();
+  // The press was a click on it: the button stays, whichever way the browser took it (into fullscreen
+  // or not), so it's found by either name.
+  await expect.soft(button(page, /^(Exit fullscreen|Fullscreen)$/)).toBeVisible();
 });
 
 test("F-floating.3 along a row, the next tooltip shows at once and replaces the last", async ({ page }, info) => {

@@ -3,16 +3,20 @@ import { TIP_REST_MS } from "@shared/constants/floating.constants";
 import { floatingStore, useFloating } from "@shared/stores/floating-store";
 import type { TipOptions } from "../types/tooltip.types";
 import { placeTip } from "../utils/place-tip.util";
+import { textCut } from "../utils/text-cut.util";
 
 /** Whether a tooltip shows, where, and what makes it go: one floating thing among the others. */
-export function useTip({ tip, anchor, quiet, text }: TipOptions) {
+export function useTip({ tip, anchor, quiet, text, side, cutOnly = false }: TipOptions) {
   const [shown, setShown] = useState(false);
   const timer = useRef<number | undefined>(undefined);
   const hide = useCallback(() => {
     window.clearTimeout(timer.current);
     setShown(false);
   }, []);
-  const show = useCallback(() => setShown(true), []);
+  // Said only when it adds something: a cut name, whole.
+  const show = useCallback(() => {
+    if (!cutOnly || textCut(anchor.current)) setShown(true);
+  }, [cutOnly, anchor]);
   const rest = useCallback(() => {
     window.clearTimeout(timer.current);
     if (floatingStore.isWarm()) show();
@@ -32,14 +36,28 @@ export function useTip({ tip, anchor, quiet, text }: TipOptions) {
   useEffect(() => () => window.clearTimeout(timer.current), []);
   if (quiet && shown) setShown(false);
 
+  // By its control on every frame while shown: a control that moves (into fullscreen, a row
+  // re-centring) takes its tooltip with it.
   useLayoutEffect(() => {
-    const el = tip.current;
-    const control = anchor.current;
-    if (!shown || !el || !control) return;
-    const { left, top } = placeTip(control.getBoundingClientRect(), el.offsetWidth, el.offsetHeight, window.innerWidth);
-    el.style.setProperty("left", `${left}px`);
-    el.style.setProperty("top", `${top}px`);
-  }, [shown, text, tip, anchor]);
+    if (!shown) return;
+    let frame = 0;
+    const place = () => {
+      const el = tip.current;
+      const control = anchor.current;
+      if (!el || !control) return;
+      const at = placeTip(
+        control.getBoundingClientRect(),
+        { width: el.offsetWidth, height: el.offsetHeight },
+        window.innerWidth,
+        side,
+      );
+      el.style.setProperty("left", `${at.left}px`);
+      el.style.setProperty("top", `${at.top}px`);
+      frame = requestAnimationFrame(place);
+    };
+    place();
+    return () => cancelAnimationFrame(frame);
+  }, [shown, text, tip, anchor, side]);
   // Scrolling moves the control away: the tooltip goes.
   useEffect(() => {
     if (!shown) return;

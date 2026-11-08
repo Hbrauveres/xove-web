@@ -3,9 +3,9 @@ import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
 import { boxOf, centreX, overlap } from "../support/geometry.ts";
 import { computed, LOOK, pxOf, SIZE, WEIGHT } from "../support/looks.ts";
-import { pointAt, pointAway } from "../support/pointer.ts";
+import { pointAt, pointAway, restOn } from "../support/pointer.ts";
 import { shownTip } from "../support/stage.ts";
-import { untilStill } from "../support/timing.ts";
+import { TIP_REST_MS, untilStill } from "../support/timing.ts";
 import { myCameraOn, pseudo, settingsOn } from "./where.ts";
 
 const [FIRST, SECOND, ...REST] = [
@@ -16,6 +16,8 @@ const [FIRST, SECOND, ...REST] = [
   "Continuity Camera",
 ] as const;
 const OTHERS = [FIRST, SECOND, ...REST];
+/** The harness's camera with a name too long for an option (`cams=long`). */
+const LONG = "Logitech BRIO Ultra HD Pro Business Webcam (046d:085e)";
 /** How many options the list shows before it scrolls: three and a half (picker-list's stylesheet). */
 const SHOWN_OPTIONS = 3.5;
 
@@ -208,4 +210,30 @@ test("F-pickers.10 a segmented control is one tab stop, and the arrow keys move 
   await page.keyboard.press("Tab");
   const inGroup = await group.evaluate((g) => g.contains(document.activeElement));
   expect.soft(inGroup).toBe(false);
+});
+
+test("F-pickers.11 an option's tooltip says a cut name whole, beside the list; a whole name has none", async ({
+  page,
+}, info) => {
+  const panel = await settingsOn(page, "Camera", "s=empty&cams=long");
+  const pill = panel.getByRole("button", { name: "Camera: Webcam C920" });
+  await pill.click();
+  const list = panel.getByRole("menu", { name: "Camera" });
+  await untilStill(list);
+  const long = list.getByRole("menuitemradio", { name: LONG });
+  const whole = list.getByRole("menuitemradio", { name: FIRST });
+  await whole.scrollIntoViewIfNeeded();
+  await restOn(page, whole, TIP_REST_MS);
+  await expect.soft(shownTip(page)).toHaveCount(0);
+  await long.scrollIntoViewIfNeeded();
+  await observe(page, info, { long, list }, () => restOn(page, long, TIP_REST_MS));
+  const tip = shownTip(page);
+  await expect.soft(tip).toHaveText(LONG);
+  // Beside the list, level with its option, never over the pill.
+  const t = await boxOf(tip);
+  const l = await boxOf(list);
+  const o = await boxOf(long);
+  expect.soft(t.x >= l.x + l.width || t.x + t.width <= l.x).toBe(true);
+  expect.soft(Math.abs(t.y + t.height / 2 - (o.y + o.height / 2))).toBeLessThan(1);
+  expect.soft(overlap(t, await boxOf(pill))).toBe(false);
 });
