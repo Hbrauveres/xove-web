@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { aUser, installFakeApi, MY_USER_ID } from "../../../../testing/fakeApi";
+import { aUser, installFakeApi, MY_USER_ID, someoneSharing } from "../../../../testing/fakeApi";
 import { lastRoom } from "../../../../testing/fakeLiveKit";
 import { appConfig } from "@services/app-config-service";
 import { RoomStore } from "./room.store";
@@ -240,6 +240,41 @@ describe("the room's store: my streams at the API", () => {
     expect(store.getState().model.streamsBusy).toBe(false);
     expect(await changing).toBe(true);
     expect(store.getState().model.streamsBusy).toBe(false);
+    store.close();
+  });
+
+  it("ends a stream at once when its sharer stops sending it, before the API says so", async () => {
+    const { server, store } = openStore();
+    server.streams = [someoneSharing("Marina", 2, "screen", undefined, new Date())];
+    await settle();
+    const room = lastRoom();
+    room.join("user-2", "Marina");
+    room.publishScreen("user-2");
+    await vi.advanceTimersByTimeAsync(POLL_MS);
+    const listed = () => (store.getState().model.streams ?? []).map((s) => `${s.personId}:${s.kind}`);
+    expect(listed()).toEqual(["user-2:screen"]);
+    // Marina stops: her screen leaves the video room; the API still lists it until its next answer.
+    room.unpublish("user-2", "screen_share");
+    expect(listed()).toEqual([]);
+    await vi.advanceTimersByTimeAsync(POLL_MS);
+    expect(listed()).toEqual([]);
+    // The API catches up, then she starts again: listed once more.
+    server.streams = [];
+    await vi.advanceTimersByTimeAsync(POLL_MS);
+    server.streams = [someoneSharing("Marina", 2, "screen", undefined, new Date())];
+    room.publishScreen("user-2");
+    await vi.advanceTimersByTimeAsync(POLL_MS);
+    expect(listed()).toEqual(["user-2:screen"]);
+    store.close();
+  });
+
+  it("keeps a stream the API lists before its video arrives: it's starting", async () => {
+    const { server, store } = openStore();
+    server.streams = [someoneSharing("Marina", 2, "screen", undefined, new Date())];
+    await settle();
+    lastRoom().join("user-2", "Marina");
+    await vi.advanceTimersByTimeAsync(POLL_MS);
+    expect((store.getState().model.streams ?? []).map((s) => s.personId)).toEqual(["user-2"]);
     store.close();
   });
 
