@@ -20,6 +20,8 @@ const TEXTS: [string, number][] = [
 export const GLASS_OVER_WHITE = "#313133";
 /** The smallest text, in rem (11 px). */
 const SMALLEST_TEXT_REM = 0.6875;
+/** How deep tokens may point at tokens before resolving stops. */
+const VAR_DEPTH = 8;
 
 /** The custom properties declared on `:root`, as name → value. */
 export function tokensOf(root: Root) {
@@ -117,6 +119,28 @@ export function mixedVendorRules(root: Root, file: string) {
   return problems;
 }
 
+/** A `var(--x)` replaced by its token's value, until none is left (an unknown one stays as is). */
+const resolved = (value: string, tokens: Map<string, string>, depth = 0): string => {
+  const next = value.replace(/var\(--([\w-]+)\)/g, (all: string, name: string) => tokens.get(name) ?? all);
+  return next === value || depth > VAR_DEPTH ? next : resolved(next, tokens, depth + 1);
+};
+
+/**
+ * Glass blurs only: a backdrop-filter with more than blur() (brightness, saturate…) is dropped whole
+ * by Chrome drawing with a graphics card, and the glass turns see-through (#249). Darkening comes
+ * from the glass's own colour.
+ */
+export function glassFilterProblems(root: Root, file: string, tokens: Map<string, string>) {
+  const problems: string[] = [];
+  root.walkDecls(/^(-webkit-)?backdrop-filter$/, (d) => {
+    const value = resolved(d.value, tokens);
+    const steps = value.match(/[a-z-]+\(/g) ?? [];
+    if (steps.some((s) => s !== "blur(" && s !== "var("))
+      problems.push(`${file}:${d.source?.start?.line}: ${d.prop}: ${value} — glass blurs only (blur()), its colour darkens it`);
+  });
+  return problems;
+}
+
 /** The global rule that stops animations and transitions for anyone who asks for reduced motion. */
 export function reducedMotionProblems(globalCss: Root) {
   let found = false;
@@ -152,6 +176,7 @@ export function checkStyles(src: string) {
     ...parsed.flatMap(({ root, file }) => disabledColourProblems(root, file)),
     ...parsed.flatMap(({ root, file }) => smallFontProblems(root, file, tokensOf(tokens.root))),
     ...parsed.flatMap(({ root, file }) => mixedVendorRules(root, file)),
+    ...parsed.flatMap(({ root, file }) => glassFilterProblems(root, file, tokensOf(tokens.root))),
     ...reducedMotionProblems(global.root),
   ];
 }
@@ -162,7 +187,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   console.log(
     problems.length
       ? `${problems.length} style problems.`
-      : "Styles: contrast, browser rules and reduced motion all hold.",
+      : "Styles: contrast, browser rules, glass and reduced motion all hold.",
   );
   process.exit(problems.length ? 1 : 0);
 }

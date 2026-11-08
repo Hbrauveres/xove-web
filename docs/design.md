@@ -86,8 +86,8 @@ Dark only: Xovê is a room for watching screens, so the chrome stays out of the 
 | `--ok` | `#3fbf7f` | Connected, the seats bar, the mic level when it's sent |
 | `--warn` | `#e0b341` | Reconnecting |
 | `--glass` | `rgba(10, 10, 11, 0.72)` | The round buttons, drop-ups and pickers over the video (with an 8 px blur) |
-| `--panel` | `rgba(18, 18, 20, 0.74)` | The [Panel](#the-panel)'s glass, with `--panel-filter` |
-| `--panel-filter` | blur 22 px, brightness 55%, saturation 120% | The Panel's backdrop: dims what's behind it before blurring |
+| `--panel` | `rgba(18, 18, 20, 0.87)` | The [Panel](#the-panel)'s glass, with `--panel-filter`: its colour does the dimming |
+| `--panel-filter` | blur 22 px, nothing else | The Panel's backdrop. Glass only blurs: a filter chain (brightness, saturate) makes Chrome on a graphics card drop the whole blur (#249); the style check refuses one |
 | `--panel-line` | `rgba(255, 255, 255, 0.08)` | The panel's border and its tabs' line |
 | `--sel-bg` | `var(--surface-raised)` | The dark pill of a chosen option, and buttons in a row (Change) |
 | `--sel-shadow` | `0 1px 2px rgba(0, 0, 0, 0.4)` | Its shadow |
@@ -132,7 +132,7 @@ Body line height is 1.5; headings balance their lines (`text-wrap: balance`). Fo
 | `--radius-pill` 999 px | Round buttons, the activity pill, badges, dots, bars |
 | `--gutter` 16 px | The page's side margin |
 
-- **Frosted glass** for things floating over the stage or the page: dark at 72–74% with a blur (8 px for the round buttons, 22 px for panels).
+- **Frosted glass** for things floating over the stage or the page: dark (72% for the round buttons, 87% for panels) with a plain blur (8 px for the round buttons, 22 px for panels), never a filter chain.
 - **Clear cuts:** stacked panel sections are separated by a 2 px gap that shows the page behind, never a drawn line.
 - **Touch targets** are at least about 36 px (the switch keeps a 36 × 20 px target).
 
@@ -439,7 +439,7 @@ The sliders' rules stay one browser per rule, checked by `npm run check:styles` 
 
 `shared/components/panel` (`Panel`, and `PanelSection` for its sections): **the one surface** that holds content, for the settings, the menus and the waiting room's card. A rule for the whole app: a new panel is this one.
 
-- **Glass, 16 px corners:** the panel colour (`--panel`), a 1 px white border at 8%, and a backdrop that's **blurred 22 px and dimmed to 55%** (`--panel-filter`), so its text stays readable over the brightest stream. Over a white stream its muted text measures 4.6 : 1, its main text 10.9 : 1; the style check holds the glass to that.
+- **Glass, 16 px corners:** the panel colour (`--panel`), a 1 px white border at 8%, and a backdrop **blurred 22 px** (`--panel-filter`, only a blur), and the colour at 87% does the dimming, so its text stays readable over the brightest stream. Over a white stream its muted text measures 4.6 : 1, its main text 10.9 : 1; the style check holds the glass to that.
 - **Cuts are optional:** a menu's sections are stacked with 2 px clear cuts, each section carrying the glass itself (a menu's unrolling clip would stop a blur on the outer box).
 - **On a plain page it's the same panel,** nearly solid there, with nothing behind it to blur.
 - What uses it places and moves it; the panel only draws itself.

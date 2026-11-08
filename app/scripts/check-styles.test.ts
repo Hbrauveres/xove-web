@@ -7,6 +7,7 @@ import {
   smallFontProblems,
   smallTextProblems,
   faviconProblems,
+  glassFilterProblems,
   mixedVendorRules,
   reducedMotionProblems,
   tokensOf,
@@ -62,6 +63,20 @@ describe("the style check: one browser per rule", () => {
       ".r::-webkit-slider-thumb, .r::-moz-range-thumb { width: 12px; }\n.r::-webkit-slider-thumb { height: 12px; }",
     );
     expect(mixedVendorRules(css, "Range.module.css")).toEqual([expect.stringMatching(/^Range\.module\.css:1: /)]);
+  });
+});
+
+describe("the style check: glass blurs only", () => {
+  const glass = (rule: string, root = "") => glassFilterProblems(postcss.parse(rule), "Panel.module.css", tokens(root));
+
+  it("passes a blur, through a token or written out", () => {
+    expect(glass(".p { backdrop-filter: var(--f); }", ":root { --b: 22px; --f: blur(var(--b)); }")).toEqual([]);
+    expect(glass(".p { -webkit-backdrop-filter: blur(8px); }")).toEqual([]);
+  });
+
+  it("names a glass whose filter does more than blur, even through a token", () => {
+    const chain = ":root { --b: 22px; --f: blur(var(--b)) brightness(0.55) saturate(1.2); }";
+    expect(glass(".p { backdrop-filter: var(--f); }", chain)).toEqual([expect.stringMatching(/^Panel\.module\.css:1: .*brightness/)]);
   });
 });
 
