@@ -94,8 +94,9 @@ export class RoomStore {
   startStream = (kind: StreamKind, connection: SharingConnection, settings: StreamSettings) =>
     this.call(() => api.streams.start(kind, connection, settings));
 
+  /** A quality or mode changed: the stream stays as it is meanwhile, so nothing reads as busy. */
   changeStreamSettings = async (kind: StreamKind, settings: StreamSettings) =>
-    (await this.call(() => api.streams.settings(kind, settings))) === "ok";
+    (await this.call(() => api.streams.settings(kind, settings), { busy: false })) === "ok";
 
   stopStream = async (kind: StreamKind) => (await this.call(() => api.streams.stop(kind))) === "ok";
 
@@ -202,9 +203,10 @@ export class RoomStore {
     this.every("reenter", answer.seated === false, () => void this.askSeat(this.video.participantSid()));
   }
 
-  private async call(request: () => Promise<StreamsState>): Promise<CallOutcome> {
+  /** A call about my streams; `busy` (a start or a stop) greys my controls until it answers. */
+  private async call(request: () => Promise<StreamsState>, { busy = true } = {}): Promise<CallOutcome> {
     this.streamsVersion += 1;
-    this.setModel(withStreamsCall(this.model, true, null));
+    this.setModel(withStreamsCall(this.model, busy, null));
     try {
       const answer = await request();
       this.onStreams(answer, false);

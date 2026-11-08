@@ -229,6 +229,20 @@ describe("the room's store: my streams at the API", () => {
     store.close();
   });
 
+  it("is busy while a stream starts or stops, never while its settings change", async () => {
+    const { store } = openStore();
+    await settle();
+    const connection = { participantSid: "PA_me", trackSid: "TR" };
+    const starting = store.startStream("screen", connection, { quality: "1080p", mode: "smooth" });
+    expect(store.getState().model.streamsBusy).toBe(true);
+    await starting;
+    const changing = store.changeStreamSettings("screen", { quality: "720p", mode: "sharp" });
+    expect(store.getState().model.streamsBusy).toBe(false);
+    expect(await changing).toBe(true);
+    expect(store.getState().model.streamsBusy).toBe(false);
+    store.close();
+  });
+
   it("says why a start failed, and whether the places are full", async () => {
     const { server, store } = openStore();
     await settle();
