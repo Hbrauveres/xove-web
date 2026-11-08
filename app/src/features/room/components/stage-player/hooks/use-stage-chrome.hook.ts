@@ -6,8 +6,8 @@ import { pointerInside } from "../utils/pointer-inside.util";
 
 /**
  * The player's labels and bars, like YouTube's: shown while the mouse moves over `frame`, faded
- * 2.5 s after it stops. Nothing fades while a control in it has the keyboard's focus, or something
- * holds them up; a click's focus doesn't count.
+ * 2.5 s after it stops. Nothing fades while a control in it has the keyboard's focus or its menu
+ * open, or something holds them up; a click's focus doesn't count.
  */
 export function useStageChrome(frame: RefObject<HTMLElement | null>): StageChrome {
   const [shown, setShown] = useState(false);
@@ -15,7 +15,11 @@ export function useStageChrome(frame: RefObject<HTMLElement | null>): StageChrom
   const held = useRef(new Set<string>());
   const keyboardFocus = useKeyboardLast();
   const kept = useCallback(
-    () => held.current.size > 0 || (keyboardFocus() && (frame.current?.contains(document.activeElement) ?? false)),
+    () =>
+      held.current.size > 0 ||
+      // A control's menu open in the player (Go live's, "…"'s): its glass never fades from under the pointer.
+      frame.current?.querySelector('[aria-expanded="true"]') != null ||
+      (keyboardFocus() && (frame.current?.contains(document.activeElement) ?? false)),
     [frame, keyboardFocus],
   );
 

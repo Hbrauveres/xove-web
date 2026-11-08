@@ -23,19 +23,18 @@
   pointer-events: auto;
 }
 
-/* Fading with the controls, part by part: a heard voice stays for its speaking cue,
+/* Fading with the controls, part by part (each glass by its own --chrome-fade): a heard voice stays for its speaking cue,
    alone in the corner, the sound beside it folding away. */
 .left > *,
 .right > * {
   transition:
-    opacity var(--duration-250) ease,
     margin var(--duration-250) ease,
     background-color var(--duration-120) ease,
     color var(--duration-120) ease;
 }
 
 :global([data-chrome="hidden"]:not(:has(:focus-visible))) :is(.left, .right) > :not([data-stays]) {
-  opacity: 0;
+  --chrome-fade: 0;
 }
 
 :global([data-chrome="hidden"]:not(:has(:focus-visible))) .left > :not([data-stays]):has(~ [data-stays]) {

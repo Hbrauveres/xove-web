@@ -1,12 +1,14 @@
 import { expect, test, type Locator, type Page, type TestInfo } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
+import { glassUnderBreakingParents } from "../support/glass.ts";
 import { observe } from "../support/observe.ts";
 import { openScene, wakeStage } from "../support/open.ts";
 import { boxOf, inside } from "../support/geometry.ts";
 import { restOn } from "../support/pointer.ts";
-import { control, pictureOf } from "../support/stage.ts";
+import { shownOpacity } from "../support/screen.ts";
+import { chromeOf, control, pictureOf } from "../support/stage.ts";
 import { HOVER_REST_MS, untilStill } from "../support/timing.ts";
-import { middleY } from "./controls.ts";
+import { middleY, openAndRestOnMenu } from "./controls.ts";
 
 const open = async (page: Page) => {
   await openScene(page, "s=live");
@@ -120,4 +122,17 @@ test("F-go-live.6 Escape closes the menu and gives the focus back to Go live", a
   await expect.soft(menu).toHaveCount(0);
   await expect.soft(goLive).toHaveAttribute("aria-expanded", "false");
   await expect.soft(goLive).toBeFocused();
+});
+
+test("F-go-live.7 its open menu stays up, glass over the stream, while the pointer rests", async ({ page }) => {
+  await open(page);
+  const menu = page.getByRole("menu");
+  // The pointer rests on the open menu past the controls' wait: nothing fades, its glass blurs throughout.
+  const { opening, resting } = await openAndRestOnMenu(page, control(page, "Go live"), menu);
+  await expect.soft(chromeOf(page)).toHaveAttribute("data-chrome", "shown");
+  await expect.soft(menu).toBeVisible();
+  expect.soft(await shownOpacity(control(page, "Go live"))).toBe(1);
+  expect.soft(opening).toEqual([]);
+  expect.soft(resting).toEqual([]);
+  expect.soft(await glassUnderBreakingParents(page)).toEqual([]);
 });

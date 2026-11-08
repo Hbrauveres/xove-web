@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
+import { glassUnderBreakingParents, glassUnderBreakingParentsWhile } from "../support/glass.ts";
 import { observe } from "../support/observe.ts";
 import { boxOf, centreX, centreY } from "../support/geometry.ts";
 import { APP_PX, computed, LOOK, pxOf, SIZE, WEIGHT } from "../support/looks.ts";
@@ -188,4 +189,16 @@ test("F-menus.9 moving up into the drop-up keeps it open; leaving closes it", as
   // Closed: out of reach (inert) and unseen.
   await expect.soft(dropUp).toHaveCount(0);
   await expect.soft(page.locator('fieldset[aria-label="What you share"]')).toHaveCSS("visibility", "hidden");
+});
+
+test("F-menus.10 a drop-up is glass over the stream on every frame of its opening", async ({ page }) => {
+  await sharingMyScreen(page);
+  const dropUp = page.getByRole("group", { name: "What you share" });
+  const found = await glassUnderBreakingParentsWhile(page, async () => {
+    await pointAt(page, page.getByRole("button", { name: "Stop sharing your screen" }));
+    await dropUp.waitFor();
+    await untilStill(dropUp);
+  });
+  expect.soft(found).toEqual([]);
+  expect.soft(await glassUnderBreakingParents(page)).toEqual([]);
 });

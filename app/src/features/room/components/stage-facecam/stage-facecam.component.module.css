@@ -38,15 +38,15 @@
   right: var(--space-1-5);
   display: flex;
   gap: var(--space-1);
-  transition: opacity var(--duration-250) ease;
 }
 
+/* Each glass fades itself (--chrome-fade), never this group. */
 :global([data-chrome="hidden"]) .controls {
-  opacity: 0;
+  --chrome-fade: 0;
   pointer-events: none;
 }
 
 :global([data-chrome="hidden"]:focus-within) .controls {
-  opacity: 1;
+  --chrome-fade: 1;
   pointer-events: auto;
 }

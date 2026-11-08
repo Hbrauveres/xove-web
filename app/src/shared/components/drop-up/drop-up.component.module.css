@@ -1,6 +1,7 @@
 /*
  * The drop-up (the Player controls design, decision 3): one frosted pill centred above a live
- * round button. It fades and slides 6 px; nothing blurred is animated.
+ * round button. It slides 6 px and its rows fade, each its own glass: the group never fades, or its
+ * glass would have nothing to blur (glass fades itself, never its parent).
  */
 .wrap {
   position: relative;
@@ -28,13 +29,16 @@
   z-index: var(--layer-popup);
   width: var(--dropup-width, var(--dropup-width));
   transform: translate(-50%, var(--space-1-5));
-  opacity: 0;
   visibility: hidden;
   pointer-events: none;
   transition:
-    opacity var(--duration-140) ease,
     transform var(--duration-180) var(--ease-out),
     visibility 0s linear var(--duration-180);
+}
+
+.dropup > * {
+  opacity: 0;
+  transition: opacity var(--duration-140) ease;
 }
 
 /* A bridge over the gap, so the pointer can travel up into it. */
@@ -49,18 +53,21 @@
 
 .wrap[data-open="true"] .dropup {
   transform: translate(-50%, 0);
-  opacity: 1;
   visibility: visible;
   pointer-events: auto;
   transition:
-    opacity var(--duration-140) ease,
     transform var(--duration-180) var(--ease-out),
     visibility 0s;
 }
 
+.wrap[data-open="true"] .dropup > * {
+  opacity: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .dropup,
-  .wrap[data-open="true"] .dropup {
+  .wrap[data-open="true"] .dropup,
+  .dropup > * {
     transition: none;
   }
 }

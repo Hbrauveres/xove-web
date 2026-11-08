@@ -50,6 +50,11 @@
   background: var(--glass);
   backdrop-filter: blur(var(--blur-2));
   box-shadow: 0 var(--space-1) var(--space-4) var(--black-35);
+  /* Glass fades itself, never its parent: a group that fades sets --chrome-fade to 0. */
+  opacity: var(--chrome-fade, 1);
+  transition:
+    background-color var(--duration-120) ease,
+    opacity var(--duration-250) ease;
 }
 
 /* Red: the first way. */

@@ -1,5 +1,6 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
+import { glassUnderBreakingParents, glassUnderBreakingParentsWhile } from "../support/glass.ts";
 import { observe } from "../support/observe.ts";
 import { openScene, wakeStage } from "../support/open.ts";
 import { boxOf, inside } from "../support/geometry.ts";
@@ -154,4 +155,17 @@ test("F-viewer-bar.6 a heard voice stays when the controls fade, the rest fade a
   // The voice takes the sound's place, alone in the corner: still inside the picture.
   expect.soft(await onPicture(page, voice)).toBe(true);
   expect.soft(blinks(seen.frames, "voice")).toEqual([]);
+});
+
+test("F-viewer-bar.7 a sound's slider is glass over the stream all the way through its unroll", async ({ page }) => {
+  await openScene(page, "s=live&sound=1");
+  await wakeStage(page);
+  const slider = page.getByLabel("Screen sound volume");
+  const found = await glassUnderBreakingParentsWhile(page, async () => {
+    await restOn(page, control(page, "Mute the screen's sound"), REST_MS);
+    await expect.poll(() => sliderOpen(slider)).toBe(true);
+    await untilStill(slider.locator("xpath=.."));
+  });
+  expect.soft(found).toEqual([]);
+  expect.soft(await glassUnderBreakingParents(page)).toEqual([]);
 });

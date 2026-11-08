@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
+import { glassUnderBreakingParentsWhile } from "../support/glass.ts";
 import { observe } from "../support/observe.ts";
 import { openScene, wakeStage } from "../support/open.ts";
 import { boxOf, centreX, centreY } from "../support/geometry.ts";
@@ -7,6 +8,7 @@ import { pointAway } from "../support/pointer.ts";
 import { shownOpacity } from "../support/screen.ts";
 import { chromeOf, stageOf } from "../support/stage.ts";
 import { CHROME_IDLE_MS, LOOK_EVERY_MS, spend, TIMER_SLACK_MS, untilStill } from "../support/timing.ts";
+import { openMyStream } from "../controls/controls.ts";
 import { restOnStage, stageParts } from "./stage.ts";
 
 /** The controls shown and their fade over, or hidden and their fade over. */
@@ -163,4 +165,22 @@ test("F-stage-fade.7 the empty stage's controls never fade", async ({ page }, in
   await expect.soft(chromeOf(page)).toHaveCount(0);
   expect.soft(await shownOpacity(fullscreen)).toBe(1);
   expect.soft(await shownOpacity(settings)).toBe(1);
+});
+
+test("F-stage-fade.8 every glass fades itself, so it blurs all the way out and back in", async ({ page }) => {
+  const scenes: [string, () => Promise<void>][] = [
+    ["someone's screen, its sounds", () => openScene(page, "s=live&sound=1")],
+    ["the small view", () => openScene(page, "s=facecam")],
+    ["my own stream", () => openMyStream(page)],
+  ];
+  for (const [scene, open] of scenes) {
+    await open();
+    await wakeStage(page);
+    await controlsShown(page);
+    // Out: the mouse rests and every control fades; back in: a move wakes them.
+    const out = await glassUnderBreakingParentsWhile(page, () => restOnStage(page).then(() => controlsHidden(page)));
+    const back = await glassUnderBreakingParentsWhile(page, () => wakeStage(page).then(() => controlsShown(page)));
+    expect.soft(out, `${scene}, fading out`).toEqual([]);
+    expect.soft(back, `${scene}, coming back`).toEqual([]);
+  }
 });

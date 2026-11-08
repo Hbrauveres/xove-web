@@ -5,7 +5,8 @@ import { boxOf, centreY } from "../support/geometry.ts";
 import { voiceOn } from "../support/harness.ts";
 import { openScene, wakeStage } from "../support/open.ts";
 import { control, stageOf } from "../support/stage.ts";
-import { untilStill } from "../support/timing.ts";
+import { glassUnderBreakingParentsWhile } from "../support/glass.ts";
+import { CHROME_IDLE_MS, spend, untilStill } from "../support/timing.ts";
 
 /** My own stream on the stage: from the empty stage, "Share your screen"; its controls awake. */
 export async function openMyStream(page: Page): Promise<void> {
@@ -42,3 +43,20 @@ export const middleY = async (target: Locator) => centreY(await boxOf(target));
 /** Whether a sound's own slider is open: unrolled, out of its inert holder. */
 export const sliderOpen = (slider: Locator) =>
   slider.evaluate((el) => !el.closest("[inert]") && el.closest("[data-open]") !== null);
+
+/**
+ * A menu opened by a click on `button`, then the pointer resting on it past the controls' wait. Returns
+ * every glass found under a parent breaking its blur, while it opened and while the pointer rested.
+ */
+export async function openAndRestOnMenu(page: Page, button: Locator, menu: Locator) {
+  const opening = await glassUnderBreakingParentsWhile(page, async () => {
+    await button.click();
+    await menu.waitFor();
+    await untilStill(menu);
+  });
+  const resting = await glassUnderBreakingParentsWhile(page, async () => {
+    await menu.hover();
+    await spend(page, CHROME_IDLE_MS * 2);
+  });
+  return { opening, resting };
+}

@@ -111,6 +111,7 @@ What the tests share lives once in `e2e/support/`, one module per concern; an ar
 - `stage.ts`: the stage, its picture, its buttons, whether its controls are shown, the tooltip on show.
 - `timing.ts`: the times a case may spend, named once (the app's own constants), and `untilStill`, waiting until nothing finite is moving.
 - `looks.ts`: the looks a case checks, by the app's token names, resolved by the page into computed values.
+- `glass.ts`: the glass rule (design sheet, "glass fades itself, never its parent"): every shown glass under a parent that would leave its blur nothing to blur, now or on every frame of an action (`glassUnderBreakingParentsWhile`).
 - `observe.ts`, `track.ts`, `frames.ts`, `state.ts`: recording an action, frame by frame, and reading the frames.
 
 Each test opens a scene (`e2e/support/open.ts`: the clock fixed, the pictures still), and records its action with `observe` (`e2e/support/observe.ts`): the named elements' state before and after (shown, where, how they look, what a screen reader hears), a screenshot of each, every animation frame while it happens, and a strip of screenshots through it. `blinks`, `drift` and `transitioned` (`e2e/support/frames.ts`) turn the frames into "must not" checks: an element that must stay never dims or disappears, never moves. The checks are `expect.soft`, so a test records everything and reports every failure. Eight browsers run at once (`E2E_WORKERS` sets another number). `E2E_OUT` says where the records go; `E2E_BASE_URL` runs the same tests against another copy of the app.

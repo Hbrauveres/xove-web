@@ -17,9 +17,12 @@
   color: var(--text);
   cursor: pointer;
   font: inherit;
+  /* Glass fades itself, never its parent: a group that fades sets --chrome-fade to 0. */
+  opacity: var(--chrome-fade, 1);
   transition:
     background-color var(--duration-120) ease,
-    color var(--duration-120) ease;
+    color var(--duration-120) ease,
+    opacity var(--duration-250) ease;
   user-select: none;
 }
 
@@ -68,7 +71,7 @@
 }
 
 .unavailable {
-  opacity: 0.45;
+  opacity: calc(0.45 * var(--chrome-fade, 1));
 }
 
 /* A narrow stage: my own buttons take the other size, so a row of four and the fullscreen button

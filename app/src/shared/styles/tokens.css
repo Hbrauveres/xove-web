@@ -45,7 +45,7 @@
   --glass: rgba(10, 10, 11, 0.72);
   --panel: rgba(18, 18, 20, 0.87);
   --panel-line: rgba(255, 255, 255, 0.08);
-  /* The glass only blurs (#249, Henrique's choice): its colour, --panel, does the dimming that keeps
+  /* The glass only blurs: its colour, --panel, does the dimming that keeps
      its text readable. */
   --panel-filter: blur(var(--blur-5-5));
   --sel-bg: var(--surface-raised);

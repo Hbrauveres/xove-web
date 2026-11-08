@@ -5,8 +5,9 @@ import { openScene, wakeStage } from "../support/open.ts";
 import { boxOf, inside } from "../support/geometry.ts";
 import { pictureWidth } from "../support/harness.ts";
 import { clickAt, restOn } from "../support/pointer.ts";
-import { control, pictureOf, shownTip } from "../support/stage.ts";
+import { chromeOf, control, pictureOf, shownTip } from "../support/stage.ts";
 import { TIP_REST_MS } from "../support/timing.ts";
+import { openAndRestOnMenu } from "./controls.ts";
 
 /** The picture made `width` px wide, as a stream that narrow would make it; then the controls woken. */
 async function shapePicture(page: Page, width: number) {
@@ -151,4 +152,14 @@ test("F-more-menu.7 Escape closes …'s menu", async ({ page }, info) => {
   });
   await expect.soft(group(page)).toHaveCount(0);
   await expect.soft(more).toHaveAttribute("aria-expanded", "false");
+});
+
+test("F-more-menu.8 its open menu stays up, glass over the stream, while the pointer rests", async ({ page }) => {
+  await openNarrow(page, "s=live&sound=1");
+  const menu = group(page);
+  const { opening, resting } = await openAndRestOnMenu(page, control(page, "More controls"), menu);
+  await expect.soft(chromeOf(page)).toHaveAttribute("data-chrome", "shown");
+  await expect.soft(menu).toBeVisible();
+  expect.soft(opening).toEqual([]);
+  expect.soft(resting).toEqual([]);
 });

@@ -27,18 +27,14 @@
   inset: 0;
   pointer-events: none;
   transition:
-    opacity var(--duration-250) ease,
     translate var(--unroll),
     bottom var(--duration-280) ease;
 }
 
-/* Fading, part by part: a heard voice stays, for its speaking cue. */
-.controls > * {
-  transition: opacity var(--duration-250) ease;
-}
-
+/* Fading, part by part: a heard voice stays, for its speaking cue. Each glass fades itself
+   (--chrome-fade), never this group: a fading parent would leave its blur nothing to blur. */
 :global([data-chrome="hidden"]) .controls > :not(:has([data-stays])) {
-  opacity: 0;
+  --chrome-fade: 0;
 }
 
 :global([data-chrome="hidden"]) .controls :is(button, input) {
@@ -46,7 +42,7 @@
 }
 
 :global([data-chrome="hidden"]:has(:focus-visible)) .controls > * {
-  opacity: 1;
+  --chrome-fade: 1;
 }
 
 :global([data-chrome="hidden"]:has(:focus-visible)) .controls :is(button, input) {

@@ -1,5 +1,6 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
+import { glassUnderBreakingParents, glassUnderBreakingParentsWhile } from "../support/glass.ts";
 import { observe } from "../support/observe.ts";
 import { boxOf, inside, overlap, windowBox, type Box } from "../support/geometry.ts";
 import { marinaGoesLive } from "../support/harness.ts";
@@ -194,4 +195,13 @@ test("F-preview-row.8 my own preview, sharing both, has only the swap, which tra
   await expect.soft(page.getByRole("button", { name: "Watch You · camera" })).toBeVisible();
   expect.soft(drift(seen.frames, "swap")).toBeLessThan(1);
   expect.soft(blinks(seen.frames, "swap")).toEqual([]);
+});
+
+test("F-preview-row.9 the row is glass over the page on every frame of its unroll, and once open", async ({ page }) => {
+  await openScene(page, "s=live");
+  const rafa = page.getByRole("button", { name: "Watch Rafa · screen" });
+  const row = page.getByRole("group", { name: "Rafa's sounds" });
+  const found = await glassUnderBreakingParentsWhile(page, () => openRow(page, rafa, row));
+  expect.soft(found).toEqual([]);
+  expect.soft(await glassUnderBreakingParents(page)).toEqual([]);
 });

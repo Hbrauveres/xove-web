@@ -1,12 +1,16 @@
 /* A small preview's row, floating over the page at the preview's width. */
 /* It unrolls from the preview's edge and rolls back into it, as the stage's own sliders do: rolled
    up, it is clipped to its edge next to the preview. The open clip reaches past the box, so the
-   shadow shows. */
+   shadow shows. The clip and the fade are on the row itself, the glass, never on this holder: a
+   clipping or fading parent would leave its blur nothing to blur (glass fades itself). */
 .tray {
   position: fixed;
   z-index: var(--layer-tray);
   display: flex;
   justify-content: center;
+}
+
+.tray > * {
   opacity: 0;
   clip-path: inset(
     calc(var(--space-6) * -1) calc(var(--space-6) * -1) calc(100% + var(--space-6)) calc(var(--space-6) * -1) round
@@ -15,14 +19,14 @@
 }
 
 /* Moving only while it shows or leaves, never while it is being placed. */
-.tray[data-shown],
-.tray[data-leaving] {
+.tray[data-shown] > *,
+.tray[data-leaving] > * {
   transition:
     clip-path var(--unroll),
     opacity var(--duration-200) ease;
 }
 
-.tray[data-up] {
+.tray[data-up] > * {
   clip-path: inset(
     calc(100% + var(--space-6)) calc(var(--space-6) * -1) calc(var(--space-6) * -1) calc(var(--space-6) * -1) round
       var(--space-4)
@@ -36,7 +40,7 @@
   --slider-padding-block: var(--space-1) var(--space-2);
 }
 
-.tray[data-shown] {
+.tray[data-shown] > * {
   opacity: 1;
   clip-path: inset(
     calc(var(--space-6) * -1) calc(var(--space-6) * -1) calc(var(--space-6) * -1) calc(var(--space-6) * -1) round
@@ -45,8 +49,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tray[data-shown],
-  .tray[data-leaving] {
+  .tray[data-shown] > *,
+  .tray[data-leaving] > * {
     transition: none;
   }
 }
