@@ -4,7 +4,7 @@ import { glassUnderBreakingParents } from "../support/glass.ts";
 import { observe } from "../support/observe.ts";
 import { openScene, wakeStage } from "../support/open.ts";
 import { boxOf, inside } from "../support/geometry.ts";
-import { restOn } from "../support/pointer.ts";
+import { restOn, tabTo } from "../support/pointer.ts";
 import { shownOpacity } from "../support/screen.ts";
 import { chromeOf, control, pictureOf } from "../support/stage.ts";
 import { HOVER_REST_MS, untilStill } from "../support/timing.ts";
@@ -135,4 +135,21 @@ test("F-go-live.7 its open menu stays up, glass over the stream, while the point
   expect.soft(opening).toEqual([]);
   expect.soft(resting).toEqual([]);
   expect.soft(await glassUnderBreakingParents(page)).toEqual([]);
+});
+
+test("F-go-live.8 opened from the keyboard, Escape closes the menu and the focus is back on Go live", async ({
+  page,
+}, info) => {
+  await open(page);
+  const goLive = control(page, "Go live");
+  const menu = page.getByRole("menu");
+  await tabTo(page, goLive);
+  await page.keyboard.press("Enter");
+  await menu.waitFor();
+  await observe(page, info, { goLive, menu }, async () => {
+    await page.keyboard.press("Escape");
+    await menu.waitFor({ state: "detached" });
+  });
+  await expect.soft(goLive).toBeFocused();
+  expect.soft(await goLive.evaluate((b) => b.matches(":focus-visible"))).toBe(true);
 });
