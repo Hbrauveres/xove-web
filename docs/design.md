@@ -177,7 +177,7 @@ Body line height is 1.5; headings balance their lines (`text-wrap: balance`). Fo
 | The mark's hover animation | about 3 s, once | — |
 
 - **Panels never clip, fade or filter** while they move: that would stop their blur. They unroll by their height.
-- **What's under the pointer stays put** (ADR-0101): buttons may appear, fade and shift as controls come and go, and things that move together move as a group (a row re-centring when a button comes or goes). But a group never moves while the pointer is on any of its parts (a button, its slider, its drop-up): it holds its place and catches up once the pointer has left them all. A click never lands on something that moved under it.
+- **What's under the pointer stays put** (ADR-0101): buttons may appear, fade and shift as controls come and go, and things that move together move as a group (a row re-centring when a button comes or goes). But a group never moves while the pointer is on any of its parts (a button, its slider, its drop-up): it holds its place and catches up once the pointer has left them all. A click never lands on something that moved under it. In the code it's one hold (`useHeldGroup`): my row (a button coming or going), the picture's controls (the stream changing shape: they stay, then glide onto the picture), and a preview's row (its preview bouncing on a swap) each hold this way; a line that would push what's above it keeps its height (the info row's meta line).
 - **With reduced motion**, every animation and transition is cut to nothing (a global rule), the mark doesn't play and the ambilight updates every 500 ms. A round button that comes or goes still never moves the one under the pointer.
 
 ## Tokens

@@ -4,7 +4,7 @@ import { Tooltip } from "@shared/components/tooltip";
 import { SETTINGS } from "../../constants/stream-words.constants";
 import { useSettingsAnchor } from "../../hooks/use-settings-anchor.hook";
 import { StageStreamButton } from "../stage-stream-button";
-import { usePinnedRow } from "./hooks/use-pinned-row.hook";
+import { useHeldGroup } from "../../hooks/use-held-group.hook";
 import styles from "./stage-player-buttons.component.module.css";
 import type { StagePlayerButtonsProps } from "./types/stage-player-buttons.types";
 
@@ -16,7 +16,7 @@ import type { StagePlayerButtonsProps } from "./types/stage-player-buttons.types
  */
 export function StagePlayerButtons({ extra, beside, size = "l", ...props }: StagePlayerButtonsProps) {
   const anchor = useSettingsAnchor();
-  const { ref } = usePinnedRow<HTMLDivElement>(anchor?.row);
+  const { ref } = useHeldGroup<HTMLDivElement>(anchor?.row);
   return (
     <div className={styles.row} data-beside={beside || undefined} data-compact={size === "m" || undefined}>
       <div className={styles.buttons} ref={ref}>

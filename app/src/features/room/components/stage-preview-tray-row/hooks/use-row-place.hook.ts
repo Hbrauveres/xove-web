@@ -4,7 +4,8 @@ import { placeRow } from "../utils/place-row.util";
 
 /**
  * Keeps a row glued to its preview's picture on every frame (one measure a frame), so nothing that
- * moves the preview (the strip scrolling, the page settling) leaves it behind. The side is chosen
+ * moves the preview (the strip scrolling, the page settling) leaves it behind, except while the
+ * pointer is on the row: then it holds, and follows again once the pointer leaves. The side is chosen
  * once, as it opens; it shows a frame after it's placed, so it unrolls from its edge.
  */
 export function useRowPlace(open: OpenRow, onElement?: (el: HTMLElement | null) => void) {
@@ -23,7 +24,9 @@ export function useRowPlace(open: OpenRow, onElement?: (el: HTMLElement | null) 
     let frame = 0;
     const place = () => {
       const el = element.current;
-      if (!el) return;
+      // Nothing moves under the pointer: placed once, the row holds while the pointer is on it (a
+      // swap's bounce, the strip settling) and catches up once it leaves.
+      if (!el || (below !== null && el.matches(":hover"))) return;
       const at = placeRow(open.picture.getBoundingClientRect(), el.offsetHeight, window.innerHeight, below);
       if (below === null) setSide(at.below ? "below" : "above");
       below = at.below;

@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { OpenRow } from "../../../types/preview-tray.types";
 import { GAP } from "../constants/stage-preview-tray-row.constants";
@@ -28,5 +28,22 @@ describe("useRowPlace", () => {
   it("near the window's bottom, puts it above", () => {
     const { getByTestId } = render(<Row open={pictureAt(window.innerHeight - 80)} />);
     expect(getByTestId("row").style).toMatchObject({ top: "", bottom: `${80 + GAP}px` });
+  });
+
+  it("holds while the pointer is on the row, and follows again once it leaves", () => {
+    vi.useFakeTimers({ toFake: ["requestAnimationFrame", "cancelAnimationFrame"] });
+    const open = pictureAt(100);
+    const { getByTestId } = render(<Row open={open} />);
+    const row = getByTestId("row");
+    let hovered = true;
+    const matches = row.matches.bind(row);
+    vi.spyOn(row, "matches").mockImplementation((s) => (s === ":hover" ? hovered : matches(s)));
+    // A swap's bounce moves the picture 7 px down under the pointer.
+    vi.spyOn(open.picture, "getBoundingClientRect").mockReturnValue(new DOMRect(40, 107, 128, 72));
+    act(() => vi.advanceTimersToNextFrame());
+    expect(row.style.top).toBe(`${100 + 72 + GAP}px`);
+    hovered = false;
+    act(() => vi.advanceTimersToNextFrame());
+    expect(row.style.top).toBe(`${107 + 72 + GAP}px`);
   });
 });

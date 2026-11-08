@@ -4,10 +4,20 @@ import { openScene, wakeStage } from "../support/open.ts";
 import { observe } from "../support/observe.ts";
 import { boxOf, centreX, centreY, inside, windowBox } from "../support/geometry.ts";
 import { computed, LOOK, pxOf, SIZE } from "../support/looks.ts";
-import { focusedName, pointAway } from "../support/pointer.ts";
+import { focusedName, pointAt, pointAway } from "../support/pointer.ts";
 import { onTop } from "../support/screen.ts";
 import { stageOf } from "../support/stage.ts";
-import { activityList, headerOf, myMenu, openFrom, peoplePanel, rolledUp, styleOf } from "./header.ts";
+import {
+  activityList,
+  everyoneStops,
+  headerOf,
+  marinaGoesLive,
+  myMenu,
+  openFrom,
+  peoplePanel,
+  rolledUp,
+  styleOf,
+} from "./header.ts";
 
 test("F-header.1 the bar: the wordmark left, the activity in the middle, people and me at the right", async ({
   page,
@@ -141,4 +151,18 @@ test("F-header.7 Escape closes a panel and gives the focus back to its button; a
   await rolledUp(myMenu(page));
   await expect.soft(myMenu(page)).toHaveCount(0);
   await expect.soft(h.me).toHaveAttribute("aria-expanded", "false");
+});
+
+test("F-header.8 what the pointer is on stays put while the room's news changes the bar", async ({ page }, info) => {
+  for (const name of ["pill", "people", "me"] as const) {
+    await openScene(page, "s=live");
+    const parts = headerOf(page);
+    await pointAt(page, parts[name]);
+    const seen = await observe(page, info, { pill: parts.pill, people: parts.people, me: parts.me }, async () => {
+      await everyoneStops(page);
+      await marinaGoesLive(page);
+    });
+    for (const part of ["pill", "people", "me"])
+      expect.soft(drift(seen.frames, part), `${name}: ${part}`).toBeLessThan(1);
+  }
 });
