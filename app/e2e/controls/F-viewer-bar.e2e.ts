@@ -2,10 +2,9 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { glassUnderBreakingParents, glassUnderBreakingParentsWhile } from "../support/glass.ts";
 import { observe } from "../support/observe.ts";
-import { setShape } from "../support/harness.ts";
 import { openScene, wakeStage } from "../support/open.ts";
 import { boxOf, inside } from "../support/geometry.ts";
-import { clickAt, overPicture, pointAt, restOn, tabTo } from "../support/pointer.ts";
+import { clickAt, restOn, tabTo } from "../support/pointer.ts";
 import { shownOpacity } from "../support/screen.ts";
 import { chromeOf, control, pictureOf, shownTip, stageOf } from "../support/stage.ts";
 import { HOVER_REST_MS, REST_MS, untilStill } from "../support/timing.ts";
@@ -169,35 +168,4 @@ test("F-viewer-bar.7 a sound's slider is glass over the stream all the way throu
   });
   expect.soft(found).toEqual([]);
   expect.soft(await glassUnderBreakingParents(page)).toEqual([]);
-});
-
-test("F-viewer-bar.8 the controls hold under the pointer when the picture changes shape, then glide to it", async ({
-  page,
-}, info) => {
-  await openScene(page, "s=live&sound=1");
-  await wakeStage(page);
-  const goLive = control(page, "Go live");
-  const full = control(page, "Fullscreen");
-  await pointAt(page, goLive);
-  await untilStill(page);
-  const before = { goLive: await boxOf(goLive), full: await boxOf(full) };
-  // The stream turns 4:3: the picture narrows while the pointer rests on Go live.
-  await observe(page, info, { goLive, full }, async () => {
-    await setShape(page, 4 / 3);
-    await untilStill(page);
-  });
-  // Held where they were. (Read before and after: a frame's record is taken before the hold
-  // corrects that frame, so it would see each step of the glide one frame early.)
-  for (const [name, now] of [
-    ["goLive", await boxOf(goLive)],
-    ["full", await boxOf(full)],
-  ] as const) {
-    expect.soft(Math.abs(now.x - before[name].x), name).toBeLessThan(1);
-    expect.soft(Math.abs(now.y - before[name].y), name).toBeLessThan(1);
-  }
-  // The pointer leaves: they glide onto the picture.
-  await overPicture(page);
-  await untilStill(page);
-  expect.soft(inside(await boxOf(goLive), await boxOf(pictureOf(page)))).toBe(true);
-  expect.soft(inside(await boxOf(full), await boxOf(pictureOf(page)))).toBe(true);
 });

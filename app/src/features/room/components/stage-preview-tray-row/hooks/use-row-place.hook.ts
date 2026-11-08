@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { OpenRow } from "../../../types/preview-tray.types";
 import { placeRow } from "../utils/place-row.util";
+import { slotBox } from "../utils/slot-box.util";
 
 /**
  * Keeps a row glued to its preview's picture on every frame (one measure a frame), so nothing that
- * moves the preview (the strip scrolling, the page settling) leaves it behind, except while the
- * pointer is on the row: then it holds, and follows again once the pointer leaves. The side is chosen
+ * moves the preview (the strip scrolling, the page settling) leaves it behind. It follows the
+ * picture's slot, so what only animates the picture (a swap's bounce) never moves it. The side is chosen
  * once, as it opens; it shows a frame after it's placed, so it unrolls from its edge.
  */
 export function useRowPlace(open: OpenRow, onElement?: (el: HTMLElement | null) => void) {
@@ -24,10 +25,9 @@ export function useRowPlace(open: OpenRow, onElement?: (el: HTMLElement | null) 
     let frame = 0;
     const place = () => {
       const el = element.current;
-      // Nothing moves under the pointer: placed once, the row holds while the pointer is on it (a
-      // swap's bounce, the strip settling) and catches up once it leaves.
-      if (!el || (below !== null && el.matches(":hover"))) return;
-      const at = placeRow(open.picture.getBoundingClientRect(), el.offsetHeight, window.innerHeight, below);
+      if (!el) return;
+      // By the picture's slot, not where it's drawn: a swap's bounce never moves the row.
+      const at = placeRow(slotBox(open.anchor, open.picture), el.offsetHeight, window.innerHeight, below);
       if (below === null) setSide(at.below ? "below" : "above");
       below = at.below;
       el.style.left = `${at.left}px`;
