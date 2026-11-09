@@ -24,3 +24,8 @@ it("holds its sections", () => {
   expect(screen.getByText("Activity")).toBeInTheDocument();
   expect(screen.getByText("Rafa joined")).toBeInTheDocument();
 });
+
+it("can be a status that speaks its changes", () => {
+  render(<Panel as="output">You're next in line.</Panel>);
+  expect(screen.getByRole("status")).toHaveTextContent("You're next in line.");
+});

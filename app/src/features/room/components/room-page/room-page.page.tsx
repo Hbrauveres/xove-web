@@ -1,15 +1,15 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "@shared/stores/auth-store";
-import { WaitingRoom } from "../../../../components/room/WaitingRoom";
-import { RoomFooter } from "../../../../components/room/RoomFooter";
 import { useDeviceList } from "./hooks/use-device-list.hook";
 import { useSoundUnlock } from "./hooks/use-sound-unlock.hook";
 import { RoomSessionProvider } from "../../stores/room-session";
 import { useRoomSeat, useRoomStore } from "../../stores/room-store";
 import { roomEntry } from "./utils/room-entry.util";
 import { Header } from "../header";
+import { QueueWaitingRoom } from "../queue-waiting-room";
 import { RoomError } from "../room-error";
+import { RoomFooter } from "../room-footer";
 import { Stage } from "../stage";
 import styles from "./room-page.page.module.css";
 import type { RoomPageProps } from "./types/room-page.types";
@@ -35,7 +35,7 @@ export function RoomPage({ pollMs }: RoomPageProps = {}) {
   }, [signOut, navigate]);
 
   const entry = roomEntry(room.model, room.video);
-  if (!entry.ready) return <WaitingRoom seat={{ ...seat, status: entry.waiting }} onSignOut={onSignOut} />;
+  if (!entry.ready) return <QueueWaitingRoom seat={{ ...seat, status: entry.waiting }} onSignOut={onSignOut} />;
   return (
     <RoomSessionProvider room={room} devices={devices} onSignOut={onSignOut}>
       <div className={styles.theater} data-room>

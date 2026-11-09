@@ -1,4 +1,4 @@
-import styles from "./RoomFooter.module.css";
+import styles from "./room-footer.component.module.css";
 
 /** The room's slim footer. Not clickable yet: the links come later. */
 export function RoomFooter() {

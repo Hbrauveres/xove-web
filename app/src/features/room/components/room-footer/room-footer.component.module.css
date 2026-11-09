@@ -1,4 +1,4 @@
-/* The footer (spec 0104): see-through, no line, the same edges as the header. */
+/* The footer: see-through, no line, the same edges as the header. */
 .footer {
   position: relative;
   z-index: var(--layer-bars);
@@ -29,7 +29,7 @@
   color: var(--text-muted);
 }
 
-/* White, among the muted links (spec 0121): it stands out without the red. */
+/* White, among the muted links: it stands out without the red. */
 .coffee {
   color: var(--text);
 }

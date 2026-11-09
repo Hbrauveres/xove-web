@@ -1,22 +1,25 @@
-.backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: var(--layer-overlay);
-  display: grid;
-  place-items: center;
-  padding: var(--gutter);
-  background: var(--grey-7-70);
+/* The browser's own modal dialog, drawn as the room's windows: centred, a gutter from the edges. */
+.window[open] {
+  display: flex;
 }
 
 .window {
-  display: flex;
   flex-direction: column;
   gap: var(--space-3-5);
-  width: min(var(--seat-offer-width), 100%);
+  width: min(var(--seat-offer-width), 100% - 2 * var(--gutter));
+  max-width: none;
+  max-height: none;
+  margin: auto;
   padding: var(--space-5);
+  color: inherit;
   background: var(--surface);
   border: var(--hairline) solid var(--line);
   border-radius: var(--radius-2-5);
+}
+
+/* Everything behind it dimmed, as the room's other windows do. */
+.window::backdrop {
+  background: var(--grey-7-70);
 }
 
 .title {
