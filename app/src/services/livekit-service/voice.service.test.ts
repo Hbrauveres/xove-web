@@ -93,6 +93,30 @@ describe("my voice", () => {
     expect(close).toHaveBeenCalled();
   });
 
+  it("says I'm speaking while the gate lets my voice through, and not once my voice stops", async () => {
+    vi.stubGlobal(
+      "AudioContext",
+      class {
+        close = async () => {};
+      },
+    );
+    const adapter = await connected();
+    await start(adapter);
+    const gate = (lastRoom().localParticipant.mic!.track as FakeLocalMicTrack).processor as NoiseGate;
+    expect(adapter.getState().voiceSpeaking).toBe(false);
+
+    act(() => gate.onOpen?.(true));
+    expect(adapter.getState().voiceSpeaking).toBe(true);
+    act(() => gate.onOpen?.(false));
+    expect(adapter.getState().voiceSpeaking).toBe(false);
+
+    act(() => gate.onOpen?.(true));
+    await act(async () => {
+      await adapter.stopVoice();
+    });
+    expect(adapter.getState().voiceSpeaking).toBe(false);
+  });
+
   it("stops the mic at once when it can't be sent, and says so apart from a block", async () => {
     const close = vi.fn(async () => {});
     vi.stubGlobal(

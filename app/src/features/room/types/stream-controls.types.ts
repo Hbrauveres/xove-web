@@ -29,6 +29,8 @@ export type StreamControls = {
   onSettings: () => void;
   /** My voice is on, and turning it on or off. */
   voice?: boolean;
+  /** My voice is being sent right now (it passes the gate): my mic button wears the speaking cue. */
+  speaking?: boolean;
   onVoice?: () => void;
   /** With the settings open, a live button's gesture goes to its setting there. */
   onGoTo?: (kind: StreamKind) => void;

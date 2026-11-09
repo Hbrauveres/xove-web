@@ -71,6 +71,8 @@ type PresenceEvent = { id: number; kind: "joined" | "left"; identity: string; at
 /** Everything the room shows about the video server, kept per person. */
 export type VideoRoomState = LocalMedia & {
   connection: ConnectionState;
+  /** My voice passes the gate right now: it's being sent, so I'm speaking. */
+  voiceSpeaking: boolean;
   /** Everyone else, in the order they arrived. */
   others: RoomPerson[];
   /** What others send, by identity. */

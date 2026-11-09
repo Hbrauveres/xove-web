@@ -19,6 +19,8 @@ export class NoiseGate implements TrackProcessor<Track.Kind.Audio, AudioProcesso
   processedTrack?: MediaStreamTrack;
   /** The microphone itself, before the gate: what the level meter reads. */
   input?: MediaStreamTrack;
+  /** Told each time it opens or closes: my voice being sent, or not. */
+  onOpen?: (open: boolean) => void;
   private line: number;
   private stop?: () => void;
 
@@ -48,6 +50,7 @@ export class NoiseGate implements TrackProcessor<Track.Kind.Audio, AudioProcesso
       const was = state.open;
       state = gateStep(state, levelOf(samples), this.line, TICK_MS);
       if (state.open !== was) {
+        this.onOpen?.(state.open);
         gain.gain.setTargetAtTime(
           state.open ? 1 : 0,
           audioContext.currentTime,

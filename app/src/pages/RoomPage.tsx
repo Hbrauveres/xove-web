@@ -106,6 +106,7 @@ function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
     cameraProblem: video.cameraProblem,
     connection: video.connection,
     voice: video.voice,
+    voiceSpeaking: video.voiceSpeaking,
     localVoice: video.localVoice,
     micInput: video.micInput,
   };
@@ -250,6 +251,7 @@ function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
               onSettings: toggleSettings,
               onGoTo: goToSetting,
               voice: session.voice,
+              speaking: session.voiceSpeaking,
               onVoice: session.toggleVoice,
             }}
             settingsPanel={settingsPanel}

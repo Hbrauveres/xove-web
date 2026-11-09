@@ -5,15 +5,20 @@ import type { VoicePrefs } from "@services/preferences-service";
 import type { Gate, RoomContext } from "./types/livekit.types";
 import { problemOf } from "./utils/voice-problem.util";
 import { NoiseGate } from "./noise-gate.adapter";
+import { VoiceActivity } from "./voice-activity.adapter";
 import { micCaptureOptions } from "./utils/publish-options.util";
 
 /** My voice: asked for only when I turn it on, sent alongside my stream, through the noise gate. */
 export class VoiceService {
   private readonly ctx: RoomContext;
   private gate: Gate | null = null;
+  /** Without the gate, my raw mic is measured for my speaking; how to stop that. */
+  private ungated: (() => void) | null = null;
+  private readonly activity: VoiceActivity;
 
-  constructor(ctx: RoomContext) {
+  constructor(ctx: RoomContext, activity = new VoiceActivity()) {
     this.ctx = ctx;
+    this.activity = activity;
   }
 
   async startVoice(prefs: VoicePrefs): Promise<VoiceProblem> {
@@ -31,6 +36,9 @@ export class VoiceService {
       this.closeVoice();
       this.gate = await this.gateVoice(track, prefs.sensitivity);
       await room.localParticipant.publishTrack(track, { source: Track.Source.Microphone });
+      // Where the browser can't run the gate, my speaking is measured from the mic as sent.
+      if (!this.gate && typeof AudioContext !== "undefined")
+        this.ungated = this.activity.watch(raw, (on) => this.ctx.update({ voiceSpeaking: on }));
       this.ctx.refreshLocal({ micInput: this.gate?.gate.input ?? raw });
       return null;
     } catch {
@@ -64,10 +72,13 @@ export class VoiceService {
     this.gate?.gate.setLine(line);
   }
 
-  /** Lets the gate's audio go. */
+  /** Lets the gate's audio go: nothing of mine is sent, so I'm not speaking. */
   closeVoice() {
     void this.gate?.context.close().catch(() => {});
     this.gate = null;
+    this.ungated?.();
+    this.ungated = null;
+    this.ctx.update({ voiceSpeaking: false });
   }
 
   private sentMic() {
@@ -88,6 +99,7 @@ export class VoiceService {
       if (context.state === "suspended") await context.resume();
       track.setAudioContext(context);
       const gate = new NoiseGate(line);
+      gate.onOpen = (open) => this.ctx.update({ voiceSpeaking: open });
       await track.setProcessor(gate);
       return { gate, context };
     } catch {

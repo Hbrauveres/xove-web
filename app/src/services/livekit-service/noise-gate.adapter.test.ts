@@ -53,4 +53,21 @@ describe("the noise gate on my voice", () => {
     expect(graph.gainTargets.at(-1)).toBe(0);
     await gate.destroy();
   });
+
+  it("tells when it opens and closes: my voice being sent, or not", async () => {
+    vi.useFakeTimers();
+    const graph = audioGraph();
+    const gate = new NoiseGate(0.3);
+    const told: boolean[] = [];
+    gate.onOpen = (open) => told.push(open);
+    await gate.init(graph.options);
+
+    graph.level.sample = 0.1;
+    vi.advanceTimersByTime(TICK_MS);
+    graph.level.sample = 0;
+    vi.advanceTimersByTime(HOLD_MS + TICK_MS);
+
+    expect(told).toEqual([true, false]);
+    await gate.destroy();
+  });
 });
