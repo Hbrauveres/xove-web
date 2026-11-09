@@ -29,3 +29,15 @@ export function aSharer({ id = "user-7", name = "Bruno", kinds = ["screen"], ...
     ...extra,
   };
 }
+
+/** Me sharing my screen from this browser (a local track), new on every call; anything else laid over. */
+export function aMe(extra: Partial<Sharer> = {}): Sharer {
+  return {
+    person: { id: "user-99", name: "Henrique", hue: 210, online: true },
+    isMe: true,
+    since: Date.now(),
+    screen: { kind: "screen", startedAt: Date.now(), settings: { quality: "1080p", mode: "smooth" }, local: aTrack() },
+    hasSound: false,
+    ...extra,
+  };
+}

@@ -24,6 +24,7 @@ export function StageInfo({ sharers, stage, hearing, places, free, watchers, her
         onHear={hearing.setHear}
         swappedOf={(id) => Boolean(swappedFor[id])}
         onSwap={toggleSwap}
+        meTalking={meTalking}
       />
     </div>
   );

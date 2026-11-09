@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { aSharer } from "@testing/factories/sharer.factory";
+import { aMe, aSharer } from "@testing/factories/sharer.factory";
 import { StageAlsoLive } from "./stage-also-live.component";
 
 const heard = { volume: 1, muted: false };
@@ -25,3 +25,10 @@ type Story = StoryObj<typeof meta>;
 export const TwoOthers: Story = {};
 /** A room set to four places. */
 export const FourPlaces: Story = { args: { places: 4, free: 1 } };
+/** I'm live and watch someone else, my voice being sent: my own preview's ring lit. */
+export const MineTalking: Story = {
+  args: {
+    others: [aMe(), aSharer({ id: "user-3", name: "Ana" })],
+    meTalking: true,
+  },
+};

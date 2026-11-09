@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { onFakeClock } from "@testing/factories/clock.factory";
-import { aSharer } from "@testing/factories/sharer.factory";
+import { aMe, aSharer } from "@testing/factories/sharer.factory";
 import { aTrack } from "@testing/factories/track.factory";
 import type { FakeTrack } from "@testing/fakeLiveKit";
 import type { Sharer } from "@features/room/types/room-view.types";
@@ -31,6 +31,7 @@ function Harness({
   free = 3,
   onPick = vi.fn(),
   heard = HEARD,
+  meTalking = false,
 }: {
   others: Sharer[];
   live?: number;
@@ -38,6 +39,7 @@ function Harness({
   free?: number;
   onPick?: (id: string) => void;
   heard?: Hearing;
+  meTalking?: boolean;
 }) {
   const [hearing, setHearing] = useState<Record<string, Hearing>>({});
   const [swapped, setSwapped] = useState<Record<string, boolean>>({});
@@ -52,6 +54,7 @@ function Harness({
       onHear={(id, h) => setHearing((was) => ({ ...was, [id]: h }))}
       swappedOf={(id) => Boolean(swapped[id])}
       onSwap={(id) => setSwapped((was) => ({ ...was, [id]: !was[id] }))}
+      meTalking={meTalking}
     />
   );
 }
@@ -84,6 +87,14 @@ describe("also live", () => {
     await user.hover(preview(/Watch You · screen/));
     act(() => vi.advanceTimersByTime(1000));
     expect(screen.queryByRole("group")).not.toBeInTheDocument();
+  });
+
+  it("lights my own preview's ring while my voice is sent", () => {
+    const me = aMe();
+    const { rerender } = render(<Harness others={[me]} meTalking />);
+    expect(item(/Watch You · screen/)).toHaveAttribute("data-talking");
+    rerender(<Harness others={[me]} />);
+    expect(item(/Watch You · screen/)).not.toHaveAttribute("data-talking");
   });
 
   it("gives my own preview its swap alone when I share a screen and a camera", async () => {

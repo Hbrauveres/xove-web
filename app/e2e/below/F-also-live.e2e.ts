@@ -1,13 +1,14 @@
-import { VOICE_LISTEN_MS, spend } from "../support/timing.ts";
-import { cueAgainstSound, recordCue, recordCueLooks } from "../support/cue.ts";
+import { VOICE_LISTEN_MS, VOICE_SETTLE_MS, spend } from "../support/timing.ts";
+import { cueAgainstSound, recordCue, recordCueLooks, ringColours } from "../support/cue.ts";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
 import { boxOf } from "../support/geometry.ts";
 import { everyoneStops, togglesStream, voiceOn } from "../support/harness.ts";
-import { openScene } from "../support/open.ts";
+import { openScene, wakeStage } from "../support/open.ts";
 import { pointAt, pointAway } from "../support/pointer.ts";
-import { pictureOf } from "../support/stage.ts";
+import { pictureOf, stageOf } from "../support/stage.ts";
+import { iShareMyScreen } from "../header/header.ts";
 import { stageUpFor } from "./below.ts";
 
 const previewsOf = (page: Page) => page.getByRole("list", { name: "Other streams" }).getByRole("button");
@@ -177,4 +178,69 @@ test("F-also-live.8 a preview's ring follows its person's voice: lit while it so
   expect.soft(cueAgainstSound(frames)).toEqual([]);
   // On or off, never in between: the ring only ever draws its two looks.
   expect.soft(new Set((await stopRing()).map((f) => f.looks.ring)).size).toBe(2);
+});
+
+/**
+ * My mic's processing as the voice settings keep it (the app's `MIC_PROCESSING_KEY`, written out: its
+ * constants file pulls in modules the e2e config can't resolve), the line at the top: nothing of mine
+ * passes.
+ */
+const LINE_AT_TOP = JSON.stringify({
+  echoCancellation: true,
+  noiseSuppression: true,
+  autoGainControl: true,
+  voiceIsolation: false,
+  sensitivity: 1,
+});
+
+/** I go live with my screen, watch Marina again, and turn my voice on: my own preview is in the row. */
+async function liveWatchingMarinaWithMyVoice(page: Page) {
+  await openScene(page, "s=live&panel=1");
+  await voiceOn(page, 3);
+  await iShareMyScreen(page);
+  await page.getByRole("button", { name: "Watch Marina · screen" }).click();
+  await stageOf(page).getByLabel("Marina's shared screen").waitFor();
+  await wakeStage(page);
+  await stageOf(page).getByRole("button", { name: "Share your voice" }).click();
+  await stageOf(page).getByRole("button", { name: "Mute your voice" }).waitFor();
+  await pointAway(page);
+  return page.getByRole("button", { name: "Watch You · screen" });
+}
+
+test("F-also-live.9 while I watch someone else, my own preview lights while my voice is sent", async ({
+  page,
+  context,
+}, info) => {
+  const mine = await liveWatchingMarinaWithMyVoice(page);
+  const rafa = page.getByRole("button", { name: "Watch Rafa · screen" });
+  // Rafa heard too: his preview's talking look, to compare mine with.
+  await pointAt(page, rafa);
+  await page.getByRole("button", { name: "Unmute Rafa's voice" }).click();
+  await pointAway(page);
+  await page.getByRole("group", { name: "Rafa's sounds" }).waitFor({ state: "detached" });
+  const ring = (preview: typeof mine) => ({ at: preview.locator(":scope > span").first(), layer: "::after" });
+  const stop = await recordCueLooks(page, { mine: ring(mine), rafa: ring(rafa) });
+  await observe(page, info, { mine }, () => spend(page, VOICE_LISTEN_MS), { strip: 8, gap: 400 });
+  const frames = await stop();
+  const looks = (who: "mine" | "rafa") => [...new Set(frames.map((f) => f.looks[who]))];
+  // On or off with my voice: its two looks, and lit it's exactly a talking preview's.
+  expect.soft(looks("mine")).toHaveLength(2);
+  const ringColour = await ringColours(page);
+  const mineLit = looks("mine").find((l) => ringColour(l ?? "") === "green");
+  const rafaLit = looks("rafa").find((l) => ringColour(l ?? "") === "green");
+  expect.soft(mineLit).toBeDefined();
+  expect.soft(mineLit).toBe(rafaLit);
+
+  // My line at the top: nothing of mine is sent, so my preview stays out (one room at a time).
+  await page.close();
+  const quiet = await context.newPage();
+  await quiet.addInitScript((line) => localStorage.setItem("xove.mic.processing", line), LINE_AT_TOP);
+  const mineQuiet = await liveWatchingMarinaWithMyVoice(quiet);
+  const quietColours = await ringColours(quiet);
+  // Past the gate's first moment on the default line and its hold: from then on, nothing of mine passes.
+  await spend(quiet, VOICE_SETTLE_MS);
+  await expect(mineQuiet.locator("xpath=ancestor::li[1]")).not.toHaveAttribute("data-talking");
+  const stopQuiet = await recordCueLooks(quiet, { mine: ring(mineQuiet) });
+  await spend(quiet, VOICE_LISTEN_MS / 2);
+  expect.soft(new Set((await stopQuiet()).map((f) => quietColours(f.looks.mine!)))).not.toContain("green");
 });
