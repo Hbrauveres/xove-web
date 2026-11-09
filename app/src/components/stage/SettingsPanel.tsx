@@ -58,7 +58,7 @@ export type SettingsPanelProps = {
   /** My voice (spec 0123): on or off, how it's captured, the mics, and its own track for the level. */
   voice?: boolean | undefined;
   voicePrefs?: VoicePrefs | undefined;
-  onVoicePrefs?: (prefs: VoicePrefs) => void | undefined;
+  onVoicePrefs?: ((prefs: VoicePrefs) => void) | undefined;
   mics?: MicDevice[] | undefined;
   localVoice?: MediaTrack | undefined;
   /** The microphone itself, before the gate: what the level meter reads. */

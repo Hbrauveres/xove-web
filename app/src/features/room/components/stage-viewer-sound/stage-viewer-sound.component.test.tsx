@@ -1,8 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { StageViewerSound } from "./stage-viewer-sound.component";
-
+import userEvent from "@testing-library/user-event";
 const setup = (over = {}) => {
   const onChange = vi.fn();
   const setOpen = vi.fn();

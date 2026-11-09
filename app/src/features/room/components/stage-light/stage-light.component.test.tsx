@@ -5,7 +5,6 @@ import { EASE_MS, SLOW_EASE, SLOW_SAMPLE_MS } from "./constants/stage-light.cons
 import { StageLight } from "./stage-light.component";
 import { easeFor } from "./utils/ease.util";
 import { glowLayout } from "./utils/glow-layout.util";
-
 /**
  * Each test's own canvas, tab and clock: fake timers (animation frames included), a recorded 2D
  * context, and the tab's visibility to set. `updates()` is how many times the light was drawn.

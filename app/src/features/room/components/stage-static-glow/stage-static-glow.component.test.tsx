@@ -2,7 +2,6 @@ import { render } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { STRENGTH } from "../../constants/static-bands.constants";
 import { StageStaticGlow } from "./stage-static-glow.component";
-
 /** Each test's own stage: a canvas recording what it fills, the stage's size, and reduced motion
  * answered for the reduced-motion test. Returns what was filled, in order. */
 function setup() {

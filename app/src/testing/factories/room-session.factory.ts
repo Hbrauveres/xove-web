@@ -4,8 +4,6 @@ import type { StagePick } from "@features/room/types/stage.types";
 import type { Friend } from "@features/room/types/room-view.types";
 import { aStreamControls } from "./stream-controls.factory";
 
-const ME: Friend = { id: "me-1", name: "Henrique", hue: 210, online: true };
-
 /** Nobody on the stage, each action a spy. */
 export function aStagePick(over: Partial<StagePick> = {}): StagePick {
   return {
@@ -21,6 +19,7 @@ export function aStagePick(over: Partial<StagePick> = {}): StagePick {
 
 /** A session for one area: me alone in a quiet room, every action a spy; each part laid over. */
 export function aRoomSession(over: { [K in keyof RoomSession]?: Partial<RoomSession[K]> } = {}): RoomSession {
+  const ME: Friend = { id: "me-1", name: "Henrique", hue: 210, online: true };
   return {
     header: {
       activity: {

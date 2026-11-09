@@ -4,12 +4,19 @@ import { OPEN_DELAY_MS } from "@shared/constants/floating.constants";
 import { fullRoom } from "@features/room/utils/full-room.util";
 import { NO_SCREEN, NO_SOUND } from "../../constants/stream-words.constants";
 import { StagePlayerButtons } from "./stage-player-buttons.component";
-import { aUser, installFakeApi, someoneSharing } from "../../../../testing/fakeApi";
+import { installFakeApi, someoneSharing } from "../../../../testing/fakeApi";
 import { lastRoom } from "../../../../testing/fakeLiveKit";
 import { clockUser, onFakeClock } from "../../../../testing/factories/clock.factory";
 import { CHROME_IDLE_MS } from "@features/room/components/stage-player/constants/stage-player.constants";
-import { renderInRoom } from "../../../../testing/factories/room-render.factory";
-import { Stage } from "../stage";
+import {
+  member,
+  pass,
+  stage,
+  connected,
+  renderStage,
+  readyRoom,
+  startSharing,
+} from "../../../../testing/factories/stage-steps.factory";
 const CAMERAS = [
   { deviceId: "cam-1", label: "Logitech C920" },
   { deviceId: "cam-2", label: "Integrated Webcam" },
@@ -254,42 +261,7 @@ describe("icons: one state system", () => {
   });
 });
 
-// The wiring: the stage over the real room session.
-const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
-
-/** Moves the fake clock on, and lets what was waiting on it happen. */
-const pass = (ms: number) => act(() => vi.advanceTimersByTimeAsync(ms));
-
-// The stage shows once I'm in the room.
-const connected = () => screen.findByRole("region", { name: /shared screen/i });
-// The stage: the picture, and my screen and camera buttons on it.
-const stage = () => screen.getByRole("region", { name: /shared screen/i });
-
-/** The stage over the real room session, on the fake API and LiveKit. */
-const renderRoom = () => renderInRoom(<Stage />);
-
-// ---- sharing: pick a screen, set it up, start ----
-
-/** The room, connected, with a free stage (the seats box says "0 of 6 live": quicker than a heading by role). */
-async function readyRoom() {
-  renderRoom();
-  await connected();
-  await screen.findByLabelText("0 of 6 live, 6 seats open");
-  return clockUser();
-}
-
-type User = ReturnType<typeof clockUser>;
-/** Clicks "Share your screen": the browser's picker, and the pick is sent at once. */
-async function pickScreen(user: User, button: RegExp = /share your screen/i) {
-  await user.click(within(stage()).getByRole("button", { name: button }));
-}
-
-/** Picks a screen and starts sharing it, with the remembered settings. */
-async function startSharing(user: User) {
-  await pickScreen(user);
-  await screen.findByRole("heading", { name: "You" });
-}
-
+// The wiring: the stage over the real room session, its steps in testing/factories/stage-steps.
 describe("room: my screen and camera buttons on the player", () => {
   beforeEach(() => {
     onFakeClock();
@@ -297,7 +269,7 @@ describe("room: my screen and camera buttons on the player", () => {
 
   it("puts each control by its owner in the four states", async () => {
     const server = installFakeApi({ me: member() });
-    renderRoom();
+    renderStage();
     await connected();
     const row = () =>
       within(stage())
@@ -341,7 +313,7 @@ describe("room: my screen and camera buttons on the player", () => {
   it("fade with the player's bars over a stream", async () => {
     const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
-    renderRoom();
+    renderStage();
     await connected();
     act(() => {
       lastRoom().publishScreen("user-7");
@@ -374,7 +346,3 @@ describe("room: my screen and camera buttons on the player", () => {
     expect(frame).toHaveAttribute("data-chrome", "shown");
   });
 });
-
-// ---- a full room: the queue and the seat offer ----
-
-// ---- who is big, and the thumbnails ----

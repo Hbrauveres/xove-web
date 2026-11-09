@@ -164,8 +164,6 @@ describe("room: waiting for a seat", () => {
   });
 });
 
-// ---- cameras ----
-
 describe("room: theater mode", () => {
   it("has no sidebar or old header: a logo, the activity pill, people and account up top, and the footer", async () => {
     installFakeApi({ me: member() });
@@ -237,8 +235,6 @@ describe("room: theater mode", () => {
     await waitFor(() => expect(within(panel).getByText("Watching Bruno", { selector: "small" })).toBeInTheDocument());
   });
 });
-
-// ---- across the areas: the page itself, the activity, and the room's errors ----
 
 /** The room, connected, with a free stage (the seats box says "0 of 6 live": quicker than a heading by role). */
 async function readyRoom() {

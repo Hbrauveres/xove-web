@@ -33,7 +33,7 @@ export type StreamControls = {
   speaking?: boolean | undefined;
   /** The browser holds the room's sound back until the page's first click or key. */
   soundHeld?: boolean | undefined;
-  onVoice?: () => void | undefined;
+  onVoice?: (() => void) | undefined;
   /** With the settings open, a live button's gesture goes to its setting there. */
-  onGoTo?: (kind: StreamKind) => void | undefined;
+  onGoTo?: ((kind: StreamKind) => void) | undefined;
 };

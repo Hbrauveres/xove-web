@@ -238,6 +238,26 @@ The room while I share: my stream on the stage with my own buttons.
 
 The settings, the footer, the queue and the pages outside the room.
 
+### Room page
+
+<table><tr>
+<td><img src="img/today/room-watching.webp" width="720" alt="The room laid out: the header, the stage with its row, the footer"><br><sub>The room laid out: the header, the stage with its row, the footer</sub></td>
+</tr></table>
+
+While I wait for a seat, the waiting room; once I'm in, the room laid out: the header, the stage in its column, the room's error line, the footer. It holds no state: each area reads its part of the room session.
+
+| Today | Goes to | What happens |
+| --- | --- | --- |
+| `features/room/components/room-page/` (#192), the room session `features/room/stores/room-session/` | — | Kept; the next version's three columns after the gate |
+
+### Room error
+
+The room's problem in one line (the shared Error notice), over the bottom of the middle; in fullscreen, over the player's top. It shows only when something fails (the video access, a stream that won't start), so it has no picture here; its look is the Error notice's in the [design sheet](../design.md).
+
+| Today | Goes to | What happens |
+| --- | --- | --- |
+| `features/room/components/room-error/` (#192) | — | Kept |
+
 ### Settings panel
 
 <table><tr>

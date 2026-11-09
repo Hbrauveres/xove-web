@@ -1,8 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { StageStreamQuick } from "./stage-stream-quick.component";
-
+import userEvent from "@testing-library/user-event";
 const props = (over = {}) => ({
   kind: "screen" as const,
   cameras: [],

@@ -34,6 +34,11 @@ export function QueueSeatOffer({ seconds, onEnter, onCancel }: QueueSeatOfferPro
     onCancel();
   };
 
+  // A second Escape in a row closes the dialog in spite of the cancel: open it again while it's mine.
+  const onDialogClose = (e: React.SyntheticEvent<HTMLDialogElement>) => {
+    if (e.currentTarget.isConnected) e.currentTarget.showModal();
+  };
+
   return (
     <dialog
       ref={dialog}
@@ -43,6 +48,7 @@ export function QueueSeatOffer({ seconds, onEnter, onCancel }: QueueSeatOfferPro
       aria-describedby="seat-offer-text"
       onKeyDown={onKeyDown}
       onCancel={onDialogCancel}
+      onClose={onDialogClose}
     >
       <h2 id="seat-offer-title" className={styles.title}>
         It's your turn

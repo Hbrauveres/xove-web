@@ -1,11 +1,10 @@
 import { render, screen, fireEvent, waitFor, within } from "@testing-library/react";
 import { expect, it, describe, vi, beforeEach } from "vitest";
 import { StageScreenSource } from "./stage-screen-source.component";
-import { clockUser, onFakeClock } from "../../../../testing/factories/clock.factory";
-import { aUser, installFakeApi, myLiveStream } from "../../../../testing/fakeApi";
+import { onFakeClock } from "../../../../testing/factories/clock.factory";
+import { installFakeApi, myLiveStream } from "../../../../testing/fakeApi";
 import { lastRoom } from "../../../../testing/fakeLiveKit";
-import { renderInRoom } from "../../../../testing/factories/room-render.factory";
-import { Stage } from "../stage";
+import { member, stage, readyRoom, startSharing, openMenu } from "../../../../testing/factories/stage-steps.factory";
 it("says what my screen share shows, or just my screen while it's unknown", () => {
   const { rerender } = render(<StageScreenSource surface="monitor" />);
   expect(screen.getByText("Your whole screen")).toBeInTheDocument();
@@ -13,56 +12,7 @@ it("says what my screen share shows, or just my screen while it's unknown", () =
   expect(screen.getByText("Your screen")).toBeInTheDocument();
 });
 
-// The wiring: the stage over the real room session.
-const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
-
-// The stage shows once I'm in the room.
-const connected = () => screen.findByRole("region", { name: /shared screen/i });
-// The stage: the picture, and my screen and camera buttons on it.
-const stage = () => screen.getByRole("region", { name: /shared screen/i });
-
-/** The stage over the real room session, on the fake API and LiveKit. */
-const renderRoom = () => renderInRoom(<Stage />);
-
-// ---- sharing: pick a screen, set it up, start ----
-
-/** The room, connected, with a free stage (the seats box says "0 of 6 live": quicker than a heading by role). */
-async function readyRoom() {
-  renderRoom();
-  await connected();
-  await screen.findByLabelText("0 of 6 live, 6 seats open");
-  return clockUser();
-}
-
-type User = ReturnType<typeof clockUser>;
-/** Clicks "Share your screen": the browser's picker, and the pick is sent at once. */
-async function pickScreen(user: User, button: RegExp = /share your screen/i) {
-  await user.click(within(stage()).getByRole("button", { name: button }));
-}
-
-/** Picks a screen and starts sharing it, with the remembered settings. */
-async function startSharing(user: User) {
-  await pickScreen(user);
-  await screen.findByRole("heading", { name: "You" });
-}
-
-type MenuKind = "Screen" | "Camera" | "Voice";
-
-/** The settings panel on a tab: opened from the cog when it isn't. */
-async function openMenu(user: User, kind: MenuKind = "Screen") {
-  if (!screen.queryByRole("dialog", { name: "Settings" })) {
-    await user.click(within(stage()).getByRole("button", { name: "Settings" }));
-  }
-  const panel = within(await screen.findByRole("dialog", { name: "Settings" }));
-  const tab = panel.getByRole("tab", { name: (name) => name.startsWith(kind) });
-  if (tab.getAttribute("aria-selected") !== "true") await user.click(tab);
-  return within(panel.getByRole("tabpanel"));
-}
-
-// ---- a full room: the queue and the seat offer ----
-
-// ---- who is big, and the thumbnails ----
-
+// The wiring: the stage over the real room session, its steps in testing/factories/stage-steps.
 describe("room: change window and pick a camera", () => {
   beforeEach(() => {
     onFakeClock();

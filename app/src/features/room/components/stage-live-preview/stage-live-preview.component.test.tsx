@@ -1,11 +1,9 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { renderHook } from "@testing-library/react";
 import { aSharer } from "@testing/factories/sharer.factory";
 import { usePreviewTray } from "../../hooks/use-preview-tray.hook";
 import { StageLivePreview } from "./stage-live-preview.component";
-
+import userEvent from "@testing-library/user-event";
 const setup = (sharer = aSharer({ name: "Ana", hasVoice: true })) => {
   const tray = renderHook(() => usePreviewTray()).result.current;
   const onPick = vi.fn();

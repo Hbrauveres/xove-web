@@ -1,11 +1,10 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { aSharer } from "@testing/factories/sharer.factory";
 import { aFold } from "@testing/factories/small-view-fold.factory";
 import type { StagePictureProps } from "./types/stage-picture.types";
 import { StagePicture } from "./stage-picture.component";
-
+import userEvent from "@testing-library/user-event";
 function renderPicture(over: Partial<StagePictureProps> = {}) {
   const big = over.big ?? aSharer();
   const props: StagePictureProps = {

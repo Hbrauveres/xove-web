@@ -22,6 +22,7 @@ const inRoom = (error: string | null) => (
 
 afterEach(() => {
   goFullscreen(null);
+  document.querySelector("[data-player]")?.remove();
 });
 
 describe("the room's error", () => {
@@ -37,11 +38,11 @@ describe("the room's error", () => {
 
   it("goes over the player in fullscreen, where nothing else can be seen", () => {
     const player = document.createElement("div");
+    player.setAttribute("data-player", "");
     document.body.appendChild(player);
     goFullscreen(player);
     render(inRoom("The room is unreachable"));
     expect(screen.getByRole("main")).not.toHaveTextContent("The room is unreachable");
     expect(player).toHaveTextContent("The room is unreachable");
-    player.remove();
   });
 });

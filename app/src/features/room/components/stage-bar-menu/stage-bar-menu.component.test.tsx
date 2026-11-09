@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { StageBarMenu } from "./stage-bar-menu.component";
-
 describe("the bar's menu", () => {
   it("is a menu for a list of actions", () => {
     render(

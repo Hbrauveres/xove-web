@@ -1,15 +1,14 @@
 import { render, renderHook, screen, act } from "@testing-library/react";
-import { describe, expect, it, beforeEach, vi } from "vitest";
+import { describe, expect, it, beforeEach } from "vitest";
 import { aMe, aSharer } from "../../../../testing/factories/sharer.factory";
 import { useHearing } from "../../hooks/use-hearing.hook";
 import { useStage } from "../../hooks/use-stage.hook";
 import { StageInfo } from "./stage-info.component";
-import { Stage } from "../stage/stage.component";
-import { aUser, installFakeApi, someoneSharing } from "../../../../testing/fakeApi";
+import { installFakeApi, someoneSharing } from "../../../../testing/fakeApi";
 import { lastRoom } from "../../../../testing/fakeLiveKit";
 import { onFakeClock } from "../../../../testing/factories/clock.factory";
 import { REPORT_STILL_MS } from "../../stores/room-session/constants/watch-report.constants";
-import { renderInRoom } from "../../../../testing/factories/room-render.factory";
+import { member, pass, connected, renderStage } from "../../../../testing/factories/stage-steps.factory";
 describe("the row under the stage", () => {
   it("says who's on the stage, and holds the other streams", () => {
     const sharers = [aSharer(), aSharer({ id: "user-3", name: "Ana", kinds: ["camera"] })];
@@ -44,24 +43,7 @@ describe("the row under the stage", () => {
   });
 });
 
-// The wiring: the stage over the real room session.
-const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
-
-/** Moves the fake clock on, and lets what was waiting on it happen. */
-const pass = (ms: number) => act(() => vi.advanceTimersByTimeAsync(ms));
-
-// The stage shows once I'm in the room.
-const connected = () => screen.findByRole("region", { name: /shared screen/i });
-
-/** The stage over the real room session, on the fake API and LiveKit. */
-const renderRoom = () => renderInRoom(<Stage />);
-
-// ---- sharing: pick a screen, set it up, start ----
-
-// ---- screen and camera together: the small view ----
-
-// ---- sound and settings for each stream ----
-
+// The wiring: the stage over the real room session, its steps in testing/factories/stage-steps.
 describe("room: under the stage", () => {
   beforeEach(() => {
     onFakeClock();
@@ -75,7 +57,7 @@ describe("room: under the stage", () => {
       { userId: 3, sharerId: 7, kind: "screen", mine: false },
       { userId: 7, sharerId: 7, kind: "screen", mine: false },
     ];
-    renderRoom();
+    renderStage();
     await connected();
     act(() => {
       lastRoom().join("user-3", "Ana Souza");
@@ -95,7 +77,7 @@ describe("room: under the stage", () => {
 
   it("invites someone to go live on an empty stage, naming who's here", async () => {
     installFakeApi({ me: member() });
-    renderRoom();
+    renderStage();
     await connected();
     expect(await screen.findByText("Nobody else is here yet.")).toBeInTheDocument();
 

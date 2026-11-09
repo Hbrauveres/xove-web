@@ -5,15 +5,14 @@ import { useRememberedCamera } from "./use-remembered-camera.hook";
 import { useRoomStore } from "../../room-store";
 import { useSessionCore } from "./use-session-core.hook";
 
-const DEVICES = { cameras: [{ deviceId: "cam-1", label: "Logitech C920" }], mics: [] };
-
 /** The core over a real room store, on the fake API and LiveKit. */
-function renderCore() {
-  return renderHook(() => {
+function renderCore(devices = { cameras: [{ deviceId: "cam-1", label: "Logitech C920" }], mics: [] }) {
+  const hook = renderHook(() => {
     const room = useRoomStore("Henrique Brauveres", 50);
     const camera = useRememberedCamera(room.store.video);
-    return useSessionCore(room, DEVICES, camera);
+    return useSessionCore(room, devices, camera);
   });
+  return { ...hook, devices };
 }
 
 describe("the room's core", () => {
@@ -23,7 +22,7 @@ describe("the room's core", () => {
     const hook = renderCore();
     await waitFor(() => expect(hook.result.current.sharers.map((s) => s.person.name)).toEqual(["Bruno"]));
     expect(hook.result.current.free).toBe(hook.result.current.places - 1);
-    expect(hook.result.current.cameras).toBe(DEVICES.cameras);
+    expect(hook.result.current.cameras).toBe(hook.devices.cameras);
     expect(hook.result.current.error).toBeNull();
     hook.unmount();
   });

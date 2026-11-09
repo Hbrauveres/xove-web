@@ -1,8 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { StageEmptyStage } from "./stage-empty-stage.component";
-
+import userEvent from "@testing-library/user-event";
 /** The empty stage, the TV already on. */
 const Empty = (props: { canShareScreen?: boolean; onStart?: () => void }) => (
   <StageEmptyStage {...props} turnOn={false} onStandby={() => undefined} />

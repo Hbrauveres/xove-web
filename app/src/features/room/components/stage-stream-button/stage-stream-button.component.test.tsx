@@ -3,12 +3,21 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import { aStreamControls } from "@testing/factories/stream-controls.factory";
 import { StageStreamButton } from "./stage-stream-button.component";
 import { cameraCaptureOptions, capOf } from "@services/livekit-service";
-import { aUser, installFakeApi, MY_USER_ID, myLiveStream, someoneSharing } from "../../../../testing/fakeApi";
+import { installFakeApi, MY_USER_ID, myLiveStream, someoneSharing } from "../../../../testing/fakeApi";
 import { FakeLocalScreenTrack, lastRoom } from "../../../../testing/fakeLiveKit";
 import { clockUser, onFakeClock } from "../../../../testing/factories/clock.factory";
 import { appConfig } from "@services/app-config-service";
-import { renderInRoom } from "../../../../testing/factories/room-render.factory";
-import { Stage } from "../stage";
+import {
+  member,
+  stage,
+  connected,
+  renderStage,
+  readyRoom,
+  pickScreen,
+  startSharing,
+  openMenu,
+} from "../../../../testing/factories/stage-steps.factory";
+import type { User } from "../../../../testing/factories/stage-steps.factory";
 import userEvent from "@testing-library/user-event";
 describe("one of my streams' buttons", () => {
   it("starts its stream, or stops it while it's live", async () => {
@@ -31,56 +40,7 @@ describe("one of my streams' buttons", () => {
   });
 });
 
-// The wiring: the stage over the real room session.
-const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
-
-// The stage shows once I'm in the room.
-const connected = () => screen.findByRole("region", { name: /shared screen/i });
-// The stage: the picture, and my screen and camera buttons on it.
-const stage = () => screen.getByRole("region", { name: /shared screen/i });
-
-/** The stage over the real room session, on the fake API and LiveKit. */
-const renderRoom = () => renderInRoom(<Stage />);
-
-// ---- sharing: pick a screen, set it up, start ----
-
-/** The room, connected, with a free stage (the seats box says "0 of 6 live": quicker than a heading by role). */
-async function readyRoom() {
-  renderRoom();
-  await connected();
-  await screen.findByLabelText("0 of 6 live, 6 seats open");
-  return clockUser();
-}
-
-type User = ReturnType<typeof clockUser>;
-/** Clicks "Share your screen": the browser's picker, and the pick is sent at once. */
-async function pickScreen(user: User, button: RegExp = /share your screen/i) {
-  await user.click(within(stage()).getByRole("button", { name: button }));
-}
-
-/** Picks a screen and starts sharing it, with the remembered settings. */
-async function startSharing(user: User) {
-  await pickScreen(user);
-  await screen.findByRole("heading", { name: "You" });
-}
-
-type MenuKind = "Screen" | "Camera" | "Voice";
-
-/** The settings panel on a tab: opened from the cog when it isn't. */
-async function openMenu(user: User, kind: MenuKind = "Screen") {
-  if (!screen.queryByRole("dialog", { name: "Settings" })) {
-    await user.click(within(stage()).getByRole("button", { name: "Settings" }));
-  }
-  const panel = within(await screen.findByRole("dialog", { name: "Settings" }));
-  const tab = panel.getByRole("tab", { name: (name) => name.startsWith(kind) });
-  if (tab.getAttribute("aria-selected") !== "true") await user.click(tab);
-  return within(panel.getByRole("tabpanel"));
-}
-
-// ---- a full room: the queue and the seat offer ----
-
-// ---- who is big, and the thumbnails ----
-
+// The wiring: the stage over the real room session, its steps in testing/factories/stage-steps.
 describe("room: sharing", () => {
   beforeEach(() => {
     onFakeClock();
@@ -136,7 +96,7 @@ describe("room: sharing", () => {
   it("shares alongside someone else, without asking anyone to stop", async () => {
     const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno", 7)];
-    renderRoom();
+    renderStage();
     await connected();
     await screen.findByRole("heading", { name: "Bruno" });
     const user = clockUser();
@@ -180,7 +140,7 @@ describe("room: sharing", () => {
     const server = installFakeApi({ me: member() });
     server.places = 4;
     server.streams = [someoneSharing("P1", 1, "screen")];
-    renderRoom();
+    renderStage();
     await connected();
     expect(await screen.findByLabelText("1 of 4 live, 3 seats open")).toBeInTheDocument();
 
@@ -201,7 +161,7 @@ describe("room: sharing", () => {
       someoneSharing(`P${id}`, id, "screen"),
       someoneSharing(`P${id}`, id, "camera"),
     ]);
-    renderRoom();
+    renderStage();
     await connected();
 
     // Go live's ways to start are greyed out, still focusable, with the reason in their tooltip.

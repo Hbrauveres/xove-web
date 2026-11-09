@@ -1,9 +1,8 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { NO_SCREEN } from "../../constants/stream-words.constants";
 import { StageGoLive } from "./stage-go-live.component";
-
+import userEvent from "@testing-library/user-event";
 const props = (over = {}) => ({ canShareScreen: true, onStart: vi.fn(), onSettings: vi.fn(), ...over });
 
 describe("Go live", () => {

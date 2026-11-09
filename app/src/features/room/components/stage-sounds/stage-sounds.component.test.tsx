@@ -3,7 +3,6 @@ import { describe, expect, it } from "vitest";
 import type { MediaTrack } from "@services/livekit-service";
 import { FakeTrack } from "../../../../testing/fakeLiveKit";
 import { StageSounds } from "./stage-sounds.component";
-
 const sound = (id: string, volume: number) => ({
   id,
   track: new FakeTrack() as unknown as MediaTrack,

@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { onFakeClock } from "../../../../testing/factories/clock.factory";
+import { YOUR_TURN_TITLE } from "./constants/queue-seat-offer.constants";
 import { QueueSeatOffer } from "./queue-seat-offer.component";
 
 beforeEach(() => {
@@ -38,6 +39,16 @@ describe("the seat offer", () => {
     expect(offer()).toHaveAttribute("open");
   });
 
+  it("opens again if the browser closes it while the seat is still offered", () => {
+    renderOffer();
+    const dialog = offer();
+    act(() => {
+      dialog.removeAttribute("open");
+      fireEvent(dialog, new Event("close"));
+    });
+    expect(dialog).toHaveAttribute("open");
+  });
+
   it("keeps Tab between its two buttons, both ways", () => {
     renderOffer();
     const enter = screen.getByRole("button", { name: "Enter room" });
@@ -52,7 +63,7 @@ describe("the seat offer", () => {
   it("says it's my turn in the tab's title while it shows, and gives the title back after", () => {
     document.title = "Xovê";
     const { view } = renderOffer();
-    expect(document.title).toBe("Your turn — Xovê");
+    expect(document.title).toBe(YOUR_TURN_TITLE);
     view.unmount();
     expect(document.title).toBe("Xovê");
   });

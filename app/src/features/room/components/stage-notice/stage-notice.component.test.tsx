@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { StageNotice } from "./stage-notice.component";
-
 describe("a stage notice", () => {
   it("says its title and text as a status", () => {
     render(<StageNotice title="Loading Ana's screen…" text="The video starts in a moment." />);

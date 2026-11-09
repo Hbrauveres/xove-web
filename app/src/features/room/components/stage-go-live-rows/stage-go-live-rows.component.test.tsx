@@ -1,8 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { StageGoLiveRows } from "./stage-go-live-rows.component";
-
+import userEvent from "@testing-library/user-event";
 const props = (over = {}) => ({
   canShareScreen: true,
   onStart: vi.fn(),

@@ -9,10 +9,9 @@ import type { StreamControls } from "@features/room/types/stream-controls.types"
 import type { Sharer } from "../../types/room-view.types";
 import { CHROME_IDLE_MS } from "./constants/stage-player.constants";
 import { StagePlayer } from "./stage-player.component";
-import { Stage } from "../stage/stage.component";
-import { aUser, installFakeApi, someoneSharing } from "../../../../testing/fakeApi";
+import { installFakeApi, someoneSharing } from "../../../../testing/fakeApi";
 import { lastRoom } from "../../../../testing/fakeLiveKit";
-import { renderInRoom } from "../../../../testing/factories/room-render.factory";
+import { member, connected, renderStage } from "../../../../testing/factories/stage-steps.factory";
 /** The player as the stage holds it, its pick and hearing kept by the room's own hooks. */
 function Player({ sharers, controls = aStreamControls() }: { sharers: Sharer[]; controls?: StreamControls }) {
   const stage = useStage(sharers);
@@ -228,21 +227,7 @@ describe("the small view's fold", () => {
   });
 });
 
-// The wiring: the stage over the real room session.
-const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
-
-// The stage shows once I'm in the room.
-const connected = () => screen.findByRole("region", { name: /shared screen/i });
-
-/** The stage over the real room session, on the fake API and LiveKit. */
-const renderRoom = () => renderInRoom(<Stage />);
-
-// ---- sharing: pick a screen, set it up, start ----
-
-// ---- screen and camera together: the small view ----
-
-// ---- sound and settings for each stream ----
-
+// The wiring: the stage over the real room session, its steps in testing/factories/stage-steps.
 describe("room: viewers follow the sharer's changes", () => {
   beforeEach(() => {
     onFakeClock();
@@ -251,7 +236,7 @@ describe("room: viewers follow the sharer's changes", () => {
   it("asks for Auto, at most the sharer's quality", async () => {
     const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
-    renderRoom();
+    renderStage();
     await connected();
     await screen.findByRole("heading", { name: "Bruno" });
     act(() => {

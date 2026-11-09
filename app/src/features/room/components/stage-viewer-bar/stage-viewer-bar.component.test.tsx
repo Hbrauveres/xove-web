@@ -7,12 +7,11 @@ import { fullRoom } from "@features/room/utils/full-room.util";
 import type { FoldKey } from "@features/room/types/fold-key.types";
 import type { Sound } from "@features/room/types/sound.types";
 import { StageViewerBar } from "./stage-viewer-bar.component";
-import { Stage } from "../stage/stage.component";
-import { aUser, installFakeApi, someoneSharing } from "../../../../testing/fakeApi";
+import { installFakeApi, someoneSharing } from "../../../../testing/fakeApi";
 import { lastRoom } from "../../../../testing/fakeLiveKit";
 import { stubVoiceLevels } from "../../../../testing/factories/audio.factory";
 import { clockUser } from "../../../../testing/factories/clock.factory";
-import { renderInRoom } from "../../../../testing/factories/room-render.factory";
+import { member, stage, connected, renderStage } from "../../../../testing/factories/stage-steps.factory";
 import userEvent from "@testing-library/user-event";
 // Fresh handlers per render, so no test sees another's calls.
 const base = () => ({ live: false, canShareScreen: true, onStart: vi.fn(), onSettings: vi.fn() });
@@ -325,23 +324,7 @@ describe("the bar over someone else's stream, on a narrow picture", () => {
   });
 });
 
-// The wiring: the stage over the real room session.
-// The stage: the picture, and my screen and camera buttons on it.
-const stage = () => screen.getByRole("region", { name: /shared screen/i });
-const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
-
-// The stage shows once I'm in the room.
-const connected = () => screen.findByRole("region", { name: /shared screen/i });
-
-/** The stage over the real room session, on the fake API and LiveKit. */
-const renderRoom = () => renderInRoom(<Stage />);
-
-// ---- sharing: pick a screen, set it up, start ----
-
-// ---- screen and camera together: the small view ----
-
-// ---- sound and settings for each stream ----
-
+// The wiring: the stage over the real room session, its steps in testing/factories/stage-steps.
 describe("room: the viewer's quality and volume", () => {
   beforeEach(() => {
     onFakeClock();
@@ -350,7 +333,7 @@ describe("room: the viewer's quality and volume", () => {
   const watchBruno = async (options: { height?: number; withSound?: boolean; layers?: number } = {}) => {
     const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
-    const view = renderRoom();
+    const view = renderStage();
     await connected();
     await screen.findByRole("heading", { name: "Bruno" });
     act(() => {
@@ -416,7 +399,7 @@ describe("room: the viewer's quality and volume", () => {
   it("closes the settings when another stream takes the stage", async () => {
     const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7), someoneSharing("Ana Souza", 3)];
-    renderRoom();
+    renderStage();
     await connected();
     await screen.findByRole("heading", { name: "Bruno" });
     const user = clockUser();

@@ -1,5 +1,5 @@
 import { act, render, screen, within, waitFor } from "@testing-library/react";
-import { describe, expect, it, beforeEach, vi } from "vitest";
+import { describe, expect, it, beforeEach } from "vitest";
 import type { StreamControls } from "@features/room/types/stream-controls.types";
 import { aSharer } from "../../../../testing/factories/sharer.factory";
 import { aStreamControls } from "../../../../testing/factories/stream-controls.factory";
@@ -8,11 +8,19 @@ import { useStage } from "../../hooks/use-stage.hook";
 import { RoomSessionContext } from "../../stores/room-session";
 import type { Sharer } from "../../types/room-view.types";
 import { Stage } from "./stage.component";
-import { aUser, installFakeApi, someoneSharing } from "../../../../testing/fakeApi";
+import { installFakeApi, someoneSharing } from "../../../../testing/fakeApi";
 import { lastRoom } from "../../../../testing/fakeLiveKit";
-import { clockUser, onFakeClock } from "../../../../testing/factories/clock.factory";
+import { onFakeClock } from "../../../../testing/factories/clock.factory";
 import { REPORT_RETRY_MS, REPORT_STILL_MS } from "../../stores/room-session/constants/watch-report.constants";
-import { renderInRoom } from "../../../../testing/factories/room-render.factory";
+import {
+  member,
+  pass,
+  minutesAgo,
+  connected,
+  renderStage,
+  readyRoom,
+  startSharing,
+} from "../../../../testing/factories/stage-steps.factory";
 /** The stage as the room shows it: its pick kept by the room's own hook, the settings open. */
 function Room({ sharers, controls = aStreamControls() }: { sharers: Sharer[]; controls?: StreamControls }) {
   const stage = useStage(sharers);
@@ -92,20 +100,7 @@ describe("the stage", () => {
   });
 });
 
-// The wiring: the stage over the real room session.
-const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
-
-/** Moves the fake clock on, and lets what was waiting on it happen. */
-const pass = (ms: number) => act(() => vi.advanceTimersByTimeAsync(ms));
-
-// The stage shows once I'm in the room.
-const connected = () => screen.findByRole("region", { name: /shared screen/i });
-/** A time some minutes before now, on the fake clock. */
-const minutesAgo = (m: number) => new Date(Date.now() - m * 60_000);
-
-/** The stage over the real room session, on the fake API and LiveKit. */
-const renderRoom = () => renderInRoom(<Stage />);
-
+// The wiring: the stage over the real room session, its steps in testing/factories/stage-steps.
 describe("room: watching", () => {
   beforeEach(() => {
     onFakeClock();
@@ -114,7 +109,7 @@ describe("room: watching", () => {
   it("plays the sharer's screen once their video arrives", async () => {
     const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Bruno Lima", 7)];
-    renderRoom();
+    renderStage();
     await connected();
 
     expect(await screen.findByRole("heading", { name: "Bruno" })).toBeInTheDocument();
@@ -129,28 +124,6 @@ describe("room: watching", () => {
     expect(track.attached).toContain(video);
   });
 });
-
-// ---- sharing: pick a screen, set it up, start ----
-
-/** The room, connected, with a free stage (the seats box says "0 of 6 live": quicker than a heading by role). */
-async function readyRoom() {
-  renderRoom();
-  await connected();
-  await screen.findByLabelText("0 of 6 live, 6 seats open");
-  return clockUser();
-}
-
-type User = ReturnType<typeof clockUser>;
-/** Clicks "Share your screen": the browser's picker, and the pick is sent at once. */
-async function pickScreen(user: User, button: RegExp = /share your screen/i) {
-  await user.click(within(stage()).getByRole("button", { name: button }));
-}
-
-/** Picks a screen and starts sharing it, with the remembered settings. */
-async function startSharing(user: User) {
-  await pickScreen(user);
-  await screen.findByRole("heading", { name: "You" });
-}
 
 describe("room: the sharer sees what they send", () => {
   beforeEach(() => {
@@ -174,10 +147,6 @@ describe("room: the sharer sees what they send", () => {
   });
 });
 
-// ---- screen and camera together: the small view ----
-
-// ---- sound and settings for each stream ----
-
 describe("room: what's on my stage is reported", () => {
   beforeEach(() => {
     onFakeClock();
@@ -189,7 +158,7 @@ describe("room: what's on my stage is reported", () => {
       someoneSharing("Ana Souza", 3, "screen", undefined, minutesAgo(10)),
       someoneSharing("Bruno Lima", 7, "screen", undefined, minutesAgo(5)),
     ];
-    renderRoom();
+    renderStage();
     await connected();
     act(() => {
       lastRoom().publishScreen("user-3");
@@ -212,7 +181,7 @@ describe("room: what's on my stage is reported", () => {
   it("reports nothing while the stream is still loading", async () => {
     const server = installFakeApi({ me: member() });
     server.streams = [someoneSharing("Ana Souza", 3)];
-    renderRoom();
+    renderStage();
     await connected();
     await screen.findByRole("heading", { name: "Ana" });
 

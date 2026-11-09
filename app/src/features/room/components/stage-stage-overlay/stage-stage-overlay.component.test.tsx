@@ -1,8 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { expect, it, vi } from "vitest";
 import { StageStageOverlay } from "./stage-stage-overlay.component";
-
+import userEvent from "@testing-library/user-event";
 it("enters fullscreen, and once in, offers to leave it", async () => {
   const onFullscreen = vi.fn();
   const { rerender } = render(<StageStageOverlay fullscreen={false} onFullscreen={onFullscreen} />);

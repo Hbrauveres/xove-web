@@ -2,7 +2,6 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { useGoLiveWidth } from "../../hooks/use-go-live-width.hook";
 import { StagePictureLayer } from "./stage-picture-layer.component";
-
 /** What fits on the picture, nothing folded, its ref and report as fakes. */
 const aPictureFit = () => ({
   setLayer: vi.fn(),

@@ -5,7 +5,6 @@ import { aStreamControls } from "../../../../testing/factories/stream-controls.f
 import { useHearing } from "../../hooks/use-hearing.hook";
 import type { StageControlsProps } from "./types/stage-controls.types";
 import { StageControls } from "./stage-controls.component";
-
 function renderControls(over: Partial<StageControlsProps> = {}) {
   const big = over.big ?? null;
   const hearing = renderHook(() => useHearing(big ? [big] : [], big?.person.id ?? null)).result.current;

@@ -3,7 +3,6 @@ import { describe, expect, it, vi } from "vitest";
 import { onFakeClock } from "@testing/factories/clock.factory";
 import { OUT_MS } from "./constants/stage-preview-tray-row.constants";
 import { StagePreviewTrayRow } from "./stage-preview-tray-row.component";
-
 const setup = (leaving = false) => {
   document.body.innerHTML = "";
   const anchor = document.createElement("li");

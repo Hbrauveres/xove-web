@@ -21,10 +21,15 @@ function answerAs(seat: Seat) {
     "GET /api/streams": streams,
     "POST /api/room/enter": seat,
   };
+  const real = window.fetch;
   window.fetch = async (input, init) => {
     const path = new URL(String(input), location.origin).pathname;
     const body = bodies[`${init?.method ?? "GET"} ${path}`];
     return body === undefined ? new Response(null, { status: 204 }) : Response.json(body);
+  };
+  // The next story gets the real fetch back.
+  return () => {
+    window.fetch = real;
   };
 }
 

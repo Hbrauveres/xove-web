@@ -9,11 +9,10 @@ import type { Sharer } from "@features/room/types/room-view.types";
 import { floatingStore } from "@shared/stores/floating-store";
 import { StageAlsoLive } from "./stage-also-live.component";
 import type { Hearing } from "@features/room/types/sound.types";
-import { Stage } from "../stage/stage.component";
-import { aUser, installFakeApi, someoneSharing } from "../../../../testing/fakeApi";
+import { installFakeApi, someoneSharing } from "../../../../testing/fakeApi";
 import { lastRoom } from "../../../../testing/fakeLiveKit";
 import { clockUser } from "../../../../testing/factories/clock.factory";
-import { renderInRoom } from "../../../../testing/factories/room-render.factory";
+import { member, minutesAgo, stage, connected, renderStage } from "../../../../testing/factories/stage-steps.factory";
 const bruno = () =>
   aSharer({
     id: "user-7",
@@ -310,25 +309,7 @@ describe("also live", () => {
   });
 });
 
-// The wiring: the stage over the real room session.
-// The stage: the picture, and my screen and camera buttons on it.
-const stage = () => screen.getByRole("region", { name: /shared screen/i });
-const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
-
-// The stage shows once I'm in the room.
-const connected = () => screen.findByRole("region", { name: /shared screen/i });
-/** A time some minutes before now, on the fake clock. */
-const minutesAgo = (m: number) => new Date(Date.now() - m * 60_000);
-
-/** The stage over the real room session, on the fake API and LiveKit. */
-const renderRoom = () => renderInRoom(<Stage />);
-
-// ---- sharing: pick a screen, set it up, start ----
-
-// ---- screen and camera together: the small view ----
-
-// ---- sound and settings for each stream ----
-
+// The wiring: the stage over the real room session, its steps in testing/factories/stage-steps.
 describe("room: several people sharing", () => {
   beforeEach(() => {
     onFakeClock();
@@ -343,7 +324,7 @@ describe("room: several people sharing", () => {
       someoneSharing("Bruno Lima", 7, "screen", undefined, minutesAgo(5)),
       someoneSharing("Caio Reis", 9, "camera", undefined, minutesAgo(1)),
     ];
-    renderRoom();
+    renderStage();
     await connected();
     act(() => {
       lastRoom().publishScreen("user-3");
