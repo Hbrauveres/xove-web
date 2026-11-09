@@ -73,6 +73,8 @@ export type VideoRoomState = LocalMedia & {
   connection: ConnectionState;
   /** My voice passes the gate right now: it's being sent, so I'm speaking. */
   voiceSpeaking: boolean;
+  /** The browser holds back a sound the room tried to play, until the page's first click or key. */
+  soundHeld: boolean;
   /** Everyone else, in the order they arrived. */
   others: RoomPerson[];
   /** What others send, by identity. */

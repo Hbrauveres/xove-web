@@ -18,6 +18,7 @@ export const RoomEvent = {
   ActiveSpeakersChanged: "activeSpeakersChanged",
   TrackMuted: "trackMuted",
   TrackUnmuted: "trackUnmuted",
+  AudioPlaybackStatusChanged: "audioPlaybackChanged",
 } as const;
 
 export const VideoQuality = { LOW: 0, MEDIUM: 1, HIGH: 2 } as const;
@@ -361,8 +362,24 @@ export class Room {
     }),
   };
 
-  /** Unlocks the page's sound (LiveKit's own, after a click). */
-  readonly startAudio = vi.fn(async () => undefined);
+  /**
+   * Whether the browser lets the page play sound, as LiveKit knows it: unknown until a sound tried to
+   * play; false while the browser holds it back (`holdSound`), true once `startAudio` lets it.
+   */
+  canPlaybackAudio: boolean | undefined = undefined;
+
+  /** The browser refuses a sound the page tried to play (no click on the page yet). */
+  holdSound() {
+    this.canPlaybackAudio = false;
+    this.emit(RoomEvent.AudioPlaybackStatusChanged, false);
+  }
+
+  /** Unlocks the page's sound (LiveKit's own, after a click): a held sound plays from then on. */
+  readonly startAudio = vi.fn(async () => {
+    if (this.canPlaybackAudio !== false) return;
+    this.canPlaybackAudio = true;
+    this.emit(RoomEvent.AudioPlaybackStatusChanged, true);
+  });
 
   constructor() {
     rooms.push(this);

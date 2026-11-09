@@ -1,3 +1,4 @@
+import { act } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { lastRoom } from "../../testing/fakeLiveKit";
 import { connectedAdapter, shareScreen } from "../../testing/factories/video-room.factory";
@@ -217,6 +218,19 @@ describe("events about what people send", () => {
 });
 
 describe("the page's sound", () => {
+  it("says while the browser holds the room's sound back, until the page's first click lets it play", async () => {
+    const adapter = await connected();
+    expect(adapter.getState().soundHeld).toBe(false);
+
+    lastRoom().holdSound();
+    expect(adapter.getState().soundHeld).toBe(true);
+
+    await act(async () => {
+      adapter.unlockAudio();
+    });
+    expect(adapter.getState().soundHeld).toBe(false);
+  });
+
   it("asks the browser to play sound until it does", async () => {
     const adapter = await connected();
     const room = lastRoom() as unknown as { startAudio: ReturnType<typeof vi.fn>; canPlaybackAudio?: boolean };

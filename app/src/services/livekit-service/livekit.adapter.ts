@@ -172,6 +172,11 @@ export class LiveKitAdapter {
       .on(RoomEvent.TrackUnsubscribed, (_track, _pub, p) => byPerson(p))
       .on(RoomEvent.TrackMuted, (_pub, p) => remoteOf(p))
       .on(RoomEvent.TrackUnmuted, (_pub, p) => remoteOf(p))
+      // The browser holds a sound back (no click on the page yet), or lets it play after one.
+      .on(
+        RoomEvent.AudioPlaybackStatusChanged,
+        () => here() && this.update({ soundHeld: r.canPlaybackAudio === false }),
+      )
       .on(RoomEvent.LocalTrackPublished, () => here() && this.refreshLocal())
       // Also fires when the person clicks the browser's own "Stop sharing" bar.
       .on(RoomEvent.LocalTrackUnpublished, () => here() && this.refreshLocal());
