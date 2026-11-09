@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
 import { boxOf, centreX, inside, overlap, windowBox } from "../support/geometry.ts";
@@ -18,6 +18,34 @@ const UNDER_THE_REST = { timeout: (TIP_REST_MS * 2) / 3 };
 // Hidden tooltips stay in the page (to describe their control): found by role, shown or not.
 const tipOf = (page: Page, text: string) => page.getByRole("tooltip", { name: text, exact: true, includeHidden: true });
 const button = (page: Page, name: string | RegExp) => page.getByRole("button", { name, exact: true });
+
+/** Notes, by the page's clock, when the pointer enters `control` and when `tip` then shows. */
+async function shownAfterEntering(page: Page, control: Locator, tip: Locator) {
+  const el = await control.elementHandle();
+  const tipEl = await tip.elementHandle();
+  await page.evaluate(
+    ({ el, tipEl }) => {
+      const w = window as unknown as { tipTimes: { entered?: number; shown?: number } };
+      w.tipTimes = {};
+      el?.addEventListener("pointerenter", () => (w.tipTimes.entered ??= performance.now()), { once: true });
+      const watch = new MutationObserver(() => {
+        if (w.tipTimes.entered !== undefined && tipEl?.getAttribute("data-shown") === "true") {
+          w.tipTimes.shown ??= performance.now();
+          watch.disconnect();
+        }
+      });
+      if (tipEl) watch.observe(tipEl, { attributes: true, attributeFilter: ["data-shown"] });
+    },
+    { el, tipEl },
+  );
+}
+
+/** How long, by the page's clock, the tooltip took to show after the pointer entered its control (ms). */
+const tipDelay = (page: Page) =>
+  page.evaluate(() => {
+    const t = (window as unknown as { tipTimes: { entered?: number; shown?: number } }).tipTimes;
+    return (t.shown ?? Number.POSITIVE_INFINITY) - (t.entered ?? 0);
+  });
 
 test("F-floating.1 a tooltip shows after a short rest, above its control, inside the window", async ({
   page,
@@ -81,11 +109,15 @@ test("F-floating.3 along a row, the next tooltip shows at once and replaces the 
   const micTip = tipOf(page, "Marina's mic is off");
   await pointAt(page, sound);
   await expect(soundTip).toHaveAttribute("data-shown", "true");
+  // Timed by the page's own clock, from the pointer reaching the mic to its tooltip showing: a busy
+  // machine's test runner doesn't count against the app.
+  await shownAfterEntering(page, mic, micTip);
   const seen = await observe(page, info, { sound, mic, soundTip, micTip }, async () => {
     await pointAt(page, mic, { steps: 2 });
-    // Well under the rest: shown already.
-    await expect(micTip).toHaveAttribute("data-shown", "true", UNDER_THE_REST);
+    await expect(micTip).toHaveAttribute("data-shown", "true");
   });
+  // Well under the rest: it didn't wait for one.
+  expect.soft(await tipDelay(page)).toBeLessThan(UNDER_THE_REST.timeout);
   await expect.soft(micTip).toHaveAttribute("data-shown", "true");
   await expect.soft(soundTip).not.toHaveAttribute("data-shown");
   await expect.soft(shownTip(page)).toHaveCount(1);
