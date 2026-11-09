@@ -56,6 +56,22 @@ export const RoundLLive: Story = {
     </IconButton>
   ),
 };
+/** Round, M 34, talking: the green tube and glow while the voice is heard. */
+export const RoundMTalking: Story = {
+  render: () => (
+    <IconButton variant="round" size="m" data-cue="talking" aria-label="Mute Marina's voice">
+      <Icon name="voice" />
+    </IconButton>
+  ),
+};
+/** Round, L 48, on and talking: my mic while my voice is sent, the same cue on its red. */
+export const RoundLLiveTalking: Story = {
+  render: () => (
+    <IconButton variant="round" size="l" live data-cue="talking" aria-label="Mute your voice">
+      <Icon name="mic" />
+    </IconButton>
+  ),
+};
 /** A header button. */
 export const Header: Story = {
   render: () => (
