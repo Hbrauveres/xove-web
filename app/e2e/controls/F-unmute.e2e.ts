@@ -64,10 +64,13 @@ test("F-unmute.3 a click anywhere else on the page does the same", async ({ page
   await openHeld(page);
   const before = await soundStarts(page);
   const button = unmute(page);
-  await observe(page, info, { button }, async () => {
+  const sound = screenSound(page);
+  await observe(page, info, { button, sound }, async () => {
     await pointAway(page);
     await page.mouse.down();
     await page.mouse.up();
+    // The controls woken again: the sounds in the pill's place.
+    await wakeStage(page);
   });
   await expectSoundBack(page, before);
 });
@@ -76,7 +79,11 @@ test("F-unmute.4 a key does the same", async ({ page }, info) => {
   await openHeld(page);
   const before = await soundStarts(page);
   const button = unmute(page);
-  await observe(page, info, { button }, () => page.keyboard.press("Shift"));
+  const sound = screenSound(page);
+  await observe(page, info, { button, sound }, async () => {
+    await page.keyboard.press("Shift");
+    await wakeStage(page);
+  });
   await expectSoundBack(page, before);
 });
 
