@@ -31,6 +31,8 @@ export type StreamControls = {
   voice?: boolean;
   /** My voice is being sent right now (it passes the gate): my mic button wears the speaking cue. */
   speaking?: boolean;
+  /** The browser holds the room's sound back until the page's first click or key. */
+  soundHeld?: boolean;
   onVoice?: () => void;
   /** With the settings open, a live button's gesture goes to its setting there. */
   onGoTo?: (kind: StreamKind) => void;

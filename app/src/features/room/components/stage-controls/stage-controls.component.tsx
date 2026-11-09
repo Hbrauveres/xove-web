@@ -38,6 +38,7 @@ export function StageControls(props: StageControlsProps) {
         {...hearProps(big, hearing.hearOf, hearing.setHear)}
         live={controls.mine.screen || controls.mine.camera}
         micOn={micOn}
+        held={controls.soundHeld}
         onMic={toggleMic}
         speaking={controls.speaking}
         folded={folded}

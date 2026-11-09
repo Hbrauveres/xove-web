@@ -9,9 +9,10 @@ import { rowItems } from "../utils/row-items.util";
  * from the picture's width and Go live's. With the width unknown, nothing folds.
  */
 export function useRowFold(width: number | null, goLive: number | null, shape: RowShape): RowFit {
-  const { mine, settingsOnly, sound, voice, live } = shape;
+  const { mine, settingsOnly, sound, voice, live, held } = shape;
   return useMemo(
-    () => rowFold(width ?? Number.POSITIVE_INFINITY, rowItems({ mine, settingsOnly, sound, voice, live }, goLive)),
-    [width, goLive, mine, settingsOnly, sound, voice, live],
+    () =>
+      rowFold(width ?? Number.POSITIVE_INFINITY, rowItems({ mine, settingsOnly, sound, voice, live, held }, goLive)),
+    [width, goLive, mine, settingsOnly, sound, voice, live, held],
   );
 }

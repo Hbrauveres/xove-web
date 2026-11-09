@@ -4,7 +4,14 @@ import type { RowShape } from "../types/row-fold.types";
 import { useRowFold } from "./use-row-fold.hook";
 
 /** The row over someone else's stream, their sound and voice, while I'm not live. */
-const watching = (): RowShape => ({ mine: false, settingsOnly: false, sound: true, voice: true, live: false });
+const watching = (): RowShape => ({
+  mine: false,
+  settingsOnly: false,
+  sound: true,
+  voice: true,
+  live: false,
+  held: false,
+});
 
 describe("how the controls fit the picture", () => {
   it("folds nothing while the picture's width is unknown", () => {

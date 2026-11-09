@@ -214,6 +214,14 @@ describe("the bar over someone else's stream: me, at the right", () => {
     expect(screen.getByRole("button", { name: "Mute your voice", pressed: true })).toBeInTheDocument();
   });
 
+  it("while the browser holds the sound, has the unmute button in the sounds' place, and no sound", () => {
+    const sound = { volume: 1, muted: false, onChange: vi.fn() };
+    render(<StageViewerBar {...base()} held sound={sound} voice={{ ...sound, name: "Bruno" }} />);
+    expect(screen.getByRole("button", { name: "Click to unmute" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /screen's sound/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Bruno's voice/ })).not.toBeInTheDocument();
+  });
+
   it("is only the settings over an empty stage, in the corner", () => {
     render(<StageViewerBar {...base()} settingsOnly />);
     expect(screen.getAllByRole("button").map((b) => b.getAttribute("aria-label"))).toEqual(["Settings"]);

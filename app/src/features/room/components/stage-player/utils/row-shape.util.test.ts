@@ -11,7 +11,15 @@ describe("what the row on the picture holds", () => {
       sound: true,
       voice: true,
       live: false,
+      held: false,
     });
+  });
+
+  it("the unmute pill while the browser holds the sound, over someone else's stream only", () => {
+    const held = aStreamControls({ soundHeld: true });
+    expect(rowShape(aSharer(), held).held).toBe(true);
+    expect(rowShape(aSharer({ isMe: true }), held).held).toBe(false);
+    expect(rowShape(null, held).held).toBe(false);
   });
 
   it("my mic instead of Go live while I'm live", () => {

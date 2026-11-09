@@ -252,6 +252,7 @@ function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
               onGoTo: goToSetting,
               voice: session.voice,
               speaking: session.voiceSpeaking,
+              soundHeld: video.soundHeld,
               onVoice: session.toggleVoice,
             }}
             settingsPanel={settingsPanel}
