@@ -38,6 +38,7 @@ export function QueueSeatOffer({ seconds, onEnter, onCancel }: QueueSeatOfferPro
     <dialog
       ref={dialog}
       className={styles.window}
+      aria-modal="true"
       aria-labelledby="seat-offer-title"
       aria-describedby="seat-offer-text"
       onKeyDown={onKeyDown}

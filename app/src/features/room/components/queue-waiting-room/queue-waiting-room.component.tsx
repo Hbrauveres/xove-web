@@ -16,7 +16,7 @@ export function QueueWaitingRoom({ seat, onSignOut }: QueueWaitingRoomProps) {
   const message = queueMessage(status);
   return (
     <PageShell variant="waiting">
-      <Panel as="output" className={styles.card}>
+      <Panel as="output" className={styles.card} aria-live="polite">
         {message.title && <h1 className={styles.title}>{message.title}</h1>}
         <p className={styles.text}>{message.text}</p>
         {message.canRejoin && (
