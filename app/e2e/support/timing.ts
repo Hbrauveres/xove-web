@@ -80,3 +80,8 @@ export const afterFrames = (page: Page, count: number): Promise<void> =>
 
 /** How long a case listens to a fake voice's talking pattern: several of its starts and stops. */
 export const VOICE_LISTEN_MS = 4000;
+/**
+ * A voice just turned on: its noise gate runs a moment on the default line before mine is applied,
+ * then holds; past this, it follows my line (ms).
+ */
+export const VOICE_SETTLE_MS = 1000;

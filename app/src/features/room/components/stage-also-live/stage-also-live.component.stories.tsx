@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { aSharer } from "@testing/factories/sharer.factory";
-import { aTrack } from "@testing/factories/track.factory";
+import { aMe, aSharer } from "@testing/factories/sharer.factory";
 import { StageAlsoLive } from "./stage-also-live.component";
 
 const heard = { volume: 1, muted: false };
@@ -29,21 +28,7 @@ export const FourPlaces: Story = { args: { places: 4, free: 1 } };
 /** I'm live and watch someone else, my voice being sent: my own preview's ring lit. */
 export const MineTalking: Story = {
   args: {
-    others: [
-      {
-        person: { id: "user-99", name: "Henrique", hue: 210, online: true },
-        isMe: true,
-        since: Date.now(),
-        screen: {
-          kind: "screen",
-          startedAt: Date.now(),
-          settings: { quality: "1080p", mode: "smooth" },
-          local: aTrack(),
-        },
-        hasSound: false,
-      },
-      aSharer({ id: "user-3", name: "Ana" }),
-    ],
+    others: [aMe(), aSharer({ id: "user-3", name: "Ana" })],
     meTalking: true,
   },
 };

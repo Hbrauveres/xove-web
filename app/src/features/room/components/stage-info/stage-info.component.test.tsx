@@ -1,6 +1,6 @@
 import { render, renderHook, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { aSharer } from "../../../../testing/factories/sharer.factory";
+import { aMe, aSharer } from "../../../../testing/factories/sharer.factory";
 import { useHearing } from "../../hooks/use-hearing.hook";
 import { useStage } from "../../hooks/use-stage.hook";
 import { StageInfo } from "./stage-info.component";
@@ -27,5 +27,14 @@ describe("the row under the stage", () => {
     const theirStage = renderHook(() => useStage(theirs)).result.current;
     rerender(<StageInfo sharers={theirs} stage={theirStage} hearing={hearing} places={6} free={5} meTalking />);
     expect(container.querySelector("[data-talking]")).toBeNull();
+  });
+
+  it("hands my speaking to my own preview while someone else is on the stage", () => {
+    const sharers = [aSharer(), aMe()];
+    const stage = renderHook(() => useStage(sharers)).result.current;
+    const hearing = renderHook(() => useHearing(sharers, stage.big?.person.id ?? null)).result.current;
+    render(<StageInfo sharers={sharers} stage={stage} hearing={hearing} places={6} free={4} meTalking />);
+    const mine = screen.getByRole("button", { name: /^Watch You/ }).closest("li");
+    expect(mine).toHaveAttribute("data-talking");
   });
 });

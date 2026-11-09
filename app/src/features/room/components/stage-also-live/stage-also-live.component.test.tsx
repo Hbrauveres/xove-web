@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { onFakeClock } from "@testing/factories/clock.factory";
-import { aSharer } from "@testing/factories/sharer.factory";
+import { aMe, aSharer } from "@testing/factories/sharer.factory";
 import { aTrack } from "@testing/factories/track.factory";
 import type { FakeTrack } from "@testing/fakeLiveKit";
 import type { Sharer } from "@features/room/types/room-view.types";
@@ -90,18 +90,7 @@ describe("also live", () => {
   });
 
   it("lights my own preview's ring while my voice is sent", () => {
-    const me: Sharer = {
-      person: { id: "user-99", name: "Henrique", hue: 210, online: true },
-      isMe: true,
-      since: Date.now(),
-      screen: {
-        kind: "screen",
-        startedAt: Date.now(),
-        settings: { quality: "1080p", mode: "smooth" },
-        local: aTrack(),
-      },
-      hasSound: false,
-    };
+    const me = aMe();
     const { rerender } = render(<Harness others={[me]} meTalking />);
     expect(item(/Watch You · screen/)).toHaveAttribute("data-talking");
     rerender(<Harness others={[me]} />);

@@ -1,4 +1,4 @@
-import { VOICE_LISTEN_MS, spend } from "../support/timing.ts";
+import { VOICE_LISTEN_MS, VOICE_SETTLE_MS, spend } from "../support/timing.ts";
 import { cueAgainstSound, recordCue, recordCueLooks, ringColours } from "../support/cue.ts";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
@@ -180,7 +180,11 @@ test("F-also-live.8 a preview's ring follows its person's voice: lit while it so
   expect.soft(new Set((await stopRing()).map((f) => f.looks.ring)).size).toBe(2);
 });
 
-/** Where the voice settings keep my mic's processing; the line at the top: nothing of mine passes. */
+/**
+ * My mic's processing as the voice settings keep it (the app's `MIC_PROCESSING_KEY`, written out: its
+ * constants file pulls in modules the e2e config can't resolve), the line at the top: nothing of mine
+ * passes.
+ */
 const LINE_AT_TOP = JSON.stringify({
   echoCancellation: true,
   noiseSuppression: true,
@@ -227,12 +231,14 @@ test("F-also-live.9 while I watch someone else, my own preview lights while my v
   expect.soft(mineLit).toBeDefined();
   expect.soft(mineLit).toBe(rafaLit);
 
-  // My line at the top: nothing of mine is sent, so my preview stays out.
+  // My line at the top: nothing of mine is sent, so my preview stays out (one room at a time).
+  await page.close();
   const quiet = await context.newPage();
   await quiet.addInitScript((line) => localStorage.setItem("xove.mic.processing", line), LINE_AT_TOP);
   const mineQuiet = await liveWatchingMarinaWithMyVoice(quiet);
   const quietColours = await ringColours(quiet);
-  // Past the hold of the gate's first moment: from then on, nothing of mine passes.
+  // Past the gate's first moment on the default line and its hold: from then on, nothing of mine passes.
+  await spend(quiet, VOICE_SETTLE_MS);
   await expect(mineQuiet.locator("xpath=ancestor::li[1]")).not.toHaveAttribute("data-talking");
   const stopQuiet = await recordCueLooks(quiet, { mine: ring(mineQuiet) });
   await spend(quiet, VOICE_LISTEN_MS / 2);
