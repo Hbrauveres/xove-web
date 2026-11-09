@@ -16,6 +16,10 @@ export const InTheRoom: Story = {};
 export const Live: Story = { args: { size: 30, onAir: true } };
 /** Live, the ring inside the edge (who's on the stage). */
 export const LiveInside: Story = { args: { size: 52, onAir: true, ring: "inside" } };
+/** Live, my voice being sent: the ring green, at the same width, glowing. */
+export const LiveTalking: Story = { args: { size: 30, onAir: true, talking: true } };
+/** Live, inside the edge, my voice being sent. */
+export const LiveInsideTalking: Story = { args: { size: 52, onAir: true, ring: "inside", talking: true } };
 /** The smallest, in a preview. */
 export const Small: Story = { args: { size: 16 } };
 /** On the account's pages, with no photo: the initial in the accent. */

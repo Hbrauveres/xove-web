@@ -9,6 +9,8 @@ export interface FaceProps {
   size: number;
   /** A red ring while this person is live. */
   onAir?: boolean | undefined;
+  /** While live, my voice is being sent: the ring turns the speaking green, at the same width. */
+  talking?: boolean | undefined;
   /** Where the ring goes: around the face, or inside its edge, to line up with what's beside it. */
   ring?: "outside" | "inside" | undefined;
 }
