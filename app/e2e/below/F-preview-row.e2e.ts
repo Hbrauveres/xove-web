@@ -1,3 +1,6 @@
+import { VOICE_LISTEN_MS, spend } from "../support/timing.ts";
+import { voiceOn } from "../support/harness.ts";
+import { cueAgainstSound, recordCue } from "../support/cue.ts";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { glassUnderBreakingParents, glassUnderBreakingParentsWhile } from "../support/glass.ts";
@@ -204,4 +207,22 @@ test("F-preview-row.9 the row is glass over the page on every frame of its unrol
   const found = await glassUnderBreakingParentsWhile(page, () => openRow(page, rafa, row));
   expect.soft(found).toEqual([]);
   expect.soft(await glassUnderBreakingParents(page)).toEqual([]);
+});
+
+test("F-preview-row.10 the row's voice button follows the voice as the ring would: lit while it sounds", async ({
+  page,
+}, info) => {
+  await openScene(page, "s=live&panel=1");
+  await voiceOn(page, 3);
+  const rafa = page.getByRole("button", { name: "Watch Rafa · screen" });
+  const row = page.getByRole("group", { name: "Rafa's sounds" });
+  await openRow(page, rafa, row);
+  // A preview's voice plays once I turn it on.
+  await row.getByRole("button", { name: "Unmute Rafa's voice" }).click();
+  const voice = row.getByRole("button", { name: "Mute Rafa's voice" });
+  const stop = await recordCue(page, voice, '[data-cue="talking"]', "user-3");
+  await observe(page, info, { voice }, () => spend(page, VOICE_LISTEN_MS), { strip: 8, gap: 400 });
+  const frames = await stop();
+  expect.soft(frames.some((f) => f.on) && frames.some((f) => !f.on)).toBe(true);
+  expect.soft(cueAgainstSound(frames)).toEqual([]);
 });

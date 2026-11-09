@@ -1,3 +1,6 @@
+import { VOICE_LISTEN_MS, spend } from "../support/timing.ts";
+
+import { cueAgainstSound, recordCue } from "../support/cue.ts";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { glassUnderBreakingParents, glassUnderBreakingParentsWhile } from "../support/glass.ts";
@@ -168,4 +171,16 @@ test("F-viewer-bar.7 a sound's slider is glass over the stream all the way throu
   });
   expect.soft(found).toEqual([]);
   expect.soft(await glassUnderBreakingParents(page)).toEqual([]);
+});
+
+test("F-viewer-bar.8 the voice button's cue follows Marina's voice: lit while it sounds, out in its silences", async ({
+  page,
+}, info) => {
+  await openWithVoice(page);
+  const voice = control(page, "Mute Marina's voice");
+  const stop = await recordCue(page, voice, '[data-cue="talking"]', "user-2");
+  await observe(page, info, { voice }, () => spend(page, VOICE_LISTEN_MS), { strip: 8, gap: 400 });
+  const frames = await stop();
+  expect.soft(frames.some((f) => f.on) && frames.some((f) => !f.on)).toBe(true);
+  expect.soft(cueAgainstSound(frames)).toEqual([]);
 });

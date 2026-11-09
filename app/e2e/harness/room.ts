@@ -24,6 +24,39 @@ const TALK = [
   [1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1],
 ];
 
+/** How loud a fake voice speaks: well over the room's line for "speaking". */
+const SPEAKING_GAIN = 0.3;
+/** Over this, a voice's tone is sounding (its silence is exactly 0). */
+const SOUNDING = 0.01;
+let audio: AudioContext | null = null;
+let ears: AudioContext | null = null;
+
+/** A tone for one person's voice, silent until the beat says they speak; `level` reads it as it sounds. */
+function speaker(id: number): { track: MediaStreamTrack; gain: GainNode; level: () => number } | undefined {
+  if (typeof AudioContext === "undefined") return undefined;
+  audio ??= new AudioContext();
+  const tone = audio.createOscillator();
+  tone.frequency.value = 180 + id * 40;
+  const gain = audio.createGain();
+  gain.gain.value = 0;
+  const out = audio.createMediaStreamDestination();
+  tone.connect(gain).connect(out);
+  tone.start();
+  const [track] = out.stream.getAudioTracks();
+  if (!track) return undefined;
+  // The voice as a listener gets it: its published track, through a context of its own, as the app
+  // reads it and as its audio element plays it (the same buffering, the same delay).
+  ears ??= new AudioContext();
+  const ear = ears.createAnalyser();
+  ears.createMediaStreamSource(new MediaStream([track])).connect(ear);
+  const samples = new Float32Array(ear.fftSize);
+  const level = () => {
+    ear.getFloatTimeDomainData(samples);
+    return Math.max(...samples.map(Math.abs));
+  };
+  return { track, gain, level };
+}
+
 export function installRoomPanel(server: Server, room: FakeRoom, picture: (track: object, name: string) => void) {
   if (new URLSearchParams(location.search).get("panel") === "0") return;
   const identity = (id: number) => `user-${id}`;
@@ -31,14 +64,29 @@ export function installRoomPanel(server: Server, room: FakeRoom, picture: (track
   const live = (id: number, kind: Kind) => server.streams.some((s) => s.userId === id && s.kind === kind);
   const voiced = new Set<number>();
   const talking = (id: number) => voiced.has(id);
+  // Each voice really speaks: a tone whose loudness follows the person's pattern, so the app hears
+  // (and measures) what it plays.
+  const sounds = new Map<number, { gain: GainNode; on: boolean }>();
+  const levels = new Map<string, () => number>();
+  // Whether a voice sounds now, as the page's audio plays it (what a listener hears, this frame).
+  (window as unknown as { __xoveSounding: (who: string) => boolean }).__xoveSounding = (who) =>
+    (levels.get(who)?.() ?? 0) > SOUNDING;
   function voice(id: number, on: boolean) {
     if (on === voiced.has(id)) return;
     if (on) {
       if (!live(id, "screen") && !live(id, "camera")) return; // a voice comes with a screen or a camera
       voiced.add(id);
-      room.publishVoice(identity(id));
+      const sound = speaker(id);
+      room.publishVoice(identity(id), sound?.track);
+      if (sound) {
+        sounds.set(id, { gain: sound.gain, on: false });
+        levels.set(identity(id), sound.level);
+      }
     } else {
       voiced.delete(id);
+      sounds.get(id)?.gain.gain.setValueAtTime(0, 0);
+      sounds.delete(id);
+      levels.delete(identity(id));
       room.setSpeaking(identity(id), false);
       room.unpublish(identity(id), "microphone");
     }
@@ -46,7 +94,15 @@ export function installRoomPanel(server: Server, room: FakeRoom, picture: (track
   let beat = 0;
   setInterval(() => {
     beat = (beat + 1) % 16;
-    for (const id of voiced) room.setSpeaking(identity(id), Boolean(TALK[id % 3]?.[(beat + id * 5) % 16]));
+    for (const id of voiced) {
+      // Only the sound says who speaks: the video server's own guess isn't sent (the app doesn't read it).
+      const on = Boolean(TALK[id % 3]?.[(beat + id * 5) % 16]);
+      const sound = sounds.get(id);
+      if (sound && sound.on !== on) {
+        sound.gain.gain.setValueAtTime(on ? SPEAKING_GAIN : 0, sound.gain.context.currentTime);
+        sound.on = on;
+      }
+    }
   }, 260);
   const seats = () => {
     if (server.seatsInfo) server.seatsInfo = { ...server.seatsInfo, taken: (server.here ?? []).length };

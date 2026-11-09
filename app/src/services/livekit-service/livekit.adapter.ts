@@ -13,6 +13,7 @@ import { RemoteMediaReader } from "./remote-media.adapter";
 import { withLocal, withOthers, withPerson, withSpeakers } from "./utils/room-state.util";
 import { ScreenChangeService } from "./screen-change.service";
 import { SendService } from "./send.service";
+import { SpeakingService } from "./speaking.service";
 import { VoiceService } from "./voice.service";
 
 /**
@@ -37,6 +38,7 @@ export class LiveKitAdapter {
   private readonly sending = new SendService(this.ctx);
   private readonly screens = new ScreenChangeService(this.ctx, this.sending);
   private readonly voice = new VoiceService(this.ctx);
+  private readonly speakers = new SpeakingService(this.ctx);
 
   getState = () => this.state;
   subscribe = (listener: () => void) => {
@@ -81,6 +83,7 @@ export class LiveKitAdapter {
     const left = this.room;
     this.room = null;
     this.voice.closeVoice();
+    this.speakers.close();
     void left?.disconnect();
     if (left) this.update({ connection: "disconnected" });
   };
@@ -90,6 +93,7 @@ export class LiveKitAdapter {
 
   /** Browsers block sound until the person clicks or types; this asks again after one. */
   unlockAudio = () => {
+    this.speakers.resume();
     if (this.room && this.room.canPlaybackAudio !== true) void this.room.startAudio().catch(() => {});
   };
 
@@ -107,7 +111,9 @@ export class LiveKitAdapter {
 
   private refreshPerson(p: RemoteParticipant) {
     if (!this.room) return;
-    const remote = withPerson(this.state.remote, p.identity, this.reader.read(p));
+    this.speakers.follow(p);
+    const read = withPerson(this.state.remote, p.identity, this.reader.read(p));
+    const remote = withSpeakers(read, this.speakers.now());
     const others = withOthers(this.state.others, this.people(this.room));
     if (remote !== this.state.remote || others !== this.state.others) this.update({ remote, others });
   }
@@ -132,6 +138,7 @@ export class LiveKitAdapter {
   }
 
   private left(r: Room, p: RemoteParticipant) {
+    this.speakers.forget(p.identity);
     this.update({
       presence: this.presence("left", p),
       remote: withPerson(this.state.remote, p.identity, undefined),
@@ -160,9 +167,6 @@ export class LiveKitAdapter {
       .on(RoomEvent.TrackUnsubscribed, (_track, _pub, p) => byPerson(p))
       .on(RoomEvent.TrackMuted, (_pub, p) => remoteOf(p))
       .on(RoomEvent.TrackUnmuted, (_pub, p) => remoteOf(p))
-      .on(RoomEvent.ActiveSpeakersChanged, (speakers: Participant[]) => {
-        if (here()) this.update({ remote: withSpeakers(this.state.remote, new Set(speakers.map((s) => s.identity))) });
-      })
       .on(RoomEvent.LocalTrackPublished, () => here() && this.refreshLocal())
       // Also fires when the person clicks the browser's own "Stop sharing" bar.
       .on(RoomEvent.LocalTrackUnpublished, () => here() && this.refreshLocal());

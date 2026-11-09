@@ -1,20 +1,32 @@
 import { describe, expect, it, vi } from "vitest";
 import { lastRoom } from "../../testing/fakeLiveKit";
 import { connectedAdapter, shareScreen } from "../../testing/factories/video-room.factory";
+import { stubVoiceLevels } from "../../testing/factories/audio.factory";
+import { ACTIVITY_TICK_MS } from "./constants/livekit.constants";
 import { LiveKitAdapter } from "./livekit.adapter";
 
 const connected = connectedAdapter;
 
-/** A room where Marina and Rafa talk, Marina also sharing her screen. */
+/**
+ * A room where Marina and Rafa talk, Marina also sharing her screen. `speaks(on)` makes Marina's
+ * voice sound or go quiet, and lets the measuring hear it.
+ */
 async function roomWithTwo() {
+  const voices = stubVoiceLevels();
   const adapter = await connected();
   const room = lastRoom();
   room.join("user-2", "Marina");
   room.join("user-3", "Rafa");
-  room.publishVoice("user-2");
-  room.publishVoice("user-3");
+  const marina = {} as MediaStreamTrack;
+  vi.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
+  room.publishVoice("user-2", marina);
+  room.publishVoice("user-3", {} as MediaStreamTrack);
   room.publishScreen("user-2");
-  return { adapter, room };
+  const speaks = (on: boolean) => {
+    voices.speak(marina, on);
+    vi.advanceTimersByTime(on ? ACTIVITY_TICK_MS : ACTIVITY_TICK_MS * 20);
+  };
+  return { adapter, room, speaks };
 }
 
 describe("the connection", () => {
@@ -75,11 +87,19 @@ describe("the connection", () => {
 });
 
 describe("each event changes only what it's about", () => {
-  it("someone starting to talk changes only their talking state", async () => {
-    const { adapter, room } = await roomWithTwo();
+  it("a voice heard goes quiet: they stop talking once it has been silent for the hold", async () => {
+    const { adapter, speaks } = await roomWithTwo();
+    speaks(true);
+    expect(adapter.getState().remote["user-2"]?.speaking).toBe(true);
+    speaks(false);
+    expect(adapter.getState().remote["user-2"]?.speaking).toBe(false);
+  });
+
+  it("someone starting to talk (their voice heard) changes only their talking state", async () => {
+    const { adapter, speaks } = await roomWithTwo();
     const before = adapter.getState();
 
-    room.setSpeaking("user-2", true);
+    speaks(true);
 
     const after = adapter.getState();
     expect(after.remote["user-2"]?.speaking).toBe(true);
@@ -125,8 +145,8 @@ describe("each event changes only what it's about", () => {
   });
 
   it("a voice muted by its person stops showing them talking", async () => {
-    const { adapter, room } = await roomWithTwo();
-    room.setSpeaking("user-2", true);
+    const { adapter, room, speaks } = await roomWithTwo();
+    speaks(true);
 
     room.muteVoice("user-2", true);
 
@@ -146,11 +166,11 @@ describe("events about what people send", () => {
   });
 
   it("a voice unmuted by its person can show them talking again", async () => {
-    const { adapter, room } = await roomWithTwo();
+    const { adapter, room, speaks } = await roomWithTwo();
     room.muteVoice("user-2", true);
 
     room.muteVoice("user-2", false);
-    room.setSpeaking("user-2", true);
+    speaks(true);
 
     expect(adapter.getState().remote["user-2"]).toMatchObject({ hasVoice: true, speaking: true });
   });
