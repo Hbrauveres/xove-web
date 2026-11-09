@@ -15,11 +15,11 @@ export type StreamControls = {
   /** False where the browser can't share a screen: its button is greyed out, not hidden. */
   canShareScreen: boolean;
   /** I'm sharing my screen, but my browser gave no sound. */
-  noSound?: boolean;
+  noSound?: boolean | undefined;
   /** What my screen share shows: a window, a tab or the whole screen. */
-  screenSurface?: ScreenSurface;
+  screenSurface?: ScreenSurface | undefined;
   /** A request is on its way: the buttons wait. */
-  busy?: boolean;
+  busy?: boolean | undefined;
   onStart: (kind: StreamKind) => void;
   onStop: (kind: StreamKind) => void;
   onChangeWindow: () => void;
@@ -28,12 +28,12 @@ export type StreamControls = {
   settingsOpen: boolean;
   onSettings: () => void;
   /** My voice is on, and turning it on or off. */
-  voice?: boolean;
+  voice?: boolean | undefined;
   /** My voice is being sent right now (it passes the gate): my face under the stage turns green. */
-  speaking?: boolean;
+  speaking?: boolean | undefined;
   /** The browser holds the room's sound back until the page's first click or key. */
-  soundHeld?: boolean;
-  onVoice?: () => void;
+  soundHeld?: boolean | undefined;
+  onVoice?: () => void | undefined;
   /** With the settings open, a live button's gesture goes to its setting there. */
-  onGoTo?: (kind: StreamKind) => void;
+  onGoTo?: (kind: StreamKind) => void | undefined;
 };

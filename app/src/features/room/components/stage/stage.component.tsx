@@ -4,7 +4,8 @@ import { StageInfo } from "../stage-info";
 import { StagePlayer } from "../stage-player";
 import { useVideoShape } from "./hooks/use-video-shape.hook";
 import styles from "./stage.component.module.css";
-import type { StageProps } from "./types/stage.types";
+import { SettingsPanel } from "../../../../components/stage/SettingsPanel";
+import { useRoomSession } from "../../stores/room-session";
 import { shapeStyle } from "./utils/stage-look.util";
 
 /**
@@ -12,7 +13,8 @@ import { shapeStyle } from "./utils/stage-look.util";
  * empty or loading), holding the player; under it, who's on it and the other streams. What I hear
  * from each person is the stage's, for the player and the row alike.
  */
-export function Stage({ sharers, controls, stage, ambilight, watchers, others, settingsPanel }: StageProps) {
+export function Stage() {
+  const { sharers, controls, stage, ambilight, watchers, others } = useRoomSession().stage;
   const [video, setVideo] = useState<HTMLVideoElement | null>(null);
   const shape = useVideoShape(video);
   const hearing = useHearing(sharers, stage.big?.person.id ?? null);
@@ -28,7 +30,7 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
           shape={shape}
           video={video}
           onVideo={setVideo}
-          settingsPanel={settingsPanel}
+          settingsPanel={<SettingsPanel />}
         />
       </div>
       <StageInfo

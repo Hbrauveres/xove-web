@@ -3,21 +3,21 @@ import { describe, expect, it } from "vitest";
 import type { StreamControls } from "@features/room/types/stream-controls.types";
 import { aSharer } from "../../../../testing/factories/sharer.factory";
 import { aStreamControls } from "../../../../testing/factories/stream-controls.factory";
+import { aRoomSession } from "../../../../testing/factories/room-session.factory";
 import { useStage } from "../../hooks/use-stage.hook";
+import { RoomSessionContext } from "../../stores/room-session";
 import type { Sharer } from "../../types/room-view.types";
 import { Stage } from "./stage.component";
 
-/** The stage as the room shows it: its pick kept by the room's own hook. */
+/** The stage as the room shows it: its pick kept by the room's own hook, the settings open. */
 function Room({ sharers, controls = aStreamControls() }: { sharers: Sharer[]; controls?: StreamControls }) {
   const stage = useStage(sharers);
   return (
-    <Stage
-      sharers={sharers}
-      controls={controls}
-      stage={stage}
-      ambilight={{ on: true, brightness: 0.9 }}
-      settingsPanel={<dialog open aria-label="Settings" />}
-    />
+    <RoomSessionContext.Provider
+      value={aRoomSession({ stage: { sharers, stage, controls }, settings: { open: true } })}
+    >
+      <Stage />
+    </RoomSessionContext.Provider>
   );
 }
 

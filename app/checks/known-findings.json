@@ -79,20 +79,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/pages/RoomPage.module.css",
-    "count": 2,
-    "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/pages/RoomPage.tsx",
-    "count": 4,
-    "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/testing/fakeApi.ts",
     "count": 2,
     "owner": "#195 the sweep"
@@ -275,27 +261,6 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/pages/RoomPage.module.css",
-    "count": 1,
-    "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/RoomPage.test.tsx",
-    "count": 1,
-    "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/RoomPage.tsx",
-    "count": 1,
-    "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/testing/fakeApi.ts",
     "count": 1,
     "owner": "#195 the sweep"
@@ -404,13 +369,6 @@
     "file": "src/pages/RequestAccessPage.tsx",
     "count": 4,
     "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/pages/RoomPage.tsx",
-    "count": 3,
-    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "code",
@@ -574,27 +532,6 @@
     "owner": "#194 home, request access, admin, the shell"
   },
   {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/RoomPage.module.css",
-    "count": 1,
-    "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/RoomPage.test.tsx",
-    "count": 1,
-    "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/RoomPage.tsx",
-    "count": 1,
-    "owner": "#192 room: queue, footer, page"
-  },
-  {
     "tool": "lint",
     "rule": "eslint(complexity)",
     "file": "src/components/room/SeatOffer.tsx",
@@ -607,13 +544,6 @@
     "file": "src/components/stage/SettingsPanel.tsx",
     "count": 3,
     "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(complexity)",
-    "file": "src/pages/RoomPage.tsx",
-    "count": 1,
-    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "lint",
@@ -642,13 +572,6 @@
     "file": "src/pages/AdminPage.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/pages/RoomPage.tsx",
-    "count": 1,
-    "owner": "#192 room: queue, footer, page"
   },
   {
     "tool": "lint",
@@ -765,23 +688,9 @@
   {
     "tool": "tsc",
     "rule": "TS2375",
-    "file": "src/pages/RoomPage.tsx",
-    "count": 2,
-    "owner": "#192 room: queue, footer, page"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
     "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2379",
-    "file": "src/components/stage/SettingsPanel.test.tsx",
-    "count": 4,
-    "owner": "#193 settings"
   },
   {
     "tool": "tsc",

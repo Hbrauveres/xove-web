@@ -6,7 +6,9 @@ import { moveFakeTimers } from "../../testing/factories/clock.factory";
 import type { StreamKind, StreamSettings } from "@services/xove-api-service";
 import { CAMERA_BLOCKED } from "@services/media-devices-service";
 import { NO_SOUND, NO_SCREEN } from "@features/room/constants/stream-words.constants";
-import { CUE_MS, SettingsPanel } from "./SettingsPanel";
+import { CUE_MS, SettingsPanel, type SettingsPanelProps } from "./SettingsPanel";
+import { RoomSessionContext } from "@features/room/stores/room-session";
+import { aRoomSession } from "../../testing/factories/room-session.factory";
 import { DEFAULT_VOICE } from "@services/preferences-service";
 import { toastStore } from "@shared/stores/toast-store";
 
@@ -20,7 +22,7 @@ const CAMERAS = [
 ];
 const track = () => ({ attach: vi.fn((el: HTMLMediaElement) => el), detach: vi.fn((el: HTMLMediaElement) => el) });
 
-function setup(props: Partial<Parameters<typeof SettingsPanel>[0]> = {}) {
+function setup(props: Partial<SettingsPanelProps> = {}) {
   const handlers = {
     onClose: vi.fn(),
     onPrefsChange: vi.fn(),
@@ -39,12 +41,21 @@ function setup(props: Partial<Parameters<typeof SettingsPanel>[0]> = {}) {
     ...handlers,
     ...props,
   };
-  const view = render(<SettingsPanel {...all} />);
+  const view = render(<InRoom {...all} />);
   return {
     user,
     ...handlers,
-    rerender: (next: Partial<typeof all>) => view.rerender(<SettingsPanel {...all} {...next} />),
+    rerender: (next: Partial<typeof all>) => view.rerender(<InRoom {...all} {...next} />),
   };
+}
+
+/** The panel as the room shows it: its values from the room's session. */
+function InRoom(props: SettingsPanelProps) {
+  return (
+    <RoomSessionContext.Provider value={aRoomSession({ settings: props })}>
+      <SettingsPanel />
+    </RoomSessionContext.Provider>
+  );
 }
 
 const panel = () => screen.getByRole("dialog", { name: "Settings" });
@@ -315,7 +326,7 @@ describe("the settings panel: React's development double-mount", () => {
     const onPreviewCamera = vi.fn();
     render(
       <StrictMode>
-        <SettingsPanel
+        <InRoom
           open
           screenTab={false}
           mine={{ screen: false, camera: false }}
@@ -338,7 +349,7 @@ describe("the settings panel: leaving", () => {
   it("stops the preview when it unmounts", () => {
     const onPreviewCamera = vi.fn();
     const view = render(
-      <SettingsPanel
+      <InRoom
         open
         screenTab={false}
         mine={{ screen: false, camera: false }}
