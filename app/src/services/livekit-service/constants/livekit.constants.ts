@@ -50,6 +50,7 @@ export const START: VideoRoomState = {
   voice: false,
   localVoice: undefined,
   micInput: undefined,
+  voiceSpeaking: false,
   connection: "connecting",
   others: [],
   remote: {},
@@ -57,3 +58,10 @@ export const START: VideoRoomState = {
   presence: [],
   error: null,
 };
+
+/**
+ * Who's speaking: a heard voice's level over this line is speech (a sender's noise gate sends true
+ * silence between words, so the line sits just above it), read every tick.
+ */
+export const ACTIVITY_LINE = 0.02;
+export const ACTIVITY_TICK_MS = 33;

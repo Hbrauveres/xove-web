@@ -1,5 +1,5 @@
 /* The app's icon buttons: one place for every look they have, the round one and the others' purposes.
-   A button's own states (speaking, active) stay with the piece that has them. */
+   A button's own states (a sound's open slider, its green icon) stay with the piece that has them. */
 
 /* Every round button, on one base: glass with a soft shadow, lighter when pointed at, a red
    ring for the keyboard, faded when unavailable, red when on. Two sizes; only the icon changes. */
@@ -24,6 +24,25 @@
     color var(--duration-120) ease,
     opacity var(--duration-250) ease;
   user-select: none;
+}
+
+/* Who's talking, on any round button that shows it (a voice, my mic): the green tube on its border,
+   its glow inside and out, drawn once and switched on or off with the sound, never faded. */
+.round::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.round[data-cue="talking"]::before {
+  box-shadow:
+    inset 0 0 0 var(--hairline) var(--green-light-85),
+    inset 0 0 var(--space-1-25) var(--green-45),
+    inset 0 0 var(--space-3) var(--space-0-25) var(--green-18),
+    0 0 var(--space-0-75) 0 var(--green-60),
+    0 0 var(--space-2-25) var(--space-0-25) var(--green-25);
 }
 
 /* l: my own buttons (my streams, my mic, my settings). */

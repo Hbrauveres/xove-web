@@ -16,7 +16,7 @@ describe("reading what someone sends", () => {
     expect(new RemoteMediaReader().read(person)).toBeUndefined();
   });
 
-  it("reads their screen, its sound and their voice, and whether they're talking", () => {
+  it("reads their screen, its sound and their voice; who's talking is measured elsewhere", () => {
     const { room, person } = someone();
     room.publishScreen("user-2", { height: 1080, withSound: true, layers: 3 });
     room.publishVoice("user-2");
@@ -25,7 +25,8 @@ describe("reading what someone sends", () => {
     const media = new RemoteMediaReader().read(person)!;
 
     expect(media.screen).toMatchObject({ height: 1080, layers: 3 });
-    expect(media).toMatchObject({ hasSound: true, hasVoice: true, speaking: true });
+    // The video server's own guess isn't read: the speaking service measures it.
+    expect(media).toMatchObject({ hasSound: true, hasVoice: true, speaking: false });
   });
 
   it("makes the same actions for the same publication, so an unchanged person stays equal", () => {

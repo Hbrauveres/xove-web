@@ -65,7 +65,8 @@ export class RemoteMediaReader {
     return {
       ...(voice?.track ? { voice: voice.track } : {}),
       hasVoice,
-      speaking: hasVoice && p.isSpeaking,
+      // Who's speaking is measured where it's heard (the speaking service), not LiveKit's guess.
+      speaking: false,
       setVoiceOn: voice ? this.subscribe(voice) : this.noop,
     };
   }

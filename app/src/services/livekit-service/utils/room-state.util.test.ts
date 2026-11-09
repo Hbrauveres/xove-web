@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { aTrack, someMedia } from "../../../testing/factories/remote-media.factory";
 import type { LocalMedia } from "../types/livekit.types";
-import { withLocal, withOthers, withPerson, withSpeakers } from "./room-state.util";
+import { heardAs, withLocal, withOthers, withPerson, withSpeakers } from "./room-state.util";
 
 const room = () => {
   const marina = someMedia({ voice: aTrack(), hasVoice: true });
@@ -10,6 +10,14 @@ const room = () => {
 };
 
 describe("the room's state, person by person", () => {
+  it("reads someone with whether they're talking now, keeping the same object when that's unchanged", () => {
+    const { marina } = room();
+    expect(heardAs("user-2", marina, new Set())).toBe(marina);
+    expect(heardAs("user-2", marina, new Set(["user-2"]))).toEqual({ ...marina, speaking: true });
+    expect(heardAs("user-2", { ...marina, hasVoice: false }, new Set(["user-2"]))?.speaking).toBe(false);
+    expect(heardAs("user-2", undefined, new Set(["user-2"]))).toBeUndefined();
+  });
+
   it("someone starting to talk changes only their talking state; everyone else stays the same object", () => {
     const { marina, rafa, remote } = room();
 

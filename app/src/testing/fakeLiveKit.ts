@@ -55,6 +55,8 @@ export const Track = {
 
 export class FakeTrack {
   readonly attached: HTMLMediaElement[] = [];
+  /** The browser's track: a voice's real sound where a test gives it one; a capture's for local tracks. */
+  mediaStreamTrack?: MediaStreamTrack | FakeMediaStreamTrack;
   attach(element: HTMLMediaElement) {
     this.attached.push(element);
     return element;
@@ -107,7 +109,7 @@ export class FakeMediaStreamTrack {
 
 /** A track this browser captured: the screen, or its sound. */
 export class FakeLocalTrack extends FakeTrack {
-  mediaStreamTrack: FakeMediaStreamTrack;
+  override mediaStreamTrack: FakeMediaStreamTrack;
   readonly kind: "video" | "audio";
   source: string;
   stopped = false;
@@ -217,7 +219,7 @@ export class FakeParticipant {
   readonly publications = new Map<string, FakeRemotePublication>();
   readonly identity: string;
   readonly name: string;
-  /** Speaking right now (LiveKit's own voice detection, spec 0123). */
+  /** LiveKit's own guess at who's speaking: the app doesn't read it (it measures what it hears). */
   isSpeaking = false;
 
   constructor(identity: string, name: string) {
@@ -440,10 +442,14 @@ export class Room {
     return sound;
   }
 
-  /** Someone turns on their voice (spec 0123): downloaded until this browser says otherwise. */
-  publishVoice(identity: string) {
+  /**
+   * Someone turns on their voice: downloaded until this browser says otherwise; `sound`
+   * is what it carries, where a test gives it real sound.
+   */
+  publishVoice(identity: string, sound?: MediaStreamTrack) {
     const p = this.remoteParticipants.get(identity) ?? this.join(identity, identity);
     const voice = new FakeTrack();
+    if (sound) voice.mediaStreamTrack = sound;
     const publication = this.publication(voice);
     publication.isMuted = false;
     publication.setSubscribed.mockImplementation((on: boolean) => {

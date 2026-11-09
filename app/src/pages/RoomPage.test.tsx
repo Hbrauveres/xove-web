@@ -5,6 +5,7 @@ import { cameraCaptureOptions, capOf } from "@services/livekit-service";
 import { AuthProvider } from "@shared/stores/auth-store";
 import { aUser, installFakeApi, MY_USER_ID, myLiveStream, someoneSharing } from "../testing/fakeApi";
 import { FakeLocalScreenTrack, lastRoom } from "../testing/fakeLiveKit";
+import { stubVoiceLevels } from "../testing/factories/audio.factory";
 import { clockUser, onFakeClock } from "../testing/factories/clock.factory";
 import { CHROME_IDLE_MS } from "@features/room/components/stage-player/constants/stage-player.constants";
 import { REPORT_RETRY_MS, REPORT_STILL_MS } from "@features/room/constants/watch-report.constants";
@@ -416,6 +417,7 @@ describe("room: the viewer's quality and volume", () => {
   });
 
   it("plays the voice of the person I watch, at its own mute, and lights it while they speak", async () => {
+    const voices = stubVoiceLevels();
     await watchBruno({ withSound: true });
     const user = clockUser();
     expect(within(stage()).getByRole("button", { name: "Bruno's mic is off" })).toHaveAttribute(
@@ -424,15 +426,15 @@ describe("room: the viewer's quality and volume", () => {
     );
 
     let voice!: ReturnType<ReturnType<typeof lastRoom>["publishVoice"]>;
+    const sound = {} as MediaStreamTrack;
     act(() => {
-      voice = lastRoom().publishVoice("user-7");
+      voice = lastRoom().publishVoice("user-7", sound);
     });
     const button = await within(stage()).findByRole("button", { name: "Mute Bruno's voice" });
     await waitFor(() => expect(voice.attached).toHaveLength(1));
     expect(button).not.toHaveAttribute("data-cue", "talking");
-    act(() => {
-      lastRoom().setSpeaking("user-7", true);
-    });
+    // His voice sounds: measured where it's heard, the cue lights.
+    voices.speak(sound, true);
     await waitFor(() => expect(button).toHaveAttribute("data-cue", "talking"));
 
     await user.click(button);

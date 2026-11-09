@@ -1,21 +1,23 @@
+import { VOICE_LISTEN_MS, spend } from "../support/timing.ts";
+import { cueAgainstSound, recordCue, recordCueLooks } from "../support/cue.ts";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
 import { boxOf } from "../support/geometry.ts";
-import { everyoneStops, togglesStream } from "../support/harness.ts";
+import { everyoneStops, togglesStream, voiceOn } from "../support/harness.ts";
 import { openScene } from "../support/open.ts";
-import { pointAt } from "../support/pointer.ts";
+import { pointAt, pointAway } from "../support/pointer.ts";
 import { pictureOf } from "../support/stage.ts";
 import { stageUpFor } from "./below.ts";
 
 const previewsOf = (page: Page) => page.getByRole("list", { name: "Other streams" }).getByRole("button");
 const placesOf = (page: Page) => page.getByRole("figure");
-/** The ring drawn inside a preview's picture. */
+/** The red ring drawn inside a preview's picture, pointed or open (its own layer). */
 const ringOf = (preview: Locator) =>
   preview
     .locator("span")
     .first()
-    .evaluate((el) => getComputedStyle(el, "::after").boxShadow);
+    .evaluate((el) => getComputedStyle(el, "::before").boxShadow);
 
 test("F-also-live.1 the other streams are previews beside the places, the one on the stage left out", async ({
   page,
@@ -152,4 +154,27 @@ test("F-also-live.7 a stream that starts enters at the far end: no preview moves
     { x: r.x + r.width / 2, y: r.y + r.height / 2 },
   );
   expect.soft(under).toBe("Watch Rafa · screen");
+});
+
+test("F-also-live.8 a preview's ring follows its person's voice: lit while it sounds, out in its silences", async ({
+  page,
+}, info) => {
+  await openScene(page, "s=live&panel=1");
+  await voiceOn(page, 3);
+  const rafa = page.getByRole("button", { name: "Watch Rafa · screen" });
+  const item = rafa.locator("xpath=ancestor::li[1]");
+  // A preview's voice plays once I turn it on, from its row; the row then goes (the ring shows with it closed).
+  await pointAt(page, rafa);
+  await page.getByRole("button", { name: "Unmute Rafa's voice" }).click();
+  await pointAway(page);
+  await page.getByRole("group", { name: "Rafa's sounds" }).waitFor({ state: "detached" });
+  const stop = await recordCue(page, item, "[data-talking]", "user-3");
+  // Who's talking is on the picture's line layer (the red ring is its own, above).
+  const stopRing = await recordCueLooks(page, { ring: rafa.locator(":scope > span").first() }, "::after");
+  await observe(page, info, { rafa }, () => spend(page, VOICE_LISTEN_MS), { strip: 8, gap: 400 });
+  const frames = await stop();
+  expect.soft(frames.some((f) => f.on) && frames.some((f) => !f.on)).toBe(true);
+  expect.soft(cueAgainstSound(frames)).toEqual([]);
+  // On or off, never in between: the ring only ever draws its two looks.
+  expect.soft(new Set((await stopRing()).map((f) => f.looks.ring)).size).toBe(2);
 });

@@ -1,10 +1,7 @@
 import type { ReactNode } from "react";
-import { Icon } from "@shared/components/icon";
-import { IconButton } from "@shared/components/icon-button";
-import { Tooltip } from "@shared/components/tooltip";
 import { SettingsAnchorContext } from "../../hooks/use-settings-anchor.hook";
 import { fullRoom } from "../../utils/full-room.util";
-import { micState } from "../../utils/mic-state.util";
+import { StageMyMic } from "../stage-my-mic";
 import { StagePlayerButtons } from "../stage-player-buttons";
 import { StageViewerBar } from "../stage-viewer-bar";
 import type { StageControlsProps } from "./types/stage-controls.types";
@@ -23,7 +20,6 @@ export function StageControls(props: StageControlsProps) {
   const folded = fit.folded;
   const micOn = Boolean(controls.voice);
   const toggleMic = () => controls.onVoice?.();
-  const mic = micState(micOn);
   let bar: ReactNode;
   if (!big) {
     bar = (
@@ -43,6 +39,7 @@ export function StageControls(props: StageControlsProps) {
         live={controls.mine.screen || controls.mine.camera}
         micOn={micOn}
         onMic={toggleMic}
+        speaking={controls.speaking}
         folded={folded}
         canShareScreen={controls.canShareScreen}
         {...(controls.free <= 0 ? { full: fullRoom(controls.places) } : {})}
@@ -59,20 +56,7 @@ export function StageControls(props: StageControlsProps) {
         onMenuChange={onMenuChange}
         beside={fit.beside}
         size={fit.size}
-        extra={
-          <Tooltip text={mic.label}>
-            <IconButton
-              variant="round"
-              size={fit.size}
-              live={micOn}
-              aria-pressed={micOn}
-              aria-label={mic.label}
-              onClick={toggleMic}
-            >
-              <Icon name={mic.icon} />
-            </IconButton>
-          </Tooltip>
-        }
+        extra={<StageMyMic on={micOn} speaking={controls.speaking} size={fit.size} onClick={toggleMic} />}
       />
     );
   }
