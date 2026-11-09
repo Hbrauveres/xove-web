@@ -79,7 +79,7 @@ My picture; it opens my menu.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/header-my-picture-button/` and `header-my-menu/` (on the shared Dropdown, Switch, Slider and Menu row); the ambilight's settings in `features/room/hooks/use-ambilight.hook.ts` | Here | Done (#189) |
+| `features/room/components/header-my-picture-button/` and `header-my-menu/` (on the shared Dropdown, Switch, Slider and Menu row); the ambilight's settings in `features/room/stores/room-session/hooks/use-ambilight.hook.ts` | Here | Done (#189) |
 
 ## The stage
 
@@ -260,7 +260,7 @@ The room's footer: credits and links.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/room/RoomFooter.tsx` | `features/room/room-footer/` | Kept; decided again with the next version |
+| `features/room/components/room-footer/` (#192) | — | Kept; decided again with the next version |
 
 ### Waiting room
 
@@ -272,7 +272,7 @@ When the room is full: waiting for a seat, and the offer when one frees.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/room/WaitingRoom.tsx`, `SeatOffer.tsx` | `features/room/components/queue-waiting-room/`, `seat-offer/` | Kept |
+| `features/room/components/queue-waiting-room/` (its card a Panel as an `<output>`), `queue-seat-offer/` (the browser's own modal dialog) (#192) | — | Kept |
 
 ### Sign-in
 
