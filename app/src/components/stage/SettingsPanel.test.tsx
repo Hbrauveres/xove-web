@@ -1,8 +1,7 @@
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { StrictMode } from "react";
-import { describe, expect, it, vi } from "vitest";
-import { moveFakeTimers } from "../../testing/factories/clock.factory";
+import { describe, expect, it, vi, beforeEach } from "vitest";
+import { moveFakeTimers, clockUser, onFakeClock } from "../../testing/factories/clock.factory";
 import type { StreamKind, StreamSettings } from "@services/xove-api-service";
 import { CAMERA_BLOCKED } from "@services/media-devices-service";
 import { NO_SOUND, NO_SCREEN } from "@features/room/constants/stream-words.constants";
@@ -11,7 +10,12 @@ import { RoomSessionContext } from "@features/room/stores/room-session";
 import { aRoomSession } from "../../testing/factories/room-session.factory";
 import { DEFAULT_VOICE } from "@services/preferences-service";
 import { toastStore } from "@shared/stores/toast-store";
-
+import { capOf } from "@services/livekit-service";
+import { aUser, installFakeApi, myLiveStream } from "../../testing/fakeApi";
+import { lastRoom } from "../../testing/fakeLiveKit";
+import { renderInRoom } from "../../testing/factories/room-render.factory";
+import { Stage } from "../../features/room/components/stage";
+import userEvent from "@testing-library/user-event";
 const PREFS: Record<StreamKind, StreamSettings> = {
   screen: { quality: "1080p", mode: "smooth" },
   camera: { quality: "720p", mode: "smooth" },
@@ -410,5 +414,120 @@ describe("the settings panel: the Voice tab (spec 0123)", () => {
     await user.click(isolation);
     expect(onVoicePrefs).not.toHaveBeenCalled();
     expect(toastStore.current()?.text).toBe("This browser can't isolate a voice");
+  });
+});
+
+// The wiring: the stage over the real room session.
+const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
+
+// The stage shows once I'm in the room.
+const connected = () => screen.findByRole("region", { name: /shared screen/i });
+// The stage: the picture, and my screen and camera buttons on it.
+const stage = () => screen.getByRole("region", { name: /shared screen/i });
+
+/** The stage over the real room session, on the fake API and LiveKit. */
+const renderRoom = () => renderInRoom(<Stage />);
+
+// ---- sharing: pick a screen, set it up, start ----
+
+/** The room, connected, with a free stage (the seats box says "0 of 6 live": quicker than a heading by role). */
+async function readyRoom() {
+  renderRoom();
+  await connected();
+  await screen.findByLabelText("0 of 6 live, 6 seats open");
+  return clockUser();
+}
+
+type User = ReturnType<typeof clockUser>;
+/** Clicks "Share your screen": the browser's picker, and the pick is sent at once. */
+async function pickScreen(user: User, button: RegExp = /share your screen/i) {
+  await user.click(within(stage()).getByRole("button", { name: button }));
+}
+
+/** Picks a screen and starts sharing it, with the remembered settings. */
+async function startSharing(user: User) {
+  await pickScreen(user);
+  await screen.findByRole("heading", { name: "You" });
+}
+
+type MenuKind = "Screen" | "Camera" | "Voice";
+
+/** The settings panel on a tab: opened from the cog when it isn't. */
+async function openMenu(user: User, kind: MenuKind = "Screen") {
+  if (!screen.queryByRole("dialog", { name: "Settings" })) {
+    await user.click(within(stage()).getByRole("button", { name: "Settings" }));
+  }
+  const panel = within(await screen.findByRole("dialog", { name: "Settings" }));
+  const tab = panel.getByRole("tab", { name: (name) => name.startsWith(kind) });
+  if (tab.getAttribute("aria-selected") !== "true") await user.click(tab);
+  return within(panel.getByRole("tabpanel"));
+}
+
+/** Picks a quality or mode in the settings, on that stream's tab. */
+async function pickInMenu(user: User, option: string, kind: MenuKind = "Screen") {
+  await user.click((await openMenu(user, kind)).getByRole("radio", { name: option }));
+}
+
+/** The quality chosen on the settings' open tab. */
+const tickedQuality = (kind: MenuKind = "Screen") =>
+  within(screen.getByRole("radiogroup", { name: `${kind} quality` }))
+    .getAllByRole<HTMLInputElement>("radio")
+    .find((r) => r.checked)?.value;
+
+// ---- a full room: the queue and the seat offer ----
+
+// ---- who is big, and the thumbnails ----
+
+describe("room: changing the stream while sharing", () => {
+  beforeEach(() => {
+    onFakeClock();
+  });
+
+  it("changes the quality live from my player: same stream, and the API tells everyone", async () => {
+    const server = installFakeApi({ me: member() });
+    const user = await readyRoom();
+    await startSharing(user);
+    const local = lastRoom().localParticipant;
+    const video = local.screens[0]!.track;
+
+    await pickInMenu(user, "480p");
+
+    await waitFor(() => {
+      expect(myLiveStream(server)?.settings).toEqual({ quality: "480p", mode: "smooth" });
+      expect(video.setPublishingQuality).toHaveBeenLastCalledWith(capOf("480p"));
+    });
+    // No new track and no reload for viewers.
+    expect(local.publishTrack).toHaveBeenCalledTimes(2);
+    expect(local.unpublishTrack).not.toHaveBeenCalled();
+    expect(screen.getByRole("heading", { name: "You" })).toBeInTheDocument();
+    expect(localStorage.getItem("xove.share.quality")).toBe("480p");
+  });
+});
+
+describe("room: my settings for each of my streams", () => {
+  beforeEach(() => {
+    onFakeClock();
+  });
+
+  it("changes the camera's quality live from the settings, apart from the screen's", async () => {
+    const server = installFakeApi({ me: member() });
+    const user = await readyRoom();
+    await startSharing(user);
+    await user.click(within(stage()).getByRole("button", { name: /turn on your camera/i }));
+    await waitFor(() => expect(myLiveStream(server, "camera")).toBeDefined());
+    const camera = lastRoom().localParticipant.lastCamera!;
+
+    const menu = await openMenu(user, "Camera");
+    expect(menu.queryByRole("radio", { name: "1080p" })).not.toBeInTheDocument();
+    await pickInMenu(user, "480p", "Camera");
+
+    await waitFor(() => {
+      expect(myLiveStream(server, "camera")?.settings.quality).toBe("480p");
+      expect(camera.setPublishingQuality).toHaveBeenLastCalledWith(capOf("480p"));
+    });
+    expect(myLiveStream(server, "screen")?.settings.quality).toBe("1080p");
+    await openMenu(user, "Screen");
+    expect(tickedQuality()).toBe("1080p");
+    expect(localStorage.getItem("xove.camera.quality")).toBe("480p");
   });
 });

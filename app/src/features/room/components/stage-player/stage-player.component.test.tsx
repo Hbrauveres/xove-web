@@ -1,5 +1,5 @@
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { act, fireEvent, render, screen, within, waitFor } from "@testing-library/react";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 import { onFakeClock } from "../../../../testing/factories/clock.factory";
 import { aSharer } from "../../../../testing/factories/sharer.factory";
 import { aStreamControls } from "../../../../testing/factories/stream-controls.factory";
@@ -9,7 +9,10 @@ import type { StreamControls } from "@features/room/types/stream-controls.types"
 import type { Sharer } from "../../types/room-view.types";
 import { CHROME_IDLE_MS } from "./constants/stage-player.constants";
 import { StagePlayer } from "./stage-player.component";
-
+import { Stage } from "../stage/stage.component";
+import { aUser, installFakeApi, someoneSharing } from "../../../../testing/fakeApi";
+import { lastRoom } from "../../../../testing/fakeLiveKit";
+import { renderInRoom } from "../../../../testing/factories/room-render.factory";
 /** The player as the stage holds it, its pick and hearing kept by the room's own hooks. */
 function Player({ sharers, controls = aStreamControls() }: { sharers: Sharer[]; controls?: StreamControls }) {
   const stage = useStage(sharers);
@@ -222,5 +225,57 @@ describe("the small view's fold", () => {
   it("has no corner button for someone sharing only one stream", () => {
     render(<Player sharers={[aSharer({ kinds: ["screen"] })]} />);
     expect(screen.queryByRole("button", { name: "Show the small view", hidden: true })).not.toBeInTheDocument();
+  });
+});
+
+// The wiring: the stage over the real room session.
+const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
+
+// The stage shows once I'm in the room.
+const connected = () => screen.findByRole("region", { name: /shared screen/i });
+
+/** The stage over the real room session, on the fake API and LiveKit. */
+const renderRoom = () => renderInRoom(<Stage />);
+
+// ---- sharing: pick a screen, set it up, start ----
+
+// ---- screen and camera together: the small view ----
+
+// ---- sound and settings for each stream ----
+
+describe("room: viewers follow the sharer's changes", () => {
+  beforeEach(() => {
+    onFakeClock();
+  });
+
+  it("asks for Auto, at most the sharer's quality", async () => {
+    const server = installFakeApi({ me: member() });
+    server.streams = [someoneSharing("Bruno Lima", 7)];
+    renderRoom();
+    await connected();
+    await screen.findByRole("heading", { name: "Bruno" });
+    act(() => {
+      lastRoom().publishScreen("user-7");
+    });
+    await screen.findByLabelText("Bruno's shared screen");
+    const publication = lastRoom().screenPublication("user-7")!;
+
+    // Bruno lowers his quality; the API says so on the next poll.
+    act(() => {
+      server.streams[0]!.settings = { quality: "720p", mode: "smooth" };
+    });
+
+    await waitFor(() => {
+      expect(publication.setVideoDimensions).toHaveBeenLastCalledWith({ width: 1280, height: 720 });
+    });
+
+    // And raises it back.
+    act(() => {
+      server.streams[0]!.settings = { quality: "1080p", mode: "smooth" };
+    });
+
+    await waitFor(() => {
+      expect(publication.setVideoQuality).toHaveBeenLastCalledWith(2);
+    });
   });
 });
