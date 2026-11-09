@@ -44,15 +44,7 @@
 }
 
 /* Their voice heard while they speak, the row closed: the speaking cue around the picture, as on
-   their voice button. */
-.video {
-  transition: box-shadow var(--duration-120) ease;
-}
-
-.video::after {
-  transition: box-shadow var(--duration-120) ease;
-}
-
+   their voice button, switched on or off with the sound, never faded. */
 .item[data-talking] .video {
   box-shadow: 0 0 var(--space-1-5) 0 var(--green-35);
 }
@@ -67,6 +59,7 @@
 .preview:hover .video::after,
 .preview:focus-visible .video::after {
   box-shadow: inset 0 0 0 var(--space-0-5) var(--accent);
+  transition: box-shadow var(--duration-120) ease;
 }
 
 .loading {

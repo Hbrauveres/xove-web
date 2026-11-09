@@ -3,8 +3,8 @@ import { IconButton } from "@shared/components/icon-button";
 import { Tooltip } from "@shared/components/tooltip";
 import { useSettingsAnchor } from "../../hooks/use-settings-anchor.hook";
 import { SETTINGS } from "../../constants/stream-words.constants";
-import { micState } from "../../utils/mic-state.util";
 import { StageGoLive } from "../stage-go-live";
+import { StageMyMic } from "../stage-my-mic";
 import type { ViewerMe } from "../../types/viewer-me.types";
 
 /**
@@ -13,8 +13,6 @@ import type { ViewerMe } from "../../types/viewer-me.types";
  */
 export function StageViewerMe(props: ViewerMe) {
   const anchor = useSettingsAnchor();
-  const on = Boolean(props.micOn);
-  const mic = micState(on);
   if (props.settingsOnly)
     return (
       <Tooltip text={SETTINGS}>
@@ -24,13 +22,7 @@ export function StageViewerMe(props: ViewerMe) {
       </Tooltip>
     );
   if (props.live)
-    return (
-      <Tooltip text={mic.label}>
-        <IconButton variant="round" size="m" live={on} aria-pressed={on} aria-label={mic.label} onClick={props.onMic}>
-          <Icon name={mic.icon} />
-        </IconButton>
-      </Tooltip>
-    );
+    return <StageMyMic on={Boolean(props.micOn)} speaking={props.speaking} size="m" onClick={props.onMic} />;
   return (
     <StageGoLive
       canShareScreen={props.canShareScreen}

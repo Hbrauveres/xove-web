@@ -280,7 +280,7 @@ void wait().then(() =>
       // How many times the room was asked to start its sound (LiveKit's startAudio, after a click).
       soundStarts: () => room.startAudio.mock.calls.length,
     };
-    // My mic: a real, quiet test tone that rises and falls like speech, so its level moves.
+    // My mic: a real, quiet test tone that rises and falls like speech, in phrases with silences between.
     const createTracks = room.localParticipant.createTracks;
     room.localParticipant.createTracks = (async (options?: { video?: unknown; audio?: unknown }) => {
       const tracks = await createTracks(options);
@@ -295,26 +295,26 @@ void wait().then(() =>
         let t = 0;
         setInterval(() => {
           t += 1;
-          gain.gain.value = 0.02 + 0.12 * Math.abs(Math.sin(t / 3)) * (t % 9 < 6 ? 1 : 0.1);
+          gain.gain.value = t % 12 < 7 ? 0.02 + 0.12 * Math.abs(Math.sin(t / 3)) : 0;
         }, 80);
         const sent = out.stream.getAudioTracks()[0];
-        if (sent) (tracks[0] as unknown as { mediaStreamTrack: MediaStreamTrack }).mediaStreamTrack = sent;
+        if (sent) {
+          // As LiveKit does: the voice's processor (the noise gate) runs on the mic, in the context it's given.
+          const mic = tracks[0] as unknown as {
+            mediaStreamTrack: MediaStreamTrack;
+            setAudioContext: (c: AudioContext) => void;
+            setProcessor: (p: {
+              init: (o: { kind: string; track: MediaStreamTrack; audioContext: AudioContext }) => Promise<void>;
+            }) => Promise<void>;
+          };
+          let given = ctx;
+          mic.mediaStreamTrack = sent;
+          mic.setAudioContext = (c) => (given = c);
+          mic.setProcessor = (p) => p.init({ kind: "audio", track: sent, audioContext: given });
+        }
       }
       return tracks;
     }) as typeof createTracks;
-    // My voice, heard: while my mic is on, I talk in phrases with pauses, and the room reports me among
-    // its active speakers, as LiveKit does (only when that changes). The app reads only the others'
-    // speaking today; this is here for when it shows mine.
-    let beat = 0;
-    setInterval(() => {
-      beat = (beat + 1) % 12;
-      const me = room.localParticipant as unknown as { identity: string; mic: unknown; isSpeaking?: boolean };
-      const speaking = Boolean(me.mic) && beat < 7 && beat !== 3;
-      if (me.isSpeaking === speaking) return;
-      me.isSpeaking = speaking;
-      const others = [...room.remoteParticipants.values()].filter((p) => p.isSpeaking);
-      room.emit("activeSpeakersChanged", speaking ? [...others, me] : others);
-    }, 300);
     // The room panel: set the states and play the other people from the page itself.
     installRoomPanel(server, room, (track, name) => pictureOf.set(track, name));
   }, 300),

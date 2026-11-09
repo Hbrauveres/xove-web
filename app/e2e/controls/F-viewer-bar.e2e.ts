@@ -184,3 +184,32 @@ test("F-viewer-bar.8 the voice button's cue follows Marina's voice: lit while it
   expect.soft(frames.some((f) => f.on) && frames.some((f) => !f.on)).toBe(true);
   expect.soft(cueAgainstSound(frames)).toEqual([]);
 });
+
+test("F-viewer-bar.9 a voice I mute shows no cue; with reduced motion the cue still follows the sound, at once", async ({
+  page,
+}, info) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await openWithVoice(page);
+  const voice = control(page, "Mute Marina's voice");
+  // Reduced motion: the same on and off with her sound, switched at once.
+  const stop = await recordCue(page, voice, '[data-cue="talking"]', "user-2");
+  await spend(page, VOICE_LISTEN_MS);
+  const frames = await stop();
+  expect.soft(frames.some((f) => f.on) && frames.some((f) => !f.on)).toBe(true);
+  expect.soft(cueAgainstSound(frames)).toEqual([]);
+  // No fade either way: the cue's layer has no transition, with or without reduced motion.
+  const fade = () => voice.evaluate((el) => parseFloat(getComputedStyle(el, "::before").transitionDuration));
+  expect.soft(await fade()).toBeLessThan(0.001);
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  expect.soft(await fade()).toBe(0);
+  // Muted by me: she still talks, and nothing of it lights.
+  await wakeStage(page);
+  await voice.click();
+  const muted = control(page, "Unmute Marina's voice");
+  await expect(muted).toBeVisible();
+  const stopMuted = await recordCue(page, muted, '[data-cue="talking"]', "user-2");
+  await observe(page, info, { muted }, () => spend(page, VOICE_LISTEN_MS), { strip: 8, gap: 400 });
+  const heard = await stopMuted();
+  expect.soft(heard.some((f) => f.sound)).toBe(true);
+  expect.soft(heard.filter((f) => f.on)).toEqual([]);
+});

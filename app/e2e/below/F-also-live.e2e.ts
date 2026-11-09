@@ -1,5 +1,5 @@
 import { VOICE_LISTEN_MS, spend } from "../support/timing.ts";
-import { cueAgainstSound, recordCue } from "../support/cue.ts";
+import { cueAgainstSound, recordCue, recordCueLooks } from "../support/cue.ts";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
@@ -169,8 +169,11 @@ test("F-also-live.8 a preview's ring follows its person's voice: lit while it so
   await pointAway(page);
   await page.getByRole("group", { name: "Rafa's sounds" }).waitFor({ state: "detached" });
   const stop = await recordCue(page, item, "[data-talking]", "user-3");
+  const stopRing = await recordCueLooks(page, { ring: rafa.locator(":scope > span").first() }, "::after");
   await observe(page, info, { rafa }, () => spend(page, VOICE_LISTEN_MS), { strip: 8, gap: 400 });
   const frames = await stop();
   expect.soft(frames.some((f) => f.on) && frames.some((f) => !f.on)).toBe(true);
   expect.soft(cueAgainstSound(frames)).toEqual([]);
+  // On or off, never in between: the ring only ever draws its two looks.
+  expect.soft(new Set((await stopRing()).map((f) => f.looks.ring)).size).toBe(2);
 });
