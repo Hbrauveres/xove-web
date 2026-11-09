@@ -19,7 +19,7 @@ import type { StageAlsoLiveProps } from "./types/stage-also-live.types";
  * buttons, floating, to hear that person while they stay small and swap their screen and camera.
  */
 export function StageAlsoLive(props: StageAlsoLiveProps) {
-  const { others, liveCount, places, free, onPick, hearOf, onHear, swappedOf, onSwap } = props;
+  const { others, liveCount, places, free, onPick, hearOf, onHear, swappedOf, onSwap, meTalking } = props;
   const tray = usePreviewTray();
   const [swapping, setSwapping] = useSwapping();
   const row = (id: string) => {
@@ -48,7 +48,7 @@ export function StageAlsoLive(props: StageAlsoLiveProps) {
             sharer={s}
             swapped={Boolean(swappedOf?.(s.person.id))}
             swapping={swapping === s.person.id}
-            talking={talkingOf(s, hearOf(s.person.id), tray.open?.id === s.person.id)}
+            talking={talkingOf(s, hearOf(s.person.id), tray.open?.id === s.person.id, meTalking)}
             tray={tray}
             onPick={onPick}
           />

@@ -17,4 +17,6 @@ export interface StageAlsoLiveProps {
   /** Whether a person's preview shows their camera instead of their screen, and swapping it. */
   swappedOf?: ((personId: string) => boolean) | undefined;
   onSwap?: ((personId: string) => void) | undefined;
+  /** My voice is being sent: my own preview's ring lights. */
+  meTalking?: boolean | undefined;
 }
