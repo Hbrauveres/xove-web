@@ -10,7 +10,7 @@ import { CANT_CONNECT, CONNECTION, PRESENCE_KEPT, START } from "./constants/live
 import type { Capture, CapturedTracks, LocalMedia, RoomContext, VideoRoomState } from "./types/livekit.types";
 import { readLocalMedia } from "./utils/local-media.util";
 import { RemoteMediaReader } from "./remote-media.adapter";
-import { withLocal, withOthers, withPerson, withSpeakers } from "./utils/room-state.util";
+import { heardAs, withLocal, withOthers, withPerson, withSpeakers } from "./utils/room-state.util";
 import { ScreenChangeService } from "./screen-change.service";
 import { SendService } from "./send.service";
 import { SpeakingService } from "./speaking.service";
@@ -112,7 +112,12 @@ export class LiveKitAdapter {
   private refreshPerson(p: RemoteParticipant) {
     if (!this.room) return;
     this.speakers.follow(p);
-    const read = withPerson(this.state.remote, p.identity, this.reader.read(p));
+    // Read with what's measured, so a talking person who changed nothing keeps their entry.
+    const read = withPerson(
+      this.state.remote,
+      p.identity,
+      heardAs(p.identity, this.reader.read(p), this.speakers.now()),
+    );
     const remote = withSpeakers(read, this.speakers.now());
     const others = withOthers(this.state.others, this.people(this.room));
     if (remote !== this.state.remote || others !== this.state.others) this.update({ remote, others });

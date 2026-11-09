@@ -74,10 +74,13 @@ export class VoiceService {
 
   /** Lets the gate's audio go: nothing of mine is sent, so I'm not speaking. */
   closeVoice() {
+    // The old gate runs on until LiveKit lets it go: it no longer speaks for me.
+    if (this.gate) delete this.gate.gate.onOpen;
     void this.gate?.context.close().catch(() => {});
     this.gate = null;
     this.ungated?.();
     this.ungated = null;
+    this.activity.close();
     this.ctx.update({ voiceSpeaking: false });
   }
 

@@ -70,4 +70,20 @@ describe("the noise gate on my voice", () => {
     expect(told).toEqual([true, false]);
     await gate.destroy();
   });
+
+  it("says it closed when it restarts while open (another mic, other processing)", async () => {
+    vi.useFakeTimers();
+    const graph = audioGraph();
+    const gate = new NoiseGate(0.3);
+    const told: boolean[] = [];
+    gate.onOpen = (open) => told.push(open);
+    await gate.init(graph.options);
+    graph.level.sample = 0.1;
+    vi.advanceTimersByTime(TICK_MS);
+
+    await gate.restart(graph.options);
+
+    expect(told).toEqual([true, false]);
+    await gate.destroy();
+  });
 });

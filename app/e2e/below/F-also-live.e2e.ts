@@ -12,12 +12,12 @@ import { stageUpFor } from "./below.ts";
 
 const previewsOf = (page: Page) => page.getByRole("list", { name: "Other streams" }).getByRole("button");
 const placesOf = (page: Page) => page.getByRole("figure");
-/** The ring drawn inside a preview's picture. */
+/** The red ring drawn inside a preview's picture, pointed or open (its own layer). */
 const ringOf = (preview: Locator) =>
   preview
     .locator("span")
     .first()
-    .evaluate((el) => getComputedStyle(el, "::after").boxShadow);
+    .evaluate((el) => getComputedStyle(el, "::before").boxShadow);
 
 test("F-also-live.1 the other streams are previews beside the places, the one on the stage left out", async ({
   page,
@@ -169,6 +169,7 @@ test("F-also-live.8 a preview's ring follows its person's voice: lit while it so
   await pointAway(page);
   await page.getByRole("group", { name: "Rafa's sounds" }).waitFor({ state: "detached" });
   const stop = await recordCue(page, item, "[data-talking]", "user-3");
+  // Who's talking is on the picture's line layer (the red ring is its own, above).
   const stopRing = await recordCueLooks(page, { ring: rafa.locator(":scope > span").first() }, "::after");
   await observe(page, info, { rafa }, () => spend(page, VOICE_LISTEN_MS), { strip: 8, gap: 400 });
   const frames = await stop();

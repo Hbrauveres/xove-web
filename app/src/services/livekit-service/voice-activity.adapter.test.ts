@@ -20,14 +20,15 @@ function audio() {
     }),
   };
   vi.stubGlobal("MediaStream", class {});
-  return { level, disconnected, context, activity: new VoiceActivity(() => context as never) };
+  // Each test's own voice track, heard through its own context.
+  const track = {} as MediaStreamTrack;
+  return { level, disconnected, context, track, activity: new VoiceActivity(() => context as never) };
 }
-const track = {} as MediaStreamTrack;
 
 describe("who's speaking, measured from what's heard", () => {
   it("is on at once while sound plays, and off only after the hold once it stops", () => {
     vi.useFakeTimers();
-    const { level, activity } = audio();
+    const { level, activity, track } = audio();
     const changes: boolean[] = [];
     activity.watch(track, (on) => changes.push(on));
 
@@ -44,7 +45,7 @@ describe("who's speaking, measured from what's heard", () => {
 
   it("says nothing in silence, and stops reading once told to", () => {
     vi.useFakeTimers();
-    const { level, disconnected, activity } = audio();
+    const { level, disconnected, activity, track } = audio();
     const changes: boolean[] = [];
     const stop = activity.watch(track, (on) => changes.push(on));
     vi.advanceTimersByTime(ACTIVITY_TICK_MS * 10);
@@ -57,7 +58,7 @@ describe("who's speaking, measured from what's heard", () => {
   });
 
   it("starts its sound with the room's (a context waits for the first click), and closes", async () => {
-    const { context, activity } = audio();
+    const { context, activity, track } = audio();
     activity.watch(track, () => {});
     await activity.resume();
     expect(context.resume).toHaveBeenCalled();

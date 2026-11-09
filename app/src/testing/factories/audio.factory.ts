@@ -29,7 +29,7 @@ export function stubAudio(sample = 0.1) {
  * the test sets (`speak(track, on)`), so who's speaking is measured as in the app. Fake timers drive
  * its readings.
  */
-export function stubVoiceLevels() {
+export function stubVoiceLevels({ suspended = false } = {}) {
   const levels = new Map<unknown, number>();
   class FakeMediaStream {
     readonly tracks: unknown[];
@@ -38,8 +38,11 @@ export function stubVoiceLevels() {
     }
   }
   class FakeAudioContext {
-    state = "running";
-    resume = vi.fn(async () => {});
+    // As a browser before the page's first click: silent until resumed.
+    state = suspended ? "suspended" : "running";
+    resume = vi.fn(async () => {
+      this.state = "running";
+    });
     close = vi.fn(async () => {});
     createMediaStreamSource(stream: FakeMediaStream) {
       const track = stream.tracks[0];
@@ -49,7 +52,7 @@ export function stubVoiceLevels() {
     createAnalyser() {
       const analyser: { fftSize: number; track?: unknown; getFloatTimeDomainData: (s: Float32Array) => void } = {
         fftSize: 0,
-        getFloatTimeDomainData: (s) => s.fill(levels.get(analyser.track) ?? 0),
+        getFloatTimeDomainData: (s) => s.fill(this.state === "running" ? (levels.get(analyser.track) ?? 0) : 0),
       };
       return analyser;
     }

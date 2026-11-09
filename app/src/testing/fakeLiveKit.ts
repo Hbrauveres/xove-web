@@ -219,7 +219,7 @@ export class FakeParticipant {
   readonly publications = new Map<string, FakeRemotePublication>();
   readonly identity: string;
   readonly name: string;
-  /** Speaking right now (LiveKit's own voice detection, spec 0123). */
+  /** LiveKit's own guess at who's speaking: the app doesn't read it (it measures what it hears). */
   isSpeaking = false;
 
   constructor(identity: string, name: string) {
@@ -443,7 +443,7 @@ export class Room {
   }
 
   /**
-   * Someone turns on their voice (spec 0123): downloaded until this browser says otherwise; `sound`
+   * Someone turns on their voice: downloaded until this browser says otherwise; `sound`
    * is what it carries, where a test gives it real sound.
    */
   publishVoice(identity: string, sound?: MediaStreamTrack) {

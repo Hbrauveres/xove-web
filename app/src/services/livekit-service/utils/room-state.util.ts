@@ -45,6 +45,17 @@ export function withPerson(
   return { ...remote, [identity]: next };
 }
 
+/** Someone's media as read, with whether they're talking now (measured apart). */
+export function heardAs(
+  identity: string,
+  media: RemoteMedia | undefined,
+  speaking: ReadonlySet<string>,
+): RemoteMedia | undefined {
+  if (!media) return undefined;
+  const now = media.hasVoice && speaking.has(identity);
+  return now === media.speaking ? media : { ...media, speaking: now };
+}
+
 /** Who's talking now: only the people whose flag changes get a new entry. */
 export function withSpeakers(
   remote: Record<string, RemoteMedia>,

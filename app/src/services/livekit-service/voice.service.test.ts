@@ -4,6 +4,9 @@ import { DEFAULT_VOICE } from "../preferences-service";
 import { FakeLocalMicTrack, lastRoom } from "../../testing/fakeLiveKit";
 import { connectedAdapter } from "../../testing/factories/video-room.factory";
 import type { LiveKitAdapter } from "./livekit.adapter";
+import { HOLD_MS } from "../media-devices-service";
+import { stubVoiceLevels } from "../../testing/factories/audio.factory";
+import { ACTIVITY_TICK_MS } from "./constants/livekit.constants";
 import { NoiseGate } from "./noise-gate.adapter";
 
 const connected = connectedAdapter;
@@ -162,5 +165,27 @@ describe("my voice", () => {
     expect(await start(adapter)).toBeNull();
     expect((lastRoom().localParticipant.mic!.track as FakeLocalMicTrack).setProcessor).not.toHaveBeenCalled();
     expect(lastRoom().localParticipant.mic).not.toBeNull();
+  });
+
+  it("where the gate can't run, measures my mic as sent for my speaking", async () => {
+    vi.useFakeTimers();
+    const voices = stubVoiceLevels();
+    const adapter = await connected();
+    const local = lastRoom().localParticipant;
+    // A browser whose processor can't start: the voice goes ungated.
+    local.createTracks.mockImplementationOnce(async (options) => {
+      const mic = new FakeLocalMicTrack(options?.audio);
+      Object.assign(mic, { setProcessor: vi.fn(async () => Promise.reject(new Error("no worklet"))) });
+      return [mic];
+    });
+    await start(adapter);
+    const raw = (local.mic!.track as FakeLocalMicTrack).mediaStreamTrack;
+
+    voices.speak(raw, true);
+    act(() => vi.advanceTimersByTime(ACTIVITY_TICK_MS));
+    expect(adapter.getState().voiceSpeaking).toBe(true);
+    voices.speak(raw, false);
+    act(() => vi.advanceTimersByTime(HOLD_MS + ACTIVITY_TICK_MS));
+    expect(adapter.getState().voiceSpeaking).toBe(false);
   });
 });

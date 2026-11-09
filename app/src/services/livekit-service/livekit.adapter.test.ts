@@ -11,8 +11,8 @@ const connected = connectedAdapter;
  * A room where Marina and Rafa talk, Marina also sharing her screen. `speaks(on)` makes Marina's
  * voice sound or go quiet, and lets the measuring hear it.
  */
-async function roomWithTwo() {
-  const voices = stubVoiceLevels();
+async function roomWithTwo({ suspended = false } = {}) {
+  const voices = stubVoiceLevels({ suspended });
   const adapter = await connected();
   const room = lastRoom();
   room.join("user-2", "Marina");
@@ -93,6 +93,27 @@ describe("each event changes only what it's about", () => {
     expect(adapter.getState().remote["user-2"]?.speaking).toBe(true);
     speaks(false);
     expect(adapter.getState().remote["user-2"]?.speaking).toBe(false);
+  });
+
+  it("a talking person keeps their entry when an event of theirs changes nothing", async () => {
+    const { adapter, room, speaks } = await roomWithTwo();
+    speaks(true);
+    const before = adapter.getState().remote["user-2"];
+
+    room.muteVoice("user-2", false);
+
+    expect(adapter.getState().remote["user-2"]).toBe(before);
+  });
+
+  it("hears nobody until the page's first click starts its sound, then follows the voices", async () => {
+    const { adapter, speaks } = await roomWithTwo({ suspended: true });
+    speaks(true);
+    expect(adapter.getState().remote["user-2"]?.speaking).toBe(false);
+
+    await adapter.unlockAudio();
+    speaks(true);
+
+    expect(adapter.getState().remote["user-2"]?.speaking).toBe(true);
   });
 
   it("someone starting to talk (their voice heard) changes only their talking state", async () => {

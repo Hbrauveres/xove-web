@@ -1,4 +1,4 @@
-// The speaking cue against the sound (#252's AC): on every frame, whether a cue is lit and whether
+// The speaking cue against the sound: on every frame, whether a cue is lit and whether
 // its voice is sounding as the page plays it. What a viewer sees must follow what they hear.
 import type { Locator, Page } from "@playwright/test";
 
