@@ -6,7 +6,7 @@ import { boxOf } from "../support/geometry.ts";
 import { pxOf, SIZE } from "../support/looks.ts";
 import { pointAt, pointAway } from "../support/pointer.ts";
 import { spend, untilStill, VOICE_LISTEN_MS } from "../support/timing.ts";
-import { recordCueLooks, ringColour } from "../support/cue.ts";
+import { recordCueLooks, ringColours } from "../support/cue.ts";
 import { myButtons } from "../settings/settings.ts";
 import { wakeStage } from "../support/open.ts";
 import {
@@ -142,6 +142,7 @@ test("F-people.8 while my voice is sent, my face in the list turns green, nobody
   const stop = await recordCueLooks(page, { mine, marina }, "");
   await observe(page, info, { mine, marina }, () => spend(page, VOICE_LISTEN_MS));
   const frames = await stop();
+  const ringColour = await ringColours(page);
   expect.soft(new Set(frames.map((f) => ringColour(f.looks.mine!)))).toEqual(new Set(["red", "green"]));
   expect.soft(new Set(frames.map((f) => ringColour(f.looks.marina!)))).toEqual(new Set(["red"]));
 });

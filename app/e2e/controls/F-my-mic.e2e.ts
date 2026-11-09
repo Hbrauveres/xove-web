@@ -6,7 +6,7 @@ import { boxOf } from "../support/geometry.ts";
 import { pxOf, SIZE } from "../support/looks.ts";
 import { restOn } from "../support/pointer.ts";
 import { control, shownTip, stageOf } from "../support/stage.ts";
-import { recordCueLooks, ringColour } from "../support/cue.ts";
+import { recordCueLooks, ringColours } from "../support/cue.ts";
 import { TIP_REST_MS, VOICE_LISTEN_MS, spend, untilStill } from "../support/timing.ts";
 import { openMyStream, shownIcons } from "./controls.ts";
 
@@ -126,6 +126,7 @@ test("F-my-mic.6 while my voice is sent, my mic wears no cue: my face under the 
   // My mic never draws the cue; my face switches between the live red and the speaking green.
   expect.soft(new Set(frames.map((f) => f.looks.mic))).toEqual(new Set(["none"]));
   await expect.soft(button).not.toHaveAttribute("data-cue");
+  const ringColour = await ringColours(page);
   const colours = new Set(frames.map((f) => ringColour(f.looks.face!)));
   expect.soft(colours).toEqual(new Set(["red", "green"]));
   expect.soft(await shownIcons(button)).toEqual(["mic"]);

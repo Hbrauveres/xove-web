@@ -30,3 +30,5 @@ type Story = StoryObj<typeof meta>;
 export const Watching: Story = {};
 /** I'm live too: my mic at the right. */
 export const MeLive: Story = { args: { live: true, micOn: true, onMic: () => undefined } };
+/** The browser holds the room's sound: Click to unmute in the sounds' place, no sound button. */
+export const Held: Story = { args: { held: true } };

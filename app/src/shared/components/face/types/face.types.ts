@@ -14,3 +14,11 @@ export interface FaceProps {
   /** Where the ring goes: around the face, or inside its edge, to line up with what's beside it. */
   ring?: "outside" | "inside" | undefined;
 }
+
+/** The ring a room face wears: none, live (around the face or inside its edge), talking or not. */
+export interface FaceRing {
+  /** The stylesheet's class for the ring, or none. */
+  look: "onAir" | "onAirInside" | null;
+  "data-ring": "outside" | "inside" | undefined;
+  "data-talking": true | undefined;
+}

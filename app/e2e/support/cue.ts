@@ -1,6 +1,7 @@
 // The speaking cue against the sound: on every frame, whether a cue is lit and whether
 // its voice is sounding as the page plays it. What a viewer sees must follow what they hear.
 import type { Locator, Page } from "@playwright/test";
+import { computed, LOOK } from "./looks.ts";
 
 /** One frame: when (performance.now()), whether the cue is lit, whether the voice sounds. */
 export type CueFrame = { at: number; on: boolean; sound: boolean };
@@ -122,9 +123,21 @@ export async function recordCueLooks(
     });
 }
 
-/** A ring's colour from its computed shadow: the speaking green, the live red, or neither. */
-export function ringColour(look: string): "green" | "red" | "none" {
-  if (look.includes("43, 205, 104")) return "green";
-  if (look.includes("239, 75, 75")) return "red";
-  return "none";
+/**
+ * How to tell a ring's colour from its computed shadow: the speaking green, the live red, or neither;
+ * both resolved by the page from the app's tokens (never retyped).
+ */
+export async function ringColours(page: Page): Promise<(look: string) => "green" | "red" | "none"> {
+  const green = await computed(page, "color", LOOK.speakingTube);
+  const red = await computed(page, "color", LOOK.accent);
+  // A shadow's colour reads as the colour alone: "rgba(43, 205, 104, 0.85)" holds "43, 205, 104".
+  const rgb = (c: string) =>
+    c
+      .replace(/^rgba?\(/, "")
+      .split(",")
+      .slice(0, 3)
+      .join(",")
+      .replace(/\)$/, "")
+      .trim();
+  return (look) => (look.includes(rgb(green)) ? "green" : look.includes(rgb(red)) ? "red" : "none");
 }

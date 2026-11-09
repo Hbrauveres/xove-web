@@ -6,6 +6,8 @@ import type { Locator, Page } from "@playwright/test";
 /** The app's named looks the cases check against, as CSS. */
 export const LOOK = {
   accent: "var(--accent)",
+  /** The speaking green's tube: a talking cue, my face's ring while my voice is sent. */
+  speakingTube: "var(--green-light-85)",
   accentLight: "var(--accent-light)",
   accentInk: "var(--accent-ink)",
   text: "var(--text)",

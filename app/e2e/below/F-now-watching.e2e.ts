@@ -2,11 +2,11 @@ import { expect, test, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
 import { boxOf } from "../support/geometry.ts";
-import { everyoneStops } from "../support/harness.ts";
+import { everyoneStops, voiceOn } from "../support/harness.ts";
 import { FIXED_TIME, openScene } from "../support/open.ts";
 import { pointAt } from "../support/pointer.ts";
 import { pictureOf } from "../support/stage.ts";
-import { recordCueLooks, ringColour } from "../support/cue.ts";
+import { recordCueLooks, ringColours } from "../support/cue.ts";
 import { spend, VOICE_LISTEN_MS } from "../support/timing.ts";
 import { myButtons, myStream, openSettings, panelOf, tabOf } from "../settings/settings.ts";
 import { stageUpFor, watch } from "./below.ts";
@@ -114,8 +114,11 @@ test("F-now-watching.7 my face's ring turns green while my voice is sent, red in
   await observe(page, info, { face }, () => spend(page, VOICE_LISTEN_MS), { strip: 8, gap: 400 });
   const frames = await stop();
   // On or off: the two looks only, the live red and the speaking green.
+  const ringColour = await ringColours(page);
   expect.soft(new Set(frames.map((f) => ringColour(f.looks.face!)))).toEqual(new Set(["red", "green"]));
   expect.soft(new Set(frames.map((f) => f.looks.face)).size).toBe(2);
+  // My picture at the header's corner never has a ring.
+  await expect.soft(page.getByRole("button", { name: /: account/ }).locator("[data-ring]")).toHaveCount(0);
   // My line at the top: nothing of mine is sent, so the ring stays red.
   await openSettings(page);
   await tabOf(page, "Voice").click();
@@ -127,11 +130,15 @@ test("F-now-watching.7 my face's ring turns green while my voice is sent, red in
 });
 
 test("F-now-watching.8 a live face's red ring glows, and someone else's never turns green", async ({ page }, info) => {
-  await openScene(page, "s=live");
+  // Marina on the stage, her voice on and talking (heard): her face still only red.
+  await openScene(page, "s=live&panel=1");
+  await voiceOn(page, 2);
+  await page.getByRole("button", { name: "Mute Marina's voice" }).waitFor({ state: "attached" });
   const face = page.locator('[data-ring="inside"]');
   const stop = await recordCueLooks(page, { face }, "::after");
-  await observe(page, info, { face }, () => spend(page, VOICE_LISTEN_MS / 2));
+  await observe(page, info, { face }, () => spend(page, VOICE_LISTEN_MS));
   const frames = await stop();
+  const ringColour = await ringColours(page);
   expect.soft(new Set(frames.map((f) => ringColour(f.looks.face!)))).toEqual(new Set(["red"]));
   // Its glow: the ring and a soft red inside.
   expect.soft((frames[0]?.looks.face ?? "").match(/inset/g)?.length ?? 0).toBeGreaterThanOrEqual(3);

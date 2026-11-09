@@ -1,10 +1,4 @@
-/** The ring a room face wears: none, live (around the face or inside its edge), talking or not. */
-export interface FaceRing {
-  /** The stylesheet's class for the ring, or none. */
-  look: "onAir" | "onAirInside" | null;
-  "data-ring": "outside" | "inside" | undefined;
-  "data-talking": true | undefined;
-}
+import type { FaceRing } from "../types/face.types";
 
 /** Ringed only while live; talking only on a live face. */
 export function faceRing(onAir: boolean, ring: "outside" | "inside", talking: boolean): FaceRing {
