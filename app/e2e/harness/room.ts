@@ -87,7 +87,6 @@ export function installRoomPanel(server: Server, room: FakeRoom, picture: (track
       sounds.get(id)?.gain.gain.setValueAtTime(0, 0);
       sounds.delete(id);
       levels.delete(identity(id));
-      room.setSpeaking(identity(id), false);
       room.unpublish(identity(id), "microphone");
     }
   }

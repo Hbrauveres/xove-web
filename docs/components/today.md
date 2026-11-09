@@ -121,7 +121,7 @@ Over someone else's stream: each sound I hear from them (screen sound, voice) as
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage-viewer-bar/`, each sound `stage-viewer-sound/` on the one sound button `stage-sound-button/`, me `stage-viewer-me/`; the slider's rest in `features/room/hooks/use-hold-or-rest.hook.ts` | Here | Done (#191); the next version's stage controls replace it |
+| `features/room/components/stage-viewer-bar/`, each sound `stage-viewer-sound/` on the one sound button `stage-sound-button/`, me `stage-viewer-me/` with my mic `stage-my-mic/` (the same block in my own row, wearing the talking cue while my voice is sent); the slider's rest in `features/room/hooks/use-hold-or-rest.hook.ts` | Here | Done (#191); the next version's stage controls replace it |
 
 ### Go live menu
 
