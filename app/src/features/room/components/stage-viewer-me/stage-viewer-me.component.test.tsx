@@ -1,8 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { StageViewerMe } from "./stage-viewer-me.component";
-
+import userEvent from "@testing-library/user-event";
 const props = (over = {}) => ({ live: false, canShareScreen: true, onStart: vi.fn(), onSettings: vi.fn(), ...over });
 
 describe("me, over someone else's stream", () => {

@@ -1,7 +1,6 @@
 import { render } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { StageStaticNoise } from "./stage-static-noise.component";
-
 /** Each test's own stage and canvas; returns what the canvas was handed to draw. */
 function setup() {
   const drawn = vi.fn();

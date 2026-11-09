@@ -1,7 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { StageSoundSlider } from "./stage-sound-slider.component";
-
 describe("a sound's slider in the row", () => {
   it("sets the volume", () => {
     const onVolume = vi.fn();

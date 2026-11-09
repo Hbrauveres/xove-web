@@ -22,13 +22,14 @@ import { StageScreenSource } from "@features/room/components/stage-screen-source
 import styles from "./SettingsPanel.module.css";
 import { MicTest } from "./MicTest";
 import { Tooltip } from "@shared/components/tooltip";
+import { useRoomSession } from "@features/room/stores/room-session";
 
 /** How long it takes to come in or go out; it leaves the page once it's out. */
 const PANEL_MS = 260;
 
 type Tab = "screen" | "camera" | "voice";
 
-type Props = {
+export type SettingsPanelProps = {
   open: boolean;
   onClose: () => void;
   /** False where the browser can't share a screen: the Screen tab is greyed out. */
@@ -38,30 +39,30 @@ type Props = {
   prefs: Record<StreamKind, StreamSettings>;
   onPrefsChange: (kind: StreamKind, prefs: StreamSettings) => void;
   /** What my screen share shows. */
-  screenSurface?: ScreenSurface;
+  screenSurface?: ScreenSurface | undefined;
   onChangeWindow: () => void;
   cameras: CameraDevice[];
   cameraId: string | null;
   onPickCamera: (deviceId: string) => void;
   /** My camera: the one being sent, or the preview's. */
-  cameraVideo?: MediaTrack;
+  cameraVideo?: MediaTrack | undefined;
   /** Turns the camera on for the preview only, or off again. */
   onPreviewCamera: (on: boolean) => void;
   /** The camera was refused or there's none: said in the preview's place. */
-  cameraProblem?: CameraProblem;
-  busy?: boolean;
+  cameraProblem?: CameraProblem | undefined;
+  busy?: boolean | undefined;
   /** I'm sharing my screen without sound: the Screen tab says how to share it. */
-  noSound?: boolean;
+  noSound?: boolean | undefined;
   /** A live button's gesture with the panel open: go to this setting and cue it (spec 0115). */
-  goTo?: { kind: StreamKind; n: number };
+  goTo?: { kind: StreamKind; n: number } | undefined;
   /** My voice (spec 0123): on or off, how it's captured, the mics, and its own track for the level. */
-  voice?: boolean;
-  voicePrefs?: VoicePrefs;
-  onVoicePrefs?: (prefs: VoicePrefs) => void;
-  mics?: MicDevice[];
-  localVoice?: MediaTrack;
+  voice?: boolean | undefined;
+  voicePrefs?: VoicePrefs | undefined;
+  onVoicePrefs?: ((prefs: VoicePrefs) => void) | undefined;
+  mics?: MicDevice[] | undefined;
+  localVoice?: MediaTrack | undefined;
   /** The microphone itself, before the gate: what the level meter reads. */
-  micInput?: MediaStreamTrack;
+  micInput?: MediaStreamTrack | undefined;
 };
 
 /** The cue's two 1 s pulses (design decision 2); then it stays lit until the next press (spec 0123). */
@@ -73,7 +74,8 @@ type Cue = { kind: Tab; n: number } | null;
  * the chosen one and a red dot on what's live. Changes apply at once and are remembered. The
  * Camera tab shows my camera; while it's off, only I see it, and only while the tab is open.
  */
-export function SettingsPanel(props: Props) {
+export function SettingsPanel() {
+  const props = useRoomSession().settings;
   const { open, onClose, screenTab, mine, onPreviewCamera } = props;
   // Both tabs always show; one that can't be used here is greyed out, not hidden (design decision 2).
   const tabs: Tab[] = ["screen", "camera", "voice"];
@@ -262,7 +264,7 @@ function QualityAndMode({
   prefs,
   onPrefsChange,
   busy,
-}: { kind: StreamKind } & Pick<Props, "prefs" | "onPrefsChange" | "busy">) {
+}: { kind: StreamKind } & Pick<SettingsPanelProps, "prefs" | "onPrefsChange" | "busy">) {
   const mine = prefs[kind];
   const qualities = (kind === "camera" ? CAMERA_QUALITIES : SHARE_QUALITIES).map((q) => ({ value: q.id, label: q.id }));
   const name = kind === "camera" ? "Camera" : "Screen";
@@ -293,7 +295,7 @@ function QualityAndMode({
 }
 
 /** `cue`: the request the tab's control is cued for, if any. */
-function ScreenTab(props: Props & { cue?: number }) {
+function ScreenTab(props: SettingsPanelProps & { cue?: number }) {
   const { mine, screenSurface, onChangeWindow, busy, noSound } = props;
   return (
     <>
@@ -325,7 +327,7 @@ function ScreenTab(props: Props & { cue?: number }) {
   );
 }
 
-function CameraTab(props: Props & { cue?: number }) {
+function CameraTab(props: SettingsPanelProps & { cue?: number }) {
   const { mine, cameras, cameraId, onPickCamera, cameraVideo, busy, cameraProblem } = props;
   // Gone to from the live camera button: its list opens, once per request.
   const [listOpen, setListOpen] = useState(false);
@@ -422,7 +424,7 @@ const canIsolate = () => {
 };
 
 /** The Voice tab (spec 0123, design decision 9): the microphone, its level with the line and Test, then Voice processing. */
-function VoiceTab(props: Props & { shown: boolean }) {
+function VoiceTab(props: SettingsPanelProps & { shown: boolean }) {
   const { voicePrefs, onVoicePrefs, mics = [], localVoice, micInput, shown } = props;
   const level = useMicLevel(micInput, shown);
   if (!voicePrefs || !onVoicePrefs) return null;

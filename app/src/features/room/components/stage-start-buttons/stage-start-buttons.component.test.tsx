@@ -1,9 +1,8 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { toastStore } from "@shared/stores/toast-store";
 import { StageStartButtons } from "./stage-start-buttons.component";
-
+import userEvent from "@testing-library/user-event";
 describe("the ways to start", () => {
   it("offers the screen first and the camera beside it, one word each, their names saying the act", async () => {
     const onStart = vi.fn();

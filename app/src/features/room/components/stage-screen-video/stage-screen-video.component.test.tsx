@@ -3,7 +3,6 @@ import { describe, expect, it, vi } from "vitest";
 import type { MediaTrack } from "@services/livekit-service";
 import { FakeTrack } from "../../../../testing/fakeLiveKit";
 import { StageScreenVideo } from "./stage-screen-video.component";
-
 const track = () => new FakeTrack() as unknown as MediaTrack & FakeTrack;
 
 describe("the stage's video", () => {

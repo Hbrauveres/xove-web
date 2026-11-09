@@ -1,5 +1,4 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { useRef } from "react";
 import { describe, expect, it, vi } from "vitest";
 import type { MediaTrack } from "@services/livekit-service";
@@ -7,7 +6,7 @@ import { FakeTrack } from "../../../../testing/fakeLiveKit";
 import type { StageFacecamProps } from "./types/stage-facecam.types";
 import { aFold } from "@testing/factories/small-view-fold.factory";
 import { StageFacecam } from "./stage-facecam.component";
-
+import userEvent from "@testing-library/user-event";
 /** The player is 1000×500 px; the facecam 240×135 px (24% of its width). */
 function sizes() {
   vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {

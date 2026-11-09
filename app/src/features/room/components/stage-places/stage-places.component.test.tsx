@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { StagePlaces } from "./stage-places.component";
-
 describe("the places", () => {
   it("draws one little screen per place, red for each stream live, and says how many", () => {
     render(<StagePlaces liveCount={1} places={4} free={3} />);

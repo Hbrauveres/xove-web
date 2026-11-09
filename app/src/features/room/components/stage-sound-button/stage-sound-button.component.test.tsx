@@ -1,9 +1,8 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { toastStore } from "@shared/stores/toast-store";
 import { StageSoundButton } from "./stage-sound-button.component";
-
+import userEvent from "@testing-library/user-event";
 const props = (over = {}) => ({
   kind: "voice" as const,
   muted: false,

@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { useState } from "react";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 import { onFakeClock } from "@testing/factories/clock.factory";
 import { aMe, aSharer } from "@testing/factories/sharer.factory";
 import { aTrack } from "@testing/factories/track.factory";
@@ -9,7 +9,10 @@ import type { Sharer } from "@features/room/types/room-view.types";
 import { floatingStore } from "@shared/stores/floating-store";
 import { StageAlsoLive } from "./stage-also-live.component";
 import type { Hearing } from "@features/room/types/sound.types";
-
+import { installFakeApi, someoneSharing } from "../../../../testing/fakeApi";
+import { lastRoom } from "../../../../testing/fakeLiveKit";
+import { clockUser } from "../../../../testing/factories/clock.factory";
+import { member, minutesAgo, stage, connected, renderStage } from "../../../../testing/factories/stage-steps.factory";
 const bruno = () =>
   aSharer({
     id: "user-7",
@@ -303,5 +306,59 @@ describe("also live", () => {
     fireEvent.pointerEnter(item(/^Watch Bruno/));
     expect(screen.queryByRole("group")).not.toBeInTheDocument();
     expect(close).not.toHaveBeenCalled();
+  });
+});
+
+// The wiring: the stage over the real room session, its steps in testing/factories/stage-steps.
+describe("room: several people sharing", () => {
+  beforeEach(() => {
+    onFakeClock();
+  });
+
+  const thumbnails = () => screen.getByRole("list", { name: /other streams/i });
+
+  async function threeSharing() {
+    const server = installFakeApi({ me: member() });
+    server.streams = [
+      someoneSharing("Ana Souza", 3, "screen", undefined, minutesAgo(10)),
+      someoneSharing("Bruno Lima", 7, "screen", undefined, minutesAgo(5)),
+      someoneSharing("Caio Reis", 9, "camera", undefined, minutesAgo(1)),
+    ];
+    renderStage();
+    await connected();
+    act(() => {
+      lastRoom().publishScreen("user-3");
+      lastRoom().publishScreen("user-7");
+      lastRoom().publishCamera("user-9");
+    });
+    await screen.findByLabelText("Ana's shared screen");
+    return server;
+  }
+
+  it("makes a thumbnail big on click, and the big one goes back to the thumbnails", async () => {
+    await threeSharing();
+    const user = clockUser();
+
+    await user.click(within(thumbnails()).getByRole("button", { name: /^Watch Bruno/ }));
+
+    expect(screen.getByRole("heading", { name: "Bruno" })).toBeInTheDocument();
+    expect(within(stage()).getByLabelText("Bruno's shared screen")).toBeInTheDocument();
+    const names = within(thumbnails())
+      .getAllByRole("button", { name: /watch/i })
+      .map((b) => b.getAttribute("aria-label"));
+    // The newest sharing first: Caio (a minute ago), then Ana (ten).
+    expect(names).toEqual(["Watch Caio · camera", "Watch Ana · screen"]);
+  });
+
+  it("asks for Auto for the big player, and keeps a stream on Auto when it leaves it", async () => {
+    await threeSharing();
+    const ana = lastRoom().screenPublication("user-3")!;
+    expect(ana.setVideoQuality).toHaveBeenLastCalledWith(2);
+
+    await clockUser().click(within(thumbnails()).getByRole("button", { name: /^Watch Bruno/ }));
+
+    expect(ana.setVideoQuality).toHaveBeenLastCalledWith(2);
+    expect(lastRoom().screenPublication("user-7")!.setVideoQuality).toHaveBeenLastCalledWith(2);
+    expect(lastRoom().screenPublication("user-7")!.setVideoDimensions).not.toHaveBeenCalled();
   });
 });

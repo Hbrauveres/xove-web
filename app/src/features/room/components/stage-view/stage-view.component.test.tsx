@@ -4,7 +4,6 @@ import { aSharer } from "@testing/factories/sharer.factory";
 import { aFold } from "@testing/factories/small-view-fold.factory";
 import type { StageViewProps } from "./types/stage-view.types";
 import { StageView } from "./stage-view.component";
-
 function renderView(over: Partial<StageViewProps> = {}) {
   const props: StageViewProps = {
     big: null,

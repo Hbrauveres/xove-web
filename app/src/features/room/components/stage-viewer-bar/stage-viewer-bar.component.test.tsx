@@ -1,14 +1,18 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { act, fireEvent, render, screen, within, waitFor } from "@testing-library/react";
 import { useState } from "react";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 import { onFakeClock } from "@testing/factories/clock.factory";
 import { TIP_REST_MS } from "@shared/constants/floating.constants";
 import { fullRoom } from "@features/room/utils/full-room.util";
 import type { FoldKey } from "@features/room/types/fold-key.types";
 import type { Sound } from "@features/room/types/sound.types";
 import { StageViewerBar } from "./stage-viewer-bar.component";
-
+import { installFakeApi, someoneSharing } from "../../../../testing/fakeApi";
+import { lastRoom } from "../../../../testing/fakeLiveKit";
+import { stubVoiceLevels } from "../../../../testing/factories/audio.factory";
+import { clockUser } from "../../../../testing/factories/clock.factory";
+import { member, stage, connected, renderStage } from "../../../../testing/factories/stage-steps.factory";
+import userEvent from "@testing-library/user-event";
 // Fresh handlers per render, so no test sees another's calls.
 const base = () => ({ live: false, canShareScreen: true, onStart: vi.fn(), onSettings: vi.fn() });
 
@@ -317,5 +321,93 @@ describe("the bar over someone else's stream, on a narrow picture", () => {
   it("has no '…' while nothing folded", () => {
     render(<Bruno />);
     expect(screen.queryByRole("button", { name: "More controls" })).not.toBeInTheDocument();
+  });
+});
+
+// The wiring: the stage over the real room session, its steps in testing/factories/stage-steps.
+describe("room: the viewer's quality and volume", () => {
+  beforeEach(() => {
+    onFakeClock();
+  });
+
+  const watchBruno = async (options: { height?: number; withSound?: boolean; layers?: number } = {}) => {
+    const server = installFakeApi({ me: member() });
+    server.streams = [someoneSharing("Bruno Lima", 7)];
+    const view = renderStage();
+    await connected();
+    await screen.findByRole("heading", { name: "Bruno" });
+    act(() => {
+      lastRoom().publishScreen("user-7", options);
+    });
+    await screen.findByLabelText("Bruno's shared screen");
+    return view;
+  };
+
+  it("a tap mutes the screen's sound; resting on it opens its own slider; the volume is remembered", async () => {
+    const view = await watchBruno({ withSound: true });
+    const user = clockUser();
+    const sound = lastRoom().remoteParticipants.get("user-7")!.tracks.get("screen_share_audio")!;
+    const audio = () => sound.attached[0] as HTMLAudioElement;
+
+    await user.click(within(stage()).getByRole("button", { name: "Mute the screen's sound" }));
+    expect(audio().muted).toBe(true);
+    const button = within(stage()).getByRole("button", { name: "Unmute the screen's sound" });
+    expect(button).toHaveAttribute("aria-pressed", "true");
+
+    // Resting the mouse on it opens its own slider; moving it unmutes.
+    await user.hover(button);
+    const bar = () => screen.getByRole("slider", { name: "Screen sound volume" });
+    await waitFor(() => expect(bar().closest("[inert]")).toBeNull());
+    fireEvent.change(bar(), { target: { value: "0.3" } });
+    expect(audio().volume).toBeCloseTo(0.3);
+    expect(audio().muted).toBe(false);
+
+    view.unmount();
+    await watchBruno({ withSound: true });
+    expect(screen.getByRole("slider", { name: "Screen sound volume" })).toHaveValue("0.3");
+  });
+
+  it("plays the voice of the person I watch, at its own mute, and lights it while they speak", async () => {
+    const voices = stubVoiceLevels();
+    await watchBruno({ withSound: true });
+    const user = clockUser();
+    expect(within(stage()).getByRole("button", { name: "Bruno's mic is off" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
+
+    let voice!: ReturnType<ReturnType<typeof lastRoom>["publishVoice"]>;
+    const sound = {} as MediaStreamTrack;
+    act(() => {
+      voice = lastRoom().publishVoice("user-7", sound);
+    });
+    const button = await within(stage()).findByRole("button", { name: "Mute Bruno's voice" });
+    await waitFor(() => expect(voice.attached).toHaveLength(1));
+    expect(button).not.toHaveAttribute("data-cue", "talking");
+    // His voice sounds: measured where it's heard, the cue lights.
+    voices.speak(sound, true);
+    await waitFor(() => expect(button).toHaveAttribute("data-cue", "talking"));
+
+    await user.click(button);
+    expect((voice.attached[0] as HTMLAudioElement).muted).toBe(true);
+    expect(within(stage()).getByRole("button", { name: "Unmute Bruno's voice" })).not.toHaveAttribute(
+      "data-cue",
+      "talking",
+    );
+  });
+
+  it("closes the settings when another stream takes the stage", async () => {
+    const server = installFakeApi({ me: member() });
+    server.streams = [someoneSharing("Bruno Lima", 7), someoneSharing("Ana Souza", 3)];
+    renderStage();
+    await connected();
+    await screen.findByRole("heading", { name: "Bruno" });
+    const user = clockUser();
+    await user.click(within(stage()).getByRole("button", { name: "Go live" }));
+    await user.click(within(stage()).getByRole("menuitem", { name: "Settings" }));
+    expect(screen.getByRole("dialog", { name: "Settings" })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /Watch Ana · screen/ }));
+    await waitFor(() => expect(screen.queryByRole("dialog", { name: "Settings" })).not.toBeInTheDocument());
   });
 });

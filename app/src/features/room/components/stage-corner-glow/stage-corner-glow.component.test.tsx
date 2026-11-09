@@ -1,7 +1,6 @@
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { StageCornerGlow } from "./stage-corner-glow.component";
-
 describe("the empty stage's corner glow", () => {
   it("lights its four corners at the ambilight's brightness", () => {
     const { container } = render(<StageCornerGlow prefs={{ on: true, brightness: 0.7 }} />);

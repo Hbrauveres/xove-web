@@ -3,7 +3,6 @@ import { describe, expect, it } from "vitest";
 import type { MediaTrack } from "@services/livekit-service";
 import { FakeTrack } from "../../../../testing/fakeLiveKit";
 import { StageVoiceAudio } from "./stage-voice-audio.component";
-
 describe("a voice played", () => {
   it("plays its track at this browser's volume, and lets it go when it leaves", () => {
     const track = new FakeTrack();

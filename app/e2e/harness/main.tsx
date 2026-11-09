@@ -1,7 +1,7 @@
 // The app's room with fake people and moving pictures, in a real browser.
 // Query: ?s=live|portrait|facecam|empty (who is live),
 // &mycam=portrait or #mycam (my own camera held upright),
-// &page=home|request|pending|admin|waiting (the other pages, and the room's queue); &page=home&error=<code>
+// &page=home|request|pending|admin|waiting|offered (the other pages, the room's queue, a seat offered); &page=home&error=<code>
 // shows the sign-in page's error.
 // &admin=1: in the room as an admin (my menu shows Admin)
 // &still=1: the pictures drawn once and held, for comparing screenshots
@@ -202,6 +202,9 @@ const server = installFakeApi({
 });
 // The room is full: I'm second in the queue.
 if (page === "waiting") server.seat = { status: "waiting", place: 2 };
+// A seat is free for me: the offer, with 30 seconds to enter.
+if (page === "offered")
+  server.seat = { status: "offered", until: new Date(Date.now() + 30_000).toISOString(), seconds: 30 };
 server.here = [
   { userId: MY_USER_ID, since: ago(24), mine: true },
   { userId: 2, since: ago(18), mine: false },

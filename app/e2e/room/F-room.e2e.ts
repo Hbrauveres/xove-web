@@ -4,7 +4,7 @@ import { observe } from "../support/observe.ts";
 import { boxOf, inside, overlap, windowBox } from "../support/geometry.ts";
 import { everyoneStops, marinaGoesLive } from "../support/harness.ts";
 import { openScene, wakeStage } from "../support/open.ts";
-import { REPORT_STILL_MS } from "../../src/features/room/constants/watch-report.constants.ts";
+import { REPORT_STILL_MS } from "../../src/features/room/stores/room-session/constants/watch-report.constants.ts";
 import { AFTER_POLL, roomOf } from "./room.ts";
 
 test("F-room.1 the room fills the window: header, stage and footer, nothing to scroll", async ({ page }, info) => {

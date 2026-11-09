@@ -2,7 +2,6 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import type { Friend, Sharer } from "../../types/room-view.types";
 import { StageNowWatching } from "./stage-now-watching.component";
-
 const feed = (kind: "screen" | "camera", minutesAgo: number) => ({
   kind,
   startedAt: Date.now() - minutesAgo * 60_000,

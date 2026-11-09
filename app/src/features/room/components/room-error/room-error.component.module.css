@@ -1,0 +1,19 @@
+/* In the room: over the bottom of the middle, above the info row. */
+.below {
+  position: absolute;
+  left: 50%;
+  bottom: var(--space-2);
+  z-index: var(--layer-error);
+  transform: translateX(-50%);
+  max-width: min(var(--error-width), calc(100% - var(--size-8)));
+}
+
+/* The same line over the fullscreen player: at its top, readable over video. */
+.over {
+  position: absolute;
+  top: var(--space-14);
+  left: 50%;
+  z-index: var(--layer-popup);
+  transform: translateX(-50%);
+  max-width: min(var(--error-width), calc(100% - var(--size-8)));
+}

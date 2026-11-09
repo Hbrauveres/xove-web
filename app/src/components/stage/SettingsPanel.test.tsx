@@ -1,15 +1,28 @@
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { StrictMode } from "react";
-import { describe, expect, it, vi } from "vitest";
-import { moveFakeTimers } from "../../testing/factories/clock.factory";
+import { describe, expect, it, vi, beforeEach } from "vitest";
+import { moveFakeTimers, onFakeClock } from "../../testing/factories/clock.factory";
 import type { StreamKind, StreamSettings } from "@services/xove-api-service";
 import { CAMERA_BLOCKED } from "@services/media-devices-service";
 import { NO_SOUND, NO_SCREEN } from "@features/room/constants/stream-words.constants";
-import { CUE_MS, SettingsPanel } from "./SettingsPanel";
+import { CUE_MS, SettingsPanel, type SettingsPanelProps } from "./SettingsPanel";
+import { RoomSessionContext } from "@features/room/stores/room-session";
+import { aRoomSession } from "../../testing/factories/room-session.factory";
 import { DEFAULT_VOICE } from "@services/preferences-service";
 import { toastStore } from "@shared/stores/toast-store";
-
+import { capOf } from "@services/livekit-service";
+import { installFakeApi, myLiveStream } from "../../testing/fakeApi";
+import { lastRoom } from "../../testing/fakeLiveKit";
+import {
+  member,
+  stage,
+  readyRoom,
+  startSharing,
+  openMenu,
+  pickInMenu,
+  tickedQuality,
+} from "../../testing/factories/stage-steps.factory";
+import userEvent from "@testing-library/user-event";
 const PREFS: Record<StreamKind, StreamSettings> = {
   screen: { quality: "1080p", mode: "smooth" },
   camera: { quality: "720p", mode: "smooth" },
@@ -20,7 +33,7 @@ const CAMERAS = [
 ];
 const track = () => ({ attach: vi.fn((el: HTMLMediaElement) => el), detach: vi.fn((el: HTMLMediaElement) => el) });
 
-function setup(props: Partial<Parameters<typeof SettingsPanel>[0]> = {}) {
+function setup(props: Partial<SettingsPanelProps> = {}) {
   const handlers = {
     onClose: vi.fn(),
     onPrefsChange: vi.fn(),
@@ -39,12 +52,21 @@ function setup(props: Partial<Parameters<typeof SettingsPanel>[0]> = {}) {
     ...handlers,
     ...props,
   };
-  const view = render(<SettingsPanel {...all} />);
+  const view = render(<InRoom {...all} />);
   return {
     user,
     ...handlers,
-    rerender: (next: Partial<typeof all>) => view.rerender(<SettingsPanel {...all} {...next} />),
+    rerender: (next: Partial<typeof all>) => view.rerender(<InRoom {...all} {...next} />),
   };
+}
+
+/** The panel as the room shows it: its values from the room's session. */
+function InRoom(props: SettingsPanelProps) {
+  return (
+    <RoomSessionContext.Provider value={aRoomSession({ settings: props })}>
+      <SettingsPanel />
+    </RoomSessionContext.Provider>
+  );
 }
 
 const panel = () => screen.getByRole("dialog", { name: "Settings" });
@@ -315,7 +337,7 @@ describe("the settings panel: React's development double-mount", () => {
     const onPreviewCamera = vi.fn();
     render(
       <StrictMode>
-        <SettingsPanel
+        <InRoom
           open
           screenTab={false}
           mine={{ screen: false, camera: false }}
@@ -338,7 +360,7 @@ describe("the settings panel: leaving", () => {
   it("stops the preview when it unmounts", () => {
     const onPreviewCamera = vi.fn();
     const view = render(
-      <SettingsPanel
+      <InRoom
         open
         screenTab={false}
         mine={{ screen: false, camera: false }}
@@ -399,5 +421,60 @@ describe("the settings panel: the Voice tab (spec 0123)", () => {
     await user.click(isolation);
     expect(onVoicePrefs).not.toHaveBeenCalled();
     expect(toastStore.current()?.text).toBe("This browser can't isolate a voice");
+  });
+});
+
+// The wiring: the stage over the real room session, its steps in testing/factories/stage-steps.
+describe("room: changing the stream while sharing", () => {
+  beforeEach(() => {
+    onFakeClock();
+  });
+
+  it("changes the quality live from my player: same stream, and the API tells everyone", async () => {
+    const server = installFakeApi({ me: member() });
+    const user = await readyRoom();
+    await startSharing(user);
+    const local = lastRoom().localParticipant;
+    const video = local.screens[0]!.track;
+
+    await pickInMenu(user, "480p");
+
+    await waitFor(() => {
+      expect(myLiveStream(server)?.settings).toEqual({ quality: "480p", mode: "smooth" });
+      expect(video.setPublishingQuality).toHaveBeenLastCalledWith(capOf("480p"));
+    });
+    // No new track and no reload for viewers.
+    expect(local.publishTrack).toHaveBeenCalledTimes(2);
+    expect(local.unpublishTrack).not.toHaveBeenCalled();
+    expect(screen.getByRole("heading", { name: "You" })).toBeInTheDocument();
+    expect(localStorage.getItem("xove.share.quality")).toBe("480p");
+  });
+});
+
+describe("room: my settings for each of my streams", () => {
+  beforeEach(() => {
+    onFakeClock();
+  });
+
+  it("changes the camera's quality live from the settings, apart from the screen's", async () => {
+    const server = installFakeApi({ me: member() });
+    const user = await readyRoom();
+    await startSharing(user);
+    await user.click(within(stage()).getByRole("button", { name: /turn on your camera/i }));
+    await waitFor(() => expect(myLiveStream(server, "camera")).toBeDefined());
+    const camera = lastRoom().localParticipant.lastCamera!;
+
+    const menu = await openMenu(user, "Camera");
+    expect(menu.queryByRole("radio", { name: "1080p" })).not.toBeInTheDocument();
+    await pickInMenu(user, "480p", "Camera");
+
+    await waitFor(() => {
+      expect(myLiveStream(server, "camera")?.settings.quality).toBe("480p");
+      expect(camera.setPublishingQuality).toHaveBeenLastCalledWith(capOf("480p"));
+    });
+    expect(myLiveStream(server, "screen")?.settings.quality).toBe("1080p");
+    await openMenu(user, "Screen");
+    expect(tickedQuality()).toBe("1080p");
+    expect(localStorage.getItem("xove.camera.quality")).toBe("480p");
   });
 });

@@ -6,9 +6,19 @@ import type { PanelProps } from "./types/panel.types";
  * stays readable. Its sections (PanelSection) sit on it, parted by a hairline. What uses it places
  * and moves it.
  */
-export function Panel({ as: Tag = "div", className, children, ...rest }: PanelProps) {
+export function Panel({ as = "div", className, children, ref, ...rest }: PanelProps) {
+  const look = className ? `${styles.panel} ${className}` : styles.panel;
+  // A status that speaks its changes: nothing holds on to it, so it takes no ref.
+  if (as === "output") {
+    return (
+      <output className={look} {...rest}>
+        {children}
+      </output>
+    );
+  }
+  const Tag = as;
   return (
-    <Tag className={className ? `${styles.panel} ${className}` : styles.panel} {...rest}>
+    <Tag ref={ref} className={look} {...rest}>
       {children}
     </Tag>
   );

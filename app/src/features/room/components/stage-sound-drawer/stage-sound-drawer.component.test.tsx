@@ -1,7 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { StageSoundDrawer } from "./stage-sound-drawer.component";
-
 const heard = { volume: 1, muted: false };
 const props = (over = {}) => ({
   open: true,

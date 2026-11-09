@@ -1,8 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { StageSmallViewButton } from "./stage-small-view-button.component";
-
+import userEvent from "@testing-library/user-event";
 const fold = (folded: boolean) => ({
   folded,
   hide: vi.fn(),

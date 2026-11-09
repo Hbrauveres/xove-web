@@ -1,10 +1,9 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { SettingsAnchorContext } from "../../hooks/use-settings-anchor.hook";
 import type { FoldKey } from "../../types/fold-key.types";
 import { StageMoreMenu } from "./stage-more-menu.component";
-
+import userEvent from "@testing-library/user-event";
 const heard = (over = {}) => ({ volume: 0.6, muted: false, onChange: vi.fn(), ...over });
 
 function more(folded: FoldKey[], over = {}) {

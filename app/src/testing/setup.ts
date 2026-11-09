@@ -43,6 +43,17 @@ afterEach(() => {
 // No canvas: drawing is the browser's to prove. Without this jsdom warns on every render of the
 // standby screen's static; a test that draws stubs its own context.
 HTMLCanvasElement.prototype.getContext = (() => null) as never;
+// The browser's own modal dialog: jsdom has the element but not its methods. Shown, it's open and
+// focuses its first control, as the browser does; the page behind it and Escape are the browser's,
+// checked in a real one (e2e).
+HTMLDialogElement.prototype.showModal ??= function showModal(this: HTMLDialogElement) {
+  this.open = true;
+  this.querySelector<HTMLElement>("[autofocus], button, [href], input, select, textarea")?.focus();
+};
+HTMLDialogElement.prototype.close ??= function close(this: HTMLDialogElement) {
+  this.open = false;
+};
+
 // The screen picker: the last fake room plays it (`nextPicker`, `nextPickerAudio`).
 Object.defineProperty(navigator, "mediaDevices", {
   configurable: true,

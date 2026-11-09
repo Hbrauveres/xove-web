@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useStage } from "../../hooks/use-stage.hook";
+import type { RoomSession } from "../../stores/room-session";
+import { RoomSessionContext } from "../../stores/room-session";
 import type { Sharer } from "../../types/room-view.types";
 import { Stage } from "./stage.component";
 
@@ -22,27 +24,35 @@ const bruno: Sharer = {
 /** The stage as the room shows it, its pick kept by the room's own hook. */
 function Room({ sharers }: { sharers: Sharer[] }) {
   const stage = useStage(sharers);
+  const session = {
+    stage: {
+      sharers,
+      stage,
+      ambilight: { on: true, brightness: 0.9 },
+      watchers: [],
+      others: [],
+      controls: {
+        mine: { screen: false, camera: false },
+        places: 6,
+        free: 6 - sharers.length,
+        cameras: [],
+        camera: null,
+        canShareScreen: true,
+        onStart: noop,
+        onStop: noop,
+        onChangeWindow: noop,
+        onPickCamera: noop,
+        settingsOpen: false,
+        onSettings: noop,
+      },
+    },
+    settings: { open: false, onClose: noop, screenTab: true, mine: { screen: false, camera: false } },
+  } as unknown as RoomSession;
   return (
     <div style={{ "--box-width": "var(--card-width)", "--box-height": "calc(var(--card-width) * 9 / 16)" } as never}>
-      <Stage
-        sharers={sharers}
-        stage={stage}
-        ambilight={{ on: true, brightness: 0.9 }}
-        controls={{
-          mine: { screen: false, camera: false },
-          places: 6,
-          free: 6 - sharers.length,
-          cameras: [],
-          camera: null,
-          canShareScreen: true,
-          onStart: noop,
-          onStop: noop,
-          onChangeWindow: noop,
-          onPickCamera: noop,
-          settingsOpen: false,
-          onSettings: noop,
-        }}
-      />
+      <RoomSessionContext.Provider value={session}>
+        <Stage />
+      </RoomSessionContext.Provider>
     </div>
   );
 }
