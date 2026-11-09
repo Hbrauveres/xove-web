@@ -6,8 +6,6 @@ export interface ViewerMe {
   live: boolean;
   micOn?: boolean | undefined;
   onMic?: (() => void) | undefined;
-  /** My voice is being sent right now: my mic wears the talking cue. */
-  speaking?: boolean | undefined;
   canShareScreen: boolean;
   /** Every stream place is taken: why Go live's ways to start are greyed. */
   full?: string | undefined;

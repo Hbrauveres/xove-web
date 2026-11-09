@@ -64,14 +64,6 @@ export const RoundMTalking: Story = {
     </IconButton>
   ),
 };
-/** Round, L 48, on and talking: my mic while my voice is sent, the same cue on its red. */
-export const RoundLLiveTalking: Story = {
-  render: () => (
-    <IconButton variant="round" size="l" live data-cue="talking" aria-label="Mute your voice">
-      <Icon name="mic" />
-    </IconButton>
-  ),
-};
 /** A header button. */
 export const Header: Story = {
   render: () => (

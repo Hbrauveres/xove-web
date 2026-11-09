@@ -192,6 +192,7 @@ function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
       <HeaderPeopleButton
         people={session.people}
         meId={session.me.id}
+        meTalking={session.voiceSpeaking}
         sharing={sharing}
         watchingOf={session.watchingOf}
         seats={session.seats}
@@ -252,6 +253,7 @@ function Room({ room, devices, camera, onSignOut }: RoomPageProps) {
               onGoTo: goToSetting,
               voice: session.voice,
               speaking: session.voiceSpeaking,
+              soundHeld: video.soundHeld,
               onVoice: session.toggleVoice,
             }}
             settingsPanel={settingsPanel}

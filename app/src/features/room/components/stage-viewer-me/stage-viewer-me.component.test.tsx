@@ -18,11 +18,6 @@ describe("me, over someone else's stream", () => {
     expect(onMic).toHaveBeenCalledOnce();
   });
 
-  it("hands my speaking to my mic", () => {
-    render(<StageViewerMe {...props({ live: true, micOn: true, speaking: true })} />);
-    expect(screen.getByRole("button", { name: "Mute your voice" })).toHaveAttribute("data-cue", "talking");
-  });
-
   it("with nobody live, is only the settings", async () => {
     const p = props({ settingsOnly: true });
     render(<StageViewerMe {...p} />);

@@ -18,7 +18,7 @@ import { queueLine } from "./utils/queue-line.util";
  * Who's here: a people icon and the number. It opens the seats, everyone with what they share or
  * watch, and the queue.
  */
-export function HeaderPeopleButton({ people, meId, sharing, watchingOf, seats }: HeaderPeopleButtonProps) {
+export function HeaderPeopleButton({ people, meId, sharing, watchingOf, seats, meTalking }: HeaderPeopleButtonProps) {
   const [open, setOpen] = useState(false);
   const anchor = useRef<HTMLDivElement>(null);
   const count = people.length;
@@ -48,7 +48,13 @@ export function HeaderPeopleButton({ people, meId, sharing, watchingOf, seats }:
           <ul className={styles.people}>
             {peopleOrder(people, meId, sharing).map((p) => (
               <li key={p.id} className={styles.person}>
-                <Face name={p.name} hue={p.hue} size={30} onAir={isSharing(sharing[p.id])} />
+                <Face
+                  name={p.name}
+                  hue={p.hue}
+                  size={30}
+                  onAir={isSharing(sharing[p.id])}
+                  talking={p.id === meId && meTalking}
+                />
                 <span className={styles.who}>
                   <b>{p.name}</b>
                   {p.id === meId && <span className={styles.you}> (you)</span>}

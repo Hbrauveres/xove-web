@@ -14,7 +14,7 @@ import { Tooltip } from "@shared/components/tooltip";
  * for how long and who's watching, like YouTube's title row. Or, with nobody live, an
  * invitation with who's here.
  */
-export function StageNowWatching({ sharer, watchers = [], others = [] }: StageNowWatchingProps) {
+export function StageNowWatching({ sharer, watchers = [], others = [], talking }: StageNowWatchingProps) {
   const elapsed = useElapsed(sharer?.since ?? null);
   if (!sharer) {
     return (
@@ -42,7 +42,7 @@ export function StageNowWatching({ sharer, watchers = [], others = [] }: StageNo
   const name = sharer.isMe ? "You" : sharer.person.name;
   return (
     <div className={styles.now}>
-      <Face name={sharer.person.name} hue={sharer.person.hue} size={52} onAir ring="inside" />
+      <Face name={sharer.person.name} hue={sharer.person.hue} size={52} onAir ring="inside" talking={talking} />
       <div className={styles.text}>
         <h2 className={styles.name}>{name}</h2>
         <p className={styles.meta}>

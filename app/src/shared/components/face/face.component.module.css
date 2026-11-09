@@ -17,14 +17,22 @@
   content: attr(data-initial);
 }
 
-/* Live: a red ring around the face, apart from it by the ground. */
+/* Live: a red ring around the face, apart from it by the ground, glowing red. */
 .onAir {
   box-shadow:
     0 0 0 var(--space-0-5) var(--ground),
-    0 0 0 var(--space-1) var(--accent);
+    0 0 0 var(--space-1) var(--accent),
+    0 0 var(--space-0-75) var(--space-1) var(--accent-70),
+    0 0 var(--space-2-25) var(--space-1-25) var(--accent-30);
 }
 
-/* The same ring, drawn inside the face's edge: its outer edge is the face's. */
+/* The same ring, drawn inside the face's edge: its outer edge is the face's; its glow inside and out. */
+.onAirInside {
+  box-shadow:
+    0 0 var(--space-0-75) 0 var(--accent-70),
+    0 0 var(--space-2-25) var(--space-0-25) var(--accent-30);
+}
+
 .onAirInside::after {
   content: "";
   position: absolute;
@@ -32,6 +40,32 @@
   border-radius: 50%;
   box-shadow:
     inset 0 0 0 var(--space-0-625) var(--accent),
+    inset 0 0 var(--space-1-25) var(--space-0-5) var(--accent-55),
+    inset 0 0 var(--space-3) var(--space-0-75) var(--accent-22),
+    inset 0 0 0 var(--space-1-125) var(--ground);
+}
+
+/* My voice being sent, while live: the same ring at the same width in the speaking green, with its
+   glow; switched on or off with my voice, never faded. */
+.onAir[data-talking] {
+  box-shadow:
+    0 0 0 var(--space-0-5) var(--ground),
+    0 0 0 var(--space-1) var(--green-light-85),
+    0 0 var(--space-0-75) var(--space-1) var(--green-60),
+    0 0 var(--space-2-25) var(--space-1-25) var(--green-25);
+}
+
+.onAirInside[data-talking] {
+  box-shadow:
+    0 0 var(--space-0-75) 0 var(--green-60),
+    0 0 var(--space-2-25) var(--space-0-25) var(--green-25);
+}
+
+.onAirInside[data-talking]::after {
+  box-shadow:
+    inset 0 0 0 var(--space-0-625) var(--green-light-85),
+    inset 0 0 var(--space-1-25) var(--space-0-5) var(--green-45),
+    inset 0 0 var(--space-3) var(--space-0-75) var(--green-18),
     inset 0 0 0 var(--space-1-125) var(--ground);
 }
 

@@ -14,5 +14,6 @@ export function rowShape(big: Sharer | null, controls: StreamControls): RowShape
     sound: watching,
     voice: watching,
     live: controls.mine.screen || controls.mine.camera,
+    held: watching && Boolean(controls.soundHeld),
   };
 }

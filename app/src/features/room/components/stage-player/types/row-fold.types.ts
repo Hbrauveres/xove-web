@@ -2,7 +2,7 @@ import type { FoldKey } from "../../../types/fold-key.types";
 
 /** One button in the bar over someone else's stream, in the bar's order, with its width in px. */
 export interface RowButton {
-  key: FoldKey | "mic";
+  key: FoldKey | "mic" | "unmute";
   width: number;
 }
 
@@ -19,4 +19,6 @@ export interface RowShape {
   sound: boolean;
   voice: boolean;
   live: boolean;
+  /** The browser holds the room's sound back: the unmute pill in the sounds' place, never folded. */
+  held: boolean;
 }

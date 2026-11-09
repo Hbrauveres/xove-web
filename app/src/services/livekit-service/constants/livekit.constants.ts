@@ -51,6 +51,7 @@ export const START: VideoRoomState = {
   localVoice: undefined,
   micInput: undefined,
   voiceSpeaking: false,
+  soundHeld: false,
   connection: "connecting",
   others: [],
   remote: {},

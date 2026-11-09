@@ -3,6 +3,7 @@ import { useFloating } from "@shared/stores/floating-store";
 import { useSettingsAnchor } from "../../hooks/use-settings-anchor.hook";
 import type { SoundKind } from "../../types/sound.types";
 import { StageMoreMenu } from "../stage-more-menu";
+import { StageUnmute } from "../stage-unmute";
 import { StageViewerMe } from "../stage-viewer-me";
 import { StageViewerSound } from "../stage-viewer-sound";
 import styles from "./stage-viewer-bar.component.module.css";
@@ -12,7 +13,8 @@ import type { StageViewerBarProps } from "./types/stage-viewer-bar.types";
  * The bar over someone else's stream: what I hear from them at the left, me at the right (my mic
  * while I'm live, or Go live), all M 34, beside the fullscreen button. My stream's own controls live
  * only on my stream. With nobody live, only the settings, in the corner. On a picture too narrow for
- * the whole bar, what folded sits in "…" at the right.
+ * the whole bar, what folded sits in "…" at the right. While the browser holds the room's sound back,
+ * the unmute pill takes the sounds' place: one or the other.
  */
 export function StageViewerBar(props: StageViewerBarProps) {
   const { sound, voice, folded = [] } = props;
@@ -43,8 +45,14 @@ export function StageViewerBar(props: StageViewerBarProps) {
   return (
     <div ref={anchor?.row} className={styles.bar}>
       <div className={styles.left}>
-        {shows("sound") && hear("sound", sound)}
-        {shows("voice") && hear("voice", voice)}
+        {props.held ? (
+          <StageUnmute />
+        ) : (
+          <>
+            {shows("sound") && hear("sound", sound)}
+            {shows("voice") && hear("voice", voice)}
+          </>
+        )}
       </div>
       <div className={styles.right}>
         {me && <StageViewerMe {...props} />}

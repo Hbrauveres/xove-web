@@ -5,6 +5,7 @@
 // shows the sign-in page's error.
 // &admin=1: in the room as an admin (my menu shows Admin)
 // &still=1: the pictures drawn once and held, for comparing screenshots
+// &held=1: the browser holds the room's sound back until the page's first click or key
 import { createRoot } from "react-dom/client";
 import { MemoryRouter } from "react-router";
 import "@shared/styles/tokens.css";
@@ -258,6 +259,8 @@ void wait().then(() =>
       pictureOf.set(room.publishCamera("user-2", { height: 1280 }), "portraitCam");
       pictureOf.set(room.publishCamera("user-3"), "faceCam");
     }
+    // &held=1: the room has a sound to play and the browser refuses it, as before any click.
+    if (params.get("held") === "1") room.holdSound();
     // For /validate: things that happen while the pointer rests on the page.
     (window as unknown as { __xove: Record<string, () => unknown> }).__xove = {
       // Everyone stops: the stage goes empty (fullscreen from the empty stage).

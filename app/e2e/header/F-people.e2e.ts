@@ -5,8 +5,20 @@ import { observe } from "../support/observe.ts";
 import { boxOf } from "../support/geometry.ts";
 import { pxOf, SIZE } from "../support/looks.ts";
 import { pointAt, pointAway } from "../support/pointer.ts";
-import { untilStill } from "../support/timing.ts";
-import { everyoneStops, headerOf, openAsGlass, openFrom, peoplePanel, rolledUp, styleOf } from "./header.ts";
+import { spend, untilStill, VOICE_LISTEN_MS } from "../support/timing.ts";
+import { recordCueLooks, ringColours } from "../support/cue.ts";
+import { myButtons } from "../settings/settings.ts";
+import { wakeStage } from "../support/open.ts";
+import {
+  everyoneStops,
+  headerOf,
+  iShareMyScreen,
+  openAsGlass,
+  openFrom,
+  peoplePanel,
+  rolledUp,
+  styleOf,
+} from "./header.ts";
 
 test("F-people.1 the button says how many are here, and brightens when pointed at", async ({ page }, info) => {
   await openScene(page, "s=live");
@@ -114,4 +126,23 @@ test("F-people.7 it's one piece of glass, blurring on every frame of its unroll"
   const { broken, pieces } = await openAsGlass(page, headerOf(page).people, peoplePanel(page));
   expect.soft(pieces).toBe(1);
   expect.soft(broken).toEqual([]);
+});
+
+test("F-people.8 while my voice is sent, my face in the list turns green, nobody else's", async ({ page }, info) => {
+  await openScene(page, "s=live");
+  await iShareMyScreen(page);
+  await wakeStage(page);
+  await myButtons(page).voice.click();
+  await page.getByRole("button", { name: "Mute your voice" }).waitFor();
+  const { people } = headerOf(page);
+  const panel = peoplePanel(page);
+  await openFrom(people, panel);
+  const mine = panel.getByRole("listitem").filter({ hasText: "(you)" }).locator("[data-ring]");
+  const marina = panel.getByRole("listitem").filter({ hasText: "Marina" }).locator("[data-ring]");
+  const stop = await recordCueLooks(page, { mine, marina }, "");
+  await observe(page, info, { mine, marina }, () => spend(page, VOICE_LISTEN_MS));
+  const frames = await stop();
+  const ringColour = await ringColours(page);
+  expect.soft(new Set(frames.map((f) => ringColour(f.looks.mine!)))).toEqual(new Set(["red", "green"]));
+  expect.soft(new Set(frames.map((f) => ringColour(f.looks.marina!)))).toEqual(new Set(["red"]));
 });

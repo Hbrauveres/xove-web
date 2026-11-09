@@ -1,10 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { GO_LIVE_GUESS, ROUND_M } from "../constants/row-fold.constants";
+import { GO_LIVE_GUESS, ROUND_M, UNMUTE_WIDTH } from "../constants/row-fold.constants";
 import type { RowShape } from "../types/row-fold.types";
 import { rowItems } from "./row-items.util";
 
 /** The row over someone else's stream, their sound and voice, while I'm not live. */
-const watching = (): RowShape => ({ mine: false, settingsOnly: false, sound: true, voice: true, live: false });
+const watching = (): RowShape => ({
+  mine: false,
+  settingsOnly: false,
+  sound: true,
+  voice: true,
+  live: false,
+  held: false,
+});
 
 describe("the buttons on the picture", () => {
   it("over someone else's stream: their sound, their voice, then Go live as measured", () => {
@@ -12,6 +19,15 @@ describe("the buttons on the picture", () => {
       viewer: [
         { key: "sound", width: ROUND_M },
         { key: "voice", width: ROUND_M },
+        { key: "go-live", width: 96 },
+      ],
+    });
+  });
+
+  it("holds the unmute button in the sounds' place while the browser holds the sound back", () => {
+    expect(rowItems({ ...watching(), held: true }, 96)).toEqual({
+      viewer: [
+        { key: "unmute", width: UNMUTE_WIDTH },
         { key: "go-live", width: 96 },
       ],
     });

@@ -1,5 +1,7 @@
 /** The settings, named the same on every control that opens them. */
 export const SETTINGS = "Settings";
+/** While the browser holds the room's sound back: what a click does. */
+export const CLICK_TO_UNMUTE = "Click to unmute";
 /** "…", on a narrow picture: what folded into it. */
 export const MORE_CONTROLS = "More controls";
 /** Why the screen's ways to start are greyed, in a browser that can't share a screen. */

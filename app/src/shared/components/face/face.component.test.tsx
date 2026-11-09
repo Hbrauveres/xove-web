@@ -23,6 +23,15 @@ describe("a face", () => {
     expect(container.firstElementChild).not.toHaveAttribute("data-ring");
   });
 
+  it("turns a live face's ring to talking while that voice is sent, and only a live one", () => {
+    const { container, rerender } = render(<Face name="Rafa" hue={20} size={52} onAir ring="inside" talking />);
+    expect(container.firstElementChild).toHaveAttribute("data-talking");
+    rerender(<Face name="Rafa" hue={20} size={52} onAir ring="inside" />);
+    expect(container.firstElementChild).not.toHaveAttribute("data-talking");
+    rerender(<Face name="Rafa" hue={20} size={52} talking />);
+    expect(container.firstElementChild).not.toHaveAttribute("data-talking");
+  });
+
   it("shows a user's photo, and their initial once the photo fails to load", () => {
     const { container } = render(<Face name="Ana" photo="https://example.com/ana.jpg" size={36} />);
     const photo = container.querySelector("img");

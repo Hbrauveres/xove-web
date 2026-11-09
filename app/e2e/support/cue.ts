@@ -1,6 +1,7 @@
 // The speaking cue against the sound: on every frame, whether a cue is lit and whether
 // its voice is sounding as the page plays it. What a viewer sees must follow what they hear.
 import type { Locator, Page } from "@playwright/test";
+import { computed, LOOK } from "./looks.ts";
 
 /** One frame: when (performance.now()), whether the cue is lit, whether the voice sounds. */
 export type CueFrame = { at: number; on: boolean; sound: boolean };
@@ -87,35 +88,56 @@ export type CueLook = { at: number; looks: Record<string, string> };
 
 /**
  * Reads, on every frame until the returned stop is called, the shadow each target's cue layer
- * (its `layer`: a round button's `::before`, a preview picture's `::after`) draws: "none" while
- * its cue is off, the tube and glow while it's lit.
+ * (its `layer`: a round button's `::before`, a preview picture's or a face's `::after`, "" for the
+ * element itself; one per target, or the same for all) draws: "none" while its cue is off, the tube
+ * and glow while it's lit. One recording at a time: a second one replaces the first.
  */
 export async function recordCueLooks(
   page: Page,
-  targets: Record<string, Locator>,
+  targets: Record<string, Locator | { at: Locator; layer: string }>,
   layer = "::before",
 ): Promise<() => Promise<CueLook[]>> {
-  const els: Record<string, unknown> = {};
-  for (const [name, target] of Object.entries(targets)) els[name] = await target.elementHandle();
-  await page.evaluate(
-    ({ els, layer }) => {
-      const w = window as unknown as { cueLooks: CueLook[]; cueLooksOn: boolean };
-      w.cueLooks = [];
-      w.cueLooksOn = true;
-      const read = () => {
-        const looks: Record<string, string> = {};
-        for (const [name, el] of Object.entries(els)) looks[name] = getComputedStyle(el as Element, layer).boxShadow;
-        w.cueLooks.push({ at: performance.now(), looks });
-        if (w.cueLooksOn) requestAnimationFrame(read);
-      };
-      requestAnimationFrame(read);
-    },
-    { els, layer },
-  );
+  const els: Record<string, { el: unknown; layer: string }> = {};
+  for (const [name, target] of Object.entries(targets)) {
+    const own = "at" in target ? target : { at: target, layer };
+    els[name] = { el: await own.at.elementHandle(), layer: own.layer };
+  }
+  await page.evaluate((els) => {
+    const w = window as unknown as { cueLooks: CueLook[]; cueLooksOn: boolean };
+    w.cueLooks = [];
+    w.cueLooksOn = true;
+    const read = () => {
+      const looks: Record<string, string> = {};
+      for (const [name, { el, layer }] of Object.entries(els))
+        looks[name] = getComputedStyle(el as Element, layer).boxShadow;
+      w.cueLooks.push({ at: performance.now(), looks });
+      if (w.cueLooksOn) requestAnimationFrame(read);
+    };
+    requestAnimationFrame(read);
+  }, els);
   return () =>
     page.evaluate(() => {
       const w = window as unknown as { cueLooks: CueLook[]; cueLooksOn: boolean };
       w.cueLooksOn = false;
       return w.cueLooks;
     });
+}
+
+/**
+ * How to tell a ring's colour from its computed shadow: the speaking green, the live red, or neither;
+ * both resolved by the page from the app's tokens (never retyped).
+ */
+export async function ringColours(page: Page): Promise<(look: string) => "green" | "red" | "none"> {
+  const green = await computed(page, "color", LOOK.speakingTube);
+  const red = await computed(page, "color", LOOK.accent);
+  // A shadow's colour reads as the colour alone: "rgba(43, 205, 104, 0.85)" holds "43, 205, 104".
+  const rgb = (c: string) =>
+    c
+      .replace(/^rgba?\(/, "")
+      .split(",")
+      .slice(0, 3)
+      .join(",")
+      .replace(/\)$/, "")
+      .trim();
+  return (look) => (look.includes(rgb(green)) ? "green" : look.includes(rgb(red)) ? "red" : "none");
 }
