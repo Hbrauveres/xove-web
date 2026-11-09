@@ -39,6 +39,7 @@ export function Stage({ sharers, controls, stage, ambilight, watchers, others, s
         free={controls.free}
         watchers={watchers}
         here={others}
+        meTalking={controls.speaking}
       />
     </section>
   );

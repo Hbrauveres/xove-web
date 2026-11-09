@@ -42,6 +42,13 @@ describe("now watching", () => {
     expect(screen.queryByText(/voice/)).not.toBeInTheDocument();
   });
 
+  it("rings the face green while it's mine and my voice is sent", () => {
+    const { container, rerender } = render(<StageNowWatching sharer={{ ...bruno(false), isMe: true }} talking />);
+    expect(container.querySelector("[data-talking]")).not.toBeNull();
+    rerender(<StageNowWatching sharer={{ ...bruno(false), isMe: true }} />);
+    expect(container.querySelector("[data-talking]")).toBeNull();
+  });
+
   it("says You when I'm on the stage", () => {
     render(<StageNowWatching sharer={{ ...bruno(false), isMe: true }} />);
     expect(screen.getByRole("heading", { name: "You" })).toBeInTheDocument();

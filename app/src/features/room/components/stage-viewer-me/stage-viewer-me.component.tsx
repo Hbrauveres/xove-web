@@ -21,8 +21,7 @@ export function StageViewerMe(props: ViewerMe) {
         </IconButton>
       </Tooltip>
     );
-  if (props.live)
-    return <StageMyMic on={Boolean(props.micOn)} speaking={props.speaking} size="m" onClick={props.onMic} />;
+  if (props.live) return <StageMyMic on={Boolean(props.micOn)} size="m" onClick={props.onMic} />;
   return (
     <StageGoLive
       canShareScreen={props.canShareScreen}

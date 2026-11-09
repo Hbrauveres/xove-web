@@ -87,35 +87,44 @@ export type CueLook = { at: number; looks: Record<string, string> };
 
 /**
  * Reads, on every frame until the returned stop is called, the shadow each target's cue layer
- * (its `layer`: a round button's `::before`, a preview picture's `::after`) draws: "none" while
- * its cue is off, the tube and glow while it's lit.
+ * (its `layer`: a round button's `::before`, a preview picture's or a face's `::after`, "" for the
+ * element itself; one per target, or the same for all) draws: "none" while its cue is off, the tube
+ * and glow while it's lit. One recording at a time: a second one replaces the first.
  */
 export async function recordCueLooks(
   page: Page,
-  targets: Record<string, Locator>,
+  targets: Record<string, Locator | { at: Locator; layer: string }>,
   layer = "::before",
 ): Promise<() => Promise<CueLook[]>> {
-  const els: Record<string, unknown> = {};
-  for (const [name, target] of Object.entries(targets)) els[name] = await target.elementHandle();
-  await page.evaluate(
-    ({ els, layer }) => {
-      const w = window as unknown as { cueLooks: CueLook[]; cueLooksOn: boolean };
-      w.cueLooks = [];
-      w.cueLooksOn = true;
-      const read = () => {
-        const looks: Record<string, string> = {};
-        for (const [name, el] of Object.entries(els)) looks[name] = getComputedStyle(el as Element, layer).boxShadow;
-        w.cueLooks.push({ at: performance.now(), looks });
-        if (w.cueLooksOn) requestAnimationFrame(read);
-      };
-      requestAnimationFrame(read);
-    },
-    { els, layer },
-  );
+  const els: Record<string, { el: unknown; layer: string }> = {};
+  for (const [name, target] of Object.entries(targets)) {
+    const own = "at" in target ? target : { at: target, layer };
+    els[name] = { el: await own.at.elementHandle(), layer: own.layer };
+  }
+  await page.evaluate((els) => {
+    const w = window as unknown as { cueLooks: CueLook[]; cueLooksOn: boolean };
+    w.cueLooks = [];
+    w.cueLooksOn = true;
+    const read = () => {
+      const looks: Record<string, string> = {};
+      for (const [name, { el, layer }] of Object.entries(els))
+        looks[name] = getComputedStyle(el as Element, layer).boxShadow;
+      w.cueLooks.push({ at: performance.now(), looks });
+      if (w.cueLooksOn) requestAnimationFrame(read);
+    };
+    requestAnimationFrame(read);
+  }, els);
   return () =>
     page.evaluate(() => {
       const w = window as unknown as { cueLooks: CueLook[]; cueLooksOn: boolean };
       w.cueLooksOn = false;
       return w.cueLooks;
     });
+}
+
+/** A ring's colour from its computed shadow: the speaking green, the live red, or neither. */
+export function ringColour(look: string): "green" | "red" | "none" {
+  if (look.includes("43, 205, 104")) return "green";
+  if (look.includes("239, 75, 75")) return "red";
+  return "none";
 }

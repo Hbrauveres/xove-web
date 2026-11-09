@@ -8,7 +8,6 @@ import { REST_MS } from "../../src/features/room/constants/sound-slider.constant
 export { CHROME_IDLE_MS } from "../../src/features/room/components/stage-player/constants/stage-player.constants.ts";
 export { LEAVE_GRACE_MS, OPEN_DELAY_MS, TIP_REST_MS } from "../../src/shared/constants/floating.constants.ts";
 export { REST_MS } from "../../src/features/room/constants/sound-slider.constants.ts";
-export { POLL_MS } from "../../src/features/room/constants/room.constants.ts";
 export { TOAST_MS } from "../../src/shared/stores/toast-store/constants/toast.constants.ts";
 
 /** How often a wait for a condition looks again (ms): about a frame, so it sees what a person would. */

@@ -9,7 +9,8 @@ import { openScene, wakeStage } from "../support/open.ts";
 import { pointAway } from "../support/pointer.ts";
 import { shownOpacity } from "../support/screen.ts";
 import { chromeOf, control, pictureOf, stageOf } from "../support/stage.ts";
-import { POLL_MS, spend, untilStill } from "../support/timing.ts";
+import { spend, untilStill } from "../support/timing.ts";
+import { AFTER_POLL } from "../room/room.ts";
 
 /** Marina's screen with its sound, the browser holding the room's sound back. */
 const HELD = "s=live&sound=1&held=1";
@@ -86,7 +87,8 @@ test("F-unmute.5 once gone, it doesn't come back in that visit", async ({ page }
   await expectSoundBack(page, before);
   const sound = screenSound(page);
   await observe(page, info, { sound }, async () => {
-    await spend(page, POLL_MS * 2);
+    // Two of the room's polls go by.
+    await spend(page, AFTER_POLL.timeout);
     await wakeStage(page);
   });
   await expect.soft(unmute(page)).toHaveCount(0);

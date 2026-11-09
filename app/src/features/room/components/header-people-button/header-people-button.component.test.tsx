@@ -65,6 +65,16 @@ describe("the people button", () => {
     expect(names).toEqual(["Bruno", "Ana", "Henrique", "Diego"]);
   });
 
+  it("rings my face green while my voice is sent, live, and nobody else's", async () => {
+    const user = setup({
+      meTalking: true,
+      sharing: { "user-99": { screen: true, camera: false }, "user-7": { screen: true, camera: false } },
+    });
+    await user.click(screen.getByRole("button", { name: "4 people here" }));
+    expect(row(/Henrique/).querySelector("[data-talking]")).not.toBeNull();
+    expect(row(/Bruno/).querySelector("[data-talking]")).toBeNull();
+  });
+
   it("says who's just in the room, and how many wait", async () => {
     const user = setup({ watchingOf: {}, seats: { total: 20, taken: 20, waiting: 2 } });
     await user.click(screen.getByRole("button", { name: "4 people here" }));

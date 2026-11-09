@@ -11,12 +11,8 @@ describe("my mic", () => {
     expect(onClick).toHaveBeenCalledOnce();
   });
 
-  it("wears the talking cue while my voice is sent, and only while it's on", () => {
-    const { rerender } = render(<StageMyMic on speaking size="l" />);
-    expect(screen.getByRole("button", { name: "Mute your voice" })).toHaveAttribute("data-cue", "talking");
-    rerender(<StageMyMic on speaking={false} size="l" />);
+  it("never wears the talking cue: my speaking shows on my face", () => {
+    render(<StageMyMic on size="l" />);
     expect(screen.getByRole("button", { name: "Mute your voice" })).not.toHaveAttribute("data-cue");
-    rerender(<StageMyMic on={false} speaking size="l" />);
-    expect(screen.getByRole("button", { name: "Share your voice" })).not.toHaveAttribute("data-cue");
   });
 });

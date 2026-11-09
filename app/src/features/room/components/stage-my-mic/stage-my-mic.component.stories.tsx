@@ -21,5 +21,3 @@ type Story = StoryObj<typeof meta>;
 export const Off: Story = {};
 /** On: red, in a silence. */
 export const On: Story = { args: { on: true } };
-/** On while my voice is sent: the talking cue on its red. */
-export const Speaking: Story = { args: { on: true, speaking: true } };

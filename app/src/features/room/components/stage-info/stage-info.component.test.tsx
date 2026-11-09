@@ -14,4 +14,18 @@ describe("the row under the stage", () => {
     expect(screen.getByText("Bruno")).toBeInTheDocument();
     expect(screen.getByRole("region", { name: "Also live" })).toBeInTheDocument();
   });
+
+  it("rings the face on the stage green only when it's mine and my voice is sent", () => {
+    const mine = [aSharer({ isMe: true })];
+    const stage = renderHook(() => useStage(mine)).result.current;
+    const hearing = renderHook(() => useHearing(mine, stage.big?.person.id ?? null)).result.current;
+    const { container, rerender } = render(
+      <StageInfo sharers={mine} stage={stage} hearing={hearing} places={6} free={5} meTalking />,
+    );
+    expect(container.querySelector("[data-talking]")).not.toBeNull();
+    const theirs = [aSharer()];
+    const theirStage = renderHook(() => useStage(theirs)).result.current;
+    rerender(<StageInfo sharers={theirs} stage={theirStage} hearing={hearing} places={6} free={5} meTalking />);
+    expect(container.querySelector("[data-talking]")).toBeNull();
+  });
 });

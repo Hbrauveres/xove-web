@@ -29,7 +29,7 @@ export type StreamControls = {
   onSettings: () => void;
   /** My voice is on, and turning it on or off. */
   voice?: boolean;
-  /** My voice is being sent right now (it passes the gate): my mic button wears the speaking cue. */
+  /** My voice is being sent right now (it passes the gate): my face under the stage turns green. */
   speaking?: boolean;
   /** The browser holds the room's sound back until the page's first click or key. */
   soundHeld?: boolean;

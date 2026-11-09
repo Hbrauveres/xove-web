@@ -12,6 +12,8 @@ export interface HeaderPeopleButtonProps {
   meId: string;
   sharing: SharingOf;
   watchingOf: WatchingOf;
+  /** My voice is being sent: my face in the list turns green (only mine, only while live). */
+  meTalking?: boolean | undefined;
   /** The room's seats, or null when the API doesn't say. */
   seats: RoomSeatsState | null;
 }

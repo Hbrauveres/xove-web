@@ -43,12 +43,4 @@ describe("the stage's bar of controls", () => {
     expect(screen.getByRole("button", { name: "Share your voice" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Settings" })).toBeInTheDocument();
   });
-
-  it("over my own stream, my mic wears the talking cue while my voice is sent", () => {
-    renderControls({
-      big: { ...aSharer(), isMe: true },
-      controls: aStreamControls({ mine: { screen: true, camera: false }, voice: true, speaking: true }),
-    });
-    expect(screen.getByRole("button", { name: "Mute your voice" })).toHaveAttribute("data-cue", "talking");
-  });
 });

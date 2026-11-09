@@ -40,7 +40,6 @@ export function StageControls(props: StageControlsProps) {
         micOn={micOn}
         held={controls.soundHeld}
         onMic={toggleMic}
-        speaking={controls.speaking}
         folded={folded}
         canShareScreen={controls.canShareScreen}
         {...(controls.free <= 0 ? { full: fullRoom(controls.places) } : {})}
@@ -57,7 +56,7 @@ export function StageControls(props: StageControlsProps) {
         onMenuChange={onMenuChange}
         beside={fit.beside}
         size={fit.size}
-        extra={<StageMyMic on={micOn} speaking={controls.speaking} size={fit.size} onClick={toggleMic} />}
+        extra={<StageMyMic on={micOn} size={fit.size} onClick={toggleMic} />}
       />
     );
   }
