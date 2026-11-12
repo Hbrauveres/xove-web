@@ -1,4 +1,4 @@
-// The layout rules of ADR-0086 that need the whole app at once: who imports what, where units
+// The layout rules of ADR-0086 and ADR-0105 that need the whole app at once: who imports what, where units
 // and parts sit, how deep a path goes. The code check (check-code.ts) runs it over src/.
 import { dirname, join, normalize } from "node:path";
 
@@ -7,8 +7,9 @@ export const LAYOUT_RULES = {
   partTooHigh: "a part used by a single unit (or feature) below it: it moves down, into that unit",
   unitInUnit: "a unit inside another unit: units sit side by side",
   noIndex: "a unit without its index.ts: the only door other code goes through",
-  nested: "a folder where ADR-0086 has none: inside a unit only part folders, inside a part folder only files",
-  tooDeep: "a path more than 6 levels under src/",
+  nested:
+    "a folder where ADR-0086 and ADR-0105 have none: a feature's components/ holds components, or areas holding only components; inside a unit only part folders, inside a part folder only files",
+  tooDeep: "a path more than 7 levels under src/",
   importUp: "an import going up: routes → features → shared → services, never back",
   importAcross: "a feature importing another feature: what two features use goes to shared/",
   indexBypass: "an import reaching inside a unit: go through its index.ts",
@@ -21,7 +22,7 @@ export type LayoutFinding = { rule: LayoutRule; file: string; line: number; text
 const KINDS = new Set(["hooks", "utils", "constants", "types", "enums"]);
 const RANK: Record<string, number> = { routes: 0, features: 1, shared: 2, services: 3 };
 const ALIASES = ["routes", "features", "shared", "services", "testing"];
-const MAX_DEPTH = 6;
+const MAX_DEPTH = 7;
 const UNIT_FILE = /\.(component|page|store|service|adapter)\.tsx?$/;
 // Whole statements, so an import or a re-export written over several lines counts too.
 const IMPORT = /^[ \t]*(?:import|export)\b[^;"']*?["']([^"']+)["']/gm;
@@ -118,8 +119,23 @@ const AREAS: Record<string, Set<string>> = {
   shared: new Set([...KINDS, "components", "stores", "styles"]),
 };
 
-/** A folder where ADR-0086 has none: inside a unit only part folders, inside a part folder only files. */
-function isNested(dirs: string[]): boolean {
+/** Inside a unit: at most one part folder. */
+const partsOnly = (rest: string[]) => rest.length > 1 || (rest.length === 1 && !KINDS.has(rest[0] ?? ""));
+
+/**
+ * Below a feature's components/ (ADR-0105): a component folder, or an area folder holding component folders
+ * only. A feature's components/ holds one kind or the other, never both (`mixed`: the features that do).
+ */
+function isNestedInComponents(dirs: string[], units: Set<string>, mixed: Set<string>): boolean {
+  const base = dirs.slice(0, 4).join("/");
+  if (units.has(base)) return partsOnly(dirs.slice(4));
+  const component = dirs.slice(0, 5).join("/");
+  if (dirs.length < 5 || !units.has(component)) return true;
+  return mixed.has(dirs.slice(0, 3).join("/")) || partsOnly(dirs.slice(5));
+}
+
+/** A folder where ADR-0086 and ADR-0105 have none: inside a unit only part folders, inside a part folder only files. */
+function isNested(dirs: string[], units: Set<string>, mixed: Set<string>): boolean {
   const [first, second] = dirs;
   if (first === "services" || first === "routes")
     return dirs.length > 3 || (dirs.length === 3 && !KINDS.has(dirs[2] ?? ""));
@@ -128,12 +144,25 @@ function isNested(dirs: string[]): boolean {
   if (start < 0 || area === undefined || (first === "features" && second === undefined)) return false;
   if (!AREAS[first ?? ""]?.has(area)) return true;
   if (KINDS.has(area) || area === "styles") return dirs.length > start + 1;
-  const rest = dirs.slice(start + 2);
-  return rest.length > 1 || (rest.length === 1 && !KINDS.has(rest[0] ?? ""));
+  if (first === "features" && area === "components" && dirs.length > 3) return isNestedInComponents(dirs, units, mixed);
+  return partsOnly(dirs.slice(start + 2));
+}
+
+/** The features whose components/ holds both component folders and area folders. */
+function mixedFeatures(files: Map<string, string>, units: Set<string>): Set<string> {
+  const kinds = new Map<string, Set<boolean>>();
+  for (const file of files.keys()) {
+    const parts = file.split("/");
+    if (parts[0] !== "features" || parts[2] !== "components" || parts.length < 5) continue;
+    const feature = parts.slice(0, 3).join("/");
+    kinds.set(feature, (kinds.get(feature) ?? new Set()).add(units.has(parts.slice(0, 4).join("/"))));
+  }
+  return new Set([...kinds].filter(([, k]) => k.size > 1).map(([f]) => f));
 }
 
 function shapeFindings(files: Map<string, string>, units: Set<string>) {
   const out: LayoutFinding[] = [];
+  const mixed = mixedFeatures(files, units);
   for (const file of files.keys()) {
     if (!isNew(file)) continue;
     const parts = file.split("/");
@@ -143,7 +172,7 @@ function shapeFindings(files: Map<string, string>, units: Set<string>) {
         out.push({ rule: "unitInUnit", file, line: 0, text: unit });
       if (!files.has(`${unit}/index.ts`)) out.push({ rule: "noIndex", file, line: 0, text: unit });
     }
-    if (isNested(parts.slice(0, -1))) out.push({ rule: "nested", file, line: 0, text: "" });
+    if (isNested(parts.slice(0, -1), units, mixed)) out.push({ rule: "nested", file, line: 0, text: "" });
     if (parts.length > MAX_DEPTH) out.push({ rule: "tooDeep", file, line: 0, text: `${parts.length} levels` });
   }
   return out;
