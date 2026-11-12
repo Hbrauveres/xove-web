@@ -9,7 +9,13 @@ import { StageHearToggles } from "./stage-hear-toggles.component";
 import { installFakeApi, someoneSharing } from "../../../../../testing/fakeApi";
 import { lastRoom } from "../../../../../testing/fakeLiveKit";
 import { clockUser, onFakeClock } from "../../../../../testing/factories/clock.factory";
-import { member, minutesAgo, stage, connected, renderStage } from "../../../../../testing/factories/stage-steps.factory";
+import {
+  member,
+  minutesAgo,
+  stage,
+  connected,
+  renderStage,
+} from "../../../../../testing/factories/stage-steps.factory";
 import userEvent from "@testing-library/user-event";
 const bruno = (extra: Partial<Sharer> = {}) => aSharer({ hasSound: true, hasVoice: true, ...extra });
 const HEARD: Hearing = { sound: { volume: 1, muted: false }, voice: { volume: 0.7, muted: false } };

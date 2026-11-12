@@ -12,7 +12,13 @@ import type { Hearing } from "@features/room/types/sound.types";
 import { installFakeApi, someoneSharing } from "../../../../../testing/fakeApi";
 import { lastRoom } from "../../../../../testing/fakeLiveKit";
 import { clockUser } from "../../../../../testing/factories/clock.factory";
-import { member, minutesAgo, stage, connected, renderStage } from "../../../../../testing/factories/stage-steps.factory";
+import {
+  member,
+  minutesAgo,
+  stage,
+  connected,
+  renderStage,
+} from "../../../../../testing/factories/stage-steps.factory";
 const bruno = () =>
   aSharer({
     id: "user-7",
