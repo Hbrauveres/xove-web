@@ -40,7 +40,9 @@ const isTest = (f: string) => /\.(spec|test)\.tsx?$/.test(f);
 /** A component's states in Storybook (ADR-0089): like a test, it's never part of the app. */
 const isStories = (f: string) => /\.stories\.tsx$/.test(f);
 /** A component or page in a new-structure `components/` folder: it has its states in Storybook. */
-const isShown = (f: string) => /^(features\/[^/]+|shared)\/components\/[^/]+\/[^/]+\.(component|page)\.tsx$/.test(f);
+// A feature's components may sit one area deep (ADR-0105); shared/'s are flat.
+const isShown = (f: string) =>
+  /^(features\/[^/]+\/components\/([^/]+\/)?|shared\/components\/)[^/]+\/[^/]+\.(component|page)\.tsx$/.test(f);
 const isCode = (f: string) => /\.tsx?$/.test(f) && !isTest(f) && !isStories(f) && !f.endsWith(".d.ts");
 const noLogic = (f: string) =>
   /(\.types|\.enum|\.constants)\.ts$/.test(f) ||

@@ -108,10 +108,14 @@ describe("the code check", () => {
     expect(rules(face, "", [test])).toContain("noStories");
     expect(rules(face, "", [test, "shared/components/face/face.component.stories.tsx"])).not.toContain("noStories");
     expect(
-      rules("features/room/components/stage-facecam/stage-facecam.component.tsx", "", [
-        "features/room/components/stage-facecam/stage-facecam.component.test.tsx",
+      rules("features/room/components/stage/stage-facecam/stage-facecam.component.tsx", "", [
+        "features/room/components/stage/stage-facecam/stage-facecam.component.test.tsx",
       ]),
     ).toContain("noStories");
+    const facecam = "features/room/components/stage/stage-facecam/stage-facecam";
+    expect(rules(`${facecam}.component.tsx`, "", [`${facecam}.component.stories.tsx`])).not.toContain("noStories");
+    expect(rules(`${facecam}.component.stories.tsx`, "", [`${facecam}.component.tsx`])).not.toContain("storiesPlace");
+    expect(rules("shared/components/area/face/face.component.tsx", "", [])).not.toContain("noStories");
     expect(rules("routes/root/root.component.tsx", "", ["routes/root/root.component.test.tsx"])).not.toContain(
       "noStories",
     );

@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from "react-router";
 import { AdminPage } from "../../pages/AdminPage";
 import { HomePage } from "../../pages/HomePage";
 import { RequestAccessPage } from "../../pages/RequestAccessPage";
-import { RoomPage } from "@features/room/components/room-page";
+import { RoomPage } from "@features/room/components/room/room-page";
 import { RouteGuard } from "../route-guard";
 
 /**
