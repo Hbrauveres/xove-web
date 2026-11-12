@@ -114,7 +114,7 @@ function partFindings(files: Map<string, string>, units: Set<string>, importers:
 }
 
 /** The folders a feature's or shared/'s own folder may hold, beside its part folders. */
-const AREAS: Record<string, Set<string>> = {
+const FEATURE_FOLDERS: Record<string, Set<string>> = {
   features: new Set([...KINDS, "components", "stores"]),
   shared: new Set([...KINDS, "components", "stores", "styles"]),
 };
@@ -140,11 +140,12 @@ function isNested(dirs: string[], units: Set<string>, mixed: Set<string>): boole
   if (first === "services" || first === "routes")
     return dirs.length > 3 || (dirs.length === 3 && !KINDS.has(dirs[2] ?? ""));
   const start = first === "features" ? 2 : first === "shared" ? 1 : -1;
-  const area = dirs[start];
-  if (start < 0 || area === undefined || (first === "features" && second === undefined)) return false;
-  if (!AREAS[first ?? ""]?.has(area)) return true;
-  if (KINDS.has(area) || area === "styles") return dirs.length > start + 1;
-  if (first === "features" && area === "components" && dirs.length > 3) return isNestedInComponents(dirs, units, mixed);
+  const folder = dirs[start];
+  if (start < 0 || folder === undefined || (first === "features" && second === undefined)) return false;
+  if (!FEATURE_FOLDERS[first ?? ""]?.has(folder)) return true;
+  if (KINDS.has(folder) || folder === "styles") return dirs.length > start + 1;
+  if (first === "features" && folder === "components" && dirs.length > 3)
+    return isNestedInComponents(dirs, units, mixed);
   return partsOnly(dirs.slice(start + 2));
 }
 

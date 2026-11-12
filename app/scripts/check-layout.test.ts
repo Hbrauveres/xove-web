@@ -234,6 +234,13 @@ describe("the layout (ADR-0086, ADR-0105)", () => {
       ]);
     });
 
+    it("names an area inside an area", () => {
+      expect(layout(unit("features/room/components/stage/inner/stage-x", "stage-x.component.tsx"))).toEqual([
+        "nested features/room/components/stage/inner/stage-x/index.ts",
+        "nested features/room/components/stage/inner/stage-x/stage-x.component.tsx",
+      ]);
+    });
+
     it("names areas beside components in the same components/", () => {
       expect(
         layout({
