@@ -28,7 +28,7 @@ The room's top bar: the wordmark at the left, the activity pill in the middle, t
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/header/` (`Header`) | Here | Done (#189); redrawn in the next version |
+| `features/room/components/header/header/` (`Header`) | Here | Done (#189); redrawn in the next version |
 
 ### Wordmark
 
@@ -53,7 +53,7 @@ What happened in the room (someone joined, went live), as a pill that opens a li
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/header-activity-pill/` (its seen marks a hook), its moving line `header-activity-ticker/`, `header-activity-list/`; the words in `features/room/utils/activity-text.util.ts`, how long ago in `shared/utils/time-ago.util.ts` | Here | Done (#189); the next version's bell replaces the pill |
+| `features/room/components/header/header-activity-pill/` (its seen marks a hook), its moving line `header-activity-ticker/`, `header-activity-list/`; the words in `features/room/utils/activity-text.util.ts`, how long ago in `shared/utils/time-ago.util.ts` | Here | Done (#189); the next version's bell replaces the pill |
 
 ### People button
 
@@ -66,7 +66,7 @@ How many people are here; it opens the seats and the list of people with what ea
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/header-people-button/` (the order, the line under each name and the queue in its `utils/`), the seats `header-seats/` | Here | Done (#189); the next version's people column replaces it |
+| `features/room/components/header/header-people-button/` (the order, the line under each name and the queue in its `utils/`), the seats `header-seats/` | Here | Done (#189); the next version's people column replaces it |
 
 ### My picture button and my menu
 
@@ -79,7 +79,7 @@ My picture; it opens my menu.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/header-my-picture-button/` and `header-my-menu/` (on the shared Dropdown, Switch, Slider and Menu row); the ambilight's settings in `features/room/stores/room-session/hooks/use-ambilight.hook.ts` | Here | Done (#189) |
+| `features/room/components/header/header-my-picture-button/` and `header-my-menu/` (on the shared Dropdown, Switch, Slider and Menu row); the ambilight's settings in `features/room/stores/room-session/hooks/use-ambilight.hook.ts` | Here | Done (#189) |
 
 ## The stage
 
@@ -96,7 +96,7 @@ The stream being watched, as large as the room allows, with its controls on the 
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage/` (the box), `stage-player/` (the frame; its controls fading, fullscreen, the settings' place, the quality, what fits the picture and folds into "…", each a hook), the picture's layer `stage-picture-layer/`, `stage-view/`, `stage-picture/`, `stage-screen-video/`, `stage-notice/`, `stage-controls/`, `stage-info/`, `stage-sounds/`, `stage-voice-audio/` | Here | Done (#190): `Stage.tsx` split into its pieces; the controls on the picture (#247) |
+| `features/room/components/stage/stage/` (the box), `stage-player/` (the frame; its controls fading, fullscreen, the settings' place, the quality, what fits the picture and folds into "…", each a hook), the picture's layer `stage-picture-layer/`, `stage-view/`, `stage-picture/`, `stage-screen-video/`, `stage-notice/`, `stage-controls/`, `stage-info/`, `stage-sounds/`, `stage-voice-audio/` | Here | Done (#190): `Stage.tsx` split into its pieces; the controls on the picture (#247) |
 
 ### Stage light (ambilight)
 
@@ -108,7 +108,7 @@ The stream's own colours glowing around the stage, drawn from its edges on a sma
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage-light/` (the maths in its `utils/`, the drawing a painter and a frame loop) | Here | Done (#190) |
+| `features/room/components/stage/stage-light/` (the maths in its `utils/`, the drawing a painter and a frame loop) | Here | Done (#190) |
 
 ### Viewer bar
 
@@ -121,7 +121,7 @@ Over someone else's stream: each sound I hear from them (screen sound, voice) as
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage-viewer-bar/`, each sound `stage-viewer-sound/` on the one sound button `stage-sound-button/`, me `stage-viewer-me/` with my mic `stage-my-mic/` (the same block in my own row); while the browser holds the room's sound, `stage-unmute/` ("Click to unmute") in the sounds' place; the slider's rest in `features/room/hooks/use-hold-or-rest.hook.ts` | Here | Done (#191); the next version's stage controls replace it |
+| `features/room/components/stage-controls/stage-viewer-bar/`, each sound `stage-viewer-sound/` on the one sound button `stage-sound-button/`, me `stage-viewer-me/` with my mic `stage-my-mic/` (the same block in my own row); while the browser holds the room's sound, `stage-unmute/` ("Click to unmute") in the sounds' place; the slider's rest in `features/room/hooks/use-hold-or-rest.hook.ts` | Here | Done (#191); the next version's stage controls replace it |
 
 ### Go live menu
 
@@ -133,7 +133,7 @@ Starts what I share, from a drop-up over the stage.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage-go-live/`, an action pill, its drop-up on the floating layer in the bar's one menu box `stage-bar-menu/`, its rows `stage-go-live-rows/` (on the shared Menu row) | Here | Done (#191; its rows and box shared with "…", #247); the next version's send buttons replace it |
+| `features/room/components/stage-controls/stage-go-live/`, an action pill, its drop-up on the floating layer in the bar's one menu box `stage-bar-menu/`, its rows `stage-go-live-rows/` (on the shared Menu row) | Here | Done (#191; its rows and box shared with "…", #247); the next version's send buttons replace it |
 
 ### More menu ("…")
 
@@ -145,7 +145,7 @@ On a picture too narrow for the whole bar, an M round button holding what folded
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage-more-menu/`, a folded sound `stage-more-sound/`, Go live's rows `stage-go-live-rows/`, the box `stage-bar-menu/`; what folds `stage-player/`'s `use-row-fold` | Here | New (#247); the next version's stage controls replace it |
+| `features/room/components/stage-controls/stage-more-menu/`, a folded sound `stage-more-sound/`, Go live's rows `stage-go-live-rows/`, the box `stage-bar-menu/`; what folds `stage-player/`'s `use-row-fold` | Here | New (#247); the next version's stage controls replace it |
 
 ### Player buttons
 
@@ -157,7 +157,7 @@ Over my own stream: my screen, camera and mic, on or off, and the settings: roun
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage-player-buttons/`, each stream `stage-stream-button/`, a live one's drop-up `stage-stream-quick/` with `stage-screen-source/` (the settings use it too) | Here | Done (#191); the next version's send buttons replace it |
+| `features/room/components/stage-controls/stage-player-buttons/`, each stream `stage-stream-button/`, a live one's drop-up `stage-stream-quick/` with `stage-screen-source/` (the settings use it too) | Here | Done (#191); the next version's send buttons replace it |
 
 ### Stage overlay
 
@@ -169,7 +169,7 @@ The stage's fullscreen button, round, M 34, at the picture's bottom right; it ne
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage-stage-overlay/` | Here | Done (#191); the next version's stage controls replace it |
+| `features/room/components/stage/stage-stage-overlay/` | Here | Done (#191); the next version's stage controls replace it |
 
 ### Small view
 
@@ -183,7 +183,7 @@ When someone shares their screen and their camera, the camera sits over the scre
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage-facecam/` (its move a hook), the corner button `stage-small-view-button/`, the fold `stage-player/`'s `use-fold` | Here | Done (#190, the fold #191, its size on a narrow picture #247) |
+| `features/room/components/stage/stage-facecam/` (its move a hook), the corner button `stage-small-view-button/`, the fold `stage-player/`'s `use-fold` | Here | Done (#190, the fold #191, its size on a narrow picture #247) |
 
 ### Empty stage
 
@@ -195,7 +195,7 @@ When nobody shares: a TV on standby, with its static and glow, and the ways to s
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage-empty-stage/`, `stage-start-buttons/`, `stage-static-noise/`, `stage-static-glow/`, `stage-corner-glow/`; the bands in `features/room/utils/static-bands.util.ts`; the TV's turn-on kept by the view, no global | Here | Done (#190) |
+| `features/room/components/stage/stage-empty-stage/`, `stage-start-buttons/`, `stage-static-noise/`, `stage-static-glow/`, `stage-corner-glow/`; the bands in `features/room/utils/static-bands.util.ts`; the TV's turn-on kept by the view, no global | Here | Done (#190) |
 
 ### Now watching
 
@@ -207,7 +207,7 @@ Under the stage: whose stream it is, what it is, how long it's been live and who
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage-now-watching/` | Here | Done (#191); the next version shows it in the people column |
+| `features/room/components/stage-info/stage-now-watching/` | Here | Done (#191); the next version shows it in the people column |
 
 ### Also live, preview tray and hear toggles
 
@@ -220,7 +220,7 @@ The other live streams as small previews, their names on label pills, the places
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage-also-live/`, `stage-live-preview/`, `stage-places/`, `stage-preview-tray/`, `stage-preview-tray-row/`, `stage-hear-toggles/`, `stage-sound-drawer/`, `stage-sound-slider/`; the layer's state in `features/room/hooks/use-preview-tray.hook.ts` | Here | Done (#191); the next version's people column and live preview replace them |
+| `features/room/components/stage-info/stage-also-live/`, `stage-live-preview/`, `stage-places/`, `stage-preview-tray/`, `stage-preview-tray-row/`, `stage-hear-toggles/`, `stage-sound-drawer/`, `stage-sound-slider/`; the layer's state in `features/room/hooks/use-preview-tray.hook.ts` | Here | Done (#191); the next version's people column and live preview replace them |
 
 ### My stream
 
@@ -248,7 +248,7 @@ While I wait for a seat, the waiting room; once I'm in, the room laid out: the h
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/room-page/` (#192), the room session `features/room/stores/room-session/` | — | Kept; the next version's three columns after the gate |
+| `features/room/components/room/room-page/` (#192), the room session `features/room/stores/room-session/` | — | Kept; the next version's three columns after the gate |
 
 ### Room error
 
@@ -256,7 +256,7 @@ The room's problem in one line (the shared Error notice), over the bottom of the
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/room-error/` (#192) | — | Kept |
+| `features/room/components/room/room-error/` (#192) | — | Kept |
 
 ### Settings panel
 
@@ -280,7 +280,7 @@ The room's footer: credits and links.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/room-footer/` (#192) | — | Kept; decided again with the next version |
+| `features/room/components/room/room-footer/` (#192) | — | Kept; decided again with the next version |
 
 ### Waiting room
 
@@ -292,7 +292,7 @@ When the room is full: waiting for a seat, and the offer when one frees.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/queue-waiting-room/` (its card a Panel as an `<output>`), `queue-seat-offer/` (the browser's own modal dialog) (#192) | — | Kept |
+| `features/room/components/queue/queue-waiting-room/` (its card a Panel as an `<output>`), `queue-seat-offer/` (the browser's own modal dialog) (#192) | — | Kept |
 
 ### Sign-in
 
