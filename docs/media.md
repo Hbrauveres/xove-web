@@ -85,7 +85,7 @@ To see what really happens, open `chrome://webrtc-internals` in the sharer's or 
 
 The picture's own edges glow around the stage, like a TV's ambient light. It's drawn by the browser's graphics pipeline and never reads a pixel, so a 4K monitor costs the same as a small window, and a stream the page isn't allowed to read is lit too.
 
-**The canvas** (`features/room/components/stage-light/`, its maths in its `utils/`) is small and stretched by the page:
+**The canvas** (`features/room/components/stage/stage-light/`, its maths in its `utils/`) is small and stretched by the page:
 
 - **A grid of square cells** follows the stage's shape (`gridFor`, in `features/room/utils/light-grid.util.ts`): 64 × 36 at 16:9, 36 × 64 for a portrait picture, at most 96 along the longer side. Round it, the glow reaches 16 cells, then a 3-cell margin, at 2 px a cell (`glowLayout`).
 - **Each update** draws the picture in nine pieces (`edgeDraws`): the whole picture under the stage, its edge strips stretched outward, and its corner patches stretched into the corners. It draws them over the last update at partial opacity, which eases the light with a 120 ms time constant (`easeFor`). Then it blurs the result once and cuts it with a fade mask made once per grid (`fadeMask`): the light falls to exactly zero before the margin, with a fixed grain so it doesn't show bands.

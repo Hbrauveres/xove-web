@@ -1,7 +1,7 @@
 import { IconButton } from "@shared/components/icon-button";
 import { useEffect, useState, type CSSProperties } from "react";
 import type { MediaTrack } from "@services/livekit-service";
-import { StageVoiceAudio } from "@features/room/components/stage-voice-audio";
+import { StageVoiceAudio } from "@features/room/components/stage/stage-voice-audio";
 import styles from "./MicTest.module.css";
 import { Tooltip } from "@shared/components/tooltip";
 

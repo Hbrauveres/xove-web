@@ -314,7 +314,7 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 
 ![Over someone else's stream: what I hear at the left, Go live at the right](images/design/viewer-bar.png)
 
-`features/room/components/stage-viewer-bar`: the corners over someone else's stream.
+`features/room/components/stage-controls/stage-viewer-bar`: the corners over someone else's stream.
 
 - **M 34** round buttons, as small as the fullscreen button, so the picture stays the subject. The left corner is level with the fullscreen button; the right corner sits just left of it.
 - **At the left, what I hear from them, each sound its own button in a fixed place:** their screen's sound (a speaker), then their voice (a speaking head). A sound that isn't there is greyed in its place (45%, its reason in the tooltip: "No sound in this stream", "Marina's mic is off"), and a click says it in the [toast](#notifications-and-status), as in a preview's row. A volume of 0 shows as off, like a muted sound.

@@ -7,7 +7,7 @@ const layout = (files: Record<string, string>) =>
 
 const unit = (dir: string, file: string, text = "") => ({ [`${dir}/index.ts`]: "", [`${dir}/${file}`]: text });
 
-describe("the layout (ADR-0086)", () => {
+describe("the layout (ADR-0086, ADR-0105)", () => {
   it("finds nothing in a layout that follows the rules", () => {
     expect(
       layout({
@@ -84,15 +84,16 @@ describe("the layout (ADR-0086)", () => {
         ...unit("features/room/components/a/b", "b.component.tsx"),
         "features/room/hooks/utils/x.util.ts": "",
         "features/room/components/a/c/d.ts": "",
-        "features/room/components/stage-x/hooks/deep/more/use-y.hook.ts": "",
+        ...unit("features/room/components/stage-x", "stage-x.component.tsx"),
+        "features/room/components/stage-x/hooks/deep/more/most/use-y.hook.ts": "",
       }),
     ).toEqual([
       "unitInUnit features/room/components/a/b/b.component.tsx",
       "nested features/room/components/a/b/b.component.tsx",
       "nested features/room/components/a/b/index.ts",
       "nested features/room/components/a/c/d.ts",
-      "nested features/room/components/stage-x/hooks/deep/more/use-y.hook.ts",
-      "tooDeep features/room/components/stage-x/hooks/deep/more/use-y.hook.ts",
+      "nested features/room/components/stage-x/hooks/deep/more/most/use-y.hook.ts",
+      "tooDeep features/room/components/stage-x/hooks/deep/more/most/use-y.hook.ts",
       "nested features/room/hooks/utils/x.util.ts",
     ]);
   });
@@ -181,8 +182,8 @@ describe("the layout (ADR-0086)", () => {
 
   it("names a path too deep on its own", () => {
     expect(
-      layout({ "features/room/components/stage-x/hooks/a/b.hook.ts": "" }).filter((l) => l.startsWith("tooDeep")),
-    ).toEqual(["tooDeep features/room/components/stage-x/hooks/a/b.hook.ts"]);
+      layout({ "features/room/components/stage/stage-x/hooks/a/b.hook.ts": "" }).filter((l) => l.startsWith("tooDeep")),
+    ).toEqual(["tooDeep features/room/components/stage/stage-x/hooks/a/b.hook.ts"]);
   });
 
   it("names the old folders importing testing, or reaching around an index", () => {
@@ -195,5 +196,88 @@ describe("the layout (ADR-0086)", () => {
           'import { f } from "../testing/fakeApi";\nimport { e } from "@services/e-service/utils/e.util";\n',
       }),
     ).toEqual(["indexBypass pages/Home.tsx", "importTesting pages/Home.tsx"]);
+  });
+
+  describe("areas in a feature's components (ADR-0105)", () => {
+    it("finds nothing in areas of components, which may use each other and the feature's parts", () => {
+      expect(
+        layout({
+          ...unit(
+            "features/room/components/stage/stage-facecam",
+            "stage-facecam.component.tsx",
+            'import { d } from "./hooks/use-drag.hook";\nimport { s } from "../../../hooks/use-stage.hook";\n',
+          ),
+          "features/room/components/stage/stage-facecam/hooks/use-drag.hook.ts": "",
+          ...unit(
+            "features/room/components/stage-controls/stage-my-mic",
+            "stage-my-mic.component.tsx",
+            'import { F } from "../../stage/stage-facecam";\nimport { s } from "../../../hooks/use-stage.hook";\n',
+          ),
+          "features/room/hooks/use-stage.hook.ts": "",
+          ...unit("features/admin/components/admin-page", "admin-page.page.tsx"),
+        }),
+      ).toEqual([]);
+    });
+
+    it("names a file or a part folder in an area, and a folder inside a component in an area", () => {
+      expect(
+        layout({
+          ...unit("features/room/components/stage/stage-x", "stage-x.component.tsx"),
+          "features/room/components/stage/notes.ts": "",
+          "features/room/components/stage/hooks/use-y.hook.ts": "",
+          "features/room/components/stage/stage-x/parts/z.ts": "",
+        }),
+      ).toEqual([
+        "nested features/room/components/stage/hooks/use-y.hook.ts",
+        "nested features/room/components/stage/notes.ts",
+        "nested features/room/components/stage/stage-x/parts/z.ts",
+      ]);
+    });
+
+    it("names an area inside an area", () => {
+      expect(layout(unit("features/room/components/stage/inner/stage-x", "stage-x.component.tsx"))).toEqual([
+        "nested features/room/components/stage/inner/stage-x/index.ts",
+        "nested features/room/components/stage/inner/stage-x/stage-x.component.tsx",
+      ]);
+    });
+
+    it("names areas beside components in the same components/", () => {
+      expect(
+        layout({
+          ...unit("features/room/components/header", "header.component.tsx"),
+          ...unit("features/room/components/stage/stage-x", "stage-x.component.tsx"),
+        }),
+      ).toEqual([
+        "nested features/room/components/stage/stage-x/index.ts",
+        "nested features/room/components/stage/stage-x/stage-x.component.tsx",
+      ]);
+    });
+
+    it("names an import from one feature's area into another feature", () => {
+      expect(
+        layout({
+          ...unit("features/room/components/stage/stage-x", "stage-x.component.tsx"),
+          ...unit("features/room/components/header/header-y", "header-y.component.tsx"),
+          ...unit(
+            "features/admin/components/admin-page",
+            "admin-page.page.tsx",
+            'import { X } from "@features/room/components/stage/stage-x";\n',
+          ),
+        }),
+      ).toEqual(["importAcross features/admin/components/admin-page/admin-page.page.tsx"]);
+    });
+
+    it("allows a part of a component in an area at the deepest path", () => {
+      expect(
+        layout({
+          ...unit(
+            "features/room/components/stage/stage-x",
+            "stage-x.component.tsx",
+            'import { y } from "./hooks/use-y.hook";\n',
+          ),
+          "features/room/components/stage/stage-x/hooks/use-y.hook.ts": "",
+        }),
+      ).toEqual([]);
+    });
   });
 });

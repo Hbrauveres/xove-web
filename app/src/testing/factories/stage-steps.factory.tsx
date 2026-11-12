@@ -1,6 +1,6 @@
 import { act, screen, within } from "@testing-library/react";
 import { vi } from "vitest";
-import { Stage } from "@features/room/components/stage";
+import { Stage } from "@features/room/components/stage/stage";
 import { aUser } from "../fakeApi";
 import { clockUser } from "./clock.factory";
 import { renderInRoom } from "./room-render.factory";

@@ -18,7 +18,7 @@ import { Picker } from "@shared/components/picker";
 import { Segmented } from "@shared/components/segmented";
 import { toastStore } from "@shared/stores/toast-store";
 import { NO_SCREEN, NO_SOUND } from "@features/room/constants/stream-words.constants";
-import { StageScreenSource } from "@features/room/components/stage-screen-source";
+import { StageScreenSource } from "@features/room/components/stage-controls/stage-screen-source";
 import styles from "./SettingsPanel.module.css";
 import { MicTest } from "./MicTest";
 import { Tooltip } from "@shared/components/tooltip";

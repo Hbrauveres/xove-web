@@ -1,9 +1,9 @@
 import type { ComponentProps, ReactNode } from "react";
 import type { DeviceList } from "@services/media-devices-service";
 import type { SettingsPanelProps } from "../../../../../components/stage/SettingsPanel";
-import type { HeaderActivityPill } from "../../../components/header-activity-pill";
-import type { HeaderMyPictureButton } from "../../../components/header-my-picture-button";
-import type { HeaderPeopleButton } from "../../../components/header-people-button";
+import type { HeaderActivityPill } from "../../../components/header/header-activity-pill";
+import type { HeaderMyPictureButton } from "../../../components/header/header-my-picture-button";
+import type { HeaderPeopleButton } from "../../../components/header/header-people-button";
 import type { AmbilightPrefs } from "@services/preferences-service";
 import type { StreamKind } from "@services/xove-api-service";
 import type { Friend, Sharer } from "../../../types/room-view.types";

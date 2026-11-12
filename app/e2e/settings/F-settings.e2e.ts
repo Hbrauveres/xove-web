@@ -2,7 +2,7 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { openScene, wakeStage } from "../support/open.ts";
 import { observe } from "../support/observe.ts";
-import { ROW_GAP } from "../../src/features/room/components/stage-player/constants/stage-player.constants.ts";
+import { ROW_GAP } from "../../src/features/room/components/stage/stage-player/constants/stage-player.constants.ts";
 import { boxOf, centreX } from "../support/geometry.ts";
 import { computed, LOOK, pxOf } from "../support/looks.ts";
 import { pointAt } from "../support/pointer.ts";
