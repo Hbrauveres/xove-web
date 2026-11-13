@@ -1,16 +1,5 @@
 import type { ReactNode } from "react";
-import type { IconName } from "@shared/types/icon.types";
-
-/** One tab: its words and icon, whether what it holds is live, and why it can't be used, if it can't. */
-export interface TabItem<K extends string> {
-  key: K;
-  label: string;
-  icon: IconName;
-  /** What it holds is live: a red dot by its icon. */
-  live?: boolean | undefined;
-  /** Can't be used here: greyed in place, saying why in its tooltip, and in a toast on a touch. */
-  unavailable?: { reason: string; icon: IconName } | undefined;
-}
+import type { TabItem } from "@shared/types/tab-item.types";
 
 export interface TabsProps<K extends string> {
   tabs: TabItem<K>[];
@@ -19,6 +8,8 @@ export interface TabsProps<K extends string> {
   onChoose: (key: K) => void;
   /** What a usable tab holds. Every panel is drawn in one cell, the hidden ones invisible. */
   panel: (key: K) => ReactNode;
+  /** Its holder has just opened: the chosen tab takes the focus. */
+  focused?: boolean | undefined;
   /** The tablist's place in its holder. */
   className?: string | undefined;
   /** The panels' holder: where they scroll, which is the holder's choice. */

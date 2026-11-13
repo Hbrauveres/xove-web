@@ -1,0 +1,5 @@
+/* A control's group: its name over it. */
+.group {
+  display: grid;
+  gap: var(--space-1-5);
+}

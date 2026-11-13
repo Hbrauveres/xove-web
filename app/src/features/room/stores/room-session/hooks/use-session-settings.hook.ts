@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import { canShareScreen } from "@services/media-devices-service";
-import type { SettingsPanelProps } from "../../../../../components/stage/SettingsPanel";
+import type { SettingsSession } from "../../../types/settings.types";
 import type { SessionCore, SettingsOpen } from "../types/room-session.types";
 
 /** The settings panel's part: what I send and how, my devices, and my voice. */
-export function useSessionSettings(core: SessionCore, settings: SettingsOpen): SettingsPanelProps {
+export function useSessionSettings(core: SessionCore, settings: SettingsOpen): SettingsSession {
   const { video } = core;
   return useMemo(
     () => ({

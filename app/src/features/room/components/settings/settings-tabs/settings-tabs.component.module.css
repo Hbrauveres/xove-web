@@ -1,0 +1,24 @@
+/* The tabs, inside the panel's edges. */
+.tabs {
+  margin: 0 var(--space-2-5);
+}
+
+/* The tabs' panels: the panel takes the tallest one's height, scrolling when it must. */
+.panes {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3-5);
+  padding: var(--space-3) var(--space-3-5) var(--space-3-5);
+  --seg-font: var(--text-xs);
+  --pick-font: var(--text-xs);
+}
+
+.body > * {
+  flex: none;
+}

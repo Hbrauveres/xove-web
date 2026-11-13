@@ -8,25 +8,22 @@ const press = (key: string) => ({ key, preventDefault: vi.fn() }) as unknown as 
 describe("the tabs' arrow keys", () => {
   it("move to the next usable tab and round the ends, focusing it", () => {
     const onChoose = vi.fn();
-    const { result } = renderHook(() => useTabKeys(["camera", "voice"], "voice", onChoose));
-    const camera = document.createElement("button");
-    document.body.append(camera);
-    result.current.refOf("camera")(camera);
-    result.current.onKeyDown(press("ArrowRight"));
+    const focusOn = vi.fn();
+    const { result } = renderHook(() => useTabKeys(["camera", "voice"], "voice", onChoose, focusOn));
+    result.current(press("ArrowRight"));
     expect(onChoose).toHaveBeenLastCalledWith("camera");
-    expect(camera).toHaveFocus();
-    result.current.onKeyDown(press("ArrowLeft"));
+    expect(focusOn).toHaveBeenLastCalledWith("camera");
+    result.current(press("ArrowLeft"));
     expect(onChoose).toHaveBeenLastCalledWith("camera");
-    camera.remove();
   });
 
   it("leave other keys, and a single usable tab, alone", () => {
     const onChoose = vi.fn();
-    const one = renderHook(() => useTabKeys(["voice"], "voice", onChoose));
-    one.result.current.onKeyDown(press("ArrowRight"));
-    const two = renderHook(() => useTabKeys(["camera", "voice"], "voice", onChoose));
+    const one = renderHook(() => useTabKeys(["voice"], "voice", onChoose, vi.fn()));
+    one.result.current(press("ArrowRight"));
+    const two = renderHook(() => useTabKeys(["camera", "voice"], "voice", onChoose, vi.fn()));
     const enter = press("Enter");
-    two.result.current.onKeyDown(enter);
+    two.result.current(enter);
     expect(onChoose).not.toHaveBeenCalled();
     expect(enter.preventDefault).not.toHaveBeenCalled();
   });

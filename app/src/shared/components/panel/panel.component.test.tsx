@@ -29,3 +29,12 @@ it("can be a status that speaks its changes", () => {
   render(<Panel as="output">You're next in line.</Panel>);
   expect(screen.getByRole("status")).toHaveTextContent("You're next in line.");
 });
+
+it("can be a dialog beside the page, open, named by its holder", () => {
+  render(
+    <Panel as="dialog" aria-label="Settings">
+      Screen
+    </Panel>,
+  );
+  expect(screen.getByRole("dialog", { name: "Settings" })).toHaveAttribute("open");
+});

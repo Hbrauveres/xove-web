@@ -1,6 +1,5 @@
 import type { ComponentProps, ReactNode } from "react";
 import type { DeviceList } from "@services/media-devices-service";
-import type { SettingsPanelProps } from "../../../../../components/stage/SettingsPanel";
 import type { HeaderActivityPill } from "../../../components/header/header-activity-pill";
 import type { HeaderMyPictureButton } from "../../../components/header/header-my-picture-button";
 import type { HeaderPeopleButton } from "../../../components/header/header-people-button";
@@ -10,6 +9,7 @@ import type { Friend, Sharer } from "../../../types/room-view.types";
 import type { RoomStoreValue } from "./room-store.types";
 import type { StagePick } from "../../../types/stage.types";
 import type { StreamControls } from "../../../types/stream-controls.types";
+import type { SettingsGoTo, SettingsSession } from "../../../types/settings.types";
 import type { useSessionCore } from "../hooks/use-session-core.hook";
 
 /** What the room's page hands the session once I'm in. */
@@ -24,15 +24,12 @@ export type RoomSessionProviderProps = {
 /** The room as its hooks give it: my streams, my voice, the people, the activity, my devices. */
 export type SessionCore = ReturnType<typeof useSessionCore>;
 
-/** A setting a live button's gesture asked for; the counter makes the same request twice still count. */
-export type GoTo = { kind: StreamKind; n: number };
-
 /** The settings panel: open or not, and the setting a live button's gesture asked for. */
 export type SettingsOpen = {
   open: boolean;
   toggle: () => void;
   close: () => void;
-  goTo: GoTo | undefined;
+  goTo: SettingsGoTo | undefined;
   goToSetting: (kind: StreamKind) => void;
 };
 
@@ -68,7 +65,7 @@ export type StageSession = {
 export type RoomSession = {
   header: HeaderSession;
   stage: StageSession;
-  settings: SettingsPanelProps;
+  settings: SettingsSession;
   /** The room's problem, said under the stage (or over the player in fullscreen). */
   error: string | null;
 };

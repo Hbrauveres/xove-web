@@ -9,34 +9,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/components/stage/MicTest.module.css",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/MicTest.tsx",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/SettingsPanel.module.css",
-    "count": 3,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 11,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/pages/AdminPage.module.css",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
@@ -72,13 +44,6 @@
   {
     "tool": "code",
     "rule": "lineLength",
-    "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "lineLength",
     "file": "src/pages/HomePage.tsx",
     "count": 3,
     "owner": "#194 home, request access, admin, the shell"
@@ -89,48 +54,6 @@
     "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/MicTest.module.css",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/MicTest.test.tsx",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/MicTest.tsx",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/SettingsPanel.module.css",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/SettingsPanel.test.tsx",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 1,
-    "owner": "#193 settings"
   },
   {
     "tool": "code",
@@ -240,20 +163,6 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/components/stage/MicTest.tsx",
-    "count": 2,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 13,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
     "file": "src/pages/AdminPage.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
@@ -275,58 +184,9 @@
   {
     "tool": "code",
     "rule": "size",
-    "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "size",
     "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/MicTest.module.css",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/MicTest.test.tsx",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/MicTest.tsx",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/SettingsPanel.module.css",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/SettingsPanel.test.tsx",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 1,
-    "owner": "#193 settings"
   },
   {
     "tool": "code",
@@ -393,45 +253,10 @@
   },
   {
     "tool": "lint",
-    "rule": "eslint(complexity)",
-    "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/stage/MicTest.tsx",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 2,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
     "rule": "eslint(max-lines-per-function)",
     "file": "src/pages/AdminPage.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/stage/MicTest.tsx",
-    "count": 3,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 2,
-    "owner": "#193 settings"
   },
   {
     "tool": "lint",
@@ -449,20 +274,6 @@
   },
   {
     "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/components/stage/MicTest.tsx",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(consistent-type-assertions)",
-    "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 4,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
     "rule": "typescript(no-non-null-assertion)",
     "file": "src/main.tsx",
     "count": 1,
@@ -471,23 +282,9 @@
   {
     "tool": "tsc",
     "rule": "TS2345",
-    "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2345",
     "file": "src/testing/fakeApi.ts",
     "count": 2,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2375",
-    "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 7,
-    "owner": "#193 settings"
   },
   {
     "tool": "tsc",
@@ -509,20 +306,6 @@
     "file": "src/testing/fakeLiveKit.ts",
     "count": 3,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
-    "file": "src/components/stage/SettingsPanel.test.tsx",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
-    "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 2,
-    "owner": "#193 settings"
   },
   {
     "tool": "tsc",

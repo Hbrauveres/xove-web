@@ -5,3 +5,11 @@
   background: var(--panel);
   backdrop-filter: var(--panel-filter);
 }
+
+/* A dialog's own browser look (its margin, padding and colours) gives way to the panel's; where it
+   sits is its holder's. */
+dialog.panel {
+  margin: 0;
+  padding: 0;
+  color: inherit;
+}

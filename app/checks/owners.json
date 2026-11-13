@@ -8,8 +8,6 @@
   ["src/pages/RoomPage.test", "#192 room: queue, footer, page"],
   ["src/shared/styles/", "#185 shared: tokens"],
   ["src/components/room/RoomFooter", "#192 room: queue, footer, page"],
-  ["src/components/stage/SettingsPanel", "#193 settings"],
-  ["src/components/stage/MicTest", "#193 settings"],
   ["src/components/", "#192 room: queue, footer, page"],
   ["src/pages/RoomPage", "#192 room: queue, footer, page"],
   ["src/pages/", "#194 home, request access, admin, the shell"],

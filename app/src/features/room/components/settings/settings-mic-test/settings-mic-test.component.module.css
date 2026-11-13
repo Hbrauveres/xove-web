@@ -1,0 +1,26 @@
+/* The mic's level: the slider across the row, Test at its end. */
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: var(--size-7-5);
+}
+
+.meter {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Test's wrapper, which takes the pointer for its tooltip while it's disabled. */
+.hearWrap {
+  display: inline-flex;
+}
+
+/* As wide as its countdown, so it never jumps. */
+.hear {
+  min-width: var(--mic-hear-width);
+}
+
+.count {
+  font-variant-numeric: tabular-nums;
+}

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { describe, expect, it } from "vitest";
 import { toastStore } from "@shared/stores/toast-store";
 import { Tabs } from "./tabs.component";
-import type { TabItem } from "./types/tabs.types";
+import type { TabItem } from "@shared/types/tab-item.types";
 
 type Key = "screen" | "camera" | "voice";
 const NO_SCREEN = "This browser can't share a screen";

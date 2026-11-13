@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Tabs } from "./tabs.component";
-import type { TabItem } from "./types/tabs.types";
+import type { TabItem } from "@shared/types/tab-item.types";
 
 type Key = "screen" | "camera" | "voice";
 

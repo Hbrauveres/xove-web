@@ -4,9 +4,11 @@ import { LiveDot } from "@shared/components/live-dot";
 import { Tooltip } from "@shared/components/tooltip";
 import type { CssVars } from "@shared/types/css-vars.types";
 import { ICON_SIZE } from "./constants/tabs.constants";
+import { useTabFocus } from "./hooks/use-tab-focus.hook";
 import { useTabKeys } from "./hooks/use-tab-keys.hook";
 import { useTouchReason } from "./hooks/use-touch-reason.hook";
 import styles from "./tabs.component.module.css";
+import { panelAttributes, tabAttributes } from "./utils/tab-attributes.util";
 import type { TabsProps } from "./types/tabs.types";
 
 /**
@@ -15,11 +17,22 @@ import type { TabsProps } from "./types/tabs.types";
  * invisible, so the box is as tall as the tallest and switching never moves the tabs.
  */
 export function Tabs<K extends string>(props: TabsProps<K>) {
-  const { tabs, chosen, onChoose, panel, className, panelsClassName, panelClassName, slimScroll } = props;
+  const {
+    tabs,
+    chosen,
+    onChoose,
+    panel,
+    focused = false,
+    className,
+    panelsClassName,
+    panelClassName,
+    slimScroll,
+  } = props;
   const ids = useId();
   const idOf = (key: K) => `${ids}-${key}`;
   const usable = tabs.filter((t) => !t.unavailable).map((t) => t.key);
-  const { onKeyDown, refOf } = useTabKeys(usable, chosen, onChoose);
+  const { refOf, focusOn } = useTabFocus(chosen, focused);
+  const onKeyDown = useTabKeys(usable, chosen, onChoose, focusOn);
   const { onPointerDown, sayWhy } = useTouchReason();
   const place: CssVars = { "--n": tabs.length, "--i": tabs.findIndex((t) => t.key === chosen) };
 
@@ -31,14 +44,9 @@ export function Tabs<K extends string>(props: TabsProps<K>) {
           <Tooltip key={t.key} text={t.unavailable?.reason}>
             <button
               ref={refOf(t.key)}
-              id={idOf(t.key)}
               type="button"
-              role="tab"
               className={styles.tab}
-              aria-selected={t.key === chosen}
-              aria-controls={t.key === chosen ? `${idOf(t.key)}-panel` : undefined}
-              aria-disabled={t.unavailable ? true : undefined}
-              tabIndex={t.key === chosen ? 0 : -1}
+              {...tabAttributes(idOf(t.key), t.key === chosen, Boolean(t.unavailable))}
               onKeyDown={onKeyDown}
               onPointerDown={onPointerDown}
               onClick={() => (t.unavailable ? sayWhy(t.unavailable.reason, t.unavailable.icon) : onChoose(t.key))}
@@ -58,14 +66,9 @@ export function Tabs<K extends string>(props: TabsProps<K>) {
           // A list opening in a panel floats over its controls, masking what's behind it.
           <div
             key={key}
-            id={`${idOf(key)}-panel`}
-            role="tabpanel"
-            aria-labelledby={idOf(key)}
             className={[styles.panel, panelClassName].filter(Boolean).join(" ")}
             data-list-host
-            data-off={key !== chosen || undefined}
-            aria-hidden={key !== chosen || undefined}
-            inert={key !== chosen || undefined}
+            {...panelAttributes(idOf(key), key === chosen)}
           >
             {panel(key)}
           </div>
