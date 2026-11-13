@@ -79,10 +79,10 @@ test("F-settings.2 the glass hides the stream behind it, blurred and dimmed", as
   const p = await boxOf(panel);
   const inset = 24;
   const clip = { x: p.x + inset, y: p.y + inset, width: p.width - 2 * inset, height: p.height - 2 * inset };
-  const showPanel = await hide(page, '[role="dialog"][aria-label="Settings"]');
+  const showPanel = await hide(page, 'dialog[aria-label="Settings"]');
   const behind = await patchOf(page, clip);
   await showPanel();
-  const showContents = await hide(page, '[role="dialog"][aria-label="Settings"] *');
+  const showContents = await hide(page, 'dialog[aria-label="Settings"] *');
   const through = await patchOf(page, clip);
   await showContents();
   info.annotations.push({ type: "glass", description: JSON.stringify({ behind, through }) });

@@ -2,6 +2,7 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { boxOf } from "../support/geometry.ts";
 import { observe } from "../support/observe.ts";
+import { computed, LOOK, pxOf, SIZE } from "../support/looks.ts";
 import { untilStill } from "../support/timing.ts";
 import { myButtons, myStream, openSettings, optionOf, panelOf, tabOf } from "./settings.ts";
 
@@ -57,6 +58,11 @@ test("F-settings-camera.1 with my camera off, the tab previews it for me alone",
   // A 16:9 box, inside the panel.
   const b = await boxOf(preview);
   expect.soft(b.width / b.height).toBeCloseTo(16 / 9, 1);
+  // Also live's frame: black, 8 px corners; "Only you see this" a label pill.
+  const frame = preview.locator("..");
+  await expect.soft(frame).toHaveCSS("border-radius", await computed(page, "border-radius", SIZE.frameCorner));
+  await expect.soft(frame).toHaveCSS("background-color", await computed(page, "background-color", LOOK.frame));
+  expect.soft((await boxOf(only)).height).toBe(await pxOf(page, SIZE.labelPill));
   // Not sent: my camera button is still off, and the tab has no red dot.
   await expect.soft(myButtons(page).camera).toHaveAccessibleName("Turn on your camera");
   await expect.soft(tabOf(page, "Camera").locator("[data-live]")).toHaveCount(0);

@@ -268,7 +268,7 @@ What I send: the screen, the camera and the voice, each a tab, with its quality 
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `components/stage/SettingsPanel.tsx` (four jobs), `MicTest.tsx` | `features/settings/` (a shell on the shared Panel, one folder per tab, `mic-test/`) | Kept |
+| `features/room/components/settings/` (ADR-0106): the panel `settings-panel/` (a native `<dialog>` on the shared Panel; sliding, the cue, the camera's preview and the focus each a hook), the tabs `settings-tabs/` on the shared Tabs, `settings-screen-tab/`, `settings-camera-tab/`, `settings-voice-tab/`, the quality and mode `settings-quality-mode/`, the camera's preview `settings-camera-preview/` (in the stage's video frame, "Only you see this" a label pill), the mic test `settings-mic-test/` (the threshold slider, Test the dark pill), a tab's line `settings-hint/` | Here | Done (#193) |
 
 ### Room footer
 
@@ -338,17 +338,21 @@ The shared controls today, and the copies that become one component each.
 | Block | Today | Goes to | What happens |
 | --- | --- | --- | --- |
 | Button | `shared/components/button/` | Here | Done (#188) |
-| Slider | `shared/components/slider/` | Here | Done (#188) |
+| Slider | `shared/components/slider/`, and its threshold variant (a line knob, a level in its track; the mic test drew its own) | Here | Done (#188, threshold #193) |
 | Segmented control | `shared/components/segmented/` (real radios) | Here | Done (#188) |
 | Floating layer | `shared/stores/floating-store/` | Here | Done (#187) |
-| Picker, drop-up, dropdown | `shared/components/picker/`, `picker-list/`, `drop-up/`, `drop-up-row/`, `dropdown/` (one piece of glass, its sections on it, #249) | Here, on the floating layer | Done (#187) |
+| Picker, drop-up, dropdown | `shared/components/picker/`, `picker-list/`, `drop-up/`, `drop-up-row/` (glass, or the panel's look in a panel, #193), `dropdown/` (one piece of glass, its sections on it, #249) | Here, on the floating layer | Done (#187) |
+| Slim scrollbar | `data-scroll="slim"` in `shared/styles/global.css` (it was written four times) | Here | Done (#193) |
 | Cue | `shared/components/cue/` | Here | Done (#187) |
 | Tooltip | `shared/components/tooltip/`: follows its control while shown; beside a list's option, only for a cut name (#249) | Here, on the floating layer | Done (#187) |
 | Avatar | `shared/components/face/` (was `ui/Avatar.tsx`, `PersonAvatar.tsx`): the room's colour and initial with its rings, the account's photo | Already there | Merged |
-| Round button | `shared/components/icon-button/`, `variant="round"`: one base (glass, a soft shadow, lighter when pointed at, a red keyboard ring, 45% when unavailable, red when on) in two sizes, L 48 for my own buttons and M 34 for every other; its other purposes the header's, words' and close | Here | Done (#191): the player's, the stage's, the overlay's, the mini and the toggle variants are one |
-| Action pill | `shared/components/action-pill/`: a button with words, M 34 or L 44, glass, red or soft, an icon or the live dot first; Go live and the empty stage's ways to start | Here | Done (#191) |
-| Label pill | `shared/components/label-pill/`: a name over a picture, 22 px glass, a face or an icon first; the previews' names | Here | Done (#191) |
-| Switch | `shared/components/switch/`: a setting's line, its words and the switch | Already there | Merged |
+| Round button | `shared/components/icon-button/`, `variant="round"`: one base (glass, a soft shadow, lighter when pointed at, a red keyboard ring, 45% when unavailable, red when on) in two sizes, L 48 for my own buttons and M 34 for every other; its other purposes the header's and close | Here | Done (#191): the player's, the stage's, the overlay's, the mini and the toggle variants are one |
+| Action pill | `shared/components/action-pill/`: a button with words, XS 26, S 30, M 34 or L 44, glass, red, soft or dark (white while on), an icon or the live dot first; Go live, the empty stage's ways to start, and Change and Test (they were a round button with words and the mic test's own pill) | Here | Done (#191, dark #193) |
+| Live dot | `shared/components/live-dot/`: the red dot with its glow, S on a tab, M on a pill | Here | Done (#193) |
+| Tabs | `shared/components/tabs/`: the sliding marker, the live dot, every pane as tall as the tallest, greyed in place when unusable; the settings' tabs | Here | Done (#193) |
+| Video frame | `features/room/components/stage/stage-video-frame/`: 16:9, black, 8 px corners; Also live's cards and the camera's preview | Here | Done (#193) |
+| Label pill | `shared/components/label-pill/`: a label over a picture, 22 px glass, a face or an icon first, or words alone; the previews' names, the camera preview's "Only you see this" | Here | Done (#191, #193) |
+| Switch | `shared/components/switch/`: a setting's row, 30 px, its words and the switch; my menu and the Voice tab (the tab restyled it) | Already there | Merged; its row #193 |
 | Icons | `shared/components/icon/` and its drawings in `shared/constants/icons.constants.ts` (was `stage/icons.tsx`, `room/ActivityIcon.tsx` and inline drawings) | Already there | Merged |
 | LIVE badge | `shared/components/live-badge/`: beside who's on the stage, and over my preview | Already there | Merged |
 | Headline | `shared/components/headline/`: the big statement with its key words in the accent (sign-in, the empty stage) | Already there | Merged |
