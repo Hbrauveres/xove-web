@@ -1,4 +1,4 @@
-import { IconButton } from "@shared/components/icon-button";
+import { ActionPill } from "@shared/components/action-pill";
 import { useEffect, useState, type CSSProperties } from "react";
 import type { MediaTrack } from "@services/livekit-service";
 import { StageVoiceAudio } from "@features/room/components/stage/stage-voice-audio";
@@ -58,17 +58,17 @@ export function MicTest({
       {/* Disabled, the button gets no pointer: its wrapper takes it, for the tooltip. */}
       <Tooltip text={track ? "Hear yourself for 5 s (use headphones)" : "Turn your voice on to hear yourself"}>
         <span className={styles.hearWrap}>
-          <IconButton
-            variant="words"
+          <ActionPill
+            size="xs"
+            fill="dark"
             className={styles.hear}
-            data-on={hearing || undefined}
             disabled={!track}
             aria-pressed={hearing}
             aria-label={hearing ? "Stop hearing yourself" : "Test: hear yourself"}
             onClick={() => setLeft(hearing ? 0 : HEAR_S)}
           >
             {hearing ? <span className={styles.count}>Stop · {left}</span> : "Test"}
-          </IconButton>
+          </ActionPill>
         </span>
       </Tooltip>
       {hearing && track && <StageVoiceAudio track={track} volume={1} muted={false} />}

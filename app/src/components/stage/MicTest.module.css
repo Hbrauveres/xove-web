@@ -90,26 +90,9 @@
   border-radius: var(--radius-1);
 }
 
-/* Test: hear yourself, a small pill in the settings' own style, counting down while it plays. */
+/* Test: hear yourself, the dark pill, as wide as its countdown. */
 .hearWrap .hear {
   min-width: var(--mic-hear-width);
-  height: var(--size-7);
-  font-weight: 600;
-}
-
-.hear:hover:not(:disabled) {
-  background: var(--sel-hover);
-}
-
-/* Playing: white with dark words. Inside its wrapper, so the button's own fill never wins over it. */
-.hearWrap .hear[data-on] {
-  background: var(--text);
-  color: var(--ground);
-}
-
-.hear:disabled {
-  cursor: not-allowed;
-  opacity: 0.4;
 }
 
 .count {

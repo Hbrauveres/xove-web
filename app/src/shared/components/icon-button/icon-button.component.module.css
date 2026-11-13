@@ -149,20 +149,6 @@
   outline-offset: var(--border-0-5);
 }
 
-/* A small pill with words, in the settings' own style: Change, Test. */
-.words {
-  flex: none;
-  padding: 0 var(--space-3);
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: var(--sel-bg);
-  box-shadow: var(--sel-shadow);
-  color: var(--text);
-  font: inherit;
-  font-size: var(--text-xs);
-  cursor: pointer;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .round {
     transition: none;

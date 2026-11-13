@@ -24,4 +24,22 @@ describe("an action pill", () => {
     );
     expect(screen.getByRole("button", { name: "Share your screen" })).toHaveAttribute("aria-disabled", "true");
   });
+
+  it("dark, says when it's on, and doesn't click while disabled", async () => {
+    const onClick = vi.fn();
+    const { rerender } = render(
+      <ActionPill size="xs" fill="dark" aria-pressed={false} onClick={onClick}>
+        Test
+      </ActionPill>,
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Test", pressed: false }));
+    expect(onClick).toHaveBeenCalledOnce();
+    rerender(
+      <ActionPill size="xs" fill="dark" aria-pressed disabled onClick={onClick}>
+        Test
+      </ActionPill>,
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Test", pressed: true }));
+    expect(onClick).toHaveBeenCalledOnce();
+  });
 });
