@@ -1,8 +1,12 @@
-/* A setting turned on and off: its words, then the switch, on one line. */
+/* A setting turned on and off: its words, then the switch, on one line as tall as a panel's other
+   controls. The words sit 3 px in, so they read as their heading's own; the switch ends 12 px in,
+   where a picker's arrow does. A touch softer than pure white, at the picker's own size. */
 .row {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-height: var(--size-7-5);
+  padding: 0 var(--space-3) 0 var(--space-0-75);
   color: var(--text-shade-82);
   font-size: var(--text-xs);
   font-weight: 400;
@@ -16,8 +20,15 @@
   height: var(--size-5);
   border: 0;
   padding: 0;
+  flex: none;
   background: transparent;
   cursor: pointer;
+}
+
+/* Can't be used here: faded in place, as every unavailable control. */
+.switch[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .switch::before {

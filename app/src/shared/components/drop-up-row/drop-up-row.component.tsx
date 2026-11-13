@@ -1,7 +1,7 @@
 import styles from "./drop-up-row.component.module.css";
 import type { DropUpRowProps } from "./types/drop-up-row.types";
 
-/** One frosted pill in a drop-up: a short line and its action. */
-export function DropUpRow({ children }: DropUpRowProps) {
-  return <div className={styles.row}>{children}</div>;
+/** One pill holding a short line and its action: frosted over the video, or a light track in a panel. */
+export function DropUpRow({ look = "glass", children }: DropUpRowProps) {
+  return <div className={`${styles.row} ${styles[look]}`}>{children}</div>;
 }

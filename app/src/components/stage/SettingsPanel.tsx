@@ -489,7 +489,6 @@ function VoiceTab(props: SettingsPanelProps & { shown: boolean }) {
         {SWITCHES.map((s) => (
           <Tooltip key={s.key} text={s.unavailable ?? s.hint}>
             <Switch
-              className={styles.voiceRow}
               label={s.label}
               checked={voicePrefs[s.key]}
               unavailable={Boolean(s.unavailable)}

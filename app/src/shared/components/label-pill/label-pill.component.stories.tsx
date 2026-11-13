@@ -20,3 +20,5 @@ type Story = StoryObj<typeof meta>;
 
 /** A preview's name: the face, then who and what. */
 export const PreviewName: Story = {};
+/** Words alone: the camera's preview, "Only you see this". */
+export const WordsAlone: Story = { args: { lead: undefined, children: "Only you see this" } };
