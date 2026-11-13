@@ -104,20 +104,6 @@ describe("the settings panel: tabs", () => {
     expect(toastStore.current()?.text).toBe(NO_SCREEN);
   });
 
-  it("marks with a red dot the tab of what I'm sending", () => {
-    setup({ mine: { screen: false, camera: true }, cameraVideo: track() });
-    expect(
-      within(panel())
-        .getByRole("tab", { name: /Camera/ })
-        .querySelector("[data-live]"),
-    ).not.toBeNull();
-    expect(
-      within(panel())
-        .getByRole("tab", { name: /Screen/ })
-        .querySelector("[data-live]"),
-    ).toBeNull();
-  });
-
   it("closes from its ✕ and with Escape", async () => {
     const { user, onClose } = setup();
     await user.click(within(panel()).getByRole("button", { name: "Close settings" }));

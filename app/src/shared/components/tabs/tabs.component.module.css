@@ -1,0 +1,90 @@
+/* Tabs: icons over words, a red marker sliding under the chosen one, on a hairline. */
+.tabs {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  border-bottom: var(--hairline) solid var(--panel-line);
+}
+
+.marker {
+  position: absolute;
+  bottom: calc(var(--hairline) * -1);
+  z-index: var(--layer-raised);
+  width: calc(100% / var(--n));
+  height: var(--size-0-5);
+  left: calc(100% / var(--n) * var(--i));
+  background: var(--accent);
+  transition: left var(--duration-200) var(--ease-out);
+}
+
+.tab {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-0-75);
+  min-width: 0;
+  margin-bottom: calc(var(--hairline) * -1);
+  padding: var(--space-1-5) var(--space-0-5) var(--space-1-25);
+  border: 0;
+  border-bottom: var(--border-0-5) solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: var(--text-11);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tab svg {
+  width: var(--size-4);
+  height: var(--size-4);
+}
+
+.tab:hover,
+.tab[aria-selected="true"] {
+  color: var(--text);
+}
+
+/* Can't be used here: greyed out in its place, not hidden, at 45% like every unavailable control. */
+.tab[aria-disabled="true"],
+.tab[aria-disabled="true"]:hover {
+  color: var(--text-disabled);
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* The keyboard's ring sits inside the tab, rounded, clear of the marker. */
+.tab:focus-visible {
+  outline: var(--border-0-5) solid var(--accent);
+  outline-offset: calc(var(--border-1) * -1);
+  border-radius: var(--radius-2);
+}
+
+/* What's live: the dot by its tab's icon. */
+.dot {
+  position: absolute;
+  top: var(--space-1-5);
+  left: calc(50% + var(--space-2-25));
+}
+
+/* Every panel in one cell: the box takes the tallest one's height, the hidden ones invisible. */
+.panels {
+  display: grid;
+}
+
+.panel {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+
+.panel[data-off] {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marker {
+    transition: none;
+  }
+}

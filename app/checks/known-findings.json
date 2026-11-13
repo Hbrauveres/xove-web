@@ -31,7 +31,7 @@
     "tool": "code",
     "rule": "history",
     "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 13,
+    "count": 11,
     "owner": "#193 settings"
   },
   {
@@ -395,7 +395,7 @@
     "tool": "lint",
     "rule": "eslint(complexity)",
     "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 3,
+    "count": 1,
     "owner": "#193 settings"
   },
   {
@@ -424,20 +424,6 @@
     "rule": "eslint(no-magic-numbers)",
     "file": "src/components/stage/MicTest.tsx",
     "count": 3,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(no-magic-numbers)",
-    "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 1,
-    "owner": "#193 settings"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(interactive-supports-focus)",
-    "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 1,
     "owner": "#193 settings"
   },
   {
@@ -472,7 +458,7 @@
     "tool": "lint",
     "rule": "typescript(consistent-type-assertions)",
     "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 5,
+    "count": 4,
     "owner": "#193 settings"
   },
   {
@@ -486,7 +472,7 @@
     "tool": "tsc",
     "rule": "TS2345",
     "file": "src/components/stage/SettingsPanel.tsx",
-    "count": 5,
+    "count": 1,
     "owner": "#193 settings"
   },
   {

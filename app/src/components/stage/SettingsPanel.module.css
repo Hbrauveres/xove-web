@@ -46,80 +46,9 @@
   font-size: var(--text-sm);
 }
 
-/* The tabs, a red marker sliding under the chosen one. */
+/* The tabs, a red marker sliding under the chosen one, inside the panel's edges. */
 .tabs {
-  position: relative;
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(0, 1fr);
   margin: 0 var(--space-2-5);
-  border-bottom: var(--hairline) solid var(--panel-line);
-}
-
-.marker {
-  position: absolute;
-  bottom: calc(var(--hairline) * -1);
-  z-index: var(--layer-raised);
-  width: calc(100% / var(--n));
-  height: var(--size-0-5);
-  left: calc(100% / var(--n) * var(--i));
-  background: var(--accent);
-  transition: left var(--duration-200) var(--ease-out);
-}
-
-.tab {
-  position: relative;
-  display: grid;
-  justify-items: center;
-  gap: var(--space-0-75);
-  min-width: 0;
-  margin-bottom: calc(var(--hairline) * -1);
-  padding: var(--space-1-5) var(--space-0-5) var(--space-1-25);
-  border: 0;
-  border-bottom: var(--border-0-5) solid transparent;
-  background: transparent;
-  color: var(--text-muted);
-  font: inherit;
-  font-size: var(--text-11);
-  font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.tab svg {
-  width: var(--size-4);
-  height: var(--size-4);
-}
-
-.tab:hover,
-.tab[aria-selected="true"] {
-  color: var(--text);
-}
-
-/* Can't be used in this browser (it can't share a screen): greyed out in its place, not hidden. */
-.tab[aria-disabled="true"],
-.tab[aria-disabled="true"]:hover {
-  color: var(--text-disabled);
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* The keyboard's ring sits inside the tab, rounded, clear of the marker. */
-.tab:focus-visible {
-  outline: var(--border-0-5) solid var(--accent);
-  outline-offset: calc(var(--border-1) * -1);
-  border-radius: var(--radius-2);
-}
-
-/* What's live: a red dot by its tab's icon. */
-.dot {
-  position: absolute;
-  top: var(--space-1-5);
-  left: calc(50% + var(--space-2-25));
-  width: var(--size-1-5);
-  height: var(--size-1-5);
-  border-radius: 50%;
-  background: var(--accent);
 }
 
 /*
@@ -130,22 +59,15 @@
   flex: 1;
   min-height: 0;
   overflow: auto;
-  display: grid;
 }
 
 .body {
-  grid-area: 1 / 1;
-  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-3-5);
   padding: var(--space-3) var(--space-3-5) var(--space-3-5);
   --seg-font: var(--text-xs);
   --pick-font: var(--text-xs);
-}
-
-.body[data-off] {
-  visibility: hidden;
 }
 
 .body > * {
@@ -293,8 +215,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .panel,
-  .marker {
+  .panel {
     transition: none;
   }
 }

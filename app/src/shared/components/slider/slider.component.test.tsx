@@ -33,4 +33,25 @@ describe("Slider, the white one", () => {
     render(<Slider aria-label="r" min={0} max={1} defaultValue={0.5} />);
     expect(screen.getByRole("slider").style.getPropertyValue("--fill")).toBe("0%");
   });
+
+  it("as a threshold, draws the live level in its track, green while it's over the line (sent)", () => {
+    const at = (level: number, sent: boolean) => {
+      const { unmount } = render(
+        <Slider
+          variant="threshold"
+          aria-label="Mic sensitivity"
+          level={level}
+          sent={sent}
+          value={0.2}
+          onChange={() => {}}
+        />,
+      );
+      const s = screen.getByRole("slider", { name: "Mic sensitivity" });
+      const seen = [s.style.getPropertyValue("--level"), s.hasAttribute("data-sent")];
+      unmount();
+      return seen;
+    };
+    expect(at(0.5, true)).toEqual(["50%", true]);
+    expect(at(0.1, false)).toEqual(["10%", false]);
+  });
 });

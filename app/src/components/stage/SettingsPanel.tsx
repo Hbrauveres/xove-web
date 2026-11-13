@@ -4,7 +4,7 @@ import { IconButton } from "@shared/components/icon-button";
 import { LiveBadge } from "@shared/components/live-badge";
 import { Switch } from "@shared/components/switch";
 import { Icon } from "@shared/components/icon";
-import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { cameraProblemWords } from "@features/room/utils/camera-problem.util";
 import { CAMERA_QUALITIES, SHARE_QUALITIES } from "@services/media-devices-service";
 import type { CameraDevice, CameraProblem, MicDevice, ScreenSurface } from "@services/media-devices-service";
@@ -22,6 +22,7 @@ import { StageScreenSource } from "@features/room/components/stage-controls/stag
 import styles from "./SettingsPanel.module.css";
 import { MicTest } from "./MicTest";
 import { Tooltip } from "@shared/components/tooltip";
+import { Tabs } from "@shared/components/tabs";
 import { useRoomSession } from "@features/room/stores/room-session";
 
 /** How long it takes to come in or go out; it leaves the page once it's out. */
@@ -102,8 +103,7 @@ export function SettingsPanel() {
     document.addEventListener("pointerdown", off);
     return () => document.removeEventListener("pointerdown", off);
   }, [cue]);
-  const tab = usable.includes(chosen) ? chosen : usable[0];
-  const ids = useId();
+  const tab: Tab = usable.includes(chosen) ? chosen : (usable[0] ?? "camera");
 
   // In the page while open, and for its slide out after.
   const [present, setPresent] = useState(open);
@@ -143,8 +143,6 @@ export function SettingsPanel() {
   // The keyboard: opening moves the focus to the chosen tab; closing gives it back to what
   // opened it (the cog), if it was inside.
   const root = useRef<HTMLDivElement>(null);
-  // A finger has no tooltip: touching the greyed-out tab says why in a toast (design decision 10).
-  const pointer = useRef("mouse");
   const opener = useRef<HTMLElement | null>(null);
   useEffect(() => {
     if (open) {
@@ -164,7 +162,6 @@ export function SettingsPanel() {
       onClose();
     }
   };
-  const tabId = (t: Tab) => `${ids}-${t}`;
 
   return (
     <Panel
@@ -182,79 +179,30 @@ export function SettingsPanel() {
           <Icon name="close" size={20} />
         </IconButton>
       </div>
-      <div
+      <Tabs
+        tabs={tabs.map((t) => ({
+          key: t,
+          label: t === "screen" ? "Screen" : t === "camera" ? "Camera" : "Voice",
+          icon: t === "screen" ? "screen-share" : t === "camera" ? "camera-on" : "mic",
+          live: Boolean(t === "voice" ? props.voice : mine[t]),
+          unavailable: usable.includes(t) ? undefined : { reason: NO_SCREEN, icon: "screen-off" },
+        }))}
+        chosen={tab}
+        onChoose={setTab}
         className={styles.tabs}
-        role="tablist"
-        onKeyDown={(e) => {
-          const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
-          if (!step || usable.length < 2) return;
-          e.preventDefault();
-          const next = usable[(usable.indexOf(tab) + step + usable.length) % usable.length];
-          setTab(next);
-          root.current?.querySelector<HTMLElement>(`#${CSS.escape(tabId(next))}`)?.focus();
-        }}
-        style={{ "--n": tabs.length, "--i": tabs.indexOf(tab) } as CSSProperties}
-      >
-        <span className={styles.marker} aria-hidden="true" />
-        {tabs.map((t) => (
-          <Tooltip key={t} text={usable.includes(t) ? undefined : NO_SCREEN}>
-            <button
-              id={tabId(t)}
-              type="button"
-              role="tab"
-              className={styles.tab}
-              aria-selected={t === tab}
-              aria-controls={t === tab ? `${tabId(t)}-panel` : undefined}
-              aria-disabled={!usable.includes(t) || undefined}
-              tabIndex={t === tab ? 0 : -1}
-              onPointerDown={(e) => {
-                pointer.current = e.pointerType;
-              }}
-              onClick={() => {
-                if (usable.includes(t)) setTab(t);
-                else if (pointer.current === "touch" || pointer.current === "pen")
-                  toastStore.show(NO_SCREEN, <Icon name="screen-off" size={20} />);
-              }}
-            >
-              {t === "screen" ? (
-                <Icon name="screen-share" size={20} />
-              ) : t === "camera" ? (
-                <Icon name="camera-on" size={20} />
-              ) : (
-                <Icon name="mic" size={20} />
-              )}
-              {t === "screen" ? "Screen" : t === "camera" ? "Camera" : "Voice"}
-              {(t === "voice" ? props.voice : mine[t]) && <span className={styles.dot} data-live aria-hidden="true" />}
-            </button>
-          </Tooltip>
-        ))}
-      </div>
-      {/* Over the cog every tab is drawn in one cell, the hidden ones invisible, so the panel is as
-          tall as its tallest tab and switching never moves the tabs (design decision 9). */}
-      <div className={styles.panes}>
-        {usable.map((t) => (
-          <div
-            key={t}
-            id={`${tabId(t)}-panel`}
-            role="tabpanel"
-            aria-labelledby={tabId(t)}
-            className={styles.body}
-            // A list opening here floats over the tab's controls, masking what's behind it (spec 0111).
-            data-list-host
-            data-off={t !== tab || undefined}
-            aria-hidden={t !== tab || undefined}
-            inert={t !== tab || undefined}
-          >
-            {t === "screen" ? (
-              <ScreenTab {...props} cue={cue?.kind === "screen" ? cue.n : undefined} />
-            ) : t === "camera" ? (
-              <CameraTab {...props} cue={cue?.kind === "camera" ? cue.n : undefined} />
-            ) : (
-              <VoiceTab {...props} shown={open && tab === "voice"} />
-            )}
-          </div>
-        ))}
-      </div>
+        panelsClassName={styles.panes}
+        panelClassName={styles.body}
+        slimScroll
+        panel={(t) =>
+          t === "screen" ? (
+            <ScreenTab {...props} cue={cue?.kind === "screen" ? cue.n : undefined} />
+          ) : t === "camera" ? (
+            <CameraTab {...props} cue={cue?.kind === "camera" ? cue.n : undefined} />
+          ) : (
+            <VoiceTab {...props} shown={open && tab === "voice"} />
+          )
+        }
+      />
     </Panel>
   );
 }
