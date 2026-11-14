@@ -173,7 +173,6 @@ Body line height is 1.5; headings balance their lines (`text-wrap: balance`). Fo
 | The stage resizing to a new picture | 350 ms | ease |
 | Controls over a playing stream | fade after about 2.5 s without a touch or mouse move; back on any mouse move or press on the stage; a heard voice stays | 250 ms fade |
 | The ambilight following the picture | 120 ms time constant, with the screen's refresh (at most 60 a second) | — |
-| The live dot's ping | 1.8 s, looping | ease-out |
 | The mark's hover animation | about 3 s, once | — |
 
 - **Panels never clip, fade or filter** while they move: that would stop their blur. They unroll by their height.
@@ -306,8 +305,9 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 
 ### Action pills and label pills
 
-- **An action pill** (`ActionPill`) is a button with words, round at both ends: **M 34** over a stream (Go live) or **L 44** where it's the screen's main choice (the empty stage's Screen and Camera). Three fills: **glass** (the round buttons' base), **red** (the first way, `--accent`) and **soft** (a second way, a light translucent fill). An icon or the live dot comes first. Unavailable: 45%, saying why, like a round button.
-- **A label pill** (`LabelPill`) names what a picture shows (a preview's "Rafa · screen"): **22 px** glass, a face or an icon first, 500 weight. It isn't a button: the picture under it is.
+- **An action pill** (`ActionPill`) is a button with words, round at both ends: **M 34** over a stream (Go live) or **L 44** where it's the screen's main choice (the empty stage's Screen and Camera). Three fills: **glass** (the round buttons' base), **red** (the first way, `--accent`) and **soft** (a second way, a light translucent fill). An icon or the [live dot](#avatars-and-live) comes first. Unavailable: 45%, saying why, like a round button.
+- **A small button with words is the dark pill** (a rule for the whole app): `ActionPill`'s **dark** fill, the chosen segment's pill (`--sel-bg`, its shadow, lighter when pointed at), white semibold words, one size per place: **S 30** in the drop-up's glass row (Change over the video) and **XS 26** in a panel (Change in the settings' window row, Test beside the mic's level). **On** (pressed, Test while it plays) it's white with dark words. Never a round button with words. (Change: [the settings' Screen tab](#the-settings-panel); Test: [the Voice tab](#the-settings-panel).)
+- **A label pill** (`LabelPill`) names what a picture shows or says something about it (a preview's "Rafa · screen", the camera preview's "Only you see this"): **22 px** glass, 500 weight, a face or an icon first when it names someone, words alone otherwise. It isn't a button: the picture under it is. **Any label over a picture is one.**
 - The counters' Stat pill stays its own block ([Counters by space](#counters-by-space)): it counts, it doesn't act or name.
 
 ### What I hear, and Go live
@@ -371,6 +371,7 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 - **The button's own click still does what it always does** (stop the stream).
 - **With the settings open, the gesture goes to the panel** instead: resting on a live button opens nothing over the button; the panel switches to that button's tab and **cues** the control (Change; the camera's picker, its list opened). The keyboard's focus doesn't move the panel. A rule for any later quick action: when a panel already shows the controls, the quick action goes there.
 - **Screen:** what's shared ("A window", "A tab" or "Your whole screen") and **Change**. **Camera:** the camera's picker, growing upward. Their controls are 36 px tall, with 12 px text.
+- **A control row has two looks** (`DropUpRow`), like the picker: **glass** over the video (the drop-up's, 36 px) and the **panel's light track** in a panel (the settings' window row, 30 px), what's shared on the left and Change at its end.
 
 ### The settings panel
 
@@ -380,10 +381,10 @@ The settings for what you send, from the cog on my own stream or, with nobody li
 
 - **Over the cog:** a popover **centred on the cog** (or on Go live), **10 px above the round buttons** (never behind them) and never past the player's sides; it fades in and rises 6 px. **Every tab has the same height**, the tallest one's, so switching tabs never moves the tabs under the pointer; at least 240 px, at most the room above the buttons (then it scrolls inside). Its width follows the player: a fifth of it, **280 to 320 px**. **Another stream taking the stage closes the settings:** they belong to the buttons they opened from. The ✕, the cog or Escape closes it.
 - On the one [Panel](#the-panel). **One control height:** 30 px. **Each control's name** is a [Control label](#labels-by-space).
-- **Tabs Screen, Camera and Voice**, with a **red marker** that slides under the chosen one and a **red dot** on the tab of what you're sending. **Where a screen can't be shared, the Screen tab is greyed out**: it stays in its place, says why ("This browser can't share a screen"), and the panel opens on Camera.
-- **Screen:** while you share, what's shared and **Change** (and, when the screen has no sound, a line saying how to share it); while you don't, one line saying these are used next time. **No preview**: the stage and the browser's picker already show it. Then Quality and Mode.
-- **Camera:** your camera's preview under its own **Preview** heading, like every other group, centred under it: **LIVE** while it's sent, **"Only you see this"** while it's off (the camera turns on for you alone while the tab is open). Like any app, the browser asks for the camera the first time; refused or missing, the preview's place says so, and how to allow it. Then the camera's picker, Quality and Mode.
-- **Voice:** the **Microphone** picker; **Mic level**, one row: my live level on the slim track (faint under the line, green over it, when it's sent), the sensitivity line on it (sound under it isn't sent), and **Test**, a small pill that plays my voice back to me for 5 s ("Stop · 5", counting down); the level and Test work once my voice is on (the mic is asked for only then), Test greyed until it is; then **Voice processing**, four [settings rows](#switch): echo cancellation, noise suppression and automatic volume (on), voice isolation (off, greyed where the browser can't). Applied at once, remembered.
+- **Tabs Screen, Camera and Voice**, on the shared [Tabs](#tabs), with the **live dot** on the tab of what you're sending. **Where a screen can't be shared, the Screen tab is greyed out**: it stays in its place, says why ("This browser can't share a screen"), and the panel opens on Camera.
+- **Screen:** while you share, what's shared and **Change** (the dark pill, on the row's panel look) (and, when the screen has no sound, a line saying how to share it); while you don't, one line saying these are used next time. **No preview**: the stage and the browser's picker already show it. Then Quality and Mode.
+- **Camera:** your camera's preview under its own **Preview** heading, like every other group, in Also live's [video frame](#rules-for-new-work), centred under it: **LIVE** while it's sent, **"Only you see this"**, a label pill, while it's off (the camera turns on for you alone while the tab is open). Like any app, the browser asks for the camera the first time; refused or missing, the preview's place says so, and how to allow it. Then the camera's picker, Quality and Mode.
+- **Voice:** the **Microphone** picker; **Mic level**, one row: the sensitivity, a [threshold slider](#sliders) (sound under its line isn't sent) with my live level drawn in its track (faint under the line, green over it, when it's sent), and **Test**, the dark pill (XS) that plays my voice back to me for 5 s ("Stop · 5", counting down); the level and Test work once my voice is on (the mic is asked for only then), Test greyed until it is; then **Voice processing**, four [settings rows](#switch): echo cancellation, noise suppression and automatic volume (on), voice isolation (off, greyed where the browser can't). Applied at once, remembered.
 
 ![The Voice tab](images/design/voice-tab.png)
 - **No field descriptions**, except where a setting needs a line to make sense. The body scrolls with the app's slim scrollbar, without arrows.
@@ -403,15 +404,24 @@ Two sizes: **md** (10 × 18 px padding, 15 px text) and **sm** (6 × 12 px, 13 p
 
 `shared/components/slider` (the `Slider`), white like a video player's: a **3 px track**, white up to the knob and `#ebebec` at 22% after, and a **12 px white knob** that grows to 14 px on hover or keyboard focus. Used for the ambilight's brightness, each sound's volume over the stage and on the phone's feed cards ([upright](#what-i-hear-and-go-live), in the stage's glass pill), and in a small preview's row ([across, after the buttons](#on-the-stage)). WebKit has no part for the filled side, so the `Slider` sets a `--fill` variable; Firefox uses `::-moz-range-progress`.
 
-**A threshold is a line, not a knob:** the mic's sensitivity is a slim upright white line (3 × 14 px, growing to 16 px) across the same slim track, the common mark for a threshold.
+**A threshold is a line, not a knob** (the `Slider`'s **threshold** variant): the mic's sensitivity is a slim upright white line (3 × 14 px, growing to 16 px) across the same slim track, the common mark for a threshold. **A level can be drawn in its track** (`level`, from 0 to 1): faint, and green once it's `sent`. Unavailable (its setting off), a slider is at 45%, like every control.
 
 ### Switch
 
 A slim grey track (**36 × 12 px**, `#3a3a3d`) that looks the same off and on, and a **16 px knob** over its height but never past its ends: `#bdbdc0` when off, red when on, sliding in 180 ms. The ambilight's on/off in my menu, the Voice tab's processing.
 
-**Settings rows** (every settings list): the label on the panel's type scale (12 px, regular, white at 82%), never heavier or bigger than the panel's title; what a row does in its tooltip, not under it; the label 3 px inside its heading; the switch ending 12 px in from the column's edge, where a picker's arrow does.
+**Settings rows** (every settings list, my menu's Ambilight included): the `Switch`'s own row, never restyled where it's used: **30 px** tall, the label on the panel's type scale (12 px, regular, white at 82%), never heavier or bigger than the panel's title; what a row does in its tooltip, not under it; the label 3 px inside its heading; the switch ending 12 px in from the column's edge, where a picker's arrow does.
 
 The sliders' rules stay one browser per rule, checked by `npm run check:styles` ([Testing](testing.md#the-style-check)).
+
+### Tabs
+
+`shared/components/tabs` (`Tabs`): **tabs are one shared block** (the settings' Screen, Camera and Voice, and any later panel with tabs).
+
+- **A red marker** (`--accent`) slides under the chosen tab in 200 ms, centred on it; the chosen tab's words and icon in the text colour, the others muted, lit to the text colour when pointed at.
+- **The [live dot](#avatars-and-live) (S)** at the top right of a tab's icon while what it sets is live.
+- **Every tab's pane is as tall as the tallest**, so switching never moves the tabs; a pane that scrolls has the slim scrollbar.
+- **Unusable, greyed in place** at 45%, its reason in its tooltip (and in a toast on a touch). The arrow keys move round them; only the chosen tab is a Tab-key stop.
 
 ### Dropdown panels
 
@@ -482,7 +492,7 @@ A number that changes takes the look of **its space**, and each space's look is 
 
 ![My face lit while my voice is sent, beside my face live and silent](images/design/my-face-talking.png)
 - **LIVE badge** (the `LiveBadge` block): "LIVE" in mono with a deep-red dot on red. Beside who's on the stage it's a small tag whose dot pulses; over my preview in the settings, a pill with a still dot.
-- **The live dot:** 8 px red, with a ring that pings outward every 1.8 s.
+- **The live dot** (the `LiveDot` block): one red dot with a soft red glow (`--accent-70`, 8 px), still, in two sizes: **M 8 px** first on a pill (Go live) and **S 6 px** on a tab (the settings' tab of what you're sending). Screen readers don't hear it: the words around it say it.
 
 ### On the stage
 
@@ -593,10 +603,12 @@ Its content stays clear of the phone's bars (the browser's safe areas).
 - **Even spacing:** a row of pictures keeps one gap between all of them, counting what peeks out behind one; a button sits in the middle of its box both ways.
 - **Say each thing once:** on one screen, a fact (who's here, the seats, that nobody's sharing) appears in one place only.
 - **A panel's places are fixed.** A set of controls (the sounds I hear, and any like it) keeps every place it will ever have; one that can't be used yet is greyed in place, never left out, and never counts for a summary.
-- **Unavailable, not hidden.** An option that can't be used here stays in its place, greyed out (a text option, like a tab: `--text-disabled` at 50%; a control, like a round button or a sound I can't hear: 45% opacity), with its reason in its tooltip, so a panel looks the same on every device.
+- **Unavailable, not hidden.** An option that can't be used here stays in its place, greyed out at **45% opacity**, every control alike (a round button, a pill, a tab in `--text-disabled`, a segment, a switch, a slider, a sound I can't hear), with its reason in its tooltip, so a panel looks the same on every device.
+- **One slim scrollbar** for every box that scrolls (`data-scroll="slim"`, written once in `global.css`): 4 px, no arrows, white at 22%, 40% while the box is pointed at; the page's own scrollbar is left alone.
+- **A video in a frame is one frame** (`StageVideoFrame`): 16:9, black, **8 px corners**, the picture letterboxed inside under a hairline: Also live's cards and the camera's preview.
 - **Draft first:** a visual change starts as a draft approved before the work starts: a change to screens that exist, as a prototype in the app itself; a brand-new screen may start as a clickable HTML draft with these tokens and fonts. The approved draft is the reference the code must match.
 - **Check every size:** a 2K monitor both ways (2560 × 1440 and 1440 × 2560), 1920 × 1080, a narrow window, the empty room, and the phone and tablet screen.
-- **Reuse the components:** the shared blocks in `shared/components/`, each shown in Storybook: `Icon`, `IconButton` (the round button, L and M, and its other purposes), `ActionPill`, `LabelPill`, `Face`, `Switch`, `LiveBadge`, `Headline`, `ErrorNotice`, `Button`, `Slider`, `Segmented`, `Toast`, `Wordmark`, `Panel` and `PanelSection`, `PageShell`, `Field`, `StatPill`, `CountChip`, `ControlLabel`, `SectionHeading`, `MenuRow`, `Dropdown`, `Picker`, `DropUp`, `Tooltip`; and `StageNotice`. **One block per purpose** (ADR-0094): what does the same job is one block, even where today's values differ; what does a different job is its own block, however alike it looks, so changing one never changes another. A new control follows their sizes, motion and focus ring. A choice from a list is a `Picker` (one box, floating, with the slim scrollbar when long), a few options a `Segmented`, and a quick action over a live button a `DropUp`, everywhere in the app.
+- **Reuse the components:** the shared blocks in `shared/components/`, each shown in Storybook: `Icon`, `IconButton` (the round button, L and M, and its other purposes), `ActionPill` (and its `LiveDot`), `LabelPill`, `Tabs`, `DropUpRow`, `Face`, `Switch`, `LiveBadge`, `Headline`, `ErrorNotice`, `Button`, `Slider`, `Segmented`, `Toast`, `Wordmark`, `Panel` and `PanelSection`, `PageShell`, `Field`, `StatPill`, `CountChip`, `ControlLabel`, `SectionHeading`, `MenuRow`, `Dropdown`, `Picker`, `DropUp`, `Tooltip`; and `StageNotice`. **One block per purpose** (ADR-0094): what does the same job is one block, even where today's values differ; what does a different job is its own block, however alike it looks, so changing one never changes another. A new control follows their sizes, motion and focus ring. A choice from a list is a `Picker` (one box, floating, with the slim scrollbar when long), a few options a `Segmented`, and a quick action over a live button a `DropUp`, everywhere in the app.
 - **Panels open over the button that opened them,** never from a side. **Panels are frosted, never opaque**; nothing over the video hides the round buttons.
 - **Say what effects cost:** blur, canvases and animations run on every frame; keep them to what's here.
 - **A screen says only what matters.** No readouts that imitate real equipment (clocks, meters, rulers, format tags, made-up numbers), and no frame inside another frame.

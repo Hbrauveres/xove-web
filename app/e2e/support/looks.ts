@@ -62,13 +62,19 @@ export const LOOK = {
   flipped: "rotate(180deg)",
   /** Words said to screen readers, unseen: clipped away. */
   unseen: "inset(50%)",
+  /** The live dot's glow. */
+  dotGlow: "0 0 var(--space-2) var(--accent-70)",
+  /** A video frame's black. */
+  frame: "var(--black)",
+  /** The dark action pill: the chosen segment's fill. */
+  selected: "var(--sel-bg)",
 } as const;
 
 /** The weights the app's words come in (its stylesheets name them as numbers). */
 export const WEIGHT = { medium: "500", semibold: "600" } as const;
 
-/** How faded an unavailable control is drawn, and a slider whose setting is off (its stylesheets). */
-export const FADED = { unavailable: "0.45", off: "0.4" } as const;
+/** How faded an unavailable control is drawn, a slider whose setting is off included (its stylesheets). */
+export const FADED = { unavailable: "0.45" } as const;
 
 /**
  * What `value` (CSS, with the app's tokens) computes to for `property` on this page: how a computed
@@ -106,6 +112,13 @@ export const SIZE = {
   /** An action pill in M (Go live) and in L (the empty stage's Screen and Camera). */
   pillM: "var(--control-sm)",
   pillL: "var(--control-2xl)",
+  /** A dark action pill in S (Change) and in XS (Test). */
+  pillS: "var(--size-7-5)",
+  pillXs: "var(--size-6-5)",
+  /** How far in from a settings row's end its switch sits. */
+  rowEnd: "var(--space-3)",
+  /** A video frame's corners. */
+  frameCorner: "var(--radius-2)",
   /** A label pill (a preview's name), a stat pill (who's watching), a count chip. */
   labelPill: "var(--size-5-5)",
   statPill: "var(--size-6-5)",

@@ -9,25 +9,8 @@
   border-top: var(--hairline) solid var(--panel-line);
 }
 
-/* A long list scrolls inside its section, with a thin scrollbar that matches. */
+/* A long list scrolls inside its section, with the app's slim scrollbar. */
 .scroll {
   max-height: min(var(--vh-56), var(--card-width));
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--white-22) transparent;
-}
-
-.scroll::-webkit-scrollbar {
-  width: var(--size-2);
-}
-
-.scroll::-webkit-scrollbar-thumb {
-  background: var(--white-22);
-  border-radius: var(--radius-pill);
-  border: var(--border-0-5) solid transparent;
-  background-clip: padding-box;
-}
-
-.scroll::-webkit-scrollbar-track {
-  background: transparent;
 }

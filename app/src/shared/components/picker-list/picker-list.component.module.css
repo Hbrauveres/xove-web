@@ -23,36 +23,9 @@
   transition: clip-path var(--duration-220) var(--ease-out);
 }
 
-/* A long list scrolls with the app's slim scrollbar, inside it, clear of its rounded corners. */
-.list::-webkit-scrollbar {
-  width: var(--size-1);
-}
-
-.list::-webkit-scrollbar-button {
-  display: none;
-  width: 0;
-  height: 0;
-}
-
+/* A long list scrolls with the app's slim scrollbar, its track clear of the list's rounded corners. */
 .list::-webkit-scrollbar-track {
   margin-block: var(--space-1-5);
-  background: transparent;
-}
-
-.list::-webkit-scrollbar-thumb {
-  border-radius: var(--radius-pill);
-  background: var(--white-22);
-}
-
-.list:hover::-webkit-scrollbar-thumb {
-  background: var(--white-40);
-}
-
-@supports not selector(::-webkit-scrollbar) {
-  .list {
-    scrollbar-width: thin;
-    scrollbar-color: var(--white-22) transparent;
-  }
 }
 
 .list[data-up] {

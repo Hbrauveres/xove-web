@@ -41,7 +41,7 @@ export function StageAlsoLive(props: StageAlsoLiveProps) {
   };
   return (
     <section className={styles.also} aria-label="Also live">
-      <ul className={styles.strip} aria-label="Other streams">
+      <ul className={styles.strip} data-scroll="slim" aria-label="Other streams">
         {stripOrder(others).map((s) => (
           <StageLivePreview
             key={s.person.id}

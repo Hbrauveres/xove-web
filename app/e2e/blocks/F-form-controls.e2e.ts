@@ -68,7 +68,7 @@ test("F-form-controls.4 a slider whose setting is off is greyed and can't be mov
     await menu.getByRole("switch", { name: "Ambilight" }).click();
   });
   await expect.soft(slider).toBeDisabled();
-  await expect.soft(slider).toHaveCSS("opacity", FADED.off);
+  await expect.soft(slider).toHaveCSS("opacity", FADED.unavailable);
 });
 
 test("F-form-controls.5 a field: its label at the box's edge, the counter under the box, the form's button at the row's end", async ({
@@ -157,4 +157,27 @@ test("F-form-controls.9 a control's name over it in a panel: 11 px muted capital
   const q = await boxOf(quality);
   const g = await boxOf(panel.getByRole("radiogroup", { name: "Screen quality" }));
   expect.soft(q.y + q.height).toBeLessThanOrEqual(g.y);
+});
+
+test("F-form-controls.10 a switch in a list is the settings row: 30 px, its switch 12 px from the end, alike everywhere", async ({
+  page,
+}, info) => {
+  const rows: { h: number; end: number }[] = [];
+  const measure = async (sw: ReturnType<typeof page.getByRole>) => {
+    const row = sw.locator("xpath=ancestor::label[1]");
+    const [r, s] = [await boxOf(row), await boxOf(sw)];
+    rows.push({ h: r.height, end: r.x + r.width - (s.x + s.width) });
+  };
+  const menu = await openMyMenu(page);
+  const ambilight = menu.getByRole("switch", { name: "Ambilight" });
+  await observe(page, info, { ambilight }, async () => {
+    await measure(ambilight);
+  });
+  const voice = await settingsOn(page, "Voice");
+  await measure(voice.getByRole("switch", { name: "Noise suppression" }));
+  const [h, end] = [await pxOf(page, SIZE.panelControl), await pxOf(page, SIZE.rowEnd)];
+  for (const r of rows) {
+    expect.soft(r.h).toBe(h);
+    expect.soft(Math.abs(r.end - end)).toBeLessThan(1);
+  }
 });

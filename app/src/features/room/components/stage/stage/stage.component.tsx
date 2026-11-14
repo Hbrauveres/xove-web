@@ -4,7 +4,7 @@ import { StageInfo } from "../../stage-info/stage-info";
 import { StagePlayer } from "../stage-player";
 import { useVideoShape } from "./hooks/use-video-shape.hook";
 import styles from "./stage.component.module.css";
-import { SettingsPanel } from "../../../../../components/stage/SettingsPanel";
+import { SettingsPanel } from "../../settings/settings-panel";
 import { useRoomSession } from "../../../stores/room-session";
 import { shapeStyle } from "./utils/stage-look.util";
 

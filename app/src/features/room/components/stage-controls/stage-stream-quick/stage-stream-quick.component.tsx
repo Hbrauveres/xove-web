@@ -1,9 +1,8 @@
+import { ActionPill } from "@shared/components/action-pill";
 import { DropUpRow } from "@shared/components/drop-up-row";
-import { IconButton } from "@shared/components/icon-button";
 import { Picker } from "@shared/components/picker";
 import { Tooltip } from "@shared/components/tooltip";
 import { StageScreenSource } from "../stage-screen-source";
-import styles from "./stage-stream-quick.component.module.css";
 import type { StageStreamQuickProps } from "./types/stage-stream-quick.types";
 
 /**
@@ -17,9 +16,9 @@ export function StageStreamQuick(props: StageStreamQuickProps) {
       <DropUpRow>
         <StageScreenSource surface={screenSurface} />
         <Tooltip text="Pick another window or tab; viewers keep watching the same stream">
-          <IconButton variant="words" className={styles.change} disabled={busy} onClick={props.onChangeWindow}>
+          <ActionPill size="s" fill="dark" disabled={busy} onClick={props.onChangeWindow}>
             Change
-          </IconButton>
+          </ActionPill>
         </Tooltip>
       </DropUpRow>
     );

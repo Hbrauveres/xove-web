@@ -19,7 +19,7 @@
 }
 
 .range:disabled {
-  opacity: 0.4;
+  opacity: 0.45;
   cursor: default;
 }
 
@@ -82,8 +82,68 @@
   height: var(--size-3-5);
 }
 
+/*
+ * The threshold: the live level drawn in the track, green past the line (sent), faint under it,
+ * and the knob a slim upright line across the track, which grows on hover or keyboard focus.
+ */
+.threshold {
+  --level-colour: var(--text-shade-40);
+  cursor: ew-resize;
+}
+
+.threshold[data-sent] {
+  --level-colour: var(--ok);
+}
+
+.threshold::-webkit-slider-runnable-track {
+  background: linear-gradient(to right, var(--level-colour) 0 var(--level), var(--text-shade-16) var(--level));
+  transition: background var(--duration-90) linear;
+}
+
+.threshold::-webkit-slider-thumb {
+  width: var(--size-0-75);
+  height: var(--size-3-5);
+  margin-top: calc(var(--space-1-375) * -1);
+  border-radius: var(--radius-0-5);
+  box-shadow: 0 0 0 var(--space-0-5) var(--black-35);
+  cursor: ew-resize;
+  transition:
+    height var(--duration-120),
+    margin-top var(--duration-120);
+}
+
+.threshold:hover::-webkit-slider-thumb,
+.threshold:focus-visible::-webkit-slider-thumb {
+  width: var(--size-0-75);
+  height: var(--size-4);
+  margin-top: calc(var(--space-1-625) * -1);
+}
+
+.threshold::-moz-range-track {
+  background: linear-gradient(to right, var(--level-colour) 0 var(--level), var(--text-shade-16) var(--level));
+}
+
+.threshold::-moz-range-progress {
+  background: transparent;
+}
+
+.threshold::-moz-range-thumb {
+  width: var(--size-0-75);
+  height: var(--size-3-5);
+  border-radius: var(--radius-0-5);
+  box-shadow: 0 0 0 var(--space-0-5) var(--black-35);
+  cursor: ew-resize;
+}
+
+.threshold:hover::-moz-range-thumb,
+.threshold:focus-visible::-moz-range-thumb {
+  width: var(--size-0-75);
+  height: var(--size-4);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .range::-webkit-slider-thumb {
+  .range::-webkit-slider-thumb,
+  .threshold::-webkit-slider-runnable-track {
     transition: none;
   }
 

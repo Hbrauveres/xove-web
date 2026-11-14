@@ -53,6 +53,39 @@ button {
   outline-offset: var(--border-0-5);
 }
 
+/* The app's one slim scrollbar, for any box marked data-scroll="slim": 4 px, no arrows, white at
+   22%, 40% while the box is pointed at. The page's own scrollbar is left alone. */
+[data-scroll="slim"]::-webkit-scrollbar {
+  width: var(--size-1);
+  height: var(--size-1);
+}
+
+[data-scroll="slim"]::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+[data-scroll="slim"]::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+[data-scroll="slim"]::-webkit-scrollbar-thumb {
+  border-radius: var(--radius-pill);
+  background: var(--white-22);
+}
+
+[data-scroll="slim"]:hover::-webkit-scrollbar-thumb {
+  background: var(--white-40);
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  [data-scroll="slim"] {
+    scrollbar-width: thin;
+    scrollbar-color: var(--white-22) transparent;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

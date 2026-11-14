@@ -1,17 +1,13 @@
-import { useEffect, useRef, useState, type FocusEvent } from "react";
+import { useEffect, useRef, type FocusEvent } from "react";
 import { LEAVE_GRACE_MS, OPEN_DELAY_MS } from "@shared/constants/floating.constants";
 import { floatingStore, useFloating } from "@shared/stores/floating-store";
 import type { DropUpOptions } from "../types/drop-up.types";
 import { isKeyboardFocus } from "../utils/keyboard-focus.util";
+import { useToldOpen } from "./use-told-open.hook";
 
 /** When a drop-up is open: the mouse's rest and grace, the keyboard's focus, what closes it. */
 export function useDropUp({ enabled, open: told, onOpenChange, redirect }: DropUpOptions) {
-  const [own, setOwn] = useState(false);
-  const open = told ?? own;
-  const setOpen = (next: boolean) => {
-    if (told === undefined) setOwn(next);
-    onOpenChange?.(next);
-  };
+  const [open, setOpen] = useToldOpen(told, onOpenChange);
   const opening = useRef<number | undefined>(undefined);
   const leaving = useRef<number | undefined>(undefined);
   const root = useRef<HTMLDivElement>(null);
@@ -53,6 +49,8 @@ export function useDropUp({ enabled, open: told, onOpenChange, redirect }: DropU
         } else if (free()) setOpen(true);
       }, OPEN_DELAY_MS);
     },
+    // Sent elsewhere, a press on the button asks again at once: what it asked for stays shown.
+    onPointerDown: () => redirect?.(),
     onPointerLeave: () => {
       window.clearTimeout(opening.current);
       leaving.current = window.setTimeout(close, LEAVE_GRACE_MS);

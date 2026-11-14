@@ -21,6 +21,20 @@
   outline-offset: var(--border-0-5);
 }
 
+/* xs: in a panel's row (the settings' Change, Test), 2 px inside it. */
+.xs {
+  height: var(--size-6-5);
+  padding: 0 var(--space-3);
+  font-size: var(--text-xs);
+}
+
+/* s: in a glass row (the screen's drop-up: Change), 2 px inside it. */
+.s {
+  height: var(--size-7-5);
+  padding: 0 var(--space-3);
+  font-size: var(--text-xs);
+}
+
 /* m: over a stream (Go live). */
 .m {
   height: var(--control-sm);
@@ -68,6 +82,17 @@
   background: var(--text-shade-08);
 }
 
+/* Dark: a small button in a row, the chosen segment's pill. On (aria-pressed), white with dark words. */
+.dark {
+  background: var(--sel-bg);
+  box-shadow: var(--sel-shadow);
+}
+
+.dark[aria-pressed="true"] {
+  background: var(--text);
+  color: var(--ground);
+}
+
 @media (hover: hover) {
   .glass:not([aria-disabled="true"]):hover {
     background: var(--grey-40-85);
@@ -80,10 +105,20 @@
   .soft:not([aria-disabled="true"]):hover {
     background: var(--text-shade-14);
   }
+
+  .dark:not([aria-disabled="true"], [aria-pressed="true"], :disabled):hover {
+    background: var(--sel-hover);
+  }
 }
 
-.pill[aria-disabled="true"] {
+.pill[aria-disabled="true"],
+.pill:disabled {
   cursor: not-allowed;
+}
+
+/* Disabled while something else is under way (a change being made): faded in its own fill. */
+.pill:disabled {
+  opacity: 0.45;
 }
 
 /* Can't be used now: faded in place, a soft fill whatever its own; its tooltip says why. */
@@ -91,15 +126,6 @@
   background: var(--text-shade-06);
   color: var(--text);
   opacity: 0.45;
-}
-
-/* The live dot: red, glowing a little. */
-.dot {
-  width: var(--size-2);
-  height: var(--size-2);
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 var(--space-2) var(--accent-70);
 }
 
 @media (prefers-reduced-motion: reduce) {

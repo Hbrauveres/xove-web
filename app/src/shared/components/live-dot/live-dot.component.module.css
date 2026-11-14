@@ -1,0 +1,20 @@
+/* The live dot: red, glowing a little, in two sizes. */
+.dot {
+  display: block;
+  flex: none;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 var(--space-2) var(--accent-70);
+}
+
+/* s: on a tab. */
+.s {
+  width: var(--size-1-5);
+  height: var(--size-1-5);
+}
+
+/* m: on a pill (Go live). */
+.m {
+  width: var(--size-2);
+  height: var(--size-2);
+}

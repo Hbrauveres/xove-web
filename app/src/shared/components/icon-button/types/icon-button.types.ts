@@ -19,11 +19,10 @@ interface RoundProps {
 /**
  * The buttons that aren't round, each for another purpose:
  * - header: the header's clear pill buttons
- * - words: a small pill with words, in the settings' own style (Change, Test)
  * - close: a panel's close, clear until pointed at
  */
 interface OtherProps {
-  variant: "header" | "words" | "close";
+  variant: "header" | "close";
   size?: never;
   live?: never;
   unavailable?: never;

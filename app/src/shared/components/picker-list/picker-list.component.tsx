@@ -21,6 +21,7 @@ export function PickerList<T extends string>({
       role="menu"
       aria-label={label}
       className={styles.list}
+      data-scroll="slim"
       data-unroll={(open && unrolled) || undefined}
       data-up={up || undefined}
       // Rolling back: still drawn, out of reach.

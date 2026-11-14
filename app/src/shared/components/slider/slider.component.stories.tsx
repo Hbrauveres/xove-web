@@ -20,3 +20,9 @@ type Story = StoryObj<typeof meta>;
 export const Partway: Story = {};
 export const Empty: Story = { args: { value: 0 } };
 export const Full: Story = { args: { value: 1 } };
+/** A threshold (the mic's sensitivity): the line knob, the live level in the track, faint under the line. */
+export const Threshold: Story = {
+  args: { variant: "threshold", "aria-label": "Mic sensitivity", value: 0.3, level: 0.2, sent: false },
+};
+/** A threshold with the level past the line: sent, green. */
+export const ThresholdSent: Story = { args: { ...Threshold.args, level: 0.6, sent: true } };

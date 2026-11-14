@@ -6,7 +6,7 @@ import { boxOf, inside } from "../support/geometry.ts";
 import { computed, LOOK, pxOf, SIZE, WEIGHT } from "../support/looks.ts";
 import { pointAt, pointAway } from "../support/pointer.ts";
 import { untilStill } from "../support/timing.ts";
-import { pseudo, watching } from "./where.ts";
+import { pseudo, sharingMyScreen, watching } from "./where.ts";
 
 test("F-pills.1 Go live is an M glass action pill with the live dot first, lighter when pointed at", async ({
   page,
@@ -25,6 +25,7 @@ test("F-pills.1 Go live is an M glass action pill with the live dot first, light
   expect.soft(seen.before.goLive?.look?.backgroundColor).toBe(await computed(page, "background-color", LOOK.glass));
   expect.soft(seen.before.goLive?.text).toBe("Go live");
   await expect.soft(dot).toHaveCSS("background-color", await computed(page, "background-color", LOOK.accent));
+  await expect.soft(dot).toHaveCSS("box-shadow", await computed(page, "box-shadow", LOOK.dotGlow));
   expect.soft(lit).toBe(await computed(page, "background-color", LOOK.glassLit));
   expect.soft(blinks(seen.frames, "dot")).toEqual([]);
   expect.soft(drift(seen.frames, "goLive")).toBeLessThan(1);
@@ -136,4 +137,28 @@ test("F-pills.7 with a request waiting, its chip is red: the light accent on a r
   const size = await pxOf(page, SIZE.chip);
   expect.soft(box.height).toBe(size);
   expect.soft(box.width).toBeGreaterThanOrEqual(size);
+});
+
+test("F-pills.8 a small button with words is the dark pill: my drop-up's Change, 30 px, semibold", async ({
+  page,
+}, info) => {
+  await sharingMyScreen(page);
+  const button = page.getByRole("button", { name: "Stop sharing your screen" });
+  const change = page.getByRole("group", { name: "What you share" }).getByRole("button", { name: "Change" });
+  let lit = "";
+  const seen = await observe(page, info, { change }, async () => {
+    await pointAt(page, button);
+    await change.waitFor();
+    await untilStill(change);
+    await pointAt(page, change);
+    await untilStill(change);
+    lit = await change.evaluate((e) => getComputedStyle(e).backgroundColor);
+  });
+  expect.soft(seen.after.change?.box?.h).toBe(await pxOf(page, SIZE.pillS));
+  await expect.soft(change).toHaveCSS("font-weight", WEIGHT.semibold);
+  await expect.soft(change).toHaveCSS("color", await computed(page, "color", LOOK.text));
+  expect.soft(lit).not.toBe(await computed(page, "background-color", LOOK.selected));
+  await pointAway(page);
+  await expect.soft(change).toHaveCSS("background-color", await computed(page, "background-color", LOOK.selected));
+  expect.soft(drift(seen.frames, "change")).toBeLessThan(1);
 });

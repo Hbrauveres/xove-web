@@ -14,6 +14,7 @@ export {
 } from "./constants/devices.constants";
 export { listDevices, watchDevices } from "./device-list.service";
 export { startMicMeter } from "./mic-meter.service";
+export { canIsolateVoice } from "./voice-isolation.service";
 export { pickScreen } from "./screen-picker.service";
 export type {
   CameraDevice,

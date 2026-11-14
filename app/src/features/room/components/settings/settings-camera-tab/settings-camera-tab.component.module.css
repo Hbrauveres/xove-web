@@ -1,0 +1,12 @@
+/* A control's group: its name over it. */
+.group {
+  display: grid;
+  gap: var(--space-1-5);
+}
+
+/* The camera's picker, cued: the cue follows its rounded corners. */
+.cueBox {
+  position: relative;
+  display: grid;
+  border-radius: var(--radius-2-5);
+}

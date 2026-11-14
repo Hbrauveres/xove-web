@@ -2,7 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
 import { boxOf } from "../support/geometry.ts";
-import { computed, cssOf, LOOK } from "../support/looks.ts";
+import { computed, cssOf, LOOK, pxOf, SIZE } from "../support/looks.ts";
 import { restOn } from "../support/pointer.ts";
 import { shownTip } from "../support/stage.ts";
 import { HEAR_YOURSELF_MS, LOOK_EVERY_MS, METER_MS, TIP_REST_MS, untilStill } from "../support/timing.ts";
@@ -30,11 +30,11 @@ async function voiceTab(page: Page, { voice = false } = {}) {
   return panelOf(page).getByRole("tabpanel", { name: "Voice" });
 }
 
-/** The level meter's reading, 0 to 100 (its `--level`), and whether it's sent. */
-const meterOf = (page: Page) => panelOf(page).locator('[style*="--level"]');
+/** The mic's level, drawn in the sensitivity slider's track: its reading, 0 to 100 (its `--level`), and whether it's sent. */
+const meterOf = (page: Page) => panelOf(page).getByRole("slider", { name: "Mic sensitivity" });
 const levelOf = async (page: Page) => {
   const style = (await meterOf(page).getAttribute("style")) ?? "";
-  return Number(/--level:\s*(\d+)%/.exec(style)?.[1] ?? 0);
+  return Number(/--level:\s*([\d.]+)%/.exec(style)?.[1] ?? 0);
 };
 
 test("F-settings-voice.1 the Voice tab holds the mic, its level and Test, and four processing switches", async ({
@@ -121,7 +121,8 @@ test("F-settings-voice.4 Test plays my voice back for 5 s, counting down", async
       await start.click();
       pressed = await button.getAttribute("aria-pressed");
       name = await button.getAttribute("aria-label");
-      // Playing, it's white with dark words: readable.
+      // Playing, it's white with dark words: readable (read once its colour has eased in).
+      await untilStill(button);
       look = { bg: await cssOf(button, "background-color"), color: await cssOf(button, "color") };
       // What it says, read every frame until it's over (its 5 s).
       await expect
@@ -147,6 +148,8 @@ test("F-settings-voice.4 Test plays my voice back for 5 s, counting down", async
   for (const b of sizes) if (b) expect.soft(Math.abs(b.x + b.w - (before.x + before.width))).toBeLessThan(1);
   expect.soft(look.bg).toBe(await computed(page, "background-color", LOOK.text));
   expect.soft(look.color).toBe(await computed(page, "color", LOOK.ground));
+  // The dark pill in XS, beside the level.
+  expect.soft(before.height).toBe(await pxOf(page, SIZE.pillXs));
 });
 
 test("F-settings-voice.5 a click on Stop ends the test at once", async ({ page }, info) => {
@@ -190,9 +193,8 @@ test("F-settings-voice.7 the sensitivity line moves with the arrow keys", async 
   });
   const now = Number(await slider.inputValue());
   expect.soft(now).toBeCloseTo(was + 0.02, 2);
-  // The line on the track is where the setting is.
-  const at = /--at:\s*([\d.]+)%/.exec((await meterOf(page).getAttribute("style")) ?? "")?.[1];
-  expect.soft(Number(at)).toBeCloseTo(now * 100, 0);
+  // The line is the slider's own knob, so it is where the setting is; the level is drawn in its track.
+  await expect.soft(meterOf(page)).toHaveAttribute("style", /--level:/);
 });
 
 test("F-settings-voice.8 the microphone picker picks another mic", async ({ page }, info) => {

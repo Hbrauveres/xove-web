@@ -68,6 +68,8 @@ test("F-pickers.3 after three and a half options the list scrolls inside itself"
   const h = (await boxOf(pill)).height;
   expect.soft(size.all).toBeGreaterThan(size.seen);
   expect.soft(Math.abs(size.seen - h * SHOWN_OPTIONS)).toBeLessThan(2);
+  // The app's one slim scrollbar (global.css; a headless browser draws none, so its mark is checked).
+  await expect.soft(list).toHaveAttribute("data-scroll", "slim");
 });
 
 test("F-pickers.4 picking an option puts it in the pill, rolls the list back and gives the pill the focus", async ({

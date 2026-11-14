@@ -29,3 +29,11 @@ export const SoftL: Story = {
 };
 /** Unavailable: faded in place, saying why in its tooltip. */
 export const Unavailable: Story = { args: { ...RedL.args, lead: "screen-off", unavailable: true } };
+/** XS 26, dark: a small button in a panel's row (the settings' Change, Test). */
+export const DarkXS: Story = { args: { size: "xs", fill: "dark", lead: undefined, children: "Change" } };
+/** S 30, dark: in a glass row (the screen's drop-up). */
+export const DarkS: Story = { args: { ...DarkXS.args, size: "s" } };
+/** Dark and on: white with dark words while it plays. */
+export const DarkOn: Story = { args: { ...DarkXS.args, children: "Stop · 4", "aria-pressed": true } };
+/** Dark and disabled: faded while something else is under way. */
+export const DarkDisabled: Story = { args: { ...DarkXS.args, disabled: true } };

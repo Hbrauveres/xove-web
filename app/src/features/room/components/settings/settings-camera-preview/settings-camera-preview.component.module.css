@@ -1,0 +1,36 @@
+/* My camera, centred in its group, at most the preview's width. */
+.frame {
+  justify-self: center;
+  align-self: center;
+  width: 100%;
+  max-width: var(--preview-width);
+}
+
+.live {
+  position: absolute;
+  left: var(--space-1-5);
+  top: var(--space-1-5);
+}
+
+.only {
+  position: absolute;
+  left: var(--space-1-5);
+  bottom: var(--space-1-5);
+}
+
+/* The camera refused or missing: said in the picture's place, in a dashed box of its shape. */
+.problem {
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  width: 100%;
+  max-width: var(--preview-width);
+  aspect-ratio: 16 / 9;
+  padding: var(--space-3);
+  border: var(--hairline) dashed var(--line);
+  border-radius: var(--radius-2);
+  background: var(--white-04);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  text-align: center;
+}

@@ -72,10 +72,6 @@ export const Header: Story = {
     </IconButton>
   ),
 };
-/** A small pill with words. */
-export const Words: Story = {
-  render: () => <IconButton variant="words">Change</IconButton>,
-};
 /** A panel's close. */
 export const Close: Story = {
   render: () => (

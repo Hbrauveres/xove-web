@@ -2,6 +2,7 @@ import { Face } from "@shared/components/face";
 import { LabelPill } from "@shared/components/label-pill";
 import { hasRow } from "../../../utils/has-row.util";
 import { StageScreenVideo } from "../../stage/stage-screen-video";
+import { StageVideoFrame } from "../../stage/stage-video-frame";
 import { usePreviewRow } from "./hooks/use-preview-row.hook";
 import styles from "./stage-live-preview.component.module.css";
 import type { StageLivePreviewProps } from "./types/stage-live-preview.types";
@@ -43,13 +44,13 @@ export function StageLivePreview({ sharer: s, swapped, swapping, talking, tray, 
         onKeyDown={on.onKeyDown}
         onClick={() => onPick(s.person.id)}
       >
-        <span ref={picture} className={styles.video}>
+        <StageVideoFrame ref={picture} className={styles.video}>
           {video ? (
             <StageScreenVideo video={video} label={words.picture} />
           ) : (
             <span className={styles.loading}>Loading…</span>
           )}
-        </span>
+        </StageVideoFrame>
         <LabelPill className={styles.chip} lead={<Face name={s.person.name} hue={s.person.hue} size={16} />}>
           {words.pill}
         </LabelPill>

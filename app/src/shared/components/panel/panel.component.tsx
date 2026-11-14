@@ -16,6 +16,15 @@ export function Panel({ as = "div", className, children, ref, ...rest }: PanelPr
       </output>
     );
   }
+  // Beside the page, which stays usable: open as it's drawn, its browser look reset in the stylesheet.
+  // Nothing holds on to it either (its holder places it with CSS), so it takes no ref.
+  if (as === "dialog") {
+    return (
+      <dialog open className={look} {...rest}>
+        {children}
+      </dialog>
+    );
+  }
   const Tag = as;
   return (
     <Tag ref={ref} className={look} {...rest}>

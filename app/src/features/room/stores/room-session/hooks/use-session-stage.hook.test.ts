@@ -29,7 +29,15 @@ function setup() {
     cameras: [],
     cameraId: null,
   } as unknown as SessionCore;
-  const settings: SettingsOpen = { open: true, toggle: vi.fn(), close: vi.fn(), goTo: undefined, goToSetting: vi.fn() };
+  const settings: SettingsOpen = {
+    open: true,
+    toggle: vi.fn(),
+    close: vi.fn(),
+    goTo: undefined,
+    goToSetting: vi.fn(),
+    cue: null,
+    endCue: vi.fn(),
+  };
   const light = { on: true, brightness: 0.9 };
   return { room, core, settings, light, report };
 }

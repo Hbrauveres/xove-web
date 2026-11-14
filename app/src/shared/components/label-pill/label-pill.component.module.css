@@ -12,3 +12,8 @@
   font-weight: 500;
   white-space: nowrap;
 }
+
+/* Words alone: even on both sides. */
+.words {
+  padding: 0 var(--space-2);
+}
