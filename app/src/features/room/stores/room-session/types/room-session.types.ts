@@ -31,6 +31,9 @@ export type SettingsOpen = {
   close: () => void;
   goTo: SettingsGoTo | undefined;
   goToSetting: (kind: StreamKind) => void;
+  /** The request cued in the panel, until a press ends it (naming the request it saw) or it closes. */
+  cue: SettingsGoTo | null;
+  endCue: (n: number) => void;
 };
 
 /** Who I am to the room's menu: an admin or not, and signing out. */

@@ -1,12 +1,14 @@
+import { createRef } from "react";
 import { render, screen } from "@testing-library/react";
 import { expect, it } from "vitest";
 import { StageVideoFrame } from "./stage-video-frame.component";
 
-it("frames what it's given, with its holder's place", () => {
+it("gives its holder the box the picture is in, to measure and place it", () => {
+  const box = createRef<HTMLSpanElement>();
   render(
-    <StageVideoFrame className="mine">
-      <span>Loading…</span>
+    <StageVideoFrame ref={box}>
+      <video aria-label="Rafa's screen" />
     </StageVideoFrame>,
   );
-  expect(screen.getByText("Loading…").parentElement).toHaveClass("mine");
+  expect(box.current).toContainElement(screen.getByLabelText("Rafa's screen"));
 });

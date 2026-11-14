@@ -5,52 +5,35 @@ import { useSettingsCue } from "./use-settings-cue.hook";
 
 const ALL: SettingsTab[] = ["screen", "camera", "voice"];
 
-function cueOf(open = true, usable = ALL) {
-  const choose = vi.fn();
-  const view = renderHook(({ goTo, open: isOpen }) => useSettingsCue(goTo, isOpen, usable, choose), {
-    initialProps: { goTo: undefined as SettingsGoTo | undefined, open },
+function cueOf(usable = ALL) {
+  const onEnd = vi.fn();
+  const view = renderHook(({ cue, open }) => useSettingsCue(cue, open, usable, onEnd), {
+    initialProps: { cue: null as SettingsGoTo | null, open: true },
   });
-  return { choose, ...view };
+  return { onEnd, ...view };
 }
 
-describe("going to a setting", () => {
-  it("chooses its tab and cues it, a second request cueing it again", () => {
-    const { result, rerender, choose } = cueOf();
-    rerender({ goTo: { kind: "screen", n: 1 }, open: true });
-    expect(choose).toHaveBeenLastCalledWith("screen");
-    expect(result.current).toEqual({ kind: "screen", n: 1 });
-    rerender({ goTo: { kind: "camera", n: 2 }, open: true });
-    expect(result.current).toEqual({ kind: "camera", n: 2 });
-  });
-
-  it("stays lit through a press on a live button, and goes at a press anywhere else", () => {
+describe("the cue in the panel", () => {
+  it("shows the session's cue while the panel is open", () => {
     const { result, rerender } = cueOf();
-    rerender({ goTo: { kind: "screen", n: 1 }, open: true });
-    const live = document.createElement("div");
-    live.dataset.dropup = "";
-    document.body.append(live);
-    act(() => void fireEvent.pointerDown(live));
-    expect(result.current).not.toBeNull();
+    rerender({ cue: { kind: "screen", n: 1 }, open: true });
+    expect(result.current).toEqual({ kind: "screen", n: 1 });
+    rerender({ cue: { kind: "screen", n: 1 }, open: false });
+    expect(result.current).toBeNull();
+  });
+
+  it("asks the session to end it at the next press, naming the request it's for", () => {
+    const { rerender, onEnd } = cueOf();
+    rerender({ cue: { kind: "camera", n: 3 }, open: true });
     act(() => void fireEvent.pointerDown(document.body));
-    expect(result.current).toBeNull();
-    live.remove();
+    expect(onEnd).toHaveBeenCalledWith(3);
   });
 
-  it("goes when the panel closes, and lets go of what's asked while it's closed", () => {
-    const { result, rerender, choose } = cueOf();
-    rerender({ goTo: { kind: "camera", n: 1 }, open: true });
-    rerender({ goTo: { kind: "camera", n: 1 }, open: false });
+  it("never cues a tab that can't be used, nor listens for it", () => {
+    const { result, rerender, onEnd } = cueOf(["camera", "voice"]);
+    rerender({ cue: { kind: "screen", n: 1 }, open: true });
     expect(result.current).toBeNull();
-    rerender({ goTo: { kind: "screen", n: 2 }, open: false });
-    rerender({ goTo: { kind: "screen", n: 2 }, open: true });
-    expect(result.current).toBeNull();
-    expect(choose).toHaveBeenCalledTimes(1);
-  });
-
-  it("never goes to a tab that can't be used", () => {
-    const { result, rerender, choose } = cueOf(true, ["camera", "voice"]);
-    rerender({ goTo: { kind: "screen", n: 1 }, open: true });
-    expect(result.current).toBeNull();
-    expect(choose).not.toHaveBeenCalled();
+    act(() => void fireEvent.pointerDown(document.body));
+    expect(onEnd).not.toHaveBeenCalled();
   });
 });

@@ -1,3 +1,4 @@
+import { HEAR_S } from "./constants/settings-mic-test.constants";
 import { ActionPill } from "@shared/components/action-pill";
 import { Slider } from "@shared/components/slider";
 import { Tooltip } from "@shared/components/tooltip";
@@ -31,7 +32,7 @@ export function SettingsMicTest({ level, track, sensitivity, onSensitivity }: Se
         />
       </Tooltip>
       {/* Disabled, the button gets no pointer: its wrapper takes it, for the tooltip. */}
-      <Tooltip text={track ? "Hear yourself for 5 s (use headphones)" : "Turn your voice on to hear yourself"}>
+      <Tooltip text={track ? `Hear yourself for ${HEAR_S} s (use headphones)` : "Turn your voice on to hear yourself"}>
         <span className={styles.hearWrap}>
           <ActionPill
             size="xs"

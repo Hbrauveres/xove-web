@@ -109,7 +109,7 @@ describe("the settings panel", () => {
   it("goes to a setting a live button asks for, cueing it", () => {
     const { rerender } = setup({ mine: { screen: true, camera: false } });
     fireEvent.click(tab("Camera"));
-    rerender({ mine: { screen: true, camera: false }, goTo: { kind: "screen", n: 1 } });
+    rerender({ mine: { screen: true, camera: false }, goTo: { kind: "screen", n: 1 }, cue: { kind: "screen", n: 1 } });
     expect(tab("Screen")).toHaveAttribute("aria-selected", "true");
     expect(within(panel()).getByRole("button", { name: "Change" }).querySelector("[data-cue]")).not.toBeNull();
   });

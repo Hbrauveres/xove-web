@@ -25,6 +25,8 @@ export function useSessionSettings(core: SessionCore, settings: SettingsOpen): S
       cameraProblem: video.cameraProblem,
       busy: core.busy,
       goTo: settings.goTo,
+      cue: settings.cue,
+      onCueEnd: settings.endCue,
       voice: video.voice,
       voicePrefs: core.voicePrefs,
       onVoicePrefs: core.setVoicePrefs,

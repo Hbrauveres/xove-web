@@ -2,7 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
 import { boxOf } from "../support/geometry.ts";
-import { computed, cssOf, LOOK } from "../support/looks.ts";
+import { computed, cssOf, LOOK, pxOf, SIZE } from "../support/looks.ts";
 import { restOn } from "../support/pointer.ts";
 import { shownTip } from "../support/stage.ts";
 import { HEAR_YOURSELF_MS, LOOK_EVERY_MS, METER_MS, TIP_REST_MS, untilStill } from "../support/timing.ts";
@@ -148,6 +148,8 @@ test("F-settings-voice.4 Test plays my voice back for 5 s, counting down", async
   for (const b of sizes) if (b) expect.soft(Math.abs(b.x + b.w - (before.x + before.width))).toBeLessThan(1);
   expect.soft(look.bg).toBe(await computed(page, "background-color", LOOK.text));
   expect.soft(look.color).toBe(await computed(page, "color", LOOK.ground));
+  // The dark pill in XS, beside the level.
+  expect.soft(before.height).toBe(await pxOf(page, SIZE.pillXs));
 });
 
 test("F-settings-voice.5 a click on Stop ends the test at once", async ({ page }, info) => {

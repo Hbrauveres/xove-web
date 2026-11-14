@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef, type FocusEvent } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, type FocusEvent } from "react";
 
 /**
  * The panel's focus going back: what had it when the panel opened (the cog) gets it again when the
@@ -21,5 +21,5 @@ export function usePanelFocus(open: boolean) {
   const onBlur = useCallback((e: FocusEvent<HTMLElement>) => {
     inside.current = e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget);
   }, []);
-  return { onFocus, onBlur };
+  return useMemo(() => ({ onFocus, onBlur }), [onFocus, onBlur]);
 }

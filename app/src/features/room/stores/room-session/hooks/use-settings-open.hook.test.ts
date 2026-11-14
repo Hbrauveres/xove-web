@@ -21,6 +21,22 @@ describe("the settings panel's open state", () => {
     expect(result.current.goTo).toEqual({ kind: "camera", n: 2 });
   });
 
+  it("a request cues its setting; the cue ends at a press for it, or when the panel closes", () => {
+    const { result } = renderHook(() => useSettingsOpen());
+    act(() => result.current.toggle());
+    act(() => result.current.goToSetting("screen"));
+    expect(result.current.cue).toEqual({ kind: "screen", n: 1 });
+    act(() => result.current.goToSetting("screen"));
+    // A press for the request before doesn't end the one just made.
+    act(() => result.current.endCue(1));
+    expect(result.current.cue).toEqual({ kind: "screen", n: 2 });
+    act(() => result.current.endCue(2));
+    expect(result.current.cue).toBeNull();
+    act(() => result.current.goToSetting("camera"));
+    act(() => result.current.close());
+    expect(result.current.cue).toBeNull();
+  });
+
   it("gives the same value while nothing changes", () => {
     const { result, rerender } = renderHook(() => useSettingsOpen());
     const before = result.current;

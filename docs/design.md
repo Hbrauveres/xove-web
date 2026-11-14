@@ -419,7 +419,7 @@ The sliders' rules stay one browser per rule, checked by `npm run check:styles` 
 `shared/components/tabs` (`Tabs`): **tabs are one shared block** (the settings' Screen, Camera and Voice, and any later panel with tabs).
 
 - **A red marker** (`--accent`) slides under the chosen tab in 200 ms, centred on it; the chosen tab's words and icon in the text colour, the others muted, lit to the text colour when pointed at.
-- **The [live dot](#avatars-and-live) (S)** after a tab's words while what it sets is live.
+- **The [live dot](#avatars-and-live) (S)** at the top right of a tab's icon while what it sets is live.
 - **Every tab's pane is as tall as the tallest**, so switching never moves the tabs; a pane that scrolls has the slim scrollbar.
 - **Unusable, greyed in place** at 45%, its reason in its tooltip (and in a toast on a touch). The arrow keys move round them; only the chosen tab is a Tab-key stop.
 

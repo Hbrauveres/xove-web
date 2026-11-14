@@ -33,6 +33,9 @@ export type SettingsSession = {
   noSound?: boolean | undefined;
   /** A live button's gesture with the panel open: go to this setting and cue it. */
   goTo?: SettingsGoTo | undefined;
+  /** That request's cue, lit until a press ends it (`onCueEnd`, with the request it saw) or the panel closes. */
+  cue?: SettingsGoTo | null | undefined;
+  onCueEnd?: ((n: number) => void) | undefined;
   /** My voice: on or off, how it's captured, the mics, and its own track for the level. */
   voice?: boolean | undefined;
   voicePrefs?: VoicePrefs | undefined;

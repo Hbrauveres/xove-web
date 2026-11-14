@@ -13,6 +13,8 @@ function setup(camera: boolean) {
     close: vi.fn(),
     goTo: { kind: "camera", n: 1 },
     goToSetting: vi.fn(),
+    cue: { kind: "camera", n: 1 },
+    endCue: vi.fn(),
   };
   const core = {
     mine: { screen: false, camera },

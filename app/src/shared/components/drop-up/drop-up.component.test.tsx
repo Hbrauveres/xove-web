@@ -217,6 +217,15 @@ describe("DropUp redirected: another panel shows the setting (spec 0115)", () =>
     expect(shown()).toBe(false);
   });
 
+  it("a press on the button asks again at once, so what it asked for stays shown", () => {
+    onDevice();
+    const redirect = vi.fn();
+    const { wrap, shown } = setup({ redirect });
+    fireEvent.pointerDown(wrap.querySelector("button")!);
+    expect(redirect).toHaveBeenCalledOnce();
+    expect(shown()).toBe(false);
+  });
+
   it("the keyboard's focus doesn't redirect, nor open it", () => {
     onDevice();
     const redirect = vi.fn();

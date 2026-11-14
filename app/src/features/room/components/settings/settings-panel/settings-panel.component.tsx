@@ -1,12 +1,11 @@
-import { useState } from "react";
 import { Icon } from "@shared/components/icon";
 import { IconButton } from "@shared/components/icon-button";
 import { Panel } from "@shared/components/panel";
 import { useRoomSession } from "../../../stores/room-session";
-import type { SettingsTab } from "../../../types/settings.types";
 import { SettingsTabs } from "../settings-tabs";
 import { CLOSE_ICON_SIZE } from "./constants/settings-panel.constants";
 import { useCameraPreviewSwitch } from "./hooks/use-camera-preview-switch.hook";
+import { useChosenTab } from "./hooks/use-chosen-tab.hook";
 import { usePanelFocus } from "./hooks/use-panel-focus.hook";
 import { usePanelPresence } from "./hooks/use-panel-presence.hook";
 import { useSettingsCue } from "./hooks/use-settings-cue.hook";
@@ -20,9 +19,8 @@ import styles from "./settings-panel.component.module.css";
 export function SettingsPanel() {
   const s = useRoomSession().settings;
   const usable = usableTabs(s);
-  const [chosen, setChosen] = useState<SettingsTab>(usable[0] ?? "camera");
-  const cue = useSettingsCue(s.goTo, s.open, usable, setChosen);
-  const tab = usable.includes(chosen) ? chosen : (usable[0] ?? "camera");
+  const { tab, choose } = useChosenTab(s.goTo, usable);
+  const cue = useSettingsCue(s.cue, s.open, usable, s.onCueEnd);
   const { present, shown } = usePanelPresence(s.open);
   useCameraPreviewSwitch(s.open && tab === "camera" && !s.mine.camera, s.onPreviewCamera);
   const focus = usePanelFocus(s.open);
@@ -48,7 +46,7 @@ export function SettingsPanel() {
           <Icon name="close" size={CLOSE_ICON_SIZE} />
         </IconButton>
       </div>
-      <SettingsTabs settings={s} usable={usable} chosen={tab} onChoose={setChosen} cue={cue} />
+      <SettingsTabs settings={s} usable={usable} chosen={tab} onChoose={choose} cue={cue} />
     </Panel>
   );
 }

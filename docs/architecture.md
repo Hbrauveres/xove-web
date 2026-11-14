@@ -121,7 +121,7 @@ sequenceDiagram
 | What I hear from each person, and what's downloaded | `use-hearing` | This page only (the volumes I start from: the browser) |
 | How I send (quality, mode, the camera picked, my mic and its processing and line), the volumes I start from (a screen's sound, a voice), the ambilight's settings | `services/preferences-service/preferences.service.ts` (the ambilight's through `use-ambilight`) | The browser (`localStorage`, `xove.*`) |
 | Each person's mutes and volumes, for this visit | `Stage` | This page only |
-| Whether the settings are open, the setting a live button asked for, and the camera's preview | The room session (`use-settings-open`, `use-camera-preview`) | This page only |
+| Whether the settings are open, the setting a live button asked for and its cue, and the camera's preview | The room session (`use-settings-open`, `use-camera-preview`) | This page only |
 
 **One id for everyone.** Everyone in the room, me included, is their identity on the video server (`user-42`): the access names me, the API's `userId`s name the others. "Is this me" is a comparison, and each person's colour comes from their id, the same on every screen. The room shows once I have a seat and the access has named me; until then the waiting screen says "Looking for a seat…". If the video access fails, the room opens anyway, to say why, with my account's name.
 
