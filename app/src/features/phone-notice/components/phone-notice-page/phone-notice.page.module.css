@@ -26,11 +26,6 @@
   text-wrap: balance;
 }
 
-.title em {
-  font-style: normal;
-  color: var(--accent);
-}
-
 /* The address, in the mono face, as bright as the heading. */
 .address {
   font: 500 var(--text-inherit) var(--font-mono);

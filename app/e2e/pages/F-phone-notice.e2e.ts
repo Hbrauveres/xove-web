@@ -36,6 +36,7 @@ test(`F-phone-notice.2 the mark, the drawn computer, the headline with big scree
   for (const l of [mark, art, heading, line]) await expect.soft(l).toBeInViewport({ ratio: 1 });
   await expect.soft(heading.locator("em")).toHaveText("big screen");
   await expect.soft(heading.locator("em")).toHaveCSS("color", await computed(page, "color", LOOK.accent));
+  await expect.soft(heading.locator("em")).toHaveCSS("text-transform", "uppercase");
   await expect.soft(line.locator("code")).toHaveText("xove.app");
   await expect.soft(line.locator("code")).toHaveCSS("font-family", await computed(page, "font-family", LOOK.fontMono));
   // Top to bottom: the mark, the computer, the headline, the line.

@@ -1,3 +1,4 @@
+import { Headline } from "@shared/components/headline";
 import { PageText } from "@shared/components/page-text";
 import { Wordmark } from "@shared/components/wordmark";
 import { BigScreenArt } from "../big-screen-art";
@@ -11,9 +12,9 @@ export function PhoneNoticePage() {
       <Wordmark variant="icon" height={MARK_PX} />
       <div className={styles.middle}>
         <BigScreenArt />
-        <h1 className={styles.title}>
+        <Headline level="page" className={styles.title}>
           See you on the <em>big screen</em>.
-        </h1>
+        </Headline>
         <PageText variant="lead">
           Sorry, Xovê doesn't work on phones or tablets yet. Open <code className={styles.address}>xove.app</code> on
           your laptop or desktop to watch and share with your friends.
