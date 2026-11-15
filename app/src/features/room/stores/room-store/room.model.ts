@@ -4,7 +4,7 @@ import { MAX_STREAM_PLACES } from "@services/app-config-service";
 import { NEXT_STEPS } from "../../constants/room.constants";
 import type { MyStreamStep, PersonId, RoomModel, SeatState } from "../../types/room.types";
 import { personIdOf } from "../../utils/person-id.util";
-import { firstName } from "../../utils/first-name.util";
+import { firstName } from "@shared/utils/first-name.util";
 import { keepSame } from "./utils/keep-same.util";
 import { samePeople } from "./utils/same-people.util";
 import { sameStreams, streamOf, streamEvents } from "./utils/room-streams.util";

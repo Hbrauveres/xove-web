@@ -4,7 +4,7 @@ import { PersonRow } from "@shared/components/person-row";
 import { AdminRemoveConfirm } from "../admin-remove-confirm";
 import styles from "./admin-member-row.component.module.css";
 import type { AdminMemberRowProps } from "./types/admin-member-row.types";
-import { firstName } from "./utils/first-name.util";
+import { firstName } from "@shared/utils/first-name.util";
 
 /** A member: their face, name and email, and Remove; an admin says Admin instead. */
 export function AdminMemberRow({ member, busy, onRemove }: AdminMemberRowProps) {
@@ -18,7 +18,11 @@ export function AdminMemberRow({ member, busy, onRemove }: AdminMemberRowProps) 
           member.admin ? (
             <LabelPill tone="solid">Admin</LabelPill>
           ) : (
-            <AdminRemoveConfirm firstName={firstName(member.name)} busy={busy} onRemove={() => onRemove(member.id)} />
+            <AdminRemoveConfirm
+              firstName={firstName(member.name, "member")}
+              busy={busy}
+              onRemove={() => onRemove(member.id)}
+            />
           )
         }
       />

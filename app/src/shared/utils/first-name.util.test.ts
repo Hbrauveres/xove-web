@@ -11,3 +11,10 @@ describe("firstName", () => {
     expect(firstName("   ")).toBe("Someone");
   });
 });
+
+describe("firstName on a button", () => {
+  it("says the place's own word without a name: Remove member", () => {
+    expect(firstName("Ana Souza", "member")).toBe("Ana");
+    expect(firstName(null, "member")).toBe("member");
+  });
+});

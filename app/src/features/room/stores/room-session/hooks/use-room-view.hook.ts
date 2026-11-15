@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { VideoRoomState } from "@services/livekit-service";
-import { firstName } from "../../../utils/first-name.util";
+import { firstName } from "@shared/utils/first-name.util";
 import { knownPeopleOf, myLiveOf, peopleOf, personOf, sharersOf, watchingOf } from "../../room-store";
 import type { RoomModel } from "../../../types/room.types";
 
