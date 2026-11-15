@@ -12,6 +12,8 @@ type PageShellVariant = "home" | "form" | "waiting" | "message" | "wide";
 
 export interface PageShellProps extends HTMLAttributes<HTMLElement> {
   variant: PageShellVariant;
+  /** A wide page's bar (its header), above its main region: wide only. */
+  bar?: ReactNode;
   /** The column's heading, by id: home and form only. */
   labelledBy?: string | undefined;
   children: ReactNode;

@@ -78,7 +78,7 @@ test("F-app-shell.5 the global styles: the dark ground, the text colour, no page
   expect.soft(wide).toBeLessThanOrEqual(0);
 });
 
-test("F-app-shell.6 the page shell centres a page's column, the sign-in page with a soft red glow at the top", async ({
+test("F-app-shell.6 the page shell centres a page's column, the sign-in page with a soft red glow at the top, admin's from the top", async ({
   page,
 }, info) => {
   await openScene(page, "page=home");
@@ -99,6 +99,12 @@ test("F-app-shell.6 the page shell centres a page's column, the sign-in page wit
   await expect
     .soft(page.getByRole("main"))
     .toHaveCSS("background-color", await computed(page, "background-color", LOOK.ground));
+  // Admin: the wide frame, its column from the top, centred, as wide as the admin's.
+  await openScene(page, "page=admin");
+  const wide = await boxOf(page.getByRole("banner"));
+  expect.soft(wide.y).toBeLessThan(1);
+  expect.soft(Math.abs(centreX(wide) - centreX(windowBox(page)))).toBeLessThan(1);
+  expect.soft(wide.width).toBeLessThanOrEqual(await pxOf(page, "var(--admin-width)"));
 });
 
 test("F-app-shell.7 the wordmark plays once when pointed at and comes back to rest", async ({ page }, info) => {

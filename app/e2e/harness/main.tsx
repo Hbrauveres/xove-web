@@ -2,7 +2,8 @@
 // Query: ?s=live|portrait|facecam|empty (who is live),
 // &mycam=portrait or #mycam (my own camera held upright),
 // &page=home|request|pending|admin|waiting|offered (the other pages, the room's queue, a seat offered); &page=home&error=<code>
-// shows the sign-in page's error.
+// shows the sign-in page's error; &page=request&fail=request makes the API refuse the request;
+// &page=admin&withAdmin=1 adds an admin to the members.
 // &admin=1: in the room as an admin (my menu shows Admin)
 // &still=1: the pictures drawn once and held, for comparing screenshots
 // &held=1: the browser holds the room's sound back until the page's first click or key
@@ -196,10 +197,20 @@ const server = installFakeApi({
             createdAt: ago(90),
           },
         ],
-        members: [{ id: 2, name: "Rafa Lima", email: "rafa@example.com", avatarUrl: null, admin: false }],
+        members: [
+          { id: 2, name: "Rafa Lima", email: "rafa@example.com", avatarUrl: null, admin: false },
+          ...(params.get("withAdmin") === "1"
+            ? [{ id: 3, name: "Bia Rocha", email: "bia@example.com", avatarUrl: null, admin: true }]
+            : []),
+        ],
       }
     : {}),
 });
+if (params.get("fail") === "request")
+  server.failures.set("POST /api/access-requests", {
+    status: 400,
+    body: { detail: "Message is too long (max 500 characters)" },
+  });
 // The room is full: I'm second in the queue.
 if (page === "waiting") server.seat = { status: "waiting", place: 2 };
 // A seat is free for me: the offer, with 30 seconds to enter.

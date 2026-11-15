@@ -13,8 +13,7 @@ export function AdminPage() {
   if (!lists && !error) return <PageShell variant="message">Loading…</PageShell>;
 
   return (
-    <PageShell variant="wide">
-      <AdminHeader />
+    <PageShell variant="wide" bar={<AdminHeader />}>
       {error && (
         <div className={styles.error}>
           <ErrorNotice>{error}</ErrorNotice>

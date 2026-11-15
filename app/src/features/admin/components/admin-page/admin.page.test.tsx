@@ -27,7 +27,8 @@ describe("the admin page", () => {
     expect(await screen.findByText("bruno@example.com")).toBeInTheDocument();
     expect(screen.getByText(/it's me/)).toBeInTheDocument();
     expect(screen.getByText("ana@example.com")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Back to the room" })).toBeInTheDocument();
+    expect(within(screen.getByRole("banner")).getByRole("link", { name: "Back to the room" })).toBeInTheDocument();
+    expect(within(screen.getByRole("main")).getByRole("region", { name: /^Members/ })).toBeInTheDocument();
   });
 
   it("approves a request, and the list comes back without it", async () => {

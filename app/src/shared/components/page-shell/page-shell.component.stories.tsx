@@ -28,6 +28,7 @@ export const Message: Story = { args: { variant: "message", children: "Loadingâ€
 export const Wide: Story = {
   args: {
     variant: "wide",
+    bar: <header style={{ padding: "var(--space-3-5) 0", color: "var(--text-muted)" }}>admin</header>,
     children: <h2 style={{ margin: 0, color: "var(--text)" }}>Waiting for access</h2>,
   },
 };

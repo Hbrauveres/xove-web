@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { expect, it } from "vitest";
 import { PageShell } from "./page-shell.component";
-import styles from "./page-shell.component.module.css";
 
 it("is the page's main region, its column named by its heading", () => {
   render(
@@ -19,13 +18,13 @@ it("holds a message without a column, passing its own props on", () => {
   expect(screen.queryByRole("region")).toBeNull();
 });
 
-it("holds a wide page's content in its own column, top first: admin", () => {
+it("puts a wide page's bar above its main region, the bar the page's banner: admin", () => {
   render(
-    <PageShell variant="wide">
+    <PageShell variant="wide" bar={<header>admin</header>}>
       <h2>Waiting for access</h2>
     </PageShell>,
   );
-  const column = screen.getByRole("main").firstElementChild;
-  expect(column?.className.split(" ")).toContain(styles.wideColumn);
-  expect(column).toHaveTextContent("Waiting for access");
+  expect(screen.getByRole("banner")).toHaveTextContent("admin");
+  expect(screen.getByRole("main")).toHaveTextContent("Waiting for access");
+  expect(screen.getByRole("main")).not.toHaveTextContent("admin");
 });
