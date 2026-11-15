@@ -66,7 +66,7 @@ How many people are here; it opens the seats and the list of people with what ea
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/header/header-people-button/` (the order, the line under each name and the queue in its `utils/`), the seats `header-seats/` | Here | Done (#189); the next version's people column replaces it |
+| `features/room/components/header/header-people-button/` (the order, the line under each name and the queue in its `utils/`; each person on `PersonRow`, their streams' icons `header-stream-icons/`, #194), the seats `header-seats/` | Here | Done (#189); the next version's people column replaces it |
 
 ### My picture button and my menu
 
@@ -79,7 +79,7 @@ My picture; it opens my menu.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/header/header-my-picture-button/` and `header-my-menu/` (on the shared Dropdown, Switch, Slider and Menu row); the ambilight's settings in `features/room/stores/room-session/hooks/use-ambilight.hook.ts` | Here | Done (#189) |
+| `features/room/components/header/header-my-picture-button/` and `header-my-menu/` (on the shared Dropdown, Switch, Slider, Menu row and Person row); the ambilight's settings in `features/room/stores/room-session/hooks/use-ambilight.hook.ts` | Here | Done (#189) |
 
 ## The stage
 
@@ -304,7 +304,7 @@ The first page: what Xovê is, and signing in with Google.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `pages/HomePage.tsx` | `features/home/` (on the shared Page shell) | Kept |
+| `features/home/components/home-page/` (on the shared Page shell, `Headline`, `PageText`, `ErrorNotice`; Continue with Google a link on `Button`'s white look), Google's mark `home-google-mark/` (#194) | — | Kept |
 
 ### Request access
 
@@ -317,7 +317,7 @@ Asking to join, and the wait for an answer.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `pages/RequestAccessPage.tsx` | `features/request-access/` | Kept |
+| `features/request-access/components/request-access-page/` (the mark, who's signed in on `PersonRow`), the form `request-access-form/` (its error in `ErrorNotice`), the wait `request-access-waiting/` (a soft `LabelPill` with a beating `LiveDot`) (#194) | — | Kept |
 
 ### Admin
 
@@ -329,7 +329,7 @@ For the admin: the access requests and the members.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `pages/AdminPage.tsx` ("3 min ago" from `shared/utils/time-ago.util.ts`) | `features/admin/` | Kept |
+| `features/admin/`: its store `stores/admin-store/`, the page on the Page shell's wide frame, `admin-header/`, `admin-requests/` and each `admin-request-card/`, `admin-members/` and each `admin-member-row/` ("Admin" a solid `LabelPill`), Remove asked first `admin-remove-confirm/`; "3 min ago" from `shared/utils/time-ago.util.ts` (#194) | — | Kept |
 
 ## Building blocks
 
@@ -337,7 +337,7 @@ The shared controls today, and the copies that become one component each.
 
 | Block | Today | Goes to | What happens |
 | --- | --- | --- | --- |
-| Button | `shared/components/button/` | Here | Done (#188) |
+| Button | `shared/components/button/`: primary, danger, ghost, quiet (muted words, underlined when pointed at: "Use another account", "Back to the room") and white (Continue with Google); a link with its look when it goes somewhere | Here | Done (#188, quiet, white and links #194) |
 | Slider | `shared/components/slider/`, and its threshold variant (a line knob, a level in its track; the mic test drew its own) | Here | Done (#188, threshold #193) |
 | Segmented control | `shared/components/segmented/` (real radios) | Here | Done (#188) |
 | Floating layer | `shared/stores/floating-store/` | Here | Done (#187) |
@@ -348,20 +348,22 @@ The shared controls today, and the copies that become one component each.
 | Avatar | `shared/components/face/` (was `ui/Avatar.tsx`, `PersonAvatar.tsx`): the room's colour and initial with its rings, the account's photo | Already there | Merged |
 | Round button | `shared/components/icon-button/`, `variant="round"`: one base (glass, a soft shadow, lighter when pointed at, a red keyboard ring, 45% when unavailable, red when on) in two sizes, L 48 for my own buttons and M 34 for every other; its other purposes the header's and close | Here | Done (#191): the player's, the stage's, the overlay's, the mini and the toggle variants are one |
 | Action pill | `shared/components/action-pill/`: a button with words, XS 26, S 30, M 34 or L 44, glass, red, soft or dark (white while on), an icon or the live dot first; Go live, the empty stage's ways to start, and Change and Test (they were a round button with words and the mic test's own pill) | Here | Done (#191, dark #193) |
-| Live dot | `shared/components/live-dot/`: the red dot with its glow, S on a tab, M on a pill | Here | Done (#193) |
+| Live dot | `shared/components/live-dot/`: the red dot with its glow, S on a tab, M on a pill; beating on a wait ("Waiting for approval") | Here | Done (#193, its beat #194) |
 | Tabs | `shared/components/tabs/`: the sliding marker, the live dot, every pane as tall as the tallest, greyed in place when unusable; the settings' tabs | Here | Done (#193) |
 | Video frame | `features/room/components/stage/stage-video-frame/`: 16:9, black, 8 px corners; Also live's cards and the camera's preview | Here | Done (#193) |
-| Label pill | `shared/components/label-pill/`: a label over a picture, 22 px glass, a face or an icon first, or words alone; the previews' names, the camera preview's "Only you see this" | Here | Done (#191, #193) |
+| Label pill | `shared/components/label-pill/`: a label, a face, an icon or a dot first, or words alone; glass over a picture (the previews' names, "Only you see this"), soft red for a status ("Waiting for approval"), solid red for a role ("Admin"); S 22 px or M on a page | Here | Done (#191, #193, tones #194) |
 | Switch | `shared/components/switch/`: a setting's row, 30 px, its words and the switch; my menu and the Voice tab (the tab restyled it) | Already there | Merged; its row #193 |
 | Icons | `shared/components/icon/` and its drawings in `shared/constants/icons.constants.ts` (was `stage/icons.tsx`, `room/ActivityIcon.tsx` and inline drawings) | Already there | Merged |
 | LIVE badge | `shared/components/live-badge/`: beside who's on the stage, and over my preview | Already there | Merged |
-| Headline | `shared/components/headline/`: the big statement with its key words in the accent (sign-in, the empty stage) | Already there | Merged |
+| Headline | `shared/components/headline/`: the big statement with its key words in the accent and in capitals (sign-in, request access, the phone notice, the empty stage) | Already there | Merged; request access and the phone notice on it #194 |
 | Toast | `shared/components/toast/`, its state `shared/stores/toast-store/` | Here | Done (#188) |
-| Page shell | `shared/components/page-shell/`: home, request access, the waiting room, the loading line | Here | Done (#188) |
+| Page shell | `shared/components/page-shell/`: home, request access, the waiting room, the loading line, and admin's wide frame with its bar above the main region | Here | Done (#188, wide #194) |
+| Person row | `shared/components/person-row/`: a face, the name, a quiet line, something at the end; request access's account, admin's requests and members, my menu, the people list (each drew its own) | Here | Done (#194) |
+| Page text | `shared/components/page-text/`: a page's lead under its heading, and a quiet note (each page had its own rules) | Here | Done (#194) |
 | Panel | `shared/components/panel/`, `panel-section/`: the settings, the menus, the waiting room's card; one piece of glass, its sections parted by a hairline (#249) | Here | Done (#188) |
 | Field, Stat pill, Count chip, Control label, Section heading | `shared/components/field/`, `stat-pill/`, `count-chip/`, `control-label/`, `section-heading/` | Here | Done (#188) |
 | Menu row | `shared/components/menu-row/`: one action in a menu, its icon and words; my menu's Admin and Sign out, the Go live menu's three (they were two looks) | Here | Done (#189) |
-| Error notice | `shared/components/error-notice/`: the red-tinted box a problem is told in, on the home page and over the room (it was a copied `.error` rule in both pages) | Already there | Merged |
+| Error notice | `shared/components/error-notice/`: the red-tinted box a problem is told in, on every page and over the room (it was a copied `.error` rule in both pages; request access's was a red line until #194) | Already there | Merged |
 
 ## Removed
 

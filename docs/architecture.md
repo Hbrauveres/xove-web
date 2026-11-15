@@ -19,7 +19,9 @@ Everything is in `app/src`:
 
 | Folder | Owns |
 | --- | --- |
-| `pages/` | One component per route: `HomePage`, `RequestAccessPage`, `AdminPage`, until they move in (#194); the room's page is in the room feature (`room/room-page/`) |
+| `features/home/` | The sign-in page (`components/home-page/`: the pitch, a sign-in's error in words from `utils/sign-in-error.util.ts`, Continue with Google as a link on `Button`'s white look), Google's mark (`components/home-google-mark/`, its paths and colours in its `constants/`) |
+| `features/request-access/` | Asking to join (`components/request-access-page/`: the mark, the form or the wait, who's signed in on `PersonRow`; the 20 s check for an approval, `use-approval-check`), the form (`request-access-form/`, its sending in `use-access-request`, a refusal in `ErrorNotice`) and the wait (`request-access-waiting/`, "Waiting for approval" a soft `LabelPill` in an `<output>`) |
+| `features/admin/` | Admin, its own data: the store (`stores/admin-store/`: both lists, one action at a time, its error kept, both reloaded after each; read through `use-admin`, a store per visit), the page on the Page shell's wide frame with its bar above the main region, the bar (`admin-header/`), the requests (`admin-requests/`, each `admin-request-card/`), the members (`admin-members/`, each `admin-member-row/`, Remove asked first in `admin-remove-confirm/`) |
 | `features/room/stores/room-store/` | The room's store, a unit: the room as data (`room.model.ts`: people by their id, streams, who watches whom, arrivals, the seat, the activity, my streams' steps, changed by pure functions), what the room shows (`room.selectors.ts`), and `RoomStore` (`room.store.ts`): the one place the seat, the streams and entering again are polled, the video room joined, and the room's actions sent; its hooks `use-room-store` (the store, the room, the video) and `use-room-seat` (the seat and its actions), and the helpers only it uses in `utils/` (the streams, the API's answer, the activity's events, a sharer's feed, keeping the same record, waiting for a seat) |
 | `features/room/stores/room-session/` | The room once I'm in, shared with its areas through a context (`RoomSessionProvider`, read with `useRoomSession`): one hook gathers the room from the store (`use-session-core`: what the room shows, `use-room-view`; what I send, `use-my-sending` with my streams, their settings through a queue, the camera's preview and switch, changing the window; keeping my streams and the API in step, `use-stream-sync`; my voice, `use-my-voice`; the activity, `use-activity-feed`; the camera remembered), and one shapes each area's part: the stage's (`use-session-stage`: who's on it, the watch report, who watches, my buttons' controls), the header's (`use-session-header`: the activity, the people, my account), the settings panel's (`use-session-settings`, its open state from `use-settings-open`); the ambilight's settings, remembered (`use-ambilight`). The areas read their part; the pieces inside them keep their props |
 | `features/room/hooks/` | The room's hooks several pieces share: who's big (`use-stage`), what I hear and what's downloaded (`use-hearing`); whether the keyboard was used last (`use-keyboard-last`); the time now, ticking (`use-now`); a track played in a video or audio element at this browser's volume (`use-played-track`), the TV turning on (`use-turn-on`), the settings' anchor the controls hand the stage (`use-settings-anchor`), Go live's width (`use-go-live-width`); a sound's slider opened by a rest of the mouse and closed on leaving (`use-hold-or-rest`), the previews' rows on their layer (`use-preview-tray`), what's fullscreen (`use-fullscreen-element`) |
@@ -30,9 +32,9 @@ Everything is in `app/src`:
 | `features/room/components/` | The room's pieces, in area folders (`room/`, `header/`, `queue/`, `stage/`, `stage-controls/`, `stage-info/`), the area in each name, each with its test and stories: the page (`room/room-page/`: my seat or the room laid out, the devices listed from the waiting room on, the sound unlocked by the first click or key, when the room can show), the room's error line (`room/room-error/`: under the stage, or over the player in fullscreen), the queue (`queue/queue-waiting-room/`, and the seat offer `queue/queue-seat-offer/` on the browser's own modal dialog), the footer (`room/room-footer/`), the header (`header/header/`, placing its own pieces from the session), the activity pill (`header/header-activity-pill/`, its moving line `header/header-activity-ticker/`) and list (`header/header-activity-list/`), who's here (`header/header-people-button/`, the seats `header/header-seats/`), my picture and my menu (`header/header-my-picture-button/`, `header/header-my-menu/`) |
 | `shared/stores/floating-store/` | What floats, one thing on screen at a time: `useFloating` tells the store a piece is open and its kind (opened by a click or the keyboard, opened on a mouse rest, a tooltip). The store's rules decide what closes, what's inside another stays, and its one listener takes a press outside and Escape, which returns focus to the button. Each piece holds its own open state; the settings panel stays pinned and doesn't join |
 | `shared/components/` (floating blocks) | On that store: `dropdown/` (one piece of glass, its sections on it), `picker/` with `picker-list/` (a list that floats over its panel, masking what's behind it in the nearest `[data-list-host]`; a menu of `menuitemradio` options), `drop-up/` and `drop-up-row/` (a labelled `fieldset`; its gestures can redirect to an open panel), `tooltip/` (the app's only tooltip, on its own layer, describing its control for screen readers; it follows its control on every frame while shown, sits `beside` a list's option, and with `cutOnly` shows only for a cut name). A redirected drop-up (the settings open) follows every rest, closing what's opened first (`floatingStore.closeOpened`). `picker/` and `drop-up/` can be told to be open (`open`, `onOpenChange`); `cue/` is how a control is pointed at |
-| `shared/components/` (the design system) | One block per purpose (ADR-0094), each with its test and stories: `button/`, `slider/`, `segmented/` (real radios), `toast/` (its state in `shared/stores/toast-store/`, shown with `toastStore.show`), `wordmark/` (the mark, full or icon; its geometry, timeline and favicon in its `utils/`, read by `scripts/brand-icons.mjs` too), `panel/` and `panel-section/` (the one glass, its sections parted by a hairline), `page-shell/` (home, form, waiting, message), `field/`, `stat-pill/` and `count-chip/` (counters by space), `control-label/` and `section-heading/` (labels by space), `menu-row/` (a menu's action: a link or a button; its menu sets its role), `icon-button/` (the round button in two sizes, L 48 for my own buttons and M 34 for every other, and the header's and close's purposes), `action-pill/` (a button with words: XS 26, S 30, M 34 or L 44, glass, red, soft or dark, the dark one "on" while pressed), `live-dot/` (the live dot, S or M, with its glow), `label-pill/` (a label over a picture, 22 px, a face first or words alone), `tabs/` (the tabs: the sliding marker, the live dot, every pane as tall as the tallest; its keys, focus and a touch's reason in its hooks); `slider/` has a threshold variant (a line knob, a level in its track), `switch/` carries the settings row; the one slim scrollbar is `data-scroll="slim"` in `shared/styles/global.css` |
+| `shared/components/` (the design system) | One block per purpose (ADR-0094), each with its test and stories: `button/` (primary, danger, ghost, quiet and white; a link with its look when it has somewhere to go), `slider/`, `segmented/` (real radios), `toast/` (its state in `shared/stores/toast-store/`, shown with `toastStore.show`), `wordmark/` (the mark, full or icon; its geometry, timeline and favicon in its `utils/`, read by `scripts/brand-icons.mjs` too), `panel/` and `panel-section/` (the one glass, its sections parted by a hairline), `page-shell/` (home, form, waiting, message, and wide, a page from the top with its bar above the main region), `field/`, `stat-pill/` and `count-chip/` (counters by space), `control-label/` and `section-heading/` (labels by space), `menu-row/` (a menu's action: a link or a button; its menu sets its role), `icon-button/` (the round button in two sizes, L 48 for my own buttons and M 34 for every other, and the header's and close's purposes), `action-pill/` (a button with words: XS 26, S 30, M 34 or L 44, glass, red, soft or dark, the dark one "on" while pressed), `live-dot/` (the live dot, S or M, with its glow, beating when something waits), `label-pill/` (a label: glass over a picture, a soft red status, a solid red role; S 22 px or M on a page), `person-row/` (a person: a face, the name, a quiet line, an end), `page-text/` (a page's lead under its heading, a quiet note), `tabs/` (the tabs: the sliding marker, the live dot, every pane as tall as the tallest; its keys, focus and a touch's reason in its hooks); `slider/` has a threshold variant (a line knob, a level in its track), `switch/` carries the settings row; the one slim scrollbar is `data-scroll="slim"` in `shared/styles/global.css` |
 | `routes/` | Which page opens at which address, and who may open it: the root (`root/`), the route table (`app-routes/`), the guard (`route-guard/`, its rule in its `utils/route-access.util.ts`) |
-| `services/xove-api-service/` | The HTTP client (`xove-api.service.ts`): one function per endpoint, the call itself and its errors as `ApiError`; the CSRF token and the headers in `utils/`, the API's types in `types/`, its messages in `constants/` |
+| `services/xove-api-service/` | The HTTP client (`xove-api.service.ts`): one function per endpoint, the call itself and its errors as `ApiError`; the CSRF token, the headers and a failed call's words (`apiErrorMessage`: the API's, or the place's own) in `utils/`, the API's types in `types/`, its messages in `constants/` |
 | `shared/stores/auth-store/` | Who is signed in (`AuthProvider` in `auth.store.tsx`, which asks `GET /api/me` once and on demand; `useAuth` in its `hooks/`) |
 | `services/app-config-service/` | The settings the server gives the app before it shows (`/config.json`, read once in `main.tsx`): today the stream places (1 to 6); a missing or broken file gives nothing, and the room falls back on the API's answer |
 | `services/settings-queue-service/` | My stream's settings on their way to the API: changes one after another, a refused one put back |
@@ -40,31 +42,35 @@ Everything is in `app/src`:
 | `services/livekit-service/` | The video server, the only place that uses `livekit-client`: the adapter (`livekit.adapter.ts`: connects with the access it's given, keeps the room's state per person, takes commands), what's captured, sent, changed and heard (`capture`, `send`, `screen-change`, `screen-sound`, `voice` services), what someone sends read into plain data (`remote-media.adapter.ts`), who's speaking measured from what I hear (`speaking.service.ts` over `voice-activity.adapter.ts`, [Media](media.md#the-voice)), the noise gate's processor (which also says when my voice is sent); its helpers in `utils/` (how streams are sent, the room's state per person, the mic's problems), its types and constants beside them |
 | `services/media-devices-service/` | The browser's devices: the screen picker, the cameras and mics and the mic's meter as services (they ask the browser); a phone or a tablet (`utils/is-handheld.util.ts`), the picker's request and the noise gate's maths as helpers; the stream presets in `constants/` |
 | `features/phone-notice/` | What phones and tablets see instead of the app ([below](#phones-and-tablets)): its page and art in `components/` |
-| `shared/` | What the whole app uses: the auth store, the time constants, the building blocks in `components/` (`icon`, `icon-button`, `face`, `switch`, `live-badge`, `headline`, `error-notice`), the icons' drawings, my mic's state and how long ago (`constants/`, `types/`, `utils/`), the design tokens (`styles/tokens.css`, every value the CSS uses) and the page's base rules (`styles/global.css`) |
+| `shared/` | What the whole app uses: the auth store, the time constants, the building blocks in `components/` (`icon`, `icon-button`, `face`, `switch`, `live-badge`, `headline`, `error-notice`), the icons' drawings, my mic's state, how long ago, a first name, the mark's two heights and where the page draws the app (`constants/`, `types/`, `utils/`), the design tokens (`styles/tokens.css`, every value the CSS uses) and the page's base rules (`styles/global.css`) |
 | `testing/` | The test helpers: a fake API, a fake LiveKit, and rendering the app at a URL ([Testing](testing.md)); only tests import it |
 
-At the top, `main.tsx` starts the app, `routes/root/root.component.tsx` chooses between the app and the phone notice, and `routes/app-routes/app-routes.component.tsx` holds the routes.
+At the top, `main.tsx` starts the app in the page's `#root` (found by `shared/utils/root-element.util.ts`, a clear error without one), `routes/root/root.component.tsx` chooses between the app and the phone notice, and `routes/app-routes/app-routes.component.tsx` holds the routes.
 
 ```mermaid
 flowchart TD
-  P[pages] --> C[components]
-  P --> H[hooks]
-  P --> A[services/xove-api-service]
-  C --> H
-  H --> A
-  H --> LK[services/livekit-service]
-  H --> M[media]
-  C --> M
-  H --> PR[services/preferences-service]
-  C --> PR
-  P --> AU[shared/stores/auth-store]
-  AU --> A
-  R[routes/root/root.component.tsx] --> D[services/media-devices-service]
+  M[main.tsx] --> R[routes/root]
   R --> N[features/phone-notice]
-  R --> APP[routes/app-routes/app-routes.component.tsx]
+  R --> APP[routes/app-routes]
   APP --> G[routes/route-guard]
-  G --> AU
-  APP --> P
+  APP --> HO[features/home]
+  APP --> RA[features/request-access]
+  APP --> AD[features/admin]
+  APP --> RO[features/room]
+  HO --> SH[shared]
+  RA --> SH
+  AD --> SH
+  RO --> SH
+  N --> SH
+  G --> AU[shared/stores/auth-store]
+  RA --> A[services/xove-api-service]
+  AD --> A
+  RO --> A
+  RO --> LK[services/livekit-service]
+  RO --> D[services/media-devices-service]
+  RO --> PR[services/preferences-service]
+  AU --> A
+  R --> D
 ```
 
 Pages put the room together; components draw it; hooks own the state and talk to the API and LiveKit (the simpler pages call the API directly); the room's rules (hearing, the stage pick, the watch report) are plain functions in `features/room/utils/`, and the settings queue is a service (`services/settings-queue-service/`). Each component has its own CSS module, using the tokens in `shared/styles/tokens.css`.
@@ -175,7 +181,7 @@ The room has one layout, theater mode, that follows the window's size ([how it l
 
 ## Where the code is going
 
-The modules above are the app as it is today. It's being reorganised, with no change of behaviour, into the structure below. The new folders are in place (`routes/`, `features/`, `shared/`, `services/`, `testing/`); the old ones (`pages/`, `components/`, `hooks/`, `media/`, `brand/`) move in step by step, and this page's tables follow. Every component, today's and the next version's, with its pictures and its future folder: [Components](components/README.md).
+The modules above are the app as it is today. It's being reorganised, with no change of behaviour, into the structure below. The new folders are in place (`routes/`, `features/`, `shared/`, `services/`, `testing/`), and every old one has moved in; what's left is the sweep of the last known findings. Every component, today's and the next version's, with its pictures and its future folder: [Components](components/README.md).
 
 ### The structure
 
@@ -196,7 +202,7 @@ app/src/
 - **A unit is a folder:** a component, a store, a service or an adapter, with its code, its test beside it (`facecam.component.test.tsx`), its CSS module if it's a component, a component's stories (`facecam.component.stories.tsx`: its states in Storybook, [Testing](testing.md#storybook)), and `index.ts`: the only door other code goes through.
 - **Its parts sit inside it,** as files in folders by kind: `hooks/`, `utils/` (helpers that format, build or map, each with its test beside it), `constants/`, `types/`, `enums/`, only when it has some. A part used by several units of a feature sits in the feature's own part folders; one used by several features in `shared/`'s; a service's parts in the service. A working file holds no type (its props and inputs too), named constant or helper; a function that makes calls (the network, storage, LiveKit) belongs to a service.
 - **Nothing nested:** no unit inside a unit, no folder inside a part folder. A feature's `components/` holds component folders, or area folders (one level) holding only component folders, never both; each name keeps its area (`stage/stage-facecam/`), and areas of one feature may use each other's components. A path is at most 7 levels under `src/`. A feature is split by its data, not its size: about 25 components in one area is a signal to look again.
-- **Names:** kebab-case with the type as a suffix: `.component.tsx`, `.page.tsx`, `.hook.ts`, `.util.ts`, `.service.ts`, `.adapter.ts`, `.store.ts`, `.model.ts`, `.selectors.ts`, `.constants.ts`, `.enum.ts`, `.types.ts`; tests `.test.ts(x)`.
+- **Names:** kebab-case with the type as a suffix: `.component.tsx`, `.page.tsx`, `.hook.ts`, `.util.ts`, `.service.ts`, `.adapter.ts`, `.store.ts`, `.model.ts`, `.selectors.ts`, `.constants.ts`, `.enum.ts`, `.types.ts`; tests `.test.ts(x)`. The entry, `main.tsx`, and its test, `main.test.tsx`, keep their own names.
 - **Short names:** `@routes/…`, `@features/…`, `@shared/…`, `@services/…` and `@testing/…` (in `tsconfig.app.json`'s `paths` and Vite's `resolve.alias`), never long relative paths into another folder.
 - **Imports go down:** `routes` → `features` → `shared` → `services`. No feature uses another; only tests use `testing/`. The lint rule enforces the direction, and the code check the rest (below), and no file imports another component's CSS.
 
