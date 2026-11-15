@@ -38,7 +38,7 @@ describe("my menu", () => {
   it("shows my name, role and connection, the ambilight, Admin and Sign out", async () => {
     const { user, onSignOut, panel } = setup();
     expect(within(panel).getByText("Henrique")).toBeInTheDocument();
-    expect(within(panel).getByText("Admin", { selector: "small" })).toBeInTheDocument();
+    expect(within(panel).getByText("Admin", { selector: "span" })).toBeInTheDocument();
     expect(within(panel).getByText("Connected")).toBeInTheDocument();
     expect(within(panel).getByRole("switch", { name: "Ambilight" })).toBeChecked();
     expect(within(panel).getByRole("link", { name: "Admin" })).toHaveAttribute("href", "/admin");

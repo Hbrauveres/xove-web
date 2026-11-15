@@ -141,7 +141,8 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
   const top = r.split("/")[0];
   if (!/\.(tsx?|css)$/.test(r)) return out;
   if (r.includes("/") && !["routes", "features", "shared", "services", "testing"].includes(top)) add("structure");
-  if (!/(^|\/)index\.ts$/.test(r) && !/^(main|vite-env\.d)\.tsx?$/.test(r) && !NAME.test(basename(r))) add("naming");
+  if (!/(^|\/)index\.ts$/.test(r) && !/^(main(\.test)?|vite-env\.d)\.tsx?$/.test(r) && !NAME.test(basename(r)))
+    add("naming");
   const lines = text.split("\n");
   if (isCode(r) && lines.length > 300) add("size", 0, `${lines.length} lines`);
   if (isCode(r) && !noLogic(r)) {

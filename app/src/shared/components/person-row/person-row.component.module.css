@@ -1,0 +1,32 @@
+/* A person in a row: the face, the words taking the room left, then what ends the row. */
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2-5);
+  min-width: 0;
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.name,
+.quiet {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+/* The label above and the line under: small and muted. */
+.quiet {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}

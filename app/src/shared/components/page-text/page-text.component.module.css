@@ -1,0 +1,15 @@
+/* A page's words beside its heading: muted, so the heading and the action lead. */
+.text {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+/* The lead: at the body's size; how wide it runs is its page's. */
+.lead {
+  font-size: inherit;
+}
+
+/* A note: small. */
+.note {
+  font-size: var(--text-xs);
+}

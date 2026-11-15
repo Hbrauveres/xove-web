@@ -44,7 +44,8 @@ The pictures are shot from the real app (`design-sheet.mjs`, see [Keeping this p
 - **The symbol:** the record O alone, inside the same four corners. It's the app icon and the favicon.
 - **Construction** (`app/src/shared/components/wordmark/utils/mark.util.ts`, the only place the geometry lives, every number named in its `constants/`): one grid with a cap height of 100 and a stroke of 10. Letter widths X 88, O 100, V 90, E 68, gaps 20. The viewfinder sits 28 from the letters, with arms of 24 (26 in the symbol). The dot's radius is 29.4 in an O 100 across. The X ends square, the V's tips are cut flat at the cap height.
 - **Colours:** white strokes (`--text`, `#ebebec`), the red dot and corner (`--accent`, `#ef4b4b`), on the soft black ground. Never recoloured, outlined, stretched or put on a busy picture.
-- **Drawn, not typed:** the `Wordmark` block (inline SVG, named "Xovê" for screen readers), `variant="full"` for the wordmark and `"icon"` for the symbol. It's a picture, not a keyboard stop. In the header it's about 110 px wide.
+- **Drawn, not typed:** the `Wordmark` block (inline SVG, named "Xovê" for screen readers), `variant="full"` for the wordmark and `"icon"` for the symbol. It's a picture, not a keyboard stop.
+- **Two sizes** (`shared/constants/mark.constants.ts`): **40 px** above a page's heading (sign-in, request access) and **32 px** in a header bar (the room's, admin's; about 110 px wide). The phone notice's symbol is 36 px, part of its drawing.
 - **The hover animation** (the Wordmark's `mark-timeline.util.ts` and `useMarkAnimation`): pointing at the wordmark plays it once, in about 3 seconds. The left corners stay and the word slides under them until the X is gone, while the right corners close in on the O; the corners settle into the symbol; the dot double-blinks like a surprised eye; everything plays back. A new hover doesn't restart it, and it never plays with reduced motion.
 - **Three optical sizes of the symbol** (`iconMark("large" | "small" | "tiny")`): **large** (64 px and up) is slim, about 70% of its square; **small** (32 px) and **tiny** (16 px) have heavier strokes and fill more of the square, tiny edge to edge. The outer edges match in all three.
 
@@ -308,6 +309,7 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 - **An action pill** (`ActionPill`) is a button with words, round at both ends: **M 34** over a stream (Go live) or **L 44** where it's the screen's main choice (the empty stage's Screen and Camera). Three fills: **glass** (the round buttons' base), **red** (the first way, `--accent`) and **soft** (a second way, a light translucent fill). An icon or the [live dot](#avatars-and-live) comes first. Unavailable: 45%, saying why, like a round button.
 - **A small button with words is the dark pill** (a rule for the whole app): `ActionPill`'s **dark** fill, the chosen segment's pill (`--sel-bg`, its shadow, lighter when pointed at), white semibold words, one size per place: **S 30** in the drop-up's glass row (Change over the video) and **XS 26** in a panel (Change in the settings' window row, Test beside the mic's level). **On** (pressed, Test while it plays) it's white with dark words. Never a round button with words. (Change: [the settings' Screen tab](#the-settings-panel); Test: [the Voice tab](#the-settings-panel).)
 - **A label pill** (`LabelPill`) names what a picture shows or says something about it (a preview's "Rafa · screen", the camera preview's "Only you see this"): **22 px** glass, 500 weight, a face or an icon first when it names someone, words alone otherwise. It isn't a button: the picture under it is. **Any label over a picture is one.**
+- **A status or a role is a label pill too**, in red: **soft** (the accent's tint, red semibold words) for a status on a page, at the page's size (**M**): "Waiting for approval", its [live dot](#avatars-and-live) beating first; **solid** (the accent, deep-red words) for a role in a row (**S**): "Admin". Never a pill of its own.
 - The counters' Stat pill stays its own block ([Counters by space](#counters-by-space)): it counts, it doesn't act or name.
 
 ### What I hear, and Go live
@@ -397,8 +399,10 @@ The settings for what you send, from the cog on my own stream or, with nobody li
 | Primary | Red fill, deep-red text; lighter red (`#f36a6a`) on hover | The one main action on a page ("Get Xovê", "Request access") |
 | Ghost | Transparent, muted text, a `--line` border; raised surface on hover | Secondary actions |
 | Danger | Transparent, red text and a red border at 55% | Removing a member, stopping |
+| Quiet | Muted words alone, 13 px, no box and no press; white and underlined when pointed at | A quiet way out or back ("Use another account", "Back to the room") |
+| White | White fill, dark words, a soft red ring (the accent at 14%, 3 px) when pointed at | Google's sign-in only, its "G" in Google's own colours: the one place outside the tokens |
 
-Two sizes: **md** (10 × 18 px padding, 15 px text) and **sm** (6 × 12 px, 13 px). Weight 600, `--radius-1-5`, 45% opacity when disabled.
+Two sizes: **md** (10 × 18 px padding, 15 px text) and **sm** (6 × 12 px, 13 px). Weight 600, `--radius-1-5`, 45% opacity when disabled. **A button that goes somewhere is a link with its look** (`to` in the app, `href` out of it): screen readers hear a link, the eye sees the button.
 
 ### Sliders
 
@@ -492,7 +496,8 @@ A number that changes takes the look of **its space**, and each space's look is 
 
 ![My face lit while my voice is sent, beside my face live and silent](images/design/my-face-talking.png)
 - **LIVE badge** (the `LiveBadge` block): "LIVE" in mono with a deep-red dot on red. Beside who's on the stage it's a small tag whose dot pulses; over my preview in the settings, a pill with a still dot.
-- **The live dot** (the `LiveDot` block): one red dot with a soft red glow (`--accent-70`, 8 px), still, in two sizes: **M 8 px** first on a pill (Go live) and **S 6 px** on a tab (the settings' tab of what you're sending). Screen readers don't hear it: the words around it say it.
+- **The live dot** (the `LiveDot` block): one red dot with a soft red glow (`--accent-70`, 8 px), in two sizes: **M 8 px** first on a pill (Go live) and **S 6 px** on a tab (the settings' tab of what you're sending). Still for something live; **beating** for something you wait for ("Waiting for approval"): down to 30% and back every 1.6 s, as LIVE's dot, still with reduced motion. Screen readers don't hear it: the words around it say it.
+- **A person in a row** (the `PersonRow` block): their face at the place's size, the name (13 px semibold) and a quiet line under it (12 px, muted: an email, a role, what they're doing), then what ends the row (a time, a button, a badge, icons). My menu, the people list, request access's "Signed in as" (a quiet word above the name) and admin's requests and members. **Every list of people uses it.**
 
 ### On the stage
 
@@ -563,8 +568,14 @@ Xovê is for computers: laptops and desktops get the app, in one layout (theater
 
 ![The sign-in page on a desktop](images/design/sign-in.png)
 
-Sign-in, request access (and request sent), the room's queue and admin: centred on the page's ground, the wordmark above the heading. Each is in the **Page shell** (`home`, `form`, `waiting`, `message`); the queue's card is the [Panel](#the-panel).
-- **Sign-in:** "Go **LIVE** with your friends." and its line (see [Name and voice](#name-and-voice)), then "Continue with Google" and who can join.
+Sign-in, request access (and request sent), the room's queue and admin, each in the **Page shell** (`home`, `form`, `waiting`, `message`, `wide`); the queue's card is the [Panel](#the-panel). A centred page has the mark (40 px) above its heading, the heading a `Headline`, the line under it a `PageText` lead (muted, the body's size); an error is the `ErrorNotice` box; a quiet note is small and muted.
+- **Sign-in:** "Go **LIVE** with your friends." and its line (see [Name and voice](#name-and-voice)), then "Continue with Google" (the white button, a link) and who can join.
+![Request access](images/design/request-access.png) ![Request sent, waiting for approval](images/design/request-sent.png)
+
+- **Request access:** "You need access" (or "Your request was declined"), its line, the note and Request access; once sent, "Request sent" with "Waiting for approval" in the soft label pill, its dot beating. At the foot, under a hairline, who's signed in (a person row) and "Use another account" (the quiet button).
+![Admin, with someone waiting and an admin among the members](images/design/admin.png)
+
+- **Admin:** the wide frame, from the top: a bar (the mark at 32 px, "admin" in mono, "Back to the room" the quiet link) above the page's main region; who's waiting (each a card: a person row with the time, their note quoted with a red line, Approve and Decline) beside the members (person rows; Remove asks first; an admin says "Admin" in the solid label pill). One column on a narrow window.
 
 ### Phones and tablets: see you on the big screen
 
@@ -573,7 +584,7 @@ Sign-in, request access (and request sent), the room's queue and admin: centred 
 What a phone or a tablet sees, on every page: nothing else of the app, and no call to the server. Centred on the page's ground, top to bottom:
 - **The mark** (36 px).
 - **A computer drawn from the mark:** its four viewfinder corners (the top right one red) round a screen, the red dot on it, a stand under it.
-- **The headline** "See you on the **big screen**." ("big screen" in the accent, as "LIVE" on sign-in).
+- **The headline** "See you on the **BIG SCREEN**." (the shared `Headline`: "big screen" in the accent and in capitals, as "LIVE" on sign-in).
 - **One line, apologising once at its start:** "Sorry, Xovê doesn't work on phones or tablets yet. Open `xove.app` on your laptop or desktop to watch and share with your friends." The address in the mono face.
 - **No button:** a copied link doesn't move anyone to their laptop, and the address is short enough to type.
 
@@ -608,7 +619,7 @@ Its content stays clear of the phone's bars (the browser's safe areas).
 - **A video in a frame is one frame** (`StageVideoFrame`): 16:9, black, **8 px corners**, the picture letterboxed inside under a hairline: Also live's cards and the camera's preview.
 - **Draft first:** a visual change starts as a draft approved before the work starts: a change to screens that exist, as a prototype in the app itself; a brand-new screen may start as a clickable HTML draft with these tokens and fonts. The approved draft is the reference the code must match.
 - **Check every size:** a 2K monitor both ways (2560 × 1440 and 1440 × 2560), 1920 × 1080, a narrow window, the empty room, and the phone and tablet screen.
-- **Reuse the components:** the shared blocks in `shared/components/`, each shown in Storybook: `Icon`, `IconButton` (the round button, L and M, and its other purposes), `ActionPill` (and its `LiveDot`), `LabelPill`, `Tabs`, `DropUpRow`, `Face`, `Switch`, `LiveBadge`, `Headline`, `ErrorNotice`, `Button`, `Slider`, `Segmented`, `Toast`, `Wordmark`, `Panel` and `PanelSection`, `PageShell`, `Field`, `StatPill`, `CountChip`, `ControlLabel`, `SectionHeading`, `MenuRow`, `Dropdown`, `Picker`, `DropUp`, `Tooltip`; and `StageNotice`. **One block per purpose** (ADR-0094): what does the same job is one block, even where today's values differ; what does a different job is its own block, however alike it looks, so changing one never changes another. A new control follows their sizes, motion and focus ring. A choice from a list is a `Picker` (one box, floating, with the slim scrollbar when long), a few options a `Segmented`, and a quick action over a live button a `DropUp`, everywhere in the app.
+- **Reuse the components:** the shared blocks in `shared/components/`, each shown in Storybook: `Icon`, `IconButton` (the round button, L and M, and its other purposes), `ActionPill` (and its `LiveDot`), `LabelPill`, `PersonRow`, `PageText`, `Tabs`, `DropUpRow`, `Face`, `Switch`, `LiveBadge`, `Headline`, `ErrorNotice`, `Button`, `Slider`, `Segmented`, `Toast`, `Wordmark`, `Panel` and `PanelSection`, `PageShell`, `Field`, `StatPill`, `CountChip`, `ControlLabel`, `SectionHeading`, `MenuRow`, `Dropdown`, `Picker`, `DropUp`, `Tooltip`; and `StageNotice`. **One block per purpose** (ADR-0094): what does the same job is one block, even where today's values differ; what does a different job is its own block, however alike it looks, so changing one never changes another. A new control follows their sizes, motion and focus ring. A choice from a list is a `Picker` (one box, floating, with the slim scrollbar when long), a few options a `Segmented`, and a quick action over a live button a `DropUp`, everywhere in the app.
 - **Panels open over the button that opened them,** never from a side. **Panels are frosted, never opaque**; nothing over the video hides the round buttons.
 - **Say what effects cost:** blur, canvases and animations run on every frame; keep them to what's here.
 - **A screen says only what matters.** No readouts that imitate real equipment (clocks, meters, rulers, format tags, made-up numbers), and no frame inside another frame.
@@ -626,7 +637,13 @@ Its content stays clear of the phone's bars (the browser's safe areas).
 - **A picture is drawn from the mark:** an illustration uses the mark's own parts (its viewfinder corners, the top right one red, and the red dot), not a new style.
 - **Point to the next step in words when a button wouldn't help:** a short address to type beats a copy button that moves nobody.
 - **An apology is said once, at the start:** "Sorry, …", then what to do.
-- **A headline's key words in the accent:** one short phrase in red, as "LIVE" on sign-in and "big screen" on the phone screen; never a whole line.
+- **A headline's key words in the accent and in capitals:** one short phrase in red, written in lowercase and shown in capitals so a screen reader says the word, as "LIVE" on sign-in and "BIG SCREEN" on the phone screen; never a whole line. A page's heading is always the `Headline` block.
+- **An error on a page is the error box** (`ErrorNotice`), never a bare red line.
+- **A person is one row** (`PersonRow`), wherever people are listed.
+- **A quiet way out or back is the quiet button** (`Button` quiet: muted, underlined only when pointed at), a link when it goes to a page.
+- **A status or a role is a label pill** in red (soft for a status, solid for a role), never a pill of its own; a dot that beats uses the app's one beat (`@keyframes beat` in `global.css`), as LIVE's does.
+- **Every page outside the room is on the Page shell;** a page of lists is its wide frame, its bar above the main region. The phone notice is the one exception: it stands in for the whole app on a phone, with its own frame clear of the phone's bars.
+- **One exception to the tokens:** Google's sign-in button, white with Google's "G" in Google's own colours, as their rules ask.
 - **A first impression plays once:** an intro (the TV turning on) plays the first time in a visit, never again for the same state, and never for reduced motion.
 
 ## Keeping this page current

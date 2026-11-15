@@ -18,3 +18,14 @@
   width: var(--size-2);
   height: var(--size-2);
 }
+
+/* Beating as LIVE's dot does: the app's one beat (global.css), every 1.6 s. Still with reduced motion. */
+.pulse {
+  animation: global(beat) var(--duration-1600) ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: none;
+  }
+}

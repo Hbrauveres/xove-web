@@ -1,3 +1,4 @@
+import { MARK_BAR_PX } from "@shared/constants/mark.constants";
 import { Wordmark } from "@shared/components/wordmark";
 import { useRoomSession } from "../../../stores/room-session";
 import { HeaderActivityPill } from "../header-activity-pill";
@@ -14,7 +15,7 @@ export function Header() {
   return (
     <header className={styles.header}>
       <span className={styles.logo}>
-        <Wordmark height={32} />
+        <Wordmark height={MARK_BAR_PX} />
       </span>
       <div className={styles.middle}>
         <HeaderActivityPill {...header.activity} />

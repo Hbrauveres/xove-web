@@ -1,0 +1,17 @@
+/* Requests the wider column, members beside it; one column on a narrow window. */
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: var(--space-8);
+  align-items: start;
+}
+
+@media (--narrow) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.error {
+  margin-bottom: var(--space-4);
+}

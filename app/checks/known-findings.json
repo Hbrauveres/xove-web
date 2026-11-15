@@ -1,34 +1,6 @@
 [
   {
     "tool": "code",
-    "rule": "domQuery",
-    "file": "src/main.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/pages/AdminPage.module.css",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/pages/HomePage.module.css",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
-    "file": "src/pages/RequestAccessPage.module.css",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
     "rule": "history",
     "file": "src/testing/fakeApi.ts",
     "count": 2,
@@ -44,79 +16,9 @@
   {
     "tool": "code",
     "rule": "lineLength",
-    "file": "src/pages/HomePage.tsx",
-    "count": 3,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "lineLength",
     "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/AdminPage.module.css",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/AdminPage.test.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/AdminPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/HomePage.module.css",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/HomePage.test.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/HomePage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/RequestAccessPage.module.css",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/RequestAccessPage.test.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/RequestAccessPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
   },
   {
     "tool": "code",
@@ -155,129 +57,10 @@
   },
   {
     "tool": "code",
-    "rule": "noTest",
-    "file": "src/main.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/pages/AdminPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/pages/HomePage.tsx",
-    "count": 2,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
-    "file": "src/pages/RequestAccessPage.tsx",
-    "count": 4,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
     "rule": "size",
     "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/AdminPage.module.css",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/AdminPage.test.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/AdminPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/HomePage.module.css",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/HomePage.test.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/HomePage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/RequestAccessPage.module.css",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/RequestAccessPage.test.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/RequestAccessPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/pages/AdminPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/pages/RequestAccessPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "react(set-state-in-effect)",
-    "file": "src/pages/AdminPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(no-non-null-assertion)",
-    "file": "src/main.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
   },
   {
     "tool": "tsc",

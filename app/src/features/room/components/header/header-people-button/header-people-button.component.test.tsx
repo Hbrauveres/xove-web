@@ -28,11 +28,11 @@ function setup(props: Partial<Parameters<typeof HeaderPeopleButton>[0]> = {}) {
   return userEvent.setup();
 }
 
-/** A person's row, by the name in bold (not a mention like "Watching Bruno"). */
-const row = (name: RegExp) =>
+/** A person's row, by the name it starts with (not a mention like "Watching Bruno"). */
+const row = (name: string) =>
   within(screen.getByRole("dialog", { name: "Here now" }))
     .getAllByRole("listitem")
-    .find((li) => name.test(li.querySelector("b")?.textContent ?? "")) ?? document.body;
+    .find((li) => li.textContent?.startsWith(name)) ?? document.body;
 
 describe("the people button", () => {
   it("shows a people icon and the number, named for screen readers", () => {
@@ -47,11 +47,11 @@ describe("the people button", () => {
     const panel = screen.getByRole("dialog", { name: "Here now" });
     expect(within(panel).getByText((_, el) => el?.textContent === "4 of 20 · 16 free")).toBeInTheDocument();
     expect(within(panel).getByRole("progressbar", { name: "Seats taken" })).toHaveAttribute("value", "4");
-    expect(row(/Bruno/)).toHaveTextContent("Sharing screen and camera");
-    expect(row(/Ana/)).toHaveTextContent("Sharing their screen");
-    expect(row(/Henrique/)).toHaveTextContent("(you)");
-    expect(row(/Henrique/)).toHaveTextContent("Watching Bruno");
-    expect(row(/Diego/)).toHaveTextContent("Watching Ana");
+    expect(row("Bruno")).toHaveTextContent("Sharing screen and camera");
+    expect(row("Ana")).toHaveTextContent("Sharing their screen");
+    expect(row("Henrique")).toHaveTextContent("(you)");
+    expect(row("Henrique")).toHaveTextContent("Watching Bruno");
+    expect(row("Diego")).toHaveTextContent("Watching Ana");
     expect(within(panel).getByText("Nobody is waiting for a seat.")).toBeInTheDocument();
   });
 
@@ -59,10 +59,9 @@ describe("the people button", () => {
     const user = setup();
     await user.click(screen.getByRole("button", { name: "4 people here" }));
 
-    const names = within(screen.getByRole("dialog", { name: "Here now" }))
-      .getAllByRole("listitem")
-      .map((li) => li.querySelector("b")?.textContent);
-    expect(names).toEqual(["Bruno", "Ana", "Henrique", "Diego"]);
+    const rows = within(screen.getByRole("dialog", { name: "Here now" })).getAllByRole("listitem");
+    const order = ["Bruno", "Ana", "Henrique", "Diego"];
+    expect(rows.map((li) => order.find((name) => li.textContent?.startsWith(name)))).toEqual(order);
   });
 
   it("rings my face green while my voice is sent, live, and nobody else's", async () => {
@@ -71,15 +70,15 @@ describe("the people button", () => {
       sharing: { "user-99": { screen: true, camera: false }, "user-7": { screen: true, camera: false } },
     });
     await user.click(screen.getByRole("button", { name: "4 people here" }));
-    expect(row(/Henrique/).querySelector("[data-talking]")).not.toBeNull();
-    expect(row(/Bruno/).querySelector("[data-talking]")).toBeNull();
+    expect(row("Henrique").querySelector("[data-talking]")).not.toBeNull();
+    expect(row("Bruno").querySelector("[data-talking]")).toBeNull();
   });
 
   it("says who's just in the room, and how many wait", async () => {
     const user = setup({ watchingOf: {}, seats: { total: 20, taken: 20, waiting: 2 } });
     await user.click(screen.getByRole("button", { name: "4 people here" }));
 
-    expect(row(/Diego/)).toHaveTextContent("In the room");
+    expect(row("Diego")).toHaveTextContent("In the room");
     expect(screen.getByText("2 people are waiting for a seat.")).toBeInTheDocument();
   });
 
@@ -96,8 +95,8 @@ describe("the people button", () => {
     await user.click(screen.getByRole("button", { name: "4 people here" }));
 
     // Two icons for Bruno, one for Ana, and none of them read aloud.
-    expect(row(/Bruno/).querySelectorAll('[aria-hidden="true"] > span > svg')).toHaveLength(2);
-    expect(row(/Ana/).querySelectorAll('[aria-hidden="true"] > span > svg')).toHaveLength(1);
-    expect(within(row(/Bruno/)).queryAllByRole("img")).toHaveLength(0);
+    expect(row("Bruno").querySelectorAll('[aria-hidden="true"] > span > svg')).toHaveLength(2);
+    expect(row("Ana").querySelectorAll('[aria-hidden="true"] > span > svg')).toHaveLength(1);
+    expect(within(row("Bruno")).queryAllByRole("img")).toHaveLength(0);
   });
 });

@@ -25,13 +25,7 @@
 }
 
 .stage::before {
-  animation: pulse var(--duration-1600) ease-in-out infinite;
-}
-
-@keyframes pulse {
-  50% {
-    opacity: 0.3;
-  }
+  animation: global(beat) var(--duration-1600) ease-in-out infinite;
 }
 
 /* Over my own stream's preview: a pill, its dot still. */

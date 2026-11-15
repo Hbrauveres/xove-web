@@ -92,7 +92,7 @@ Its own test (`scripts/check-styles.test.ts`) feeds it small stylesheets that pa
 
 ## End-to-end, every feature at every size
 
-Every feature of the app has numbered test cases, each written as given / when / then / must not, and **one Playwright test per case** in `e2e/`, titled by the case's id (`F-my-buttons.3 …`). They drive the whole app on its **harness** (`e2e/harness/`: the real app, the tests' fake API and LiveKit, fake people with drawn pictures; `npm run harness` serves it on http://localhost:5199, `&still=1` holds the pictures still, `&held=1` holds the room's sound back until the first click; `&page=waiting` and `&page=offered` show the queue and a seat offered), and run at every size of a selection, each with its pixel density:
+Every feature of the app has numbered test cases, each written as given / when / then / must not, and **one Playwright test per case** in `e2e/`, titled by the case's id (`F-my-buttons.3 …`). They drive the whole app on its **harness** (`e2e/harness/`: the real app, the tests' fake API and LiveKit, fake people with drawn pictures; `npm run harness` serves it on http://localhost:5199, `&still=1` holds the pictures still, `&held=1` holds the room's sound back until the first click; `&page=waiting` and `&page=offered` show the queue and a seat offered; `&page=request&fail=request` makes the API refuse a request; `&page=admin&withAdmin=1` adds an admin to the members), and run at every size of a selection, each with its pixel density:
 
 | Size                        | Viewport    | Density |
 | --------------------------- | ----------- | ------- |

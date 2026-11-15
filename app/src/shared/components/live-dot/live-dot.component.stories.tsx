@@ -21,3 +21,5 @@ type Story = StoryObj<typeof meta>;
 export const M: Story = {};
 /** S 6: on a tab. */
 export const S: Story = { args: { size: "s" } };
+/** Beating: something you wait for. */
+export const Pulse: Story = { args: { pulse: true } };

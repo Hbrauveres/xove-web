@@ -26,19 +26,8 @@
   text-wrap: balance;
 }
 
-.title em {
-  font-style: normal;
-  color: var(--accent);
-}
-
-.copy {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: var(--text-md);
-  line-height: 1.6;
-}
-
-.copy code {
+/* The address, in the mono face, as bright as the heading. */
+.address {
   font: 500 var(--text-inherit) var(--font-mono);
   color: var(--text);
 }

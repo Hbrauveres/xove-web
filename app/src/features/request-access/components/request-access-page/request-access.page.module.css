@@ -1,0 +1,12 @@
+.brand {
+  display: flex;
+  margin: 0 0 var(--space-2);
+  color: var(--text);
+}
+
+/* Who's signed in, under a line at the foot of the column. */
+.account {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: var(--hairline) solid var(--line);
+}

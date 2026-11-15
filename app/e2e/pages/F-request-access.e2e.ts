@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { blinks } from "../support/frames.ts";
-import { computed } from "../support/looks.ts";
+import { computed, LOOK } from "../support/looks.ts";
 import { openScene } from "../support/open.ts";
 import { observe } from "../support/observe.ts";
 
@@ -73,8 +73,12 @@ test("F-request-access.4 a request already sent shows Request sent, its dot puls
   await expect.soft(page.getByRole("heading", { level: 1, name: "Request sent" })).toBeVisible();
   await expect.soft(page.getByText(SENT, { exact: true })).toBeVisible();
   await expect.soft(status).toHaveText("Waiting for approval");
-  const dot = status.locator("span[aria-hidden]");
-  await expect.soft(dot).toHaveCSS("animation-name", /pulse/);
+  const pill = status.locator("span").first();
+  await expect.soft(pill).toHaveCSS("background-color", await computed(page, "background-color", LOOK.accentSoft));
+  await expect.soft(pill).toHaveCSS("color", await computed(page, "color", LOOK.accent));
+  const dot = status.locator("[data-live]");
+  await expect.soft(dot).toHaveCSS("animation-name", "beat");
+  await expect.soft(dot).not.toHaveCSS("box-shadow", "none");
   await expect
     .soft(dot)
     .toHaveCSS("animation-duration", await computed(page, "animation-duration", "var(--duration-1600)"));
@@ -109,4 +113,22 @@ test("F-request-access.6 the keyboard goes from the message to Request access to
   await expect.soft(send).toBeFocused();
   await page.keyboard.press("Tab");
   await expect.soft(other).toBeFocused();
+});
+
+test("F-request-access.7 a request the API refuses says why in the error box, and the form stays", async ({
+  page,
+}, info) => {
+  await openScene(page, "page=request&fail=request");
+  const send = page.getByRole("button", { name: "Request access" });
+  const alert = page.getByRole("alert");
+  await observe(page, info, { send, alert }, async () => {
+    await send.click();
+  });
+  await expect.soft(alert).toHaveText("Message is too long (max 500 characters)");
+  // The error box every page uses: a tinted box with its border, not a bare red line.
+  await expect.soft(alert).toHaveCSS("border-top-style", "solid");
+  await expect.soft(alert).not.toHaveCSS("padding-top", "0px");
+  await expect.soft(page.getByRole("textbox")).toBeVisible();
+  await expect.soft(send).toBeEnabled();
+  await expect.soft(page.getByRole("heading", { name: "Request sent" })).toHaveCount(0);
 });

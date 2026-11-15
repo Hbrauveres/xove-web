@@ -1,5 +1,4 @@
 [
-  ["src/routes/", "#194 home, request access, admin, the shell"],
   ["src/services/", "#180 services: API client, auth, preferences"],
   ["src/shared/", "#188 shared: Panel, Page shell"],
   ["src/features/", "#192 room: queue, footer, page"],
@@ -10,7 +9,5 @@
   ["src/components/room/RoomFooter", "#192 room: queue, footer, page"],
   ["src/components/", "#192 room: queue, footer, page"],
   ["src/pages/RoomPage", "#192 room: queue, footer, page"],
-  ["src/pages/", "#194 home, request access, admin, the shell"],
-  ["src/main", "#194 home, request access, admin, the shell"],
   ["src/testing/", "#195 the sweep"]
 ]

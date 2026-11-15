@@ -94,3 +94,11 @@ button {
     transition-duration: var(--duration-0-01) !important;
   }
 }
+
+/* The beat of something live or awaited (LIVE's dot, a waiting dot): down to 30% and back. The one
+   copy: each dot names it, at --duration-1600, and stills it with reduced motion. */
+@keyframes beat {
+  50% {
+    opacity: 0.3;
+  }
+}

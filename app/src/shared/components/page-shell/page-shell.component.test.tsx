@@ -17,3 +17,14 @@ it("holds a message without a column, passing its own props on", () => {
   expect(screen.getByRole("status")).toHaveTextContent("Loading…");
   expect(screen.queryByRole("region")).toBeNull();
 });
+
+it("puts a wide page's bar above its main region, the bar the page's banner: admin", () => {
+  render(
+    <PageShell variant="wide" bar={<header>admin</header>}>
+      <h2>Waiting for access</h2>
+    </PageShell>,
+  );
+  expect(screen.getByRole("banner")).toHaveTextContent("admin");
+  expect(screen.getByRole("main")).toHaveTextContent("Waiting for access");
+  expect(screen.getByRole("main")).not.toHaveTextContent("admin");
+});

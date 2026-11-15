@@ -4,20 +4,7 @@
 }
 
 .who {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2-5);
   padding: var(--space-2) var(--space-2-5) var(--space-2-5);
-}
-
-.who b {
-  font-weight: 700;
-}
-
-.who small {
-  display: block;
-  color: var(--text-muted);
-  font-weight: 500;
 }
 
 .status {

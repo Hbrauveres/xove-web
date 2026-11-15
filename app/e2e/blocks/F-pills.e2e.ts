@@ -103,7 +103,7 @@ test("F-pills.5 LIVE beside who's on the stage: a red tag in the mono face, its 
   await expect.soft(live).toHaveCSS("background-color", await computed(page, "background-color", LOOK.accent));
   await expect.soft(live).toHaveCSS("color", await computed(page, "color", LOOK.accentInk));
   await expect.soft(live).toHaveCSS("font-family", await computed(page, "font-family", LOOK.fontMono));
-  expect.soft(await pseudo(live, "::before", "animation-name")).toMatch(/pulse/);
+  expect.soft(await pseudo(live, "::before", "animation-name")).toMatch(/^beat$/);
   expect
     .soft(await pseudo(live, "::before", "animation-duration"))
     .toBe(await computed(page, "animation-duration", LOOK.pulse));
