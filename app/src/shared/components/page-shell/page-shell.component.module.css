@@ -43,13 +43,14 @@
   font-size: var(--text-sm);
 }
 
-/* A page of lists (admin): from the top, its column as wide as the admin's. */
+/* A page of lists (admin): from the top, its column as wide as the admin's, the gutters inside it. */
 .wide {
   display: block;
-  padding: 0 var(--gutter) var(--space-10) var(--gutter);
+  padding: 0;
 }
 
 .wideColumn {
   max-width: var(--admin-width);
   margin-inline: auto;
+  padding: 0 var(--gutter) var(--space-10) var(--gutter);
 }

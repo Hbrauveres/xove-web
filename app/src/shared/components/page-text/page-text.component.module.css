@@ -4,9 +4,9 @@
   color: var(--text-muted);
 }
 
-/* The lead: at the body's size, no wider than a comfortable line. */
+/* The lead: at the body's size; how wide it runs is its page's. */
 .lead {
-  max-width: var(--measure-36);
+  font-size: inherit;
 }
 
 /* A note: small. */

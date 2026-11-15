@@ -29,7 +29,7 @@ export function HomePage() {
         </Headline>
       </div>
       <div className={styles.act}>
-        <PageText variant="lead">
+        <PageText variant="lead" className={styles.pitch}>
           Share your screen or camera in sharp, fast streams. Watch them play, hang out, help out. Invite only.
         </PageText>
         {error && <ErrorNotice>{error}</ErrorNotice>}

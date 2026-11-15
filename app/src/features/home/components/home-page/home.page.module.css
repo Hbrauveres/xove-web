@@ -9,6 +9,11 @@
   line-height: 1.05;
 }
 
+/* The pitch's line, no wider than a comfortable read. */
+.pitch {
+  max-width: var(--measure-36);
+}
+
 /* Under the words, at its own width. */
 .google {
   align-self: flex-start;
