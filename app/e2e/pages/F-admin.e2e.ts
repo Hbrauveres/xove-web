@@ -92,12 +92,12 @@ test("F-admin.5 confirming Remove Rafa takes him off the members", async ({ page
 test("F-admin.6 Back to the room, a quiet link, takes the admin into the room", async ({ page }, info) => {
   await openScene(page, "page=admin");
   const back = page.getByRole("link", { name: "Back to the room" });
-  await observe(page, info, { back }, async () => {
-    await page.mouse.move(1, 1);
-  });
+  await page.mouse.move(1, 1);
   await expect.soft(back).toHaveCSS("color", await computed(page, "color", LOOK.muted));
   await expect.soft(back).toHaveCSS("text-decoration-line", "none");
-  await back.hover();
+  await observe(page, info, { back }, async () => {
+    await back.hover();
+  });
   await expect.soft(back).toHaveCSS("text-decoration-line", "underline");
   await expect.soft(back).toHaveCSS("color", await computed(page, "color", LOOK.text));
   await back.click();
