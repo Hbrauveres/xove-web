@@ -1,11 +1,13 @@
 import { useRef, useState } from "react";
 import { Dropdown } from "@shared/components/dropdown";
 import { Face } from "@shared/components/face";
+import { PersonRow } from "@shared/components/person-row";
 import { Icon } from "@shared/components/icon";
 import { IconButton } from "@shared/components/icon-button";
 import { PanelSection } from "@shared/components/panel-section";
 import { personName } from "../../../utils/person-name.util";
 import { HeaderSeats } from "../header-seats";
+import { HeaderStreamIcons } from "../header-stream-icons";
 import styles from "./header-people-button.component.module.css";
 import { STREAMS } from "./constants/people-button.constants";
 import type { HeaderPeopleButtonProps } from "./types/header-people-button.types";
@@ -48,26 +50,25 @@ export function HeaderPeopleButton({ people, meId, sharing, watchingOf, seats, m
           <ul className={styles.people}>
             {peopleOrder(people, meId, sharing).map((p) => (
               <li key={p.id} className={styles.person}>
-                <Face
-                  name={p.name}
-                  hue={p.hue}
-                  size={30}
-                  onAir={isSharing(sharing[p.id])}
-                  talking={p.id === meId && meTalking}
+                <PersonRow
+                  face={
+                    <Face
+                      name={p.name}
+                      hue={p.hue}
+                      size={30}
+                      onAir={isSharing(sharing[p.id])}
+                      talking={p.id === meId && meTalking}
+                    />
+                  }
+                  name={
+                    <>
+                      {p.name}
+                      {p.id === meId && <span className={styles.you}> (you)</span>}
+                    </>
+                  }
+                  line={personNote(p.id, sharing, watchingOf, nameOf)}
+                  end={<HeaderStreamIcons kinds={STREAMS.filter((kind) => sharing[p.id]?.[kind])} />}
                 />
-                <span className={styles.who}>
-                  <b>{p.name}</b>
-                  {p.id === meId && <span className={styles.you}> (you)</span>}
-                  <small>{personNote(p.id, sharing, watchingOf, nameOf)}</small>
-                </span>
-                {/* The line above says it in words: the icons are only for the eye. */}
-                <span className={styles.icons} aria-hidden="true">
-                  {STREAMS.filter((kind) => sharing[p.id]?.[kind]).map((kind) => (
-                    <span key={kind} className={styles.icon}>
-                      <Icon name={`stream-${kind}`} size={14} />
-                    </span>
-                  ))}
-                </span>
               </li>
             ))}
           </ul>

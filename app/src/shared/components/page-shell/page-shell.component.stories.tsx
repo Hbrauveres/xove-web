@@ -25,3 +25,9 @@ type Story = StoryObj<typeof meta>;
 export const Form: Story = {};
 export const Home: Story = { args: { variant: "home" } };
 export const Message: Story = { args: { variant: "message", children: "Loading…" } };
+export const Wide: Story = {
+  args: {
+    variant: "wide",
+    children: <h2 style={{ margin: 0, color: "var(--text)" }}>Waiting for access</h2>,
+  },
+};

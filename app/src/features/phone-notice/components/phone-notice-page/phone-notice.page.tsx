@@ -1,3 +1,4 @@
+import { PageText } from "@shared/components/page-text";
 import { Wordmark } from "@shared/components/wordmark";
 import { BigScreenArt } from "../big-screen-art";
 import { MARK_PX } from "./constants/phone-notice.constants";
@@ -13,10 +14,10 @@ export function PhoneNoticePage() {
         <h1 className={styles.title}>
           See you on the <em>big screen</em>.
         </h1>
-        <p className={styles.copy}>
-          Sorry, Xovê doesn't work on phones or tablets yet. Open <code>xove.app</code> on your laptop or desktop to
-          watch and share with your friends.
-        </p>
+        <PageText variant="lead">
+          Sorry, Xovê doesn't work on phones or tablets yet. Open <code className={styles.address}>xove.app</code> on
+          your laptop or desktop to watch and share with your friends.
+        </PageText>
       </div>
     </main>
   );

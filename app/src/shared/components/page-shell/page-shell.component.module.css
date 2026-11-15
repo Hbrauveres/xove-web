@@ -42,3 +42,14 @@
   color: var(--text-muted);
   font-size: var(--text-sm);
 }
+
+/* A page of lists (admin): from the top, its column as wide as the admin's. */
+.wide {
+  display: block;
+  padding: 0 var(--gutter) var(--space-10) var(--gutter);
+}
+
+.wideColumn {
+  max-width: var(--admin-width);
+  margin-inline: auto;
+}

@@ -232,7 +232,7 @@ describe("room: theater mode", () => {
     await user.click(screen.getByRole("button", { name: /people here/ }));
 
     const panel = screen.getByRole("dialog", { name: "Here now" });
-    await waitFor(() => expect(within(panel).getByText("Watching Bruno", { selector: "small" })).toBeInTheDocument());
+    await waitFor(() => expect(within(panel).getByText("Watching Bruno", { selector: "span" })).toBeInTheDocument());
   });
 });
 

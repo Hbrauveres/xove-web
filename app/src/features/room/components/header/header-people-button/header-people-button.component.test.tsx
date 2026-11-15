@@ -28,11 +28,11 @@ function setup(props: Partial<Parameters<typeof HeaderPeopleButton>[0]> = {}) {
   return userEvent.setup();
 }
 
-/** A person's row, by the name in bold (not a mention like "Watching Bruno"). */
+/** A person's row, by the name it starts with (not a mention like "Watching Bruno"). */
 const row = (name: RegExp) =>
   within(screen.getByRole("dialog", { name: "Here now" }))
     .getAllByRole("listitem")
-    .find((li) => name.test(li.querySelector("b")?.textContent ?? "")) ?? document.body;
+    .find((li) => new RegExp(`^${name.source}`).test(li.textContent ?? "")) ?? document.body;
 
 describe("the people button", () => {
   it("shows a people icon and the number, named for screen readers", () => {
@@ -59,10 +59,9 @@ describe("the people button", () => {
     const user = setup();
     await user.click(screen.getByRole("button", { name: "4 people here" }));
 
-    const names = within(screen.getByRole("dialog", { name: "Here now" }))
-      .getAllByRole("listitem")
-      .map((li) => li.querySelector("b")?.textContent);
-    expect(names).toEqual(["Bruno", "Ana", "Henrique", "Diego"]);
+    const rows = within(screen.getByRole("dialog", { name: "Here now" })).getAllByRole("listitem");
+    const order = ["Bruno", "Ana", "Henrique", "Diego"];
+    expect(rows.map((li) => order.find((name) => li.textContent?.startsWith(name)))).toEqual(order);
   });
 
   it("rings my face green while my voice is sent, live, and nobody else's", async () => {

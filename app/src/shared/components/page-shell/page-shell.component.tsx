@@ -1,7 +1,7 @@
 import styles from "./page-shell.component.module.css";
 import type { PageShellProps } from "./types/page-shell.types";
 
-/** A page on its own: a frame centred in the window; for home and form, a column in it; for a message, its line. */
+/** A page on its own: a centred column (home, form), a line (message), or a column from the top (wide). */
 export function PageShell({ variant, labelledBy, children, ...rest }: PageShellProps) {
   const column = variant === "home" || variant === "form";
   return (
@@ -14,6 +14,7 @@ export function PageShell({ variant, labelledBy, children, ...rest }: PageShellP
       {/* Said once by screen readers, as it changes. */}
       {variant === "message" && <output>{children}</output>}
       {variant === "waiting" && children}
+      {variant === "wide" && <div className={styles.wideColumn}>{children}</div>}
     </main>
   );
 }

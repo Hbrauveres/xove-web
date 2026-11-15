@@ -1,0 +1,14 @@
+.icons {
+  display: inline-flex;
+  gap: var(--space-1);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: var(--size-6);
+  height: var(--size-6);
+  border-radius: var(--radius-1-5);
+  background: var(--accent-18);
+  color: var(--accent);
+}

@@ -6,8 +6,9 @@ import type { HTMLAttributes, ReactNode } from "react";
  * - form: a page with a form in its column (Request access)
  * - waiting: the waiting room, its card and what's under it centred
  * - message: one short line while something loads
+ * - wide: a page of lists, from the top, in a wide column (admin)
  */
-type PageShellVariant = "home" | "form" | "waiting" | "message";
+type PageShellVariant = "home" | "form" | "waiting" | "message" | "wide";
 
 export interface PageShellProps extends HTMLAttributes<HTMLElement> {
   variant: PageShellVariant;

@@ -2,6 +2,7 @@ import { Dropdown } from "@shared/components/dropdown";
 import { Face } from "@shared/components/face";
 import { MenuRow } from "@shared/components/menu-row";
 import { PanelSection } from "@shared/components/panel-section";
+import { PersonRow } from "@shared/components/person-row";
 import { Slider } from "@shared/components/slider";
 import { Switch } from "@shared/components/switch";
 import { BRIGHTNESS_MAX, BRIGHTNESS_MIN, BRIGHTNESS_STEP } from "./constants/ambilight-slider.constants";
@@ -16,13 +17,12 @@ export function HeaderMyMenu(props: HeaderMyMenuProps) {
   return (
     <Dropdown open={open} label="Account" anchor={anchor} width={260} onClose={onClose}>
       <PanelSection className={styles.me}>
-        <div className={styles.who}>
-          <Face name={me.name} hue={me.hue} size={40} />
-          <div>
-            <b>{me.name}</b>
-            <small>{isAdmin ? "Admin" : "Member"}</small>
-          </div>
-        </div>
+        <PersonRow
+          className={styles.who}
+          face={<Face name={me.name} hue={me.hue} size={40} />}
+          name={me.name}
+          line={isAdmin ? "Admin" : "Member"}
+        />
         <div className={styles.status} data-state={connection}>
           <i aria-hidden="true" />
           {CONNECTION_WORDS[connection]}
