@@ -62,3 +62,37 @@
   color: var(--text);
   background: var(--surface-raised);
 }
+
+/* Words alone, muted; underlined when pointed at. No box and no press. */
+.quiet {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.quiet:active {
+  transform: none;
+}
+
+.quiet:hover:not(:disabled) {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+/* White with dark words (Google's sign-in), a soft red ring when pointed at. */
+.light {
+  background: var(--white);
+  color: var(--grey-31);
+  text-decoration: none;
+  transition:
+    transform var(--duration-80) ease,
+    box-shadow var(--duration-120) ease;
+}
+
+.light:hover:not(:disabled) {
+  box-shadow: 0 0 0 var(--space-0-75) var(--accent-soft);
+}

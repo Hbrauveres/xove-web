@@ -1,19 +1,49 @@
-/* A name over a picture: 22 px of the round buttons' glass, a face or an icon, then the words. */
+/* A label: a pill, a face, an icon or a dot, then the words. */
 .pill {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1-5);
-  height: var(--size-5-5);
-  padding: 0 var(--space-2) 0 var(--space-0-75);
   border-radius: var(--radius-pill);
-  background: var(--glass);
-  color: var(--text);
-  font-size: var(--text-11);
-  font-weight: 500;
   white-space: nowrap;
 }
 
+/* s: 22 px, over a picture or in a row. */
+.s {
+  gap: var(--space-1-5);
+  height: var(--size-5-5);
+  padding: 0 var(--space-2) 0 var(--space-0-75);
+  font-size: var(--text-11);
+  font-weight: 500;
+}
+
 /* Words alone: even on both sides. */
-.words {
+.s.words {
   padding: 0 var(--space-2);
+}
+
+/* m: on a page, under its text. */
+.m {
+  gap: var(--space-2-5);
+  padding: var(--space-2-5) var(--space-3-5);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+/* Over a picture: the round buttons' glass. */
+.glass {
+  background: var(--glass);
+  color: var(--text);
+}
+
+/* A status: the red tint, red words. */
+.soft {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* A role: red, deep-red words. */
+.solid {
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
 }

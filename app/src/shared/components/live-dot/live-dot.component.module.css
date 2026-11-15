@@ -18,3 +18,20 @@
   width: var(--size-2);
   height: var(--size-2);
 }
+
+/* Beating as LIVE's dot does: down to 30% and back, every 1.6 s. Still with reduced motion. */
+.pulse {
+  animation: pulse var(--duration-1600) ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: none;
+  }
+}
