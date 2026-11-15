@@ -15,3 +15,4 @@ export type {
   WatchingTarget,
 } from "./types/api.types";
 export { ApiError, api } from "./xove-api.service";
+export { apiErrorMessage } from "./utils/api-error-message.util";

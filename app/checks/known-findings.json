@@ -16,13 +16,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/pages/RequestAccessPage.module.css",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/testing/fakeApi.ts",
     "count": 2,
     "owner": "#195 the sweep"
@@ -59,27 +52,6 @@
     "tool": "code",
     "rule": "naming",
     "file": "src/pages/AdminPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/RequestAccessPage.module.css",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/RequestAccessPage.test.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/RequestAccessPage.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
   },
@@ -134,13 +106,6 @@
   },
   {
     "tool": "code",
-    "rule": "partInCode",
-    "file": "src/pages/RequestAccessPage.tsx",
-    "count": 4,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
     "rule": "size",
     "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
@@ -168,37 +133,9 @@
     "owner": "#194 home, request access, admin, the shell"
   },
   {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/RequestAccessPage.module.css",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/RequestAccessPage.test.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/RequestAccessPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
     "tool": "lint",
     "rule": "eslint(max-lines-per-function)",
     "file": "src/pages/AdminPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "jsx-a11y(prefer-tag-over-role)",
-    "file": "src/pages/RequestAccessPage.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
   },

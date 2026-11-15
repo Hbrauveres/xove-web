@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from "react-router";
 import { AdminPage } from "../../pages/AdminPage";
 import { HomePage } from "@features/home";
-import { RequestAccessPage } from "../../pages/RequestAccessPage";
+import { RequestAccessPage } from "@features/request-access";
 import { RoomPage } from "@features/room/components/room/room-page";
 import { RouteGuard } from "../route-guard";
 
