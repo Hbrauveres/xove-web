@@ -22,6 +22,12 @@ describe("the code check", () => {
     ]);
   });
 
+  it("takes the app's entry and its test by their own names, with no type to add", () => {
+    expect(rules("main.tsx", "", ["main.test.tsx"])).not.toContain("naming");
+    expect(rules("main.test.tsx", "")).not.toContain("naming");
+    expect(rules("other.test.tsx", "")).toContain("naming");
+  });
+
   it("names a file over 300 lines", () => {
     expect(rules("shared/utils/long.util.ts", "x\n".repeat(301), ["shared/utils/long.util.test.ts"])).toContain("size");
   });
