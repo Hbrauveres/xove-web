@@ -21,7 +21,7 @@ describe("the admin store", () => {
   it("starts with no lists, then has both once loaded", async () => {
     installFakeApi({ me: anAdmin(), requests: [aRequest()], members: someMembers() });
     const store = new AdminStore();
-    expect(store.getState()).toEqual({ lists: null, error: null, busy: false });
+    expect(store.getState()).toEqual({ lists: null, error: null, busy: false, asking: null });
 
     await store.load();
 
@@ -84,5 +84,15 @@ describe("the admin store", () => {
     const store = new AdminStore();
     await store.load();
     expect(store.getState()).toMatchObject({ lists: null, error: "Admins only" });
+  });
+
+  it("asks about one member's removal at a time, and any action ending closes the question", async () => {
+    installFakeApi({ me: anAdmin(), requests: [aRequest()], members: someMembers() });
+    const store = new AdminStore();
+    store.ask(2);
+    store.ask(1);
+    expect(store.getState().asking).toBe(1);
+    await store.approve(7);
+    expect(store.getState().asking).toBeNull();
   });
 });

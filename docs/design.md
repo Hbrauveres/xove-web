@@ -641,8 +641,8 @@ Its content stays clear of the phone's bars (the browser's safe areas).
 - **An error on a page is the error box** (`ErrorNotice`), never a bare red line.
 - **A person is one row** (`PersonRow`), wherever people are listed.
 - **A quiet way out or back is the quiet button** (`Button` quiet: muted, underlined only when pointed at), a link when it goes to a page.
-- **A status or a role is a label pill** in red (soft for a status, solid for a role), never a pill of its own; a dot that beats beats as LIVE's.
-- **Every page outside the room is on the Page shell;** a page of lists is its wide frame, its bar above the main region.
+- **A status or a role is a label pill** in red (soft for a status, solid for a role), never a pill of its own; a dot that beats uses the app's one beat (`@keyframes beat` in `global.css`), as LIVE's does.
+- **Every page outside the room is on the Page shell;** a page of lists is its wide frame, its bar above the main region. The phone notice is the one exception: it stands in for the whole app on a phone, with its own frame clear of the phone's bars.
 - **One exception to the tokens:** Google's sign-in button, white with Google's "G" in Google's own colours, as their rules ask.
 - **A first impression plays once:** an intro (the TV turning on) plays the first time in a visit, never again for the same state, and never for reduced motion.
 

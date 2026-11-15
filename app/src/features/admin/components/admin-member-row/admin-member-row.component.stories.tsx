@@ -7,7 +7,9 @@ const meta = {
   args: {
     member: { id: 2, email: "ana@example.com", name: "Ana Souza", avatarUrl: null, admin: false },
     busy: false,
-    onRemove: () => Promise.resolve(),
+    asking: false,
+    onAsk: () => undefined,
+    onRemove: () => undefined,
   },
   decorators: [
     (Story) => (
@@ -27,3 +29,5 @@ export const Member: Story = {};
 export const Admin: Story = {
   args: { member: { id: 1, email: "admin@example.com", name: "Henrique", avatarUrl: null, admin: true } },
 };
+/** Asked about: "Remove Ana" or Cancel. */
+export const Asking: Story = { args: { asking: true } };

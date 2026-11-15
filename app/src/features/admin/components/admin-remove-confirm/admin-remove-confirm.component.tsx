@@ -1,31 +1,22 @@
-import { useState } from "react";
 import { Button } from "@shared/components/button";
 import styles from "./admin-remove-confirm.component.module.css";
 import type { AdminRemoveConfirmProps } from "./types/admin-remove-confirm.types";
 
 /** Remove, asked first: "Remove Ana" or Cancel. */
-export function AdminRemoveConfirm({ firstName, busy, onRemove }: AdminRemoveConfirmProps) {
-  const [asking, setAsking] = useState(false);
-
+export function AdminRemoveConfirm({ firstName, asking, busy, onAsk, onRemove }: AdminRemoveConfirmProps) {
   if (!asking) {
     return (
-      <Button size="sm" variant="ghost" onClick={() => setAsking(true)}>
+      <Button size="sm" variant="ghost" onClick={() => onAsk(true)}>
         Remove
       </Button>
     );
   }
-
-  const remove = async () => {
-    await onRemove();
-    setAsking(false);
-  };
-
   return (
     <span className={styles.confirm}>
-      <Button size="sm" variant="danger" onClick={remove} disabled={busy}>
+      <Button size="sm" variant="danger" onClick={onRemove} disabled={busy}>
         Remove {firstName}
       </Button>
-      <Button size="sm" variant="ghost" onClick={() => setAsking(false)}>
+      <Button size="sm" variant="ghost" onClick={() => onAsk(false)}>
         Cancel
       </Button>
     </span>

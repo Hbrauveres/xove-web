@@ -13,4 +13,6 @@ export interface AdminState {
   error: string | null;
   /** An action is running: the others wait for it. */
   busy: boolean;
+  /** The member whose removal is being asked about: one at a time, closed when any action ends. */
+  asking: number | null;
 }

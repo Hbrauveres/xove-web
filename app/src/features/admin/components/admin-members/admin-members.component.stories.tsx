@@ -10,7 +10,9 @@ const meta = {
       { id: 2, email: "ana@example.com", name: "Ana Souza", avatarUrl: null, admin: false },
     ],
     busy: false,
-    onRemove: () => Promise.resolve(),
+    asking: null,
+    onAsk: () => undefined,
+    onRemove: () => undefined,
   },
   decorators: [
     (Story) => (

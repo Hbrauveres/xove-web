@@ -4,7 +4,7 @@ import type { AdminState } from "./types/admin.types";
 
 /** Admin's lists and its actions: one action at a time, its error kept, both lists reloaded after each. */
 export class AdminStore {
-  private state: AdminState = { lists: null, error: null, busy: false };
+  private state: AdminState = { lists: null, error: null, busy: false, asking: null };
   private readonly listeners = new Set<() => void>();
 
   readonly subscribe = (listener: () => void) => {
@@ -26,6 +26,9 @@ export class AdminStore {
     }
   };
 
+  /** Asks about removing this member (closing any other question), or closes the question. */
+  readonly ask = (id: number | null) => this.set({ asking: id });
+
   readonly approve = (id: number) => this.act(() => api.admin.approve(id));
   readonly decline = (id: number) => this.act(() => api.admin.decline(id));
   readonly remove = (id: number) => this.act(() => api.admin.removeMember(id));
@@ -37,7 +40,7 @@ export class AdminStore {
     } catch (err) {
       this.set({ error: apiErrorMessage(err, ACTION_FAILED) });
     } finally {
-      this.set({ busy: false });
+      this.set({ busy: false, asking: null });
       await this.load();
     }
   }

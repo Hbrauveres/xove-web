@@ -1,4 +1,4 @@
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { AdminStore } from "../admin.store";
 
 /** Admin's lists and actions, for this visit: a store of its own, loaded as the page opens. */
@@ -8,5 +8,8 @@ export function useAdmin() {
   useEffect(() => {
     void store.load();
   }, [store]);
-  return { ...state, approve: store.approve, decline: store.decline, remove: store.remove };
+  return useMemo(
+    () => ({ ...state, ask: store.ask, approve: store.approve, decline: store.decline, remove: store.remove }),
+    [state, store],
+  );
 }

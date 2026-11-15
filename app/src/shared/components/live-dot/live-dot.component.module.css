@@ -19,15 +19,9 @@
   height: var(--size-2);
 }
 
-/* Beating as LIVE's dot does: down to 30% and back, every 1.6 s. Still with reduced motion. */
+/* Beating as LIVE's dot does: the app's one beat (global.css), every 1.6 s. Still with reduced motion. */
 .pulse {
-  animation: pulse var(--duration-1600) ease-in-out infinite;
-}
-
-@keyframes pulse {
-  50% {
-    opacity: 0.3;
-  }
+  animation: global(beat) var(--duration-1600) ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {

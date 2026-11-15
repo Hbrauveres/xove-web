@@ -8,7 +8,7 @@ import styles from "./admin.page.module.css";
 
 /** Who's waiting to get in, and who's in. Only admins reach this page. */
 export function AdminPage() {
-  const { lists, error, busy, approve, decline, remove } = useAdmin();
+  const { lists, error, busy, asking, ask, approve, decline, remove } = useAdmin();
 
   if (!lists && !error) return <PageShell variant="message">Loading…</PageShell>;
 
@@ -22,7 +22,7 @@ export function AdminPage() {
       {lists && (
         <div className={styles.columns}>
           <AdminRequests requests={lists.requests} busy={busy} onApprove={approve} onDecline={decline} />
-          <AdminMembers members={lists.members} busy={busy} onRemove={remove} />
+          <AdminMembers members={lists.members} busy={busy} asking={asking} onAsk={ask} onRemove={remove} />
         </div>
       )}
     </PageShell>

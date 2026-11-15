@@ -7,7 +7,7 @@ import type { AdminMemberRowProps } from "./types/admin-member-row.types";
 import { firstName } from "@shared/utils/first-name.util";
 
 /** A member: their face, name and email, and Remove; an admin says Admin instead. */
-export function AdminMemberRow({ member, busy, onRemove }: AdminMemberRowProps) {
+export function AdminMemberRow({ member, busy, asking, onAsk, onRemove }: AdminMemberRowProps) {
   return (
     <li className={styles.member}>
       <PersonRow
@@ -20,7 +20,9 @@ export function AdminMemberRow({ member, busy, onRemove }: AdminMemberRowProps) 
           ) : (
             <AdminRemoveConfirm
               firstName={firstName(member.name, "member")}
+              asking={asking}
               busy={busy}
+              onAsk={(on) => onAsk(on ? member.id : null)}
               onRemove={() => onRemove(member.id)}
             />
           )

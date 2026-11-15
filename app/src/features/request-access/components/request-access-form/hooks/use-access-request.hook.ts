@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { api, apiErrorMessage } from "@services/xove-api-service";
 import { SEND_FAILED } from "../constants/request-access-form.constants";
 
@@ -8,7 +8,7 @@ export function useAccessRequest(onSent: () => Promise<void>) {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const send = async () => {
+  const send = useCallback(async () => {
     setSending(true);
     setError(null);
     try {
@@ -19,7 +19,7 @@ export function useAccessRequest(onSent: () => Promise<void>) {
     } finally {
       setSending(false);
     }
-  };
+  }, [message, onSent]);
 
-  return { message, setMessage, sending, error, send };
+  return useMemo(() => ({ message, setMessage, sending, error, send }), [message, sending, error, send]);
 }

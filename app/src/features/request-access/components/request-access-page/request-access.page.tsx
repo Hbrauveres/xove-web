@@ -20,7 +20,7 @@ export function RequestAccessPage() {
 
   if (!me) return null;
 
-  const useAnotherAccount = async () => {
+  const switchAccount = async () => {
     await signOut();
     navigate("/", { replace: true });
   };
@@ -41,7 +41,7 @@ export function RequestAccessPage() {
         label="Signed in as"
         name={me.email}
         end={
-          <Button variant="quiet" onClick={useAnotherAccount}>
+          <Button variant="quiet" onClick={switchAccount}>
             Use another account
           </Button>
         }

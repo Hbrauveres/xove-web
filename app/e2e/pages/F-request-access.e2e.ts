@@ -77,7 +77,7 @@ test("F-request-access.4 a request already sent shows Request sent, its dot puls
   await expect.soft(pill).toHaveCSS("background-color", await computed(page, "background-color", LOOK.accentSoft));
   await expect.soft(pill).toHaveCSS("color", await computed(page, "color", LOOK.accent));
   const dot = status.locator("[data-live]");
-  await expect.soft(dot).toHaveCSS("animation-name", /pulse/);
+  await expect.soft(dot).toHaveCSS("animation-name", "beat");
   await expect.soft(dot).not.toHaveCSS("box-shadow", "none");
   await expect
     .soft(dot)
