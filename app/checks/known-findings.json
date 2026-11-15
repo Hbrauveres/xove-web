@@ -9,13 +9,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/pages/AdminPage.module.css",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/testing/fakeApi.ts",
     "count": 2,
     "owner": "#195 the sweep"
@@ -33,27 +26,6 @@
     "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/AdminPage.module.css",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/AdminPage.test.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/AdminPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
   },
   {
     "tool": "code",
@@ -99,52 +71,10 @@
   },
   {
     "tool": "code",
-    "rule": "partInCode",
-    "file": "src/pages/AdminPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
     "rule": "size",
     "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/AdminPage.module.css",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/AdminPage.test.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/AdminPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "eslint(max-lines-per-function)",
-    "file": "src/pages/AdminPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "lint",
-    "rule": "react(set-state-in-effect)",
-    "file": "src/pages/AdminPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
   },
   {
     "tool": "lint",

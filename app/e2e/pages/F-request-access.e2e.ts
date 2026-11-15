@@ -73,7 +73,7 @@ test("F-request-access.4 a request already sent shows Request sent, its dot puls
   await expect.soft(page.getByRole("heading", { level: 1, name: "Request sent" })).toBeVisible();
   await expect.soft(page.getByText(SENT, { exact: true })).toBeVisible();
   await expect.soft(status).toHaveText("Waiting for approval");
-  const dot = status.locator("span[aria-hidden]");
+  const dot = status.locator("[data-live]");
   await expect.soft(dot).toHaveCSS("animation-name", /pulse/);
   await expect
     .soft(dot)
