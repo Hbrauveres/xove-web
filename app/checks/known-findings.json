@@ -1,13 +1,6 @@
 [
   {
     "tool": "code",
-    "rule": "domQuery",
-    "file": "src/main.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
     "rule": "history",
     "file": "src/testing/fakeApi.ts",
     "count": 2,
@@ -64,24 +57,10 @@
   },
   {
     "tool": "code",
-    "rule": "noTest",
-    "file": "src/main.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
     "rule": "size",
     "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "lint",
-    "rule": "typescript(no-non-null-assertion)",
-    "file": "src/main.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
   },
   {
     "tool": "tsc",
