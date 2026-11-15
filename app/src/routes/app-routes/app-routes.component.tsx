@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from "react-router";
 import { AdminPage } from "../../pages/AdminPage";
-import { HomePage } from "../../pages/HomePage";
+import { HomePage } from "@features/home";
 import { RequestAccessPage } from "../../pages/RequestAccessPage";
 import { RoomPage } from "@features/room/components/room/room-page";
 import { RouteGuard } from "../route-guard";

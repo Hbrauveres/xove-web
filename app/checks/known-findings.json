@@ -16,13 +16,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/pages/HomePage.module.css",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/pages/RequestAccessPage.module.css",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
@@ -40,13 +33,6 @@
     "file": "src/testing/fakeLiveKit.ts",
     "count": 5,
     "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "lineLength",
-    "file": "src/pages/HomePage.tsx",
-    "count": 3,
-    "owner": "#194 home, request access, admin, the shell"
   },
   {
     "tool": "code",
@@ -73,27 +59,6 @@
     "tool": "code",
     "rule": "naming",
     "file": "src/pages/AdminPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/HomePage.module.css",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/HomePage.test.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/pages/HomePage.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
   },
@@ -170,13 +135,6 @@
   {
     "tool": "code",
     "rule": "partInCode",
-    "file": "src/pages/HomePage.tsx",
-    "count": 2,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "partInCode",
     "file": "src/pages/RequestAccessPage.tsx",
     "count": 4,
     "owner": "#194 home, request access, admin, the shell"
@@ -206,27 +164,6 @@
     "tool": "code",
     "rule": "structure",
     "file": "src/pages/AdminPage.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/HomePage.module.css",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/HomePage.test.tsx",
-    "count": 1,
-    "owner": "#194 home, request access, admin, the shell"
-  },
-  {
-    "tool": "code",
-    "rule": "structure",
-    "file": "src/pages/HomePage.tsx",
     "count": 1,
     "owner": "#194 home, request access, admin, the shell"
   },

@@ -1,0 +1,22 @@
+.brand {
+  display: flex;
+  margin: 0;
+  color: var(--text);
+}
+
+.title {
+  font-size: clamp(var(--text-32), var(--vw-8), var(--text-44));
+  line-height: 1.05;
+}
+
+/* Under the words, at its own width. */
+.google {
+  align-self: flex-start;
+  margin-top: var(--space-2);
+}
+
+/* The mark and headline, then what to read and do, in one column. */
+.lead,
+.act {
+  display: contents;
+}
