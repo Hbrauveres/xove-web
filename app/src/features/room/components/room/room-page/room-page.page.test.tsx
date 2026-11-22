@@ -5,6 +5,7 @@ import { AuthProvider } from "@shared/stores/auth-store";
 import { aUser, installFakeApi, someoneSharing } from "../../../../../testing/fakes/api.fake";
 import { lastRoom } from "../../../../../testing/fakes/livekit.fake";
 import { clockUser, onFakeClock } from "../../../../../testing/factories/clock.factory";
+import { startFrom } from "../../../../../testing/factories/stage-steps.factory";
 import { RoomPage } from "./room-page.page";
 const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });
 const FAST_POLL = 50;
@@ -247,10 +248,7 @@ async function readyRoom() {
 type User = ReturnType<typeof clockUser>;
 /** Clicks "Share your screen": the browser's picker, and the pick is sent at once. */
 async function pickScreen(user: User, button: RegExp = /share your screen/i) {
-  const direct = within(stage()).queryByRole("button", { name: button });
-  if (direct) return user.click(direct);
-  await user.click(within(stage()).getByRole("button", { name: "Go live" }));
-  await user.click(await screen.findByRole("menuitem", { name: button }));
+  await startFrom(user, button);
 }
 
 describe("room: watching", () => {

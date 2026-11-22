@@ -1,6 +1,7 @@
 // Where people meet the shared blocks in the app: the steps that open each place, shared by the
 // blocks' tests.
 import type { Locator, Page } from "@playwright/test";
+import { startMine } from "../support/start.ts";
 import { openScene, wakeStage } from "../support/open.ts";
 import { stageOf } from "../support/stage.ts";
 import { untilStill } from "../support/timing.ts";
@@ -12,10 +13,10 @@ export async function watching(page: Page, extra = ""): Promise<void> {
   await wakeStage(page);
 }
 
-/** The empty room, where I start my screen ("Share your screen"); its controls awake. */
+/** The empty room, where I start my screen (Go live's "Share your screen"); its controls awake. */
 export async function sharingMyScreen(page: Page): Promise<void> {
   await openScene(page, "s=empty");
-  await page.getByRole("button", { name: "Share your screen" }).click();
+  await startMine(page, "screen");
   await page.getByRole("button", { name: "Stop sharing your screen" }).waitFor();
   await stageOf(page).locator(`video[aria-label="Your shared screen"]`).waitFor();
   await wakeStage(page);
@@ -24,7 +25,7 @@ export async function sharingMyScreen(page: Page): Promise<void> {
 /** The empty room with my camera on; its controls awake. */
 export async function myCameraOn(page: Page): Promise<void> {
   await openScene(page, "s=empty");
-  await page.getByRole("button", { name: "Turn on your camera" }).click();
+  await startMine(page, "camera");
   await page.getByRole("button", { name: "Turn off your camera" }).waitFor();
   await stageOf(page).locator(`video[aria-label="Your camera"]`).waitFor();
   await wakeStage(page);

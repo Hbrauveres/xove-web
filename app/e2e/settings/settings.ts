@@ -2,6 +2,7 @@
 // parts, moving the pointer off to a calm spot, a record of controls greyed even for a moment, and
 // parts of the page hidden while the glass is measured.
 import { expect, type Locator, type Page } from "@playwright/test";
+import { startMine } from "../support/start.ts";
 import { openScene, wakeStage } from "../support/open.ts";
 import { boxOf } from "../support/geometry.ts";
 import { pictureOf, stageOf } from "../support/stage.ts";
@@ -27,10 +28,10 @@ export function myButtons(page: Page) {
 /** My own stream on the stage: the harness's room with nobody live, then my screen shared. */
 export async function myStream(page: Page, query = "s=empty", { camera = false } = {}): Promise<void> {
   await openScene(page, query);
-  await page.getByRole("button", { name: "Share your screen" }).first().click();
+  await startMine(page, "screen");
   await page.getByRole("button", { name: "Stop sharing your screen" }).waitFor();
   if (camera) {
-    await page.getByRole("button", { name: "Turn on your camera" }).first().click();
+    await startMine(page, "camera");
     await page.getByRole("button", { name: "Turn off your camera" }).waitFor();
   }
   // My picture on the stage, its controls' layer in place.

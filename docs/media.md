@@ -22,7 +22,7 @@ sequenceDiagram
 
 1. **The picker.** Xovê opens the browser's picker itself (`getDisplayMedia`) instead of through LiveKit, because `livekit-client` drops the `windowAudio` option. It always captures the best quality, 1080p at 30 fps, so the sharer can raise the quality later without picking again. It can't pick its own tab (that would show the room inside the room). In Chrome, it asks the browser to stay on Xovê after the pick (`CaptureController.setFocusBehavior`), so the sharer sees that it started and can adjust it right there instead of jumping to the shared window.
 2. **One click.** The pick is sent at once with the settings remembered in this browser (the defaults the first time: 1080p and Smooth for a screen, 720p and Smooth for a camera). Closing the picker leaves everything as it was.
-3. **Publishing** sends the tracks to LiveKit, then tells the API, which lists the stream for everyone. Up to 6 streams are live at once (someone with a screen and a camera uses 2); with 6 live, the start buttons wait: nobody is pushed out. A phone that can't share a screen offers only the camera.
+3. **Publishing** sends the tracks to LiveKit, then tells the API, which lists the stream for everyone. Up to 6 streams are live at once (someone with a screen and a camera uses 2); with 6 live, Go live's ways to start wait: nobody is pushed out. A phone that can't share a screen offers only the camera.
 
 **Which sound comes along:**
 

@@ -1,4 +1,4 @@
-/* A button with words, round at both ends: one base, two sizes, three fills. Only its icon and
+/* A button with words, round at both ends: one base, three sizes, three fills. Only its icon and
    words change. */
 .pill {
   display: inline-flex;
@@ -35,7 +35,7 @@
   font-size: var(--text-xs);
 }
 
-/* m: over a stream (Go live). */
+/* m: over a stream and on the empty stage (Go live). */
 .m {
   height: var(--control-sm);
   padding: 0 var(--space-3-5) 0 var(--space-3);
@@ -45,18 +45,6 @@
 .m svg {
   width: var(--size-4);
   height: var(--size-4);
-}
-
-/* l: the main thing to do (the ways to start, on the empty stage). */
-.l {
-  height: var(--control-2xl);
-  padding: 0 var(--space-5);
-  font-size: var(--text-14-5);
-}
-
-.l svg {
-  width: var(--size-4-5);
-  height: var(--size-4-5);
 }
 
 /* Glass, over a stream: the round buttons' own glass and shadow. */
@@ -77,11 +65,6 @@
   color: var(--accent-ink);
 }
 
-/* Soft: the second way, a light fill with no outline. */
-.soft {
-  background: var(--text-shade-08);
-}
-
 /* Dark: a small button in a row, the chosen segment's pill. On (aria-pressed), white with dark words. */
 .dark {
   background: var(--sel-bg);
@@ -100,10 +83,6 @@
 
   .red:not([aria-disabled="true"]):hover {
     background: var(--accent-light);
-  }
-
-  .soft:not([aria-disabled="true"]):hover {
-    background: var(--text-shade-14);
   }
 
   .dark:not([aria-disabled="true"], [aria-pressed="true"], :disabled):hover {

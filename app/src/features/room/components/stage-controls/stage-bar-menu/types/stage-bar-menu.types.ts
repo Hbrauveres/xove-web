@@ -10,6 +10,8 @@ export interface StageBarMenuProps {
    * reaches past both sides equally). Its holder must then not be positioned: it's placed in the bar.
    */
   centred?: boolean | undefined;
+  /** Centred over its own button rather than ending at its right (the empty stage's Go live). */
+  overButton?: boolean | undefined;
   /** Its rows; an `<hr />` between groups. */
   children: ReactNode;
 }

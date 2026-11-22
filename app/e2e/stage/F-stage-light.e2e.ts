@@ -22,7 +22,7 @@ const chosen = (page: Page, on: boolean, brightness: number) =>
 
 /** The stream's light: a canvas behind the picture. */
 const streamLight = (page: Page) => stageParts(page).view.locator('canvas[class*="_light_"]');
-/** Anything beside the picture besides the stream's light: what used to light the wall with nobody live. */
+/** Anything beside the picture but the stream's light: a light on the wall that isn't the picture's. */
 const wallLights = (page: Page) => stageParts(page).view.locator(":scope > :not(canvas):not(div)");
 
 /** Whether `outer` reaches past `inner` on every side. */

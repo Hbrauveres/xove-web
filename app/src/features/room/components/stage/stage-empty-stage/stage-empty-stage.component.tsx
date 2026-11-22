@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { StageGoLive } from "../../stage-controls/stage-go-live";
 import { StageEmptyScene } from "../stage-empty-scene";
-import { CORNERS } from "./constants/corners.constants";
+import { CORNERS, NEON_CORNER } from "./constants/corners.constants";
 import { usePointerShift } from "./hooks/use-pointer-shift.hook";
 import styles from "./stage-empty-stage.component.module.css";
 import type { StageEmptyStageProps } from "./types/stage-empty-stage.types";
@@ -19,10 +19,16 @@ export function StageEmptyStage({ canShareScreen, onStart, onSettings }: StageEm
     <div className={styles.empty} {...shift}>
       <StageEmptyScene ref={scene} />
       {CORNERS.map((at) => (
-        <span key={at} className={styles.corner} data-at={at} data-neon={at === "tr" || undefined} aria-hidden="true" />
+        <span
+          key={at}
+          className={styles.corner}
+          data-at={at}
+          data-neon={at === NEON_CORNER || undefined}
+          aria-hidden="true"
+        />
       ))}
       <div className={styles.start}>
-        <StageGoLive canShareScreen={canShareScreen} onStart={onStart} onSettings={onSettings} />
+        <StageGoLive canShareScreen={canShareScreen} onStart={onStart} onSettings={onSettings} menuOverButton />
       </div>
     </div>
   );

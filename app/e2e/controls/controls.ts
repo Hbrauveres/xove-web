@@ -1,6 +1,7 @@
 // The stage's controls' own helpers: my stream, a voice heard, what icons a control shows, whether a
 // sound's slider is open, and where an element's centre is. The rest is in support/.
 import type { Locator, Page } from "@playwright/test";
+import { startMine } from "../support/start.ts";
 import { boxOf, centreY } from "../support/geometry.ts";
 import { voiceOn } from "../support/harness.ts";
 import { openScene, wakeStage } from "../support/open.ts";
@@ -8,10 +9,10 @@ import { control, stageOf } from "../support/stage.ts";
 import { glassUnderBreakingParentsWhile } from "../support/glass.ts";
 import { CHROME_IDLE_MS, spend, untilStill } from "../support/timing.ts";
 
-/** My own stream on the stage: from the empty stage, "Share your screen"; its controls awake. */
+/** My own stream on the stage: from the empty stage, Go live's "Share your screen"; its controls awake. */
 export async function openMyStream(page: Page): Promise<void> {
   await openScene(page, "s=empty");
-  await page.getByRole("button", { name: "Share your screen" }).first().click();
+  await startMine(page, "screen");
   await stageOf(page).getByLabel("Your shared screen").waitFor();
   await untilStill(page);
   await wakeStage(page);

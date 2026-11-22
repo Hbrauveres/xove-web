@@ -115,7 +115,7 @@ describe("room: sharing", () => {
     const user = await readyRoom();
     await startSharing(user);
 
-    await startFrom(user, /stop sharing/i);
+    await user.click(within(stage()).getByRole("button", { name: /stop sharing/i }));
 
     expect(await screen.findByLabelText("0 of 6 live, 6 seats open")).toBeInTheDocument();
     expect(lastRoom().localParticipant.isScreenShareEnabled).toBe(false);

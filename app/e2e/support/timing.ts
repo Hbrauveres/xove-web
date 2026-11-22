@@ -24,7 +24,7 @@ export interface StillOptions {
 /**
  * Waits until nothing finite is moving in `scope` (the whole page, or one part with what's inside
  * it): no CSS transition or animation with an end still running, two frames after each look. What
- * runs forever (a spinner, the static's loop) doesn't count.
+ * runs forever (a spinner, the empty stage's grid) doesn't count.
  */
 export async function untilStill(scope: Page | Locator, { property }: StillOptions = {}): Promise<void> {
   const root = "page" in scope ? scope.first() : scope.locator(":root");

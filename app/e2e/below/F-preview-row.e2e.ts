@@ -1,4 +1,5 @@
 import { VOICE_LISTEN_MS, spend } from "../support/timing.ts";
+import { startMine } from "../support/start.ts";
 import { voiceOn } from "../support/harness.ts";
 import { cueAgainstSound, recordCue } from "../support/cue.ts";
 import { expect, test, type Locator, type Page } from "@playwright/test";
@@ -177,10 +178,10 @@ test("F-preview-row.8 my own preview, sharing both, has only the swap, which tra
   page,
 }, info) => {
   await openScene(page, "s=empty");
-  await page.getByRole("button", { name: "Share your screen" }).click();
+  await startMine(page, "screen");
   await page.getByRole("button", { name: "Stop sharing your screen" }).waitFor();
   await wakeStage(page);
-  await page.getByRole("button", { name: "Turn on your camera" }).click();
+  await startMine(page, "camera");
   await page.getByRole("button", { name: "Turn off your camera" }).waitFor();
   await marinaGoesLive(page);
   await watch(page, "Marina · screen");

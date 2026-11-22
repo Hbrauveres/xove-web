@@ -26,7 +26,7 @@ it("isn't, for a computer, a touch-screen laptop or a narrow window: their main 
 });
 ```
 
-The same goes for the stream presets (`services/media-devices-service/constants/devices.constants.ts`) and how they're sent and capped (`services/livekit-service/utils/publish-options.util.ts`), the room's state person by person (`services/livekit-service/utils/room-state.util.ts`), the stage light's grid and mask (`features/room/utils/light-grid.util.ts`, `features/room/components/stage/stage-light/utils/`) who is big by default and what I hear (`features/room/utils/*.util.ts`), and the mark's geometry and animation (`shared/components/wordmark/utils/`): a test fails if the favicon drifts from the geometry.
+The same goes for the stream presets (`services/media-devices-service/constants/devices.constants.ts`) and how they're sent and capped (`services/livekit-service/utils/publish-options.util.ts`), the room's state person by person (`services/livekit-service/utils/room-state.util.ts`), the stage light's grid and mask (`features/room/utils/light-grid.util.ts`, `features/room/components/stage/stage-light/utils/`), who is big by default and what I hear (`features/room/utils/*.util.ts`), and the mark's geometry and animation (`shared/components/wordmark/utils/`): a test fails if the favicon drifts from the geometry.
 
 ## Components
 

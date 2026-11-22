@@ -35,7 +35,7 @@ const running = (page: Page) =>
       .map((a) => (a instanceof CSSAnimation ? a.animationName : "")),
   );
 
-/** Starts counting what the old TV added to the stage (a canvas, the turn-on's flare) from now. */
+/** Starts counting what's drawn or flashed onto the stage (a canvas, a turn-on's flare) from now. */
 const countTv = (page: Page) =>
   page.evaluate(() => {
     const w = window as unknown as { __tv: number };
@@ -112,8 +112,11 @@ test("F-empty-stage.3 Go live opens its menu above it, and a click outside or Es
   await expect.soft(row(page, "Share your screen")).toBeVisible();
   await expect.soft(row(page, "Turn on your camera")).toBeVisible();
   await expect.soft(row(page, "Settings")).toBeVisible();
+  // Above the pill, centred over it.
   const m = await boxOf(menu(page));
-  expect.soft(m.y + m.height).toBeLessThanOrEqual((await boxOf(pill)).y);
+  const p = await boxOf(pill);
+  expect.soft(m.y + m.height).toBeLessThanOrEqual(p.y);
+  expect.soft(Math.abs(centreX(m) - centreX(p))).toBeLessThan(2);
   // A click on the stage's empty sky closes it.
   const view = await boxOf(stageParts(page).view);
   await page.mouse.click(view.x + view.width * 0.2, view.y + view.height * 0.2);
@@ -201,7 +204,7 @@ test("F-empty-stage.8 when the last stream stops, the empty stage is back with n
   expect.soft(await tvSeen(page)).toBe(0);
 });
 
-test("F-empty-stage.9 the grid slides toward us and the neon flickers, drawn without a canvas", async ({
+test("F-empty-stage.9 the grid slides, the neon flickers and Go live's halo breathes, drawn without a canvas", async ({
   page,
 }, info) => {
   await openScene(page, "s=empty");
@@ -209,6 +212,9 @@ test("F-empty-stage.9 the grid slides toward us and the neon flickers, drawn wit
   await observe(page, info, { grid: grid(page), eye: eye(page) }, () => afterFrames(page, SOME_FRAMES));
   expect.soft(await gridShift(page)).not.toBe(first);
   await expect.soft(stageParts(page).view.locator("canvas")).toHaveCount(0);
+  // CSS modules name each animation with its file's hash (`_run_ingzd_1`): matched by its own name.
+  const names = (await running(page)).join(" ");
+  for (const name of ["run", "tube", "breathe"]) expect.soft(names.includes(`_${name}_`), name).toBe(true);
   // The eye: cut in half by the horizon.
   const view = await boxOf(stageParts(page).view);
   const e = await boxOf(eye(page));

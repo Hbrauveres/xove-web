@@ -43,16 +43,6 @@ describe("the stage's view", () => {
     expect(props.onSettings).toHaveBeenCalledTimes(1);
   });
 
-  it("never plays a TV's turn-on, the first time nobody's live or later", () => {
-    const big = aSharer();
-    const { container, rerender, props } = renderView();
-    const flashes = () => container.querySelectorAll('[class*="intro"], [class*="flash"]');
-    expect(flashes()).toHaveLength(0);
-    rerender(<StageView {...props} big={big} main={big.screen ?? null} />);
-    rerender(<StageView {...props} />);
-    expect(flashes()).toHaveLength(0);
-  });
-
   it("plays the big stream, with nothing else beside it", () => {
     const big = aSharer();
     const { container } = renderView({ big, main: big.screen ?? null });

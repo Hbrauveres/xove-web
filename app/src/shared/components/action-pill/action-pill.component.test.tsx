@@ -18,7 +18,7 @@ describe("an action pill", () => {
 
   it("is disabled for assistive tech while it can't be used", () => {
     render(
-      <ActionPill size="l" fill="red" lead="screen-off" unavailable aria-label="Share your screen">
+      <ActionPill size="m" fill="glass" lead="screen-off" unavailable aria-label="Share your screen">
         Screen
       </ActionPill>,
     );

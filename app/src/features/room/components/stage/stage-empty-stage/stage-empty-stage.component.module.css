@@ -35,6 +35,18 @@
   border-width: var(--stroke) var(--stroke) 0 0;
 }
 
+.corner[data-at="bl"] {
+  bottom: var(--inset);
+  left: var(--inset);
+  border-width: 0 0 var(--stroke) var(--stroke);
+}
+
+.corner[data-at="br"] {
+  bottom: var(--inset);
+  right: var(--inset);
+  border-width: 0 var(--stroke) var(--stroke) 0;
+}
+
 /*
  * The neon: the top right corner's red tube and its glow, over the grey corner, fading as one. Off, the
  * grey corner shows beneath, like the other three. A tube on its way out: lit, then a quick burst of
@@ -132,18 +144,6 @@
   100% {
     opacity: 1;
   }
-}
-
-.corner[data-at="bl"] {
-  bottom: var(--inset);
-  left: var(--inset);
-  border-width: 0 0 var(--stroke) var(--stroke);
-}
-
-.corner[data-at="br"] {
-  bottom: var(--inset);
-  right: var(--inset);
-  border-width: 0 var(--stroke) var(--stroke) 0;
 }
 
 /* Go live, centred on the floor, below the horizon, so its menu opens into the space above it. */

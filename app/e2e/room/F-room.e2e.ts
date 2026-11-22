@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { startMine } from "../support/start.ts";
 import { blinks, drift } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
 import { boxOf, inside, overlap, windowBox } from "../support/geometry.ts";
@@ -95,10 +96,10 @@ test("F-room.5 what I watch is told to the room: my face joins its watchers", as
 test("F-room.6 my own screen goes live and is counted by the room, and stops the same way", async ({ page }, info) => {
   await openScene(page, "s=empty");
   const { stage } = roomOf(page);
-  const share = page.getByRole("button", { name: "Share your screen" });
+  const share = page.getByRole("button", { name: "Go live" });
   const mine = stage.getByLabel("Your shared screen");
   await observe(page, info, { share, mine }, async () => {
-    await share.click();
+    await startMine(page, "screen");
     await expect(mine).toBeVisible(AFTER_POLL);
   });
   await expect.soft(mine).toBeVisible();

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import type { PointerEvent, RefObject } from "react";
 import { reducedMotion } from "@shared/utils/reduced-motion.util";
 import { pointerShift } from "../utils/pointer-shift.util";
@@ -29,5 +29,5 @@ export function usePointerShift(scene: RefObject<HTMLElement | null>) {
     [move],
   );
   const onPointerLeave = useCallback(() => move(0, 0), [move]);
-  return { onPointerMove, onPointerLeave };
+  return useMemo(() => ({ onPointerMove, onPointerLeave }), [onPointerMove, onPointerLeave]);
 }

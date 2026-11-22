@@ -86,7 +86,8 @@
   --grey-11: #0b0b0c;
   --grey-12: #0c0c0e;
   --grey-15: #0f0f11;
-  /* The eye's silhouette on the empty stage: a flat near-black just off the stage's own dark. */
+  /* The eye's silhouette on the empty stage: a flat near-black just off the stage's own dark. Named
+     "flat" because `--grey-15` (#0f0f11, a touch blue) already takes its strength. */
   --grey-15-flat: #0f0f0f;
   --grey-20-72: rgba(20, 20, 21, 0.72);
   --grey-20-85: rgba(20, 20, 21, 0.85);
@@ -100,7 +101,6 @@
   --grey-202: #cacacd;
   --grey-208: #d0d0d3;
   --text-shade-06: rgba(235, 235, 236, 0.06);
-  --text-shade-08: rgba(235, 235, 236, 0.08);
   --text-shade-14: rgba(235, 235, 236, 0.14);
   --text-shade-16: rgba(235, 235, 236, 0.16);
   --text-shade-22: rgba(235, 235, 236, 0.22);
@@ -212,7 +212,6 @@
   --art-width: 9.375rem;
   --avatar-big: 3.25rem;
   --card-width: 27.5rem;
-  --control-2xl: 2.75rem;
   --control-3xl: 3rem;
   --control-lg: 2.375rem;
   --control-md: 2.25rem;
@@ -274,7 +273,6 @@
   --text-11: 0.6875rem;
   --text-13-5: 0.84375rem;
   --text-14: 0.875rem;
-  --text-14-5: 0.90625rem;
   --text-23-2: 1.45rem;
   --text-28: 1.75rem;
   --text-32: 2rem;
