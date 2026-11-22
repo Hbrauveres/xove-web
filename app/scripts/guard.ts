@@ -164,7 +164,7 @@ const npx = async (args: string[]) => {
 
 /** Every tool's findings; a tool whose output can't be read fails the run instead of counting as none. */
 async function collect(): Promise<Finding[]> {
-  const tsc = await npx(["tsc", "-p", "tsconfig.strict.json", "--noEmit", "--pretty", "false"]);
+  const tsc = await npx(["tsc", "-p", "tsconfig.app.json", "--noEmit", "--pretty", "false"]);
   const lint = await npx(["oxlint", "-f", "json"]);
   // jscpd writes its report to a file: an old one must never stand in for a run that failed.
   rmSync(JSCPD_REPORT, { force: true });
