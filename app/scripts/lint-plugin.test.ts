@@ -3,9 +3,9 @@ import { spawnSync } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import plugin, { diagnose, verdictOf } from "./lint-plugin.ts";
+import plugin, { type AstNode, diagnose, verdictOf } from "./lint-plugin.ts";
 
-type Node = Record<string, unknown>;
+type Node = AstNode;
 const str = (value: string): Node => ({ type: "Literal", value });
 const ident = (name: string): Node => ({ type: "Identifier", name });
 const template = (...values: Node[]): Node => ({

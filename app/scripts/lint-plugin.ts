@@ -20,7 +20,7 @@ const cacheFile = () =>
   process.env["XOVE_RECHECK_CACHE"] ?? join(process.cwd(), "node_modules", ".cache", "xove-recheck.json");
 
 /** The few parts of oxlint's syntax tree the rules read. */
-type AstNode = {
+export type AstNode = {
   type: string;
   name?: string;
   value?: unknown;
