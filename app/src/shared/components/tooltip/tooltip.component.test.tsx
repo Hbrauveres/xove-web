@@ -22,7 +22,7 @@ function setup(props: { text?: string | undefined; hidden?: boolean } = {}) {
   return { camera: screen.getByRole("button", { name: "Camera" }), cog: screen.getByRole("button", { name: "Cog" }) };
 }
 
-describe("the app's one tooltip (spec 0133)", () => {
+describe("the app's one tooltip", () => {
   it("shows after a short rest of the mouse, and goes the moment it leaves", () => {
     const { camera } = setup();
     fireEvent.pointerEnter(camera, { pointerType: "mouse" });

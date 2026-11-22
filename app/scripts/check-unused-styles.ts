@@ -20,6 +20,7 @@ const lineOf = (text: string, at: number) => text.slice(0, at).split("\n").lengt
 /** The classes a module defines, each with the line it first appears on. */
 function classesOf(css: string) {
   const clean = withoutComments(css)
+    .replace(/url\([^)]*\)|(["'])(?:\\.|(?!\1)[^\\])*\1/g, (v) => v.replace(/[^\n]/g, " "))
     .replace(/:global\([^)]*\)/g, (g) => g.replace(/[^\n]/g, " "))
     .replace(/\{[^{}]*\}/g, (block) => block.replace(/[^\n]/g, " "));
   const classes = new Map<string, number>();
@@ -45,7 +46,7 @@ function unusedClasses(files: Map<string, string>): StyleFinding[] {
   const reads = new Map<string, Set<string> | "all">();
   for (const [file, code] of files) {
     if (!/\.tsx?$/.test(file)) continue;
-    for (const m of code.matchAll(/import\s+(\w+)\s+from\s+["']([^"']+\.module\.css)["']/g)) {
+    for (const m of code.matchAll(/import\s+(?:\*\s+as\s+)?(\w+)\s+from\s+["']([^"']+\.module\.css)["']/g)) {
       const module = normalize(join(dirname(file), m[2] ?? ""));
       const before = reads.get(module) ?? new Set<string>();
       const now = readsOf(code, m[1] ?? "");

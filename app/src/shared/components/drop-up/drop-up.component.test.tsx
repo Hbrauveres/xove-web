@@ -50,7 +50,7 @@ describe("DropUp, the quick-access pill over a live button", () => {
     expect(OPEN_DELAY_MS).toBe(120);
   });
 
-  it("closes at once when the pointer moves on to another live button: one at a time (spec 0133, #128)", () => {
+  it("closes at once when the pointer moves on to another live button: one at a time", () => {
     onDevice();
     render(
       <div>
@@ -76,7 +76,7 @@ describe("DropUp, the quick-access pill over a live button", () => {
     expect(cameraUp).toHaveAttribute("data-open", "true");
   });
 
-  it("keeps open while a tooltip inside it shows, and closes when one outside shows (spec 0133)", () => {
+  it("keeps open while a tooltip inside it shows, and closes when one outside shows", () => {
     onDevice();
     render(
       <div>
@@ -107,7 +107,7 @@ describe("DropUp, the quick-access pill over a live button", () => {
     expect(up).toHaveAttribute("data-open", "false");
   });
 
-  it("opening closes a tooltip showing elsewhere (spec 0133)", () => {
+  it("opening closes a tooltip showing elsewhere", () => {
     onDevice();
     render(
       <div>
@@ -204,7 +204,7 @@ describe("DropUp, the quick-access pill over a live button", () => {
   });
 });
 
-describe("DropUp redirected: another panel shows the setting (spec 0115)", () => {
+describe("DropUp redirected: another panel shows the setting", () => {
   it("resting the mouse calls the redirect after the same pause, and nothing opens", () => {
     onDevice();
     const redirect = vi.fn();

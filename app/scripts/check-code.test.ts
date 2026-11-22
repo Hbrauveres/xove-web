@@ -47,6 +47,20 @@ describe("the code check", () => {
     expect(rules("shared/utils/long.util.ts", "x\n".repeat(301), ["shared/utils/long.util.test.ts"])).toContain("size");
   });
 
+  it("names history in a test's title in the app, once per line", () => {
+    const titled = rules("shared/utils/g.util.test.ts", 'describe("the dropdown (spec 0104)", () => {});\n', [
+      "shared/utils/g.util.ts",
+    ]);
+    expect(titled.filter((r) => r === "history")).toHaveLength(1);
+    const both = rules("shared/utils/g.util.test.ts", 'it("opens (#187)", () => {}); // see spec 0123\n', [
+      "shared/utils/g.util.ts",
+    ]);
+    expect(both.filter((r) => r === "history")).toHaveLength(1);
+    expect(
+      rules("shared/utils/g.util.test.ts", 'expect(name("spec 0104")).toBe(true);\n', ["shared/utils/g.util.ts"]),
+    ).not.toContain("history");
+  });
+
   it("names history in a comment, LiveKit outside core, and a literal colour in CSS", () => {
     expect(
       rules("features/room/utils/a.util.ts", "// as decided in spec 0123\n", ["features/room/utils/a.util.test.ts"]),

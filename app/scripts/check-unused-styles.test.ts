@@ -56,6 +56,15 @@ describe("the unused styles check", () => {
       ).toEqual([]);
     });
 
+    it("reads a namespace import, and never takes a file name in a nested block for a class", () => {
+      expect(
+        found({
+          "g/g.component.tsx": 'import * as styles from "./g.module.css";\nstyles.box;\n',
+          "g/g.module.css": ".box {\n  background: url(./bg.png);\n  &:hover { background: url(./hover.png); }\n}\n",
+        }),
+      ).toEqual([]);
+    });
+
     it("names every class of a module nothing imports", () => {
       expect(found({ "e/e.module.css": ".lost {}\n" })).toEqual(["unusedClass e/e.module.css lost"]);
     });

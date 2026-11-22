@@ -232,7 +232,7 @@ describe("the bar over someone else's stream: me, at the right", () => {
   });
 });
 
-describe("the bar on the floating layer (#187)", () => {
+describe("the bar on the floating layer", () => {
   const sliderOpen = () => screen.getByRole("slider", { name: "Screen sound volume" }).closest("[inert]") === null;
   const restOnSound = () => {
     vi.useFakeTimers();

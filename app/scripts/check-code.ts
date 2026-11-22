@@ -20,7 +20,7 @@ export const RULES = {
     "querySelector/closest/getElementById in a component: finding other parts through the page (pass a ref or context)",
   crossCss: "CSS module imported from another folder",
   livekit: "livekit-client imported outside services/",
-  history: "spec, issue or decision number in a comment (history belongs in commits and docs)",
+  history: "spec, issue or decision number in a comment or a test's title (history belongs in commits and docs)",
   mutable: "module-level mutable export (export let/var)",
   structure: "outside the folder structure (routes/ features/ shared/ services/ testing/)",
   naming: "file name not kebab-case with a type suffix",
@@ -237,6 +237,11 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
       add("disable", n, l);
     if (isCode(r) && l.length > MAX_LINE) add("lineLength", n, `${l.length} characters`);
   });
+  // A test's title is history's other hiding place: read as in the tooling, once per line.
+  if (isTest(r) || isStories(r)) {
+    const flagged = new Set(out.filter((f) => f.rule === "history").map((f) => f.line));
+    for (const f of historyInTooling(r, text)) if (!flagged.has(f.line)) out.push(f);
+  }
   return out;
 }
 
