@@ -2,8 +2,8 @@ import { render, screen, fireEvent, waitFor, within } from "@testing-library/rea
 import { expect, it, describe, vi, beforeEach } from "vitest";
 import { StageScreenSource } from "./stage-screen-source.component";
 import { onFakeClock } from "../../../../../testing/factories/clock.factory";
-import { installFakeApi, myLiveStream } from "../../../../../testing/fakeApi";
-import { lastRoom } from "../../../../../testing/fakeLiveKit";
+import { installFakeApi, myLiveStream } from "../../../../../testing/fakes/api.fake";
+import { lastRoom } from "../../../../../testing/fakes/livekit.fake";
 import { member, stage, readyRoom, startSharing, openMenu } from "../../../../../testing/factories/stage-steps.factory";
 it("says what my screen share shows, or just my screen while it's unknown", () => {
   const { rerender } = render(<StageScreenSource surface="monitor" />);

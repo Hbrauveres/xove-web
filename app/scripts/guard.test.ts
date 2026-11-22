@@ -10,7 +10,6 @@ import {
   type Known,
   newRulesOf,
   renamed,
-  ownerOf,
   recordOf,
 } from "./guard.ts";
 
@@ -85,28 +84,26 @@ describe("the guard: the list that only shrinks", () => {
   });
 
   it("records today's counts, keeping each owner, but never a new finding", () => {
-    const owners: [string, string][] = [["src/components/stage/", "#190 stage"]];
-    const lowered = recordOf(countAll([finding("src/a.ts")]), [known("src/a.ts", 2)], owners);
+    const lowered = recordOf(countAll([finding("src/a.ts")]), [known("src/a.ts", 2)]);
     expect(lowered.list).toEqual([{ ...known("src/a.ts", 1) }]);
-    expect(recordOf(countAll([finding("src/b.ts")]), [known("src/a.ts", 2)], owners).refused).toEqual([
+    expect(recordOf(countAll([finding("src/b.ts")]), [known("src/a.ts", 2)]).refused).toEqual([
       "src/b.ts: lint complexity",
     ]);
   });
 
-  it("lets a code rule main's check doesn't have record its findings, once, and nothing else grow", () => {
-    const owners: [string, string][] = [["src/components/", "#192 room"]];
+  it("lets a code rule main's check doesn't have record its findings, once, with no owner yet", () => {
     const fresh = new Set(["partPlace"]);
     const now = countAll([finding("src/components/a.ts", "partPlace", "code"), finding("src/b.ts")]);
-    const listed = recordOf(now, [known("src/b.ts", 1)], owners, fresh);
+    const listed = recordOf(now, [known("src/b.ts", 1)], fresh);
     expect(listed.list?.map((k) => `${k.file} ${k.rule} ${k.owner}`)).toEqual([
-      "src/components/a.ts partPlace #192 room",
+      "src/components/a.ts partPlace ",
       "src/b.ts complexity #190",
     ]);
     expect(compare(now, listed.list ?? [], [known("src/b.ts", 1)], fresh).errors).toEqual([]);
     expect(compare(now, listed.list ?? [], [known("src/b.ts", 1)]).errors).toEqual([
       expect.stringMatching(/^grown: src\/components\/a\.ts/),
     ]);
-    expect(recordOf(countAll([finding("src/c.ts")]), [known("src/b.ts", 1)], owners, fresh).refused).toEqual([
+    expect(recordOf(countAll([finding("src/c.ts")]), [known("src/b.ts", 1)], fresh).refused).toEqual([
       "src/c.ts: lint complexity",
     ]);
   });
@@ -114,9 +111,7 @@ describe("the guard: the list that only shrinks", () => {
   it("never lets a new rule's findings into the new structure", () => {
     const fresh = new Set(["partPlace"]);
     const now = countAll([finding("src/features/room/a.ts", "partPlace", "code"), finding("src/b.ts")]);
-    expect(recordOf(now, [known("src/b.ts", 1)], [], fresh).refused).toEqual([
-      "src/features/room/a.ts: code partPlace",
-    ]);
+    expect(recordOf(now, [known("src/b.ts", 1)], fresh).refused).toEqual(["src/features/room/a.ts: code partPlace"]);
     const listed = [known("src/features/room/a.ts", 1, "partPlace", "code")];
     expect(
       compare(countAll([finding("src/features/room/a.ts", "partPlace", "code")]), listed, [], fresh).errors,
@@ -132,23 +127,13 @@ describe("the guard: the list that only shrinks", () => {
     expect([...newRulesOf(`${spread}\n${layout}`, ["size", "nested"])]).toEqual([]);
   });
 
-  it("records the first list from scratch, each entry owned by the step for its folder", () => {
-    const owners: [string, string][] = [
-      ["src/components/", "#192 room"],
-      ["src/components/stage/", "#190 stage"],
-    ];
-    const first = recordOf(countAll([finding("src/components/stage/Stage.tsx")]), [], owners);
-    expect(first.list?.[0]?.owner).toBe("#190 stage");
-    expect(ownerOf("src/somewhere/else.ts", owners)).toBe("#195 the sweep");
-  });
-
   it("fails when a tool that had findings suddenly reports none, and won't record that", () => {
     const now = countAll([finding("src/a.ts")]);
     const recorded = [known("src/a.ts", 1), known("src/b.ts", 3, "TS2532", "tsc")];
     expect(compare(now, recorded).errors).toContain(
       "silent: tsc reported nothing, against 3 recorded; check that it still runs",
     );
-    expect(recordOf(now, recorded, []).refused).toEqual([
+    expect(recordOf(now, recorded).refused).toEqual([
       "silent: tsc reported nothing, against 3 recorded; check that it still runs",
     ]);
   });

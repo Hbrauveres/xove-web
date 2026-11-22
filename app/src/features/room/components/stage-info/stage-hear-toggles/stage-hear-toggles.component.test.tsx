@@ -6,8 +6,8 @@ import type { Sharer } from "@features/room/types/room-view.types";
 import { toastStore } from "@shared/stores/toast-store";
 import type { Hearing } from "../../../types/sound.types";
 import { StageHearToggles } from "./stage-hear-toggles.component";
-import { installFakeApi, someoneSharing } from "../../../../../testing/fakeApi";
-import { lastRoom } from "../../../../../testing/fakeLiveKit";
+import { installFakeApi, someoneSharing } from "../../../../../testing/fakes/api.fake";
+import { lastRoom } from "../../../../../testing/fakes/livekit.fake";
 import { clockUser, onFakeClock } from "../../../../../testing/factories/clock.factory";
 import {
   member,

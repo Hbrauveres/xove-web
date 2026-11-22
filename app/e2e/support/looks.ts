@@ -1,6 +1,6 @@
 // The looks a case checks, by the app's own names (its tokens, tokens.css), never retyped: a value is
 // written here as the CSS the app uses (`var(--accent)`, `blur(var(--blur-2))`) and resolved by the
-// page into what a computed style reads, so a case compares like with like (ADR-0102).
+// page into what a computed style reads, so a case compares like with like.
 import type { Locator, Page } from "@playwright/test";
 
 /** The app's named looks the cases check against, as CSS. */

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { analyse, type Rule } from "./check-code.ts";
+import { analyse, historyInTooling, type Rule } from "./check-code.ts";
 
 /** The rules one file breaks: its path relative to src, its text, and which other files exist. */
 const rules = (path: string, text = "", others: string[] = []) =>
@@ -28,8 +28,37 @@ describe("the code check", () => {
     expect(rules("other.test.tsx", "")).toContain("naming");
   });
 
+  it("takes a fake in testing/fakes/ and the tests' setup by name, and a fake nowhere else", () => {
+    expect(rules("testing/fakes/api.fake.ts", "")).not.toContain("naming");
+    expect(rules("testing/fakes/livekit-room.fake.ts", "")).not.toContain("naming");
+    expect(rules("testing/setup.ts", "")).not.toContain("naming");
+    expect(rules("testing/setup.test.tsx", "")).not.toContain("naming");
+    expect(rules("testing/fakeApi.ts", "")).toContain("naming");
+    expect(rules("testing/api.fake.ts", "")).toContain("naming");
+    expect(rules("services/livekit-service/room.fake.ts", "")).toContain("naming");
+    expect(rules("shared/utils/setup.ts", "")).toContain("naming");
+  });
+
+  it("names a fake over 300 lines", () => {
+    expect(rules("testing/fakes/long.fake.ts", "x\n".repeat(301))).toContain("size");
+  });
+
   it("names a file over 300 lines", () => {
     expect(rules("shared/utils/long.util.ts", "x\n".repeat(301), ["shared/utils/long.util.test.ts"])).toContain("size");
+  });
+
+  it("names history in a test's title in the app, once per line", () => {
+    const titled = rules("shared/utils/g.util.test.ts", 'describe("the dropdown (spec 0104)", () => {});\n', [
+      "shared/utils/g.util.ts",
+    ]);
+    expect(titled.filter((r) => r === "history")).toHaveLength(1);
+    const both = rules("shared/utils/g.util.test.ts", 'it("opens (#187)", () => {}); // see spec 0123\n', [
+      "shared/utils/g.util.ts",
+    ]);
+    expect(both.filter((r) => r === "history")).toHaveLength(1);
+    expect(
+      rules("shared/utils/g.util.test.ts", 'expect(name("spec 0104")).toBe(true);\n', ["shared/utils/g.util.ts"]),
+    ).not.toContain("history");
   });
 
   it("names history in a comment, LiveKit outside core, and a literal colour in CSS", () => {
@@ -151,9 +180,9 @@ describe("the code check", () => {
     ).toContain("sharedData");
   });
 
-  it("lets a test read a stylesheet (ADR-0102)", () => {
-    const test = (text: string) => rules("shared/utils/f.util.test.ts", text, ["shared/utils/f.util.ts"]);
-    expect(test('import css from "./f.module.css?raw";\n')).toEqual([]);
+  it("lets a test read a stylesheet", () => {
+    const rulesBesideCode = (text: string) => rules("shared/utils/f.util.test.ts", text, ["shared/utils/f.util.ts"]);
+    expect(rulesBesideCode('import css from "./f.module.css?raw";\n')).toEqual([]);
   });
 
   it("names a comment that switches a check off, and a line past Prettier's width, outside tests", () => {
@@ -167,9 +196,9 @@ describe("the code check", () => {
   });
 
   it("names a utils, constants, types or enum file outside its kind's folder", () => {
-    const test = (f: string) => [f.replace(/\.ts$/, ".test.ts")];
+    const pairOf = (f: string) => [f.replace(/\.ts$/, ".test.ts")];
     expect(
-      rules("services/livekit-service/capture.util.ts", "x\n", test("services/livekit-service/capture.util.ts")),
+      rules("services/livekit-service/capture.util.ts", "x\n", pairOf("services/livekit-service/capture.util.ts")),
     ).toEqual(["partPlace"]);
     expect(rules("features/room/state/room.types.ts")).toEqual(["partPlace"]);
     expect(rules("services/xove-api-service/api.constants.ts")).toEqual(["partPlace"]);
@@ -241,5 +270,24 @@ describe("the code check", () => {
         "services/xove-api-service/utils/x.service.test.ts",
       ]),
     ).toEqual(["partPlace"]);
+  });
+
+  describe("history in the tooling (e2e/, scripts/, .storybook/)", () => {
+    const lines = (text: string) => historyInTooling("e2e/support/a.ts", text).map((f) => f.line);
+
+    it("names a number in a comment or a test's title", () => {
+      expect(lines("// the time is named once (ADR-0102)\n")).toEqual([1]);
+      expect(lines("const a = 1; /* as in spec 0123 */\n")).toEqual([1]);
+      expect(lines('it("keeps the layout (ADR-0086)", () => {});\n')).toEqual([1]);
+      expect(lines('describe("the queue (#192)", () => {});\n')).toEqual([1]);
+      expect(lines("test.skip(`the stage, design decision 3`, () => {});\n")).toEqual([1]);
+    });
+
+    it("leaves a number in a test's data, even one that looks like a comment", () => {
+      expect(lines('const owner = "#190";\n')).toEqual([]);
+      expect(lines('rules("a.ts", "// as decided in spec 0123\\n");\n')).toEqual([]);
+      expect(lines('expect(new RegExp(p).test("shows one (spec 0133)")).toBe(true);\n')).toEqual([]);
+      expect(lines("// the time is named once, here\n")).toEqual([]);
+    });
   });
 });

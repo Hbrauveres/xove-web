@@ -118,7 +118,6 @@ Dark only: Xovê is a room for watching screens, so the chrome stays out of the 
 | `--text-sm` | 0.8125 | 13 | Names in rows, small buttons, captions |
 | `--text-md` | 0.9375 | 15 | Body (the default), buttons |
 | `--text-lg` | 1.125 | 18 | Stage messages, dialog titles |
-| `--text-xl` | 1.5 | 24 | Page headings |
 | `--text-2xl` | 2.25 | 36 | The largest headings |
 
 Body line height is 1.5; headings balance their lines (`text-wrap: balance`). Fonts load from Google Fonts with `display=swap`; fallbacks are Segoe UI and the system sans.
@@ -194,7 +193,7 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 
 **Shades: each colour family at the strengths the app uses (white-10 is white at 10%).**
 
-`--accent-00` rgba(239, 75, 75, 0) · `--accent-10` rgba(239, 75, 75, 0.1) · `--accent-35` rgba(239, 75, 75, 0.35) · `--accent-40` rgba(239, 75, 75, 0.4) · `--accent-45` rgba(239, 75, 75, 0.45) · `--accent-70` rgba(239, 75, 75, 0.7) · `--accent-95` rgba(239, 75, 75, 0.95) · `--accent-light` #f36a6a · `--black` #000000 · `--black-35` rgba(0, 0, 0, 0.35) · `--black-40` rgba(0, 0, 0, 0.4) · `--black-45` rgba(0, 0, 0, 0.45) · `--black-50` rgba(0, 0, 0, 0.5) · `--black-55` rgba(0, 0, 0, 0.55) · `--blue-grey-50` rgba(138, 150, 172, 0.5) · `--green-18` rgba(22, 163, 74, 0.18) · `--green-25` rgba(22, 163, 74, 0.25) · `--green-30` rgba(22, 163, 74, 0.3) · `--green-35` rgba(22, 163, 74, 0.35) · `--green-45` rgba(22, 163, 74, 0.45) · `--green-60` rgba(22, 163, 74, 0.6) · `--green-light-85` rgba(43, 205, 104, 0.85) · `--green-lighter` #45e087 · `--grey-5` #050506 · `--grey-7` #070708 · `--grey-7-70` rgba(7, 7, 8, 0.7) · `--grey-10-90` rgba(10, 10, 11, 0.9) · `--grey-12-74` rgba(12, 12, 13, 0.74) · `--grey-15` #0f0f11 · `--grey-15-75` rgba(15, 15, 17, 0.75) · `--grey-15-92` rgba(15, 15, 17, 0.92) · `--grey-20-72` rgba(20, 20, 21, 0.72) · `--grey-20-85` rgba(20, 20, 21, 0.85) · `--grey-22-90` rgba(22, 22, 23, 0.9) · `--grey-31` #1f1f1f · `--grey-40-85` rgba(40, 40, 44, 0.85) · `--grey-40-90` rgba(40, 40, 44, 0.9) · `--grey-58` #3a3a3d · `--grey-60-30` rgba(60, 60, 64, 0.3) · `--grey-90-10` rgba(90, 90, 96, 0.1) · `--grey-90-14` rgba(90, 90, 96, 0.14) · `--grey-164` #a4a4a9 · `--grey-176` #b0b0b4 · `--grey-185` #b9b9bc · `--grey-189` #bdbdc0 · `--grey-202` #cacacd · `--grey-207` #cfcfd2 · `--grey-208` #d0d0d3 · `--pink-30` rgba(255, 228, 228, 0.3) · `--text-shade-05` rgba(235, 235, 236, 0.05) · `--text-shade-06` rgba(235, 235, 236, 0.06) · `--text-shade-08` rgba(235, 235, 236, 0.08) · `--text-shade-14` rgba(235, 235, 236, 0.14) · `--text-shade-16` rgba(235, 235, 236, 0.16) · `--text-shade-18` rgba(235, 235, 236, 0.18) · `--text-shade-22` rgba(235, 235, 236, 0.22) · `--text-shade-28` rgba(235, 235, 236, 0.28) · `--text-shade-32` rgba(235, 235, 236, 0.32) · `--text-shade-35` rgba(235, 235, 236, 0.35) · `--text-shade-40` rgba(235, 235, 236, 0.4) · `--text-shade-45` rgba(235, 235, 236, 0.45) · `--text-shade-82` rgba(235, 235, 236, 0.82) · `--white` #ffffff · `--white-00` rgba(255, 255, 255, 0) · `--white-04` rgba(255, 255, 255, 0.04) · `--white-05` rgba(255, 255, 255, 0.05) · `--white-06` rgba(255, 255, 255, 0.06) · `--white-10` rgba(255, 255, 255, 0.1) · `--white-18` rgba(255, 255, 255, 0.18) · `--white-22` rgba(255, 255, 255, 0.22) · `--white-28` rgba(255, 255, 255, 0.28) · `--white-30` rgba(255, 255, 255, 0.3) · `--white-35` rgba(255, 255, 255, 0.35) · `--white-40` rgba(255, 255, 255, 0.4) · `--white-45` rgba(255, 255, 255, 0.45) · `--white-55` rgba(255, 255, 255, 0.55) · `--white-80` rgba(255, 255, 255, 0.8) · `--white-90` rgba(255, 255, 255, 0.9)
+`--accent-00` rgba(239, 75, 75, 0) · `--accent-10` rgba(239, 75, 75, 0.1) · `--accent-35` rgba(239, 75, 75, 0.35) · `--accent-40` rgba(239, 75, 75, 0.4) · `--accent-45` rgba(239, 75, 75, 0.45) · `--accent-70` rgba(239, 75, 75, 0.7) · `--accent-95` rgba(239, 75, 75, 0.95) · `--accent-light` #f36a6a · `--black` #000000 · `--black-35` rgba(0, 0, 0, 0.35) · `--black-40` rgba(0, 0, 0, 0.4) · `--black-45` rgba(0, 0, 0, 0.45) · `--black-50` rgba(0, 0, 0, 0.5) · `--black-55` rgba(0, 0, 0, 0.55) · `--blue-grey-50` rgba(138, 150, 172, 0.5) · `--green-18` rgba(22, 163, 74, 0.18) · `--green-25` rgba(22, 163, 74, 0.25) · `--green-30` rgba(22, 163, 74, 0.3) · `--green-35` rgba(22, 163, 74, 0.35) · `--green-45` rgba(22, 163, 74, 0.45) · `--green-60` rgba(22, 163, 74, 0.6) · `--green-light-85` rgba(43, 205, 104, 0.85) · `--green-lighter` #45e087 · `--grey-5` #050506 · `--grey-7` #070708 · `--grey-7-70` rgba(7, 7, 8, 0.7) · `--grey-15` #0f0f11 · `--grey-15-75` rgba(15, 15, 17, 0.75) · `--grey-15-92` rgba(15, 15, 17, 0.92) · `--grey-20-72` rgba(20, 20, 21, 0.72) · `--grey-20-85` rgba(20, 20, 21, 0.85) · `--grey-22-90` rgba(22, 22, 23, 0.9) · `--grey-31` #1f1f1f · `--grey-40-85` rgba(40, 40, 44, 0.85) · `--grey-58` #3a3a3d · `--grey-60-30` rgba(60, 60, 64, 0.3) · `--grey-90-10` rgba(90, 90, 96, 0.1) · `--grey-90-14` rgba(90, 90, 96, 0.14) · `--grey-164` #a4a4a9 · `--grey-176` #b0b0b4 · `--grey-185` #b9b9bc · `--grey-189` #bdbdc0 · `--grey-202` #cacacd · `--grey-207` #cfcfd2 · `--grey-208` #d0d0d3 · `--pink-30` rgba(255, 228, 228, 0.3) · `--text-shade-05` rgba(235, 235, 236, 0.05) · `--text-shade-06` rgba(235, 235, 236, 0.06) · `--text-shade-08` rgba(235, 235, 236, 0.08) · `--text-shade-14` rgba(235, 235, 236, 0.14) · `--text-shade-16` rgba(235, 235, 236, 0.16) · `--text-shade-18` rgba(235, 235, 236, 0.18) · `--text-shade-22` rgba(235, 235, 236, 0.22) · `--text-shade-28` rgba(235, 235, 236, 0.28) · `--text-shade-32` rgba(235, 235, 236, 0.32) · `--text-shade-35` rgba(235, 235, 236, 0.35) · `--text-shade-40` rgba(235, 235, 236, 0.4) · `--text-shade-45` rgba(235, 235, 236, 0.45) · `--text-shade-82` rgba(235, 235, 236, 0.82) · `--white` #ffffff · `--white-00` rgba(255, 255, 255, 0) · `--white-04` rgba(255, 255, 255, 0.04) · `--white-05` rgba(255, 255, 255, 0.05) · `--white-06` rgba(255, 255, 255, 0.06) · `--white-10` rgba(255, 255, 255, 0.1) · `--white-18` rgba(255, 255, 255, 0.18) · `--white-22` rgba(255, 255, 255, 0.22) · `--white-30` rgba(255, 255, 255, 0.3) · `--white-35` rgba(255, 255, 255, 0.35) · `--white-40` rgba(255, 255, 255, 0.4) · `--white-45` rgba(255, 255, 255, 0.45) · `--white-80` rgba(255, 255, 255, 0.8) · `--white-90` rgba(255, 255, 255, 0.9)
 
 **Mixed shades: a colour token mixed with clear or with another token (live-45 is LIVE's red at 45%).**
 
@@ -210,7 +209,7 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 
 **Small sizes (icons, dots, bars), numbered as px ÷ 4.**
 
-`--size-0-5` 2 px · `--size-0-75` 3 px · `--size-1` 4 px · `--size-1-5` 6 px · `--size-2` 8 px · `--size-2-5` 10 px · `--size-2-75` 11 px · `--size-3` 12 px · `--size-3-25` 13 px · `--size-3-5` 14 px · `--size-3-75` 15 px · `--size-4` 16 px · `--size-4-25` 17 px · `--size-4-5` 18 px · `--size-5` 20 px · `--size-5-5` 22 px · `--size-6` 24 px · `--size-6-5` 26 px · `--size-7` 28 px · `--size-7-5` 30 px · `--size-8` 32 px
+`--size-0-5` 2 px · `--size-0-75` 3 px · `--size-1` 4 px · `--size-1-5` 6 px · `--size-2` 8 px · `--size-2-5` 10 px · `--size-2-75` 11 px · `--size-3` 12 px · `--size-3-5` 14 px · `--size-3-75` 15 px · `--size-4` 16 px · `--size-4-25` 17 px · `--size-4-5` 18 px · `--size-5` 20 px · `--size-5-5` 22 px · `--size-6` 24 px · `--size-6-5` 26 px · `--size-7` 28 px · `--size-7-5` 30 px · `--size-8` 32 px
 
 **Things with a role.**
 
@@ -256,7 +255,7 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 
 **Lines: the hairline stays one pixel; thicker lines and outline gaps are numbered as px ÷ 4.**
 
-`--border-0-375` 1.5 px · `--border-0-5` 2 px · `--border-0-75` 3 px · `--border-1` 4 px · `--hairline` 1px
+`--border-0-375` 1.5 px · `--border-0-5` 2 px · `--border-1` 4 px · `--hairline` 1px
 
 **Blurs, numbered as px ÷ 4.**
 
@@ -280,7 +279,7 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 
 **Window and box sizes**, named with `@custom-media` and used as `@media (--narrow)` or `@container (--tiny)`:
 
-`--short` max-height 20rem (320 px) · `--tiny` max-width 22.4375rem (359 px) · `--compact` max-width 40rem (640 px) · `--narrow` max-width 47.5rem (760 px) · `--medium` max-width 56.25rem (900 px)
+`--short` max-height 20rem (320 px) · `--tiny` max-width 22.4375rem (359 px) · `--compact` max-width 40rem (640 px) · `--narrow` max-width 47.5rem (760 px)
 
 ## Controls
 

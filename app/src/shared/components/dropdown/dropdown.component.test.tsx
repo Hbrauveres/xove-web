@@ -40,7 +40,7 @@ function Trigger({ name, role = "dialog" }: { name: string; role?: "dialog" | "m
 
 const panel = (name: string) => screen.queryByRole("dialog", { name: `${name} panel` });
 
-describe("dropdown (spec 0104)", () => {
+describe("dropdown", () => {
   it("opens as a named panel of sections, and closes with Escape, the focus back on its button", async () => {
     const user = onFakeClock();
     render(<Trigger name="People" />);

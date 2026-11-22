@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { installFakeApi, aUser } from "../../../../../testing/fakeApi";
+import { installFakeApi, aUser } from "../../../../../testing/fakes/api.fake";
 import { initialRoom } from "../room.model";
 import { RoomStore } from "../room.store";
 import { useRoomSeat } from "./use-room-seat.hook";

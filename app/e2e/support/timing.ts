@@ -1,6 +1,6 @@
 // The times the cases spend, and waiting for the page to be still. A case waits for a condition; it
 // spends a time only where the behaviour is that time (a rest, a hold, a fade after the mouse stops),
-// and then the time is named once, here: the app's own constant wherever the app has one (ADR-0102).
+// and then the time is named once, here: the app's own constant wherever the app has one.
 import { expect, type Locator, type Page } from "@playwright/test";
 import { OPEN_DELAY_MS, TIP_REST_MS } from "../../src/shared/constants/floating.constants.ts";
 import { REST_MS } from "../../src/features/room/constants/sound-slider.constants.ts";

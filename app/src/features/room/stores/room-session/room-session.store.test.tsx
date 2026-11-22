@@ -1,6 +1,6 @@
 import { act, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
-import { aUser, installFakeApi, someoneSharing } from "../../../../testing/fakeApi";
+import { aUser, installFakeApi, someoneSharing } from "../../../../testing/fakes/api.fake";
 import { onFakeClock } from "../../../../testing/factories/clock.factory";
 import { renderInRoom } from "../../../../testing/factories/room-render.factory";
 import { useRoomSession } from "./hooks/use-room-session.hook";

@@ -3,8 +3,8 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import { aStreamControls } from "@testing/factories/stream-controls.factory";
 import { StageStreamButton } from "./stage-stream-button.component";
 import { cameraCaptureOptions, capOf } from "@services/livekit-service";
-import { installFakeApi, MY_USER_ID, myLiveStream, someoneSharing } from "../../../../../testing/fakeApi";
-import { FakeLocalScreenTrack, lastRoom } from "../../../../../testing/fakeLiveKit";
+import { installFakeApi, MY_USER_ID, myLiveStream, someoneSharing } from "../../../../../testing/fakes/api.fake";
+import { FakeLocalScreenTrack, lastRoom } from "../../../../../testing/fakes/livekit.fake";
 import { clockUser, onFakeClock } from "../../../../../testing/factories/clock.factory";
 import { appConfig } from "@services/app-config-service";
 import {

@@ -1,6 +1,6 @@
 import { act, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { FakeLocalCameraTrack, FakeLocalScreenTrack, lastRoom } from "../../testing/fakeLiveKit";
+import { FakeLocalCameraTrack, FakeLocalScreenTrack, lastRoom } from "../../testing/fakes/livekit.fake";
 import { cameraOn, connectedAdapter } from "../../testing/factories/video-room.factory";
 import { cameraPublishOptions, capOf, screenPublishOptions } from "./utils/publish-options.util";
 

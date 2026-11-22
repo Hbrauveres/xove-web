@@ -1,7 +1,7 @@
 import type { LocalParticipant } from "livekit-client";
 import { describe, expect, it } from "vitest";
 import { cameraOn, connectedAdapter, shareScreen } from "../../../testing/factories/video-room.factory";
-import { lastRoom } from "../../../testing/fakeLiveKit";
+import { lastRoom } from "../../../testing/fakes/livekit.fake";
 import { readLocalMedia } from "./local-media.util";
 
 const me = () => lastRoom().localParticipant as unknown as LocalParticipant;

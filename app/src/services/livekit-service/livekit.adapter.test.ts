@@ -1,6 +1,6 @@
 import { act } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { lastRoom } from "../../testing/fakeLiveKit";
+import { lastRoom } from "../../testing/fakes/livekit.fake";
 import { connectedAdapter, shareScreen } from "../../testing/factories/video-room.factory";
 import { stubVoiceLevels } from "../../testing/factories/audio.factory";
 import { ACTIVITY_TICK_MS } from "./constants/livekit.constants";

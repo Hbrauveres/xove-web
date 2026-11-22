@@ -1,6 +1,6 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { expect, it, vi } from "vitest";
-import { aUser, installFakeApi } from "../../../../../testing/fakeApi";
+import { aUser, installFakeApi } from "../../../../../testing/fakes/api.fake";
 import { useAccessRequest } from "./use-access-request.hook";
 
 it("sends the note with the request, then lets the page know", async () => {

@@ -7,8 +7,8 @@ import { fullRoom } from "@features/room/utils/full-room.util";
 import type { FoldKey } from "@features/room/types/fold-key.types";
 import type { Sound } from "@features/room/types/sound.types";
 import { StageViewerBar } from "./stage-viewer-bar.component";
-import { installFakeApi, someoneSharing } from "../../../../../testing/fakeApi";
-import { lastRoom } from "../../../../../testing/fakeLiveKit";
+import { installFakeApi, someoneSharing } from "../../../../../testing/fakes/api.fake";
+import { lastRoom } from "../../../../../testing/fakes/livekit.fake";
 import { stubVoiceLevels } from "../../../../../testing/factories/audio.factory";
 import { clockUser } from "../../../../../testing/factories/clock.factory";
 import { member, stage, connected, renderStage } from "../../../../../testing/factories/stage-steps.factory";
@@ -232,7 +232,7 @@ describe("the bar over someone else's stream: me, at the right", () => {
   });
 });
 
-describe("the bar on the floating layer (#187)", () => {
+describe("the bar on the floating layer", () => {
   const sliderOpen = () => screen.getByRole("slider", { name: "Screen sound volume" }).closest("[inert]") === null;
   const restOnSound = () => {
     vi.useFakeTimers();

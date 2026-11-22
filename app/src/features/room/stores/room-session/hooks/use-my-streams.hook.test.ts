@@ -1,7 +1,7 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { Capture } from "../../../../../services/livekit-service";
-import { aUser, installFakeApi } from "../../../../../testing/fakeApi";
+import { aUser, installFakeApi } from "../../../../../testing/fakes/api.fake";
 import { aTrack } from "../../../../../testing/factories/track.factory";
 import { RoomStore } from "../../room-store";
 import { SettingsQueue } from "../../../../../services/settings-queue-service";

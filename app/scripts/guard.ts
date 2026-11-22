@@ -6,11 +6,11 @@
 import { execFile } from "node:child_process";
 import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { promisify } from "node:util";
-import { checkCode, RULES } from "./check-code.ts";
+import { checkCode, checkTooling, RULES } from "./check-code.ts";
+import { checkUnusedStyles } from "./check-unused-styles.ts";
 
 const run = promisify(execFile);
 const KNOWN = "checks/known-findings.json";
-const OWNERS = "checks/owners.json";
 const JSCPD_REPORT = "node_modules/.tmp/jscpd/jscpd-report.json";
 
 /** One finding, as the guard counts it: which tool, which of its rules, in which file. */
@@ -65,12 +65,6 @@ export function fromKnip(json: string): Finding[] {
   return issues.flatMap((i) =>
     KINDS.flatMap((kind) => (i[kind] ?? []).map(() => ({ tool: "unused", rule: kind, file: i.file }))),
   );
-}
-
-/** The step that clears a file's findings: the longest matching path prefix in checks/owners.json. */
-export function ownerOf(file: string, owners: [string, string][]) {
-  const match = owners.filter(([prefix]) => file.startsWith(prefix)).sort((a, b) => b[0].length - a[0].length)[0];
-  return match?.[1] ?? "#195 the sweep";
 }
 
 /** Findings counted per tool, rule and file. */
@@ -139,14 +133,10 @@ export function newRulesOf(mainCheck: string | undefined, rules: string[]): Set<
 
 /**
  * The list to write after a fix: today's counts, never above what was recorded, sorted. A new
- * rule's findings (`fresh`) are recorded once, each owned by the step for its folder.
+ * rule's findings (`fresh`) are recorded once, with no owner yet: the issue that clears them is
+ * written on each entry by hand.
  */
-export function recordOf(
-  now: Map<string, Known>,
-  known: Known[],
-  owners: [string, string][],
-  fresh = new Set<string>(),
-) {
+export function recordOf(now: Map<string, Known>, known: Known[], fresh = new Set<string>()) {
   const silent = compare(now, known).errors.filter((e) => e.startsWith("silent:"));
   if (silent.length) return { refused: silent };
   const record = new Map(known.map((k) => [keyOf(k), k]));
@@ -155,7 +145,7 @@ export function recordOf(
   );
   if (over.length) return { refused: over.map((n) => `${n.file}: ${n.tool} ${n.rule}`) };
   const list = [...now.values()]
-    .map((n) => ({ ...n, owner: record.get(keyOf(n))?.owner ?? ownerOf(n.file, owners) }))
+    .map((n) => ({ ...n, owner: record.get(keyOf(n))?.owner ?? "" }))
     .sort((a, b) => keyOf(a).localeCompare(keyOf(b)));
   return { list };
 }
@@ -174,7 +164,7 @@ const npx = async (args: string[]) => {
 
 /** Every tool's findings; a tool whose output can't be read fails the run instead of counting as none. */
 async function collect(): Promise<Finding[]> {
-  const tsc = await npx(["tsc", "-p", "tsconfig.strict.json", "--noEmit", "--pretty", "false"]);
+  const tsc = await npx(["tsc", "-p", "tsconfig.app.json", "--noEmit", "--pretty", "false"]);
   const lint = await npx(["oxlint", "-f", "json"]);
   // jscpd writes its report to a file: an old one must never stand in for a run that failed.
   rmSync(JSCPD_REPORT, { force: true });
@@ -182,7 +172,17 @@ async function collect(): Promise<Finding[]> {
   const copies = readFileSync(JSCPD_REPORT, "utf8");
   const unused = await npx(["knip", "--no-progress", "--reporter", "json"]);
   const code = checkCode("src").map((f) => ({ tool: "code", rule: f.rule, file: `src/${f.file}` }));
-  return [...fromTsc(tsc), ...fromOxlint(lint), ...fromJscpd(copies), ...fromKnip(unused), ...code];
+  const tooling = checkTooling(".").map((f) => ({ tool: "code", rule: f.rule, file: f.file }));
+  const styles = checkUnusedStyles("src").map((f) => ({ tool: "styles", rule: f.rule, file: `src/${f.file}` }));
+  return [
+    ...fromTsc(tsc),
+    ...fromOxlint(lint),
+    ...fromJscpd(copies),
+    ...fromKnip(unused),
+    ...code,
+    ...tooling,
+    ...styles,
+  ];
 }
 
 /**
@@ -232,14 +232,16 @@ async function mainCodeCheck(): Promise<string | undefined> {
   }
 }
 
+/** How an entry with no owner yet shows: its owner is written on the list by hand. */
+const NO_OWNER = "no owner yet (write the issue that clears it in checks/known-findings.json)";
+
 async function main(args: string[]) {
-  const owners = JSON.parse(readFileSync(OWNERS, "utf8")) as [string, string][];
   const known = existsSync(KNOWN) ? (JSON.parse(readFileSync(KNOWN, "utf8")) as Known[]) : [];
   const now = countAll(await collect());
   const fresh = newRulesOf(await mainCodeCheck(), Object.keys(RULES));
 
   if (args.includes("--record")) {
-    const result = recordOf(now, known, owners, fresh);
+    const result = recordOf(now, known, fresh);
     if (result.refused) {
       console.error(
         `Not recorded: these are new, and the list only shrinks. Fix them first:\n  ${result.refused.join("\n  ")}`,
@@ -253,10 +255,9 @@ async function main(args: string[]) {
 
   const { errors, known: still } = compare(now, known, await mainRecord(), fresh);
   const byOwner = new Map<string, number>();
-  for (const k of still)
-    byOwner.set(k.owner || ownerOf(k.file, owners), (byOwner.get(k.owner || ownerOf(k.file, owners)) ?? 0) + k.count);
+  for (const k of still) byOwner.set(k.owner || NO_OWNER, (byOwner.get(k.owner || NO_OWNER) ?? 0) + k.count);
   const total = still.reduce((s, k) => s + k.count, 0);
-  console.warn(`Recorded, still to clear (warnings): ${total}, by owner:`);
+  console.warn(total ? `Recorded, still to clear (warnings): ${total}, by owner:` : "Recorded, still to clear: none.");
   for (const [owner, n] of [...byOwner].sort((a, b) => b[1] - a[1])) console.warn(`  ${owner}: ${n}`);
   if (args.includes("--all")) for (const k of still) console.warn(`  ${k.file}: ${k.tool} ${k.rule} × ${k.count}`);
   for (const e of errors) console.error(e);

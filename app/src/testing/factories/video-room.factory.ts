@@ -1,5 +1,5 @@
 import { LiveKitAdapter } from "@services/livekit-service";
-import { lastRoom } from "../fakeLiveKit";
+import { lastRoom } from "../fakes/livekit.fake";
 
 /** A fresh adapter, joined to a fresh fake room. */
 export async function connectedAdapter() {

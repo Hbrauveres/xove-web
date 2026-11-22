@@ -1,6 +1,6 @@
 import type { RemoteParticipant } from "livekit-client";
 import { describe, expect, it } from "vitest";
-import { Room } from "../../testing/fakeLiveKit";
+import { Room } from "../../testing/fakes/livekit.fake";
 import { RemoteMediaReader } from "./remote-media.adapter";
 
 /** Someone in a fresh fake room, as LiveKit hands them over. */

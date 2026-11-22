@@ -1,4 +1,4 @@
-// The sizes every case runs at (ADR-0098): two common desktops, a monitor turned on its side, and a
+// The sizes every case runs at: two common desktops, a monitor turned on its side, and a
 // real phone, each with its pixel density (a page lays out in CSS pixels; the density decides how
 // sharp it is). The phone gets only what it gets today, the phone notice: its project runs the tests
 // tagged @phone.

@@ -16,9 +16,11 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting: strict, stated even where it's the default. Two stricter settings live in
-       tsconfig.strict.json until today's code meets them (npm run guard). */
+    /* Linting: strict, stated even where it's the default; a value read from a list may be missing,
+       and an optional field is never set to undefined by mistake. */
     "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
     "noImplicitOverride": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

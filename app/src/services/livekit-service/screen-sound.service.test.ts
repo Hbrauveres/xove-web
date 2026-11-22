@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { FakeMediaStreamTrack } from "../../testing/fakeLiveKit";
+import { FakeMediaStreamTrack } from "../../testing/fakes/livekit.fake";
 import { screenSound } from "./screen-sound.service";
 
 describe("the screen's sound", () => {

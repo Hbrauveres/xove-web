@@ -1,8 +1,8 @@
 import { act, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { aUser, installFakeApi } from "../../../../testing/fakeApi";
-import { renderApp } from "../../../../testing/renderApp";
+import { aUser, installFakeApi } from "../../../../testing/fakes/api.fake";
+import { renderApp } from "../../../../testing/factories/app-render.factory";
 import { APPROVAL_CHECK_MS } from "./constants/request-access.constants";
 
 describe("the request access page", () => {

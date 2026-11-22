@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { aUser } from "../../../testing/fakeApi";
+import { aUser } from "../../../testing/fakes/api.fake";
 import type { AuthState } from "../../../shared/stores/auth-store";
 import { routeAccess } from "./route-access.util";
 

@@ -16,7 +16,7 @@ How the web app's interface is put together, piece by piece, with pictures: what
 - **Room pieces** each do one job and are built from blocks (a person's row, the stage's controls, a chat message). They live in their feature's folder (`features/room/<area>/`).
 - **Screen regions** hold pieces in place (the header, the stage, a column).
 
-**Where the code lives.** The [architecture](../architecture.md#where-the-code-is-going) has the structure and its rules: one folder per component, holding its code, its styles and its one test file.
+**Where the code lives.** The [architecture](../architecture.md#how-the-code-is-organised) has the structure and its rules: one folder per component, holding its code, its styles and its one test file.
 
 ## Keeping these pages current
 

@@ -4,13 +4,13 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import { onFakeClock } from "@testing/factories/clock.factory";
 import { aMe, aSharer } from "@testing/factories/sharer.factory";
 import { aTrack } from "@testing/factories/track.factory";
-import type { FakeTrack } from "@testing/fakeLiveKit";
+import type { FakeTrack } from "@testing/fakes/livekit.fake";
 import type { Sharer } from "@features/room/types/room-view.types";
 import { floatingStore } from "@shared/stores/floating-store";
 import { StageAlsoLive } from "./stage-also-live.component";
 import type { Hearing } from "@features/room/types/sound.types";
-import { installFakeApi, someoneSharing } from "../../../../../testing/fakeApi";
-import { lastRoom } from "../../../../../testing/fakeLiveKit";
+import { installFakeApi, someoneSharing } from "../../../../../testing/fakes/api.fake";
+import { lastRoom } from "../../../../../testing/fakes/livekit.fake";
 import { clockUser } from "../../../../../testing/factories/clock.factory";
 import {
   member,

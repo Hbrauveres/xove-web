@@ -3,7 +3,7 @@ import { describe, expect, it, beforeEach } from "vitest";
 import { aRoomSession } from "../../../../../testing/factories/room-session.factory";
 import { RoomSessionContext } from "../../../stores/room-session";
 import { Header } from "./header.component";
-import { aUser, installFakeApi } from "../../../../../testing/fakeApi";
+import { aUser, installFakeApi } from "../../../../../testing/fakes/api.fake";
 import { clockUser, onFakeClock } from "../../../../../testing/factories/clock.factory";
 import { loadAmbilight } from "@services/preferences-service";
 import { renderInRoom } from "../../../../../testing/factories/room-render.factory";

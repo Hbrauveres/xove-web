@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import type { MediaTrack } from "@services/livekit-service";
-import { FakeTrack } from "../../../../../testing/fakeLiveKit";
+import { FakeTrack } from "../../../../../testing/fakes/livekit.fake";
 import { StageSounds } from "./stage-sounds.component";
 const sound = (id: string, volume: number) => ({
   id,

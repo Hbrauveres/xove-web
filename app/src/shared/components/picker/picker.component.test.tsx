@@ -105,7 +105,7 @@ describe("Picker, the app's one-box picker", () => {
   });
 });
 
-describe("Picker: floating over its panel (spec 0111)", () => {
+describe("Picker: floating over its panel", () => {
   /** A panel holding the picker and two controls: one right under its list, one far below. */
   function panel() {
     const user = onFakeClock();
@@ -215,7 +215,7 @@ describe("Picker: floating over its panel (spec 0111)", () => {
   });
 });
 
-describe("Picker: long names and an upward list (spec 0114)", () => {
+describe("Picker: long names and an upward list", () => {
   const LONG = [
     { value: "studio", label: "EMEET STUDIO Virtual Camera" },
     { value: "pixy", label: "EMEET PIXY (328f:00c0)" },
@@ -259,7 +259,7 @@ describe("Picker: long names and an upward list (spec 0114)", () => {
   });
 });
 
-describe("Picker: opened on request (spec 0115)", () => {
+describe("Picker: opened on request", () => {
   it("opens when asked, again each time the request changes", async () => {
     const user = userEvent.setup();
     function Told() {
@@ -291,7 +291,7 @@ describe("Picker: opened on request (spec 0115)", () => {
   });
 });
 
-describe("Picker: cued (spec 0123, design decision 11)", () => {
+describe("Picker: cued", () => {
   it("draws the cue's ring over its list, round the pill and the open list together", () => {
     const { container } = render(
       <Picker label="Camera" options={CAMERAS} value="c920" onChange={() => {}} open cue={1} />,
