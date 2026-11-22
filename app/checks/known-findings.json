@@ -43,20 +43,6 @@
   },
   {
     "tool": "code",
-    "rule": "naming",
-    "file": "src/testing/setup.test.tsx",
-    "count": 1,
-    "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/testing/setup.ts",
-    "count": 1,
-    "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
     "rule": "size",
     "file": "src/testing/fakeLiveKit.ts",
     "count": 1,

@@ -28,6 +28,21 @@ describe("the code check", () => {
     expect(rules("other.test.tsx", "")).toContain("naming");
   });
 
+  it("takes a fake in testing/fakes/ and the tests' setup by name, and a fake nowhere else", () => {
+    expect(rules("testing/fakes/api.fake.ts", "")).not.toContain("naming");
+    expect(rules("testing/fakes/livekit-room.fake.ts", "")).not.toContain("naming");
+    expect(rules("testing/setup.ts", "")).not.toContain("naming");
+    expect(rules("testing/setup.test.tsx", "")).not.toContain("naming");
+    expect(rules("testing/fakeApi.ts", "")).toContain("naming");
+    expect(rules("testing/api.fake.ts", "")).toContain("naming");
+    expect(rules("services/livekit-service/room.fake.ts", "")).toContain("naming");
+    expect(rules("shared/utils/setup.ts", "")).toContain("naming");
+  });
+
+  it("names a fake over 300 lines", () => {
+    expect(rules("testing/fakes/long.fake.ts", "x\n".repeat(301))).toContain("size");
+  });
+
   it("names a file over 300 lines", () => {
     expect(rules("shared/utils/long.util.ts", "x\n".repeat(301), ["shared/utils/long.util.test.ts"])).toContain("size");
   });

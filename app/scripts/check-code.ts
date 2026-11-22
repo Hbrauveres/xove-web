@@ -133,6 +133,12 @@ const writesAValue = (line: string) => CSS_VALUE.some((re) => re.test(line)) || 
 const withoutComments = (css: string) => css.replace(/\/\*[\s\S]*?\*\//g, (c) => c.replace(/[^\n]/g, " "));
 const NAME =
   /^[a-z0-9]+(-[a-z0-9]+)*\.(component|page|hook|util|service|adapter|store|model|selectors|constants|enum|types|factory)(\.module)?\.(tsx?|css)$|^[a-z0-9]+(-[a-z0-9]+)*\.(component|page|hook|util|service|adapter|store|model|selectors)\.test\.tsx?$|^[a-z0-9]+(-[a-z0-9]+)*\.(component|page)\.stories\.tsx$|^(tokens|global)\.css$/;
+/**
+ * The files named by what reads them rather than by their kind: the app's entry, its test and Vite's types; the
+ * tests' setup, which the test runner's config names; and a fake, which stands in for a service in the tests only.
+ */
+const OWN_NAME =
+  /^(main(\.test)?|vite-env\.d)\.tsx?$|^testing\/setup(\.test)?\.tsx?$|^testing\/fakes\/[a-z0-9]+(-[a-z0-9]+)*\.fake\.ts$/;
 
 // Findings of one file, from its path (relative to src) and its text: [{ rule, line, text }].
 export function analyse(r: string, text: string, exists: (path: string) => boolean): Finding[] {
@@ -141,8 +147,7 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
   const top = r.split("/")[0];
   if (!/\.(tsx?|css)$/.test(r)) return out;
   if (r.includes("/") && !["routes", "features", "shared", "services", "testing"].includes(top)) add("structure");
-  if (!/(^|\/)index\.ts$/.test(r) && !/^(main(\.test)?|vite-env\.d)\.tsx?$/.test(r) && !NAME.test(basename(r)))
-    add("naming");
+  if (!/(^|\/)index\.ts$/.test(r) && !OWN_NAME.test(r) && !NAME.test(basename(r))) add("naming");
   const lines = text.split("\n");
   if (isCode(r) && lines.length > 300) add("size", 0, `${lines.length} lines`);
   if (isCode(r) && !noLogic(r)) {
