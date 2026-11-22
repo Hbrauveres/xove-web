@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import plugin from "./lint-plugin.ts";
+import plugin, { verdictOf } from "./lint-plugin.ts";
 
 type Node = Record<string, unknown>;
 const str = (value: string): Node => ({ type: "Literal", value });
@@ -41,6 +41,31 @@ describe("the lint plugin", () => {
       expect(reports("regexp-from-data", call("NewExpression", template(), str("g")))).toEqual([]);
       const other = { type: "NewExpression", callee: ident("Map"), arguments: [ident("x")] };
       expect(reports("regexp-from-data", other)).toEqual([]);
+    });
+  });
+
+  describe("slow-regexp", () => {
+    const regex = (pattern: string, flags = ""): Node => ({ type: "Literal", regex: { pattern, flags } });
+
+    it("reports a pattern that can backtrack for a very long time, and says how", () => {
+      expect(reports("slow-regexp", regex("^(a+)+$"))).toEqual([expect.stringContaining("exponential")]);
+      expect(reports("slow-regexp", regex("\\s*$"))).toEqual([expect.stringContaining("polynomial")]);
+    });
+
+    it("reports a fixed-text RegExp the same way", () => {
+      expect(reports("slow-regexp", call("NewExpression", str("(\\w+\\s?)+$")))).toHaveLength(1);
+    });
+
+    it("reports a pattern recheck couldn't judge, as well as one it found slow", () => {
+      expect(verdictOf({ status: "unknown" })).toContain("couldn't judge");
+      expect(verdictOf({ status: "vulnerable", complexity: { type: "exponential" } })).toContain("exponential");
+      expect(verdictOf({ status: "safe" })).toBeUndefined();
+    });
+
+    it("leaves a safe pattern, and a literal that isn't a regex", () => {
+      expect(reports("slow-regexp", regex("^[a-z]+@[a-z]+\\.com$"))).toEqual([]);
+      expect(reports("slow-regexp", call("NewExpression", str("^\\d{4}-\\d{2}$"), str("u")))).toEqual([]);
+      expect(reports("slow-regexp", str("(a+)+"))).toEqual([]);
     });
   });
 });
