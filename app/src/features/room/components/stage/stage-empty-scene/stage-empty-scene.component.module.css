@@ -69,13 +69,7 @@
   overflow: hidden;
   perspective: var(--cqw-52-5);
   perspective-origin: 50% 0;
-  mask-image: linear-gradient(
-    180deg,
-    transparent 0%,
-    var(--black-35) 18%,
-    var(--black-80) 55%,
-    var(--black) 100%
-  );
+  mask-image: linear-gradient(180deg, transparent 0%, var(--black-35) 18%, var(--black-80) 55%, var(--black) 100%);
 }
 
 .plane {

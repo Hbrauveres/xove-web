@@ -13,11 +13,7 @@ export function StageEmptyScene({ ref }: StageEmptySceneProps) {
     <div ref={ref} className={styles.scene} aria-hidden="true">
       <div className={styles.sky} />
       <div className={styles.haze} />
-      <svg
-        className={styles.eye}
-        viewBox={`0 0 ${EYE_BOX.width} ${EYE_BOX.height}`}
-        data-part="eye"
-      >
+      <svg className={styles.eye} viewBox={`0 0 ${EYE_BOX.width} ${EYE_BOX.height}`} data-part="eye">
         <circle cx={EYE_RING.cx} cy={EYE_RING.cy} r={EYE_RING.r} strokeWidth={EYE_RING.width} className={styles.ring} />
         <circle cx={EYE_DOT.cx} cy={EYE_DOT.cy} r={EYE_DOT.r} className={styles.dot} />
       </svg>
