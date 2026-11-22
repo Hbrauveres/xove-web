@@ -1,8 +1,8 @@
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { aUser, installFakeApi } from "../../testing/fakeApi";
-import { renderApp } from "../../testing/renderApp";
+import { aUser, installFakeApi } from "../../testing/fakes/api.fake";
+import { renderApp } from "../../testing/factories/app-render.factory";
 
 describe("who sees which screen", () => {
   it("shows the Google sign-in to signed-out visitors", async () => {

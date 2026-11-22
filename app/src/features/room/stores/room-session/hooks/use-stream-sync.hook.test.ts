@@ -1,6 +1,6 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { aUser, installFakeApi, MY_USER_ID } from "../../../../../testing/fakeApi";
+import { aUser, installFakeApi, MY_USER_ID } from "../../../../../testing/fakes/api.fake";
 import { aLiveStream, anAnswer } from "../../../../../testing/factories/streams-state.factory";
 import { withMe, withMyStep, withStreams, RoomStore } from "../../room-store";
 import { SettingsQueue } from "../../../../../services/settings-queue-service";

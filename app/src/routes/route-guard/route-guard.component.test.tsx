@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { describe, expect, it } from "vitest";
 import { AuthProvider } from "../../shared/stores/auth-store";
-import { aUser, installFakeApi } from "../../testing/fakeApi";
+import { aUser, installFakeApi } from "../../testing/fakes/api.fake";
 import { RouteGuard } from "./route-guard.component";
 
 function renderAt(path: string) {

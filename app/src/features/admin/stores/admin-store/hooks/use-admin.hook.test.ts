@@ -1,6 +1,6 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { expect, it } from "vitest";
-import { aUser, installFakeApi } from "../../../../../testing/fakeApi";
+import { aUser, installFakeApi } from "../../../../../testing/fakes/api.fake";
 import { useAdmin } from "./use-admin.hook";
 
 it("loads the lists as the page opens, and its actions change them", async () => {

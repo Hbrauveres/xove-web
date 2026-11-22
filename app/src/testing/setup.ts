@@ -4,7 +4,7 @@ import { afterEach, vi } from "vitest";
 import { appConfig } from "@services/app-config-service";
 import { floatingStore } from "@shared/stores/floating-store";
 import { toastStore } from "@shared/stores/toast-store";
-import { fakeCameras, fakeMics, resetFakeLiveKit, rooms } from "./fakeLiveKit";
+import { fakeCameras, fakeMics, lastRoom, resetFakeLiveKit } from "./fakeLiveKit";
 
 // findBy and waitFor give up after 1 s: a wait that needs longer is a delay that belongs on fake
 // timers, and a stuck test fails fast instead of hiding for seconds.
@@ -27,7 +27,7 @@ afterEach(() => {
   localStorage.clear();
   sessionStorage.clear();
   for (const cookie of document.cookie.split(";")) {
-    const name = cookie.split("=")[0].trim();
+    const name = (cookie.split("=")[0] ?? "").trim();
     if (!name) continue;
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
@@ -58,7 +58,7 @@ HTMLDialogElement.prototype.close ??= function close(this: HTMLDialogElement) {
 Object.defineProperty(navigator, "mediaDevices", {
   configurable: true,
   value: {
-    getDisplayMedia: (request?: unknown) => rooms[rooms.length - 1].localParticipant.getDisplayMedia(request),
+    getDisplayMedia: (request?: unknown) => lastRoom().localParticipant.getDisplayMedia(request),
     enumerateDevices: async () => [
       ...fakeCameras.map((c) => ({ ...c, kind: "videoinput", groupId: "" })),
       ...fakeMics.map((m) => ({ ...m, kind: "audioinput", groupId: "" })),

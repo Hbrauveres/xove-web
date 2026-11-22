@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { expect, it, vi } from "vitest";
-import { aUser, installFakeApi } from "../../../../testing/fakeApi";
+import { aUser, installFakeApi } from "../../../../testing/fakes/api.fake";
 import { RequestAccessForm } from "./request-access-form.component";
 
 it("asks for access with an optional note, and says when it went", async () => {

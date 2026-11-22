@@ -98,12 +98,12 @@ describe("after every test, the fake LiveKit is new", { shuffle: false }, () => 
   it("1. leaves a room and a camera unplugged", () => {
     rooms.push({} as (typeof rooms)[number]);
     fakeCameras.pop();
-    fakeMics[0].label = "Changed";
+    for (const mic of fakeMics) mic.label = "Changed";
   });
   it("2. finds no room, and the browser's devices as they were", () => {
     expect(rooms).toHaveLength(0);
     expect(fakeCameras.map((c) => c.deviceId)).toEqual(["cam-1", "cam-2"]);
-    expect(fakeMics[0].label).toBe("Headset (USB)");
+    expect(fakeMics.map((m) => m.label)).toEqual(["Headset (USB)", "MacBook Pro microphone"]);
   });
 });
 

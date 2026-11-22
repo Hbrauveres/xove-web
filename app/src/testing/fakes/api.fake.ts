@@ -9,12 +9,12 @@ import type {
 } from "@services/xove-api-service";
 
 type Reply = { status: number; body?: unknown };
-export type Call = {
+type Call = {
   method: string;
   path: string;
   headers: Record<string, string>;
   body: unknown;
-  keepalive?: boolean;
+  keepalive?: boolean | undefined;
 };
 
 /** The signed-in user's id inside the fake API. /api/me doesn't expose ids, so tests never need it. */
@@ -37,11 +37,11 @@ export function installFakeApi(
     places: 6 as number | undefined,
     /** False plays an API that restarted and forgot this person's seat. */
     seated: true,
-    /** The room's seats (spec 0104); undefined plays an older API. */
+    /** The room's seats: how many, taken and waiting; undefined plays an older API that doesn't count them. */
     seatsInfo: { total: 20, taken: 1, waiting: 0 } as { total: number; taken: number; waiting: number } | undefined,
     /** Who watches what, besides me; undefined plays an older API. */
     watching: [] as { userId: number; sharerId: number; kind: StreamKind; mine: boolean }[] | undefined,
-    /** Who has a seat, since when (spec 0158); undefined for an older API. */
+    /** Who has a seat, since when; undefined plays an older API that doesn't say. */
     here: undefined as { userId: number; since: string; mine: boolean }[] | undefined,
     /** What I reported with PUT /api/streams/watching. */
     myWatch: null as { sharerId: number; kind: StreamKind } | null,
@@ -117,7 +117,8 @@ export function installFakeApi(
     }
     const perKind = path.match(/^\/api\/streams\/(screen|camera)\/(settings|stop)$/);
     if (method === "POST" && perKind) {
-      const [, kind, action] = perKind;
+      const kind = perKind[1] ?? "";
+      const action = perKind[2];
       const own = server.streams.find(isMine(kind));
       if (action === "stop") {
         server.streams = server.streams.filter((st) => !isMine(kind)(st));
@@ -184,7 +185,7 @@ export function installFakeApi(
 /** One live stream as the fake API keeps it. */
 export type FakeStream = Omit<LiveStream, "mine">;
 
-export type SeatAnswer =
+type SeatAnswer =
   { status: "in" } | { status: "waiting"; place: number } | { status: "offered"; until: string; seconds: number };
 
 /** Someone else's live stream: a screen at 1080p Smooth unless said otherwise, started a minute ago. */

@@ -1,7 +1,7 @@
 // The room panel: a tab at the right edge that sets the app's state and makes the
 // fake people enter, leave and start or stop their screen and camera, so a published build of
 // the harness can be clicked through without the query string. Hidden with ?panel=0 (screenshots).
-import { MY_USER_ID, someoneSharing } from "@testing/fakeApi";
+import { MY_USER_ID, someoneSharing } from "@testing/fakes/api.fake";
 import type { Room as FakeRoom } from "@testing/fakeLiveKit";
 
 type Server = {

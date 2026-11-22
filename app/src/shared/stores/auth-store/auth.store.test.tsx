@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import { aUser, installFakeApi } from "../../../testing/fakeApi";
+import { aUser, installFakeApi } from "../../../testing/fakes/api.fake";
 import { AuthProvider } from "./auth.store";
 import { useAuth } from "./hooks/use-auth.hook";
 

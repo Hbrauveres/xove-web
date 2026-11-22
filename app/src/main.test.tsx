@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/react";
 import { expect, it } from "vitest";
-import { installFakeApi } from "./testing/fakeApi";
+import { installFakeApi } from "./testing/fakes/api.fake";
 
 it("draws the app in the page's root once its settings are loaded", async () => {
   installFakeApi({ me: null });

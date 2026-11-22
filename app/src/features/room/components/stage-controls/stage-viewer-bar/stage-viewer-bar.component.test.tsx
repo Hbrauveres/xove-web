@@ -7,7 +7,7 @@ import { fullRoom } from "@features/room/utils/full-room.util";
 import type { FoldKey } from "@features/room/types/fold-key.types";
 import type { Sound } from "@features/room/types/sound.types";
 import { StageViewerBar } from "./stage-viewer-bar.component";
-import { installFakeApi, someoneSharing } from "../../../../../testing/fakeApi";
+import { installFakeApi, someoneSharing } from "../../../../../testing/fakes/api.fake";
 import { lastRoom } from "../../../../../testing/fakeLiveKit";
 import { stubVoiceLevels } from "../../../../../testing/factories/audio.factory";
 import { clockUser } from "../../../../../testing/factories/clock.factory";

@@ -1,6 +1,6 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { aUser, installFakeApi, someoneSharing } from "../../../../../testing/fakeApi";
+import { aUser, installFakeApi, someoneSharing } from "../../../../../testing/fakes/api.fake";
 import { useRememberedCamera } from "./use-remembered-camera.hook";
 import { useRoomStore } from "../../room-store";
 import { useSessionCore } from "./use-session-core.hook";

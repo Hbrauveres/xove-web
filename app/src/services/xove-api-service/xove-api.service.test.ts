@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { installFakeApi } from "../../testing/fakeApi";
+import { installFakeApi } from "../../testing/fakes/api.fake";
 import { api, ApiError } from "./xove-api.service";
 
 describe("api client", () => {

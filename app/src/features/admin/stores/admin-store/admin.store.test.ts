@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { AccessRequestView, MemberView } from "@services/xove-api-service";
-import { aUser, installFakeApi } from "../../../../testing/fakeApi";
+import { aUser, installFakeApi } from "../../../../testing/fakes/api.fake";
 import { AdminStore } from "./admin.store";
 
 const anAdmin = () => aUser({ email: "admin@example.com", name: "Admin", status: "MEMBER", admin: true });

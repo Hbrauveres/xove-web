@@ -9,7 +9,7 @@ import type { Sharer } from "@features/room/types/room-view.types";
 import { floatingStore } from "@shared/stores/floating-store";
 import { StageAlsoLive } from "./stage-also-live.component";
 import type { Hearing } from "@features/room/types/sound.types";
-import { installFakeApi, someoneSharing } from "../../../../../testing/fakeApi";
+import { installFakeApi, someoneSharing } from "../../../../../testing/fakes/api.fake";
 import { lastRoom } from "../../../../../testing/fakeLiveKit";
 import { clockUser } from "../../../../../testing/factories/clock.factory";
 import {

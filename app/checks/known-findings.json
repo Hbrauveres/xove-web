@@ -2,13 +2,6 @@
   {
     "tool": "code",
     "rule": "history",
-    "file": "src/testing/fakeApi.ts",
-    "count": 2,
-    "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "history",
     "file": "src/testing/fakeLiveKit.ts",
     "count": 5,
     "owner": "#195 the sweep"
@@ -23,21 +16,7 @@
   {
     "tool": "code",
     "rule": "naming",
-    "file": "src/testing/fakeApi.ts",
-    "count": 1,
-    "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
     "file": "src/testing/fakeLiveKit.ts",
-    "count": 1,
-    "owner": "#195 the sweep"
-  },
-  {
-    "tool": "code",
-    "rule": "naming",
-    "file": "src/testing/renderApp.tsx",
     "count": 1,
     "owner": "#195 the sweep"
   },
@@ -50,22 +29,8 @@
   },
   {
     "tool": "tsc",
-    "rule": "TS2345",
-    "file": "src/testing/fakeApi.ts",
-    "count": 2,
-    "owner": "#195 the sweep"
-  },
-  {
-    "tool": "tsc",
     "rule": "TS2375",
     "file": "src/testing/fakeLiveKit.ts",
-    "count": 1,
-    "owner": "#195 the sweep"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2379",
-    "file": "src/testing/fakeApi.ts",
     "count": 1,
     "owner": "#195 the sweep"
   },
@@ -81,27 +46,6 @@
     "rule": "TS2532",
     "file": "src/testing/fakeLiveKit.ts",
     "count": 1,
-    "owner": "#195 the sweep"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
-    "file": "src/testing/setup.test.tsx",
-    "count": 2,
-    "owner": "#195 the sweep"
-  },
-  {
-    "tool": "tsc",
-    "rule": "TS2532",
-    "file": "src/testing/setup.ts",
-    "count": 2,
-    "owner": "#195 the sweep"
-  },
-  {
-    "tool": "unused",
-    "rule": "types",
-    "file": "src/testing/fakeApi.ts",
-    "count": 2,
     "owner": "#195 the sweep"
   }
 ]

@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { HANDHELD_QUERY } from "../../services/media-devices-service";
-import { aUser, installFakeApi } from "../../testing/fakeApi";
+import { aUser, installFakeApi } from "../../testing/fakes/api.fake";
 import { Root } from "./root.component";
 
 /** A browser that is a phone or tablet, or a computer. */

@@ -13,7 +13,7 @@ import {
   startSharing,
   tickedQuality,
 } from "../../../../../testing/factories/stage-steps.factory";
-import { installFakeApi, myLiveStream } from "../../../../../testing/fakeApi";
+import { installFakeApi, myLiveStream } from "../../../../../testing/fakes/api.fake";
 import { lastRoom } from "../../../../../testing/fakeLiveKit";
 import { RoomSessionContext } from "../../../stores/room-session";
 import type { SettingsSession } from "../../../types/settings.types";

@@ -15,7 +15,7 @@ import { AuthProvider } from "@shared/stores/auth-store";
 import { AppRoutes } from "@routes/app-routes";
 import { isHandheld } from "@services/media-devices-service";
 import { PhoneNoticePage } from "@features/phone-notice";
-import { aUser, installFakeApi, MY_USER_ID, someoneSharing } from "@testing/fakeApi";
+import { aUser, installFakeApi, MY_USER_ID, someoneSharing } from "@testing/fakes/api.fake";
 import { FakeTrack, lastRoom, rooms } from "@testing/fakeLiveKit";
 import { POLL_MS } from "@features/room/constants/room.constants";
 import { installRoomPanel } from "./room";

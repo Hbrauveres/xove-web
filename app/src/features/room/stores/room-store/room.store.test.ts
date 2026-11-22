@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { aUser, installFakeApi, MY_USER_ID, someoneSharing } from "../../../../testing/fakeApi";
+import { aUser, installFakeApi, MY_USER_ID, someoneSharing } from "../../../../testing/fakes/api.fake";
 import { lastRoom } from "../../../../testing/fakeLiveKit";
 import { appConfig } from "@services/app-config-service";
 import { RoomStore } from "./room.store";
