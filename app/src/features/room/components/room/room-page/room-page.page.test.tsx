@@ -184,7 +184,7 @@ describe("room: theater mode", () => {
 
     const footer = screen.getByRole("contentinfo");
     expect(footer).toHaveTextContent("xovê · Made by Hbrauveres");
-    expect(footer).toHaveTextContent(/Buy me a coffee.*GitHub.*LinkedIn/);
+    for (const name of ["Buy me a coffee", "GitHub", "LinkedIn"]) expect(footer).toHaveTextContent(name);
     expect(within(footer).queryByRole("link")).not.toBeInTheDocument();
   });
 

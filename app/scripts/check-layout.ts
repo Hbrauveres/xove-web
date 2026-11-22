@@ -24,8 +24,8 @@ const RANK: Record<string, number> = { routes: 0, features: 1, shared: 2, servic
 const ALIASES = ["routes", "features", "shared", "services", "testing"];
 const MAX_DEPTH = 7;
 const UNIT_FILE = /\.(component|page|store|service|adapter)\.tsx?$/;
-// Whole statements, so an import or a re-export written over several lines counts too.
-const IMPORT = /^[ \t]*(?:import|export)\b[^;"']*?["']([^"']+)["']/gm;
+/** Where an import or a re-export starts: its path follows, maybe lines later. */
+const STATEMENT = /^[ \t]*(?:import|export)\b/gm;
 const EXTENSIONS = ["", ".ts", ".tsx", "/index.ts", "/index.tsx"];
 
 // Tests and a component's stories: neither is part of the app, so neither counts as an importer.
@@ -59,15 +59,40 @@ const ownsItsApi = (unit: string) => top(unit) === "services" || unit.split("/")
 const unitOf = (f: string, units: Set<string>) =>
   [...units].filter((u) => inside(f, u)).sort((a, b) => b.length - a.length)[0] ?? null;
 
+/**
+ * Each import's or re-export's path, with where its statement starts: statements over several lines too.
+ * One walk over the text: a statement's search for its path never reads what an earlier one read.
+ */
+export function importsIn(text: string): { path: string; at: number; first: string }[] {
+  const found: { path: string; at: number; first: string }[] = [];
+  let resume = 0;
+  for (const m of text.matchAll(STATEMENT)) {
+    if (m.index < resume) continue;
+    let at = m.index + m[0].length;
+    while (at < text.length && !";\"'".includes(text.charAt(at))) at += 1;
+    resume = at;
+    const quote = text.charAt(at);
+    const end = quote === ";" ? -1 : text.indexOf(quote, at + 1);
+    if (end < 0) continue;
+    const first =
+      text
+        .slice(m.index, end + 1)
+        .trim()
+        .split("\n")[0] ?? "";
+    found.push({ path: text.slice(at + 1, end), at: m.index, first });
+    resume = end + 1;
+  }
+  return found;
+}
+
 /** Who imports each file, with the line: only the app's own code, never tests. */
 function importersOf(files: Map<string, string>) {
   const by = new Map<string, { file: string; line: number; text: string }[]>();
   for (const [file, text] of files) {
     if (isTest(file)) continue;
-    for (const m of text.matchAll(IMPORT)) {
-      const target = m[1] ? resolveImport(m[1], file, files) : null;
-      const line = text.slice(0, m.index).split("\n").length;
-      const first = m[0].trim().split("\n")[0] ?? "";
+    for (const { path, at, first } of importsIn(text)) {
+      const target = path ? resolveImport(path, file, files) : null;
+      const line = text.slice(0, at).split("\n").length;
       if (target && target !== file) by.set(target, [...(by.get(target) ?? []), { file, line, text: first }]);
     }
   }

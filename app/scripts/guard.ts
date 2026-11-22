@@ -127,7 +127,7 @@ const NEW_STRUCTURE = /^src\/(routes|features|shared|services|testing)\//;
 /** The code rules `rules` names that main's check (its source) doesn't define; none without main's. */
 export function newRulesOf(mainCheck: string | undefined, rules: string[]): Set<string> {
   if (mainCheck === undefined) return new Set();
-  const defined = new Set([...mainCheck.matchAll(/^\s+(\w+):/gm)].map((m) => m[1]));
+  const defined = new Set([...mainCheck.matchAll(/^[ \t]+(\w+):/gm)].map((m) => m[1]));
   return new Set(rules.filter((r) => !defined.has(r)));
 }
 

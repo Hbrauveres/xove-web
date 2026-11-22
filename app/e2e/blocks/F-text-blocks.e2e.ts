@@ -102,7 +102,7 @@ test("F-text-blocks.6 with the settings open, resting on a live button cues its 
   });
   await expect.soft(panel.getByRole("tab", { name: "Screen" })).toHaveAttribute("aria-selected", "true");
   await expect.soft(cue).toHaveCount(1);
-  await expect.soft(cue).toHaveCSS("animation-name", /pulse.*, .*settle/);
+  await expect.soft(cue).toHaveCSS("animation-name", /^_?pulse[\w-]*, _?settle/);
   await expect.soft(cue).toHaveCSS("animation-iteration-count", "2, 1");
   await expect.soft(cue).toHaveCSS("pointer-events", "none");
   // The cue rings the Change pill, over it.

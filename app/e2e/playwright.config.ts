@@ -2,7 +2,7 @@
 // serves the app; E2E_BASE_URL points them at another copy instead (a reference version, run beside),
 // and E2E_OUT says where each case's records go (docs/testing.md).
 import { defineConfig } from "@playwright/test";
-import { PHONE_TAG, SIZES } from "./support/sizes.ts";
+import { PHONE, SIZES } from "./support/sizes.ts";
 
 const base = process.env.E2E_BASE_URL;
 
@@ -30,7 +30,7 @@ export default defineConfig({
       isMobile: s.phone,
       hasTouch: s.phone,
     },
-    ...(s.phone ? { grep: new RegExp(PHONE_TAG) } : { grepInvert: new RegExp(PHONE_TAG) }),
+    ...(s.phone ? { grep: PHONE } : { grepInvert: PHONE }),
   })),
   ...(base
     ? {}

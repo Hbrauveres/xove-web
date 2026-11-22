@@ -271,8 +271,10 @@ jobs:
           echo "::group::image"
           trivy image --input /images/web.tar || status=1
           echo "::endgroup::"
-          echo "::group::web dependencies (package-lock.json)"
-          trivy fs --scanners vuln /src/app || status=1
+          # Dev dependencies too: the check tools run here and in these checks, so a
+          # vulnerability in one of them must block like any other.
+          echo "::group::web dependencies (package-lock.json, dev dependencies included)"
+          trivy fs --scanners vuln --include-dev-deps /src/app || status=1
           echo "::endgroup::"
           exit "$status"
 

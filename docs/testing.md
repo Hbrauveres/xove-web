@@ -101,7 +101,7 @@ Every feature of the app has numbered test cases, each written as given / when /
 | A 1080p monitor on its side | 1080 × 1920 | 1×      |
 | Galaxy S23 Ultra            | 384 × 824   | 3.75×   |
 
-Phones get only the phone notice, so their sizes run the tests tagged `@phone`.
+Phones get only the phone notice, so their sizes run the tests tagged `@phone` (`PHONE_TAG` in a test's title, `PHONE` the fixed pattern the config picks them by, both in `e2e/support/sizes.ts`).
 
 What the tests share lives once in `e2e/support/`, one module per concern; an area's own file (`e2e/stage/stage.ts`, `e2e/settings/settings.ts`, …) keeps only what's specific to it:
 

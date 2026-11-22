@@ -65,6 +65,15 @@ describe("the unused styles check", () => {
       ).toEqual([]);
     });
 
+    it("leaves a nested :global(…) whole, and reads on past a quote left open in a url", () => {
+      expect(
+        found({
+          "h/h.component.tsx": 'import styles from "./h.module.css";\nstyles.a;\n',
+          "h/h.module.css": ":global(.dark:not(.lite)) .a {}\n.a { background: url(it's.png); }\n.b {}\n",
+        }),
+      ).toEqual(["unusedClass h/h.module.css b"]);
+    });
+
     it("names every class of a module nothing imports", () => {
       expect(found({ "e/e.module.css": ".lost {}\n" })).toEqual(["unusedClass e/e.module.css lost"]);
     });

@@ -4,6 +4,7 @@
 import { readdirSync, readFileSync, statSync, existsSync } from "node:fs";
 import { basename, join, relative, resolve } from "node:path";
 import { checkLayout, LAYOUT_RULES } from "./check-layout.ts";
+import { blank, stringSpans, withoutComments } from "./text-scan.ts";
 
 export const RULES = {
   size: "over 300 lines (one job per file)",
@@ -63,7 +64,7 @@ const isWorking = (r: string) => isCode(r) && !noLogic(r) && !partOf(r);
 /** A type, named constant or helper declared at the top of a working file; a hook's, component's or page's only job is its export. */
 const PART_DECLARATION = [
   /^\s*(export )?(declare )?(type|interface|enum) \w+\b(<[^>]*>)?\s*(=|\{|extends)/,
-  /^(export )?const [A-Z][A-Z0-9_]*\b(?![a-z])\s*(:[^=]+)?=/,
+  /^(export )?const [A-Z][A-Z0-9_]*\s*(:[^=]+)?=/,
   /^(async )?function\*? \w/,
   /^(let|var) \w/,
   /^const [a-z]\w*\s*(:[^=]+)?=\s*(async\s*)?(function\b|\(|<|\w+\s*=>)/,
@@ -94,49 +95,50 @@ function misplacedPart(r: string): boolean {
 const isTokenFile = (f: string) => /(^|\/)tokens\.css$/.test(f);
 // A value written in CSS rather than named in tokens.css. Zero isn't a value (`0`, `0s`), and a
 // token's own name (`var(--space-2)`) isn't one either; `%` and `fr` share out a layout.
-const UNITS = "px|rem|em|ex|ch|pt|pc|cm|mm|in|q|vw|vh|vmin|vmax|vi|vb|[dsl]v[hw]|cq[whib]|cqmin|cqmax|ms|s";
 const CSS_VALUE = [
   /#[0-9a-f]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color|color-mix|cubic-bezier)\(/i,
-  new RegExp(`(?<![\\w.#])(?<!\\w-)(?!0+(?:\\.0+)?(?:${UNITS})\\b)\\d*\\.?\\d+(?:${UNITS})\\b`, "i"),
+  // A number with a unit (px, rem, em… ms, s), written out: no regular expression is built from data.
+  /(?<![\w.#])(?<!\w-)(?!0+(?:\.0+)?(?:px|rem|em|ex|ch|pt|pc|cm|mm|in|q|vw|vh|vmin|vmax|vi|vb|[dsl]v[hw]|cq[whib]|cqmin|cqmax|ms|s)\b)(?:\d+(?:\.\d+)?|\.\d+)(?:px|rem|em|ex|ch|pt|pc|cm|mm|in|q|vw|vh|vmin|vmax|vi|vb|[dsl]v[hw]|cq[whib]|cqmin|cqmax|ms|s)\b/i,
   /z-index\s*:\s*-?[1-9]/i,
 ];
 /** CSS's named colours, but the keywords that aren't a colour of their own (`transparent`, `currentColor`). */
-const COLOUR_NAMES = new RegExp(
-  `(?<![\\w-])(?:${[
+const COLOUR_NAMES = new Set(
+  [
     "aliceblue antiquewhite aqua aquamarine azure beige bisque black blanchedalmond blue blueviolet brown burlywood",
-    "cadetblue chartreuse chocolate coral cornflowerblue cornsilk crimson cyan darkblue darkcyan darkgoldenrod darkgray",
-    "darkgreen darkgrey darkkhaki darkmagenta darkolivegreen darkorange darkorchid darkred darksalmon darkseagreen",
-    "darkslateblue darkslategray darkslategrey darkturquoise darkviolet deeppink deepskyblue dimgray dimgrey dodgerblue",
-    "firebrick floralwhite forestgreen fuchsia gainsboro ghostwhite gold goldenrod gray green greenyellow grey honeydew",
-    "hotpink indianred indigo ivory khaki lavender lavenderblush lawngreen lemonchiffon lightblue lightcoral lightcyan",
-    "lightgoldenrodyellow lightgray lightgreen lightgrey lightpink lightsalmon lightseagreen lightskyblue",
-    "lightslategray lightslategrey lightsteelblue lightyellow lime limegreen linen magenta maroon mediumaquamarine",
-    "mediumblue mediumorchid mediumpurple mediumseagreen mediumslateblue mediumspringgreen mediumturquoise",
-    "mediumvioletred midnightblue mintcream mistyrose moccasin navajowhite navy oldlace olive olivedrab orange",
-    "orangered orchid palegoldenrod palegreen paleturquoise palevioletred papayawhip peachpuff peru pink plum",
-    "powderblue purple rebeccapurple red rosybrown royalblue saddlebrown salmon sandybrown seagreen seashell sienna",
-    "silver skyblue slateblue slategray slategrey snow springgreen steelblue tan teal thistle tomato turquoise violet",
-    "wheat white whitesmoke yellow yellowgreen",
+    "cadetblue chartreuse chocolate coral cornflowerblue cornsilk crimson cyan darkblue darkcyan darkgoldenrod",
+    "darkgray darkgreen darkgrey darkkhaki darkmagenta darkolivegreen darkorange darkorchid darkred darksalmon",
+    "darkseagreen darkslateblue darkslategray darkslategrey darkturquoise darkviolet deeppink deepskyblue dimgray",
+    "dimgrey dodgerblue firebrick floralwhite forestgreen fuchsia gainsboro ghostwhite gold goldenrod gray green",
+    "greenyellow grey honeydew hotpink indianred indigo ivory khaki lavender lavenderblush lawngreen lemonchiffon",
+    "lightblue lightcoral lightcyan lightgoldenrodyellow lightgray lightgreen lightgrey lightpink lightsalmon",
+    "lightseagreen lightskyblue lightslategray lightslategrey lightsteelblue lightyellow lime limegreen linen",
+    "magenta maroon mediumaquamarine mediumblue mediumorchid mediumpurple mediumseagreen mediumslateblue",
+    "mediumspringgreen mediumturquoise mediumvioletred midnightblue mintcream mistyrose moccasin navajowhite navy",
+    "oldlace olive olivedrab orange orangered orchid palegoldenrod palegreen paleturquoise palevioletred papayawhip",
+    "peachpuff peru pink plum powderblue purple rebeccapurple red rosybrown royalblue saddlebrown salmon sandybrown",
+    "seagreen seashell sienna silver skyblue slateblue slategray slategrey snow springgreen steelblue tan teal",
+    "thistle tomato turquoise violet wheat white whitesmoke yellow yellowgreen",
   ]
     .join(" ")
-    .replaceAll(" ", "|")})(?![\\w-])`,
-  "i",
+    .split(" "),
 );
 /** The parts of a line that hold values: what follows each property's colon, or a whole line that goes on from one. */
 const valuesOf = (line: string) => {
-  const declarations = [...line.matchAll(/[\w-]+\s*:([^;{}]*)/g)].map((m) => m[1] ?? "");
+  const declarations = [...line.matchAll(/(?<![\w-])[\w-]+\s*:([^;{}]*)/g)].map((m) => m[1] ?? "");
   if (declarations.length) return declarations.join(" ");
   return /[{}]/.test(line) ? "" : line;
 };
-const writesAValue = (line: string) => CSS_VALUE.some((re) => re.test(line)) || COLOUR_NAMES.test(valuesOf(line));
-/** The CSS's lines with their comments blanked out, so a comment's words never count and lines keep their numbers. */
-const withoutComments = (css: string) => css.replace(/\/\*[\s\S]*?\*\//g, (c) => c.replace(/[^\n]/g, " "));
+/** A CSS colour named as a whole word in a line's values (`red`, never `--red-50` or `reddish`). */
+const namesAColour = (values: string) =>
+  values
+    .toLowerCase()
+    .split(/[^\w-]+/)
+    .some((word) => COLOUR_NAMES.has(word));
+const writesAValue = (line: string) => CSS_VALUE.some((re) => re.test(line)) || namesAColour(valuesOf(line));
 const NAME =
   /^[a-z0-9]+(-[a-z0-9]+)*\.(component|page|hook|util|service|adapter|store|model|selectors|constants|enum|types|factory)(\.module)?\.(tsx?|css)$|^[a-z0-9]+(-[a-z0-9]+)*\.(component|page|hook|util|service|adapter|store|model|selectors)\.test\.tsx?$|^[a-z0-9]+(-[a-z0-9]+)*\.(component|page)\.stories\.tsx$|^(tokens|global)\.css$/;
 /** A spec, issue, decision or design round named by its number: history, which belongs in commits and docs. */
 const HISTORY = /\b[Ss]pecs? 0\d{3}|\bADR-\d{4}|#\d{2,4}\b|[Dd]esign decision \d+|\bround \d+/;
-/** A string literal: its quotes and what's between them. */
-const STRING = /(["'`])(?:\\.|(?!\1)[^\\])*\1/g;
 /** A test's or a group's title: `describe("…"`, `it.skip("…"`; never a method such as `.test(`. */
 const TITLE = /(?<![.\w])(?:describe|it|test)(?:\.\w+)?\(\s*((["'`])(?:\\.|(?!\2)[^\\])*\2)/g;
 
@@ -146,10 +148,10 @@ const TITLE = /(?<![.\w])(?:describe|it|test)(?:\.\w+)?\(\s*((["'`])(?:\\.|(?!\2
  */
 export function historyInTooling(file: string, text: string): Finding[] {
   return text.split("\n").flatMap((l, i) => {
-    const code = l.replace(STRING, '""');
+    const spans = stringSpans(l);
+    const code = blank(l, spans, '""');
     const at = code.search(/\/\/|\/\*|^\s*\*/);
-    const strings = [...l.matchAll(STRING)].map((m) => [m.index, m.index + m[0].length]);
-    const inString = (at: number) => strings.some(([from = 0, to = 0]) => at > from && at < to);
+    const inString = (at: number) => spans.some(([from, to]) => at > from && at < to);
     const title = [...l.matchAll(TITLE)].find((m) => !inString(m.index))?.[1] ?? "";
     const hit = (at >= 0 && HISTORY.test(code.slice(at))) || HISTORY.test(title);
     return hit ? [{ rule: "history" as const, file, line: i + 1, text: l.trim().slice(0, 90) }] : [];
@@ -221,7 +223,7 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
       add("partInCode", n, l);
     if (
       isTest(r) &&
-      /setTimeout\(\s*r(esolve)?\s*,|\bsleep\(|\bwait\(\s*\d|timeout:\s*(1\d{3,}|[2-9]\d{3,}|\d{5,})|\},\s*\d{4,}\)\s*;?\s*$/.test(
+      /setTimeout\(\s*r(?:esolve)?\s*,|\bsleep\(|\bwait\(\s*\d|timeout:\s*[1-9]\d{3,}|\},\s*\d{4,}\)\s*(?:;\s*)?$/.test(
         l,
       ) &&
       !/timeout:\s*1000\b/.test(l)
@@ -230,7 +232,7 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
     if (
       isTest(r) &&
       (/^let \w/.test(l) ||
-        /^const \w+(:[^=]+)?\s*=\s*(new |(?!vi\.mock\b|Date\.parse\("[^"]*"\))[a-zA-Z_][\w.]*\()/.test(l))
+        /^const \w+[ \t]*(?::[^=]*)?=\s*(new |(?!vi\.mock\b|Date\.parse\("[^"]*"\))[a-zA-Z_][\w.]*\()/.test(l))
     )
       add("sharedData", n, l);
     if (isCode(r) && /(oxlint|eslint)-disable|@ts-(ignore|expect-error|nocheck)|jscpd:ignore|prettier-ignore/.test(l))
