@@ -179,9 +179,9 @@ The room has one layout, theater mode, that follows the window's size ([how it l
 - **No pull-to-refresh in the room:** while the room is open (`data-room`), the page sets `overscroll-behavior: none`, so a drag down never reloads it.
 - **Fullscreen** is the browser's own, on the stage's box.
 
-## Where the code is going
+## How the code is organised
 
-The modules above are the app as it is today. It's being reorganised, with no change of behaviour, into the structure below. The new folders are in place (`routes/`, `features/`, `shared/`, `services/`, `testing/`), and every old one has moved in; what's left is the sweep of the last known findings. Every component, today's and the next version's, with its pictures and its future folder: [Components](components/README.md).
+The modules above sit in the structure below, and the checks keep them there. Every component, today's and the next version's, with its pictures and its folder: [Components](components/README.md).
 
 ### The structure
 
@@ -196,13 +196,14 @@ app/src/
 │                 styles/ (tokens.css, global.css)
 ├── services/     the links to the outside world: xove-api-service/, livekit-service/, preferences-service/, media-devices-service/,
 │                 settings-queue-service/
-└── testing/      the fakes, the sample data and the setup tests share; only tests import it
+└── testing/      what the tests share: fakes/ (the API and LiveKit, each part a .fake.ts), factories/ (the sample data), setup.ts;
+                  only tests import it
 ```
 
 - **A unit is a folder:** a component, a store, a service or an adapter, with its code, its test beside it (`facecam.component.test.tsx`), its CSS module if it's a component, a component's stories (`facecam.component.stories.tsx`: its states in Storybook, [Testing](testing.md#storybook)), and `index.ts`: the only door other code goes through.
 - **Its parts sit inside it,** as files in folders by kind: `hooks/`, `utils/` (helpers that format, build or map, each with its test beside it), `constants/`, `types/`, `enums/`, only when it has some. A part used by several units of a feature sits in the feature's own part folders; one used by several features in `shared/`'s; a service's parts in the service. A working file holds no type (its props and inputs too), named constant or helper; a function that makes calls (the network, storage, LiveKit) belongs to a service.
 - **Nothing nested:** no unit inside a unit, no folder inside a part folder. A feature's `components/` holds component folders, or area folders (one level) holding only component folders, never both; each name keeps its area (`stage/stage-facecam/`), and areas of one feature may use each other's components. A path is at most 7 levels under `src/`. A feature is split by its data, not its size: about 25 components in one area is a signal to look again.
-- **Names:** kebab-case with the type as a suffix: `.component.tsx`, `.page.tsx`, `.hook.ts`, `.util.ts`, `.service.ts`, `.adapter.ts`, `.store.ts`, `.model.ts`, `.selectors.ts`, `.constants.ts`, `.enum.ts`, `.types.ts`; tests `.test.ts(x)`. The entry, `main.tsx`, and its test, `main.test.tsx`, keep their own names.
+- **Names:** kebab-case with the type as a suffix: `.component.tsx`, `.page.tsx`, `.hook.ts`, `.util.ts`, `.service.ts`, `.adapter.ts`, `.store.ts`, `.model.ts`, `.selectors.ts`, `.constants.ts`, `.enum.ts`, `.types.ts`; tests `.test.ts(x)`; a fake, which stands in for a service in the tests only, `.fake.ts` in `testing/fakes/`. The entry, `main.tsx`, its test, `main.test.tsx`, and the tests' setup, `testing/setup.ts` (the test runner's config names it), keep their own names.
 - **Short names:** `@routes/…`, `@features/…`, `@shared/…`, `@services/…` and `@testing/…` (in `tsconfig.app.json`'s `paths` and Vite's `resolve.alias`), never long relative paths into another folder.
 - **Imports go down:** `routes` → `features` → `shared` → `services`. No feature uses another; only tests use `testing/`. The lint rule enforces the direction, and the code check the rest (below), and no file imports another component's CSS.
 
@@ -214,7 +215,7 @@ app/src/
 - **Tokens only:** every colour, size, duration, easing, layer and window size comes from `shared/styles/tokens.css`, sizes in rem ([Design sheet](design.md#tokens)); no other CSS file writes a value, `global.css` included. Window and box sizes are `@custom-media` names (`@media (--narrow)`, `@container (--tiny)`): browsers don't read those yet, so PostCSS turns them into plain CSS when Vite builds (`postcss.config.js`; `scripts/container-media.ts` does it for `@container`, which `postcss-custom-media` leaves alone).
 - **Components never find each other through the page** (`querySelector`, labels, `data-*` used as hooks): a ref, a context, or CSS.
 - **No module-level mutable state.** Hooks return stable values; effects only sync with something outside React.
-- **Comments say why**, never history: no issue or spec numbers in the code.
+- **Comments say why**, never history: no issue, spec or decision numbers in the code, nor in the tooling's comments and test titles (`e2e/`, `scripts/`, `.storybook/`).
 - **Functions stay small and plain:**
   - at most 60 lines
   - complexity at most 10
@@ -231,30 +232,31 @@ Every rule a tool can measure runs in the commit checks as `3 · Code checks`, o
 
 **What's exempt, and why:**
 - **Tests and stories** (`*.test.ts(x)`, `*.stories.tsx`, `src/testing/`, its fakes and factories) are exempt from the size, number and escape-hatch limits. A `describe` block is long by nature, and expected values belong in the test. They keep their own rules ([Testing](testing.md#test-rules)).
-- **`scripts/`** (the checks themselves) and **`e2e/`** (the end-to-end tests and their harness) are exempt from the same limits. They're tooling, not part of the app.
+- **`scripts/`** (the checks themselves), **`e2e/`** (the end-to-end tests and their harness) and **`.storybook/`** are exempt from the same limits. They're tooling, not part of the app; only the history rule reads them.
 - **The copy check skips tests.** Tests repeat their arrange steps on purpose, so each one reads on its own.
 - **No exemption from the escape hatches' own back door.** A comment that switches a check off (`oxlint-disable`, `@ts-ignore`, `@ts-expect-error`, `@ts-nocheck`, `jscpd:ignore`, `prettier-ignore`) is a finding in app code. Fix the code instead.
 
 | Check | Catches | Run it |
 | --- | --- | --- |
-| TypeScript | The build: `strict`, `noImplicitOverride`, `noFallthroughCasesInSwitch`. `tsconfig.strict.json` adds `noUncheckedIndexedAccess` (a value read from a list may be missing) and `exactOptionalPropertyTypes` (an optional field set to `undefined` by mistake). | `npm run build`; the strict config through the guard |
+| TypeScript | The build: `strict`, `noImplicitOverride`, `noFallthroughCasesInSwitch`, `noUncheckedIndexedAccess` (a value read from a list may be missing) and `exactOptionalPropertyTypes` (an optional field set to `undefined` by mistake). | `npm run build`; also through the guard |
 | oxlint | Hooks' dependencies, accessibility, unused code, the import direction, the size and shape limits above, escape hatches, unexplained numbers, default exports. Two accessibility rules are set in `.oxlintrc.json`: `media-has-caption` is off, since every video and sound is a live stream with no words to caption (an empty captions track would only satisfy the rule; it comes back with real captions); and an `application` region may take the keyboard's focus (the facecam: ARIA expects an application to), as a `tabpanel` may | through the guard |
 | jscpd | A block of code copied into another place (8 lines or 60 tokens, CSS included) | `npm run check:copies` |
 | knip | Files nothing imports, exports nothing uses | `npm run check:unused` |
-| The code check | The structure's rules: folders and names, every part in its kind's folder and none inside working code, a test beside every file with logic, units in their own folders with their parts inside them, area folders one level deep, nothing nested past 7 levels, imports through a unit's `index.ts` and never up, across features or into `testing/`, any colour, size, duration, easing, layer or window size written in CSS outside `tokens.css` (zero isn't a value), no DOM queries between components, LiveKit only in `services/`, a component in a `components/` folder of the new structure with no stories, no history in comments, lines over 120 characters (Prettier doesn't wrap strings and comments), comments that switch a check off, and the tests' own rules | `npm run check:code -- <folder> --all` |
+| The unused styles | A CSS module's class no component reads (a module read by a computed key, or handed whole to a helper, counts as read), and a token or custom media in `tokens.css` that no stylesheet, other token or code reads | `npm run check:styles-unused` |
+| The code check | The structure's rules: folders and names, every part in its kind's folder and none inside working code, a test beside every file with logic, units in their own folders with their parts inside them, area folders one level deep, nothing nested past 7 levels, imports through a unit's `index.ts` and never up, across features or into `testing/`, any colour, size, duration, easing, layer or window size written in CSS outside `tokens.css` (zero isn't a value), no DOM queries between components, LiveKit only in `services/`, a component in a `components/` folder of the new structure with no stories, no history in comments (in `e2e/`, `scripts/` and `.storybook/` too, with the tests' titles), lines over 120 characters (Prettier doesn't wrap strings and comments), comments that switch a check off, and the tests' own rules | `npm run check:code -- <folder> --all` |
 | Storybook | Every story in headless Chromium: one that throws, or breaks an accessibility rule (contrast included), fails | `npm run test:storybook` |
 | Prettier | Layout | `npm run format` fixes, `npm run format:check` checks |
 | The size budget | The built JavaScript and styles, compressed, against `checks/size-budget.json` | `npm run build && npm run check:size` |
 
-**The guard and its list.** `npm run guard` runs TypeScript's strict config, oxlint, jscpd, knip and the code check, and compares what they find with `checks/known-findings.json`:
+**The guard and its list.** `npm run guard` runs TypeScript, oxlint, jscpd, knip, the code check and the unused styles check, and compares what they find with `checks/known-findings.json`:
 
-- **The list** is what today's code still breaks: counts per tool, rule and file. Each entry names the step that owns it (`checks/owners.json`).
+- **The list is empty:** today's code breaks no rule, so any finding fails. An entry, when there is one, is what the code still breaks: counts per tool, rule and file, each naming the issue that clears it.
 - **Recorded findings** show as warnings.
 - **The guard fails** on:
   - a finding the list doesn't allow, in an old file as much as a new one
   - a recorded finding that's gone: lower the list with `npm run guard -- --record` in the same change
   - a list that allows more than `main`'s
-- **The list only shrinks.** Each step of the reorganisation clears its own areas. The one exception is the change that adds a rule to the code check: that rule's findings in the old folders are recorded once, each owned by the step that moves its folder. The guard knows a rule is new because `main`'s code check doesn't define it. When it's empty, the two stricter TypeScript settings move into the main config.
+- **The list only shrinks.** The one exception is the change that adds a rule to the code check: that rule's findings outside the app's folders are recorded once, with no owner yet; the issue that clears them is written on each entry. The guard knows a rule is new because `main`'s code check doesn't define it.
 - **A moved file keeps its entries.** The guard compares with `main`'s list through git's renames, so moving a file isn't a new finding.
 - **A tool that goes quiet fails.** If a tool reports nothing where the list expects findings (a setting lost, its output changed), that's an error, not a clean-up, and it can't be recorded. When a change really clears a tool's last findings, check the tool by hand (run it alone: it finds nothing), then take its entries out of the list by hand and record.
 - **The tools are pinned** (oxlint, TypeScript, Prettier, knip, jscpd at exact versions). Dependabot proposes their upgrades in a PR of their own (the `checks` group). An upgrade that brings new findings fixes them in that PR, since the list can't grow.
@@ -289,10 +291,10 @@ app/                  the web app: everything its image is built from
   Dockerfile, Caddyfile, caddy/   the image: the Vite build served by Caddy, built from source
   config/             config.json, the settings the server fills in from its environment (`/config.json`)
   compose.yaml        runs the image (locally and in the checks)
-  scripts/            the checks (guard, check-code, check-styles, check-size), test-alone, brand-icons.mjs (the favicon from the mark's geometry)
+  scripts/            the checks (guard, check-code, check-unused-styles, check-styles, check-size), test-alone, brand-icons.mjs (the favicon from the mark's geometry)
   e2e/                the end-to-end tests, one per feature case at every size, and their harness (harness/: the app on its fakes; support/: open, observe, frames) ([Testing](testing.md#end-to-end-every-feature-at-every-size))
-  checks/             the guard's list of known findings, who owns them, the size budget
-  tsconfig.strict.json, .oxlintrc.json, .jscpd.json, knip.json, .prettierrc.json   the checks' settings
+  checks/             the guard's list of known findings (empty), the size budget
+  .oxlintrc.json, .jscpd.json, knip.json, .prettierrc.json   the checks' settings
 docs/                 these pages, and the design sheet's pictures
 .github/workflows/    the commit checks and the releases
 ```

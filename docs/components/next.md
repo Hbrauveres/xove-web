@@ -1,6 +1,6 @@
 # The next version, component by component
 
-The room's redesign: three columns (who's here, the stream, the room's chat), the people as cards with their own previews, a rail of faces when the column is folded, and a chat. These pictures come from the redesign's draft, a static page with no logic: they show the direction chosen, not finished behaviour. Each piece is built in the [new structure](../architecture.md#where-the-code-is-going) after the reorganisation, and its details are settled in a working prototype first.
+The room's redesign: three columns (who's here, the stream, the room's chat), the people as cards with their own previews, a rail of faces when the column is folded, and a chat. These pictures come from the redesign's draft, a static page with no logic: they show the direction chosen, not finished behaviour. Each piece is built in the [structure](../architecture.md#how-the-code-is-organised), and its details are settled in a working prototype first.
 
 Desktop only for now. Pictures: the draft at 1600 px wide.
 

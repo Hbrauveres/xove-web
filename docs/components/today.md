@@ -1,8 +1,8 @@
 # Today's app, component by component
 
-Every visual piece of the web app **as it is today** (desktop), with a picture, what it does, where its code lives now, where it goes in the [new structure](../architecture.md#where-the-code-is-going), and what happens to it. The app is being reorganised into that structure as it is, with no change of behaviour, before the [next version](next.md) is built; this page is the starting point and is kept current as pieces move.
+Every visual piece of the web app **as it is today** (desktop), with a picture, what it does, where its code lives in the [structure](../architecture.md#how-the-code-is-organised), and what happens to it when the [next version](next.md) is built. The app was reorganised into that structure as it was, with no change of behaviour; this page is kept current as pieces change.
 
-**What happens to it:** *Kept* moves into its folder and is rewritten to the [rules](../architecture.md#where-the-code-is-going), behaving as today. *Replaced* means the next version brings a new piece for the same job, after the reorganisation. *Merged* means several copies become one shared component. *Removed* goes with phone support, which is paused: the app is desktop only for now.
+**What happens to it:** *Done* and *Kept* sit in their folders, written to the [rules](../architecture.md#how-the-code-is-organised), behaving as before the reorganisation. *Replaced* means the next version brings a new piece for the same job, after the reorganisation. *Merged* means several copies become one shared component. *Removed* goes with phone support, which is paused: the app is desktop only for now.
 
 Pictures: the room at 1920 × 1080, with fake people and moving pictures.
 
