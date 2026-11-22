@@ -188,14 +188,14 @@ When someone shares their screen and their camera, the camera sits over the scre
 ### Empty stage
 
 <table><tr>
-<td><img src="img/today/room-empty-stage.webp" width="720" alt="Nobody is live: a TV on standby"><br><sub>Nobody is live: a TV on standby</sub></td>
+<td><img src="img/today/room-empty-stage.webp" width="720" alt="Nobody is live: the synthwave stage, Go live on the floor"><br><sub>Nobody is live: the synthwave stage, Go live on the floor</sub></td>
 </tr></table>
 
-When nobody shares: a TV on standby, with its static and glow, and the ways to start.
+When nobody shares: a red synthwave grid to a horizon, the eye of Xovê's mark as a dark silhouette on it, the viewfinder corners with the top right a flickering neon tube, and Go live (the room's own pill and menu) on the floor. Nothing lights the wall.
 
 | Today | Goes to | What happens |
 | --- | --- | --- |
-| `features/room/components/stage/stage-empty-stage/`, `stage-start-buttons/`, `stage-static-noise/`, `stage-static-glow/`, `stage-corner-glow/`; the bands in `features/room/utils/static-bands.util.ts`; the TV's turn-on kept by the view, no global | Here | Done (#190) |
+| `features/room/components/stage/stage-empty-stage/` (the corners, Go live, the pointer's shift in its `hooks/` and `utils/`), its scene `stage-empty-scene/` | Here | Done (#190); the TV (static, turn-on, wall lights) replaced by the scene (#262) |
 
 ### Now watching
 
@@ -347,7 +347,7 @@ The shared controls today, and the copies that become one component each.
 | Tooltip | `shared/components/tooltip/`: follows its control while shown; beside a list's option, only for a cut name (#249) | Here, on the floating layer | Done (#187) |
 | Avatar | `shared/components/face/` (was `ui/Avatar.tsx`, `PersonAvatar.tsx`): the room's colour and initial with its rings, the account's photo | Already there | Merged |
 | Round button | `shared/components/icon-button/`, `variant="round"`: one base (glass, a soft shadow, lighter when pointed at, a red keyboard ring, 45% when unavailable, red when on) in two sizes, L 48 for my own buttons and M 34 for every other; its other purposes the header's and close | Here | Done (#191): the player's, the stage's, the overlay's, the mini and the toggle variants are one |
-| Action pill | `shared/components/action-pill/`: a button with words, XS 26, S 30, M 34 or L 44, glass, red, soft or dark (white while on), an icon or the live dot first; Go live, the empty stage's ways to start, and Change and Test (they were a round button with words and the mic test's own pill) | Here | Done (#191, dark #193) |
+| Action pill | `shared/components/action-pill/`: a button with words, XS 26, S 30, M 34 or L 44, glass, red, soft or dark (white while on), an icon or the live dot first; Go live (over a stream and on the empty stage), and Change and Test (they were a round button with words and the mic test's own pill) | Here | Done (#191, dark #193) |
 | Live dot | `shared/components/live-dot/`: the red dot with its glow, S on a tab, M on a pill; beating on a wait ("Waiting for approval") | Here | Done (#193, its beat #194) |
 | Tabs | `shared/components/tabs/`: the sliding marker, the live dot, every pane as tall as the tallest, greyed in place when unusable; the settings' tabs | Here | Done (#193) |
 | Video frame | `features/room/components/stage/stage-video-frame/`: 16:9, black, 8 px corners; Also live's cards and the camera's preview | Here | Done (#193) |
@@ -355,7 +355,7 @@ The shared controls today, and the copies that become one component each.
 | Switch | `shared/components/switch/`: a setting's row, 30 px, its words and the switch; my menu and the Voice tab (the tab restyled it) | Already there | Merged; its row #193 |
 | Icons | `shared/components/icon/` and its drawings in `shared/constants/icons.constants.ts` (was `stage/icons.tsx`, `room/ActivityIcon.tsx` and inline drawings) | Already there | Merged |
 | LIVE badge | `shared/components/live-badge/`: beside who's on the stage, and over my preview | Already there | Merged |
-| Headline | `shared/components/headline/`: the big statement with its key words in the accent and in capitals (sign-in, request access, the phone notice, the empty stage) | Already there | Merged; request access and the phone notice on it #194 |
+| Headline | `shared/components/headline/`: the big statement with its key words in the accent and in capitals (sign-in, request access, the phone notice) | Already there | Merged; request access and the phone notice on it #194 |
 | Toast | `shared/components/toast/`, its state `shared/stores/toast-store/` | Here | Done (#188) |
 | Page shell | `shared/components/page-shell/`: home, request access, the waiting room, the loading line, and admin's wide frame with its bar above the main region | Here | Done (#188, wide #194) |
 | Person row | `shared/components/person-row/`: a face, the name, a quiet line, something at the end; request access's account, admin's requests and members, my menu, the people list (each drew its own) | Here | Done (#194) |
