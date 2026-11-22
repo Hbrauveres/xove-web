@@ -7,8 +7,8 @@ import { pointAt, pointAway } from "../support/pointer.ts";
 import { sharingMyScreen } from "./where.ts";
 
 test("F-text-blocks.1 a headline's key words are red capitals, written as a word", async ({ page }, info) => {
-  await openScene(page, "s=empty");
-  const heading = page.getByRole("heading", { level: 2, name: "Go live" });
+  await openScene(page, "page=home");
+  const heading = page.getByRole("heading", { name: /^Go live with/ });
   const live = heading.locator("em");
   await observe(page, info, { heading }, async () => {
     await pointAway(page);

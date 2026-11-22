@@ -1,3 +1,4 @@
+import { stageOf } from "../support/stage.ts";
 import { expect, test, type Page } from "@playwright/test";
 import { observe } from "../support/observe.ts";
 import { openScene } from "../support/open.ts";
@@ -108,12 +109,12 @@ test("F-stage-notice.4 when someone stops, the stage goes straight to its empty 
   await recordNotices(page);
   await observe(page, info, { view: stageParts(page).view }, async () => {
     await everyoneStops(page);
-    await page.getByRole("heading", { name: "Go live" }).waitFor();
+    await stageOf(page).getByRole("button", { name: "Go live" }).waitFor();
   });
   // On no frame between the stream and the empty stage did a notice show.
   expect.soft(await notices(page)).toEqual([]);
   await expect.soft(stageParts(page).view.locator("output")).toHaveCount(0);
-  await expect.soft(page.getByRole("heading", { name: "Go live" })).toBeVisible();
+  await expect.soft(stageOf(page).getByRole("button", { name: "Go live" })).toBeVisible();
 });
 
 test("F-stage-notice.5 a stream that starts plays without a notice once its video is there", async ({ page }, info) => {

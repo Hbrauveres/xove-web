@@ -102,7 +102,7 @@ test("F-stage.6 when everyone stops, the stage goes back to 16:9, as wide as its
   const stage = stageParts(page);
   await observe(page, info, { view: stage.view, box: stage.box }, async () => {
     await everyoneStops(page);
-    await page.getByRole("heading", { name: "Go live" }).waitFor();
+    await stageOf(page).getByRole("button", { name: "Go live" }).waitFor();
   });
   const box = await boxOf(stage.box);
   const view = await boxOf(stage.view);

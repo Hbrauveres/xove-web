@@ -5,7 +5,7 @@ import { openScene, wakeStage } from "../support/open.ts";
 import { boxOf, inside, windowBox } from "../support/geometry.ts";
 import { everyoneStops } from "../support/harness.ts";
 import { restOn } from "../support/pointer.ts";
-import { shownTip } from "../support/stage.ts";
+import { shownTip, stageOf } from "../support/stage.ts";
 import { TIP_REST_MS, untilStill } from "../support/timing.ts";
 import { shownControls, stageParts, TALL } from "./stage.ts";
 
@@ -153,10 +153,10 @@ test("F-fullscreen.7 when everyone stops in fullscreen, the empty stage shows th
   const exit = page.getByRole("button", { name: "Exit fullscreen" });
   await observe(page, info, { exit }, async () => {
     await everyoneStops(page);
-    await page.getByRole("heading", { name: "Go live" }).waitFor();
+    await stageOf(page).getByRole("button", { name: "Go live" }).waitFor();
   });
   expect.soft(await fullscreenIsStage(page)).toBe(true);
-  await expect.soft(page.getByRole("heading", { name: "Go live" })).toBeVisible();
+  await expect.soft(stageOf(page).getByRole("button", { name: "Go live" })).toBeVisible();
   await expect.soft(exit).toBeVisible();
   await exit.click();
   await fullscreenNow(page, false);
