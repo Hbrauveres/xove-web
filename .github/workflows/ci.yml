@@ -213,7 +213,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # TypeScript's strict config, the lint rules, copies, unused code and the code check, against
+      # TypeScript, the lint rules, copies, unused code, the code check and the unused styles, against
       # checks/known-findings.json (docs/architecture.md, "The checks").
       - name: Guard
         run: npm run guard
