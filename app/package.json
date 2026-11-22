@@ -17,6 +17,7 @@
     "check:code": "node scripts/check-code.ts",
     "check:copies": "jscpd",
     "check:unused": "knip --no-progress",
+    "check:styles-unused": "node scripts/check-unused-styles.ts",
     "guard": "node scripts/guard.ts",
     "check:size": "node scripts/check-size.ts",
     "storybook": "storybook dev -p 6006 --no-open",
