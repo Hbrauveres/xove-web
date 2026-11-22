@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { checkLayout } from "./check-layout.ts";
+import { checkLayout, importsIn } from "./check-layout.ts";
 
 /** The layout rules a set of files breaks, as "rule file" lines; each file's text is its imports. */
 const layout = (files: Record<string, string>) =>
@@ -279,5 +279,15 @@ describe("the layout", () => {
         }),
       ).toEqual([]);
     });
+  });
+});
+
+describe("finding the imports in a file", () => {
+  it("reads each statement's path, over several lines too, and skips an export with none", () => {
+    const text = "import { a } from \"./a\";\nexport const n = 1;\nexport {\n  b,\n} from '@shared/b';\n";
+    expect(importsIn(text).map(({ path, first }) => `${path} | ${first}`)).toEqual([
+      './a | import { a } from "./a"',
+      "@shared/b | export {",
+    ]);
   });
 });

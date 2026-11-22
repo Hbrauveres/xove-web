@@ -21,3 +21,5 @@ export const SIZES: readonly Size[] = [
 
 /** The tag that puts a test on the phones: what phones get. */
 export const PHONE_TAG = "@phone";
+/** The same tag, as the runner picks the phone's cases by it. */
+export const PHONE = /@phone/;

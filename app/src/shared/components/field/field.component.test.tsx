@@ -20,6 +20,6 @@ it("is a box named by its label, counting toward its limit as you type", async (
 
 it("has no counter without a limit, and holds its action", () => {
   render(<Field label="Note" value="" onChange={() => {}} action={<button>Send</button>} />);
-  expect(screen.queryByText(/\d+\/\d+/)).toBeNull();
+  expect(screen.queryByText(/(?<!\d)\d+\/\d+/)).toBeNull();
   expect(screen.getByRole("button", { name: "Send" })).toBeInTheDocument();
 });

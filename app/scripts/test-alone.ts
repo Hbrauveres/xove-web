@@ -25,8 +25,8 @@ export function patternFor(listedName: string) {
 /** A run proves something only if what it targeted ran and passed: a pattern that matched nothing
  * skips everything, and Vitest calls that a pass. One test, or at least one case of an `it.each`. */
 export function ranAsTargeted(output: string, cases: boolean) {
-  const summary = output.split(/\n\s*Tests\s+/)[1]?.split("\n")[0] ?? "";
-  const passed = Number(/(\d+) passed/.exec(summary)?.[1] ?? 0);
+  const summary = output.split(/\n[ \t]*Tests[ \t]+/)[1]?.split("\n")[0] ?? "";
+  const passed = Number(/(?<!\d)(\d+) passed/.exec(summary)?.[1] ?? 0);
   return !/failed/.test(summary) && (cases ? passed >= 1 : passed === 1);
 }
 

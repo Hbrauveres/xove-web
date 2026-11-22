@@ -140,7 +140,7 @@ export function glassFilterProblems(root: Root, file: string, tokens: Map<string
   });
   root.walkDecls("backdrop-filter", (d) => {
     const value = resolved(d.value, tokens);
-    const steps = value.match(/[a-z-]+\(/g) ?? [];
+    const steps = value.match(/(?<![a-z-])[a-z-]+\(/g) ?? [];
     if (steps.some((s) => s !== "blur(" && s !== "var("))
       problems.push(
         `${file}:${d.source?.start?.line}: ${d.prop}: ${value} — glass blurs only (blur()), its colour darkens it`,
