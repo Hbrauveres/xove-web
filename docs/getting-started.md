@@ -8,7 +8,7 @@ How to run the web app on your own machine. On Windows, do all of this inside WS
 | --- | --- | --- |
 | Git | any recent | |
 | Node.js | 22 (via [nvm](https://github.com/nvm-sh/nvm)) | The web app; Vite 8 needs Node 22 |
-| Docker | Docker Desktop with WSL integration, or Docker Engine on Linux | To build and run the image (optional) |
+| Docker | Docker Desktop with WSL integration, or Docker Engine on Linux | To build and run the image, and to run the commit checks' vulnerability scan (Trivy) and SAST (Semgrep) here (optional) |
 
 ## Clone
 
