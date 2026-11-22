@@ -9,11 +9,15 @@ import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { checkSync } from "recheck";
 
-/** How long recheck may think about one pattern; an ordinary one takes a couple of milliseconds. */
-const RECHECK_TIMEOUT_MS = 10_000;
+/**
+ * How recheck is asked: with no clock limit and a fixed seed for its random tries, so a pattern gets the same
+ * verdict on any machine, however busy (a clock limit made a slow CI runner answer "unknown"). recheck still
+ * bounds its own work, so it always answers.
+ */
+const RECHECK_OPTIONS = { timeout: null, randomSeed: 0 };
 /**
  * Where recheck's verdicts are kept between runs: asking it about every pattern each time takes about 15 s.
- * A pattern is asked again when it changes, or when recheck does (its version is in the key). Deleting the
+ * A pattern is asked again when it changes, or when recheck or how it's asked does (both are in the key). Deleting the
  * file asks about every pattern again; XOVE_RECHECK_CACHE names another file (the tests use their own).
  */
 const cacheFile = () =>
@@ -36,7 +40,7 @@ export type AstNode = {
 };
 /** What recheck answers about one pattern. */
 type Diagnosis = { status: string; complexity?: { type: string } };
-type Ask = (pattern: string, flags: string, options: { timeout: number }) => Diagnosis;
+type Ask = (pattern: string, flags: string, options: typeof RECHECK_OPTIONS) => Diagnosis;
 type Context = { report: (diagnostic: { node: AstNode; message: string }) => void };
 
 /** Fixed text: a plain string, or a template with nothing put into it. */
@@ -132,10 +136,10 @@ export function diagnose(
     cache = keptIn(file),
   }: { ask?: Ask; cache?: Record<string, Diagnosis>; file?: string } = {},
 ): Diagnosis {
-  const key = `${VERSION}\u0000${flags}\u0000${pattern}`;
+  const key = `${VERSION}\u0000${JSON.stringify(RECHECK_OPTIONS)}\u0000${flags}\u0000${pattern}`;
   const kept = cache[key];
   if (kept) return kept;
-  const { status, complexity } = ask(pattern, flags, { timeout: RECHECK_TIMEOUT_MS });
+  const { status, complexity } = ask(pattern, flags, RECHECK_OPTIONS);
   const fresh: Diagnosis = complexity ? { status, complexity: { type: complexity.type } } : { status };
   cache[key] = fresh;
   try {
