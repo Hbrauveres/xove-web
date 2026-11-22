@@ -1,5 +1,9 @@
-import { describe, expect, it } from "vitest";
-import plugin, { verdictOf } from "./lint-plugin.ts";
+import { describe, expect, it, vi } from "vitest";
+import { spawnSync } from "node:child_process";
+import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import plugin, { diagnose, verdictOf } from "./lint-plugin.ts";
 
 type Node = Record<string, unknown>;
 const str = (value: string): Node => ({ type: "Literal", value });
@@ -66,6 +70,53 @@ describe("the lint plugin", () => {
       expect(reports("slow-regexp", regex("^[a-z]+@[a-z]+\\.com$"))).toEqual([]);
       expect(reports("slow-regexp", call("NewExpression", str("^\\d{4}-\\d{2}$"), str("u")))).toEqual([]);
       expect(reports("slow-regexp", str("(a+)+"))).toEqual([]);
+    });
+  });
+
+  describe("recheck's verdicts, kept between runs", () => {
+    it("asks once per pattern, keeps the answer on disk, and reads it back", () => {
+      const file = join(mkdtempSync(join(tmpdir(), "recheck-")), "kept.json");
+      const ask = vi.fn(() => ({ status: "safe" }));
+      const cache = {};
+      expect(diagnose("^a$", "", { ask, cache, file })).toEqual({ status: "safe" });
+      expect(diagnose("^a$", "", { ask, cache, file })).toEqual({ status: "safe" });
+      expect(ask).toHaveBeenCalledTimes(1);
+      expect(Object.values(JSON.parse(readFileSync(file, "utf8")))).toEqual([{ status: "safe" }]);
+    });
+
+    it("asks again for the same pattern under other flags", () => {
+      const file = join(mkdtempSync(join(tmpdir(), "recheck-")), "kept.json");
+      const ask = vi.fn(() => ({ status: "vulnerable", complexity: { type: "polynomial" } }));
+      const cache = {};
+      diagnose("a*a*$", "", { ask, cache, file });
+      diagnose("a*a*$", "i", { ask, cache, file });
+      expect(ask).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe("in oxlint, with the app's own config", () => {
+    it("finds a planted pattern of each kind, so an oxlint upgrade that drops the plugins fails here", () => {
+      const file = join(mkdtempSync(join(tmpdir(), "planted-")), "planted.ts");
+      const planted = [
+        "export const fromData = (x: string) => new RegExp(x);",
+        "export const slow = /^(a+)+$/;",
+        "export const twice = /(a|a)x/;",
+        "export const range = /[A-z]/;",
+      ];
+      writeFileSync(file, planted.join("\n") + "\n");
+      const run = spawnSync("node_modules/.bin/oxlint", ["-c", ".oxlintrc.json", "-f", "json", file], {
+        encoding: "utf8",
+      });
+      const codes = (JSON.parse(run.stdout) as { diagnostics: { code?: string }[] }).diagnostics.map((d) => d.code);
+      expect(codes).toEqual(
+        expect.arrayContaining([
+          "xove(regexp-from-data)",
+          "xove(slow-regexp)",
+          "regexp(no-super-linear-backtracking)",
+          "regexp(no-dupe-disjunctions)",
+          "regexp(no-obscure-range)",
+        ]),
+      );
     });
   });
 });
