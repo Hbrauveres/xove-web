@@ -1,24 +1,16 @@
-import { useEffect } from "react";
 import { Headline } from "@shared/components/headline";
-import { CORNERS } from "../../../constants/corners.constants";
-import { useTurnOn } from "../../../hooks/use-turn-on.hook";
+import { CORNERS } from "./constants/corners.constants";
 import { StageStartButtons } from "../stage-start-buttons";
-import { StageStaticNoise } from "../stage-static-noise";
 import styles from "./stage-empty-stage.component.module.css";
 import type { StageEmptyStageProps } from "./types/stage-empty-stage.types";
 
 /**
- * Nobody is live: a TV on standby. Its viewfinder corners (the top right red, as in the logo), a
- * still "Standby" where there's room, and the ways to start, over the TV's static; who's here and
- * the seats are said once, below. The first time it stands by in a visit, the TV turns on.
+ * Nobody is live: the viewfinder corners (the top right red, as in the logo), a still "Standby"
+ * where there's room, and the ways to start; who's here and the seats are said once, below.
  */
-export function StageEmptyStage({ canShareScreen = true, onStart, turnOn, onStandby }: StageEmptyStageProps) {
-  const { turningOn, ended } = useTurnOn(turnOn);
-  useEffect(() => onStandby(), [onStandby]);
-
+export function StageEmptyStage({ canShareScreen = true, onStart }: StageEmptyStageProps) {
   return (
     <div className={styles.empty}>
-      <StageStaticNoise />
       {CORNERS.map((at) => (
         <span key={at} className={styles.corner} data-at={at} aria-hidden="true" />
       ))}
@@ -26,18 +18,6 @@ export function StageEmptyStage({ canShareScreen = true, onStart, turnOn, onStan
         <i className={styles.dot} aria-hidden="true" />
         Standby
       </span>
-      {turningOn && (
-        <span
-          className={styles.intro}
-          aria-hidden="true"
-          onAnimationEnd={(e) => e.target === e.currentTarget && ended()}
-        >
-          <i data-part="flare" />
-          <i data-part="band" />
-          <i data-part="line" />
-          <i data-part="dot" />
-        </span>
-      )}
       <div className={styles.focus}>
         <Headline level="section" className={styles.title}>
           Go <em>live</em>

@@ -24,23 +24,25 @@ function renderView(over: Partial<StageViewProps> = {}) {
 }
 
 describe("the stage's view", () => {
-  it("stands by with nobody live: the TV, its corners lit round the stage", () => {
-    const { container } = renderView();
-    expect(screen.getByRole("heading", { name: "Go live" })).toBeInTheDocument();
-    const corners = container.querySelectorAll("i[data-at]");
-    expect(corners).toHaveLength(4);
-    expect(corners[0]?.parentElement?.style.opacity).toBe("0.9");
+  it("with nobody live, shows the empty stage with nothing lit on the wall and no static, the light on or off", () => {
+    for (const on of [true, false]) {
+      const { container, unmount } = renderView({ ambilight: { on, brightness: 0.9 } });
+      expect(screen.getByRole("heading", { name: "Go live" })).toBeInTheDocument();
+      expect(container.querySelector("canvas")).toBeNull();
+      // Nothing outside the picture: the light's layers sit beside it.
+      expect(container.firstElementChild?.children).toHaveLength(1);
+      unmount();
+    }
   });
 
-  it("turns the TV on only the first time it stands by", () => {
+  it("never plays a TV's turn-on, the first time nobody's live or later", () => {
     const big = aSharer();
     const { container, rerender, props } = renderView();
-    // The stage's flash and the wall's, together.
-    const flashes = () => [container.querySelector('[class*="intro"]'), container.querySelector('[class*="flash"]')];
-    expect(flashes()).not.toContain(null);
+    const flashes = () => container.querySelectorAll('[class*="intro"], [class*="flash"]');
+    expect(flashes()).toHaveLength(0);
     rerender(<StageView {...props} big={big} main={big.screen ?? null} />);
     rerender(<StageView {...props} />);
-    expect(flashes()).toEqual([null, null]);
+    expect(flashes()).toHaveLength(0);
   });
 
   it("plays the big stream, with no standby glow", () => {

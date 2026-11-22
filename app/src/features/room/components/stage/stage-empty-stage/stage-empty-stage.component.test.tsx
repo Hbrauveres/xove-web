@@ -2,10 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { StageEmptyStage } from "./stage-empty-stage.component";
 import userEvent from "@testing-library/user-event";
-/** The empty stage, the TV already on. */
-const Empty = (props: { canShareScreen?: boolean; onStart?: () => void }) => (
-  <StageEmptyStage {...props} turnOn={false} onStandby={() => undefined} />
-);
+const Empty = (props: { canShareScreen?: boolean; onStart?: () => void }) => <StageEmptyStage {...props} />;
 
 describe("the empty stage, a TV on standby", () => {
   it("asks you to go live, with the screen first and the camera beside it", async () => {
@@ -65,16 +62,5 @@ describe("the empty stage, a TV on standby", () => {
   it("says nothing the row below says: no names, no seats, no 'nobody'", () => {
     const { container } = render(<Empty />);
     expect(container).not.toHaveTextContent(/here|seat|of 6|nobody/i);
-  });
-
-  it("says when it stands by, and turns the TV on only when asked, never for reduced motion", () => {
-    vi.spyOn(window, "matchMedia").mockImplementation((q: string) => ({ matches: false, media: q }) as MediaQueryList);
-    const onStandby = vi.fn();
-    const first = render(<StageEmptyStage turnOn onStandby={onStandby} />);
-    expect(onStandby).toHaveBeenCalledTimes(1);
-    expect(first.container.querySelector('[class*="intro"]')).not.toBeNull();
-    first.unmount();
-    const again = render(<StageEmptyStage turnOn={false} onStandby={onStandby} />);
-    expect(again.container.querySelector('[class*="intro"]')).toBeNull();
   });
 });
