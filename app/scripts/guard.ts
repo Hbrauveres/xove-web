@@ -6,7 +6,7 @@
 import { execFile } from "node:child_process";
 import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { promisify } from "node:util";
-import { checkCode, RULES } from "./check-code.ts";
+import { checkCode, checkTooling, RULES } from "./check-code.ts";
 
 const run = promisify(execFile);
 const KNOWN = "checks/known-findings.json";
@@ -182,7 +182,8 @@ async function collect(): Promise<Finding[]> {
   const copies = readFileSync(JSCPD_REPORT, "utf8");
   const unused = await npx(["knip", "--no-progress", "--reporter", "json"]);
   const code = checkCode("src").map((f) => ({ tool: "code", rule: f.rule, file: `src/${f.file}` }));
-  return [...fromTsc(tsc), ...fromOxlint(lint), ...fromJscpd(copies), ...fromKnip(unused), ...code];
+  const tooling = checkTooling(".").map((f) => ({ tool: "code", rule: f.rule, file: f.file }));
+  return [...fromTsc(tsc), ...fromOxlint(lint), ...fromJscpd(copies), ...fromKnip(unused), ...code, ...tooling];
 }
 
 /**

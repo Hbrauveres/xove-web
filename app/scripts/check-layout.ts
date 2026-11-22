@@ -1,4 +1,4 @@
-// The layout rules of ADR-0086 and ADR-0105 that need the whole app at once: who imports what, where units
+// The layout rules that need the whole app at once: who imports what, where units
 // and parts sit, how deep a path goes. The code check (check-code.ts) runs it over src/.
 import { dirname, join, normalize } from "node:path";
 
@@ -28,7 +28,7 @@ const UNIT_FILE = /\.(component|page|store|service|adapter)\.tsx?$/;
 const IMPORT = /^[ \t]*(?:import|export)\b[^;"']*?["']([^"']+)["']/gm;
 const EXTENSIONS = ["", ".ts", ".tsx", "/index.ts", "/index.tsx"];
 
-// Tests and a component's stories (ADR-0089): neither is part of the app, so neither counts as an importer.
+// Tests and a component's stories: neither is part of the app, so neither counts as an importer.
 const isTest = (f: string) => /\.(test\.tsx?|stories\.tsx)$/.test(f);
 const top = (f: string) => f.split("/")[0] ?? "";
 const isNew = (f: string) => top(f) in RANK;
@@ -123,7 +123,7 @@ const FEATURE_FOLDERS: Record<string, Set<string>> = {
 const partsOnly = (rest: string[]) => rest.length > 1 || (rest.length === 1 && !KINDS.has(rest[0] ?? ""));
 
 /**
- * Below a feature's components/ (ADR-0105): a component folder, or an area folder holding component folders
+ * Below a feature's components/: a component folder, or an area folder holding component folders
  * only. A feature's components/ holds one kind or the other, never both (`mixed`: the features that do).
  */
 function isNestedInComponents(dirs: string[], units: Set<string>, mixed: Set<string>): boolean {
@@ -134,7 +134,7 @@ function isNestedInComponents(dirs: string[], units: Set<string>, mixed: Set<str
   return mixed.has(dirs.slice(0, 3).join("/")) || partsOnly(dirs.slice(5));
 }
 
-/** A folder where ADR-0086 and ADR-0105 have none: inside a unit only part folders, inside a part folder only files. */
+/** A folder where the layout allows none: inside a unit only part folders, inside a part folder only files. */
 function isNested(dirs: string[], units: Set<string>, mixed: Set<string>): boolean {
   const [first, second] = dirs;
   if (first === "services" || first === "routes")

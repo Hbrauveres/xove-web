@@ -7,7 +7,7 @@ const layout = (files: Record<string, string>) =>
 
 const unit = (dir: string, file: string, text = "") => ({ [`${dir}/index.ts`]: "", [`${dir}/${file}`]: text });
 
-describe("the layout (ADR-0086, ADR-0105)", () => {
+describe("the layout", () => {
   it("finds nothing in a layout that follows the rules", () => {
     expect(
       layout({
@@ -198,7 +198,7 @@ describe("the layout (ADR-0086, ADR-0105)", () => {
     ).toEqual(["indexBypass pages/Home.tsx", "importTesting pages/Home.tsx"]);
   });
 
-  describe("areas in a feature's components (ADR-0105)", () => {
+  describe("areas in a feature's components", () => {
     it("finds nothing in areas of components, which may use each other and the feature's parts", () => {
       expect(
         layout({

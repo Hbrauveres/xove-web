@@ -133,6 +133,39 @@ const writesAValue = (line: string) => CSS_VALUE.some((re) => re.test(line)) || 
 const withoutComments = (css: string) => css.replace(/\/\*[\s\S]*?\*\//g, (c) => c.replace(/[^\n]/g, " "));
 const NAME =
   /^[a-z0-9]+(-[a-z0-9]+)*\.(component|page|hook|util|service|adapter|store|model|selectors|constants|enum|types|factory)(\.module)?\.(tsx?|css)$|^[a-z0-9]+(-[a-z0-9]+)*\.(component|page|hook|util|service|adapter|store|model|selectors)\.test\.tsx?$|^[a-z0-9]+(-[a-z0-9]+)*\.(component|page)\.stories\.tsx$|^(tokens|global)\.css$/;
+/** A spec, issue, decision or design round named by its number: history, which belongs in commits and docs. */
+const HISTORY = /\b[Ss]pecs? 0\d{3}|\bADR-\d{4}|#\d{2,4}\b|[Dd]esign decision \d+|\bround \d+/;
+/** A string literal: its quotes and what's between them. */
+const STRING = /(["'`])(?:\\.|(?!\1)[^\\])*\1/g;
+/** A test's or a group's title: `describe("…"`, `it.skip("…"`; never a method such as `.test(`. */
+const TITLE = /(?<![.\w])(?:describe|it|test)(?:\.\w+)?\(\s*((["'`])(?:\\.|(?!\2)[^\\])*\2)/g;
+
+/**
+ * History in the tooling (e2e/, scripts/, .storybook/), which the other rules leave alone: a number in a
+ * comment or in a test's title. A string that only holds a test's data isn't read, comment-like or not.
+ */
+export function historyInTooling(file: string, text: string): Finding[] {
+  return text.split("\n").flatMap((l, i) => {
+    const code = l.replace(STRING, '""');
+    const at = code.search(/\/\/|\/\*|^\s*\*/);
+    const strings = [...l.matchAll(STRING)].map((m) => [m.index, m.index + m[0].length]);
+    const inString = (at: number) => strings.some(([from = 0, to = 0]) => at > from && at < to);
+    const title = [...l.matchAll(TITLE)].find((m) => !inString(m.index))?.[1] ?? "";
+    const hit = (at >= 0 && HISTORY.test(code.slice(at))) || HISTORY.test(title);
+    return hit ? [{ rule: "history" as const, file, line: i + 1, text: l.trim().slice(0, 90) }] : [];
+  });
+}
+
+/** Every history finding in the tooling folders under `app` (paths relative to it). */
+export function checkTooling(app: string, folders = ["e2e", "scripts", ".storybook"]): Finding[] {
+  return folders
+    .map((f) => join(app, f))
+    .filter((f) => existsSync(f))
+    .flatMap(walk)
+    .filter((f) => /\.(tsx?|mjs|js)$/.test(f))
+    .flatMap((f) => historyInTooling(relative(app, f), readFileSync(f, "utf8")));
+}
+
 /**
  * The files named by what reads them rather than by their kind: the app's entry, its test and Vite's types; the
  * tests' setup, which the test runner's config names; and a fake, which stands in for a service in the tests only.
@@ -175,8 +208,7 @@ export function analyse(r: string, text: string, exists: (path: string) => boole
       add("domQuery", n, l);
     if (isCode(r) && /from\s+["']\.\.\/[^"']*\.module\.css["']/.test(l)) add("crossCss", n, l);
     if (isCode(r) && /from\s+["']livekit-client["']/.test(l) && top !== "services") add("livekit", n, l);
-    if (comment && /\b[Ss]pecs? 0\d{3}|\bADR-\d{4}|#\d{2,4}\b|[Dd]esign decision \d+|\bround \d+/.test(l))
-      add("history", n, l);
+    if (comment && HISTORY.test(l)) add("history", n, l);
     if (isCode(r) && /^export (let|var) /.test(l)) add("mutable", n, l);
     if (
       working &&
