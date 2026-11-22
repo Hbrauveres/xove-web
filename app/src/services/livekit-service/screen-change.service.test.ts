@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { FakeLocalScreenTrack, FakeMediaStreamTrack, lastRoom } from "../../testing/fakeLiveKit";
+import { FakeLocalScreenTrack, FakeMediaStreamTrack, lastRoom } from "../../testing/fakes/livekit.fake";
 import { connectedAdapter, shareScreen } from "../../testing/factories/video-room.factory";
 import type { LiveKitAdapter } from "./livekit.adapter";
 import { capOf } from "./utils/publish-options.util";

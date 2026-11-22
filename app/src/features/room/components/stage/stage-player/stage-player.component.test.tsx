@@ -10,7 +10,7 @@ import type { Sharer } from "../../../types/room-view.types";
 import { CHROME_IDLE_MS } from "./constants/stage-player.constants";
 import { StagePlayer } from "./stage-player.component";
 import { installFakeApi, someoneSharing } from "../../../../../testing/fakes/api.fake";
-import { lastRoom } from "../../../../../testing/fakeLiveKit";
+import { lastRoom } from "../../../../../testing/fakes/livekit.fake";
 import { member, connected, renderStage } from "../../../../../testing/factories/stage-steps.factory";
 /** The player as the stage holds it, its pick and hearing kept by the room's own hooks. */
 function Player({ sharers, controls = aStreamControls() }: { sharers: Sharer[]; controls?: StreamControls }) {

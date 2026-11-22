@@ -1,5 +1,5 @@
 import type { MediaTrack } from "@services/livekit-service";
-import { FakeTrack } from "../fakeLiveKit";
+import { FakeTrack } from "../fakes/livekit.fake";
 
 /** A fake video or audio track, new on every call: what one test attaches never shows in another. */
 export const aTrack = () => new FakeTrack() as unknown as MediaTrack;

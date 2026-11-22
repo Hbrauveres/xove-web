@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { MediaTrack } from "@services/livekit-service";
-import { FakeTrack } from "../../../../../testing/fakeLiveKit";
+import { FakeTrack } from "../../../../../testing/fakes/livekit.fake";
 import { HEAR_S, SECOND_MS } from "./constants/settings-mic-test.constants";
 import { SettingsMicTest } from "./settings-mic-test.component";
 

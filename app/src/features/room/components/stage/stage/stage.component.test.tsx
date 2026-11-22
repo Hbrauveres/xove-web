@@ -9,7 +9,7 @@ import { RoomSessionContext } from "../../../stores/room-session";
 import type { Sharer } from "../../../types/room-view.types";
 import { Stage } from "./stage.component";
 import { installFakeApi, someoneSharing } from "../../../../../testing/fakes/api.fake";
-import { lastRoom } from "../../../../../testing/fakeLiveKit";
+import { lastRoom } from "../../../../../testing/fakes/livekit.fake";
 import { onFakeClock } from "../../../../../testing/factories/clock.factory";
 import { REPORT_RETRY_MS, REPORT_STILL_MS } from "../../../stores/room-session/constants/watch-report.constants";
 import {

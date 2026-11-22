@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { lastRoom } from "../../testing/fakeLiveKit";
+import { lastRoom } from "../../testing/fakes/livekit.fake";
 import { connectedAdapter } from "../../testing/factories/video-room.factory";
 import { CAMERA_BLOCKED, CAMERA_MISSING } from "@services/media-devices-service";
 import type { Capture } from "./types/livekit.types";

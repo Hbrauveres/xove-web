@@ -4,7 +4,7 @@ import { floatingStore } from "@shared/stores/floating-store";
 import { toastStore } from "@shared/stores/toast-store";
 import { Tooltip } from "@shared/components/tooltip";
 import { TIP_REST_MS } from "@shared/constants/floating.constants";
-import { fakeCameras, fakeMics, rooms } from "./fakeLiveKit";
+import { fakeCameras, fakeMics, rooms } from "./fakes/livekit.fake";
 
 // Each pair: the first test leaves something behind, the second finds it gone. The pairs run in
 // their written order, so the reset is what the second one proves; in the other order both pass

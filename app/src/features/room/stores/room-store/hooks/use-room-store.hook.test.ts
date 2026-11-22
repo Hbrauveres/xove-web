@@ -2,7 +2,7 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { StrictMode } from "react";
 import { describe, expect, it } from "vitest";
 import { aUser, installFakeApi, MY_USER_ID } from "../../../../../testing/fakes/api.fake";
-import { lastRoom, rooms } from "../../../../../testing/fakeLiveKit";
+import { lastRoom, rooms } from "../../../../../testing/fakes/livekit.fake";
 import { useRoomStore } from "./use-room-store.hook";
 
 const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });

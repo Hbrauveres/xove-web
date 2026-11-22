@@ -4,7 +4,7 @@ import { afterEach, vi } from "vitest";
 import { appConfig } from "@services/app-config-service";
 import { floatingStore } from "@shared/stores/floating-store";
 import { toastStore } from "@shared/stores/toast-store";
-import { fakeCameras, fakeMics, lastRoom, resetFakeLiveKit } from "./fakeLiveKit";
+import { fakeCameras, fakeMics, lastRoom, resetFakeLiveKit } from "./fakes/livekit.fake";
 
 // findBy and waitFor give up after 1 s: a wait that needs longer is a delay that belongs on fake
 // timers, and a stuck test fails fast instead of hiding for seconds.
@@ -15,7 +15,7 @@ configure({ asyncUtilTimeout: 1000 });
 (globalThis as { jest?: unknown }).jest = { advanceTimersByTime: (ms: number) => vi.advanceTimersByTime(ms) };
 
 // No WebRTC in jsdom: every test gets the fake LiveKit instead of the real package.
-vi.mock("livekit-client", () => import("./fakeLiveKit"));
+vi.mock("livekit-client", () => import("./fakes/livekit.fake"));
 
 /** Everything one test can leave behind, put back after every test, so no test sees another's.
  * Spies, stubbed globals and variables are the runner's (vite.config.ts); a new piece of shared

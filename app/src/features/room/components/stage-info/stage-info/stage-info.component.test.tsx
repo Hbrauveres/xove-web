@@ -5,7 +5,7 @@ import { useHearing } from "../../../hooks/use-hearing.hook";
 import { useStage } from "../../../hooks/use-stage.hook";
 import { StageInfo } from "./stage-info.component";
 import { installFakeApi, someoneSharing } from "../../../../../testing/fakes/api.fake";
-import { lastRoom } from "../../../../../testing/fakeLiveKit";
+import { lastRoom } from "../../../../../testing/fakes/livekit.fake";
 import { onFakeClock } from "../../../../../testing/factories/clock.factory";
 import { REPORT_STILL_MS } from "../../../stores/room-session/constants/watch-report.constants";
 import { member, pass, connected, renderStage } from "../../../../../testing/factories/stage-steps.factory";

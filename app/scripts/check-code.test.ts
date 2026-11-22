@@ -167,8 +167,8 @@ describe("the code check", () => {
   });
 
   it("lets a test read a stylesheet (ADR-0102)", () => {
-    const test = (text: string) => rules("shared/utils/f.util.test.ts", text, ["shared/utils/f.util.ts"]);
-    expect(test('import css from "./f.module.css?raw";\n')).toEqual([]);
+    const rulesBesideCode = (text: string) => rules("shared/utils/f.util.test.ts", text, ["shared/utils/f.util.ts"]);
+    expect(rulesBesideCode('import css from "./f.module.css?raw";\n')).toEqual([]);
   });
 
   it("names a comment that switches a check off, and a line past Prettier's width, outside tests", () => {
@@ -182,9 +182,9 @@ describe("the code check", () => {
   });
 
   it("names a utils, constants, types or enum file outside its kind's folder", () => {
-    const test = (f: string) => [f.replace(/\.ts$/, ".test.ts")];
+    const pairOf = (f: string) => [f.replace(/\.ts$/, ".test.ts")];
     expect(
-      rules("services/livekit-service/capture.util.ts", "x\n", test("services/livekit-service/capture.util.ts")),
+      rules("services/livekit-service/capture.util.ts", "x\n", pairOf("services/livekit-service/capture.util.ts")),
     ).toEqual(["partPlace"]);
     expect(rules("features/room/state/room.types.ts")).toEqual(["partPlace"]);
     expect(rules("services/xove-api-service/api.constants.ts")).toEqual(["partPlace"]);

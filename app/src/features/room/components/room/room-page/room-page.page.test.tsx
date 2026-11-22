@@ -3,7 +3,7 @@ import { MemoryRouter } from "react-router";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AuthProvider } from "@shared/stores/auth-store";
 import { aUser, installFakeApi, someoneSharing } from "../../../../../testing/fakes/api.fake";
-import { lastRoom } from "../../../../../testing/fakeLiveKit";
+import { lastRoom } from "../../../../../testing/fakes/livekit.fake";
 import { clockUser, onFakeClock } from "../../../../../testing/factories/clock.factory";
 import { RoomPage } from "./room-page.page";
 const member = () => aUser({ name: "Henrique Brauveres", status: "MEMBER" });

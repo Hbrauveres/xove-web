@@ -5,7 +5,7 @@ import { fullRoom } from "@features/room/utils/full-room.util";
 import { NO_SCREEN, NO_SOUND } from "../../../constants/stream-words.constants";
 import { StagePlayerButtons } from "./stage-player-buttons.component";
 import { installFakeApi, someoneSharing } from "../../../../../testing/fakes/api.fake";
-import { lastRoom } from "../../../../../testing/fakeLiveKit";
+import { lastRoom } from "../../../../../testing/fakes/livekit.fake";
 import { clockUser, onFakeClock } from "../../../../../testing/factories/clock.factory";
 import { CHROME_IDLE_MS } from "@features/room/components/stage/stage-player/constants/stage-player.constants";
 import {

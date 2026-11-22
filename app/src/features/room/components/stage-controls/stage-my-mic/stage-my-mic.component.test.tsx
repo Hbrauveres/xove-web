@@ -2,7 +2,7 @@ import { render, screen, fireEvent, within, waitFor } from "@testing-library/rea
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { StageMyMic } from "./stage-my-mic.component";
 import { installFakeApi, MY_USER_ID } from "../../../../../testing/fakes/api.fake";
-import { lastRoom } from "../../../../../testing/fakeLiveKit";
+import { lastRoom } from "../../../../../testing/fakes/livekit.fake";
 import { onFakeClock } from "../../../../../testing/factories/clock.factory";
 import { member, stage, readyRoom, startSharing, openMenu } from "../../../../../testing/factories/stage-steps.factory";
 import userEvent from "@testing-library/user-event";

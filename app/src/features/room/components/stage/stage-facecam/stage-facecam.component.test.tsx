@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { useRef } from "react";
 import { describe, expect, it, vi } from "vitest";
 import type { MediaTrack } from "@services/livekit-service";
-import { FakeTrack } from "../../../../../testing/fakeLiveKit";
+import { FakeTrack } from "../../../../../testing/fakes/livekit.fake";
 import type { StageFacecamProps } from "./types/stage-facecam.types";
 import { aFold } from "@testing/factories/small-view-fold.factory";
 import { StageFacecam } from "./stage-facecam.component";
