@@ -1,6 +1,4 @@
-import type { StreamKind } from "@services/xove-api-service";
+import type { GoLiveActions } from "../../../../types/go-live.types";
 
-export interface StageEmptyStageProps {
-  canShareScreen?: boolean | undefined;
-  onStart?: ((kind: StreamKind) => void) | undefined;
-}
+/** Go live's actions; with nobody live, no stream place is taken. */
+export type StageEmptyStageProps = Omit<GoLiveActions, "full">;

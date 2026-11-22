@@ -18,6 +18,7 @@ function renderView(over: Partial<StageViewProps> = {}) {
     fold: aFold(),
     canShareScreen: true,
     onStart: vi.fn(),
+    onSettings: vi.fn(),
     ...over,
   };
   return { props, ...render(<StageView {...props} />) };
@@ -27,12 +28,19 @@ describe("the stage's view", () => {
   it("with nobody live, shows the empty stage with nothing lit on the wall and no static, the light on or off", () => {
     for (const on of [true, false]) {
       const { container, unmount } = renderView({ ambilight: { on, brightness: 0.9 } });
-      expect(screen.getByRole("heading", { name: "Go live" })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Go live" })).toBeInTheDocument();
       expect(container.querySelector("canvas")).toBeNull();
       // Nothing outside the picture: the light's layers sit beside it.
       expect(container.firstElementChild?.children).toHaveLength(1);
       unmount();
     }
+  });
+
+  it("hands Go live's settings to the player", async () => {
+    const { props } = renderView();
+    fireEvent.click(screen.getByRole("button", { name: "Go live" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Settings" }));
+    expect(props.onSettings).toHaveBeenCalledTimes(1);
   });
 
   it("never plays a TV's turn-on, the first time nobody's live or later", () => {
@@ -49,8 +57,8 @@ describe("the stage's view", () => {
     const big = aSharer();
     const { container } = renderView({ big, main: big.screen ?? null });
     expect(screen.getByLabelText("Bruno's shared screen")).toBeInTheDocument();
-    expect(screen.queryByRole("heading", { name: "Go live" })).not.toBeInTheDocument();
-    expect(container.querySelectorAll("i[data-at]")).toHaveLength(0);
+    expect(screen.queryByRole("button", { name: "Go live" })).not.toBeInTheDocument();
+    expect(container.querySelectorAll("[data-at]")).toHaveLength(0);
   });
 
   it("starts the small view at the top right", () => {

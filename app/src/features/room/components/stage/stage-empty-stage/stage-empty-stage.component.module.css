@@ -1,7 +1,5 @@
 /*
- * Nobody live: a TV on standby, like Xovê's mark. Thin viewfinder
- * corners, the top right red as in the logo; a still "Standby" where there's room; the way to start
- * in the middle, with room around it.
+ * Nobody live: thin viewfinder corners, the top right red as in the logo, and Go live on the floor.
  */
 .empty {
   /* Close to the edge, so the stage's own buttons sit inside the bottom-right corner. */
@@ -10,10 +8,6 @@
   --stroke: var(--border-0-5);
   position: absolute;
   inset: 0;
-  display: grid;
-  place-items: center;
-  padding: var(--space-5);
-  text-align: center;
   container-type: size;
   /* One flat dark: a gradient this dim has too few shades and shows them as bands. */
   background: var(--grey-15);
@@ -56,92 +50,57 @@
   border-width: 0 var(--stroke) var(--stroke) 0;
 }
 
-/* "Standby": small mono capitals inside the top-left corner, a still grey dot (red would mean
-   recording). */
-.readout {
+/* Go live, centred on the floor, below the horizon, so its menu opens into the space above it. */
+.start {
   position: absolute;
-  top: calc(var(--inset) + var(--space-4-5));
-  left: calc(var(--inset) + var(--space-4-5));
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  color: var(--text-muted);
-  font: 500 var(--text-11)/1 var(--font-mono);
-  letter-spacing: var(--tracking-8);
-  text-transform: uppercase;
-  white-space: nowrap;
+  left: 50%;
+  bottom: 9%;
+  translate: -50% 0;
 }
 
-.dot {
-  width: var(--size-1-5);
-  height: var(--size-1-5);
-  border-radius: 50%;
-  background: var(--text-shade-40);
+/* Its halo glued to its outside edge: a thin red line on its border and a glow going outward only
+   (a box-shadow is never drawn under its box, so nothing shows through the glass); it breathes,
+   opacity only. */
+.start::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-pill);
+  pointer-events: none;
+  box-shadow:
+    0 0 0 var(--border-0-25) var(--accent-45),
+    0 0 var(--blur-5-5) var(--border-0-75) var(--accent-22);
+  animation: breathe var(--duration-3000) var(--ease-standard) infinite;
 }
 
-/* The way to start: a heading, a line, the buttons; no frame of its own. */
-.focus {
-  position: relative;
-  display: grid;
-  justify-items: center;
-  gap: var(--space-3);
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
-.title {
-  margin: 0;
-  font: 800 var(--text-28)/1.1 var(--font-display);
-}
-
-.copy {
-  margin: 0;
-  max-width: var(--measure-38);
-  color: var(--text-muted);
-  font-size: var(--text-14);
-  line-height: 1.5;
-  text-wrap: balance;
-}
-
-/* A small stage (a narrow window): finer corners, no "Standby", a smaller heading, compact buttons. */
+/* A small stage (a narrow window): finer corners. */
 @container (--compact) {
   .empty {
     --arm: var(--size-4-5);
     --stroke: var(--border-0-375);
   }
-
-  .readout {
-    display: none;
-  }
-
-  .title {
-    font-size: var(--text-22);
-  }
 }
 
-/* A short stage: finer corners, no line, and the way to start
-   in its middle both ways, the stage's own buttons in their corner. */
+/* A short stage: finer corners still. */
 @container (--short) {
   .empty {
     --arm: var(--size-4);
-    /* In the stage's middle both ways; the stage's own buttons sit in its corner. */
-    padding: var(--space-3) var(--space-5);
-  }
-
-  .focus {
-    gap: 0;
-  }
-
-  .title {
-    font-size: var(--text-19);
-  }
-
-  .copy {
-    display: none;
   }
 }
 
-/* The narrowest stages (under 360 px): smaller still, so the stage's own buttons stay clear. */
-@container (--tiny) {
-  .title {
-    font-size: var(--text-17);
+@media (prefers-reduced-motion: reduce) {
+  .start::after {
+    animation: none;
   }
 }

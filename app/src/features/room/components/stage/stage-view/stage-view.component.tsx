@@ -34,7 +34,11 @@ export function StageView(props: StageViewProps) {
             onVideo={onVideo}
           />
         ) : (
-          <StageEmptyStage canShareScreen={props.canShareScreen} onStart={props.onStart} />
+          <StageEmptyStage
+            canShareScreen={props.canShareScreen}
+            onStart={props.onStart}
+            onSettings={props.onSettings}
+          />
         )}
       </div>
     </div>

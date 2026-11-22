@@ -58,6 +58,7 @@ export function StagePlayer(props: StagePlayerProps) {
         fold={fold}
         canShareScreen={controls.canShareScreen}
         onStart={startMine}
+        onSettings={settings.toggle}
       />
       {/* The controls sit on the picture, never on the dark around it. */}
       <StagePictureLayer

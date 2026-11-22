@@ -16,6 +16,7 @@ import {
   pickScreen,
   startSharing,
   openMenu,
+  startFrom,
 } from "../../../../../testing/factories/stage-steps.factory";
 import type { User } from "../../../../../testing/factories/stage-steps.factory";
 import userEvent from "@testing-library/user-event";
@@ -114,7 +115,7 @@ describe("room: sharing", () => {
     const user = await readyRoom();
     await startSharing(user);
 
-    await user.click(within(stage()).getByRole("button", { name: /stop sharing/i }));
+    await startFrom(user, /stop sharing/i);
 
     expect(await screen.findByLabelText("0 of 6 live, 6 seats open")).toBeInTheDocument();
     expect(lastRoom().localParticipant.isScreenShareEnabled).toBe(false);
@@ -202,7 +203,7 @@ describe("room: my camera", () => {
   });
   /** Clicks "Turn on your camera": it's sent at once. */
   async function turnOnCamera(user: User) {
-    await user.click(within(stage()).getByRole("button", { name: /turn on your camera/i }));
+    await startFrom(user, /turn on your camera/i);
     await waitFor(() =>
       expect(within(stage()).getByRole("button", { name: /turn off your camera/i })).toBeInTheDocument(),
     );
@@ -248,7 +249,7 @@ describe("room: my camera", () => {
     const local = lastRoom().localParticipant;
     const camera = local.lastCamera!;
 
-    await user.click(within(stage()).getByRole("button", { name: /turn off your camera/i }));
+    await startFrom(user, /turn off your camera/i);
 
     await waitFor(() => {
       expect(myLiveStream(server, "camera")).toBeUndefined();

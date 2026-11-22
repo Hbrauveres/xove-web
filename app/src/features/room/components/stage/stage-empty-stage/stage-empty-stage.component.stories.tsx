@@ -4,7 +4,7 @@ import { StageEmptyStage } from "./stage-empty-stage.component";
 const meta = {
   title: "Room/Stage empty stage",
   component: StageEmptyStage,
-  args: { canShareScreen: true, onStart: () => undefined },
+  args: { canShareScreen: true, onStart: () => undefined, onSettings: () => undefined },
   decorators: [
     (Story) => (
       <div

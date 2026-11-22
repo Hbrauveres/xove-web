@@ -277,8 +277,8 @@ describe("room: my screen and camera buttons on the player", () => {
         .filter((b) => !b.closest("[inert]"))
         .map((b) => b.getAttribute("aria-label") ?? b.textContent?.trim())
         .filter((name) => name !== "Fullscreen" && name !== "Exit fullscreen" && !name?.startsWith("Watch "));
-    // Nobody live: the two ways to start on the stage, the settings in the corner.
-    expect(row()).toEqual(["Share your screen", "Turn on your camera", "Settings"]);
+    // Nobody live: Go live on the stage, the settings in the corner.
+    expect(row()).toEqual(["Go live", "Settings"]);
 
     // Watching someone, not live: what I hear at the left, Go live at the right, nothing of mine in the middle.
     act(() => {

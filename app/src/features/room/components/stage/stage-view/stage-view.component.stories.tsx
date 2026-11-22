@@ -28,6 +28,7 @@ const meta = {
     fold: { folded: false, hide: noop, show: noop, setBox: noop, setHide: noop, setCorner: noop },
     canShareScreen: true,
     onStart: noop,
+    onSettings: noop,
   },
   decorators: [
     (Story) => (

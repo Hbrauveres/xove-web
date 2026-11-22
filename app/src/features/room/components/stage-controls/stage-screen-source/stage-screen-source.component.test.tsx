@@ -4,7 +4,14 @@ import { StageScreenSource } from "./stage-screen-source.component";
 import { onFakeClock } from "../../../../../testing/factories/clock.factory";
 import { installFakeApi, myLiveStream } from "../../../../../testing/fakes/api.fake";
 import { lastRoom } from "../../../../../testing/fakes/livekit.fake";
-import { member, stage, readyRoom, startSharing, openMenu } from "../../../../../testing/factories/stage-steps.factory";
+import {
+  member,
+  stage,
+  readyRoom,
+  startSharing,
+  openMenu,
+  startFrom,
+} from "../../../../../testing/factories/stage-steps.factory";
 it("says what my screen share shows, or just my screen while it's unknown", () => {
   const { rerender } = render(<StageScreenSource surface="monitor" />);
   expect(screen.getByText("Your whole screen")).toBeInTheDocument();
@@ -73,7 +80,7 @@ describe("room: change window and pick a camera", () => {
   it("switches my camera from the settings without stopping it", async () => {
     const server = installFakeApi({ me: member() });
     const user = await readyRoom();
-    await user.click(within(stage()).getByRole("button", { name: /turn on your camera/i }));
+    await startFrom(user, /turn on your camera/i);
     await waitFor(() => expect(myLiveStream(server, "camera")).toBeDefined());
     await within(stage()).findByRole("button", { name: /turn off your camera/i });
     const camera = lastRoom().localParticipant.lastCamera!;

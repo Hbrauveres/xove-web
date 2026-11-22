@@ -247,7 +247,10 @@ async function readyRoom() {
 type User = ReturnType<typeof clockUser>;
 /** Clicks "Share your screen": the browser's picker, and the pick is sent at once. */
 async function pickScreen(user: User, button: RegExp = /share your screen/i) {
-  await user.click(within(stage()).getByRole("button", { name: button }));
+  const direct = within(stage()).queryByRole("button", { name: button });
+  if (direct) return user.click(direct);
+  await user.click(within(stage()).getByRole("button", { name: "Go live" }));
+  await user.click(await screen.findByRole("menuitem", { name: button }));
 }
 
 describe("room: watching", () => {
@@ -310,7 +313,7 @@ describe("room: starting from fullscreen", () => {
     const frame = enterFullscreen();
     lastRoom().localParticipant.nextPicker = "no-video";
 
-    await user.click(within(stage()).getByRole("button", { name: /share your screen/i }));
+    await pickScreen(user);
 
     expect(frame).toContainElement(await screen.findByRole("alert"));
   });
