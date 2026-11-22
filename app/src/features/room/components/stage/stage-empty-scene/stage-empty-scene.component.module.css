@@ -1,0 +1,133 @@
+/*
+ * The empty stage's scene, sized by the stage (`.empty` is the container). The horizon sits at 68 %
+ * of the height; above it the sky and the eye, below it the floor.
+ */
+.scene {
+  --horizon: 68%;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* The pointer shifts it a few px (set from the hook); the transition eases it. */
+  transition: transform var(--duration-900) var(--ease-out);
+}
+
+/* The stage's own dark above the horizon, a touch deeper at the top. */
+.sky {
+  position: absolute;
+  inset: 0 0 calc(100% - var(--horizon)) 0;
+  background: linear-gradient(180deg, var(--grey-8) 0%, var(--grey-12) 70%, transparent 100%);
+}
+
+/* A soft red haze where the grid meets the horizon. */
+.haze {
+  position: absolute;
+  left: 15%;
+  right: 15%;
+  top: 58%;
+  height: 20%;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, var(--accent-12), transparent 70%);
+}
+
+/* The eye of Xovê's mark, very large, cut exactly in half by the horizon: one near-black silhouette,
+   hidden at the line and appearing little by little upward. */
+.eye {
+  position: absolute;
+  left: 50%;
+  top: var(--horizon);
+  height: var(--cqw-62-5);
+  translate: -50% -50%;
+  overflow: visible;
+  clip-path: inset(0 0 50% 0);
+  mask-image: linear-gradient(
+    0deg,
+    transparent 0%,
+    transparent 50%,
+    var(--black-08) 56%,
+    var(--black-30) 66%,
+    var(--black-65) 80%,
+    var(--black) 95%
+  );
+}
+
+.ring {
+  fill: none;
+  stroke: var(--grey-15-flat);
+}
+
+.dot {
+  fill: var(--grey-15-flat);
+}
+
+/* The synthwave floor: a red grid laid in perspective below the horizon. It fades into the horizon,
+   so its far lines never crowd into a bright band. */
+.floor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--horizon);
+  bottom: 0;
+  overflow: hidden;
+  perspective: var(--cqw-52-5);
+  perspective-origin: 50% 0;
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--black-35) 18%,
+    var(--black-80) 55%,
+    var(--black) 100%
+  );
+}
+
+.plane {
+  position: absolute;
+  left: -150%;
+  right: -150%;
+  top: 0;
+  height: 400%;
+  overflow: hidden;
+  transform-origin: 50% 0;
+  transform: rotateX(76deg);
+}
+
+/* 1 px lines, one cell every 3.2 s toward us, then it starts again: the layer moves, nothing is
+   redrawn. */
+.grid {
+  position: absolute;
+  inset: calc(-1 * var(--cqw-3-25)) 0 0 0;
+  background-image:
+    linear-gradient(90deg, var(--accent-40) 0 var(--border-0-25), transparent var(--border-0-25)),
+    linear-gradient(180deg, var(--accent-40) 0 var(--border-0-25), transparent var(--border-0-25));
+  background-size: var(--cqw-3-25) var(--cqw-3-25);
+  background-position: center top;
+  animation: run var(--duration-3200) linear infinite;
+}
+
+@keyframes run {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(var(--cqw-3-25));
+  }
+}
+
+/* The horizon: a thin red line, fading at both ends. */
+.horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--horizon);
+  height: var(--border-0-25);
+  background: linear-gradient(90deg, transparent, var(--accent-55) 30%, var(--accent-55) 70%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene {
+    transition: none;
+  }
+
+  .grid {
+    animation: none;
+  }
+}

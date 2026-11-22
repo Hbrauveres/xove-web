@@ -52,6 +52,12 @@ describe("the empty stage", () => {
     expect(container).not.toHaveTextContent(/here|seat|of 6|nobody/i);
   });
 
+  it("sets the scene behind it: the eye on the horizon and the grid", () => {
+    const { container } = render(<StageEmptyStage {...props()} />);
+    expect(container.querySelector('[data-part="eye"]')).not.toBeNull();
+    expect(container.querySelector('[data-part="grid"]')).not.toBeNull();
+  });
+
   it("has four viewfinder corners, the top right one the neon", () => {
     const { container } = render(<StageEmptyStage {...props()} />);
     const corners = [...container.querySelectorAll("[data-at]")];

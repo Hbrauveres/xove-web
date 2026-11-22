@@ -1,5 +1,6 @@
 /*
- * Nobody live: thin viewfinder corners, the top right red as in the logo, and Go live on the floor.
+ * Nobody live: the scene (sky, the eye, the horizon, the grid), thin viewfinder corners, the top right
+ * a red neon tube, and Go live on the floor.
  */
 .empty {
   /* Close to the edge, so the stage's own buttons sit inside the bottom-right corner. */
@@ -9,8 +10,8 @@
   position: absolute;
   inset: 0;
   container-type: size;
-  /* One flat dark: a gradient this dim has too few shades and shows them as bands. */
-  background: var(--grey-15);
+  overflow: hidden;
+  background: var(--grey-11);
 }
 
 /* The viewfinder's corners: two thin arms each. */
@@ -18,10 +19,8 @@
   position: absolute;
   width: var(--arm);
   height: var(--arm);
-  border: 0 solid var(--text-shade-32);
+  border: 0 solid var(--grey-90);
   pointer-events: none;
-  /* Lit, as a camera's display: each corner glows softly in its own colour. */
-  filter: drop-shadow(0 0 var(--blur-0-75) var(--text-shade-35)) drop-shadow(0 0 var(--blur-2-5) var(--text-shade-18));
 }
 
 .corner[data-at="tl"] {
@@ -34,8 +33,105 @@
   top: var(--inset);
   right: var(--inset);
   border-width: var(--stroke) var(--stroke) 0 0;
-  border-color: var(--accent);
-  filter: drop-shadow(0 0 var(--blur-0-75) var(--accent-70)) drop-shadow(0 0 var(--blur-3) var(--accent-40));
+}
+
+/*
+ * The neon: the top right corner's red tube and its glow, over the grey corner, fading as one. Off, the
+ * grey corner shows beneath, like the other three. A tube on its way out: lit, then a quick burst of
+ * blinks and straight back, never a slow fade or a breath. One 11 s rhythm, three kinds of burst (a
+ * double blink, a single drop, a long stutter); 1 % is 110 ms. Opacity only.
+ */
+.corner[data-neon]::before,
+.corner[data-neon]::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--stroke)) calc(-1 * var(--stroke)) auto auto;
+  width: calc(100% + var(--stroke));
+  height: calc(100% + var(--stroke));
+  border: var(--stroke) solid var(--accent);
+  border-left: 0;
+  border-bottom: 0;
+  animation: tube var(--duration-11000) var(--ease-standard) infinite;
+}
+
+.corner[data-neon]::before {
+  filter: drop-shadow(0 0 var(--blur-0-5) var(--accent-95));
+}
+
+/* The glow: the same two strips, wider and blurred, hugging the corner where they meet. */
+.corner[data-neon]::after {
+  inset: calc(-1 * var(--stroke) - var(--border-0-25)) calc(-1 * var(--stroke) - var(--border-0-25)) auto auto;
+  border-width: var(--border-1);
+  border-color: var(--accent-70);
+  filter: blur(var(--blur-1));
+}
+
+@keyframes tube {
+  0%,
+  30% {
+    opacity: 1;
+  }
+
+  30.4% {
+    opacity: 0.05;
+  }
+
+  30.9% {
+    opacity: 1;
+  }
+
+  31.3% {
+    opacity: 0.1;
+  }
+
+  31.9%,
+  61% {
+    opacity: 1;
+  }
+
+  61.4%,
+  62.6% {
+    opacity: 0;
+  }
+
+  63%,
+  84% {
+    opacity: 1;
+  }
+
+  84.3% {
+    opacity: 0.1;
+  }
+
+  84.7% {
+    opacity: 0.9;
+  }
+
+  85% {
+    opacity: 0.05;
+  }
+
+  85.3% {
+    opacity: 0.8;
+  }
+
+  85.6%,
+  86.9% {
+    opacity: 0;
+  }
+
+  87.2% {
+    opacity: 0.6;
+  }
+
+  87.5% {
+    opacity: 0.1;
+  }
+
+  87.9%,
+  100% {
+    opacity: 1;
+  }
 }
 
 .corner[data-at="bl"] {
@@ -100,7 +196,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .start::after {
+  .start::after,
+  .corner[data-neon]::before,
+  .corner[data-neon]::after {
     animation: none;
   }
 }
