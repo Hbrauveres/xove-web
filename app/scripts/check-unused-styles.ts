@@ -29,16 +29,23 @@ function classesOf(css: string) {
 }
 
 /**
+ * A name in the code and how it's used: `.name` or `["name"]` read one class; anything else (a computed
+ * key, the name handed on whole) reads them all.
+ */
+const USE = /(?<![.\w$])([A-Za-z_$][\w$]*)(?:\s*\.\s*([\w$]+)|\s*\[\s*["'`]([^"'`]+)["'`]\s*\])?/g;
+/**
  * What one importer reads of a module: the names it reads, or "all" when it reads by a computed key or
  * hands the module on whole (to a helper that picks the classes).
  */
 function readsOf(importer: string, local: string): Set<string> | "all" {
   const code = importer.replace(/^import\s.*$/gm, "");
-  if (new RegExp(`\\b${local}\\[(?!\\s*["'\`])`).test(code)) return "all";
-  if (new RegExp(`(?<![.\\w$])${local}\\b(?!\\s*[.[])`).test(code)) return "all";
   const names = new Set<string>();
-  for (const m of code.matchAll(new RegExp(`\\b${local}(?:\\.([\\w$]+)|\\[\\s*["'\`]([^"'\`]+)["'\`]\\s*\\])`, "g")))
-    names.add(m[1] ?? m[2] ?? "");
+  for (const m of code.matchAll(USE)) {
+    if (m[1] !== local) continue;
+    const name = m[2] ?? m[3];
+    if (name === undefined) return "all";
+    names.add(name);
+  }
   return names;
 }
 
@@ -76,8 +83,9 @@ function unusedTokens(files: Map<string, string>): StyleFinding[] {
     ...[...files].filter(([f]) => f !== TOKENS).map(([, text]) => text),
     clean.replace(/(--[\w-]+)\s*:/g, ":").replace(/@custom-media\s+--[\w-]+/g, ""),
   ].join("\n");
+  const read = new Set(readers.match(/--[\w-]+/g));
   return defined
-    .filter(({ name }) => !new RegExp(`${name}(?![\\w-])`).test(readers))
+    .filter(({ name }) => !read.has(name))
     .map(({ name, line }) => ({ rule: "unusedToken" as const, file: TOKENS, line, name }));
 }
 
