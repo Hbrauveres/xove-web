@@ -117,7 +117,7 @@ const COLOUR_NAMES = new Set(
     "oldlace olive olivedrab orange orangered orchid palegoldenrod palegreen paleturquoise palevioletred papayawhip",
     "peachpuff peru pink plum powderblue purple rebeccapurple red rosybrown royalblue saddlebrown salmon sandybrown",
     "seagreen seashell sienna silver skyblue slateblue slategray slategrey snow springgreen steelblue tan teal",
-    "thistle tomato turquoise violet wheat white whitesmoke yellow yellowgreen i",
+    "thistle tomato turquoise violet wheat white whitesmoke yellow yellowgreen",
   ]
     .join(" ")
     .split(" "),

@@ -47,6 +47,18 @@ describe("the code check", () => {
     expect(rules("shared/utils/long.util.ts", "x\n".repeat(301), ["shared/utils/long.util.test.ts"])).toContain("size");
   });
 
+  it("names a CSS value written with any unit, and a colour by its name, never a word that isn't one", () => {
+    const css = (line: string) => rules("shared/components/a/a.component.module.css", `.a { ${line} }\n`);
+    for (const unit of ["px", "rem", "em", "ch", "vw", "vh", "dvh", "svw", "cqw", "cqmin", "ms", "s"])
+      expect(css(`width: 3${unit};`)).toContain("literal");
+    expect(css("width: .5rem;")).toContain("literal");
+    expect(css("margin: 0px;")).not.toContain("literal");
+    for (const colour of ["red", "rebeccapurple", "yellowgreen"]) expect(css(`color: ${colour};`)).toContain("literal");
+    expect(css('content: "i";')).not.toContain("literal");
+    expect(css("font-family: i, serif;")).not.toContain("literal");
+    expect(css("color: var(--red-50);")).not.toContain("literal");
+  });
+
   it("names history in a test's title in the app, once per line", () => {
     const titled = rules("shared/utils/g.util.test.ts", 'describe("the dropdown (spec 0104)", () => {});\n', [
       "shared/utils/g.util.ts",
@@ -277,6 +289,8 @@ describe("the code check", () => {
 
     it("names a number in a comment or a test's title", () => {
       expect(lines("// the time is named once (ADR-0102)\n")).toEqual([1]);
+      expect(lines("const a = 1; // it's from spec 0123\n")).toEqual([1]);
+      expect(lines("const b = 'x'; // don't: ADR-0042\n")).toEqual([1]);
       expect(lines("const a = 1; /* as in spec 0123 */\n")).toEqual([1]);
       expect(lines('it("keeps the layout (ADR-0086)", () => {});\n')).toEqual([1]);
       expect(lines('describe("the queue (#192)", () => {});\n')).toEqual([1]);

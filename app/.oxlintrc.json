@@ -34,6 +34,7 @@
     "regexp/no-super-linear-move": "error",
     "regexp/no-useless-assertions": "error",
     "regexp/no-useless-backreference": "error",
+    "regexp/no-useless-flag": "error",
     "regexp/no-useless-dollar-replacements": "error",
     "regexp/no-zero-quantifier": "error",
     "regexp/optimal-lookaround-quantifier": "error",

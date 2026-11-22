@@ -12,10 +12,12 @@ import { checkSync } from "recheck";
 /** How long recheck may think about one pattern; an ordinary one takes a couple of milliseconds. */
 const RECHECK_TIMEOUT_MS = 10_000;
 /**
- * recheck's verdicts, kept between runs: asking it about every pattern each time takes about 15 s. A
- * pattern is asked again when it changes, or when recheck does (its version is in the key).
+ * Where recheck's verdicts are kept between runs: asking it about every pattern each time takes about 15 s.
+ * A pattern is asked again when it changes, or when recheck does (its version is in the key). Deleting the
+ * file asks about every pattern again; XOVE_RECHECK_CACHE names another file (the tests use their own).
  */
-const CACHE_FILE = join(process.cwd(), "node_modules", ".cache", "xove-recheck.json");
+const cacheFile = () =>
+  process.env["XOVE_RECHECK_CACHE"] ?? join(process.cwd(), "node_modules", ".cache", "xove-recheck.json");
 
 /** The few parts of oxlint's syntax tree the rules read. */
 type AstNode = {
@@ -23,6 +25,10 @@ type AstNode = {
   name?: string;
   value?: unknown;
   callee?: AstNode;
+  object?: AstNode;
+  id?: AstNode;
+  init?: AstNode;
+  property?: AstNode;
   arguments?: AstNode[];
   expressions?: AstNode[];
   quasis?: { value: { cooked?: string } }[];
@@ -38,16 +44,45 @@ const isFixedText = (node: AstNode | undefined) =>
   (node?.type === "Literal" && typeof node.value === "string") ||
   (node?.type === "TemplateLiteral" && node.expressions?.length === 0);
 
-const isRegExpCall = (node: AstNode) => node.callee?.type === "Identifier" && node.callee.name === "RegExp";
+/** `RegExp(…)` or `new RegExp(…)`, also through the global object (`window.RegExp`, `globalThis.RegExp`). */
+const isRegExpCall = (node: AstNode) =>
+  (node.callee?.type === "Identifier" && node.callee.name === "RegExp") ||
+  (node.callee?.type === "MemberExpression" && node.callee.property?.name === "RegExp");
+
+/** A string's `match`, `matchAll` or `search`: given a string, JavaScript makes it a RegExp. */
+const isStringSearch = (node: AstNode) =>
+  node.type === "CallExpression" &&
+  node.callee?.type === "MemberExpression" &&
+  ["match", "matchAll", "search"].includes(node.callee.property?.name ?? "");
+
+const isRegexLiteral = (node: AstNode | undefined) => node?.type === "Literal" && node.regex !== undefined;
 
 const regexpFromData = {
   meta: { type: "problem", docs: { description: "a RegExp whose pattern isn't fixed text" } },
   create(context: Context) {
+    /** Names the file binds to a regex literal: searching with one is searching with a fixed pattern. */
+    const regexNames = new Set<string>();
+    /** Searches with a name, decided at the end of the file, once every binding is known. */
+    const named: { node: AstNode; name: string }[] = [];
+    const report = (node: AstNode) =>
+      context.report({ node, message: "A RegExp built from data: write the pattern as fixed text." });
     const check = (node: AstNode) => {
-      if (isRegExpCall(node) && node.arguments?.length && !isFixedText(node.arguments[0]))
-        context.report({ node, message: "A RegExp built from data: write the pattern as fixed text." });
+      const [pattern] = node.arguments ?? [];
+      if (!pattern || isFixedText(pattern) || isRegexLiteral(pattern)) return;
+      if (isRegExpCall(node)) report(node);
+      else if (isStringSearch(node) && pattern.type === "Identifier") named.push({ node, name: pattern.name ?? "" });
+      else if (isStringSearch(node)) report(node);
     };
-    return { NewExpression: check, CallExpression: check };
+    return {
+      NewExpression: check,
+      CallExpression: check,
+      VariableDeclarator: (node: AstNode) => {
+        if (node.id?.type === "Identifier" && isRegexLiteral(node.init)) regexNames.add(node.id.name ?? "");
+      },
+      "Program:exit": () => {
+        for (const { node, name } of named) if (!regexNames.has(name)) report(node);
+      },
+    };
   },
 };
 
@@ -73,14 +108,19 @@ function recheckVersion() {
   }
 }
 
-/** The kept verdicts; unreadable or missing, an empty set to fill. */
-function readCache(file = CACHE_FILE): Record<string, Diagnosis> {
+/** The kept verdicts; unreadable, missing or not a set of verdicts, an empty set to fill. */
+function readCache(file: string): Record<string, Diagnosis> {
   try {
-    return JSON.parse(readFileSync(file, "utf8"));
+    const read: unknown = JSON.parse(readFileSync(file, "utf8"));
+    return typeof read === "object" && read !== null && !Array.isArray(read) ? { ...read } : {};
   } catch {
     return {};
   }
 }
+
+/** Each cache file's verdicts, read once per process. */
+const opened = new Map<string, Record<string, Diagnosis>>();
+const keptIn = (file: string) => opened.get(file) ?? opened.set(file, readCache(file)).get(file) ?? {};
 
 /** recheck's verdict on a pattern: kept from an earlier run, or asked now and kept. */
 export function diagnose(
@@ -88,8 +128,8 @@ export function diagnose(
   flags: string,
   {
     ask = checkSync,
-    cache = KEPT,
-    file = CACHE_FILE,
+    file = cacheFile(),
+    cache = keptIn(file),
   }: { ask?: Ask; cache?: Record<string, Diagnosis>; file?: string } = {},
 ): Diagnosis {
   const key = `${VERSION}\u0000${flags}\u0000${pattern}`;
@@ -109,7 +149,6 @@ export function diagnose(
   return fresh;
 }
 const VERSION = recheckVersion();
-const KEPT = readCache();
 
 const slowRegexp = {
   meta: { type: "problem", docs: { description: "a regular expression some input can make very slow" } },
@@ -118,14 +157,18 @@ const slowRegexp = {
       const message = verdictOf(diagnose(pattern, flags));
       if (message) context.report({ node, message });
     };
+    /** A pattern written as fixed text: `RegExp("…")`, or a string a search makes a RegExp of. */
+    const fixedText = (node: AstNode) => {
+      const [pattern, flags] = node.arguments ?? [];
+      if ((isRegExpCall(node) || isStringSearch(node)) && isFixedText(pattern))
+        ask(node, textOf(pattern), isRegExpCall(node) && flags ? textOf(flags) : "");
+    };
     return {
       Literal: (node: AstNode) => {
         if (node.regex) ask(node, node.regex.pattern, node.regex.flags);
       },
-      NewExpression: (node: AstNode) => {
-        const [pattern, flags] = node.arguments ?? [];
-        if (isRegExpCall(node) && isFixedText(pattern)) ask(node, textOf(pattern), flags ? textOf(flags) : "");
-      },
+      NewExpression: (node: AstNode) => fixedText(node),
+      CallExpression: (node: AstNode) => fixedText(node),
     };
   },
 };

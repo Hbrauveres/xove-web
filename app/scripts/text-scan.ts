@@ -2,7 +2,10 @@
 // time that grows with the square of the text when a quote or a comment is never closed, so the checks
 // use these instead: no regular expression in the checks may be one some input can make slow.
 
-/** Where each quoted string starts and ends ([from, to), quotes included); one never closed runs to the end. */
+/**
+ * Where each quoted string starts and ends ([from, to), quotes included). A quote not closed on its own line
+ * opens no string: in a comment it's an apostrophe ("it's"), and it mustn't hide what follows.
+ */
 export function stringSpans(text: string, quotes = "\"'`"): [number, number][] {
   const spans: [number, number][] = [];
   let at = 0;
@@ -13,9 +16,30 @@ export function stringSpans(text: string, quotes = "\"'`"): [number, number][] {
       continue;
     }
     let end = at + 1;
-    while (end < text.length && text.charAt(end) !== quote) end += text.charAt(end) === "\\" ? 2 : 1;
-    spans.push([at, Math.min(end + 1, text.length)]);
+    while (end < text.length && text.charAt(end) !== quote && text.charAt(end) !== "\n")
+      end += text.charAt(end) === "\\" ? 2 : 1;
+    if (text.charAt(end) !== quote) {
+      at += 1;
+      continue;
+    }
+    spans.push([at, end + 1]);
     at = end + 1;
+  }
+  return spans;
+}
+
+/** Each `name(…)` call's span, its parentheses balanced (`:global(.a:not(.b))` whole); an unclosed one runs to the end. */
+export function callSpans(text: string, name: string): [number, number][] {
+  const spans: [number, number][] = [];
+  let from = text.indexOf(`${name}(`);
+  while (from >= 0) {
+    let at = from + name.length + 1;
+    for (let depth = 1; at < text.length && depth > 0; at += 1) {
+      if (text.charAt(at) === "(") depth += 1;
+      else if (text.charAt(at) === ")") depth -= 1;
+    }
+    spans.push([from, at]);
+    from = text.indexOf(`${name}(`, at);
   }
   return spans;
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { blank, commentSpans, stringSpans, withoutComments } from "./text-scan.ts";
+import { blank, callSpans, commentSpans, stringSpans, withoutComments } from "./text-scan.ts";
 
 describe("scanning a text for strings and comments", () => {
   it("finds each quoted string, an escaped quote staying inside", () => {
@@ -7,14 +7,22 @@ describe("scanning a text for strings and comments", () => {
     expect(stringSpans(line).map(([from, to]) => line.slice(from, to))).toEqual([`"it's \\"fine\\""`, "'a'", "`b`"]);
   });
 
-  it("runs an unclosed string to the end, and reads only the quotes it's given", () => {
-    expect(stringSpans(`a "b`)).toEqual([[2, 4]]);
-    expect(stringSpans("it's `x`", "\"'")).toEqual([[2, 8]]);
+  it("takes a quote not closed on its line for no string, and reads only the quotes it's given", () => {
+    expect(stringSpans(`a "b`)).toEqual([]);
+    expect(stringSpans(`// it's "x"`)).toEqual([[8, 11]]);
+    expect(stringSpans(`'a\nb'`)).toEqual([]);
+    expect(stringSpans("say `x` and 'y'", "\"'")).toEqual([[12, 15]]);
   });
 
   it("blanks a CSS comment, keeping its line breaks, and leaves an unclosed one", () => {
     expect(withoutComments("a /* b\nc */ d")).toBe("a     \n     d");
     expect(commentSpans("a /* b")).toEqual([]);
+  });
+
+  it("finds a call whole, its parentheses balanced", () => {
+    const css = ":global(.dark:not(.lite)) .a { background: url(a.png); }";
+    expect(callSpans(css, ":global").map(([from, to]) => css.slice(from, to))).toEqual([":global(.dark:not(.lite))"]);
+    expect(callSpans(css, "url").map(([from, to]) => css.slice(from, to))).toEqual(["url(a.png)"]);
   });
 
   it("can put something else in a span's place", () => {

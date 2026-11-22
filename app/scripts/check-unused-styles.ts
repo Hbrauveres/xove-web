@@ -3,7 +3,7 @@
 // The guard runs it; `npm run check:styles-unused` prints it.
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, normalize, relative, resolve } from "node:path";
-import { blank, stringSpans, withoutComments } from "./text-scan.ts";
+import { blank, callSpans, stringSpans, withoutComments } from "./text-scan.ts";
 
 export const STYLE_RULES = {
   unusedClass: "a CSS module's class no component reads",
@@ -19,11 +19,12 @@ const lineOf = (text: string, at: number) => text.slice(0, at).split("\n").lengt
 
 /** The classes a module defines, each with the line it first appears on. */
 function classesOf(css: string) {
-  const uncommented = withoutComments(css);
-  const clean = blank(uncommented, stringSpans(uncommented, "\"'"))
-    .replace(/url\([^()]*\)/g, (v) => v.replace(/[^\n]/g, " "))
-    .replace(/:global\([^()]*\)/g, (g) => g.replace(/[^\n]/g, " "))
-    .replace(/\{[^{}]*\}/g, (block) => block.replace(/[^\n]/g, " "));
+  const noComments = withoutComments(css);
+  const noStrings = blank(noComments, stringSpans(noComments, "\"'"));
+  const noUrls = blank(noStrings, callSpans(noStrings, "url"));
+  const clean = blank(noUrls, callSpans(noUrls, ":global")).replace(/\{[^{}]*\}/g, (block) =>
+    block.replace(/[^\n]/g, " "),
+  );
   const classes = new Map<string, number>();
   for (const m of clean.matchAll(CLASS)) if (!classes.has(m[1] ?? "")) classes.set(m[1] ?? "", lineOf(clean, m.index));
   return classes;
