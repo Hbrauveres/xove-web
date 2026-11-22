@@ -25,5 +25,5 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Nobody live. */
-export const Standby: Story = {};
+/** Nobody live: the scene, the corners and Go live. */
+export const Empty: Story = {};

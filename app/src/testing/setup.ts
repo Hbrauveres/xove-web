@@ -41,7 +41,7 @@ afterEach(() => {
 
 // jsdom lacks these browser APIs.
 // No canvas: drawing is the browser's to prove. Without this jsdom warns on every render of the
-// standby screen's static; a test that draws stubs its own context.
+// stage's light; a test that draws stubs its own context.
 HTMLCanvasElement.prototype.getContext = (() => null) as never;
 // The browser's own modal dialog: jsdom has the element but not its methods. Shown, it's open and
 // focuses its first control, as the browser does; the page behind it and Escape are the browser's,

@@ -49,8 +49,8 @@ const meta = {
 
 export default meta;
 
-/** Nobody live: the TV on standby, the wall lit. */
-export const Standby: StoryObj<typeof meta> = {};
+/** Nobody live: the empty stage, nothing on the wall. */
+export const Empty: StoryObj<typeof meta> = {};
 /** Bruno's screen on the stage. */
 export const Playing: StoryObj<typeof meta> = { args: { big: bruno, main: screen, lightKey: "bruno" } };
 

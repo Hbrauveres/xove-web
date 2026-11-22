@@ -27,7 +27,7 @@ The pictures are shot from the real app (`design-sheet.mjs`, see [Keeping this p
 
 - **Xovê**, with the circumflex, in every sentence and label. `xove` only where an accent can't go: the domain (`xove.app`), repos, code, image and container names. The wordmark is written in capitals, **XOVE**, and its red corner stands in for the ^.
 - **Short, plain sentences**, in sentence case: "Share your screen", "Full-screen view", "Nobody live · 0 of 6 · 6 free", "See you on the big screen." No exclamation marks, no jargon.
-- **An invitation, not an order:** under a call to act, a friendly question ("What's on today?"), never a command about someone's camera or screen.
+- **An invitation, not an order:** a call to act asks or offers, never a command about someone's camera or screen.
 - **One word on a button where the context says the rest:** "Screen" and "Camera" on the player's own buttons; the button's spoken name says the whole act ("Share your screen", "Turn on your camera").
 - **As short as they can be:** a call to act says the act ("Go LIVE"); a state says plainly what is ("Nobody is sharing yet").
 - **"Go LIVE" is said one way everywhere:** LIVE in capitals and in the accent red, like the room's LIVE marks, on the sign-in page. It's written as the word ("live") and set in capitals by its style, so a screen reader says the word, not its letters.

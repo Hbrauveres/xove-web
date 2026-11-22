@@ -53,7 +53,7 @@ describe("the stage's view", () => {
     expect(flashes()).toHaveLength(0);
   });
 
-  it("plays the big stream, with no standby glow", () => {
+  it("plays the big stream, with nothing else beside it", () => {
     const big = aSharer();
     const { container } = renderView({ big, main: big.screen ?? null });
     expect(screen.getByLabelText("Bruno's shared screen")).toBeInTheDocument();
