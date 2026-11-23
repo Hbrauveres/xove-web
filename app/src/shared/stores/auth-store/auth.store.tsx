@@ -1,12 +1,16 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { api } from "@services/xove-api-service";
-import type { AuthProviderProps, AuthState } from "./types/auth.types";
+import type { AuthProviderProps } from "./types/auth.types";
 import { AuthContext } from "./hooks/use-auth.hook";
+import { useWhoCheck } from "./hooks/use-who-check.hook";
 import { checkOutcome } from "./utils/check-outcome.util";
 
-/** Asks the API who is signed in, once at the start and whenever `refresh` is called. */
+/**
+ * Asks the API who is signed in when the page opens (trying again while it can't be reached) and
+ * whenever `refresh` is called.
+ */
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [state, setState] = useState<AuthState>({ status: "loading" });
+  const { state, setState, retry } = useWhoCheck();
 
   const refresh = useCallback(async () => {
     try {
@@ -17,7 +21,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (checkOutcome(error) === "signedOut") setState({ status: "signedOut" });
       else throw error;
     }
-  }, []);
+  }, [setState]);
 
   const signOut = useCallback(async () => {
     try {
@@ -25,21 +29,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } finally {
       setState({ status: "signedOut" });
     }
-  }, []);
+  }, [setState]);
 
-  // The first answer: only "nobody is signed in" offers the sign-in; out of reach or failed says so.
-  useEffect(() => {
-    api.me().then(
-      (me) => setState({ status: "signedIn", me }),
-      (error: unknown) => {
-        const outcome = checkOutcome(error);
-        if (outcome === "signedOut") setState({ status: "signedOut" });
-        else if (outcome === "unreachable") setState({ status: "unreachable", nextTryAt: null });
-        else setState({ status: "failed", busy: false });
-      },
-    );
-  }, []);
-
-  const value = useMemo(() => ({ state, refresh, signOut }), [state, refresh, signOut]);
+  const value = useMemo(() => ({ state, refresh, signOut, retry }), [state, refresh, signOut, retry]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

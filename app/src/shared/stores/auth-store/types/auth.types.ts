@@ -21,6 +21,8 @@ export type AuthContextValue = {
   /** Asks the API again who is signed in (after requesting access, being approved...). */
   refresh: () => Promise<void>;
   signOut: () => Promise<void>;
+  /** Try again, when the page says it can't tell: a new round once it stopped, one try after a failure. */
+  retry: () => void;
 };
 
 export type AuthProviderProps = { children: ReactNode };
