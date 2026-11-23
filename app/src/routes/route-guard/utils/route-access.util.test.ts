@@ -15,6 +15,17 @@ describe("which page a person may open", () => {
     }
   });
 
+  it("says it can't tell who's signed in, whatever the page, when the API is out of reach or failed", () => {
+    const states: AuthState[] = [
+      { status: "unreachable", nextTryAt: 2_000 },
+      { status: "unreachable", nextTryAt: null },
+      { status: "failed", busy: false },
+    ];
+    for (const state of states)
+      for (const rule of ["member", "admin", "non-member", "signed-out"] as const)
+        expect(routeAccess(rule, state)).toEqual({ kind: "cantReach", state });
+  });
+
   it("sends signed-out people home from every signed-in page, and shows them the home page", () => {
     for (const rule of ["member", "admin", "non-member"] as const) {
       expect(routeAccess(rule, { status: "signedOut" })).toEqual({ kind: "redirect", to: "/" });

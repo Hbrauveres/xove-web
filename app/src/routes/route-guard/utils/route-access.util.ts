@@ -21,9 +21,9 @@ const SIGNED_IN: Record<RouteRule, (me: Me) => RouteAccess> = {
  * endpoint checks the session itself.
  */
 export function routeAccess(rule: RouteRule, state: AuthState): RouteAccess {
-  // Out of reach or failed: the page that says so comes with the route guard's next step.
-  if (state.status === "loading" || state.status === "unreachable" || state.status === "failed")
-    return { kind: "loading" };
+  if (state.status === "loading") return { kind: "loading" };
+  // Can't tell who's signed in: every page says so, whoever it's for.
+  if (state.status === "unreachable" || state.status === "failed") return { kind: "cantReach", state };
   if (state.status === "signedOut") return rule === "signed-out" ? SHOW : goTo("/");
   return SIGNED_IN[rule](state.me);
 }

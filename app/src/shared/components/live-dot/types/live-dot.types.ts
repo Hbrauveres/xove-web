@@ -3,6 +3,8 @@ export interface LiveDotProps {
   size: "s" | "m";
   /** It beats as LIVE's dot does: something going on that you wait for (Waiting for approval). */
   pulse?: boolean | undefined;
+  /** live: red, glowing (the default); quiet: grey, no glow, for a wait that isn't red news (Reconnecting). */
+  tone?: "live" | "quiet" | undefined;
   /** Its place, set by what holds it. */
   className?: string | undefined;
 }

@@ -7,6 +7,12 @@
   box-shadow: 0 0 var(--space-2) var(--accent-70);
 }
 
+/* Quiet: grey, no glow. */
+.quiet {
+  background: var(--text-muted);
+  box-shadow: none;
+}
+
 /* s: on a tab. */
 .s {
   width: var(--size-1-5);

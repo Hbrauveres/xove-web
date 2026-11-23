@@ -23,3 +23,17 @@ describe("pulsing", () => {
     expect(live?.className.split(" ")).not.toContain(styles.pulse);
   });
 });
+
+describe("its tone", () => {
+  it("is red unless asked to be quiet, for a wait that isn't red news", () => {
+    const { container } = render(
+      <>
+        <LiveDot size="m" tone="quiet" />
+        <LiveDot size="m" />
+      </>,
+    );
+    const [quiet, live] = [...container.children];
+    expect(quiet?.className.split(" ")).toContain(styles.quiet);
+    expect(live?.className.split(" ")).not.toContain(styles.quiet);
+  });
+});

@@ -1,0 +1,39 @@
+/* The request-sent page's layout: the mark, a headline, one muted line, then what to do. */
+.brand {
+  display: flex;
+  margin: 0 0 var(--space-2);
+  color: var(--text);
+}
+
+.title {
+  font-size: clamp(var(--text-28), var(--vw-6), var(--text-2xl));
+  line-height: 1.1;
+}
+
+/* At its own width, a little under the line. */
+.act {
+  align-self: flex-start;
+  margin-top: var(--space-1);
+}
+
+/* Please wait's small red ring, turning: a rotation only, slower with reduced motion. */
+.spinner {
+  width: var(--size-3-5);
+  height: var(--size-3-5);
+  border: var(--border-0-5) solid var(--accent-soft);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin var(--duration-800) linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: var(--duration-2400);
+  }
+}

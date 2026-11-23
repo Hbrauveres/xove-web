@@ -41,6 +41,13 @@
   font-weight: 600;
 }
 
+/* A status that isn't red news: grey, muted words. */
+.quiet {
+  background: var(--surface-raised);
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
 /* A role: red, deep-red words. */
 .solid {
   background: var(--accent);

@@ -14,16 +14,20 @@ it("is a glass pill of the small size unless told otherwise", () => {
   expect(pill).toEqual(expect.arrayContaining([styles.glass, styles.s]));
 });
 
-it("takes a tone and a size: the red tint for a status, solid red for a role", () => {
+it("takes a tone and a size: the red tint for a status, solid red for a role, grey for a quiet status", () => {
   const { container } = render(
     <>
       <LabelPill tone="soft" size="m">
         Waiting for approval
       </LabelPill>
       <LabelPill tone="solid">Admin</LabelPill>
+      <LabelPill tone="quiet" size="m">
+        Reconnecting
+      </LabelPill>
     </>,
   );
-  const [waiting, admin] = [...container.children];
+  const [waiting, admin, reconnecting] = [...container.children];
   expect(waiting?.className.split(" ")).toEqual(expect.arrayContaining([styles.soft, styles.m]));
   expect(admin?.className.split(" ")).toEqual(expect.arrayContaining([styles.solid, styles.s]));
+  expect(reconnecting?.className.split(" ")).toEqual(expect.arrayContaining([styles.quiet, styles.m]));
 });

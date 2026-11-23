@@ -3,11 +3,14 @@ import { useAuth } from "@shared/stores/auth-store";
 import { PageShell } from "@shared/components/page-shell";
 import type { RouteGuardProps } from "./types/route-guard.types";
 import { routeAccess } from "./utils/route-access.util";
+import { CantReachPage } from "@features/cant-reach";
 
 /** Shows its page only to the people `rule` allows; sends anyone else where they belong. */
 export function RouteGuard({ rule, children }: RouteGuardProps) {
-  const access = routeAccess(rule, useAuth().state);
+  const { state, retry } = useAuth();
+  const access = routeAccess(rule, state);
   if (access.kind === "loading") return <PageShell variant="message">Loading…</PageShell>;
+  if (access.kind === "cantReach") return <CantReachPage state={access.state} onRetry={retry} />;
   if (access.kind === "redirect") return <Navigate to={access.to} replace />;
   return <>{children}</>;
 }
