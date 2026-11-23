@@ -80,9 +80,8 @@ const desktopMatchMedia = (query: string) => ({
 });
 Object.defineProperty(window, "matchMedia", { writable: true, configurable: true, value: desktopMatchMedia });
 
-// The page as it begins: its title, its head and its root element's attributes, put back after every
+// The page as it begins: its head (its title with it) and its root element's attributes, put back after every
 // test: a test file shares its worker's page with the files before it.
-const startTitle = document.title;
 const startHead = document.head.innerHTML;
 const startRoot = [...document.documentElement.attributes].map((a) => [a.name, a.value] as const);
 
@@ -93,7 +92,6 @@ function resetBrowserStandIns() {
   window.matchMedia = desktopMatchMedia as never;
   Object.defineProperty(navigator, "mediaDevices", { configurable: true, value: fakeMediaDevices });
   HTMLCanvasElement.prototype.getContext = noCanvas;
-  document.title = startTitle;
   document.head.innerHTML = startHead;
   const root = document.documentElement;
   for (const { name } of [...root.attributes]) root.removeAttribute(name);
