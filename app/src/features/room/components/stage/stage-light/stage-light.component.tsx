@@ -24,7 +24,7 @@ export function StageLight({ video, prefs, shape = WIDESCREEN }: StageLightProps
   const lit = prefs.on && playing;
   useLightDrawing(canvas, { video, layout, mask, lit });
 
-  // No stream: no light at all (the empty stage has its own).
+  // No stream: no light.
   if (!video) return null;
   return (
     <canvas

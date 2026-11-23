@@ -66,7 +66,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Nobody live: the TV on standby, the settings in the corner, who's here under it. */
+/** Nobody live: the empty stage, the settings in the corner, who's here under it. */
 export const NobodyLive: Story = {};
 /** Watching Bruno's screen: what I hear from him over it, his name under it. */
 export const Watching: Story = { args: { sharers: [bruno] } };

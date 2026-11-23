@@ -13,7 +13,7 @@ import type { StageGoLiveProps } from "./types/stage-go-live.types";
  * menu holds the ways to start (greyed where they can't, saying why) and the settings, which open
  * over it.
  */
-export function StageGoLive({ canShareScreen, full, onStart, onSettings }: StageGoLiveProps) {
+export function StageGoLive({ canShareScreen, full, onStart, onSettings, menuOverButton }: StageGoLiveProps) {
   const anchor = useSettingsAnchor();
   const [menu, setMenu] = useState(false);
   const box = useRef<HTMLSpanElement | null>(null);
@@ -48,7 +48,7 @@ export function StageGoLive({ canShareScreen, full, onStart, onSettings }: Stage
         Go live
       </ActionPill>
       {menu && (
-        <StageBarMenu kind="menu">
+        <StageBarMenu kind="menu" overButton={menuOverButton}>
           <StageGoLiveRows
             role="menuitem"
             canShareScreen={canShareScreen}

@@ -9,9 +9,9 @@ import {
   openMenu,
   pickInMenu,
   readyRoom,
-  stage,
   startSharing,
   tickedQuality,
+  startFrom,
 } from "../../../../../testing/factories/stage-steps.factory";
 import { installFakeApi, myLiveStream } from "../../../../../testing/fakes/api.fake";
 import { lastRoom } from "../../../../../testing/fakes/livekit.fake";
@@ -145,7 +145,7 @@ describe("room: changing my streams from the settings", () => {
     const server = installFakeApi({ me: member() });
     const user = await readyRoom();
     await startSharing(user);
-    await user.click(within(stage()).getByRole("button", { name: /turn on your camera/i }));
+    await startFrom(user, /turn on your camera/i);
     await waitFor(() => expect(myLiveStream(server, "camera")).toBeDefined());
     const camera = lastRoom().localParticipant.lastCamera!;
 

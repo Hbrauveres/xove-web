@@ -22,7 +22,9 @@ export interface StageViewProps {
   onSwap: () => void;
   /** The small view's fold, kept by the player. */
   fold: SmallViewFold;
-  /** For the empty stage. */
+  /** For the empty stage's Go live. */
   canShareScreen: boolean;
   onStart: (kind: StreamKind) => void;
+  /** Go live's settings, opened by the player. */
+  onSettings: () => void;
 }

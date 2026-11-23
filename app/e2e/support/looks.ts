@@ -35,9 +35,6 @@ export const LOOK = {
   /** A menu row pointed at or focused, and its ring inside the edge. */
   rowLit: "var(--white-06)",
   rowRing: "inset 0 0 0 var(--border-0-5) var(--accent)",
-  /** A soft pill (the empty stage's Camera), at rest and pointed at. */
-  soft: "var(--text-shade-08)",
-  softLit: "var(--text-shade-14)",
   /** A neutral count chip. */
   chip: "var(--white-10)",
   /** A ghost button's border, and its fill pointed at. */
@@ -109,9 +106,8 @@ export const SIZE = {
   /** A round button's icon, in L and in M. */
   iconL: "var(--size-5)",
   iconM: "var(--size-4)",
-  /** An action pill in M (Go live) and in L (the empty stage's Screen and Camera). */
+  /** An action pill in M (Go live, over a stream and on the empty stage). */
   pillM: "var(--control-sm)",
-  pillL: "var(--control-2xl)",
   /** A dark action pill in S (Change) and in XS (Test). */
   pillS: "var(--size-7-5)",
   pillXs: "var(--size-6-5)",

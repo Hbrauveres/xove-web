@@ -4,7 +4,7 @@ import { StageEmptyStage } from "./stage-empty-stage.component";
 const meta = {
   title: "Room/Stage empty stage",
   component: StageEmptyStage,
-  args: { canShareScreen: true, onStart: () => undefined, turnOn: false, onStandby: () => undefined },
+  args: { canShareScreen: true, onStart: () => undefined, onSettings: () => undefined },
   decorators: [
     (Story) => (
       <div
@@ -25,7 +25,5 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** A TV on standby, already on. */
-export const Standby: Story = {};
-/** The first time it stands by in a visit: the TV turns on. */
-export const TurningOn: Story = { args: { turnOn: true } };
+/** Nobody live: the scene, the corners and Go live. */
+export const Empty: Story = {};

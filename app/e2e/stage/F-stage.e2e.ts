@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { startMine } from "../support/start.ts";
 import { blinks } from "../support/frames.ts";
 import { observe } from "../support/observe.ts";
 import { openScene, wakeStage } from "../support/open.ts";
@@ -101,7 +102,7 @@ test("F-stage.6 when everyone stops, the stage goes back to 16:9, as wide as its
   const stage = stageParts(page);
   await observe(page, info, { view: stage.view, box: stage.box }, async () => {
     await everyoneStops(page);
-    await page.getByRole("heading", { name: "Go live" }).waitFor();
+    await stageOf(page).getByRole("button", { name: "Go live" }).waitFor();
   });
   const box = await boxOf(stage.box);
   const view = await boxOf(stage.view);
@@ -115,7 +116,7 @@ test("F-stage.7 my own stream plays on my stage, without its sound", async ({ pa
   const stage = stageParts(page);
   const mine = stage.box.getByLabel("Your shared screen");
   await observe(page, info, { mine, view: stage.view }, async () => {
-    await page.getByRole("button", { name: "Share your screen" }).click();
+    await startMine(page, "screen");
     await mine.waitFor();
   });
   await expect.soft(mine).toBeVisible();

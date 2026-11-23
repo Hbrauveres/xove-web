@@ -1,6 +1,6 @@
 // What reaches the screen: how opaque an element is drawn (its own opacity times its ancestors'),
 // whether it's on top at its middle, and what a patch of the screen holds, measured from a
-// screenshot as a person sees it (for what has no role or name: the stage's light, its static).
+// screenshot as a person sees it (for what has no role or name: the stage's light).
 import type { Locator, Page } from "@playwright/test";
 import type { Box } from "./geometry.ts";
 

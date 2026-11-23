@@ -27,10 +27,10 @@ The pictures are shot from the real app (`design-sheet.mjs`, see [Keeping this p
 
 - **Xovê**, with the circumflex, in every sentence and label. `xove` only where an accent can't go: the domain (`xove.app`), repos, code, image and container names. The wordmark is written in capitals, **XOVE**, and its red corner stands in for the ^.
 - **Short, plain sentences**, in sentence case: "Share your screen", "Full-screen view", "Nobody live · 0 of 6 · 6 free", "See you on the big screen." No exclamation marks, no jargon.
-- **An invitation, not an order:** under a call to act, a friendly question ("What's on today?"), never a command about someone's camera or screen.
-- **One word on a button where the context says the rest:** "Screen" and "Camera" under "Go LIVE"; the button's spoken name says the whole act ("Share your screen", "Turn on your camera").
+- **An invitation, not an order:** a call to act asks or offers, never a command about someone's camera or screen.
+- **A button's spoken name says the whole act** ("Share your screen", "Turn on your camera"), whatever its words or icon show.
 - **As short as they can be:** a call to act says the act ("Go LIVE"); a state says plainly what is ("Nobody is sharing yet").
-- **"Go LIVE" is said one way everywhere:** LIVE in capitals and in the accent red, like the room's LIVE marks, on the sign-in page and on the standby screen. It's written as the word ("live") and set in capitals by its style, so a screen reader says the word, not its letters.
+- **"Go LIVE" is said one way everywhere:** LIVE in capitals and in the accent red, like the room's LIVE marks, on the sign-in page. It's written as the word ("live") and set in capitals by its style, so a screen reader says the word, not its letters.
 - **Public words** (the sign-in page, and any page someone sees before the room): a short headline with personality ("Go **LIVE** with your friends."), then one short line with substance: what you do and why it's good ("Share your screen or camera in sharp, fast streams. Watch them play, hang out, help out. Invite only.").
 - **Say what happens, then what to do:** "The room is full. You're 2nd in line." A disabled control says why in its tooltip.
 - **The middle dot (·)** joins short facts on one line: "Marina · Screen", "3 of 6 live · 3 free".
@@ -98,7 +98,7 @@ Dark only: Xovê is a room for watching screens, so the chrome stays out of the 
 - **The speaking greens**, only for "this person is speaking": the tube `#2bcd68` at 85% (`--green-light-85`), the icon `#45e087` (`--green-lighter`), the glow `#16a34a` (`--green-*`). Nothing else is green but "connected" and a mic level that's sent.
 - **Red is rare on purpose:** it means the brand or something live. Sliders are white and the switch is grey until it's on.
 - **Avatars** without a photo get the person's own hue: `hsl(<hue> 42% 38%)` with a white initial. The hue comes from the person's id, so **everyone has one colour on every screen, me included**: I see myself in the colour my friends see me in.
-- **The empty stage** is one flat dark (`--grey-15`, `#0f0f11`: a gradient this dim shows bands); its corners glow softly, each in its own colour (a slightly blue grey, the top right red).
+- **The empty stage** is a near-black (`--grey-11`, `#0b0b0c`) under a sky a shade deeper at the top; the eye on its horizon is `--grey-15-flat` (`#0f0f0f`), just off it; its corners are a plain grey (`--grey-90`), the top right a red neon tube. Nothing round it glows.
 - **The ambilight** takes its colour from the picture, never from the palette.
 - **Contrast:** every text colour reaches 4.5:1 on every surface, 3:1 for faint labels. `npm run check:styles` computes it on every push ([Testing](testing.md#the-style-check)).
 
@@ -110,7 +110,7 @@ Dark only: Xovê is a room for watching screens, so the chrome stays out of the 
 | --- | --- | --- |
 | **Bricolage Grotesque** 500 / 700 / 800 | `--font-display` | Headings, the name of who's on the stage, big statements ("Go LIVE") |
 | **IBM Plex Sans** 400 / 500 / 600 | `--font-body` | Everything else: body, buttons, names in lists |
-| **IBM Plex Mono** 400 / 500 | `--font-mono` | Counters and times: LIVE, `1:12:41`, section labels like "LIVE NOW", the standby screen's "Standby" |
+| **IBM Plex Mono** 400 / 500 | `--font-mono` | Counters and times: LIVE, `1:12:41`, section labels like "LIVE NOW" |
 
 | Size token | rem | px | Typical use |
 | --- | --- | --- | --- |
@@ -164,8 +164,10 @@ Body line height is 1.5; headings balance their lines (`text-wrap: balance`). Fo
 | The cue: a control pointed at (a sharp red border pulsing in place, with a slight glow) | two 1 s pulses, then lit until the next press; still with reduced motion | ease-in-out |
 | A list unrolling from its pill, its options fading in by their distance (40 ms apart), and rolling back | 220 ms; 150 ms back | `cubic-bezier(0.2, 0.8, 0.2, 1)`; ease-in back |
 | The soft light behind an option pointed at | 160 ms | ease |
-| The standby static: its bands rolling down (24 px a second on a desktop's stage), swaying and shimmering | 20 updates a second; still with reduced motion | — |
-| The TV turning on: a point, a line, the bloom (peak at about 380 ms), the band opening from the middle | 900 ms, once a visit; none with reduced motion | `cubic-bezier(0.2, 0.8, 0.2, 1)` and kin |
+| The empty stage's grid sliding toward us, one cell at a time, without end | one cell every 3.2 s, transform only; still with reduced motion | linear |
+| The empty stage's neon corner flickering: a double blink, a single drop, a long stutter, each straight back on | an 11 s rhythm, each change tens of ms, opacity only; lit and still with reduced motion | `cubic-bezier(0.4, 0, 0.2, 1)` |
+| Go live's halo breathing on the empty stage | 3 s, opacity only; still with reduced motion | `cubic-bezier(0.4, 0, 0.2, 1)` |
+| The empty stage's scene shifting a few px away from the pointer | 900 ms, transform only; none with reduced motion | `cubic-bezier(0.2, 0.8, 0.2, 1)` |
 | A new activity in the pill | 350 ms | ease |
 | The small view's buttons fading | 250 ms | ease |
 | The small view folding into its corner button (its box onto the button) | 220 ms, transform only; none with reduced motion | `cubic-bezier(0.2, 0.8, 0.2, 1)` |
@@ -305,7 +307,7 @@ The colours above, the type scale and the fonts are tokens too. The rest:
 
 ### Action pills and label pills
 
-- **An action pill** (`ActionPill`) is a button with words, round at both ends: **M 34** over a stream (Go live) or **L 44** where it's the screen's main choice (the empty stage's Screen and Camera). Three fills: **glass** (the round buttons' base), **red** (the first way, `--accent`) and **soft** (a second way, a light translucent fill). An icon or the [live dot](#avatars-and-live) comes first. Unavailable: 45%, saying why, like a round button.
+- **An action pill** (`ActionPill`) is a button with words, round at both ends: **M 34** over a stream and on the empty stage (Go live). Two fills for a call: **glass** (the round buttons' base) and **red** (a call that stands out, `--accent`: Unmute). An icon or the [live dot](#avatars-and-live) comes first. Unavailable: 45%, saying why, like a round button.
 - **A small button with words is the dark pill** (a rule for the whole app): `ActionPill`'s **dark** fill, the chosen segment's pill (`--sel-bg`, its shadow, lighter when pointed at), white semibold words, one size per place: **S 30** in the drop-up's glass row (Change over the video) and **XS 26** in a panel (Change in the settings' window row, Test beside the mic's level). **On** (pressed, Test while it plays) it's white with dark words. Never a round button with words. (Change: [the settings' Screen tab](#the-settings-panel); Test: [the Voice tab](#the-settings-panel).)
 - **A label pill** (`LabelPill`) names what a picture shows or says something about it (a preview's "Rafa · screen", the camera preview's "Only you see this"): **22 px** glass, 500 weight, a face or an icon first when it names someone, words alone otherwise. It isn't a button: the picture under it is. **Any label over a picture is one.**
 - **A status or a role is a label pill too**, in red: **soft** (the accent's tint, red semibold words) for a status on a page, at the page's size (**M**): "Waiting for approval", its [live dot](#avatars-and-live) beating first; **solid** (the accent, deep-red words) for a role in a row (**S**): "Admin". Never a pill of its own.
@@ -550,18 +552,16 @@ Xovê is for computers: laptops and desktops get the app, in one layout (theater
 
 ![A tall picture: the box keeps the column's width, the controls on the picture](images/design/stage-tall-picture.png) ![The empty room on a desktop](images/design/room-empty-desktop.png)
 
-**Nobody live, a TV on standby:**
+**Nobody live, a synthwave stage:**
 
-- **Viewfinder corners**, the screen's only frame: close to the stage's own edges (the stage's buttons sit inside the bottom-right one), the top right red as in the logo. Finer and fainter on small stages (18 px arms, 1.5 px), and each **glows softly in its own colour**.
-- **Their light outside:** each corner glows outward too, a blurred L just outside the stage, a fade with no edge; still, following the ambilight's switch and brightness.
-- **"Standby"**, still, in small grey mono capitals with a grey dot (never red: that would mean recording), on larger stages only. Nothing else imitates equipment: no clock, meter, ruler, format tags or room number.
-- **The way to start**, with no frame of its own, in the stage's middle both ways: "Go **LIVE**" (LIVE in the accent), "What's on today?", then one row, centred: **Screen** and **Camera** alone (one word each, two pills of one width, the first red, the second a soft fill). The **settings** stay in the stage's bottom-right corner beside fullscreen, as over a stream, and open from there. A screen the browser can't share is the same pill, greyed, with its reason.
-- **The TV's static** behind it all: snow in soft horizontal bands (their gaps at 40% of the bands' brightness), shown at 17% over the stage's dark and darker behind the heading. The bands roll down together keeping their sizes, the picture sways a little as a TV losing its vertical hold, and the bands shimmer, about 15 times a second (once 50 ms have passed, every fourth frame of a 60 Hz screen). The grain is 1.5 px on a desktop's stage, finer on smaller ones (down to 0.75 px) and coarser on wider ones, keeping about 1 066 grains across, so a 4K or ultrawide screen costs what a desktop does; the bands are a share of the stage's height, so a small stage shows the same picture smaller. Still for reduced motion.
-- **Curved glass, 90s style:** square corners; the glass darker towards its edges, a soft sheen high on the left, a faint line of light along the top; the bands bow gently towards the sides. Not a fisheye.
-- **The static lights the room:** its bands' light spills onto the page round the stage as they roll, measured from the static itself, so it's never brighter than the screen; it follows the ambilight's switch and brightness.
-- **The TV turns on** the first time the stage stands by in a visit, in 0.9 s, eased and soft-edged: a point of light, a glowing line drawn across, a white bloom filling the screen and lighting the wall, then a grey band that opens from the middle while dimming onto the static. White, with only a hint of the red at the glow's edges. Never again when the last stream stops; none for reduced motion.
-
-![The TV turning on, every 50 ms](images/design/turn-on.png)
+- **Viewfinder corners**, the screen's only frame: close to the stage's own edges (the stage's buttons sit inside the bottom-right one), plain grey (`--grey-90`), finer on small stages (18 px arms, 1.5 px). No glow round them.
+- **The top right is a neon tube:** the red corner and a tight glow hugging its two strips where they meet, never a round light, over the grey corner. It flickers like a tube on its way out: lit, then a quick burst and straight back on, three kinds in an 11 s rhythm (a double blink, a single drop, a long stutter), each change tens of milliseconds. Never a slow fade or a breathing pulse. Off, the grey corner shows, like the other three.
+- **The floor is a synthwave grid:** 1 px lines in the accent at 40%, in a gentle perspective, sliding toward us one cell every 3.2 s without end, fading into a thin red horizon (68% down) with a soft red haze. No sun, no mountains.
+- **The eye of Xovê's mark** (the icon mark's ring and dot, no corners), very large and cut exactly in half by the horizon, as one flat near-black silhouette (`--grey-15-flat`), hidden at the line and appearing little by little upward. It never lights or moves.
+- **One way to start, Go live**, the room's own [action pill](#action-pills-and-label-pills) (M, glass, the live dot first) and its menu (Share your screen, Turn on your camera, Settings), centred on the floor below the horizon; its menu opens upward, centred over it; on a tall stage it stays under the horizon, and on a shorter one it may cover the eye's lower part while it's open. No words on the stage: the pill says it. A screen the browser can't share is the menu's row, greyed, with its reason. The **settings** also stay in the stage's bottom-right corner beside fullscreen, as over a stream.
+- **Go live's halo hugs it:** a thin red line right on its outside edge and a soft glow going outward from there, never under the pill (nothing shows through its glass) and never a ring standing off it; it breathes.
+- **The scene shifts a touch with the pointer** (up to 10 px across and 6 px up and down, away from it, eased).
+- **Nothing lights the wall:** the ambilight is only for a shared picture. **Nothing is redrawn while it runs:** every motion is a transform or an opacity, so the graphics card moves the layers; with reduced motion, nothing moves.
 
 ### Pages outside the room
 
@@ -643,7 +643,12 @@ Its content stays clear of the phone's bars (the browser's safe areas).
 - **A status or a role is a label pill** in red (soft for a status, solid for a role), never a pill of its own; a dot that beats uses the app's one beat (`@keyframes beat` in `global.css`), as LIVE's does.
 - **Every page outside the room is on the Page shell;** a page of lists is its wide frame, its bar above the main region. The phone notice is the one exception: it stands in for the whole app on a phone, with its own frame clear of the phone's bars.
 - **One exception to the tokens:** Google's sign-in button, white with Google's "G" in Google's own colours, as their rules ask.
-- **A first impression plays once:** an intro (the TV turning on) plays the first time in a visit, never again for the same state, and never for reduced motion.
+- **A first impression plays once:** an intro plays the first time in a visit, never again for the same state, and never for reduced motion.
+- **Light on the wall comes only from a picture** (a rule for the whole app): the ambilight round a shared screen or camera, and nothing else; a screen with nothing playing leaves the wall dark.
+- **One way to start, the same everywhere** (a rule for the whole app): Go live and its menu, wherever starting is offered (over a stream, on the empty stage), never a second set of start buttons.
+- **A halo hugs its control** (a rule for the whole app): a thin line on the control's outside edge and a glow going outward from it, never drawn under a glass control and never a ring standing off it.
+- **A flickering light is a failing tube** (a rule for the whole app): quick bursts and straight back, never a slow fade or a breath; a light that breathes is a halo, not a flicker.
+- **Ambient motion costs nothing to draw** (a rule for the whole app): only transforms and opacity, never a canvas or anything drawn per frame; still with reduced motion.
 
 ## Keeping this page current
 

@@ -36,9 +36,21 @@ export async function readyRoom() {
   return clockUser();
 }
 
+/**
+ * Starts a stream the way a person would: its button on the stage, or, with nobody live, the row of
+ * Go live's menu.
+ */
+export async function startFrom(user: User, name: RegExp) {
+  const here = within(stage());
+  const button = here.queryByRole("button", { name });
+  if (button) return user.click(button);
+  await user.click(here.getByRole("button", { name: "Go live" }));
+  await user.click(await screen.findByRole("menuitem", { name }));
+}
+
 /** Clicks "Share your screen": the browser's picker, and the pick is sent at once. */
 export async function pickScreen(user: User, button: RegExp = /share your screen/i) {
-  await user.click(within(stage()).getByRole("button", { name: button }));
+  await startFrom(user, button);
 }
 
 /** Picks a screen and starts sharing it, with the remembered settings. */

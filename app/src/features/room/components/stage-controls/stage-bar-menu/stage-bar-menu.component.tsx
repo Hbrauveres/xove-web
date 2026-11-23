@@ -3,11 +3,17 @@ import type { StageBarMenuProps } from "./types/stage-bar-menu.types";
 
 /**
  * A menu over the stage's bar, opening above the button it belongs to (its holder places it): Go
- * live's, a menu ending at its right; "…"'s, a group of rows and sliders centred on the picture. A
+ * live's, a menu ending at its right (centred over it on the empty stage); "…"'s, a group of rows and
+ * sliders centred on the picture. A
  * line (`<hr />`) parts its groups.
  */
-export function StageBarMenu({ kind, children, centred, ...rest }: StageBarMenuProps) {
-  const shared = { className: styles.menu, "data-centred": centred || undefined, ...rest };
+export function StageBarMenu({ kind, children, centred, overButton, ...rest }: StageBarMenuProps) {
+  const shared = {
+    className: styles.menu,
+    "data-centred": centred || undefined,
+    "data-over-button": overButton || undefined,
+    ...rest,
+  };
   return kind === "group" ? (
     <fieldset {...shared}>{children}</fieldset>
   ) : (

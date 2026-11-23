@@ -88,7 +88,7 @@ test("F-settings-screen.4 not sharing, the Screen tab says its settings are for 
   await myStream(page);
   await page.getByRole("button", { name: "Stop sharing your screen" }).click();
   // My screen stopped: the empty stage's cog opens the same settings.
-  await page.getByRole("button", { name: "Share your screen" }).first().waitFor();
+  await page.getByRole("button", { name: "Go live" }).first().waitFor();
   await untilStill(page);
   const cog = page.getByRole("button", { name: "Settings", exact: true });
   await observe(page, info, { cog }, async () => {

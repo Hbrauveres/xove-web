@@ -31,28 +31,21 @@ test("F-pills.1 Go live is an M glass action pill with the live dot first, light
   expect.soft(drift(seen.frames, "goLive")).toBeLessThan(1);
 });
 
-test("F-pills.2 the empty stage's Screen and Camera are L pills of one width, red then soft, each lighter when pointed at", async ({
+test("F-pills.2 the empty stage's Go live is the same M glass pill as the bar's, with the live dot first", async ({
   page,
 }, info) => {
   await openScene(page, "s=empty");
-  const screen = page.getByRole("button", { name: "Share your screen" });
-  const camera = page.getByRole("button", { name: "Turn on your camera" });
-  const seen = await observe(page, info, { screen, camera }, async () => {
-    await pointAt(page, screen);
+  const goLive = page.getByRole("button", { name: "Go live" });
+  const seen = await observe(page, info, { goLive }, async () => {
+    await pointAt(page, goLive);
   });
-  const pillL = await pxOf(page, SIZE.pillL);
-  expect.soft(seen.before.screen?.box?.h).toBe(pillL);
-  expect.soft(seen.before.camera?.box?.h).toBe(pillL);
-  expect.soft(seen.before.screen?.box?.w).toBe(seen.before.camera?.box?.w);
-  expect.soft(seen.before.screen?.look?.backgroundColor).toBe(await computed(page, "background-color", LOOK.accent));
-  expect.soft(seen.before.screen?.look?.color).toBe(await computed(page, "color", LOOK.accentInk));
-  expect.soft(seen.before.camera?.look?.backgroundColor).toBe(await computed(page, "background-color", LOOK.soft));
-  await expect.soft(screen).toHaveCSS("background-color", await computed(page, "background-color", LOOK.accentLight));
-  await expect.soft(screen).toHaveText("Screen");
-  await expect.soft(camera).toHaveText("Camera");
-  await pointAt(page, camera);
-  await expect.soft(camera).toHaveCSS("background-color", await computed(page, "background-color", LOOK.softLit));
-  expect.soft(drift(seen.frames, "camera")).toBeLessThan(1);
+  expect.soft(seen.before.goLive?.box?.h).toBe(await pxOf(page, SIZE.pillM));
+  expect.soft(seen.before.goLive?.look?.backgroundColor).toBe(await computed(page, "background-color", LOOK.glass));
+  expect.soft(seen.before.goLive?.text).toBe("Go live");
+  await expect
+    .soft(goLive.locator("i"))
+    .toHaveCSS("background-color", await computed(page, "background-color", LOOK.accent));
+  expect.soft(drift(seen.frames, "goLive")).toBeLessThan(1);
 });
 
 test("F-pills.3 a label pill names a preview: 22 px of glass, a face, then its words", async ({ page }, info) => {

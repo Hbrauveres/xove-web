@@ -19,7 +19,7 @@ This repo is the web app: React 19 and TypeScript, talking to [`xove-api`](https
 
 | | |
 | --- | --- |
-| ![Nobody live on a desktop: the stage as a camera waiting](docs/images/design/room-empty-desktop.png) | **The room, nobody live.** The stage as a camera waiting, its corners glowing, "Go LIVE", "What's on today?" and the ways to start |
+| ![Nobody live on a desktop: the synthwave stage and Go live](docs/images/design/room-empty-desktop.png) | **The room, nobody live.** A red synthwave grid to the horizon, the eye of Xovê's mark rising from it, a neon corner flickering, and Go live on the floor |
 | ![A tall picture on the stage, the controls at its corners](docs/images/design/stage-tall-picture.png) | **A tall picture.** The stage takes the picture's own shape; the controls fade while a stream plays |
 | ![The screen phones and tablets see](docs/images/design/phone-notice.png) | **On a phone or a tablet.** "See you on the big screen.": Xovê is for laptops and desktops for now |
 

@@ -18,37 +18,37 @@ function renderView(over: Partial<StageViewProps> = {}) {
     fold: aFold(),
     canShareScreen: true,
     onStart: vi.fn(),
+    onSettings: vi.fn(),
     ...over,
   };
   return { props, ...render(<StageView {...props} />) };
 }
 
 describe("the stage's view", () => {
-  it("stands by with nobody live: the TV, its corners lit round the stage", () => {
-    const { container } = renderView();
-    expect(screen.getByRole("heading", { name: "Go live" })).toBeInTheDocument();
-    const corners = container.querySelectorAll("i[data-at]");
-    expect(corners).toHaveLength(4);
-    expect(corners[0]?.parentElement?.style.opacity).toBe("0.9");
+  it("with nobody live, shows the empty stage with nothing lit on the wall and no static, the light on or off", () => {
+    for (const on of [true, false]) {
+      const { container, unmount } = renderView({ ambilight: { on, brightness: 0.9 } });
+      expect(screen.getByRole("button", { name: "Go live" })).toBeInTheDocument();
+      expect(container.querySelector("canvas")).toBeNull();
+      // Nothing outside the picture: the light's layers sit beside it.
+      expect(container.firstElementChild?.children).toHaveLength(1);
+      unmount();
+    }
   });
 
-  it("turns the TV on only the first time it stands by", () => {
-    const big = aSharer();
-    const { container, rerender, props } = renderView();
-    // The stage's flash and the wall's, together.
-    const flashes = () => [container.querySelector('[class*="intro"]'), container.querySelector('[class*="flash"]')];
-    expect(flashes()).not.toContain(null);
-    rerender(<StageView {...props} big={big} main={big.screen ?? null} />);
-    rerender(<StageView {...props} />);
-    expect(flashes()).toEqual([null, null]);
+  it("hands Go live's settings to the player", async () => {
+    const { props } = renderView();
+    fireEvent.click(screen.getByRole("button", { name: "Go live" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Settings" }));
+    expect(props.onSettings).toHaveBeenCalledTimes(1);
   });
 
-  it("plays the big stream, with no standby glow", () => {
+  it("plays the big stream, with nothing else beside it", () => {
     const big = aSharer();
     const { container } = renderView({ big, main: big.screen ?? null });
     expect(screen.getByLabelText("Bruno's shared screen")).toBeInTheDocument();
-    expect(screen.queryByRole("heading", { name: "Go live" })).not.toBeInTheDocument();
-    expect(container.querySelectorAll("i[data-at]")).toHaveLength(0);
+    expect(screen.queryByRole("button", { name: "Go live" })).not.toBeInTheDocument();
+    expect(container.querySelectorAll("[data-at]")).toHaveLength(0);
   });
 
   it("starts the small view at the top right", () => {

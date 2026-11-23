@@ -32,6 +32,13 @@ fieldset.menu {
   translate: -50% 0;
 }
 
+/* Centred over its own button: the empty stage's Go live, in the stage's middle. */
+.menu[data-over-button] {
+  right: auto;
+  left: 50%;
+  translate: -50% 0;
+}
+
 /* Between its groups. */
 .menu hr {
   height: var(--hairline);

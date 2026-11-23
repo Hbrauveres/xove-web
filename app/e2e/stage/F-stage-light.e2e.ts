@@ -22,8 +22,8 @@ const chosen = (page: Page, on: boolean, brightness: number) =>
 
 /** The stream's light: a canvas behind the picture. */
 const streamLight = (page: Page) => stageParts(page).view.locator('canvas[class*="_light_"]');
-/** The empty stage's two lights on the wall: its corners' and its static's. */
-const wallLights = (page: Page) => stageParts(page).view.locator(':scope > span[class*="_glow_"]');
+/** Anything beside the picture but the stream's light: a light on the wall that isn't the picture's. */
+const wallLights = (page: Page) => stageParts(page).view.locator(":scope > :not(canvas):not(div)");
 
 /** Whether `outer` reaches past `inner` on every side. */
 const reachesPast = (outer: Box, inner: Box) =>
@@ -80,25 +80,19 @@ test("F-stage-light.4 the light shines at the brightness chosen in the settings"
   expect.soft(await light.evaluate((c) => Number(getComputedStyle(c).opacity))).toBeCloseTo(DIM, 2);
 });
 
-test("F-stage-light.5 nobody live: the corners and the static light the wall instead", async ({ page }, info) => {
+test("F-stage-light.5 nobody live: nothing lights the wall", async ({ page }, info) => {
   await openScene(page, "s=empty");
-  const lights = wallLights(page);
-  await observe(page, info, { lights }, () => wakeStage(page));
+  await observe(page, info, { view: stageParts(page).view }, () => wakeStage(page));
   await expect.soft(streamLight(page)).toHaveCount(0);
-  await expect.soft(lights).toHaveCount(2);
-  const opacities = await lights.evaluateAll((els) => els.map((e) => Number(getComputedStyle(e).opacity)));
-  expect.soft(opacities.map((o) => Math.round(o * 100) / 100)).toEqual([DEFAULT_BRIGHTNESS, DEFAULT_BRIGHTNESS]);
-  // The static's light reaches past the stage's edges.
-  const glow = await boxOf(stageParts(page).view.locator(':scope > span[class*="_glow_"] canvas'));
-  expect.soft(reachesPast(glow, await boxOf(stageParts(page).view))).toBe(true);
+  await expect.soft(wallLights(page)).toHaveCount(0);
 });
 
-test("F-stage-light.6 nobody live with the light switched off: the wall stays dark", async ({ page }, info) => {
+test("F-stage-light.6 nobody live with the light switched off: the wall stays dark too", async ({ page }, info) => {
   await chosen(page, false, DEFAULT_BRIGHTNESS);
   await openScene(page, "s=empty");
-  const lights = wallLights(page);
-  await observe(page, info, { lights }, () => wakeStage(page));
-  expect.soft(await lights.evaluateAll((els) => els.map((e) => Number(getComputedStyle(e).opacity)))).toEqual([0, 0]);
+  await observe(page, info, { view: stageParts(page).view }, () => wakeStage(page));
+  await expect.soft(streamLight(page)).toHaveCount(0);
+  await expect.soft(wallLights(page)).toHaveCount(0);
 });
 
 test("F-stage-light.7 the light never blinks while the controls fade", async ({ page }, info) => {

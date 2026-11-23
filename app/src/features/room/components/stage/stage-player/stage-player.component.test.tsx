@@ -127,7 +127,7 @@ describe("the player's fullscreen", () => {
     browserFullscreen(frame);
     fireEvent.click(within(frame).getByRole("button", { name: "Fullscreen" }));
     rerender(<Player sharers={[]} />);
-    expect(screen.getByRole("heading", { name: "Go live" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Go live" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Exit fullscreen" }));
     expect(document.exitFullscreen).toHaveBeenCalled();
   });
@@ -156,7 +156,7 @@ describe("the settings over the player", () => {
     vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
       if (this.tagName === "BUTTON") return DOMRect.fromRect({ x: 900, y: 850, width: 40, height: 40 });
       if (this.getAttribute("aria-label") === null && this.querySelector("button")) {
-        return this.querySelector("video, h2")
+        return this.querySelector("video, [data-at]")
           ? DOMRect.fromRect({ x: 0, y: 0, width: 1600, height: 900 })
           : DOMRect.fromRect({ x: 700, y: 840, width: 400, height: 60 });
       }

@@ -38,7 +38,7 @@ const stage = () => screen.getByRole("region", { name: "Shared screen" });
 describe("the stage", () => {
   it("stands by with nobody live, with the settings in its corner and fullscreen", () => {
     render(<Room sharers={[]} />);
-    expect(within(stage()).getByRole("heading", { name: "Go live" })).toBeInTheDocument();
+    expect(within(stage()).getByRole("button", { name: "Go live" })).toBeInTheDocument();
     expect(within(stage()).getByRole("button", { name: "Settings" })).toBeInTheDocument();
     expect(within(stage()).getByRole("button", { name: "Fullscreen" })).toBeInTheDocument();
   });

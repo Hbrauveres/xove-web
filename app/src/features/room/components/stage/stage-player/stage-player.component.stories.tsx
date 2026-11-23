@@ -61,7 +61,7 @@ const meta = {
 
 export default meta;
 
-/** Nobody live: the TV on standby, the settings in the corner. */
+/** Nobody live: the empty stage, the settings in the corner. */
 export const NobodyLive: StoryObj<typeof meta> = {};
 /** Over Bruno's screen: what I hear from him, Go live, fullscreen. */
 export const Watching: StoryObj<typeof meta> = { args: { sharers: [bruno] } };
