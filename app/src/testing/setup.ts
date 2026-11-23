@@ -42,7 +42,8 @@ afterEach(() => {
 // jsdom lacks these browser APIs.
 // No canvas: drawing is the browser's to prove. Without this jsdom warns on every render of the
 // stage's light; a test that draws stubs its own context.
-HTMLCanvasElement.prototype.getContext = (() => null) as never;
+const noCanvas = (() => null) as never;
+HTMLCanvasElement.prototype.getContext = noCanvas;
 // The browser's own modal dialog: jsdom has the element but not its methods. Shown, it's open and
 // focuses its first control, as the browser does; the page behind it and Escape are the browser's,
 // checked in a real one (e2e).
@@ -55,18 +56,16 @@ HTMLDialogElement.prototype.close ??= function close(this: HTMLDialogElement) {
 };
 
 // The screen picker: the last fake room plays it (`nextPicker`, `nextPickerAudio`).
-Object.defineProperty(navigator, "mediaDevices", {
-  configurable: true,
-  value: {
-    getDisplayMedia: (request?: unknown) => lastRoom().localParticipant.getDisplayMedia(request),
-    enumerateDevices: async () => [
-      ...fakeCameras.map((c) => ({ ...c, kind: "videoinput", groupId: "" })),
-      ...fakeMics.map((m) => ({ ...m, kind: "audioinput", groupId: "" })),
-    ],
-    addEventListener: () => {},
-    removeEventListener: () => {},
-  },
-});
+const fakeMediaDevices = {
+  getDisplayMedia: (request?: unknown) => lastRoom().localParticipant.getDisplayMedia(request),
+  enumerateDevices: async () => [
+    ...fakeCameras.map((c) => ({ ...c, kind: "videoinput", groupId: "" })),
+    ...fakeMics.map((m) => ({ ...m, kind: "audioinput", groupId: "" })),
+  ],
+  addEventListener: () => {},
+  removeEventListener: () => {},
+};
+Object.defineProperty(navigator, "mediaDevices", { configurable: true, value: fakeMediaDevices });
 // Media queries: a desktop window that matches none of them. Put back after every test, since a test
 // may swap it for a phone's or a tablet's.
 const desktopMatchMedia = (query: string) => ({
@@ -79,12 +78,34 @@ const desktopMatchMedia = (query: string) => ({
   removeListener: () => {},
   dispatchEvent: () => false,
 });
-Object.defineProperty(window, "matchMedia", { writable: true, value: desktopMatchMedia });
+Object.defineProperty(window, "matchMedia", { writable: true, configurable: true, value: desktopMatchMedia });
 
-/** The browser stand-ins a test may replace, back as setup made them: the media queries, and none of
- * what jsdom lacks and a test defines for itself (fullscreen, an element's animations). */
+// The page as it begins (its head, with its title; its root's and body's attributes; its address) and the
+// process's environment, put back after every test: the tests in a file share one fake browser, and
+// Node's own objects (`process.env`, `fetch`, `Headers`) are shared by the files a worker runs. Those
+// are changed only through `vi.stubGlobal`, `vi.stubEnv` or `vi.spyOn`, which the runner puts back.
+const startHead = document.head.innerHTML;
+const startRoot = [...document.documentElement.attributes].map((a) => [a.name, a.value] as const);
+const startBody = [...document.body.attributes].map((a) => [a.name, a.value] as const);
+const startAddress = location.pathname + location.search + location.hash;
+const startEnv = { ...process.env };
+
+/** The browser stand-ins a test may replace, back as setup made them: the media queries, the devices,
+ * the canvas, the page's title, head and root, and none of what jsdom lacks and a test defines for
+ * itself (fullscreen, an element's animations). */
 function resetBrowserStandIns() {
   window.matchMedia = desktopMatchMedia as never;
+  Object.defineProperty(navigator, "mediaDevices", { configurable: true, value: fakeMediaDevices });
+  HTMLCanvasElement.prototype.getContext = noCanvas;
+  document.head.innerHTML = startHead;
+  const root = document.documentElement;
+  for (const { name } of [...root.attributes]) root.removeAttribute(name);
+  for (const [name, value] of startRoot) root.setAttribute(name, value);
+  for (const { name } of [...document.body.attributes]) document.body.removeAttribute(name);
+  for (const [name, value] of startBody) document.body.setAttribute(name, value);
+  history.replaceState(null, "", startAddress);
+  for (const name of Object.keys(process.env)) if (!(name in startEnv)) delete process.env[name];
+  Object.assign(process.env, startEnv);
   for (const own of ["fullscreenElement", "exitFullscreen"])
     delete (document as unknown as Record<string, unknown>)[own];
   delete (HTMLElement.prototype as unknown as Record<string, unknown>).animate;
