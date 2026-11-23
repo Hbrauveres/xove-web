@@ -37,13 +37,16 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     setupFiles: ["./src/testing/setup.ts"],
-    // Every test starts clean (docs/testing.md): each file in its own environment, and every spy,
-    // stubbed global and stubbed variable put back after each test, by the runner, not by the test.
+    // Every test starts clean (docs/testing.md): each file in a fresh context, on a fake browser its
+    // worker shares, which the shared setup puts back after every test; and every spy, stubbed global
+    // and stubbed variable put back by the runner, not by the test. A fresh context per file is far
+    // cheaper than a new process and fake browser for each.
+    pool: "vmThreads",
     isolate: true,
     // The tests in each file run in a new order every time, so a test that leans on another fails at
     // once. The run prints its seed; `npm test -- --sequence.seed=<seed>` replays that order. Files
-    // aren't shuffled: each has its own environment already, and the slowest starting first keeps
-    // the run short.
+    // aren't shuffled: each has a fresh context already, and the slowest starting first keeps the run
+    // short.
     sequence: { shuffle: { files: false, tests: true } },
     restoreMocks: true,
     unstubGlobals: true,
