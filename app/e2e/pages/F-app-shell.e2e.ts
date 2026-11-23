@@ -1,8 +1,8 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { blinks } from "../support/frames.ts";
 import { boxOf, centreX, windowBox } from "../support/geometry.ts";
 import { computed, LOOK, pxOf, cssOf } from "../support/looks.ts";
-import { openScene } from "../support/open.ts";
+import { FIXED_TIME, openScene } from "../support/open.ts";
 import { observe } from "../support/observe.ts";
 import { spend, WORDMARK_MS } from "../support/timing.ts";
 
@@ -138,4 +138,76 @@ test("F-app-shell.8 the keyboard's focus is a red ring, 2 px out, on any control
   await expect.soft(other).toBeFocused();
   await expect.soft(other).toHaveCSS("outline", await computed(page, "outline", LOOK.focusRing));
   await expect.soft(other).toHaveCSS("outline-offset", await computed(page, "outline-offset", LOOK.focusOffset));
+});
+
+/** The harness with the check of who's signed in answered as `me` says, on a clock the test moves. */
+async function openWithMe(page: Page, me: "down" | "fail" | "later") {
+  // The page's clock flows as usual, and the test jumps it over the long waits (a real second or so may
+  // pass besides: the cases allow for it; the exact timings are the unit tests').
+  await page.clock.install({ time: FIXED_TIME });
+  await page.goto(`/?me=${me}&panel=0&still=1`);
+  await page.evaluate(() => document.fonts.ready.then(() => undefined));
+}
+const cantReach = (page: Page) => page.getByRole("heading", { name: "Can't reach Xovê" });
+
+test("F-app-shell.9 the API out of reach: the page says so, counts down to its next try, and offers nothing to press", async ({
+  page,
+}, info) => {
+  await openWithMe(page, "down");
+  const heading = cantReach(page);
+  await heading.waitFor();
+  const line = page.getByText(/^Trying again in \d+ s\.$/);
+  await observe(page, info, { heading, line }, async () => {
+    await page.clock.runFor(1_000);
+  });
+  await expect.soft(line).toHaveText(/^Trying again in [12] s\.$/);
+  await expect.soft(page.getByText("Reconnecting")).toBeVisible();
+  await expect.soft(page.getByRole("button")).toHaveCount(0);
+  await expect.soft(page.getByRole("link", { name: "Continue with Google" })).toHaveCount(0);
+  // Past the first try, the count starts again from the next, longer wait.
+  await page.clock.runFor(2_000);
+  await expect.soft(line).toHaveText(/^Trying again in [34] s\.$/);
+});
+
+test("F-app-shell.10 after its tries it stops and says so; Try again starts a new round", async ({ page }, info) => {
+  await openWithMe(page, "down");
+  await cantReach(page).waitFor();
+  await page.clock.runFor(2_000 + 4_000 + 8_000 + 16_000 + 30_000 + 30_000);
+  const tryAgain = page.getByRole("button", { name: "Try again" });
+  await observe(page, info, { tryAgain }, async () => {
+    await expect(page.getByText("Check your connection and try again.")).toBeVisible();
+  });
+  await tryAgain.click();
+  await expect.soft(page.getByText("Reconnecting")).toBeVisible();
+  await expect.soft(page.getByRole("button")).toHaveCount(0);
+});
+
+test("F-app-shell.11 back in reach, it goes on to the room, still signed in", async ({ page }, info) => {
+  await openWithMe(page, "later");
+  await cantReach(page).waitFor();
+  const stage = page.getByRole("region", { name: "Shared screen" });
+  await observe(page, info, { stage }, async () => {
+    await page.clock.runFor(2_000 + 4_000);
+    await stage.waitFor();
+  });
+  await expect.soft(stage).toBeVisible();
+  await expect.soft(page.getByRole("link", { name: "Continue with Google" })).toHaveCount(0);
+});
+
+test("F-app-shell.12 any other answer: Something went wrong; Try again waits while it tries and a moment after", async ({
+  page,
+}, info) => {
+  await openWithMe(page, "fail");
+  await page.getByRole("heading", { name: "Something went wrong" }).waitFor();
+  const tryAgain = page.getByRole("button", { name: "Try again" });
+  const wait = page.getByRole("button", { name: "Please wait…" });
+  await observe(page, info, { tryAgain, wait }, async () => {
+    await tryAgain.click();
+    await wait.waitFor();
+  });
+  await expect.soft(wait).toBeDisabled();
+  await expect.soft(tryAgain).toHaveCount(0);
+  await page.clock.runFor(5_000);
+  await expect.soft(tryAgain).toBeEnabled();
+  await expect.soft(page.locator("body")).not.toContainText(/\d{3}|server|network|timeout/i);
 });

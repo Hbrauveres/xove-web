@@ -7,6 +7,8 @@
 // &admin=1: in the room as an admin (my menu shows Admin)
 // &still=1: the pictures drawn once and held, for comparing screenshots
 // &held=1: the browser holds the room's sound back until the page's first click or key
+// &me=down|fail|later: the check of who's signed in gets no answer (down), a 500 (fail), or no answer
+// for its first two tries and then the member (later)
 import { createRoot } from "react-dom/client";
 import { MemoryRouter } from "react-router";
 import "@shared/styles/tokens.css";
@@ -206,6 +208,10 @@ const server = installFakeApi({
       }
     : {}),
 });
+const meAnswer = params.get("me");
+if (meAnswer === "down") server.unreachable.add("GET /api/me");
+if (meAnswer === "fail") server.failures.set("GET /api/me", { status: 500 });
+if (meAnswer === "later") server.unreachableFor.set("GET /api/me", 2);
 if (params.get("fail") === "request")
   server.failures.set("POST /api/access-requests", {
     status: 400,

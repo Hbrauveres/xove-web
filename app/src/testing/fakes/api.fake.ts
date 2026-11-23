@@ -54,6 +54,8 @@ export function installFakeApi(
     unreachable: new Set<string>(),
     /** Requests that never answer until they're aborted, as a stuck connection: key is "GET /api/me". */
     hanging: new Set<string>(),
+    /** The next N matching requests get no answer, then the API answers again: key is "GET /api/me". */
+    unreachableFor: new Map<string, number>(),
   };
 
   const route = (method: string, path: string, body: unknown): Reply => {
@@ -174,7 +176,9 @@ export function installFakeApi(
     const body = init?.body ? JSON.parse(String(init.body)) : undefined;
     server.calls.push({ method, path, headers, body, keepalive: init?.keepalive });
     const key = `${method} ${path}`;
-    if (server.unreachable.has(key)) throw new TypeError("Failed to fetch");
+    const missed = server.unreachableFor.get(key) ?? 0;
+    if (missed > 0) server.unreachableFor.set(key, missed - 1);
+    if (server.unreachable.has(key) || missed > 0) throw new TypeError("Failed to fetch");
     if (server.hanging.has(key))
       return new Promise<Response>((_, reject) => {
         init?.signal?.addEventListener("abort", () => reject(init.signal?.reason));
