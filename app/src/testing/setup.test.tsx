@@ -145,3 +145,22 @@ describe("after every test, the browser's devices and canvas are setup's", { shu
     expect(document.createElement("canvas").getContext("2d")).toBeNull();
   });
 });
+
+describe(
+  "after every test, the body's own attributes, the address and the environment are put back",
+  { shuffle: false },
+  () => {
+    it("1. leaves a style and an attribute on the body, a new address and an environment variable", () => {
+      document.body.style.overflow = "hidden";
+      document.body.setAttribute("data-left", "1");
+      history.pushState({}, "", "/left");
+      process.env.XOVE_LEFT = "1";
+    });
+    it("2. finds the body bare, the address back at the start and the variable gone", () => {
+      expect(document.body.getAttribute("style")).toBeNull();
+      expect(document.body.hasAttribute("data-left")).toBe(false);
+      expect(location.pathname).toBe("/");
+      expect(process.env.XOVE_LEFT).toBeUndefined();
+    });
+  },
+);

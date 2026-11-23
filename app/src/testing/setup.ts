@@ -80,10 +80,15 @@ const desktopMatchMedia = (query: string) => ({
 });
 Object.defineProperty(window, "matchMedia", { writable: true, configurable: true, value: desktopMatchMedia });
 
-// The page as it begins: its head (its title with it) and its root element's attributes, put back after every
-// test: a test file shares its worker's page with the files before it.
+// The page as it begins (its head, with its title; its root's and body's attributes; its address) and the
+// process's environment, put back after every test: the tests in a file share one fake browser, and
+// Node's own objects (`process.env`, `fetch`, `Headers`) are shared by the files a worker runs. Those
+// are changed only through `vi.stubGlobal`, `vi.stubEnv` or `vi.spyOn`, which the runner puts back.
 const startHead = document.head.innerHTML;
 const startRoot = [...document.documentElement.attributes].map((a) => [a.name, a.value] as const);
+const startBody = [...document.body.attributes].map((a) => [a.name, a.value] as const);
+const startAddress = location.pathname + location.search + location.hash;
+const startEnv = { ...process.env };
 
 /** The browser stand-ins a test may replace, back as setup made them: the media queries, the devices,
  * the canvas, the page's title, head and root, and none of what jsdom lacks and a test defines for
@@ -96,6 +101,11 @@ function resetBrowserStandIns() {
   const root = document.documentElement;
   for (const { name } of [...root.attributes]) root.removeAttribute(name);
   for (const [name, value] of startRoot) root.setAttribute(name, value);
+  for (const { name } of [...document.body.attributes]) document.body.removeAttribute(name);
+  for (const [name, value] of startBody) document.body.setAttribute(name, value);
+  history.replaceState(null, "", startAddress);
+  for (const name of Object.keys(process.env)) if (!(name in startEnv)) delete process.env[name];
+  Object.assign(process.env, startEnv);
   for (const own of ["fullscreenElement", "exitFullscreen"])
     delete (document as unknown as Record<string, unknown>)[own];
   delete (HTMLElement.prototype as unknown as Record<string, unknown>).animate;

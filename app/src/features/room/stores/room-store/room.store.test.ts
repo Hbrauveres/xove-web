@@ -1,17 +1,19 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, onTestFinished, vi } from "vitest";
 import { aUser, installFakeApi, MY_USER_ID, someoneSharing } from "../../../../testing/fakes/api.fake";
 import { lastRoom } from "../../../../testing/fakes/livekit.fake";
 import { appConfig } from "@services/app-config-service";
 import { RoomStore } from "./room.store";
 import { POLL_MS } from "../../constants/room.constants";
 
-/** A fresh store over a fresh fake API, opened; fake timers drive its polls. */
+/** A fresh store over a fresh fake API, opened, and closed when the test ends; fake timers drive its polls. */
 function openStore(seat: { status: "in" } | { status: "waiting"; place: number } = { status: "in" }) {
   vi.useFakeTimers();
   const server = installFakeApi({ me: aUser({ name: "Henrique Brauveres", status: "MEMBER" }) });
   server.seat = seat;
   const store = new RoomStore("Henrique Brauveres", POLL_MS);
   store.open();
+  // Closed when the test ends, even when it fails before its own close: no poll or listener outlives it.
+  onTestFinished(() => store.close());
   return { server, store };
 }
 
