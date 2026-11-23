@@ -119,3 +119,29 @@ describe("after every test, the browser's stand-ins are as setup made them", { s
     expect("exitFullscreen" in document).toBe(false);
   });
 });
+
+describe("after every test, the page's title, head and root are as they began", { shuffle: false }, () => {
+  it("1. leaves a new title, something in the head and attributes on the root", () => {
+    document.title = "Left behind";
+    document.head.append(document.createElement("style"));
+    document.documentElement.setAttribute("data-left", "1");
+    document.documentElement.style.setProperty("--left", "1");
+  });
+  it("2. finds them as setup left them", () => {
+    expect(document.title).toBe("");
+    expect(document.head.querySelector("style")).toBeNull();
+    expect(document.documentElement.hasAttribute("data-left")).toBe(false);
+    expect(document.documentElement.style.getPropertyValue("--left")).toBe("");
+  });
+});
+
+describe("after every test, the browser's devices and canvas are setup's", { shuffle: false }, () => {
+  it("1. leaves other devices and a canvas that draws", () => {
+    Object.defineProperty(navigator, "mediaDevices", { configurable: true, value: { left: true } });
+    HTMLCanvasElement.prototype.getContext = (() => ({ left: true })) as never;
+  });
+  it("2. finds setup's screen picker and a canvas that draws nothing", () => {
+    expect(typeof navigator.mediaDevices.getDisplayMedia).toBe("function");
+    expect(document.createElement("canvas").getContext("2d")).toBeNull();
+  });
+});
