@@ -50,6 +50,10 @@ export function installFakeApi(
     calls: [] as Call[],
     /** Force the next matching request to fail: key is "POST /api/access-requests". */
     failures: new Map<string, Reply>(),
+    /** Requests that get no answer at all, as when the network is down: key is "GET /api/me". */
+    unreachable: new Set<string>(),
+    /** Requests that never answer until they're aborted, as a stuck connection: key is "GET /api/me". */
+    hanging: new Set<string>(),
   };
 
   const route = (method: string, path: string, body: unknown): Reply => {
@@ -169,6 +173,12 @@ export function installFakeApi(
     const headers = (init?.headers ?? {}) as Record<string, string>;
     const body = init?.body ? JSON.parse(String(init.body)) : undefined;
     server.calls.push({ method, path, headers, body, keepalive: init?.keepalive });
+    const key = `${method} ${path}`;
+    if (server.unreachable.has(key)) throw new TypeError("Failed to fetch");
+    if (server.hanging.has(key))
+      return new Promise<Response>((_, reject) => {
+        init?.signal?.addEventListener("abort", () => reject(init.signal?.reason));
+      });
 
     const reply = route(method, path, body);
     const text = reply.body === undefined ? "" : JSON.stringify(reply.body);

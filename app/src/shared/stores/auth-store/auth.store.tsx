@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { api, ApiError, SIGNED_OUT_STATUS } from "@services/xove-api-service";
+import { api } from "@services/xove-api-service";
 import type { AuthProviderProps, AuthState } from "./types/auth.types";
 import { AuthContext } from "./hooks/use-auth.hook";
+import { checkOutcome } from "./utils/check-outcome.util";
 
 /** Asks the API who is signed in, once at the start and whenever `refresh` is called. */
 export function AuthProvider({ children }: AuthProviderProps) {
@@ -12,11 +13,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const me = await api.me();
       setState({ status: "signedIn", me });
     } catch (error) {
-      if (error instanceof ApiError && error.status === SIGNED_OUT_STATUS) {
-        setState({ status: "signedOut" });
-      } else {
-        throw error;
-      }
+      // Only "nobody is signed in" signs out; any other failure leaves who's signed in as it was.
+      if (checkOutcome(error) === "signedOut") setState({ status: "signedOut" });
+      else throw error;
     }
   }, []);
 
@@ -28,11 +27,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, []);
 
-  // The first answer: any failure counts as signed out, so the home page can offer the sign-in.
+  // The first answer: only "nobody is signed in" offers the sign-in; out of reach or failed says so.
   useEffect(() => {
     api.me().then(
       (me) => setState({ status: "signedIn", me }),
-      () => setState({ status: "signedOut" }),
+      (error: unknown) => {
+        const outcome = checkOutcome(error);
+        if (outcome === "signedOut") setState({ status: "signedOut" });
+        else if (outcome === "unreachable") setState({ status: "unreachable", nextTryAt: null });
+        else setState({ status: "failed", busy: false });
+      },
     );
   }, []);
 
