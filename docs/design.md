@@ -497,7 +497,7 @@ A number that changes takes the look of **its space**, and each space's look is 
 
 ![My face lit while my voice is sent, beside my face live and silent](images/design/my-face-talking.png)
 - **LIVE badge** (the `LiveBadge` block): "LIVE" in mono with a deep-red dot on red. Beside who's on the stage it's a small tag whose dot pulses; over my preview in the settings, a pill with a still dot.
-- **The live dot** (the `LiveDot` block): one red dot with a soft red glow (`--accent-70`, 8 px), in two sizes: **M 8 px** first on a pill (Go live) and **S 6 px** on a tab (the settings' tab of what you're sending). Still for something live; **beating** for something you wait for ("Waiting for approval"): down to 30% and back every 1.6 s, as LIVE's dot, still with reduced motion. Screen readers don't hear it: the words around it say it.
+- **The live dot** (the `LiveDot` block): one red dot with a soft red glow (`--accent-70`, 8 px), or grey with no glow (quiet: "Reconnecting"), in two sizes: **M 8 px** first on a pill (Go live) and **S 6 px** on a tab (the settings' tab of what you're sending). Still for something live; **beating** for something you wait for ("Waiting for approval"): down to 30% and back every 1.6 s, as LIVE's dot, still with reduced motion. Screen readers don't hear it: the words around it say it.
 - **A person in a row** (the `PersonRow` block): their face at the place's size, the name (13 px semibold) and a quiet line under it (12 px, muted: an email, a role, what they're doing), then what ends the row (a time, a button, a badge, icons). My menu, the people list, request access's "Signed in as" (a quiet word above the name) and admin's requests and members. **Every list of people uses it.**
 
 ### On the stage
@@ -571,6 +571,14 @@ Sign-in, request access (and request sent), the room's queue and admin, each in 
 - **Sign-in:** "Go **LIVE** with your friends." and its line (see [Name and voice](#name-and-voice)), then "Continue with Google" (the white button, a link) and who can join.
 ![Request access](images/design/request-access.png) ![Request sent, waiting for approval](images/design/request-sent.png)
 
+- **Can't reach Xovê** (`CantReachPage`), on the request-sent page's layout, when the app can't tell who's signed in:
+  - **out of reach** (no answer, a timeout, or the proxy's 502–504): "Can't reach Xovê", "Trying again in N s." counting down, and "Reconnecting" in the quiet label pill with its grey dot beating; nothing to press. It tries again after 2, 4, 8, 16, 30 and 30 s;
+  - **after those 6 tries:** "Check your connection and try again." with Try again (the primary button), which starts a new round;
+  - **any other answer** (a 500, 403, 404, 429…): "Something went wrong", "Try again in a moment.", with Try again; pressed, it's a disabled "Please wait…" with a 14 px red spinner (a rotation; slower with reduced motion), off while it tries and for 5 s after a failure.
+  - Only the API's "nobody is signed in" (401) shows the sign-in page.
+
+![Can't reach Xovê, retrying](images/design/cant-reach.png) ![Something went wrong](images/design/something-went-wrong.png)
+
 - **Request access:** "You need access" (or "Your request was declined"), its line, the note and Request access; once sent, "Request sent" with "Waiting for approval" in the soft label pill, its dot beating. At the foot, under a hairline, who's signed in (a person row) and "Use another account" (the quiet button).
 ![Admin, with someone waiting and an admin among the members](images/design/admin.png)
 
@@ -640,9 +648,13 @@ Its content stays clear of the phone's bars (the browser's safe areas).
 - **An error on a page is the error box** (`ErrorNotice`), never a bare red line.
 - **A person is one row** (`PersonRow`), wherever people are listed.
 - **A quiet way out or back is the quiet button** (`Button` quiet: muted, underlined only when pointed at), a link when it goes to a page.
-- **A status or a role is a label pill** in red (soft for a status, solid for a role), never a pill of its own; a dot that beats uses the app's one beat (`@keyframes beat` in `global.css`), as LIVE's does.
+- **A status or a role is a label pill** in red (soft for a status, solid for a role), or grey (quiet) for a status that isn't red news ("Reconnecting"), never a pill of its own; a dot that beats uses the app's one beat (`@keyframes beat` in `global.css`), as LIVE's does.
 - **Every page outside the room is on the Page shell;** a page of lists is its wide frame, its bar above the main region. The phone notice is the one exception: it stands in for the whole app on a phone, with its own frame clear of the phone's bars.
 - **One exception to the tokens:** Google's sign-in button, white with Google's "G" in Google's own colours, as their rules ask.
+- **One page for every "can't tell who you are"** (a rule for the whole app): the request-sent page's layout, never the sign-in page, which only a real "not signed in" shows.
+- **What the app retries on its own offers nothing to press** (a rule for the whole app): automatic retries are paced by the app alone, so nobody can set them off faster than their timers.
+- **A retry button can't be spammed** (a rule for the whole app): pressed, it turns into a disabled "Please wait…" with a small red spinner while it tries, and stays off a moment after a failure; or it goes away with the round it starts.
+- **Errors say nothing specific** (a rule for the whole app): plain headlines ("Can't reach Xovê", "Something went wrong"), never a code, a cause or a detail about the server.
 - **A first impression plays once:** an intro plays the first time in a visit, never again for the same state, and never for reduced motion.
 - **Light on the wall comes only from a picture** (a rule for the whole app): the ambilight round a shared screen or camera, and nothing else; a screen with nothing playing leaves the wall dark.
 - **One way to start, the same everywhere** (a rule for the whole app): Go live and its menu, wherever starting is offered (over a stream, on the empty stage), never a second set of start buttons.
