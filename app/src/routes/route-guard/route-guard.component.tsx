@@ -10,7 +10,15 @@ export function RouteGuard({ rule, children }: RouteGuardProps) {
   const { state, retry } = useAuth();
   const access = routeAccess(rule, state);
   if (access.kind === "loading") return <PageShell variant="message">Loading…</PageShell>;
-  if (access.kind === "cantReach") return <CantReachPage state={access.state} onRetry={retry} />;
+  // Keyed by its next try, so each new wait counts down from the time now.
+  if (access.kind === "cantReach")
+    return (
+      <CantReachPage
+        key={access.state.status === "unreachable" ? String(access.state.nextTryAt) : "failed"}
+        state={access.state}
+        onRetry={retry}
+      />
+    );
   if (access.kind === "redirect") return <Navigate to={access.to} replace />;
   return <>{children}</>;
 }

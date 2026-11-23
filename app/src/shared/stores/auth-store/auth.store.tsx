@@ -10,26 +10,26 @@ import { checkOutcome } from "./utils/check-outcome.util";
  * whenever `refresh` is called.
  */
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { state, setState, retry } = useWhoCheck();
+  const { state, settle, retry } = useWhoCheck();
 
   const refresh = useCallback(async () => {
     try {
       const me = await api.me();
-      setState({ status: "signedIn", me });
+      settle({ status: "signedIn", me });
     } catch (error) {
       // Only "nobody is signed in" signs out; any other failure leaves who's signed in as it was.
-      if (checkOutcome(error) === "signedOut") setState({ status: "signedOut" });
+      if (checkOutcome(error) === "signedOut") settle({ status: "signedOut" });
       else throw error;
     }
-  }, [setState]);
+  }, [settle]);
 
   const signOut = useCallback(async () => {
     try {
       await api.logout();
     } finally {
-      setState({ status: "signedOut" });
+      settle({ status: "signedOut" });
     }
-  }, [setState]);
+  }, [settle]);
 
   const value = useMemo(() => ({ state, refresh, signOut, retry }), [state, refresh, signOut, retry]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

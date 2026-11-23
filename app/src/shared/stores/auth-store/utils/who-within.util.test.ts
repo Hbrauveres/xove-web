@@ -19,3 +19,12 @@ describe("asking who's signed in, within a time", () => {
     await gaveUp;
   });
 });
+
+it("gives up at once when told to stop", async () => {
+  const server = installFakeApi({ me: aUser() });
+  server.hanging.add("GET /api/me");
+  const stop = new AbortController();
+  const asked = whoWithin(10_000, stop.signal);
+  stop.abort();
+  await expect(asked).rejects.toBeDefined();
+});

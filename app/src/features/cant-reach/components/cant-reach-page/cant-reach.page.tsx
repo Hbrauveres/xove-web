@@ -29,7 +29,7 @@ export function CantReachPage({ state, onRetry }: CantReachProps) {
         {view.headline}
       </Headline>
       <PageText variant="lead">
-        <output>{view.line}</output>
+        <output aria-live={view.action === "reconnecting" ? "off" : undefined}>{view.line}</output>
       </PageText>
       <div className={styles.act}>
         {view.action === "reconnecting" ? (
@@ -37,12 +37,12 @@ export function CantReachPage({ state, onRetry }: CantReachProps) {
             {RECONNECTING}
           </LabelPill>
         ) : view.action === "pleaseWait" ? (
-          <Button variant="ghost" disabled aria-disabled="true">
+          <Button key="wait" variant="ghost" disabled aria-disabled="true" className={styles.waiting}>
             <span className={styles.spinner} aria-hidden="true" />
             {PLEASE_WAIT}
           </Button>
         ) : (
-          <Button variant="primary" onClick={onRetry}>
+          <Button key="try" variant="primary" onClick={onRetry}>
             {TRY_AGAIN}
           </Button>
         )}

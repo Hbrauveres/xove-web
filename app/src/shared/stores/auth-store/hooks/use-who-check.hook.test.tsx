@@ -1,4 +1,5 @@
 import { act, renderHook } from "@testing-library/react";
+import { StrictMode } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { onFakeClock } from "../../../../testing/factories/clock.factory";
 import { aUser, installFakeApi } from "../../../../testing/fakes/api.fake";
@@ -97,14 +98,16 @@ describe("checking who's signed in, and trying again", () => {
     expect(result.current.state).toEqual({ status: "failed", busy: false });
   });
 
-  it("signs out on the API's 'nobody is signed in', and stops trying once it's gone", async () => {
+  it("signs out on the API's 'nobody is signed in'", async () => {
     onFakeClock();
-    const out = installFakeApi({ me: null });
-    const signedOut = renderHook(() => useWhoCheck());
+    installFakeApi({ me: null });
+    const { result } = renderHook(() => useWhoCheck());
     await pass(0);
-    expect(signedOut.result.current.state).toEqual({ status: "signedOut" });
-    signedOut.unmount();
+    expect(result.current.state).toEqual({ status: "signedOut" });
+  });
 
+  it("stops trying once the page is gone", async () => {
+    onFakeClock();
     const server = installFakeApi({ me: aUser() });
     server.unreachable.add(ME);
     const { unmount } = renderHook(() => useWhoCheck());
@@ -112,6 +115,52 @@ describe("checking who's signed in, and trying again", () => {
     unmount();
     await pass(60_000);
     expect(checks(server)).toBe(1);
-    void out;
+  });
+
+  it("runs one round only when mounted twice, as StrictMode does", async () => {
+    onFakeClock();
+    const server = installFakeApi({ me: aUser() });
+    server.unreachable.add(ME);
+    renderHook(() => useWhoCheck(), { wrapper: StrictMode });
+    await pass(RETRY_DELAYS_MS.reduce((a, b) => a + b, 0) + 60_000);
+    // The first mount's check, then one round: its first check and its retries.
+    expect(checks(server)).toBe(RETRY_DELAYS_MS.length + 2);
+  });
+
+  it("ignores a second press in the same moment, once stopped and after a failure", async () => {
+    onFakeClock();
+    const down = installFakeApi({ me: aUser() });
+    down.unreachable.add(ME);
+    const stopped = renderHook(() => useWhoCheck());
+    await pass(RETRY_DELAYS_MS.reduce((a, b) => a + b, 0));
+    const before = checks(down);
+    act(() => {
+      stopped.result.current.retry();
+      stopped.result.current.retry();
+    });
+    await pass(0);
+    expect(checks(down)).toBe(before + 1);
+    stopped.unmount();
+
+    const failing = installFakeApi({ me: aUser() });
+    failing.failures.set(ME, { status: 500 });
+    const failed = renderHook(() => useWhoCheck());
+    await pass(0);
+    act(() => {
+      failed.result.current.retry();
+      failed.result.current.retry();
+    });
+    await pass(0);
+    expect(checks(failing)).toBe(2);
+  });
+
+  it("hands out the same value while nothing changes", async () => {
+    onFakeClock();
+    installFakeApi({ me: aUser() });
+    const { result, rerender } = renderHook(() => useWhoCheck());
+    await pass(0);
+    const first = result.current;
+    rerender();
+    expect(result.current).toBe(first);
   });
 });

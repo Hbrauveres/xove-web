@@ -70,6 +70,24 @@ describe("who is signed in", () => {
     expect(screen.getByText("signed in as ana@example.com")).toBeInTheDocument();
   });
 
+  it("on a later check, signs out on the API's 'nobody is signed in', and keeps who's signed in on any other answer", async () => {
+    for (const status of [500, 502, 403]) {
+      const server = installFakeApi({ me: aUser({ email: "ana@example.com" }) });
+      const { unmount } = renderProvider();
+      await screen.findByText("signed in as ana@example.com");
+      server.failures.set("GET /api/me", { status });
+      await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
+      expect(screen.getByText("signed in as ana@example.com")).toBeInTheDocument();
+      unmount();
+    }
+    const server = installFakeApi({ me: aUser() });
+    renderProvider();
+    await screen.findByText(/signed in/);
+    server.me = null;
+    await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
+    expect(await screen.findByText("signedOut")).toBeInTheDocument();
+  });
+
   it("asks the API again on refresh, after being approved", async () => {
     const server = installFakeApi({ me: null });
     renderProvider();

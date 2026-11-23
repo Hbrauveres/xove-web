@@ -16,6 +16,12 @@
   margin-top: var(--space-1);
 }
 
+/* Please wait: off, but not faded as a disabled button is, so its ring shows; its words muted. */
+.waiting[aria-disabled="true"]:disabled {
+  opacity: 1;
+  color: var(--text-muted);
+}
+
 /* Please wait's small red ring, turning: a rotation only, slower with reduced motion. */
 .spinner {
   width: var(--size-3-5);

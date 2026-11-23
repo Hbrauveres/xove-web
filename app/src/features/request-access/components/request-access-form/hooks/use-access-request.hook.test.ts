@@ -33,3 +33,14 @@ it("keeps the API's words when it refuses, and lets the person try again", async
   expect(onSent).not.toHaveBeenCalled();
   expect(result.current.sending).toBe(false);
 });
+
+it("counts the request as sent even when the check that follows fails: it says nothing about that check", async () => {
+  installFakeApi({ me: aUser({ status: "NONE" }) });
+  const onSent = vi.fn(() => Promise.reject(new Error("the API's own words")));
+  const { result } = renderHook(() => useAccessRequest(onSent));
+
+  await act(() => result.current.send());
+
+  expect(onSent).toHaveBeenCalled();
+  expect(result.current.error).toBeNull();
+});

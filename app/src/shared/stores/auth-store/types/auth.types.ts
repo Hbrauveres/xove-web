@@ -13,6 +13,9 @@ export type AuthState =
   | { status: "unreachable"; nextTryAt: number | null }
   | { status: "failed"; busy: boolean };
 
+/** Why it can't tell who's signed in: out of reach, or failed. */
+export type CantTellState = Extract<AuthState, { status: "unreachable" | "failed" }>;
+
 /** What a failed check means. */
 export type CheckOutcome = "signedOut" | "unreachable" | "failed";
 
