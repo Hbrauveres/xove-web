@@ -81,7 +81,7 @@ const desktopMatchMedia = (query: string) => ({
 Object.defineProperty(window, "matchMedia", { writable: true, value: desktopMatchMedia });
 
 // The page as it begins: its title, its head and its root element's attributes, put back after every
-// test (a test file shares its worker's page with the files before it, ADR-0109).
+// test: a test file shares its worker's page with the files before it.
 const startTitle = document.title;
 const startHead = document.head.innerHTML;
 const startRoot = [...document.documentElement.attributes].map((a) => [a.name, a.value] as const);
