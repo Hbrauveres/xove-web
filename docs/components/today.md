@@ -382,4 +382,10 @@ Phone support is paused, so its code went, with its tests.
 
 What a phone or a tablet sees on every page: the mark, a computer drawn from it, "See you on the big screen." and one line ([how it looks](../design.md#phones-and-tablets-see-you-on-the-big-screen)). Already in the new structure: `features/phone-notice/` (the page, and `big-screen-art/` for the drawing), chosen by `routes/root/root.component.tsx` with `services/media-devices-service/utils/is-handheld.util.ts`.
 
+### Can't reach Xovê
+
+<img src="img/today/cant-reach.webp" width="720" alt="Can't reach Xovê: trying again, reconnecting">
+
+When the app can't tell who's signed in: out of reach, a countdown to its next try and "Reconnecting"; after 6 tries, Try again; any other answer, "Something went wrong" with Try again, which waits while it tries. `features/cant-reach/` (the page), shown by `routes/route-guard/` for the sign-in state's `unreachable` and `failed` (`shared/stores/auth-store/`).
+
 Not pictured here, but listed with their area above: the stage's notices, the voice's audio element, the mic test inside the settings, the toast and the tooltip.

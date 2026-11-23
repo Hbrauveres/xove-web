@@ -11,7 +11,7 @@ function Probe() {
   return (
     <>
       <p>{state.status === "signedIn" ? `signed in as ${state.me.email}` : state.status}</p>
-      <button onClick={() => void refresh()}>Refresh</button>
+      <button onClick={() => void refresh().catch(() => undefined)}>Refresh</button>
       <button onClick={() => void signOut()}>Sign out</button>
     </>
   );
@@ -40,11 +40,51 @@ describe("who is signed in", () => {
     expect(await screen.findByText("signedOut")).toBeInTheDocument();
   });
 
-  it("is signed out when the first answer fails for any reason, so the home page can offer the sign-in", async () => {
-    const server = installFakeApi({ me: aUser() });
-    server.failures.set("GET /api/me", { status: 500 });
-    renderProvider();
+  it("isn't signed out when the API can't be reached or fails: only its 'nobody is signed in' signs out", async () => {
+    const down = installFakeApi({ me: aUser() });
+    down.unreachable.add("GET /api/me");
+    const first = renderProvider();
+    expect(await screen.findByText("unreachable")).toBeInTheDocument();
+    first.unmount();
 
+    const gateway = installFakeApi({ me: aUser() });
+    gateway.failures.set("GET /api/me", { status: 502 });
+    const second = renderProvider();
+    expect(await screen.findByText("unreachable")).toBeInTheDocument();
+    second.unmount();
+
+    const failing = installFakeApi({ me: aUser() });
+    failing.failures.set("GET /api/me", { status: 500 });
+    renderProvider();
+    expect(await screen.findByText("failed")).toBeInTheDocument();
+  });
+
+  it("keeps who's signed in when a later check fails without saying they're signed out", async () => {
+    const server = installFakeApi({ me: aUser({ email: "ana@example.com" }) });
+    renderProvider();
+    await screen.findByText("signed in as ana@example.com");
+
+    server.unreachable.add("GET /api/me");
+    await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
+
+    expect(screen.getByText("signed in as ana@example.com")).toBeInTheDocument();
+  });
+
+  it("on a later check, signs out on the API's 'nobody is signed in', and keeps who's signed in on any other answer", async () => {
+    for (const status of [500, 502, 403]) {
+      const server = installFakeApi({ me: aUser({ email: "ana@example.com" }) });
+      const { unmount } = renderProvider();
+      await screen.findByText("signed in as ana@example.com");
+      server.failures.set("GET /api/me", { status });
+      await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
+      expect(screen.getByText("signed in as ana@example.com")).toBeInTheDocument();
+      unmount();
+    }
+    const server = installFakeApi({ me: aUser() });
+    renderProvider();
+    await screen.findByText(/signed in/);
+    server.me = null;
+    await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
     expect(await screen.findByText("signedOut")).toBeInTheDocument();
   });
 

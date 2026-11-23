@@ -1,41 +1,36 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { api, ApiError, SIGNED_OUT_STATUS } from "@services/xove-api-service";
-import type { AuthProviderProps, AuthState } from "./types/auth.types";
+import { useCallback, useMemo } from "react";
+import { api } from "@services/xove-api-service";
+import type { AuthProviderProps } from "./types/auth.types";
 import { AuthContext } from "./hooks/use-auth.hook";
+import { useWhoCheck } from "./hooks/use-who-check.hook";
+import { checkOutcome } from "./utils/check-outcome.util";
 
-/** Asks the API who is signed in, once at the start and whenever `refresh` is called. */
+/**
+ * Asks the API who is signed in when the page opens (trying again while it can't be reached) and
+ * whenever `refresh` is called.
+ */
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [state, setState] = useState<AuthState>({ status: "loading" });
+  const { state, settle, retry } = useWhoCheck();
 
   const refresh = useCallback(async () => {
     try {
       const me = await api.me();
-      setState({ status: "signedIn", me });
+      settle({ status: "signedIn", me });
     } catch (error) {
-      if (error instanceof ApiError && error.status === SIGNED_OUT_STATUS) {
-        setState({ status: "signedOut" });
-      } else {
-        throw error;
-      }
+      // Only "nobody is signed in" signs out; any other failure leaves who's signed in as it was.
+      if (checkOutcome(error) === "signedOut") settle({ status: "signedOut" });
+      else throw error;
     }
-  }, []);
+  }, [settle]);
 
   const signOut = useCallback(async () => {
     try {
       await api.logout();
     } finally {
-      setState({ status: "signedOut" });
+      settle({ status: "signedOut" });
     }
-  }, []);
+  }, [settle]);
 
-  // The first answer: any failure counts as signed out, so the home page can offer the sign-in.
-  useEffect(() => {
-    api.me().then(
-      (me) => setState({ status: "signedIn", me }),
-      () => setState({ status: "signedOut" }),
-    );
-  }, []);
-
-  const value = useMemo(() => ({ state, refresh, signOut }), [state, refresh, signOut]);
+  const value = useMemo(() => ({ state, refresh, signOut, retry }), [state, refresh, signOut, retry]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -13,7 +13,9 @@ export function useAccessRequest(onSent: () => Promise<void>) {
     setError(null);
     try {
       await api.requestAccess(message);
-      await onSent();
+      // Sent: a failed check of who's signed in after it says nothing here (no cause is shown); the
+      // page's approval check asks again.
+      await onSent().catch(() => undefined);
     } catch (err) {
       setError(apiErrorMessage(err, SEND_FAILED));
     } finally {

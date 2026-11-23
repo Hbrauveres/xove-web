@@ -3,7 +3,7 @@ import { Dropdown } from "@shared/components/dropdown";
 import { Icon } from "@shared/components/icon";
 import { PanelSection } from "@shared/components/panel-section";
 import { ACTIVITY_TICK_MS } from "../../../constants/activity.constants";
-import { useNow } from "../../../hooks/use-now.hook";
+import { useNow } from "@shared/hooks/use-now.hook";
 import { HeaderActivityList } from "../header-activity-list";
 import { HeaderActivityTicker } from "../header-activity-ticker";
 import { RECONNECTING } from "./constants/activity-pill.constants";

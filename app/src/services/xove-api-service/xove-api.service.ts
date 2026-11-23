@@ -13,6 +13,7 @@ import type {
 import { DEFAULT_ERROR_MESSAGE, FALLBACK_MESSAGES } from "./constants/api.constants";
 import { csrfTokenFrom } from "./utils/csrf-token.util";
 import { requestHeaders } from "./utils/request-headers.util";
+import type { RequestOptions } from "./types/request-options.types";
 
 /** An error the API answered with. `message` is safe to show to the user. */
 export class ApiError extends Error {
@@ -29,7 +30,8 @@ export class ApiError extends Error {
 
 /** Talks to the API: every call, its headers and its errors. `api` is the one instance. */
 class ApiClient {
-  readonly me = () => this.#request<Me>("GET", "/api/me");
+  /** Who is signed in; `signal` lets the caller give up waiting. */
+  readonly me = (signal?: AbortSignal) => this.#request<Me>("GET", "/api/me", undefined, { signal });
   readonly logout = () => this.#request<void>("POST", "/api/auth/logout");
   readonly requestAccess = (message: string) =>
     this.#request<void>("POST", "/api/access-requests", { message: message.trim() || null });
@@ -57,7 +59,7 @@ class ApiClient {
     /** Leaves the queue, or turns the seat down. */
     cancel: () => this.#request<void>("POST", "/api/room/cancel"),
     /** The waiting page is closing: keep my place for 30 seconds. */
-    leave: () => this.#request<void>("POST", "/api/room/leave", undefined, true),
+    leave: () => this.#request<void>("POST", "/api/room/leave", undefined, { keepalive: true }),
   };
 
   readonly liveKitToken = () => this.#request<LiveKitAccess>("POST", "/api/livekit/token");
@@ -70,8 +72,16 @@ class ApiClient {
     removeMember: (id: number) => this.#request<void>("DELETE", `/api/admin/members/${id}`),
   };
 
-  /** `keepalive`: the request still goes out while the page is closing. An empty answer reads as null. */
-  async #request<T>(method: string, path: string, body?: unknown, keepalive = false): Promise<T> {
+  /**
+   * `keepalive`: the request still goes out while the page is closing; `signal`: the caller can give up
+   * waiting. An empty answer reads as null.
+   */
+  async #request<T>(
+    method: string,
+    path: string,
+    body?: unknown,
+    { keepalive, signal }: RequestOptions = {},
+  ): Promise<T> {
     const token = method === "GET" ? undefined : this.#csrfToken();
     const init: RequestInit = {
       method,
@@ -80,6 +90,7 @@ class ApiClient {
     };
     if (body !== undefined) init.body = JSON.stringify(body);
     if (keepalive) init.keepalive = true;
+    if (signal) init.signal = signal;
     const response = await fetch(path, init);
     if (!response.ok) throw await this.#errorFrom(response);
     return JSON.parse((await response.text()) || "null");

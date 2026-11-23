@@ -22,6 +22,8 @@ const SIGNED_IN: Record<RouteRule, (me: Me) => RouteAccess> = {
  */
 export function routeAccess(rule: RouteRule, state: AuthState): RouteAccess {
   if (state.status === "loading") return { kind: "loading" };
+  // Can't tell who's signed in: every page says so, whoever it's for.
+  if (state.status === "unreachable" || state.status === "failed") return { kind: "cantReach", state };
   if (state.status === "signedOut") return rule === "signed-out" ? SHOW : goTo("/");
   return SIGNED_IN[rule](state.me);
 }
