@@ -42,6 +42,10 @@ export default defineConfig({
     // and stubbed variable put back by the runner, not by the test. A fresh context per file is far
     // cheaper than a new process and fake browser for each.
     pool: "vmThreads",
+    // Half the machine's cores: each worker keeps a core to itself, so a heavy file isn't slowed by
+    // the others (on 16 cores, the slowest file 2.1–2.4 s against 3.4–3.7 s on all of them), for the
+    // same total time.
+    maxWorkers: "50%",
     isolate: true,
     // The tests in each file run in a new order every time, so a test that leans on another fails at
     // once. The run prints its seed; `npm test -- --sequence.seed=<seed>` replays that order. Files
